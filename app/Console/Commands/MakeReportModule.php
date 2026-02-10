@@ -43,6 +43,8 @@ class MakeReportModule extends Command
         $this->createService($name, $basePath);
         $this->createRepository($name, $basePath);
         $this->createPdf($name, $basePath);
+        $this->createTests($name);
+
 
         $this->info("Report module {$name} created successfully!");
     }
@@ -192,4 +194,112 @@ PHP;
             $content
         );
     }
+
+    private function createTests($name)
+    {
+        $testPath = base_path(
+            "tests/Unit/Domains/Reports/{$name}"
+        );
+
+        if (!File::exists($testPath)) {
+            File::makeDirectory($testPath, 0755, true);
+        }
+
+        $this->createUseCaseTest($name, $testPath);
+        $this->createServiceTest($name, $testPath);
+    }
+    private function createUseCaseTest($name, $path)
+    {
+        $class = "Generate{$name}ReportUseCaseTest";
+
+        $content = <<<PHP
+    <?php
+
+    namespace Tests\Unit\Domains\Reports\\{$name};
+
+    use Tests\TestCase;
+    use Mockery;
+    use App\Domains\Reports\\{$name}\UseCases\Generate{$name}ReportUseCase;
+    use App\Domains\Reports\\{$name}\Services\\{$name}ReportService;
+    use App\Domains\Reports\\{$name}\Pdf\\{$name}ReportPdf;
+
+    class {$class} extends TestCase
+    {
+        protected function tearDown(): void
+        {
+            Mockery::close();
+            parent::tearDown();
+        }
+
+        public function test_execute_generates_report()
+        {
+            \$service = Mockery::mock({$name}ReportService::class);
+            \$pdf = Mockery::mock({$name}ReportPdf::class);
+
+            \$service->shouldReceive('process')
+                ->once()
+                ->with(['raw'])
+                ->andReturn(['processed']);
+
+            \$pdf->shouldReceive('generate')
+                ->once()
+                ->with(['processed'])
+                ->andReturn('PDF_RESULT');
+
+            \$useCase = new Generate{$name}ReportUseCase(
+                \$service,
+                \$pdf
+            );
+
+            \$result = \$useCase->execute(['raw']);
+
+            \$this->assertEquals('PDF_RESULT', \$result);
+        }
+    }
+    PHP;
+
+        File::put("{$path}/{$class}.php", $content);
+    }
+    private function createServiceTest($name, $path)
+    {
+        $class = "{$name}ReportServiceTest";
+
+        $content = <<<PHP
+    <?php
+
+    namespace Tests\Unit\Domains\Reports\\{$name};
+
+    use Tests\TestCase;
+    use Mockery;
+    use App\Domains\Reports\\{$name}\Services\\{$name}ReportService;
+    use App\Domains\Reports\\{$name}\Repositories\\{$name}ReportRepository;
+
+    class {$class} extends TestCase
+    {
+        protected function tearDown(): void
+        {
+            Mockery::close();
+            parent::tearDown();
+        }
+
+        public function test_process_returns_data()
+        {
+            \$repo = Mockery::mock({$name}ReportRepository::class);
+
+            \$service = new {$name}ReportService(\$repo);
+
+            \$data = ['amount' => 100];
+
+            \$result = \$service->process(\$data);
+
+            \$this->assertEquals(\$data, \$result);
+        }
+    }
+    PHP;
+
+        File::put("{$path}/{$class}.php", $content);
+    }
+
+
+
 }
