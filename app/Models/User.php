@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Domains\Wilayah\Models\Area;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -52,4 +53,21 @@ class User extends Authenticatable
     {
         return $this->hasOne(UserAssignment::class);
     }
+
+
+    public function area()
+    {
+        return $this->belongsTo(Area::class);
+    }
+
+    public function isKecamatan()
+    {
+        return $this->scope === 'kecamatan';
+    }
+
+    public function isDesa()
+    {
+        return $this->scope === 'desa';
+    }
+
 }

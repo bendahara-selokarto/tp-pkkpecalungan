@@ -4,6 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
+use App\Domains\Wilayah\Repositories\{
+    AreaRepository,
+    AreaRepositoryInterface
+};
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +16,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+            $this->app->bind(
+            AreaRepositoryInterface::class,
+            AreaRepository::class
+        );
     }
 
     /**
