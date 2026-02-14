@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             WilayahSeeder::class,
             SuperAdminSeeder::class,
-             \App\Domains\Wilayah\Seeders\WilayahSeeder::class,
         ]);
 
         User::factory()->create([
