@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
+use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -23,6 +25,13 @@ Route::middleware(['auth', 'role:super-admin'])
     ->name('super-admin.')
     ->group(function () {
         Route::resource('users', UserManagementController::class);
+    });
+
+Route::prefix('desa')
+    ->middleware(['auth', 'role:desa'])
+    ->group(function () {
+
+        Route::resource('activities', DesaActivityController::class);
     });
 
 require __DIR__.'/auth.php';

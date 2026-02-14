@@ -2,31 +2,46 @@
 
 namespace App\Domains\Wilayah\Repositories;
 
-use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
+use App\Domains\Wilayah\Models\Area;
 
-class AreaRepository implements AreaRepositoryInterface
+class AreaRepository
 {
-    public function getByUser(User $user)
+    public function find(int $id): Area
     {
-        if ($user->isKecamatan()) {
-            return Area::where('level','desa')
-                ->where('parent_id', $user->area_id)
-                ->get();
-        }
-
-        return Area::where('id', $user->area_id)->get();
+        return Area::findOrFail($id);
     }
 
     public function getDesaByKecamatan(int $kecamatanId)
     {
-        return Area::where('level','desa')
-            ->where('parent_id', $kecamatanId)
+        return Area::where('parent_id', $kecamatanId)
+            ->where('level', 'desa')
             ->get();
     }
 
-    public function find(int $id)
+    /**
+     * 🔥 Tambahkan ini
+     */
+    public function getByUser(User $user)
     {
-        return Area::findOrFail($id);
+        // Jika user level kecamatan
+        if ($user->scope === 'kecamatan') {
+
+            $kecamatan = Area::findOrFail($user->area_id);
+
+            return Area::where('parent_id', $kecamatan->id)
+                ->where('level', 'desa')
+                ->get();
+        }
+
+        // Jika user level desa
+        if ($user->scope === 'desa') {
+
+            return Area::where('id', $user->area_id)
+                ->where('level', 'desa')
+                ->get();
+        }
+
+        return collect();
     }
 }
