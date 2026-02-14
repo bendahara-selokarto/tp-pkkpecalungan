@@ -21,7 +21,7 @@ class DesaActivityTest extends TestCase
         parent::setUp();
 
         // Buat role desa
-        Role::create(['name' => 'desa']);
+        Role::create(['name' => 'admin-desa']);
 
         // Buat Kecamatan
         $this->kecamatan = Area::create([
@@ -45,7 +45,7 @@ class DesaActivityTest extends TestCase
             'scope'   => 'desa',
         ]);
 
-        $user->assignRole('desa');
+        $user->assignRole('admin-desa');
         $this->actingAs($user);
 
         $response = $this->post('/desa/activities', [
@@ -69,7 +69,7 @@ class DesaActivityTest extends TestCase
             'area_id' => $this->desa->id,
             'scope'   => 'desa',
         ]);
-        $desaUser->assignRole('desa');
+        $desaUser->assignRole('admin-desa');
 
         // Desa lain
         $desaLain = Area::create([
