@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
 use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
+use App\Domains\Wilayah\Activities\Controllers\KecamatanActivityController;
 
 
 Route::get('/', function () {
@@ -32,6 +33,13 @@ Route::prefix('desa')
     ->group(function () {
 
         Route::resource('activities', DesaActivityController::class);
+    });
+
+Route::prefix('kecamatan')
+    ->middleware(['auth', 'role:kecamatan'])
+    ->group(function () {
+
+        Route::resource('activities', KecamatanActivityController::class);
     });
 
 require __DIR__.'/auth.php';

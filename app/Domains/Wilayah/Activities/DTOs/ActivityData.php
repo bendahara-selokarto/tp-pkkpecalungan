@@ -5,23 +5,25 @@ namespace App\Domains\Wilayah\Activities\DTOs;
 class ActivityData
 {
     public function __construct(
-        public string $nama_kegiatan,
-        public ?string $deskripsi,
-        public string $tanggal,
-        public ?int $desa_id,
-        public ?int $kecamatan_id,
+        public string $title,
+        public ?string $description,
+        public string $level,
+        public int $area_id,
         public int $created_by,
+        public string $activity_date,
+        public string $status = 'draft',
     ) {}
 
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['nama_kegiatan'],
-            $data['deskripsi'] ?? null,
-            $data['tanggal'],
-            $data['desa_id'] ?? null,
-            $data['kecamatan_id'] ?? null,
+            $data['title'],
+            $data['description'] ?? null,
+            $data['level'],
+            $data['area_id'],
             $data['created_by'],
+            $data['activity_date'],
+            $data['status'] ?? 'draft',
         );
     }
 }

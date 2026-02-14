@@ -7,20 +7,20 @@ use App\Domains\Wilayah\Activities\Repositories\ActivityRepository;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-class DesaActivityController extends Controller
+class KecamatanActivityController extends Controller
 {
     public function __construct(
         private readonly ActivityRepository $activityRepository
     ) {
-        $this->middleware('role:desa');
+        $this->middleware('role:kecamatan');
     }
 
     public function index()
     {
         $user = auth()->user();
-        $activities = $this->activityRepository->getByLevelAndArea('desa', $user->area_id);
+        $activities = $this->activityRepository->getByLevelAndArea('kecamatan', $user->area_id);
 
-        return view('desa.activities.index', compact('activities'));
+        return view('kecamatan.activities.index', compact('activities'));
     }
 
     public function store(Request $request)
@@ -34,7 +34,7 @@ class DesaActivityController extends Controller
         $data = ActivityData::fromArray([
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
-            'level' => 'desa',
+            'level' => 'kecamatan',
             'area_id' => auth()->user()->area_id,
             'created_by' => auth()->id(),
             'activity_date' => $validated['activity_date'],

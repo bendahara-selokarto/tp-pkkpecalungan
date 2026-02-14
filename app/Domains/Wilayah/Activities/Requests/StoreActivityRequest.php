@@ -14,9 +14,9 @@ class StoreActivityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nama_kegiatan' => 'required|string|max:255',
-            'deskripsi'     => 'nullable|string',
-            'tanggal'       => 'required|date',
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'activity_date' => 'required|date',
         ];
     }
 }

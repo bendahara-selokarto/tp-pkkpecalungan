@@ -10,18 +10,21 @@ class ActivityRepository
     public function store(ActivityData $data): Activity
     {
         return Activity::create([
-            'nama_kegiatan' => $data->nama_kegiatan,
-            'deskripsi'     => $data->deskripsi,
-            'tanggal'       => $data->tanggal,
-            'desa_id'       => $data->desa_id,
-            'kecamatan_id'  => $data->kecamatan_id,
+            'title'         => $data->title,
+            'description'   => $data->description,
+            'level'         => $data->level,
+            'area_id'       => $data->area_id,
             'created_by'    => $data->created_by,
+            'activity_date' => $data->activity_date,
+            'status'        => $data->status,
         ]);
     }
 
-    public function getByDesa(int $desaId)
+    public function getByLevelAndArea(string $level, int $areaId)
     {
-        return Activity::where('desa_id', $desaId)->get();
+        return Activity::where('level', $level)
+            ->where('area_id', $areaId)
+            ->get();
     }
 
     public function find(int $id): Activity
@@ -32,9 +35,10 @@ class ActivityRepository
     public function update(Activity $activity, ActivityData $data): Activity
     {
         $activity->update([
-            'nama_kegiatan' => $data->nama_kegiatan,
-            'deskripsi'     => $data->deskripsi,
-            'tanggal'       => $data->tanggal,
+            'title'         => $data->title,
+            'description'   => $data->description,
+            'activity_date' => $data->activity_date,
+            'status'        => $data->status,
         ]);
 
         return $activity;
