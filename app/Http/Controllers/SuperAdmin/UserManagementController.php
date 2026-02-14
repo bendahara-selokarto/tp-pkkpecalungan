@@ -15,7 +15,9 @@ class UserManagementController extends Controller
     
     public function __construct(
         protected UserService $userService
-    ) {}
+    ) {
+        $this->authorizeResource(User::class, 'user');
+    }
 
     public function index()
     {
