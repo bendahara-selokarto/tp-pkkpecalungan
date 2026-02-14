@@ -29,14 +29,16 @@ Route::middleware(['auth', 'role:super-admin'])
     });
 
 Route::prefix('desa')
-    ->middleware(['auth', 'role:desa'])
+    ->name('desa.')
+    ->middleware(['auth', 'role:admin-desa'])
     ->group(function () {
 
         Route::resource('activities', DesaActivityController::class);
     });
 
 Route::prefix('kecamatan')
-    ->middleware(['auth', 'role:kecamatan'])
+    ->name('kecamatan.')
+    ->middleware(['auth', 'role:admin-kecamatan'])
     ->group(function () {
 
         Route::resource('activities', KecamatanActivityController::class);

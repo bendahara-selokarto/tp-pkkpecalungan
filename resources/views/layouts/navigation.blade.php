@@ -24,6 +24,22 @@
                     </x-nav-link>
                 </div>
                 @endrole
+
+                @role('admin-desa')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="url('/desa/activities')" :active="request()->is('desa/activities*')">
+                        {{ __('Activities') }}
+                    </x-nav-link>
+                </div>
+                @endrole
+
+                @role('admin-kecamatan')
+                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    <x-nav-link :href="url('/kecamatan/activities')" :active="request()->is('kecamatan/activities*')">
+                        {{ __('Activities') }}
+                    </x-nav-link>
+                </div>
+                @endrole
             </div>
 
             <!-- Settings Dropdown -->
@@ -78,6 +94,18 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+
+            @role('admin-desa')
+            <x-responsive-nav-link :href="url('/desa/activities')" :active="request()->is('desa/activities*')">
+                {{ __('Activities') }}
+            </x-responsive-nav-link>
+            @endrole
+
+            @role('admin-kecamatan')
+            <x-responsive-nav-link :href="url('/kecamatan/activities')" :active="request()->is('kecamatan/activities*')">
+                {{ __('Activities') }}
+            </x-responsive-nav-link>
+            @endrole
         </div>
 
         <!-- Responsive Settings Options -->
