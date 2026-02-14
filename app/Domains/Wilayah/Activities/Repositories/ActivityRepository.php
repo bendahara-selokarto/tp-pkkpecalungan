@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Activities\Repositories;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Activities\DTOs\ActivityData;
+use App\Domains\Wilayah\Models\Area;
 
 class ActivityRepository
 {
@@ -24,6 +25,22 @@ class ActivityRepository
     {
         return Activity::where('level', $level)
             ->where('area_id', $areaId)
+            ->get();
+    }
+
+    public function getDesaActivitiesByKecamatan(int $kecamatanAreaId)
+    {
+        return Activity::query()
+            ->with(['area', 'creator'])
+            ->where('level', 'desa')
+            ->whereIn('area_id', function ($query) use ($kecamatanAreaId) {
+                $query->select('id')
+                    ->from((new Area())->getTable())
+                    ->where('level', 'desa')
+                    ->where('parent_id', $kecamatanAreaId);
+            })
+            ->latest('activity_date')
+            ->latest('id')
             ->get();
     }
 

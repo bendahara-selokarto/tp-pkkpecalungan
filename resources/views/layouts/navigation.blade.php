@@ -36,7 +36,10 @@
                 @role('admin-kecamatan')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="url('/kecamatan/activities')" :active="request()->is('kecamatan/activities*')">
-                        {{ __('Activities') }}
+                        {{ __('Activities Kecamatan') }}
+                    </x-nav-link>
+                    <x-nav-link :href="url('/kecamatan/desa-activities')" :active="request()->is('kecamatan/desa-activities*')">
+                        {{ __('Activities Desa') }}
                     </x-nav-link>
                 </div>
                 @endrole
@@ -103,7 +106,10 @@
 
             @role('admin-kecamatan')
             <x-responsive-nav-link :href="url('/kecamatan/activities')" :active="request()->is('kecamatan/activities*')">
-                {{ __('Activities') }}
+                {{ __('Activities Kecamatan') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="url('/kecamatan/desa-activities')" :active="request()->is('kecamatan/desa-activities*')">
+                {{ __('Activities Desa') }}
             </x-responsive-nav-link>
             @endrole
         </div>
