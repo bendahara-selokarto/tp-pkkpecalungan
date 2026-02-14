@@ -3,12 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Seeder;
+use App\Domains\Wilayah\Models\Area;
 use Spatie\Permission\Models\Role;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class SuperAdminSeeder extends Seeder
 {
@@ -51,11 +51,18 @@ class SuperAdminSeeder extends Seeder
             ]
         );
 
+        // Scope tetap valid (enum) dan area diset ke level kecamatan default.
+        $defaultKecamatanId = Area::where('level', 'kecamatan')->value('id');
+        if ($defaultKecamatanId !== null) {
+            $superAdmin->forceFill([
+                'scope' => 'kecamatan',
+                'area_id' => $defaultKecamatanId,
+            ])->save();
+        }
+
         /**
          * 4. Assign role ke user
          */
-        if (! $superAdmin->hasRole($superAdminRole->name)) {
-            $superAdmin->assignRole($superAdminRole);
-        }
+        $superAdmin->syncRoles([$superAdminRole->name]);
     }
 }

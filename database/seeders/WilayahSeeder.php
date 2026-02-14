@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Kecamatan;
 use App\Models\Desa;
+use App\Models\Kecamatan;
+use App\Domains\Wilayah\Models\Area;
+use Illuminate\Database\Seeder;
 
 class WilayahSeeder extends Seeder
 {
@@ -14,12 +14,7 @@ class WilayahSeeder extends Seeder
      */
     public function run(): void
     {
-                // 1. Kecamatan
-        $kecamatan = Kecamatan::firstOrCreate(
-            ['nama' => 'Pecalungan']
-        );
-
-        // 2. Daftar Desa
+        $kecamatanName = 'Pecalungan';
         $desaList = [
             'Pecalungan',
             'Bandung',
@@ -33,12 +28,29 @@ class WilayahSeeder extends Seeder
             'Keniten',
         ];
 
+        // Seed struktur wilayah baru (areas) yang dipakai fitur current domain.
+        $kecamatanArea = Area::firstOrCreate([
+            'name' => $kecamatanName,
+            'level' => 'kecamatan',
+            'parent_id' => null,
+        ]);
+
+        foreach ($desaList as $namaDesa) {
+            Area::firstOrCreate([
+                'name' => $namaDesa,
+                'level' => 'desa',
+                'parent_id' => $kecamatanArea->id,
+            ]);
+        }
+
+        // Tetap seed tabel legacy agar modul lama tetap konsisten.
+        $legacyKecamatan = Kecamatan::firstOrCreate(['nama' => $kecamatanName]);
+
         foreach ($desaList as $namaDesa) {
             Desa::firstOrCreate([
-                'kecamatan_id' => $kecamatan->id,
+                'kecamatan_id' => $legacyKecamatan->id,
                 'nama' => $namaDesa,
             ]);
         }
-        
     }
 }
