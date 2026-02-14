@@ -20,16 +20,10 @@ class AdminWilayahUserSeeder extends Seeder
             return;
         }
 
-        $desaArea = Area::where('level', 'desa')
+        $desaAreas = Area::where('level', 'desa')
             ->where('parent_id', $kecamatanArea->id)
-            ->where('name', 'Gombong')
-            ->first();
-
-        if (! $desaArea) {
-            $desaArea = Area::where('level', 'desa')
-                ->where('parent_id', $kecamatanArea->id)
-                ->first();
-        }
+            ->orderBy('id')
+            ->get();
 
         $this->upsertUserWithRole(
             name: 'Admin Kecamatan',
@@ -40,10 +34,12 @@ class AdminWilayahUserSeeder extends Seeder
             role: 'admin-kecamatan',
         );
 
-        if ($desaArea) {
+        foreach ($desaAreas as $desaArea) {
+            $desaSlug = str($desaArea->name)->lower()->replace(' ', '.')->value();
+
             $this->upsertUserWithRole(
-                name: 'Admin Desa',
-                email: 'admin.desa@example.com',
+                name: 'Admin Desa '.$desaArea->name,
+                email: 'admin.desa.'.$desaSlug.'@example.com',
                 plainPassword: 'password123',
                 scope: 'desa',
                 areaId: $desaArea->id,
