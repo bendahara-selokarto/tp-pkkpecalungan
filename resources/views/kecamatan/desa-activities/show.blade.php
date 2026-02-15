@@ -17,7 +17,7 @@
                     <p class="text-sm">Status: {{ $activity->status }}</p>
                     <p class="text-sm">Dibuat oleh: {{ $activity->creator?->name ?? '-' }}</p>
                     @can('print', $activity)
-                        <a href="{{ route('kecamatan.desa-activities.print', $activity->id) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
+                        <a href="{{ route('kecamatan.desa-activities.print', $activity->id) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white">
                             Cetak PDF
                         </a>
                     @endcan
