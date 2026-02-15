@@ -63,4 +63,16 @@ class SuperAdminAuthorizationTest extends TestCase
             ->get(route('dashboard'))
             ->assertRedirect(route('super-admin.users.index', absolute: false));
     }
+
+    /** @test */
+    public function super_admin_role_is_visible_next_to_profile_user()
+    {
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+
+        $this->actingAs($user)
+            ->get(route('super-admin.users.index'))
+            ->assertOk()
+            ->assertSee('super-admin', false);
+    }
 }
