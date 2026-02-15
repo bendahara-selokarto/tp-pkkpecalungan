@@ -30,9 +30,11 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name'     => 'required|string',
-            'email'    => 'required|email|unique:users,email,' . $this->user->id,
+            'email'    => 'required|email|unique:users,email,' . $this->route('user')->id,
             'password' => 'nullable|min:8',
             'role'     => 'required|exists:roles,name',
+            'scope'    => 'required|in:kecamatan,desa',
+            'area_id'  => 'required|exists:areas,id',
         ];
     }
 }

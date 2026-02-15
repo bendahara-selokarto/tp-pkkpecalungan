@@ -14,6 +14,8 @@ class CreateUserAction
                 'name'     => $data['name'],
                 'email'    => $data['email'],
                 'password' => Hash::make($data['password']),
+                'scope'    => $data['scope'],
+                'area_id'  => $data['area_id'],
             ]);
 
             $user->syncRoles([$data['role']]);

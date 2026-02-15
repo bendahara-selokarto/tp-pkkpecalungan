@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Services\User\UserService;
+use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
 
@@ -26,10 +27,12 @@ class UserManagementController extends Controller
         ]);
     }
 
-        public function create()
+    public function create()
     {
         $roles = Role::all();
-        return view('super-admin.users.create', compact('roles'));
+        $areas = Area::orderBy('level')->orderBy('name')->get();
+
+        return view('super-admin.users.create', compact('roles', 'areas'));
     }
 
     public function store(StoreUserRequest $request)
@@ -39,10 +42,12 @@ class UserManagementController extends Controller
         return redirect()->back()->with('success', 'User berhasil dibuat');
     }
 
-        public function edit(User $user)
+    public function edit(User $user)
     {
         $roles = Role::all();
-        return view('super-admin.users.edit', compact('user', 'roles'));
+        $areas = Area::orderBy('level')->orderBy('name')->get();
+
+        return view('super-admin.users.edit', compact('user', 'roles', 'areas'));
     }
     
     public function update(UpdateUserRequest $request, User $user)

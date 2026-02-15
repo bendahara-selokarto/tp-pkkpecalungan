@@ -27,6 +27,8 @@ class StoreUserRequest extends FormRequest
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|min:8',
             'role'     => 'required|exists:roles,name',
+            'scope'    => 'required|in:kecamatan,desa',
+            'area_id'  => 'required|exists:areas,id',
         ];
     }
 }

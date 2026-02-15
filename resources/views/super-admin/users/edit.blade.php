@@ -44,8 +44,28 @@
                     <select name="role" class="w-full border-gray-300 rounded">
                         @foreach($roles as $role)
                             <option value="{{ $role->name }}"
-                                @selected($user->hasRole($role->name))>
+                                @selected(old('role', $user->roles->first()?->name) === $role->name)>
                                 {{ ucfirst($role->name) }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="mb-4">
+                    <x-input-label value="Scope" />
+                    <select name="scope" class="w-full border-gray-300 rounded" required>
+                        <option value="kecamatan" @selected(old('scope', $user->scope) === 'kecamatan')>Kecamatan</option>
+                        <option value="desa" @selected(old('scope', $user->scope) === 'desa')>Desa</option>
+                    </select>
+                </div>
+
+                <div class="mb-6">
+                    <x-input-label value="Wilayah" />
+                    <select name="area_id" class="w-full border-gray-300 rounded" required>
+                        <option value="">Pilih wilayah</option>
+                        @foreach($areas as $area)
+                            <option value="{{ $area->id }}" @selected((int) old('area_id', $user->area_id) === (int) $area->id)>
+                                {{ ucfirst($area->level) }} - {{ $area->name }}
                             </option>
                         @endforeach
                     </select>

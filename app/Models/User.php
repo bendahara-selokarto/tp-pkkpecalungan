@@ -24,6 +24,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'area_id',
+        'scope',
     ];
 
     /**
@@ -48,12 +50,6 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-
-    public function assignment()
-    {
-        return $this->hasOne(UserAssignment::class);
-    }
-
 
     public function area()
     {
