@@ -15,6 +15,21 @@ class AuthenticationTest extends TestCase
         $response = $this->get('/login');
 
         $response->assertStatus(200);
+        $response->assertDontSee('Register');
+    }
+
+    public function test_root_redirects_guest_to_login(): void
+    {
+        $this->get('/')->assertRedirect(route('login', absolute: false));
+    }
+
+    public function test_root_redirects_authenticated_user_to_dashboard(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get('/')
+            ->assertRedirect(route('dashboard', absolute: false));
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void
