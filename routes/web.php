@@ -11,6 +11,10 @@ use App\Domains\Wilayah\Activities\Controllers\KecamatanDesaActivityController;
 
 
 Route::get('/', function () {
+    if (auth()->user()?->hasRole('super-admin')) {
+        return redirect()->route('super-admin.users.index');
+    }
+
     if (auth()->check()) {
         return redirect()->route('dashboard');
     }

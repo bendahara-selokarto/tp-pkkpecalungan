@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -30,6 +31,17 @@ class AuthenticationTest extends TestCase
         $this->actingAs($user)
             ->get('/')
             ->assertRedirect(route('dashboard', absolute: false));
+    }
+
+    public function test_root_redirects_super_admin_to_management_user_page(): void
+    {
+        Role::create(['name' => 'super-admin']);
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+
+        $this->actingAs($user)
+            ->get('/')
+            ->assertRedirect(route('super-admin.users.index', absolute: false));
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void

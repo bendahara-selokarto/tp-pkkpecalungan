@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\DashboardActivityChartService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -12,8 +13,12 @@ class DashboardController extends Controller
     ) {
     }
 
-    public function __invoke(): View
+    public function __invoke(): View|RedirectResponse
     {
+        if (auth()->user()?->hasRole('super-admin')) {
+            return redirect()->route('super-admin.users.index');
+        }
+
         $dashboardData = $this->dashboardActivityChartService->buildForUser(auth()->user());
 
         return view('dashboard', [
