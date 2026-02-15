@@ -53,4 +53,9 @@ class ActivityPolicy
     {
         return $this->update($user, $activity);
     }
+
+    public function print(User $user, Activity $activity): bool
+    {
+        return $this->view($user, $activity);
+    }
 }

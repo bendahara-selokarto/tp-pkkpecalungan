@@ -14,9 +14,16 @@
                     <p class="text-sm">{{ $activity->description ?: '-' }}</p>
                     <p class="text-sm">Tanggal: {{ $activity->activity_date }}</p>
                     <p class="text-sm">Status: {{ $activity->status }}</p>
-                    <a href="{{ url('/kecamatan/activities/' . $activity->id . '/edit') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white">
-                        Edit
-                    </a>
+                    <div class="flex gap-3">
+                        <a href="{{ url('/kecamatan/activities/' . $activity->id . '/edit') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white">
+                            Edit
+                        </a>
+                        @can('print', $activity)
+                            <a href="{{ route('kecamatan.activities.print', $activity->id) }}" target="_blank" class="inline-flex items-center px-4 py-2 bg-indigo-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-indigo-500">
+                                Cetak PDF
+                            </a>
+                        @endcan
+                    </div>
                 </div>
             </div>
         </div>
