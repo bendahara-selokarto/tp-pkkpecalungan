@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Services\DashboardActivityChartService;
-use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class DashboardController extends Controller
 {
@@ -12,11 +14,15 @@ class DashboardController extends Controller
     ) {
     }
 
-    public function __invoke(): View
+    public function __invoke(): Response|RedirectResponse
     {
+        if (auth()->user()?->hasRole('super-admin')) {
+            return redirect()->route('super-admin.users.index');
+        }
+
         $dashboardData = $this->dashboardActivityChartService->buildForUser(auth()->user());
 
-        return view('dashboard', [
+        return Inertia::render('Dashboard', [
             'dashboardStats' => $dashboardData['stats'],
             'dashboardCharts' => $dashboardData['charts'],
         ]);

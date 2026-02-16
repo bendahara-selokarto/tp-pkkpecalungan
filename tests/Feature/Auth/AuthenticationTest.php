@@ -4,6 +4,7 @@ namespace Tests\Feature\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AuthenticationTest extends TestCase
@@ -15,6 +16,32 @@ class AuthenticationTest extends TestCase
         $response = $this->get('/login');
 
         $response->assertStatus(200);
+        $response->assertDontSee('Register');
+    }
+
+    public function test_root_redirects_guest_to_login(): void
+    {
+        $this->get('/')->assertRedirect(route('login', absolute: false));
+    }
+
+    public function test_root_redirects_authenticated_user_to_dashboard(): void
+    {
+        $user = User::factory()->create();
+
+        $this->actingAs($user)
+            ->get('/')
+            ->assertRedirect(route('dashboard', absolute: false));
+    }
+
+    public function test_root_redirects_super_admin_to_management_user_page(): void
+    {
+        Role::create(['name' => 'super-admin']);
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+
+        $this->actingAs($user)
+            ->get('/')
+            ->assertRedirect(route('super-admin.users.index', absolute: false));
     }
 
     public function test_users_can_authenticate_using_the_login_screen(): void

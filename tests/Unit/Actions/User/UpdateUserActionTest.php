@@ -2,11 +2,12 @@
 
 namespace Tests\Unit\Actions\User;
 
-use Tests\TestCase;
 use App\Actions\User\UpdateUserAction;
+use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class UpdateUserActionTest extends TestCase
 {
@@ -14,21 +15,30 @@ class UpdateUserActionTest extends TestCase
 
     public function test_it_updates_user_and_role(): void
     {
-        Role::create(['name' => 'admin']);
-        Role::create(['name' => 'operator']);
+        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'admin-kecamatan']);
+        $oldArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
+        $newArea = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
 
-        $user = User::factory()->create();
-        $user->assignRole('admin');
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $oldArea->id,
+        ]);
+        $user->assignRole('admin-desa');
 
         $action = app(UpdateUserAction::class);
 
         $action->execute($user, [
             'name' => 'Updated Name',
             'email' => 'updated@email.com',
-            'role' => 'operator',
+            'scope' => 'kecamatan',
+            'area_id' => $newArea->id,
+            'role' => 'admin-kecamatan',
         ]);
 
         $this->assertEquals('Updated Name', $user->fresh()->name);
-        $this->assertTrue($user->fresh()->hasRole('operator'));
+        $this->assertEquals('kecamatan', $user->fresh()->scope);
+        $this->assertEquals($newArea->id, $user->fresh()->area_id);
+        $this->assertTrue($user->fresh()->hasRole('admin-kecamatan'));
     }
 }

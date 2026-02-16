@@ -2,11 +2,11 @@
 
 namespace Tests\Unit\Services;
 
-use Tests\TestCase;
+use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class UserServiceTest extends TestCase
 {
@@ -14,7 +14,11 @@ class UserServiceTest extends TestCase
 
     public function test_service_creates_user(): void
     {
-        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'admin-desa']);
+        $area = Area::create([
+            'name' => 'Gombong',
+            'level' => 'desa',
+        ]);
 
         $service = app(\App\Services\User\UserService::class);
 
@@ -22,9 +26,14 @@ class UserServiceTest extends TestCase
             'name' => 'Service User',
             'email' => 'service@test.com',
             'password' => 'password',
-            'role' => 'admin',
+            'scope' => 'desa',
+            'area_id' => $area->id,
+            'role' => 'admin-desa',
         ]);
 
         $this->assertInstanceOf(User::class, $user);
+        $this->assertSame('desa', $user->scope);
+        $this->assertSame($area->id, $user->area_id);
+        $this->assertTrue($user->hasRole('admin-desa'));
     }
 }

@@ -52,4 +52,27 @@ class SuperAdminAuthorizationTest extends TestCase
             $user->can('this permission does not exist')
         );
     }
+
+    /** @test */
+    public function super_admin_is_redirected_from_dashboard_to_user_management()
+    {
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+
+        $this->actingAs($user)
+            ->get(route('dashboard'))
+            ->assertRedirect(route('super-admin.users.index', absolute: false));
+    }
+
+    /** @test */
+    public function super_admin_role_is_visible_next_to_profile_user()
+    {
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+
+        $this->actingAs($user)
+            ->get(route('super-admin.users.index'))
+            ->assertOk()
+            ->assertSee('super-admin', false);
+    }
 }
