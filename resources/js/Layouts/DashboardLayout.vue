@@ -1,8 +1,10 @@
 <script setup>
 import { Link, router, usePage } from '@inertiajs/vue3'
+import { useDarkModeStore } from '@/admin-one/stores/darkMode'
 import { computed, ref } from 'vue'
 
 const page = usePage()
+const darkModeStore = useDarkModeStore()
 
 const sidebarOpen = ref(false)
 const sidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === '1')
@@ -29,6 +31,10 @@ const toggleCollapse = () => {
 
 const logout = () => {
   router.post('/logout')
+}
+
+const toggleTheme = () => {
+  darkModeStore.set(null, true)
 }
 </script>
 
@@ -62,6 +68,14 @@ const logout = () => {
 
         <div class="flex items-center gap-3">
           <span class="hidden sm:inline text-xs text-slate-500 dark:text-slate-300">{{ activeRoles }}</span>
+          <button
+            type="button"
+            :class="{ 'transition-colors': !darkModeStore.isInProgress }"
+            class="inline-flex items-center rounded-md border border-slate-300 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+            @click="toggleTheme"
+          >
+            {{ darkModeStore.isEnabled ? 'Light mode' : 'Dark mode' }}
+          </button>
           <span class="text-sm text-slate-700 dark:text-slate-200">{{ user?.name }}</span>
           <a href="/profile" class="text-sm text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Profile</a>
           <button type="button" class="text-sm text-rose-600 hover:text-rose-700 dark:text-rose-400" @click="logout">
