@@ -10,6 +10,8 @@ use App\Domains\Wilayah\Activities\Controllers\KecamatanActivityController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanDesaActivityController;
 use App\Domains\Wilayah\Inventaris\Controllers\DesaInventarisController;
 use App\Domains\Wilayah\Inventaris\Controllers\KecamatanInventarisController;
+use App\Domains\Wilayah\Bantuan\Controllers\DesaBantuanController;
+use App\Domains\Wilayah\Bantuan\Controllers\KecamatanBantuanController;
 
 
 Route::get('/', function () {
@@ -48,6 +50,7 @@ Route::prefix('desa')
 
         Route::resource('activities', DesaActivityController::class);
         Route::resource('inventaris', DesaInventarisController::class);
+        Route::resource('bantuans', DesaBantuanController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printDesa'])->name('activities.print');
     });
 
@@ -58,6 +61,7 @@ Route::prefix('kecamatan')
 
         Route::resource('activities', KecamatanActivityController::class);
         Route::resource('inventaris', KecamatanInventarisController::class);
+        Route::resource('bantuans', KecamatanBantuanController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printKecamatan'])->name('activities.print');
         Route::get('desa-activities', [KecamatanDesaActivityController::class, 'index'])->name('desa-activities.index');
         Route::get('desa-activities/{id}', [KecamatanDesaActivityController::class, 'show'])->name('desa-activities.show');

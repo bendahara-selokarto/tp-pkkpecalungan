@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
+use App\Policies\BantuanPolicy;
 use App\Policies\InventarisPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -35,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Activity::class, ActivityPolicy::class);
+        Gate::policy(Bantuan::class, BantuanPolicy::class);
         Gate::policy(Inventaris::class, InventarisPolicy::class);
 
         Gate::before(function ($user, $ability) {
