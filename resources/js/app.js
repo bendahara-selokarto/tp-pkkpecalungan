@@ -7,6 +7,7 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createPinia } from 'pinia';
 import { createApp, h } from 'vue';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
+import LayoutGuest from '@/admin-one/layouts/LayoutGuest.vue';
 import { useDarkModeStore } from '@/admin-one/stores/darkMode';
 
 window.Alpine = Alpine;
@@ -23,9 +24,8 @@ createInertiaApp({
             import.meta.glob('./Pages/**/*.vue'),
         );
 
-        if (!name.startsWith('Auth/')) {
-            page.default.layout = page.default.layout || DashboardLayout;
-        }
+        page.default.layout = page.default.layout
+            || (name.startsWith('Auth/') ? LayoutGuest : DashboardLayout);
 
         return page;
     },
