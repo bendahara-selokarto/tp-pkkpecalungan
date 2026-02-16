@@ -12,6 +12,7 @@ const districtOpen = ref(
   page.url.startsWith('/kecamatan/activities')
     || page.url.startsWith('/kecamatan/inventaris')
     || page.url.startsWith('/kecamatan/bantuans')
+    || page.url.startsWith('/kecamatan/anggota-pokja')
     || page.url.startsWith('/kecamatan/desa-activities'),
 )
 
@@ -167,11 +168,20 @@ const toggleTheme = () => {
               <span v-show="!sidebarCollapsed">Bantuan Desa</span>
               <span v-show="sidebarCollapsed">BD</span>
             </a>
+            <a
+              v-if="hasRole('admin-desa')"
+              href="/desa/anggota-pokja"
+              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/anggota-pokja') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
+            >
+              <span v-show="!sidebarCollapsed">Anggota Pokja Desa</span>
+              <span v-show="sidebarCollapsed">APD</span>
+            </a>
 
             <button
               v-if="hasRole('admin-kecamatan')"
               type="button"
-              :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/bantuans') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/bantuans') || isActive('/kecamatan/anggota-pokja') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="w-full flex items-center rounded-md px-3 py-2 text-sm"
               @click="sidebarCollapsed ? (window.location.href = '/kecamatan/activities') : (districtOpen = !districtOpen)"
             >
@@ -205,6 +215,13 @@ const toggleTheme = () => {
                 class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
               >
                 Bantuan Kecamatan
+              </a>
+              <a
+                href="/kecamatan/anggota-pokja"
+                :class="isActive('/kecamatan/anggota-pokja') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
+                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
+              >
+                Anggota Pokja Kecamatan
               </a>
               <a
                 href="/kecamatan/desa-activities"
