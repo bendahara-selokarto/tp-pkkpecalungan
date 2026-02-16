@@ -11,6 +11,9 @@ use App\Domains\Wilayah\Inventaris\Requests\UpdateInventarisRequest;
 use App\Domains\Wilayah\Inventaris\UseCases\GetScopedInventarisUseCase;
 use App\Domains\Wilayah\Inventaris\UseCases\ListScopedInventarisUseCase;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class DesaInventarisController extends Controller
 {
@@ -24,60 +27,87 @@ class DesaInventarisController extends Controller
         $this->middleware('role:admin-desa');
     }
 
-    public function index()
+    public function index(): Response
     {
         $this->authorize('viewAny', Inventaris::class);
         $inventaris = $this->listScopedInventarisUseCase->execute('desa');
 
-        return view('desa.inventaris.index', compact('inventaris'));
+        return Inertia::render('Desa/Inventaris/Index', [
+            'inventaris' => $inventaris->values()->map(fn (Inventaris $item) => [
+                'id' => $item->id,
+                'name' => $item->name,
+                'description' => $item->description,
+                'quantity' => $item->quantity,
+                'unit' => $item->unit,
+                'condition' => $item->condition,
+            ]),
+        ]);
     }
 
-    public function create()
+    public function create(): Response
     {
         $this->authorize('create', Inventaris::class);
 
-        return view('desa.inventaris.create');
+        return Inertia::render('Desa/Inventaris/Create');
     }
 
-    public function store(StoreInventarisRequest $request)
+    public function store(StoreInventarisRequest $request): RedirectResponse
     {
         $this->authorize('create', Inventaris::class);
         $this->createScopedInventarisAction->execute($request->validated(), 'desa');
 
-        return redirect('/desa/inventaris');
+        return redirect()->route('desa.inventaris.index')->with('success', 'Inventaris berhasil dibuat');
     }
 
-    public function show(int $id)
+    public function show(int $id): Response
     {
         $inventaris = $this->getScopedInventarisUseCase->execute($id, 'desa');
         $this->authorize('view', $inventaris);
 
-        return view('desa.inventaris.show', compact('inventaris'));
+        return Inertia::render('Desa/Inventaris/Show', [
+            'inventaris' => [
+                'id' => $inventaris->id,
+                'name' => $inventaris->name,
+                'description' => $inventaris->description,
+                'quantity' => $inventaris->quantity,
+                'unit' => $inventaris->unit,
+                'condition' => $inventaris->condition,
+            ],
+        ]);
     }
 
-    public function edit(int $id)
+    public function edit(int $id): Response
     {
         $inventaris = $this->getScopedInventarisUseCase->execute($id, 'desa');
         $this->authorize('update', $inventaris);
 
-        return view('desa.inventaris.edit', compact('inventaris'));
+        return Inertia::render('Desa/Inventaris/Edit', [
+            'inventaris' => [
+                'id' => $inventaris->id,
+                'name' => $inventaris->name,
+                'description' => $inventaris->description,
+                'quantity' => $inventaris->quantity,
+                'unit' => $inventaris->unit,
+                'condition' => $inventaris->condition,
+            ],
+        ]);
     }
 
-    public function update(UpdateInventarisRequest $request, int $id)
+    public function update(UpdateInventarisRequest $request, int $id): RedirectResponse
     {
         $inventaris = $this->getScopedInventarisUseCase->execute($id, 'desa');
         $this->authorize('update', $inventaris);
         $this->updateInventarisAction->execute($inventaris, $request->validated());
 
-        return redirect('/desa/inventaris');
+        return redirect()->route('desa.inventaris.index')->with('success', 'Inventaris berhasil diupdate');
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $inventaris = $this->getScopedInventarisUseCase->execute($id, 'desa');
         $this->authorize('delete', $inventaris);
         $this->inventarisRepository->delete($inventaris);
 
-        return redirect('/desa/inventaris');
+        return redirect()->route('desa.inventaris.index')->with('success', 'Inventaris berhasil dihapus');
     }
 }
