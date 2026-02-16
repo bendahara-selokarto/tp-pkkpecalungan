@@ -14,7 +14,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased" x-data="{ sidebarOpen: false, sidebarCollapsed: false, districtOpen: {{ request()->routeIs('kecamatan.activities.*') || request()->routeIs('kecamatan.desa-activities.*') ? 'true' : 'false' }} }" x-init="sidebarCollapsed = localStorage.getItem('sidebar-collapsed') === '1'">
+    <body class="font-sans antialiased" x-data="{ sidebarOpen: false, sidebarCollapsed: false, districtOpen: {{ request()->routeIs('kecamatan.activities.*') || request()->routeIs('kecamatan.inventaris.*') || request()->routeIs('kecamatan.desa-activities.*') ? 'true' : 'false' }} }" x-init="sidebarCollapsed = localStorage.getItem('sidebar-collapsed') === '1'">
         @php
             $activeRoles = auth()->user()?->getRoleNames()->implode(', ') ?: '-';
             $primaryHref = auth()->user()?->hasRole('super-admin') ? route('super-admin.users.index') : route('dashboard');
@@ -115,10 +115,16 @@
                                 </svg>
                                 <span x-show="!sidebarCollapsed">Activities Desa</span>
                             </a>
+                            <a href="{{ route('desa.inventaris.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm {{ request()->routeIs('desa.inventaris.*') ? $activeLinkClass : $idleLinkClass }}" title="Inventaris Desa">
+                                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V7a2 2 0 00-2-2h-4M4 7h10M4 7v10a2 2 0 002 2h8m-2-4h4m-2-2v4" />
+                                </svg>
+                                <span x-show="!sidebarCollapsed">Inventaris Desa</span>
+                            </a>
                             @endrole
 
                             @role('admin-kecamatan')
-                            <button @click="sidebarCollapsed ? window.location.href='{{ route('kecamatan.activities.index') }}' : districtOpen = !districtOpen" :class="sidebarCollapsed ? 'justify-center' : 'justify-between'" class="w-full flex items-center rounded-md px-3 py-2 text-sm {{ request()->routeIs('kecamatan.activities.*') || request()->routeIs('kecamatan.desa-activities.*') ? $activeLinkClass : $idleLinkClass }}" title="Kecamatan">
+                            <button @click="sidebarCollapsed ? window.location.href='{{ route('kecamatan.activities.index') }}' : districtOpen = !districtOpen" :class="sidebarCollapsed ? 'justify-center' : 'justify-between'" class="w-full flex items-center rounded-md px-3 py-2 text-sm {{ request()->routeIs('kecamatan.activities.*') || request()->routeIs('kecamatan.inventaris.*') || request()->routeIs('kecamatan.desa-activities.*') ? $activeLinkClass : $idleLinkClass }}" title="Kecamatan">
                                 <span class="flex items-center gap-3">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0H5m14 0h2m-18 0H1m6-8h10M9 9h6" />
@@ -134,6 +140,10 @@
                                 <a href="{{ route('kecamatan.activities.index') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm {{ request()->routeIs('kecamatan.activities.*') ? $activeLinkClass : $idleLinkClass }}">
                                     <span class="h-1.5 w-1.5 rounded-full bg-current"></span>
                                     Activities Kecamatan
+                                </a>
+                                <a href="{{ route('kecamatan.inventaris.index') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm {{ request()->routeIs('kecamatan.inventaris.*') ? $activeLinkClass : $idleLinkClass }}">
+                                    <span class="h-1.5 w-1.5 rounded-full bg-current"></span>
+                                    Inventaris Kecamatan
                                 </a>
                                 <a href="{{ route('kecamatan.desa-activities.index') }}" class="flex items-center gap-2 rounded-md px-3 py-2 text-sm {{ request()->routeIs('kecamatan.desa-activities.*') ? $activeLinkClass : $idleLinkClass }}">
                                     <span class="h-1.5 w-1.5 rounded-full bg-current"></span>
