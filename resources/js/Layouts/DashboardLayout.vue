@@ -123,7 +123,7 @@ const logout = () => {
           <div class="space-y-1">
             <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Activity</p>
 
-            <Link
+            <a
               v-if="hasRole('admin-desa')"
               href="/desa/activities"
               :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
@@ -131,7 +131,7 @@ const logout = () => {
             >
               <span v-show="!sidebarCollapsed">Activities Desa</span>
               <span v-show="sidebarCollapsed">AD</span>
-            </Link>
+            </a>
 
             <button
               v-if="hasRole('admin-kecamatan')"
@@ -150,20 +150,20 @@ const logout = () => {
             </button>
 
             <div v-show="districtOpen && !sidebarCollapsed" class="space-y-1 pl-4">
-              <Link
+              <a
                 href="/kecamatan/activities"
                 :class="isActive('/kecamatan/activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
                 class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
               >
                 Activities Kecamatan
-              </Link>
-              <Link
+              </a>
+              <a
                 href="/kecamatan/desa-activities"
                 :class="isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
                 class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
               >
                 Activities Desa
-              </Link>
+              </a>
             </div>
           </div>
 

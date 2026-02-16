@@ -12,14 +12,14 @@ const page = usePage()
           <div>
             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">TP PKK Pecalungan</p>
             <h1 class="mt-4 text-3xl font-semibold leading-tight">
-              Sistem Monitoring Kegiatan Wilayah
+              Sistem Administrasi Tim Penggerak PKK Kecamatan Pecalungan
             </h1>
             <p class="mt-4 text-sm text-emerald-50/90">
-              Login untuk mengelola data kegiatan desa dan kecamatan secara terstruktur.
+              Kelola data kegiatan TP. PKK Kecamatan Pecalungan secara terstruktur.
             </p>
           </div>
           <p class="text-xs text-emerald-100/90">
-            {{ page.props.appName ?? 'Laravel' }}
+            {{ page.props.appName ?? 'By. Kecamatan Pecalunga' }}
           </p>
         </div>
 
