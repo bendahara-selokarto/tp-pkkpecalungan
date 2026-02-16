@@ -11,6 +11,7 @@ const sidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === '1')
 const districtOpen = ref(
   page.url.startsWith('/kecamatan/activities')
     || page.url.startsWith('/kecamatan/inventaris')
+    || page.url.startsWith('/kecamatan/bantuans')
     || page.url.startsWith('/kecamatan/desa-activities'),
 )
 
@@ -157,11 +158,20 @@ const toggleTheme = () => {
               <span v-show="!sidebarCollapsed">Inventaris Desa</span>
               <span v-show="sidebarCollapsed">ID</span>
             </a>
+            <a
+              v-if="hasRole('admin-desa')"
+              href="/desa/bantuans"
+              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/bantuans') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
+            >
+              <span v-show="!sidebarCollapsed">Bantuan Desa</span>
+              <span v-show="sidebarCollapsed">BD</span>
+            </a>
 
             <button
               v-if="hasRole('admin-kecamatan')"
               type="button"
-              :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/bantuans') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="w-full flex items-center rounded-md px-3 py-2 text-sm"
               @click="sidebarCollapsed ? (window.location.href = '/kecamatan/activities') : (districtOpen = !districtOpen)"
             >
@@ -188,6 +198,13 @@ const toggleTheme = () => {
                 class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
               >
                 Inventaris Kecamatan
+              </a>
+              <a
+                href="/kecamatan/bantuans"
+                :class="isActive('/kecamatan/bantuans') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
+                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
+              >
+                Bantuan Kecamatan
               </a>
               <a
                 href="/kecamatan/desa-activities"
