@@ -56,6 +56,14 @@ class ActivityPolicy
 
     public function print(User $user, Activity $activity): bool
     {
+        if ($user->hasRole('admin-desa') && $user->scope !== 'desa') {
+            return false;
+        }
+
+        if ($user->hasRole('admin-kecamatan') && $user->scope !== 'kecamatan') {
+            return false;
+        }
+
         return $this->view($user, $activity);
     }
 }
