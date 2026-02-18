@@ -18,7 +18,15 @@ Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur terstruktur 
 - Alur bisnis ada di `UseCases`/`Actions`.
 - Akses data domain melalui `Repositories`.
 - Otorisasi melalui `Policies` yang mendelegasikan ke `Scope Service`.
-- Akses data wilayah mengikuti role + konteks area user.
+- Akses data wilayah mengikuti scoped role + konteks area user.
+
+## Ringkas Authorization Scope
+- Scope domain aktif: `desa` dan `kecamatan`.
+- Role scoped aktif:
+  - `desa-sekretaris`, `desa-bendahara`, `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv`
+  - `kecamatan-sekretaris`, `kecamatan-bendahara`, `kecamatan-pokja-i`, `kecamatan-pokja-ii`, `kecamatan-pokja-iii`, `kecamatan-pokja-iv`
+- Compatibility role legacy masih didukung: `admin-desa`, `admin-kecamatan`.
+- Guard route domain memakai middleware `scope.role:{desa|kecamatan}`.
 
 ## Status Implementasi UI
 - `activities`: Blade

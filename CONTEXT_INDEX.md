@@ -5,7 +5,7 @@ Dokumen ini adalah pintu masuk konteks proyek untuk developer dan AI agent.
 ## Baca Dulu
 1. `ARCHITECTURE.md` (aturan layer backend + authorization)
 2. `DATABASE_STANDARDS.md` (aturan schema, relasi, index, migration)
-3. `UI_ARCHITECTURE.md` (stack UI, layout, dan konsistensi role-based navigation)
+3. `UI_ARCHITECTURE.md` (stack UI, layout, dan konsistensi scope-based navigation)
 4. `README.md` (ringkasan proyek)
 
 ## Ringkasan Proyek (Kondisi Saat Ini)
@@ -15,11 +15,13 @@ Dokumen ini adalah pintu masuk konteks proyek untuk developer dan AI agent.
 - Sumber wilayah canonical: tabel `areas`
 - Pola backend aktif: `Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`
 - Pola authorization aktif: `Policy -> Scope Service`
+- Matrix role-scope aktif: role scoped `desa-*` dan `kecamatan-*` + legacy compatibility role
 
 ## Catatan Implementasi Penting
 - Modul `activities` masih dominan Blade.
 - Modul `bantuans`, `inventaris`, `anggota_pokja`, dan `super-admin/users` menggunakan Inertia Vue.
 - Validasi manajemen user sudah mewajibkan konsistensi `role`, `scope`, dan `area_id` (dengan kecocokan `areas.level`).
+- Guard route domain wilayah memakai middleware `scope.role:{desa|kecamatan}`.
 
 ## Aturan Integrasi Dokumen
 - Perubahan backend architecture: update `ARCHITECTURE.md`.
