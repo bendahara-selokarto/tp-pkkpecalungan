@@ -9,12 +9,14 @@ class UpdateUserAction
 {
     public function execute(User $user, array $data): User
     {
-        $user->update([
+        $updatePayload = [
             'name'  => $data['name'],
             'email' => $data['email'],
             'scope' => $data['scope'] ?? $user->scope,
             'area_id' => $data['area_id'] ?? $user->area_id,
-        ]);
+        ];
+
+        $user->update($updatePayload);
 
         if (!empty($data['password'])) {
             $user->update([
