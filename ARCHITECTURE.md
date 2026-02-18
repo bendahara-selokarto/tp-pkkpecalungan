@@ -9,38 +9,51 @@ Dokumen ini menetapkan arsitektur default proyek. Semua fitur baru wajib mengiku
 - Instruksi agent: `AGENTS.md`.
 
 ## Tujuan
-
 - Konsisten antar modul
 - Mudah dirawat
 - Mudah diuji
 - Menghindari logic drift antar layer
 
-## Aturan Default
-
-1. Controller harus tipis.
-2. Alur aplikasi ditulis di `UseCases`/`Actions`, bukan di controller.
-3. Query data harus lewat `Repositories`.
-4. Dependency repository harus memakai interface (`*RepositoryInterface`), bukan concrete class.
-5. Authorization policy harus delegasi ke service/domain source of truth (contoh activity: `ActivityScopeService`).
-6. Dilarang memakai service locator `app()` di service/use case/action. Gunakan constructor injection.
-7. Query lintas modul tidak boleh bypass repository.
-8. Gunakan Bahasa Indonesia untuk istilah domain, dan English untuk istilah teknis pada code artifact (class, method, layer, contract).
-9. Khusus test, nama function/method test wajib menggunakan Bahasa Indonesia agar deskripsi skenario domain konsisten.
-
-## Layering
-
-Urutan default:
+## Layering Wajib
+Urutan backend:
 
 `HTTP Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`
 
-Authorization:
+Urutan authorization:
 
 `Policy -> Domain Scope Service`
 
+## Aturan Default
+1. Controller harus tipis (hanya orchestration request/response).
+2. Alur aplikasi ditulis di `UseCases`/`Actions`, bukan di controller.
+3. Query data domain harus lewat `Repositories`.
+4. Dependency repository di layer aplikasi wajib memakai interface (`*RepositoryInterface`).
+5. Policy wajib delegasi ke scope service sebagai source of truth authorization.
+6. Dilarang memakai service locator `app()` di service/use case/action; gunakan constructor injection.
+7. Query lintas modul tidak boleh bypass repository.
+8. Istilah domain bisnis memakai Bahasa Indonesia; istilah teknis memakai English.
+9. Nama function/method test menggunakan Bahasa Indonesia.
+
+## Aturan Authorization Scope (Aktif)
+1. Akses data domain wilayah ditentukan oleh kombinasi:
+- role pengguna (`admin-desa` atau `admin-kecamatan`)
+- level area pada `users.area_id` (via `areas.level`)
+- kecocokan `area_id` terhadap data target
+2. Pada modul existing, kolom `users.scope` diperlakukan sebagai metadata yang harus konsisten, tetapi authorization tidak bergantung ke kolom ini saja.
+3. Tujuan aturan ini adalah menjaga kompatibilitas transisi data lama (contoh kasus `scope` belum sinkron) tanpa melonggarkan batas area.
+4. Untuk endpoint list/create, policy `viewAny/create` tetap harus memverifikasi kelayakan konteks area user.
+
+## Aturan Manajemen User (Aktif)
+1. `role`, `scope`, dan `area_id` wajib konsisten.
+2. `area_id` harus mengacu ke `areas.id` dengan `areas.level` yang sama dengan `scope`.
+3. Mapping role-scope:
+- `admin-desa` -> `scope=desa`
+- `admin-kecamatan` -> `scope=kecamatan`
+- `super-admin` -> `scope=kecamatan`
+4. Validasi ini wajib dijaga di request **dan** action (defensive validation).
+
 ## Struktur Minimal Modul Baru
-
 Untuk modul baru, minimal sediakan:
-
 - `Controllers/`
 - `UseCases/` atau `Actions/`
 - `Repositories/*RepositoryInterface.php`
@@ -50,10 +63,12 @@ Untuk modul baru, minimal sediakan:
 - `Policies/` (jika butuh authorization)
 - `tests/Feature` dan `tests/Unit` yang relevan
 
+## Known Debt (Per 2026-02-18)
+1. Beberapa controller non-domain administratif masih melakukan query model langsung untuk listing/reference data.
+2. Enum domain masih tersebar dalam string literal lintas layer.
+
 ## Definition of Done
-
 Sebuah perubahan dianggap selesai jika:
-
 1. Mengikuti aturan default di dokumen ini.
 2. Tidak menambah dependency ke concrete repository pada layer aplikasi.
 3. Tidak menambah service locator `app()` di layer aplikasi.

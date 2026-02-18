@@ -1,9 +1,9 @@
 # Aplikasi PKK
 
-Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur yang terstruktur dan mudah dikembangkan.
+Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur terstruktur dan konsisten lintas modul.
 
 ## Tujuan
-- Menjaga struktur kode tetap konsisten antar modul.
+- Menjaga konsistensi struktur kode antar modul.
 - Memisahkan alur bisnis dari layer HTTP.
 - Mempermudah maintenance dan pengujian.
 
@@ -15,9 +15,14 @@ Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur yang terstru
 
 ## Prinsip Arsitektur
 - Controller tipis.
-- Alur proses di `UseCases` atau `Actions`.
-- Akses data melalui `Repositories`.
-- Otorisasi melalui `Policies` + role/permission.
+- Alur bisnis ada di `UseCases`/`Actions`.
+- Akses data domain melalui `Repositories`.
+- Otorisasi melalui `Policies` yang mendelegasikan ke `Scope Service`.
+- Akses data wilayah mengikuti role + konteks area user.
+
+## Status Implementasi UI
+- `activities`: Blade
+- `inventaris`, `bantuans`, `anggota_pokja`, `super-admin/users`: Inertia Vue
 
 ## Konteks Dokumentasi
 - Indeks konteks: `CONTEXT_INDEX.md`
@@ -29,8 +34,8 @@ Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur yang terstru
 ## Konvensi Bahasa
 - Istilah domain bisnis: Bahasa Indonesia.
 - Istilah teknis implementasi: English.
-- Kontrak teknis yang sudah dipakai di schema/API tetap dipertahankan sampai ada refactor terencana.
-- Nama function/method pada test ditulis dalam Bahasa Indonesia.
+- Kontrak teknis yang sudah dipakai di schema/API dipertahankan sampai ada refactor terencana.
+- Nama function/method test ditulis dalam Bahasa Indonesia.
 
 ## Catatan Database
 - Sumber wilayah canonical: tabel `areas`.

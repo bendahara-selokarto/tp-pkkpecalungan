@@ -12,6 +12,7 @@ Untuk memahami proyek ini secara konsisten, baca dokumen dalam urutan berikut:
 - Proyek Laravel untuk manajemen data PKK dengan domain wilayah.
 - Arsitektur backend mengikuti pola: Controller -> UseCase/Action -> Repository -> Model.
 - Otorisasi berbasis Role/Permission + policy + scope wilayah.
+- Pada modul domain aktif, authorization source of truth adalah `Policy -> Scope Service`.
 
 ## Domain Canonical
 - Sumber data wilayah canonical adalah tabel `areas`.
@@ -22,6 +23,7 @@ Untuk memahami proyek ini secara konsisten, baca dokumen dalam urutan berikut:
 - Untuk data domain berbasis wilayah, wajib ada `level`, `area_id`, `created_by`.
 - Naming kolom harus konsisten antara migration, model, DTO, request.
 - Ikuti checklist pada `DATABASE_STANDARDS.md` untuk perubahan schema.
+- Untuk manajemen user, pastikan `role`, `scope`, dan `area_id` tetap konsisten (`area_id` harus match `areas.level`).
 
 ## Documentation Policy
 - Jika ada perubahan arsitektur, update dokumen terkait di commit yang sama.
@@ -29,6 +31,7 @@ Untuk memahami proyek ini secara konsisten, baca dokumen dalam urutan berikut:
   1. `DATABASE_STANDARDS.md` untuk aturan database
   2. `ARCHITECTURE.md` untuk aturan backend layer
   3. `UI_ARCHITECTURE.md` untuk aturan frontend/layout
+  4. `CONTEXT_INDEX.md` untuk ringkasan lintas dokumen
 
 ## Scope
 Instruksi ini berlaku untuk agent AI yang bekerja di repository ini.
