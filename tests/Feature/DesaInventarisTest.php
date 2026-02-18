@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Models\Area;
@@ -42,7 +43,7 @@ class DesaInventarisTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function admin_desa_dapat_melihat_daftar_inventaris_di_desanya_sendiri()
     {
         $adminDesa = User::factory()->create([
@@ -80,7 +81,7 @@ class DesaInventarisTest extends TestCase
         $response->assertDontSee('Meja Desa Lain');
     }
 
-    /** @test */
+    #[Test]
     public function admin_desa_dapat_melihat_detail_inventaris_di_desanya_sendiri()
     {
         $adminDesa = User::factory()->create([
@@ -106,7 +107,7 @@ class DesaInventarisTest extends TestCase
         $response->assertSee('Lemari Arsip');
     }
 
-    /** @test */
+    #[Test]
     public function admin_desa_dapat_menambah_data_inventaris_baru()
     {
         $adminDesa = User::factory()->create([
@@ -132,7 +133,7 @@ class DesaInventarisTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function admin_desa_dapat_memperbarui_data_inventaris_yang_dimiliki()
     {
         $adminDesa = User::factory()->create([
@@ -170,7 +171,7 @@ class DesaInventarisTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function admin_desa_dapat_menghapus_data_inventaris_yang_dimiliki()
     {
         $adminDesa = User::factory()->create([
@@ -196,7 +197,7 @@ class DesaInventarisTest extends TestCase
         $this->assertDatabaseMissing('inventaris', ['id' => $inventaris->id]);
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_non_admin_desa_tidak_bisa_mengakses_modul_inventaris_desa()
     {
         $adminKecamatan = User::factory()->create([
@@ -210,3 +211,4 @@ class DesaInventarisTest extends TestCase
         $response->assertStatus(403);
     }
 }
+

@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Domains\Wilayah\Feature;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -40,7 +41,7 @@ class WilayahScopeTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_kecamatan_dapat_mengakses_semua_desa()
     {
         $user = User::factory()->create([
@@ -56,7 +57,7 @@ class WilayahScopeTest extends TestCase
         $this->assertCount(2, $areas);
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_desa_hanya_dapat_mengakses_desanya_sendiri()
     {
         $user = User::factory()->create([
@@ -77,4 +78,5 @@ class WilayahScopeTest extends TestCase
         );
     }
 }
+
 

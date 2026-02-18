@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Unit\Actions\User;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use App\Actions\User\DeleteUserAction;
 use App\Models\User;
@@ -11,7 +12,7 @@ class DeleteUserActionTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function menghapus_pengguna_biasa()
     {
         $user = User::factory()->create();
@@ -23,4 +24,5 @@ class DeleteUserActionTest extends TestCase
         ]);
     }
 }
+
 

@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Models\Area;
@@ -42,7 +43,7 @@ class DesaBantuanTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function admin_desa_dapat_melihat_daftar_bantuan_di_desanya_sendiri()
     {
         $adminDesa = User::factory()->create([
@@ -82,7 +83,7 @@ class DesaBantuanTest extends TestCase
         $response->assertDontSee('Bantuan Desa Lain');
     }
 
-    /** @test */
+    #[Test]
     public function admin_desa_dapat_menambah_memperbarui_dan_menghapus_data_bantuan()
     {
         $adminDesa = User::factory()->create([
@@ -123,7 +124,7 @@ class DesaBantuanTest extends TestCase
         $this->assertDatabaseMissing('bantuans', ['id' => $bantuan->id]);
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_non_admin_desa_tidak_bisa_mengakses_modul_bantuan_desa()
     {
         $adminKecamatan = User::factory()->create([
@@ -137,3 +138,4 @@ class DesaBantuanTest extends TestCase
         $response->assertStatus(403);
     }
 }
+

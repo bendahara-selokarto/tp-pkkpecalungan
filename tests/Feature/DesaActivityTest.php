@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use Tests\TestCase;
 use App\Models\User;
@@ -37,7 +38,7 @@ class DesaActivityTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_desa_dapat_membuat_kegiatan()
     {
         $user = User::factory()->create([
@@ -62,7 +63,7 @@ class DesaActivityTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_desa_hanya_melihat_kegiatannya_sendiri()
     {
         $desaUser = User::factory()->create([
@@ -106,7 +107,7 @@ class DesaActivityTest extends TestCase
         $response->assertDontSee('Desa Bandung Event');
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_non_desa_tidak_dapat_mengakses_rute_desa()
     {
         $user = User::factory()->create([
@@ -121,4 +122,5 @@ class DesaActivityTest extends TestCase
         $response->assertStatus(403);
     }
 }
+
 

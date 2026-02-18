@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Domains\Wilayah\Unit;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -10,7 +11,7 @@ class AreaModelTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function area_dapat_memiliki_induk_dan_anak()
     {
         $kecamatan = Area::create([
@@ -34,4 +35,5 @@ class AreaModelTest extends TestCase
         $this->assertCount(1, $kecamatan->children);
     }
 }
+
 

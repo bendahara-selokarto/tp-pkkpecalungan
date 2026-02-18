@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Domains\Wilayah\UseCases;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -13,7 +14,7 @@ class GetWilayahByUserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function usecase_mengembalikan_data_yang_benar_untuk_pengguna_kecamatan()
     {
         $kecamatan = Area::create([
@@ -45,7 +46,7 @@ class GetWilayahByUserTest extends TestCase
         $this->assertCount(2, $result);
     }
 
-    /** @test */
+    #[Test]
     public function usecase_mengembalikan_data_yang_benar_untuk_pengguna_desa()
     {
         $kecamatan = Area::create([
@@ -78,4 +79,5 @@ class GetWilayahByUserTest extends TestCase
         $this->assertEquals($desa->id, $result->first()->id);
     }
 }
+
 

@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Unit\Policies;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Models\Area;
@@ -14,7 +15,7 @@ class BantuanPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function admin_desa_hanya_boleh_melihat_bantuan_pada_desanya_sendiri()
     {
         Role::create(['name' => 'admin-desa']);
@@ -56,7 +57,7 @@ class BantuanPolicyTest extends TestCase
         $this->assertFalse($policy->view($user, $milikDesaLain));
     }
 
-    /** @test */
+    #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_bantuan_kecamatan_lain()
     {
         Role::create(['name' => 'admin-kecamatan']);
@@ -84,3 +85,4 @@ class BantuanPolicyTest extends TestCase
         $this->assertFalse($policy->update($user, $bantuanLuar));
     }
 }
+

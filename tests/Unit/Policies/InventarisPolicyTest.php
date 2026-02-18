@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Unit\Policies;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Models\Area;
@@ -14,7 +15,7 @@ class InventarisPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function admin_desa_hanya_boleh_melihat_inventaris_pada_desanya_sendiri()
     {
         Role::create(['name' => 'admin-desa']);
@@ -54,7 +55,7 @@ class InventarisPolicyTest extends TestCase
         $this->assertFalse($policy->view($user, $milikDesaLain));
     }
 
-    /** @test */
+    #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_inventaris_kecamatan_lain()
     {
         Role::create(['name' => 'admin-kecamatan']);
@@ -81,3 +82,4 @@ class InventarisPolicyTest extends TestCase
         $this->assertFalse($policy->update($user, $inventarisLuar));
     }
 }
+

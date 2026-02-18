@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,7 +30,7 @@ class SuperAdminAuthorizationTest extends TestCase
         $role->givePermissionTo(Permission::all());
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_memiliki_semua_izin()
     {
         $user = User::factory()->create();
@@ -39,7 +40,7 @@ class SuperAdminAuthorizationTest extends TestCase
         $this->assertTrue($user->can('manage roles'));
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_melewati_aturan_gate_before()
     {
         $user = User::factory()->create();
@@ -53,7 +54,7 @@ class SuperAdminAuthorizationTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function super_admin_diarahkan_dari_dashboard_ke_manajemen_pengguna()
     {
         $user = User::factory()->create();
@@ -64,7 +65,7 @@ class SuperAdminAuthorizationTest extends TestCase
             ->assertRedirect(route('super-admin.users.index', absolute: false));
     }
 
-    /** @test */
+    #[Test]
     public function peran_super_admin_terlihat_di_samping_profil_pengguna()
     {
         $user = User::factory()->create();
@@ -76,4 +77,5 @@ class SuperAdminAuthorizationTest extends TestCase
             ->assertSee('super-admin', false);
     }
 }
+
 

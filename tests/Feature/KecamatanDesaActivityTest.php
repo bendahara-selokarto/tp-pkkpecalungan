@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Models\Area;
@@ -48,7 +49,7 @@ class KecamatanDesaActivityTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_kecamatan_dapat_melihat_daftar_kegiatan_desa_di_kecamatannya_saja()
     {
         $kecamatanUser = User::factory()->create([
@@ -86,7 +87,7 @@ class KecamatanDesaActivityTest extends TestCase
         $response->assertDontSee('Kegiatan Desa Kalisalak');
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_kecamatan_tidak_dapat_membuka_detail_kegiatan_desa_di_luar_kecamatannya()
     {
         $kecamatanUser = User::factory()->create([
@@ -112,7 +113,7 @@ class KecamatanDesaActivityTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function peran_non_kecamatan_tidak_dapat_mengakses_menu_kegiatan_desa_kecamatan()
     {
         $desaUser = User::factory()->create([
@@ -128,4 +129,5 @@ class KecamatanDesaActivityTest extends TestCase
         $response->assertStatus(403);
     }
 }
+
 

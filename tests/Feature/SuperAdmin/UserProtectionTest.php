@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Feature\SuperAdmin;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -18,7 +19,7 @@ class UserProtectionTest extends TestCase
         Role::create(['name' => 'super-admin']);
     }
 
-   /** @test */
+   #[Test]
     public function super_admin_tidak_dapat_menghapus_super_admin_lain()
     {
         $this->withoutExceptionHandling();
@@ -37,4 +38,5 @@ class UserProtectionTest extends TestCase
     }
 
 }
+
 

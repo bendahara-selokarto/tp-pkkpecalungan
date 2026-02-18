@@ -1,6 +1,7 @@
 <?php
 
-namespace Tests\Feature;
+
+use PHPUnit\\Framework\\Attributes\\Test;
 
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Models\Area;
@@ -34,7 +35,7 @@ class KecamatanInventarisTest extends TestCase
         ]);
     }
 
-    /** @test */
+    #[Test]
     public function admin_kecamatan_dapat_melihat_daftar_inventaris_di_kecamatannya_sendiri()
     {
         $adminKecamatan = User::factory()->create([
@@ -72,7 +73,7 @@ class KecamatanInventarisTest extends TestCase
         $response->assertDontSee('Printer Kecamatan B');
     }
 
-    /** @test */
+    #[Test]
     public function admin_kecamatan_dapat_menambah_memperbarui_dan_menghapus_inventarisnya()
     {
         $adminKecamatan = User::factory()->create([
@@ -112,7 +113,7 @@ class KecamatanInventarisTest extends TestCase
         $this->assertDatabaseMissing('inventaris', ['id' => $inventaris->id]);
     }
 
-    /** @test */
+    #[Test]
     public function admin_kecamatan_tidak_bisa_melihat_detail_inventaris_kecamatan_lain()
     {
         $adminKecamatan = User::factory()->create([
@@ -137,7 +138,7 @@ class KecamatanInventarisTest extends TestCase
         $response->assertStatus(403);
     }
 
-    /** @test */
+    #[Test]
     public function pengguna_non_admin_kecamatan_tidak_bisa_mengakses_modul_inventaris_kecamatan()
     {
         $desa = Area::create([
@@ -157,3 +158,4 @@ class KecamatanInventarisTest extends TestCase
         $response->assertStatus(403);
     }
 }
+
