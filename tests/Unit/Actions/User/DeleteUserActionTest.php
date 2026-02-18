@@ -12,7 +12,7 @@ class DeleteUserActionTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function it_deletes_normal_user()
+    public function menghapus_pengguna_biasa()
     {
         $user = User::factory()->create();
 
@@ -23,3 +23,4 @@ class DeleteUserActionTest extends TestCase
         ]);
     }
 }
+

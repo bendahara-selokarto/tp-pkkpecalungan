@@ -14,7 +14,7 @@ class GetWilayahByUserTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function usecase_returns_correct_data_for_kecamatan_user()
+    public function usecase_mengembalikan_data_yang_benar_untuk_pengguna_kecamatan()
     {
         $kecamatan = Area::create([
             'name'  => 'Pecalungan',
@@ -46,7 +46,7 @@ class GetWilayahByUserTest extends TestCase
     }
 
     /** @test */
-    public function usecase_returns_correct_data_for_desa_user()
+    public function usecase_mengembalikan_data_yang_benar_untuk_pengguna_desa()
     {
         $kecamatan = Area::create([
             'name'  => 'Pecalungan',
@@ -78,3 +78,4 @@ class GetWilayahByUserTest extends TestCase
         $this->assertEquals($desa->id, $result->first()->id);
     }
 }
+

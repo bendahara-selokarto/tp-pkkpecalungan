@@ -21,7 +21,7 @@ class ActivityPolicyTest extends TestCase
         Role::create(['name' => 'admin-kecamatan']);
     }
 
-    public function test_admin_desa_can_only_access_own_desa_activity(): void
+    public function test_admin_desa_hanya_dapat_mengakses_kegiatan_desanya_sendiri(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -54,7 +54,7 @@ class ActivityPolicyTest extends TestCase
         $this->assertFalse($user->can('update', $otherActivity));
     }
 
-    public function test_admin_kecamatan_can_view_child_desa_but_cannot_update_it(): void
+    public function test_admin_kecamatan_dapat_melihat_kegiatan_desa_turunan_tetapi_tidak_dapat_memperbaruinya(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -85,3 +85,4 @@ class ActivityPolicyTest extends TestCase
         $this->assertTrue($user->can('update', $kecamatanActivity));
     }
 }
+

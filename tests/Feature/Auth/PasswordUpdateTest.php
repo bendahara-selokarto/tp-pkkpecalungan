@@ -11,7 +11,7 @@ class PasswordUpdateTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_password_can_be_updated(): void
+    public function test_kata_sandi_dapat_diperbarui(): void
     {
         $user = User::factory()->create();
 
@@ -31,7 +31,7 @@ class PasswordUpdateTest extends TestCase
         $this->assertTrue(Hash::check('new-password', $user->refresh()->password));
     }
 
-    public function test_correct_password_must_be_provided_to_update_password(): void
+    public function test_kata_sandi_yang_benar_wajib_diberikan_untuk_memperbarui(): void
     {
         $user = User::factory()->create();
 
@@ -49,3 +49,4 @@ class PasswordUpdateTest extends TestCase
             ->assertRedirect('/profile');
     }
 }
+

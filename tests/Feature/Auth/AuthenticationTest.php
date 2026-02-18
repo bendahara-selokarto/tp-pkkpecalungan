@@ -11,7 +11,7 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_login_screen_can_be_rendered(): void
+    public function test_halaman_login_dapat_dirender(): void
     {
         $response = $this->get('/login');
 
@@ -19,12 +19,12 @@ class AuthenticationTest extends TestCase
         $response->assertDontSee('Register');
     }
 
-    public function test_root_redirects_guest_to_login(): void
+    public function test_root_mengarahkan_tamu_ke_login(): void
     {
         $this->get('/')->assertRedirect(route('login', absolute: false));
     }
 
-    public function test_root_redirects_authenticated_user_to_dashboard(): void
+    public function test_root_mengarahkan_pengguna_terautentikasi_ke_dashboard(): void
     {
         $user = User::factory()->create();
 
@@ -33,7 +33,7 @@ class AuthenticationTest extends TestCase
             ->assertRedirect(route('dashboard', absolute: false));
     }
 
-    public function test_root_redirects_super_admin_to_management_user_page(): void
+    public function test_root_mengarahkan_super_admin_ke_halaman_manajemen_pengguna(): void
     {
         Role::create(['name' => 'super-admin']);
         $user = User::factory()->create();
@@ -44,7 +44,7 @@ class AuthenticationTest extends TestCase
             ->assertRedirect(route('super-admin.users.index', absolute: false));
     }
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
+    public function test_pengguna_dapat_autentikasi_melalui_halaman_login(): void
     {
         $user = User::factory()->create();
 
@@ -57,7 +57,7 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect(route('dashboard', absolute: false));
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password(): void
+    public function test_pengguna_tidak_dapat_autentikasi_dengan_kata_sandi_tidak_valid(): void
     {
         $user = User::factory()->create();
 
@@ -69,7 +69,7 @@ class AuthenticationTest extends TestCase
         $this->assertGuest();
     }
 
-    public function test_users_can_logout(): void
+    public function test_pengguna_dapat_logout(): void
     {
         $user = User::factory()->create();
 
@@ -79,3 +79,4 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect('/');
     }
 }
+

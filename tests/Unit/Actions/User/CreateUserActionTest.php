@@ -19,7 +19,7 @@ class CreateUserActionTest extends TestCase
         Role::create(['name' => 'admin-desa']);
     }
 
-    public function test_it_creates_user_with_role(): void
+    public function test_membuat_pengguna_dengan_peran(): void
     {
         $action = app(CreateUserAction::class);
         $area = Area::create([
@@ -46,3 +46,4 @@ class CreateUserActionTest extends TestCase
         $this->assertTrue($user->hasRole('admin-desa'));
     }
 }
+

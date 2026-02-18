@@ -9,14 +9,14 @@ class RegistrationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_registration_screen_is_not_available_for_guest(): void
+    public function test_halaman_registrasi_tidak_tersedia_untuk_tamu(): void
     {
         $response = $this->get('/register');
 
         $response->assertNotFound();
     }
 
-    public function test_guest_cannot_register_from_public_endpoint(): void
+    public function test_tamu_tidak_dapat_registrasi_dari_endpoint_publik(): void
     {
         $response = $this->post('/register', [
             'name' => 'Test User',
@@ -32,3 +32,4 @@ class RegistrationTest extends TestCase
         ]);
     }
 }
+

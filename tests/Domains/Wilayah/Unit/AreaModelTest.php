@@ -11,7 +11,7 @@ class AreaModelTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function area_can_have_parent_and_children()
+    public function area_dapat_memiliki_induk_dan_anak()
     {
         $kecamatan = Area::create([
             'name'  => 'Pecalungan',
@@ -34,3 +34,4 @@ class AreaModelTest extends TestCase
         $this->assertCount(1, $kecamatan->children);
     }
 }
+

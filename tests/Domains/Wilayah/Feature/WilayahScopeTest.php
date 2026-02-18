@@ -41,7 +41,7 @@ class WilayahScopeTest extends TestCase
     }
 
     /** @test */
-    public function kecamatan_user_can_access_all_villages()
+    public function pengguna_kecamatan_dapat_mengakses_semua_desa()
     {
         $user = User::factory()->create([
             'scope'   => 'kecamatan',
@@ -57,7 +57,7 @@ class WilayahScopeTest extends TestCase
     }
 
     /** @test */
-    public function desa_user_can_only_access_own_village()
+    public function pengguna_desa_hanya_dapat_mengakses_desanya_sendiri()
     {
         $user = User::factory()->create([
             'scope'   => 'desa',
@@ -77,3 +77,4 @@ class WilayahScopeTest extends TestCase
         );
     }
 }
+

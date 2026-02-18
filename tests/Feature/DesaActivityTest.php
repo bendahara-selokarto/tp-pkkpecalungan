@@ -38,7 +38,7 @@ class DesaActivityTest extends TestCase
     }
 
     /** @test */
-    public function desa_user_can_create_activity()
+    public function pengguna_desa_dapat_membuat_kegiatan()
     {
         $user = User::factory()->create([
             'area_id' => $this->desa->id,
@@ -63,7 +63,7 @@ class DesaActivityTest extends TestCase
     }
 
     /** @test */
-    public function desa_user_only_sees_their_own_activities()
+    public function pengguna_desa_hanya_melihat_kegiatannya_sendiri()
     {
         $desaUser = User::factory()->create([
             'area_id' => $this->desa->id,
@@ -107,7 +107,7 @@ class DesaActivityTest extends TestCase
     }
 
     /** @test */
-    public function non_desa_user_cannot_access_desa_route()
+    public function pengguna_non_desa_tidak_dapat_mengakses_rute_desa()
     {
         $user = User::factory()->create([
             'area_id' => $this->desa->id,
@@ -121,3 +121,4 @@ class DesaActivityTest extends TestCase
         $response->assertStatus(403);
     }
 }
+

@@ -13,7 +13,7 @@ class UpdateUserActionTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_it_updates_user_and_role(): void
+    public function test_memperbarui_pengguna_dan_peran(): void
     {
         Role::create(['name' => 'admin-desa']);
         Role::create(['name' => 'admin-kecamatan']);
@@ -42,3 +42,4 @@ class UpdateUserActionTest extends TestCase
         $this->assertTrue($user->fresh()->hasRole('admin-kecamatan'));
     }
 }
+

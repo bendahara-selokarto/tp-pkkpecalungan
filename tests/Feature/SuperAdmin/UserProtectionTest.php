@@ -19,7 +19,7 @@ class UserProtectionTest extends TestCase
     }
 
    /** @test */
-    public function super_admin_cannot_delete_another_super_admin()
+    public function super_admin_tidak_dapat_menghapus_super_admin_lain()
     {
         $this->withoutExceptionHandling();
 
@@ -37,3 +37,4 @@ class UserProtectionTest extends TestCase
     }
 
 }
+

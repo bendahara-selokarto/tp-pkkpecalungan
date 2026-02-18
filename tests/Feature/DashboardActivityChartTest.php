@@ -30,7 +30,7 @@ class DashboardActivityChartTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_desa_user_dashboard_chart_is_scoped_to_own_desa(): void
+    public function test_grafik_dashboard_pengguna_desa_terbatas_pada_desanya_sendiri(): void
     {
         Carbon::setTestNow('2026-02-14');
 
@@ -82,7 +82,7 @@ class DashboardActivityChartTest extends TestCase
         });
     }
 
-    public function test_kecamatan_user_dashboard_chart_includes_own_kecamatan_and_child_desas(): void
+    public function test_grafik_dashboard_pengguna_kecamatan_mencakup_kecamatan_sendiri_dan_desa_turunan(): void
     {
         Carbon::setTestNow('2026-02-14');
 
@@ -145,3 +145,4 @@ class DashboardActivityChartTest extends TestCase
         });
     }
 }
+

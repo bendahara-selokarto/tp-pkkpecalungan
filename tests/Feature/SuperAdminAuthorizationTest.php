@@ -30,7 +30,7 @@ class SuperAdminAuthorizationTest extends TestCase
     }
 
     /** @test */
-    public function super_admin_has_all_permissions()
+    public function super_admin_memiliki_semua_izin()
     {
         $user = User::factory()->create();
         $user->assignRole('super-admin');
@@ -40,7 +40,7 @@ class SuperAdminAuthorizationTest extends TestCase
     }
 
     /** @test */
-    public function super_admin_bypasses_gate_before_rule()
+    public function super_admin_melewati_aturan_gate_before()
     {
         $user = User::factory()->create();
         $user->assignRole('super-admin');
@@ -54,7 +54,7 @@ class SuperAdminAuthorizationTest extends TestCase
     }
 
     /** @test */
-    public function super_admin_is_redirected_from_dashboard_to_user_management()
+    public function super_admin_diarahkan_dari_dashboard_ke_manajemen_pengguna()
     {
         $user = User::factory()->create();
         $user->assignRole('super-admin');
@@ -65,7 +65,7 @@ class SuperAdminAuthorizationTest extends TestCase
     }
 
     /** @test */
-    public function super_admin_role_is_visible_next_to_profile_user()
+    public function peran_super_admin_terlihat_di_samping_profil_pengguna()
     {
         $user = User::factory()->create();
         $user->assignRole('super-admin');
@@ -76,3 +76,4 @@ class SuperAdminAuthorizationTest extends TestCase
             ->assertSee('super-admin', false);
     }
 }
+

@@ -49,7 +49,7 @@ class KecamatanDesaActivityTest extends TestCase
     }
 
     /** @test */
-    public function kecamatan_user_can_list_desa_activities_in_their_kecamatan_only()
+    public function pengguna_kecamatan_dapat_melihat_daftar_kegiatan_desa_di_kecamatannya_saja()
     {
         $kecamatanUser = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
@@ -87,7 +87,7 @@ class KecamatanDesaActivityTest extends TestCase
     }
 
     /** @test */
-    public function kecamatan_user_cannot_open_detail_of_desa_activity_outside_their_kecamatan()
+    public function pengguna_kecamatan_tidak_dapat_membuka_detail_kegiatan_desa_di_luar_kecamatannya()
     {
         $kecamatanUser = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
@@ -113,7 +113,7 @@ class KecamatanDesaActivityTest extends TestCase
     }
 
     /** @test */
-    public function non_kecamatan_role_cannot_access_kecamatan_desa_activity_menu()
+    public function peran_non_kecamatan_tidak_dapat_mengakses_menu_kegiatan_desa_kecamatan()
     {
         $desaUser = User::factory()->create([
             'area_id' => $this->desaA1->id,
@@ -128,3 +128,4 @@ class KecamatanDesaActivityTest extends TestCase
         $response->assertStatus(403);
     }
 }
+

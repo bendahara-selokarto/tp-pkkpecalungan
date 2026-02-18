@@ -12,7 +12,7 @@ class UserServiceTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_service_creates_user(): void
+    public function test_layanan_membuat_pengguna(): void
     {
         Role::create(['name' => 'admin-desa']);
         $area = Area::create([
@@ -37,3 +37,4 @@ class UserServiceTest extends TestCase
         $this->assertTrue($user->hasRole('admin-desa'));
     }
 }
+
