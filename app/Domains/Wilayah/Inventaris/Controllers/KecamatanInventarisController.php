@@ -5,7 +5,7 @@ namespace App\Domains\Wilayah\Inventaris\Controllers;
 use App\Domains\Wilayah\Inventaris\Actions\CreateScopedInventarisAction;
 use App\Domains\Wilayah\Inventaris\Actions\UpdateInventarisAction;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
-use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepository;
+use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
 use App\Domains\Wilayah\Inventaris\Requests\StoreInventarisRequest;
 use App\Domains\Wilayah\Inventaris\Requests\UpdateInventarisRequest;
 use App\Domains\Wilayah\Inventaris\UseCases\GetScopedInventarisUseCase;
@@ -18,7 +18,7 @@ use Inertia\Response;
 class KecamatanInventarisController extends Controller
 {
     public function __construct(
-        private readonly InventarisRepository $inventarisRepository,
+        private readonly InventarisRepositoryInterface $inventarisRepository,
         private readonly ListScopedInventarisUseCase $listScopedInventarisUseCase,
         private readonly GetScopedInventarisUseCase $getScopedInventarisUseCase,
         private readonly CreateScopedInventarisAction $createScopedInventarisAction,
@@ -111,3 +111,4 @@ class KecamatanInventarisController extends Controller
         return redirect()->route('kecamatan.inventaris.index')->with('success', 'Inventaris berhasil dihapus');
     }
 }
+

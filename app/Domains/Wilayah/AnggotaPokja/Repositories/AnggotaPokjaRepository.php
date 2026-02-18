@@ -4,8 +4,9 @@ namespace App\Domains\Wilayah\AnggotaPokja\Repositories;
 
 use App\Domains\Wilayah\AnggotaPokja\DTOs\AnggotaPokjaData;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
+use Illuminate\Support\Collection;
 
-class AnggotaPokjaRepository
+class AnggotaPokjaRepository implements AnggotaPokjaRepositoryInterface
 {
     public function store(AnggotaPokjaData $data): AnggotaPokja
     {
@@ -27,7 +28,7 @@ class AnggotaPokjaRepository
         ]);
     }
 
-    public function getByLevelAndArea(string $level, int $areaId)
+    public function getByLevelAndArea(string $level, int $areaId): Collection
     {
         return AnggotaPokja::query()
             ->where('level', $level)
@@ -65,3 +66,4 @@ class AnggotaPokjaRepository
         $anggotaPokja->delete();
     }
 }
+

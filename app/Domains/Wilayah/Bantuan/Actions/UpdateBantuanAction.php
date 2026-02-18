@@ -4,12 +4,12 @@ namespace App\Domains\Wilayah\Bantuan\Actions;
 
 use App\Domains\Wilayah\Bantuan\DTOs\BantuanData;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
-use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepository;
+use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepositoryInterface;
 
 class UpdateBantuanAction
 {
     public function __construct(
-        private readonly BantuanRepository $bantuanRepository
+        private readonly BantuanRepositoryInterface $bantuanRepository
     ) {
     }
 
@@ -30,3 +30,4 @@ class UpdateBantuanAction
         return $this->bantuanRepository->update($bantuan, $data);
     }
 }
+

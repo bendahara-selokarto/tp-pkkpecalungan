@@ -2,13 +2,13 @@
 
 namespace App\Domains\Wilayah\AnggotaPokja\UseCases;
 
-use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepository;
+use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepositoryInterface;
 use App\Domains\Wilayah\AnggotaPokja\Services\AnggotaPokjaScopeService;
 
 class ListScopedAnggotaPokjaUseCase
 {
     public function __construct(
-        private readonly AnggotaPokjaRepository $anggotaPokjaRepository,
+        private readonly AnggotaPokjaRepositoryInterface $anggotaPokjaRepository,
         private readonly AnggotaPokjaScopeService $anggotaPokjaScopeService
     ) {
     }
@@ -20,3 +20,4 @@ class ListScopedAnggotaPokjaUseCase
         return $this->anggotaPokjaRepository->getByLevelAndArea($level, $areaId);
     }
 }
+

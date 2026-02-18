@@ -4,12 +4,12 @@ namespace App\Domains\Wilayah\Inventaris\Actions;
 
 use App\Domains\Wilayah\Inventaris\DTOs\InventarisData;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
-use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepository;
+use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
 
 class UpdateInventarisAction
 {
     public function __construct(
-        private readonly InventarisRepository $inventarisRepository
+        private readonly InventarisRepositoryInterface $inventarisRepository
     ) {
     }
 
@@ -29,3 +29,4 @@ class UpdateInventarisAction
         return $this->inventarisRepository->update($inventaris, $data);
     }
 }
+

@@ -4,8 +4,9 @@ namespace App\Domains\Wilayah\Bantuan\Repositories;
 
 use App\Domains\Wilayah\Bantuan\DTOs\BantuanData;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
+use Illuminate\Support\Collection;
 
-class BantuanRepository
+class BantuanRepository implements BantuanRepositoryInterface
 {
     public function store(BantuanData $data): Bantuan
     {
@@ -22,7 +23,7 @@ class BantuanRepository
         ]);
     }
 
-    public function getByLevelAndArea(string $level, int $areaId)
+    public function getByLevelAndArea(string $level, int $areaId): Collection
     {
         return Bantuan::query()
             ->where('level', $level)
@@ -56,3 +57,4 @@ class BantuanRepository
         $bantuan->delete();
     }
 }
+

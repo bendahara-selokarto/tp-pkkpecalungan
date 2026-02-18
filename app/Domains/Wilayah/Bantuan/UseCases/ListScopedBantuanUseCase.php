@@ -2,13 +2,13 @@
 
 namespace App\Domains\Wilayah\Bantuan\UseCases;
 
-use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepository;
+use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepositoryInterface;
 use App\Domains\Wilayah\Bantuan\Services\BantuanScopeService;
 
 class ListScopedBantuanUseCase
 {
     public function __construct(
-        private readonly BantuanRepository $bantuanRepository,
+        private readonly BantuanRepositoryInterface $bantuanRepository,
         private readonly BantuanScopeService $bantuanScopeService
     ) {
     }
@@ -20,3 +20,4 @@ class ListScopedBantuanUseCase
         return $this->bantuanRepository->getByLevelAndArea($level, $areaId);
     }
 }
+

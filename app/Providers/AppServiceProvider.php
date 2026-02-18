@@ -3,8 +3,14 @@
 namespace App\Providers;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepository;
+use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepositoryInterface;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
+use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepository;
+use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepositoryInterface;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
+use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepository;
+use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Activities\Repositories\ActivityRepository;
 use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
@@ -36,6 +42,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             ActivityRepositoryInterface::class,
             ActivityRepository::class
+        );
+
+        $this->app->bind(
+            BantuanRepositoryInterface::class,
+            BantuanRepository::class
+        );
+
+        $this->app->bind(
+            InventarisRepositoryInterface::class,
+            InventarisRepository::class
+        );
+
+        $this->app->bind(
+            AnggotaPokjaRepositoryInterface::class,
+            AnggotaPokjaRepository::class
         );
     }
 

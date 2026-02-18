@@ -5,7 +5,7 @@ namespace App\Domains\Wilayah\AnggotaPokja\Controllers;
 use App\Domains\Wilayah\AnggotaPokja\Actions\CreateScopedAnggotaPokjaAction;
 use App\Domains\Wilayah\AnggotaPokja\Actions\UpdateAnggotaPokjaAction;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
-use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepository;
+use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepositoryInterface;
 use App\Domains\Wilayah\AnggotaPokja\Requests\StoreAnggotaPokjaRequest;
 use App\Domains\Wilayah\AnggotaPokja\Requests\UpdateAnggotaPokjaRequest;
 use App\Domains\Wilayah\AnggotaPokja\UseCases\GetScopedAnggotaPokjaUseCase;
@@ -18,7 +18,7 @@ use Inertia\Response;
 class DesaAnggotaPokjaController extends Controller
 {
     public function __construct(
-        private readonly AnggotaPokjaRepository $anggotaPokjaRepository,
+        private readonly AnggotaPokjaRepositoryInterface $anggotaPokjaRepository,
         private readonly ListScopedAnggotaPokjaUseCase $listScopedAnggotaPokjaUseCase,
         private readonly GetScopedAnggotaPokjaUseCase $getScopedAnggotaPokjaUseCase,
         private readonly CreateScopedAnggotaPokjaAction $createScopedAnggotaPokjaAction,
@@ -124,3 +124,4 @@ class DesaAnggotaPokjaController extends Controller
         return redirect()->route('desa.anggota-pokja.index')->with('success', 'Data anggota pokja berhasil dihapus');
     }
 }
+

@@ -4,13 +4,13 @@ namespace App\Domains\Wilayah\AnggotaPokja\Actions;
 
 use App\Domains\Wilayah\AnggotaPokja\DTOs\AnggotaPokjaData;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
-use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepository;
+use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepositoryInterface;
 use App\Domains\Wilayah\AnggotaPokja\Services\AnggotaPokjaScopeService;
 
 class CreateScopedAnggotaPokjaAction
 {
     public function __construct(
-        private readonly AnggotaPokjaRepository $anggotaPokjaRepository,
+        private readonly AnggotaPokjaRepositoryInterface $anggotaPokjaRepository,
         private readonly AnggotaPokjaScopeService $anggotaPokjaScopeService
     ) {
     }
@@ -37,3 +37,4 @@ class CreateScopedAnggotaPokjaAction
         return $this->anggotaPokjaRepository->store($data);
     }
 }
+

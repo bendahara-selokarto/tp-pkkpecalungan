@@ -4,12 +4,12 @@ namespace App\Domains\Wilayah\AnggotaPokja\Actions;
 
 use App\Domains\Wilayah\AnggotaPokja\DTOs\AnggotaPokjaData;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
-use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepository;
+use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepositoryInterface;
 
 class UpdateAnggotaPokjaAction
 {
     public function __construct(
-        private readonly AnggotaPokjaRepository $anggotaPokjaRepository
+        private readonly AnggotaPokjaRepositoryInterface $anggotaPokjaRepository
     ) {
     }
 
@@ -35,3 +35,4 @@ class UpdateAnggotaPokjaAction
         return $this->anggotaPokjaRepository->update($anggotaPokja, $data);
     }
 }
+

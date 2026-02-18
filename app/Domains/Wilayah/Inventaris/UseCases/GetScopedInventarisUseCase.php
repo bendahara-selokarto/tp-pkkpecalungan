@@ -3,13 +3,13 @@
 namespace App\Domains\Wilayah\Inventaris\UseCases;
 
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
-use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepository;
+use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
 use App\Domains\Wilayah\Inventaris\Services\InventarisScopeService;
 
 class GetScopedInventarisUseCase
 {
     public function __construct(
-        private readonly InventarisRepository $inventarisRepository,
+        private readonly InventarisRepositoryInterface $inventarisRepository,
         private readonly InventarisScopeService $inventarisScopeService
     ) {
     }
@@ -22,3 +22,4 @@ class GetScopedInventarisUseCase
         return $this->inventarisScopeService->authorizeSameLevelAndArea($inventaris, $level, $areaId);
     }
 }
+

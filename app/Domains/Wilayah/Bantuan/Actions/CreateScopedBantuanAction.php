@@ -4,13 +4,13 @@ namespace App\Domains\Wilayah\Bantuan\Actions;
 
 use App\Domains\Wilayah\Bantuan\DTOs\BantuanData;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
-use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepository;
+use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepositoryInterface;
 use App\Domains\Wilayah\Bantuan\Services\BantuanScopeService;
 
 class CreateScopedBantuanAction
 {
     public function __construct(
-        private readonly BantuanRepository $bantuanRepository,
+        private readonly BantuanRepositoryInterface $bantuanRepository,
         private readonly BantuanScopeService $bantuanScopeService
     ) {
     }
@@ -32,3 +32,4 @@ class CreateScopedBantuanAction
         return $this->bantuanRepository->store($data);
     }
 }
+

@@ -4,13 +4,13 @@ namespace App\Domains\Wilayah\Inventaris\Actions;
 
 use App\Domains\Wilayah\Inventaris\DTOs\InventarisData;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
-use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepository;
+use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
 use App\Domains\Wilayah\Inventaris\Services\InventarisScopeService;
 
 class CreateScopedInventarisAction
 {
     public function __construct(
-        private readonly InventarisRepository $inventarisRepository,
+        private readonly InventarisRepositoryInterface $inventarisRepository,
         private readonly InventarisScopeService $inventarisScopeService
     ) {
     }
@@ -31,3 +31,4 @@ class CreateScopedInventarisAction
         return $this->inventarisRepository->store($data);
     }
 }
+

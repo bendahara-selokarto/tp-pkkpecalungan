@@ -5,7 +5,7 @@ namespace App\Domains\Wilayah\Bantuan\Controllers;
 use App\Domains\Wilayah\Bantuan\Actions\CreateScopedBantuanAction;
 use App\Domains\Wilayah\Bantuan\Actions\UpdateBantuanAction;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
-use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepository;
+use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepositoryInterface;
 use App\Domains\Wilayah\Bantuan\Requests\StoreBantuanRequest;
 use App\Domains\Wilayah\Bantuan\Requests\UpdateBantuanRequest;
 use App\Domains\Wilayah\Bantuan\UseCases\GetScopedBantuanUseCase;
@@ -18,7 +18,7 @@ use Inertia\Response;
 class KecamatanBantuanController extends Controller
 {
     public function __construct(
-        private readonly BantuanRepository $bantuanRepository,
+        private readonly BantuanRepositoryInterface $bantuanRepository,
         private readonly ListScopedBantuanUseCase $listScopedBantuanUseCase,
         private readonly GetScopedBantuanUseCase $getScopedBantuanUseCase,
         private readonly CreateScopedBantuanAction $createScopedBantuanAction,
@@ -114,3 +114,4 @@ class KecamatanBantuanController extends Controller
         return redirect()->route('kecamatan.bantuans.index')->with('success', 'Data bantuan berhasil dihapus');
     }
 }
+

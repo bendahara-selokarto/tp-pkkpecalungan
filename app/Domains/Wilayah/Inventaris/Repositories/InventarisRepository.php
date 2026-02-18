@@ -4,8 +4,9 @@ namespace App\Domains\Wilayah\Inventaris\Repositories;
 
 use App\Domains\Wilayah\Inventaris\DTOs\InventarisData;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
+use Illuminate\Support\Collection;
 
-class InventarisRepository
+class InventarisRepository implements InventarisRepositoryInterface
 {
     public function store(InventarisData $data): Inventaris
     {
@@ -21,7 +22,7 @@ class InventarisRepository
         ]);
     }
 
-    public function getByLevelAndArea(string $level, int $areaId)
+    public function getByLevelAndArea(string $level, int $areaId): Collection
     {
         return Inventaris::query()
             ->where('level', $level)
@@ -53,3 +54,4 @@ class InventarisRepository
         $inventaris->delete();
     }
 }
+
