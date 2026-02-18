@@ -24,7 +24,7 @@ class DesaAnggotaPokjaController extends Controller
         private readonly CreateScopedAnggotaPokjaAction $createScopedAnggotaPokjaAction,
         private readonly UpdateAnggotaPokjaAction $updateAnggotaPokjaAction
     ) {
-        $this->middleware('role:admin-desa');
+        $this->middleware('scope.role:desa');
     }
 
     public function index(): Response
@@ -124,4 +124,5 @@ class DesaAnggotaPokjaController extends Controller
         return redirect()->route('desa.anggota-pokja.index')->with('success', 'Data anggota pokja berhasil dihapus');
     }
 }
+
 

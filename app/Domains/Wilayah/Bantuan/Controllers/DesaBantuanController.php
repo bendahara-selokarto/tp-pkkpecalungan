@@ -24,7 +24,7 @@ class DesaBantuanController extends Controller
         private readonly CreateScopedBantuanAction $createScopedBantuanAction,
         private readonly UpdateBantuanAction $updateBantuanAction
     ) {
-        $this->middleware('role:admin-desa');
+        $this->middleware('scope.role:desa');
     }
 
     public function index(): Response
@@ -114,4 +114,5 @@ class DesaBantuanController extends Controller
         return redirect()->route('desa.bantuans.index')->with('success', 'Data bantuan berhasil dihapus');
     }
 }
+
 

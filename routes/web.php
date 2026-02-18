@@ -47,7 +47,7 @@ Route::middleware(['auth', 'role:super-admin'])
 
 Route::prefix('desa')
     ->name('desa.')
-    ->middleware(['auth', 'role:admin-desa'])
+    ->middleware(['auth', 'scope.role:desa'])
     ->group(function () {
 
         Route::resource('activities', DesaActivityController::class);
@@ -59,7 +59,7 @@ Route::prefix('desa')
 
 Route::prefix('kecamatan')
     ->name('kecamatan.')
-    ->middleware(['auth', 'role:admin-kecamatan'])
+    ->middleware(['auth', 'scope.role:kecamatan'])
     ->group(function () {
 
         Route::resource('activities', KecamatanActivityController::class);
@@ -73,3 +73,4 @@ Route::prefix('kecamatan')
     });
 
 require __DIR__.'/auth.php';
+

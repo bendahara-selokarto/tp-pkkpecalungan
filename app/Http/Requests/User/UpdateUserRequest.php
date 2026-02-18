@@ -3,6 +3,7 @@
 namespace App\Http\Requests\User;
 
 use App\Models\User;
+use App\Support\RoleScopeMatrix;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -30,38 +31,25 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'     => 'required|string',
-            'email'    => 'required|email|unique:users,email,' . $this->route('user')->id,
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users,email,' . $this->route('user')->id,
             'password' => 'nullable|min:8',
-            'role'     => [
+            'role' => [
                 'required',
                 'exists:roles,name',
                 function (string $attribute, mixed $value, \Closure $fail): void {
-                    if (! $this->isRoleCompatibleWithScope((string) $value, (string) $this->input('scope'))) {
+                    if (! RoleScopeMatrix::isRoleCompatibleWithScope((string) $value, (string) $this->input('scope'))) {
                         $fail('Role tidak sesuai dengan scope yang dipilih.');
                     }
                 },
             ],
-            'scope'    => 'required|in:kecamatan,desa',
-            'area_id'  => [
+            'scope' => 'required|in:kecamatan,desa',
+            'area_id' => [
                 'required',
                 Rule::exists('areas', 'id')->where(
                     fn ($query) => $query->where('level', $this->input('scope'))
                 ),
             ],
         ];
-    }
-
-    private function isRoleCompatibleWithScope(string $role, string $scope): bool
-    {
-        if ($scope === 'desa') {
-            return $role === 'admin-desa';
-        }
-
-        if ($scope === 'kecamatan') {
-            return in_array($role, ['admin-kecamatan', 'super-admin'], true);
-        }
-
-        return false;
     }
 }

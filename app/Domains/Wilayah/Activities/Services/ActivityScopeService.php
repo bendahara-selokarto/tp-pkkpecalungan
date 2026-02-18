@@ -13,12 +13,12 @@ class ActivityScopeService
     {
         $areaLevel = $this->resolveUserAreaLevel($user);
 
-        if ($user->hasRole('admin-desa')) {
-            return $level === 'desa' && $areaLevel === 'desa';
+        if ($level === 'desa') {
+            return $user->hasRoleForScope('desa') && $areaLevel === 'desa';
         }
 
-        if ($user->hasRole('admin-kecamatan')) {
-            return $level === 'kecamatan' && $areaLevel === 'kecamatan';
+        if ($level === 'kecamatan') {
+            return $user->hasRoleForScope('kecamatan') && $areaLevel === 'kecamatan';
         }
 
         return false;
@@ -28,15 +28,11 @@ class ActivityScopeService
     {
         $areaLevel = $this->resolveUserAreaLevel($user);
 
-        if ($user->hasRole('admin-desa')) {
-            return $areaLevel === 'desa';
+        if (! is_string($areaLevel)) {
+            return false;
         }
 
-        if ($user->hasRole('admin-kecamatan')) {
-            return $areaLevel === 'kecamatan';
-        }
-
-        return false;
+        return $this->canAccessLevel($user, $areaLevel);
     }
 
     public function requireUserAreaId(): int
@@ -64,7 +60,7 @@ class ActivityScopeService
 
     public function canView(User $user, Activity $activity): bool
     {
-        if ($user->hasRole('admin-desa')) {
+        if ($user->hasRoleForScope('desa')) {
             if (! $this->canAccessLevel($user, 'desa')) {
                 return false;
             }
@@ -72,7 +68,7 @@ class ActivityScopeService
             return $this->isSameLevelAndArea($activity, 'desa', (int) $user->area_id);
         }
 
-        if ($user->hasRole('admin-kecamatan')) {
+        if ($user->hasRoleForScope('kecamatan')) {
             if (! $this->canAccessLevel($user, 'kecamatan')) {
                 return false;
             }
@@ -91,7 +87,7 @@ class ActivityScopeService
 
     public function canUpdate(User $user, Activity $activity): bool
     {
-        if ($user->hasRole('admin-desa')) {
+        if ($user->hasRoleForScope('desa')) {
             if (! $this->canAccessLevel($user, 'desa')) {
                 return false;
             }
@@ -99,7 +95,7 @@ class ActivityScopeService
             return $this->isSameLevelAndArea($activity, 'desa', (int) $user->area_id);
         }
 
-        if ($user->hasRole('admin-kecamatan')) {
+        if ($user->hasRoleForScope('kecamatan')) {
             if (! $this->canAccessLevel($user, 'kecamatan')) {
                 return false;
             }

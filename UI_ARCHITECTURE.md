@@ -27,13 +27,15 @@ Keduanya menjaga pola sidebar serupa:
 - desktop: collapse (`sidebarCollapsed`)
 - state collapse tersimpan di `localStorage` key `sidebar-collapsed`
 
-## Navigasi Berbasis Role
-- Sidebar menampilkan menu berdasarkan role (`super-admin`, `admin-kecamatan`, `admin-desa`).
-- Guard akses utama tetap di backend (middleware role + policy), UI hanya sebagai layer presentasi.
+## Navigasi Berbasis Scope dan Role
+- Sidebar menampilkan menu domain berdasarkan `scope` user (`desa`/`kecamatan`) dan super admin tetap berbasis role `super-admin`.
+- Guard akses utama tetap di backend (middleware scope-role + policy), UI hanya sebagai layer presentasi.
 
 ## Form Super Admin User Management
 Pada `resources/js/Pages/SuperAdmin/Users/Create.vue` dan `resources/js/Pages/SuperAdmin/Users/Edit.vue`:
 - pilihan role difilter berdasarkan `scope`
+- role scope `desa`: `sekretaris`, `bendahara`, `pokja I`, `pokja II`, `pokja III`, `pokja IV`
+- role scope `kecamatan`: `sekretaris`, `bendahara`, `pokja I`, `pokja II`, `pokja III`, `pokja IV`
 - pilihan area difilter berdasarkan `areas.level == scope`
 - nilai role/area di-reset otomatis jika tidak kompatibel dengan scope aktif
 
@@ -45,4 +47,3 @@ Ini menjaga sinkronisasi payload form dengan validasi backend.
 - Hindari menambah layout ketiga tanpa alasan kuat.
 - Istilah domain di UI gunakan Bahasa Indonesia.
 - Istilah teknis UI gunakan English (contoh: `Dashboard`, `Sidebar`, `Layout`, `Auth`).
-

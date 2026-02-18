@@ -36,7 +36,7 @@ Urutan authorization:
 
 ## Aturan Authorization Scope (Aktif)
 1. Akses data domain wilayah ditentukan oleh kombinasi:
-- role pengguna (`admin-desa` atau `admin-kecamatan`)
+- scoped role pengguna (matrix `scope -> role` via `RoleScopeMatrix`)
 - level area pada `users.area_id` (via `areas.level`)
 - kecocokan `area_id` terhadap data target
 2. Pada modul existing, kolom `users.scope` diperlakukan sebagai metadata yang harus konsisten, tetapi authorization tidak bergantung ke kolom ini saja.
@@ -46,10 +46,11 @@ Urutan authorization:
 ## Aturan Manajemen User (Aktif)
 1. `role`, `scope`, dan `area_id` wajib konsisten.
 2. `area_id` harus mengacu ke `areas.id` dengan `areas.level` yang sama dengan `scope`.
-3. Mapping role-scope:
-- `admin-desa` -> `scope=desa`
-- `admin-kecamatan` -> `scope=kecamatan`
+3. Mapping role-scope aktif:
+- `scope=desa` -> `desa-sekretaris`, `desa-bendahara`, `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv`
+- `scope=kecamatan` -> `kecamatan-sekretaris`, `kecamatan-bendahara`, `kecamatan-pokja-i`, `kecamatan-pokja-ii`, `kecamatan-pokja-iii`, `kecamatan-pokja-iv`
 - `super-admin` -> `scope=kecamatan`
+- role legacy `admin-desa` dan `admin-kecamatan` masih diterima untuk backward compatibility
 4. Validasi ini wajib dijaga di request **dan** action (defensive validation).
 
 ## Struktur Minimal Modul Baru
@@ -73,5 +74,3 @@ Sebuah perubahan dianggap selesai jika:
 2. Tidak menambah dependency ke concrete repository pada layer aplikasi.
 3. Tidak menambah service locator `app()` di layer aplikasi.
 4. `php artisan test` PASS.
-
-

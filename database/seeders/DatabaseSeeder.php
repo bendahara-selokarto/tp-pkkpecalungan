@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             WilayahSeeder::class,
             SuperAdminSeeder::class,
             AdminWilayahUserSeeder::class,
+            RoleScopeSimulationSeeder::class,
             SyncUserScopeAreaSeeder::class,
         ]);
     }

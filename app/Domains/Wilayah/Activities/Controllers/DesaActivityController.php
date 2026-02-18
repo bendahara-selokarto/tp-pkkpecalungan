@@ -21,7 +21,7 @@ class DesaActivityController extends Controller
         private readonly CreateScopedActivityAction $createScopedActivityAction,
         private readonly UpdateActivityAction $updateActivityAction
     ) {
-        $this->middleware('role:admin-desa');
+        $this->middleware('scope.role:desa');
     }
 
     public function index()
@@ -80,3 +80,4 @@ class DesaActivityController extends Controller
         return redirect('/desa/activities');
     }
 }
+

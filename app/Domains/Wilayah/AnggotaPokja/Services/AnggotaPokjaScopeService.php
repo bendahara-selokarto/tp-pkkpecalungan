@@ -13,12 +13,12 @@ class AnggotaPokjaScopeService
     {
         $areaLevel = $this->resolveUserAreaLevel($user);
 
-        if ($user->hasRole('admin-desa')) {
-            return $level === 'desa' && $areaLevel === 'desa';
+        if ($level === 'desa') {
+            return $user->hasRoleForScope('desa') && $areaLevel === 'desa';
         }
 
-        if ($user->hasRole('admin-kecamatan')) {
-            return $level === 'kecamatan' && $areaLevel === 'kecamatan';
+        if ($level === 'kecamatan') {
+            return $user->hasRoleForScope('kecamatan') && $areaLevel === 'kecamatan';
         }
 
         return false;
@@ -26,7 +26,13 @@ class AnggotaPokjaScopeService
 
     public function canEnterModule(User $user): bool
     {
-        return $this->canAccessLevel($user, $user->hasRole('admin-desa') ? 'desa' : 'kecamatan');
+        $areaLevel = $this->resolveUserAreaLevel($user);
+
+        if (! is_string($areaLevel)) {
+            return false;
+        }
+
+        return $this->canAccessLevel($user, $areaLevel);
     }
 
     public function canView(User $user, AnggotaPokja $anggotaPokja): bool

@@ -4,11 +4,11 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Domains\Wilayah\Models\Area;
+use App\Support\RoleScopeMatrix;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
-
 
 class User extends Authenticatable
 {
@@ -56,14 +56,18 @@ class User extends Authenticatable
         return $this->belongsTo(Area::class);
     }
 
-    public function isKecamatan()
+    public function isKecamatan(): bool
     {
         return $this->scope === 'kecamatan';
     }
 
-    public function isDesa()
+    public function isDesa(): bool
     {
         return $this->scope === 'desa';
     }
 
+    public function hasRoleForScope(string $scope): bool
+    {
+        return RoleScopeMatrix::userHasRoleForScope($this, $scope);
+    }
 }

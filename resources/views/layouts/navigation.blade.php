@@ -31,15 +31,15 @@
                 </div>
                 @endrole
 
-                @role('admin-desa')
+                @hasanyrole('admin-desa|desa-sekretaris|desa-bendahara|desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="url('/desa/activities')" :active="request()->is('desa/activities*')">
                         {{ __('Activities') }}
                     </x-nav-link>
                 </div>
-                @endrole
+                @endhasanyrole
 
-                @role('admin-kecamatan')
+                @hasanyrole('admin-kecamatan|kecamatan-sekretaris|kecamatan-bendahara|kecamatan-pokja-i|kecamatan-pokja-ii|kecamatan-pokja-iii|kecamatan-pokja-iv')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="url('/kecamatan/activities')" :active="request()->is('kecamatan/activities*')">
                         {{ __('Activities Kecamatan') }}
@@ -48,7 +48,7 @@
                         {{ __('Activities Desa') }}
                     </x-nav-link>
                 </div>
-                @endrole
+                @endhasanyrole
             </div>
 
             <!-- Settings Dropdown -->
@@ -109,20 +109,20 @@
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
 
-            @role('admin-desa')
+            @hasanyrole('admin-desa|desa-sekretaris|desa-bendahara|desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv')
             <x-responsive-nav-link :href="url('/desa/activities')" :active="request()->is('desa/activities*')">
                 {{ __('Activities') }}
             </x-responsive-nav-link>
-            @endrole
+            @endhasanyrole
 
-            @role('admin-kecamatan')
+            @hasanyrole('admin-kecamatan|kecamatan-sekretaris|kecamatan-bendahara|kecamatan-pokja-i|kecamatan-pokja-ii|kecamatan-pokja-iii|kecamatan-pokja-iv')
             <x-responsive-nav-link :href="url('/kecamatan/activities')" :active="request()->is('kecamatan/activities*')">
                 {{ __('Activities Kecamatan') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="url('/kecamatan/desa-activities')" :active="request()->is('kecamatan/desa-activities*')">
                 {{ __('Activities Desa') }}
             </x-responsive-nav-link>
-            @endrole
+            @endhasanyrole
             </div>
             @endunlessrole
 
@@ -153,3 +153,4 @@
         </div>
     </div>
 </nav>
+

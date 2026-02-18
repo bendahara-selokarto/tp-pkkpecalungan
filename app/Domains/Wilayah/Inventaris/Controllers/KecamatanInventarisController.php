@@ -24,7 +24,7 @@ class KecamatanInventarisController extends Controller
         private readonly CreateScopedInventarisAction $createScopedInventarisAction,
         private readonly UpdateInventarisAction $updateInventarisAction
     ) {
-        $this->middleware('role:admin-kecamatan');
+        $this->middleware('scope.role:kecamatan');
     }
 
     public function index(): Response
@@ -111,4 +111,5 @@ class KecamatanInventarisController extends Controller
         return redirect()->route('kecamatan.inventaris.index')->with('success', 'Inventaris berhasil dihapus');
     }
 }
+
 

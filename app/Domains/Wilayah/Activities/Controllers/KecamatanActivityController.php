@@ -21,7 +21,7 @@ class KecamatanActivityController extends Controller
         private readonly CreateScopedActivityAction $createScopedActivityAction,
         private readonly UpdateActivityAction $updateActivityAction
     ) {
-        $this->middleware('role:admin-kecamatan');
+        $this->middleware('scope.role:kecamatan');
     }
 
     public function index()
@@ -80,3 +80,4 @@ class KecamatanActivityController extends Controller
         return redirect('/kecamatan/activities');
     }
 }
+

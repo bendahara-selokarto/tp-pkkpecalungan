@@ -13,7 +13,7 @@ class KecamatanDesaActivityController extends Controller
         private readonly ListKecamatanDesaActivitiesUseCase $listKecamatanDesaActivitiesUseCase,
         private readonly GetKecamatanDesaActivityUseCase $getKecamatanDesaActivityUseCase
     ) {
-        $this->middleware('role:admin-kecamatan');
+        $this->middleware('scope.role:kecamatan');
     }
 
     public function index()
@@ -32,3 +32,4 @@ class KecamatanDesaActivityController extends Controller
         return view('kecamatan.desa-activities.show', compact('activity'));
     }
 }
+

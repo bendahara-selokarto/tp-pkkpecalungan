@@ -19,6 +19,9 @@ const districtOpen = ref(
 const user = computed(() => page.props.auth?.user ?? null)
 const roles = computed(() => user.value?.roles ?? [])
 const activeRoles = computed(() => roles.value.join(', ') || '-')
+const userScope = computed(() => user.value?.scope ?? null)
+const isDesaScope = computed(() => userScope.value === 'desa')
+const isKecamatanScope = computed(() => userScope.value === 'kecamatan')
 
 const hasRole = (role) => roles.value.includes(role)
 
@@ -143,7 +146,7 @@ const toggleTheme = () => {
             <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Activity</p>
 
             <a
-              v-if="hasRole('admin-desa')"
+              v-if="isDesaScope"
               href="/desa/activities"
               :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
@@ -152,7 +155,7 @@ const toggleTheme = () => {
               <span v-show="sidebarCollapsed">AD</span>
             </a>
             <a
-              v-if="hasRole('admin-desa')"
+              v-if="isDesaScope"
               href="/desa/inventaris"
               :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/inventaris') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
@@ -161,7 +164,7 @@ const toggleTheme = () => {
               <span v-show="sidebarCollapsed">ID</span>
             </a>
             <a
-              v-if="hasRole('admin-desa')"
+              v-if="isDesaScope"
               href="/desa/bantuans"
               :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/bantuans') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
@@ -170,7 +173,7 @@ const toggleTheme = () => {
               <span v-show="sidebarCollapsed">BD</span>
             </a>
             <a
-              v-if="hasRole('admin-desa')"
+              v-if="isDesaScope"
               href="/desa/anggota-pokja"
               :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/anggota-pokja') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
@@ -180,7 +183,7 @@ const toggleTheme = () => {
             </a>
 
             <button
-              v-if="hasRole('admin-kecamatan')"
+              v-if="isKecamatanScope"
               type="button"
               :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/bantuans') || isActive('/kecamatan/anggota-pokja') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="w-full flex items-center rounded-md px-3 py-2 text-sm"
@@ -267,3 +270,4 @@ const toggleTheme = () => {
     </div>
   </div>
 </template>
+

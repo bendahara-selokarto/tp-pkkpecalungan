@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
+use App\Support\RoleScopeMatrix;
 use Illuminate\Database\Seeder;
 
 class SyncUserScopeAreaSeeder extends Seeder
@@ -37,11 +38,11 @@ class SyncUserScopeAreaSeeder extends Seeder
 
     private function resolveScopeFromRole(User $user): ?string
     {
-        if ($user->hasRole('admin-kecamatan') || $user->hasRole('super-admin')) {
+        if (RoleScopeMatrix::userHasRoleForScope($user, 'kecamatan')) {
             return 'kecamatan';
         }
 
-        if ($user->hasRole('admin-desa')) {
+        if (RoleScopeMatrix::userHasRoleForScope($user, 'desa')) {
             return 'desa';
         }
 

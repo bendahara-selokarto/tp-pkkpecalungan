@@ -24,7 +24,7 @@ class KecamatanAnggotaPokjaController extends Controller
         private readonly CreateScopedAnggotaPokjaAction $createScopedAnggotaPokjaAction,
         private readonly UpdateAnggotaPokjaAction $updateAnggotaPokjaAction
     ) {
-        $this->middleware('role:admin-kecamatan');
+        $this->middleware('scope.role:kecamatan');
     }
 
     public function index(): Response
@@ -124,4 +124,5 @@ class KecamatanAnggotaPokjaController extends Controller
         return redirect()->route('kecamatan.anggota-pokja.index')->with('success', 'Data anggota pokja berhasil dihapus');
     }
 }
+
 

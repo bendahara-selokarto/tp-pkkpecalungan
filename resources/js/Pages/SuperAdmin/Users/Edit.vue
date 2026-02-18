@@ -31,8 +31,24 @@ const form = useForm({
 })
 
 const scopeRoleMap = {
-  desa: ['admin-desa'],
-  kecamatan: ['admin-kecamatan', 'super-admin'],
+  desa: ['desa-sekretaris', 'desa-bendahara', 'desa-pokja-i', 'desa-pokja-ii', 'desa-pokja-iii', 'desa-pokja-iv'],
+  kecamatan: ['kecamatan-sekretaris', 'kecamatan-bendahara', 'kecamatan-pokja-i', 'kecamatan-pokja-ii', 'kecamatan-pokja-iii', 'kecamatan-pokja-iv', 'super-admin'],
+}
+
+const roleLabelMap = {
+  'desa-sekretaris': 'Sekretaris (Desa)',
+  'desa-bendahara': 'Bendahara (Desa)',
+  'desa-pokja-i': 'Pokja I (Desa)',
+  'desa-pokja-ii': 'Pokja II (Desa)',
+  'desa-pokja-iii': 'Pokja III (Desa)',
+  'desa-pokja-iv': 'Pokja IV (Desa)',
+  'kecamatan-sekretaris': 'Sekretaris (Kecamatan)',
+  'kecamatan-bendahara': 'Bendahara (Kecamatan)',
+  'kecamatan-pokja-i': 'Pokja I (Kecamatan)',
+  'kecamatan-pokja-ii': 'Pokja II (Kecamatan)',
+  'kecamatan-pokja-iii': 'Pokja III (Kecamatan)',
+  'kecamatan-pokja-iv': 'Pokja IV (Kecamatan)',
+  'super-admin': 'Super Admin',
 }
 
 const filteredRoles = computed(() => scopeRoleMap[form.scope] ?? [])
@@ -103,7 +119,7 @@ const submit = () => {
               class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               required
             >
-              <option v-for="role in filteredRoles" :key="role" :value="role">{{ role }}</option>
+              <option v-for="role in filteredRoles" :key="role" :value="role">{{ roleLabelMap[role] ?? role }}</option>
             </select>
             <p v-if="form.errors.role" class="mt-1 text-xs text-rose-600">{{ form.errors.role }}</p>
           </div>

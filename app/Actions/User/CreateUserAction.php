@@ -3,6 +3,7 @@ namespace App\Actions\User;
 
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
+use App\Support\RoleScopeMatrix;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -15,11 +16,11 @@ class CreateUserAction
 
         return DB::transaction(function () use ($data) {
             $user = User::create([
-                'name'     => $data['name'],
-                'email'    => $data['email'],
+                'name' => $data['name'],
+                'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'scope'    => $data['scope'] ?? 'desa',
-                'area_id'  => $data['area_id'] ?? null,
+                'scope' => $data['scope'] ?? 'desa',
+                'area_id' => $data['area_id'] ?? null,
             ]);
 
             $user->syncRoles([$data['role']]);
@@ -41,10 +42,7 @@ class CreateUserAction
             ]);
         }
 
-        $roleValid = ($scope === 'desa' && $role === 'admin-desa')
-            || ($scope === 'kecamatan' && in_array($role, ['admin-kecamatan', 'super-admin'], true));
-
-        if (! $roleValid) {
+        if (! RoleScopeMatrix::isRoleCompatibleWithScope($role, $scope)) {
             throw ValidationException::withMessages([
                 'role' => 'Role tidak sesuai dengan scope yang dipilih.',
             ]);

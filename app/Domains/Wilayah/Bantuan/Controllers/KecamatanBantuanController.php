@@ -24,7 +24,7 @@ class KecamatanBantuanController extends Controller
         private readonly CreateScopedBantuanAction $createScopedBantuanAction,
         private readonly UpdateBantuanAction $updateBantuanAction
     ) {
-        $this->middleware('role:admin-kecamatan');
+        $this->middleware('scope.role:kecamatan');
     }
 
     public function index(): Response
@@ -114,4 +114,5 @@ class KecamatanBantuanController extends Controller
         return redirect()->route('kecamatan.bantuans.index')->with('success', 'Data bantuan berhasil dihapus');
     }
 }
+
 

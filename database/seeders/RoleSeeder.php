@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Spatie\Permission\Models\Role;
+use App\Support\RoleScopeMatrix;
 use Illuminate\Database\Seeder;
-
+use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -14,8 +13,13 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::firstOrCreate(['name' => 'admin-desa']);
-        Role::firstOrCreate(['name' => 'admin-kecamatan']);
+        foreach (RoleScopeMatrix::scopedRoles() as $roles) {
+            foreach ($roles as $roleName) {
+                Role::firstOrCreate(['name' => $roleName]);
+            }
+        }
+
+        // Keep explicit super-admin creation for clarity and compatibility.
         Role::firstOrCreate(['name' => 'super-admin']);
     }
 }

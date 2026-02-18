@@ -109,7 +109,7 @@
 
                         <div class="space-y-1">
                             <p x-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Activity</p>
-                            @role('admin-desa')
+                            @hasanyrole('admin-desa|desa-sekretaris|desa-bendahara|desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv')
                             <a href="{{ route('desa.activities.index') }}" :class="sidebarCollapsed ? 'justify-center' : ''" class="flex items-center gap-3 rounded-md px-3 py-2 text-sm {{ request()->routeIs('desa.activities.*') ? $activeLinkClass : $idleLinkClass }}" title="Activities Desa">
                                 <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6m3 6V7m3 10v-4m5 8H4a1 1 0 01-1-1V4a1 1 0 011-1h16a1 1 0 011 1v16a1 1 0 01-1 1z" />
@@ -122,9 +122,9 @@
                                 </svg>
                                 <span x-show="!sidebarCollapsed">Inventaris Desa</span>
                             </a>
-                            @endrole
+                            @endhasanyrole
 
-                            @role('admin-kecamatan')
+                            @hasanyrole('admin-kecamatan|kecamatan-sekretaris|kecamatan-bendahara|kecamatan-pokja-i|kecamatan-pokja-ii|kecamatan-pokja-iii|kecamatan-pokja-iv')
                             <button @click="sidebarCollapsed ? window.location.href='{{ route('kecamatan.activities.index') }}' : districtOpen = !districtOpen" :class="sidebarCollapsed ? 'justify-center' : 'justify-between'" class="w-full flex items-center rounded-md px-3 py-2 text-sm {{ request()->routeIs('kecamatan.activities.*') || request()->routeIs('kecamatan.inventaris.*') || request()->routeIs('kecamatan.desa-activities.*') ? $activeLinkClass : $idleLinkClass }}" title="Kecamatan">
                                 <span class="flex items-center gap-3">
                                     <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +151,7 @@
                                     Activities Desa
                                 </a>
                             </div>
-                            @endrole
+                            @endhasanyrole
                         </div>
 
                         <div class="space-y-1">
@@ -195,3 +195,4 @@
         </div>
     </body>
 </html>
+

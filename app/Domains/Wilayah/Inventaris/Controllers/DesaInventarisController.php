@@ -24,7 +24,7 @@ class DesaInventarisController extends Controller
         private readonly CreateScopedInventarisAction $createScopedInventarisAction,
         private readonly UpdateInventarisAction $updateInventarisAction
     ) {
-        $this->middleware('role:admin-desa');
+        $this->middleware('scope.role:desa');
     }
 
     public function index(): Response
@@ -111,4 +111,5 @@ class DesaInventarisController extends Controller
         return redirect()->route('desa.inventaris.index')->with('success', 'Inventaris berhasil dihapus');
     }
 }
+
 
