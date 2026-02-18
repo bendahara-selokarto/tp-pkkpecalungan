@@ -43,9 +43,10 @@ Label tombol dibuat eksplisit:
 - `Minimize` saat sidebar lebar
 - `Expand` saat sidebar dalam mode collapse
 
+Pada template `admin-one` (`resources/js/admin-one/layouts/LayoutAuthenticated.vue`), tombol desktop juga tersedia untuk `Collapse/Expand sidebar` dengan state yang disimpan di `localStorage` key `admin-one-sidebar-collapsed`.
+
 ## Catatan Konsistensi
 
 - Saat menambah halaman Vue baru, gunakan `DashboardLayout` secara default.
 - Jika menambah halaman Blade, pastikan pola navigasi/role mengikuti layout app Blade.
 - Hindari membuat layout ketiga tanpa alasan kuat; sinkronkan behavior sidebar agar konsisten.
-

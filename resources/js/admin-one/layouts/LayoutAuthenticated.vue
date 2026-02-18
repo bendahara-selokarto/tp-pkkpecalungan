@@ -9,16 +9,17 @@ import { buildMenuAside } from '@/admin-one/menuAside.js';
 import menuNavBar from '@/admin-one/menuNavBar.js';
 import { useDarkModeStore } from '@/admin-one/stores/darkMode.js';
 import { router, usePage } from '@inertiajs/vue3';
-import { mdiBackburger, mdiForwardburger, mdiMenu } from '@mdi/js';
+import { mdiBackburger, mdiForwardburger, mdiMenu, mdiMenuOpen } from '@mdi/js';
 import { computed, ref } from 'vue';
-
-const layoutAsidePadding = 'xl:pl-60';
 
 const darkModeStore = useDarkModeStore();
 const page = usePage();
 
 const isAsideMobileExpanded = ref(false);
 const isAsideLgActive = ref(false);
+const isAsideDesktopCollapsed = ref(localStorage.getItem('admin-one-sidebar-collapsed') === '1');
+
+const layoutAsidePadding = computed(() => (isAsideDesktopCollapsed.value ? '' : 'xl:pl-60'));
 
 const menuAside = computed(() => buildMenuAside(page.props.auth?.user?.roles ?? []));
 
@@ -35,6 +36,11 @@ const menuClick = (event, item) => {
   if (item.isLogout) {
     router.post('/logout');
   }
+};
+
+const toggleDesktopAside = () => {
+  isAsideDesktopCollapsed.value = !isAsideDesktopCollapsed.value;
+  localStorage.setItem('admin-one-sidebar-collapsed', isAsideDesktopCollapsed.value ? '1' : '0');
 };
 </script>
 
@@ -62,6 +68,12 @@ const menuClick = (event, item) => {
         <NavBarItemPlain display="hidden lg:flex xl:hidden" @click.prevent="isAsideLgActive = true">
           <BaseIcon :path="mdiMenu" size="24" />
         </NavBarItemPlain>
+        <NavBarItemPlain display="hidden xl:flex" @click.prevent="toggleDesktopAside">
+          <BaseIcon :path="isAsideDesktopCollapsed ? mdiMenu : mdiMenuOpen" size="24" />
+          <span class="ml-2 text-xs font-medium">
+            {{ isAsideDesktopCollapsed ? 'Expand sidebar' : 'Collapse sidebar' }}
+          </span>
+        </NavBarItemPlain>
         <NavBarItemPlain use-margin>
           <FormControl placeholder="Search (ctrl+k)" ctrl-k-focus transparent borderless />
         </NavBarItemPlain>
@@ -69,6 +81,7 @@ const menuClick = (event, item) => {
       <AsideMenu
         :is-aside-mobile-expanded="isAsideMobileExpanded"
         :is-aside-lg-active="isAsideLgActive"
+        :is-aside-desktop-collapsed="isAsideDesktopCollapsed"
         :menu="menuAside"
         @menu-click="menuClick"
         @aside-lg-close-click="isAsideLgActive = false"

@@ -10,6 +10,7 @@ defineProps({
   menuBottom: Array,
   isAsideMobileExpanded: Boolean,
   isAsideLgActive: Boolean,
+  isAsideDesktopCollapsed: Boolean,
 })
 
 const emit = defineEmits(['menu-click', 'aside-lg-close-click'])
@@ -29,7 +30,8 @@ const asideLgCloseClick = (event) => {
     :menu-bottom="menuBottom"
     :class="[
       isAsideMobileExpanded ? 'left-0' : '-left-60 lg:left-0',
-      { 'lg:hidden xl:flex': !isAsideLgActive },
+      { 'lg:hidden xl:flex': !isAsideLgActive && !isAsideDesktopCollapsed },
+      { 'xl:hidden': isAsideDesktopCollapsed },
     ]"
     @menu-click="menuClick"
     @aside-lg-close-click="asideLgCloseClick"
