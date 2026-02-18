@@ -3,11 +3,42 @@
 namespace App\Domains\Wilayah\Activities\Services;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ActivityScopeService
 {
+    public function canAccessLevel(User $user, string $level): bool
+    {
+        $areaLevel = $this->resolveUserAreaLevel($user);
+
+        if ($user->hasRole('admin-desa')) {
+            return $level === 'desa' && $areaLevel === 'desa';
+        }
+
+        if ($user->hasRole('admin-kecamatan')) {
+            return $level === 'kecamatan' && $areaLevel === 'kecamatan';
+        }
+
+        return false;
+    }
+
+    public function canEnterModule(User $user): bool
+    {
+        $areaLevel = $this->resolveUserAreaLevel($user);
+
+        if ($user->hasRole('admin-desa')) {
+            return $areaLevel === 'desa';
+        }
+
+        if ($user->hasRole('admin-kecamatan')) {
+            return $areaLevel === 'kecamatan';
+        }
+
+        return false;
+    }
+
     public function requireUserAreaId(): int
     {
         $areaId = auth()->user()?->area_id;
@@ -34,10 +65,18 @@ class ActivityScopeService
     public function canView(User $user, Activity $activity): bool
     {
         if ($user->hasRole('admin-desa')) {
+            if (! $this->canAccessLevel($user, 'desa')) {
+                return false;
+            }
+
             return $this->isSameLevelAndArea($activity, 'desa', (int) $user->area_id);
         }
 
         if ($user->hasRole('admin-kecamatan')) {
+            if (! $this->canAccessLevel($user, 'kecamatan')) {
+                return false;
+            }
+
             if ($activity->level === 'kecamatan') {
                 return $this->isSameLevelAndArea($activity, 'kecamatan', (int) $user->area_id);
             }
@@ -53,10 +92,18 @@ class ActivityScopeService
     public function canUpdate(User $user, Activity $activity): bool
     {
         if ($user->hasRole('admin-desa')) {
+            if (! $this->canAccessLevel($user, 'desa')) {
+                return false;
+            }
+
             return $this->isSameLevelAndArea($activity, 'desa', (int) $user->area_id);
         }
 
         if ($user->hasRole('admin-kecamatan')) {
+            if (! $this->canAccessLevel($user, 'kecamatan')) {
+                return false;
+            }
+
             return $this->isSameLevelAndArea($activity, 'kecamatan', (int) $user->area_id);
         }
 
@@ -84,5 +131,21 @@ class ActivityScopeService
         }
 
         return $activity;
+    }
+
+    private function resolveUserAreaLevel(User $user): ?string
+    {
+        if (! is_numeric($user->area_id)) {
+            return null;
+        }
+
+        $loadedLevel = $user->relationLoaded('area') ? $user->area?->level : null;
+        if (is_string($loadedLevel)) {
+            return $loadedLevel;
+        }
+
+        return Area::query()
+            ->whereKey((int) $user->area_id)
+            ->value('level');
     }
 }

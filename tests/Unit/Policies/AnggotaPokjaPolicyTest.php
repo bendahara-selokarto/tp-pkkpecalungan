@@ -61,7 +61,7 @@ class AnggotaPokjaPolicyTest extends TestCase
             'created_by' => $user->id,
         ]);
 
-        $policy = new AnggotaPokjaPolicy();
+        $policy = app(AnggotaPokjaPolicy::class);
 
         $this->assertTrue($policy->view($user, $milikSendiri));
         $this->assertFalse($policy->view($user, $milikDesaLain));
@@ -95,7 +95,7 @@ class AnggotaPokjaPolicyTest extends TestCase
             'created_by' => $user->id,
         ]);
 
-        $policy = new AnggotaPokjaPolicy();
+        $policy = app(AnggotaPokjaPolicy::class);
 
         $this->assertFalse($policy->update($user, $anggotaPokjaLuar));
     }

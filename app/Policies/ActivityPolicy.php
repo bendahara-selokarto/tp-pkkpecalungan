@@ -15,12 +15,12 @@ class ActivityPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['admin-desa', 'admin-kecamatan', 'super-admin']);
+        return $this->activityScopeService->canEnterModule($user);
     }
 
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['admin-desa', 'admin-kecamatan', 'super-admin']);
+        return $this->viewAny($user);
     }
 
     public function view(User $user, Activity $activity): bool

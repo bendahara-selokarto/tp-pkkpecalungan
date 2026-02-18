@@ -4,6 +4,7 @@ namespace App\Http\Requests\User;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreUserRequest extends FormRequest
 {
@@ -26,9 +27,35 @@ class StoreUserRequest extends FormRequest
             'name'     => 'required|string',
             'email'    => 'required|email|unique:users,email',
             'password' => 'required|min:8',
-            'role'     => 'required|exists:roles,name',
+            'role'     => [
+                'required',
+                'exists:roles,name',
+                function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (! $this->isRoleCompatibleWithScope((string) $value, (string) $this->input('scope'))) {
+                        $fail('Role tidak sesuai dengan scope yang dipilih.');
+                    }
+                },
+            ],
             'scope'    => 'required|in:kecamatan,desa',
-            'area_id'  => 'required|exists:areas,id',
+            'area_id'  => [
+                'required',
+                Rule::exists('areas', 'id')->where(
+                    fn ($query) => $query->where('level', $this->input('scope'))
+                ),
+            ],
         ];
+    }
+
+    private function isRoleCompatibleWithScope(string $role, string $scope): bool
+    {
+        if ($scope === 'desa') {
+            return $role === 'admin-desa';
+        }
+
+        if ($scope === 'kecamatan') {
+            return in_array($role, ['admin-kecamatan', 'super-admin'], true);
+        }
+
+        return false;
     }
 }

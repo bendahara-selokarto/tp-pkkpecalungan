@@ -4,6 +4,7 @@ import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import { mdiAccountPlus } from '@mdi/js'
+import { computed, watch } from 'vue'
 
 const props = defineProps({
   roles: {
@@ -20,10 +21,32 @@ const form = useForm({
   name: '',
   email: '',
   password: '',
-  role: props.roles[0] ?? '',
+  role: 'admin-desa',
   scope: 'desa',
   area_id: '',
 })
+
+const scopeRoleMap = {
+  desa: ['admin-desa'],
+  kecamatan: ['admin-kecamatan', 'super-admin'],
+}
+
+const filteredRoles = computed(() => scopeRoleMap[form.scope] ?? [])
+const filteredAreas = computed(() => props.areas.filter((area) => area.level === form.scope))
+
+watch(
+  () => form.scope,
+  () => {
+    if (!filteredRoles.value.includes(form.role)) {
+      form.role = filteredRoles.value[0] ?? ''
+    }
+
+    if (!filteredAreas.value.some((area) => String(area.id) === String(form.area_id))) {
+      form.area_id = ''
+    }
+  },
+  { immediate: true },
+)
 
 const submit = () => {
   form.post('/super-admin/users')
@@ -77,7 +100,7 @@ const submit = () => {
               class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               required
             >
-              <option v-for="role in roles" :key="role" :value="role">{{ role }}</option>
+              <option v-for="role in filteredRoles" :key="role" :value="role">{{ role }}</option>
             </select>
             <p v-if="form.errors.role" class="mt-1 text-xs text-rose-600">{{ form.errors.role }}</p>
           </div>
@@ -104,7 +127,7 @@ const submit = () => {
             required
           >
             <option value="">Pilih wilayah</option>
-            <option v-for="area in areas" :key="area.id" :value="area.id">
+            <option v-for="area in filteredAreas" :key="area.id" :value="area.id">
               {{ area.level }} - {{ area.name }}
             </option>
           </select>

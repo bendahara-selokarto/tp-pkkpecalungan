@@ -51,7 +51,7 @@ class BantuanPolicyTest extends TestCase
             'created_by' => $user->id,
         ]);
 
-        $policy = new BantuanPolicy();
+        $policy = app(BantuanPolicy::class);
 
         $this->assertTrue($policy->view($user, $milikSendiri));
         $this->assertFalse($policy->view($user, $milikDesaLain));
@@ -80,10 +80,9 @@ class BantuanPolicyTest extends TestCase
             'created_by' => $user->id,
         ]);
 
-        $policy = new BantuanPolicy();
+        $policy = app(BantuanPolicy::class);
 
         $this->assertFalse($policy->update($user, $bantuanLuar));
     }
 }
-
 

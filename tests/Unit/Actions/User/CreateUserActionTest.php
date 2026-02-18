@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use App\Actions\User\CreateUserAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -17,6 +18,7 @@ class CreateUserActionTest extends TestCase
     {
         parent::setUp();
         Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'admin-kecamatan']);
     }
 
     public function test_membuat_pengguna_dengan_peran(): void
@@ -45,5 +47,25 @@ class CreateUserActionTest extends TestCase
 
         $this->assertTrue($user->hasRole('admin-desa'));
     }
-}
 
+    public function test_gagal_membuat_pengguna_jika_role_tidak_sesuai_scope(): void
+    {
+        $this->expectException(ValidationException::class);
+
+        $action = app(CreateUserAction::class);
+        $area = Area::create([
+            'name' => 'Gombong',
+            'level' => 'desa',
+            'parent_id' => null,
+        ]);
+
+        $action->execute([
+            'name' => 'Test User',
+            'email' => 'invalid-role@example.com',
+            'password' => 'password123',
+            'scope' => 'desa',
+            'area_id' => $area->id,
+            'role' => 'admin-kecamatan',
+        ]);
+    }
+}

@@ -6,6 +6,7 @@ use App\Actions\User\UpdateUserAction;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -41,5 +42,28 @@ class UpdateUserActionTest extends TestCase
         $this->assertEquals($newArea->id, $user->fresh()->area_id);
         $this->assertTrue($user->fresh()->hasRole('admin-kecamatan'));
     }
-}
 
+    public function test_gagal_memperbarui_pengguna_jika_area_tidak_sesuai_scope(): void
+    {
+        $this->expectException(ValidationException::class);
+
+        Role::create(['name' => 'admin-desa']);
+        $desaArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
+        $kecamatanArea = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desaArea->id,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $action = app(UpdateUserAction::class);
+        $action->execute($user, [
+            'name' => 'Updated Name',
+            'email' => 'updated@email.com',
+            'scope' => 'desa',
+            'area_id' => $kecamatanArea->id,
+            'role' => 'admin-desa',
+        ]);
+    }
+}

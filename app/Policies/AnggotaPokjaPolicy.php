@@ -3,36 +3,34 @@
 namespace App\Policies;
 
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
+use App\Domains\Wilayah\AnggotaPokja\Services\AnggotaPokjaScopeService;
 use App\Models\User;
 
 class AnggotaPokjaPolicy
 {
+    public function __construct(
+        private readonly AnggotaPokjaScopeService $anggotaPokjaScopeService
+    ) {
+    }
+
     public function viewAny(User $user): bool
     {
-        return $user->hasAnyRole(['admin-desa', 'admin-kecamatan', 'super-admin']);
+        return $this->anggotaPokjaScopeService->canEnterModule($user);
     }
 
     public function create(User $user): bool
     {
-        return $user->hasAnyRole(['admin-desa', 'admin-kecamatan', 'super-admin']);
+        return $this->viewAny($user);
     }
 
     public function view(User $user, AnggotaPokja $anggotaPokja): bool
     {
-        if ($user->hasRole('admin-desa')) {
-            return $anggotaPokja->level === 'desa' && (int) $anggotaPokja->area_id === (int) $user->area_id;
-        }
-
-        if ($user->hasRole('admin-kecamatan')) {
-            return $anggotaPokja->level === 'kecamatan' && (int) $anggotaPokja->area_id === (int) $user->area_id;
-        }
-
-        return false;
+        return $this->anggotaPokjaScopeService->canView($user, $anggotaPokja);
     }
 
     public function update(User $user, AnggotaPokja $anggotaPokja): bool
     {
-        return $this->view($user, $anggotaPokja);
+        return $this->anggotaPokjaScopeService->canUpdate($user, $anggotaPokja);
     }
 
     public function delete(User $user, AnggotaPokja $anggotaPokja): bool
