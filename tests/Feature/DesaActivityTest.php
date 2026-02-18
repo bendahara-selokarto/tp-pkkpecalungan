@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Feature;
+use PHPUnit\Framework\Attributes\Test;
 
 use Tests\TestCase;
 use App\Models\User;
@@ -122,5 +122,6 @@ class DesaActivityTest extends TestCase
         $response->assertStatus(403);
     }
 }
+
 
 

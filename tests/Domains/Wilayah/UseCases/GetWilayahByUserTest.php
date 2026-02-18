@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Domains\Wilayah\UseCases;
+use PHPUnit\Framework\Attributes\Test;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -79,5 +79,6 @@ class GetWilayahByUserTest extends TestCase
         $this->assertEquals($desa->id, $result->first()->id);
     }
 }
+
 
 

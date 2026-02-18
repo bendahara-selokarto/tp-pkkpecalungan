@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Feature;
+use PHPUnit\Framework\Attributes\Test;
 
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Models\Area;
@@ -158,4 +158,5 @@ class KecamatanInventarisTest extends TestCase
         $response->assertStatus(403);
     }
 }
+
 

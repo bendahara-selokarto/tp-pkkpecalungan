@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Feature;
+use PHPUnit\Framework\Attributes\Test;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Models\Area;
@@ -129,5 +129,6 @@ class KecamatanDesaActivityTest extends TestCase
         $response->assertStatus(403);
     }
 }
+
 
 

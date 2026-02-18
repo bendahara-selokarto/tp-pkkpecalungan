@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Feature;
+use PHPUnit\Framework\Attributes\Test;
 
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Models\Area;
@@ -138,4 +138,5 @@ class DesaBantuanTest extends TestCase
         $response->assertStatus(403);
     }
 }
+
 

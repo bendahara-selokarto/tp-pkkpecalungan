@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Domains\Wilayah\Feature;
+use PHPUnit\Framework\Attributes\Test;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -78,5 +78,6 @@ class WilayahScopeTest extends TestCase
         );
     }
 }
+
 
 

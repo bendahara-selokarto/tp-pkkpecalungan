@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Unit\Policies;
+use PHPUnit\Framework\Attributes\Test;
 
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Models\Area;
@@ -85,4 +85,5 @@ class BantuanPolicyTest extends TestCase
         $this->assertFalse($policy->update($user, $bantuanLuar));
     }
 }
+
 

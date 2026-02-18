@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Unit\Policies;
+use PHPUnit\Framework\Attributes\Test;
 
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Models\Area;
@@ -82,4 +82,5 @@ class InventarisPolicyTest extends TestCase
         $this->assertFalse($policy->update($user, $inventarisLuar));
     }
 }
+
 

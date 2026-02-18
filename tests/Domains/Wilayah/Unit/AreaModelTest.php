@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Domains\Wilayah\Unit;
+use PHPUnit\Framework\Attributes\Test;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -35,5 +35,6 @@ class AreaModelTest extends TestCase
         $this->assertCount(1, $kecamatan->children);
     }
 }
+
 
 

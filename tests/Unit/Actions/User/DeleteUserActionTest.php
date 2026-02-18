@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Unit\Actions\User;
+use PHPUnit\Framework\Attributes\Test;
 
 use App\Actions\User\DeleteUserAction;
 use App\Models\User;
@@ -24,5 +24,6 @@ class DeleteUserActionTest extends TestCase
         ]);
     }
 }
+
 
 

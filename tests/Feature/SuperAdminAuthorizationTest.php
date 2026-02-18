@@ -1,7 +1,7 @@
 <?php
 
-
-use PHPUnit\\Framework\\Attributes\\Test;
+namespace Tests\Feature;
+use PHPUnit\Framework\Attributes\Test;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -77,5 +77,6 @@ class SuperAdminAuthorizationTest extends TestCase
             ->assertSee('super-admin', false);
     }
 }
+
 
 
