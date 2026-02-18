@@ -7,6 +7,7 @@ Dokumen ini adalah pintu masuk konteks proyek untuk developer dan AI agent.
 2. `DATABASE_STANDARDS.md` (aturan schema, relasi, index, migration)
 3. `UI_ARCHITECTURE.md` (stack UI, layout, dan konsistensi scope-based navigation)
 4. `README.md` (ringkasan proyek)
+5. `CODEX_EXECUTION_PROTOCOL.md` (kontrak eksekusi agent + efisiensi konteks/token)
 
 ## Ringkasan Proyek (Kondisi Saat Ini)
 - Framework: Laravel 12
@@ -27,6 +28,7 @@ Dokumen ini adalah pintu masuk konteks proyek untuk developer dan AI agent.
 - Perubahan backend architecture: update `ARCHITECTURE.md`.
 - Perubahan schema database: update `DATABASE_STANDARDS.md`.
 - Perubahan stack/layout UI: update `UI_ARCHITECTURE.md`.
+- Perubahan pola eksekusi agent: update `CODEX_EXECUTION_PROTOCOL.md`.
 - Perubahan konteks lintas dokumen: update file ini.
 
 ## Konvensi Bahasa

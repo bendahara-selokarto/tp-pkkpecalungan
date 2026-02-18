@@ -7,6 +7,7 @@ Untuk memahami proyek ini secara konsisten, baca dokumen dalam urutan berikut:
 3. `DATABASE_STANDARDS.md`
 4. `UI_ARCHITECTURE.md`
 5. `README.md`
+6. `CODEX_EXECUTION_PROTOCOL.md`
 
 ## Project Intent
 - Proyek Laravel untuk manajemen data PKK dengan domain wilayah.
@@ -27,11 +28,13 @@ Untuk memahami proyek ini secara konsisten, baca dokumen dalam urutan berikut:
 
 ## Documentation Policy
 - Jika ada perubahan arsitektur, update dokumen terkait di commit yang sama.
+- Jika ada perubahan pola eksekusi agent, update `CODEX_EXECUTION_PROTOCOL.md`.
 - Jika ada konflik antar dokumen, prioritas kebenaran:
   1. `DATABASE_STANDARDS.md` untuk aturan database
   2. `ARCHITECTURE.md` untuk aturan backend layer
   3. `UI_ARCHITECTURE.md` untuk aturan frontend/layout
-  4. `CONTEXT_INDEX.md` untuk ringkasan lintas dokumen
+  4. `CODEX_EXECUTION_PROTOCOL.md` untuk kontrak eksekusi agent
+  5. `CONTEXT_INDEX.md` untuk ringkasan lintas dokumen
 
 ## Scope
 Instruksi ini berlaku untuk agent AI yang bekerja di repository ini.

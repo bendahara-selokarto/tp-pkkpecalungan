@@ -37,6 +37,7 @@ Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur terstruktur 
 - Arsitektur backend: `ARCHITECTURE.md`
 - Standar database: `DATABASE_STANDARDS.md`
 - Arsitektur UI: `UI_ARCHITECTURE.md`
+- Protokol eksekusi agent: `CODEX_EXECUTION_PROTOCOL.md`
 - Instruksi agen AI: `AGENTS.md`
 
 ## Konvensi Bahasa
