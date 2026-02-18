@@ -7,7 +7,7 @@ use App\Domains\Wilayah\Activities\Actions\UpdateActivityAction;
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Activities\Requests\StoreActivityRequest;
 use App\Domains\Wilayah\Activities\Requests\UpdateActivityRequest;
-use App\Domains\Wilayah\Activities\Repositories\ActivityRepository;
+use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\Activities\UseCases\GetScopedActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\ListScopedActivitiesUseCase;
 use App\Http\Controllers\Controller;
@@ -15,7 +15,7 @@ use App\Http\Controllers\Controller;
 class KecamatanActivityController extends Controller
 {
     public function __construct(
-        private readonly ActivityRepository $activityRepository,
+        private readonly ActivityRepositoryInterface $activityRepository,
         private readonly ListScopedActivitiesUseCase $listScopedActivitiesUseCase,
         private readonly GetScopedActivityUseCase $getScopedActivityUseCase,
         private readonly CreateScopedActivityAction $createScopedActivityAction,

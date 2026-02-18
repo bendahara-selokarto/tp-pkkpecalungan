@@ -6,6 +6,8 @@ use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
+use App\Domains\Wilayah\Activities\Repositories\ActivityRepository;
+use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
 use App\Policies\AnggotaPokjaPolicy;
@@ -26,9 +28,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-            $this->app->bind(
+        $this->app->bind(
             AreaRepositoryInterface::class,
             AreaRepository::class
+        );
+
+        $this->app->bind(
+            ActivityRepositoryInterface::class,
+            ActivityRepository::class
         );
     }
 

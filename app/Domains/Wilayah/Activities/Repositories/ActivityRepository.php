@@ -7,8 +7,9 @@ use App\Domains\Wilayah\Activities\DTOs\ActivityData;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
-class ActivityRepository
+class ActivityRepository implements ActivityRepositoryInterface
 {
     public function store(ActivityData $data): Activity
     {
@@ -23,14 +24,14 @@ class ActivityRepository
         ]);
     }
 
-    public function getByLevelAndArea(string $level, int $areaId)
+    public function getByLevelAndArea(string $level, int $areaId): Collection
     {
         return Activity::where('level', $level)
             ->where('area_id', $areaId)
             ->get();
     }
 
-    public function getDesaActivitiesByKecamatan(int $kecamatanAreaId)
+    public function getDesaActivitiesByKecamatan(int $kecamatanAreaId): Collection
     {
         return Activity::query()
             ->with(['area', 'creator'])

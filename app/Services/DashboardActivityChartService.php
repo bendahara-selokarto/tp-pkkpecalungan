@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Domains\Wilayah\Activities\Repositories\ActivityRepository;
+use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 class DashboardActivityChartService
 {
     public function __construct(
-        private readonly ActivityRepository $activityRepository
+        private readonly ActivityRepositoryInterface $activityRepository
     ) {
     }
 

@@ -4,13 +4,13 @@ namespace App\Domains\Wilayah\Activities\Actions;
 
 use App\Domains\Wilayah\Activities\DTOs\ActivityData;
 use App\Domains\Wilayah\Activities\Models\Activity;
-use App\Domains\Wilayah\Activities\Repositories\ActivityRepository;
+use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\Activities\Services\ActivityScopeService;
 
 class CreateScopedActivityAction
 {
     public function __construct(
-        private readonly ActivityRepository $activityRepository,
+        private readonly ActivityRepositoryInterface $activityRepository,
         private readonly ActivityScopeService $activityScopeService
     ) {
     }
