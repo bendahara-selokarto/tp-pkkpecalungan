@@ -26,6 +26,14 @@ Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur yang terstru
 - Arsitektur UI: `UI_ARCHITECTURE.md`
 - Instruksi agen AI: `AGENTS.md`
 
+## Konvensi Bahasa
+- Istilah domain bisnis: Bahasa Indonesia.
+- Istilah teknis implementasi: English.
+- Kontrak teknis yang sudah dipakai di schema/API tetap dipertahankan sampai ada refactor terencana.
+- Nama function/method pada test ditulis dalam Bahasa Indonesia.
+
 ## Catatan Database
 - Sumber wilayah canonical: tabel `areas`.
 - Tabel `kecamatans`, `desas`, dan `user_assignments` adalah legacy compatibility.
+
+

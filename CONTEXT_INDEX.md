@@ -19,5 +19,13 @@ Dokumen ini adalah pintu masuk konteks proyek untuk developer dan AI agent.
 - Perubahan stack/layout UI: update `UI_ARCHITECTURE.md`.
 - Perubahan konteks lintas dokumen: update file ini.
 
+## Konvensi Bahasa
+- Istilah domain bisnis menggunakan Bahasa Indonesia (contoh: `kecamatan`, `desa`, `bantuan`, `anggota_pokja`).
+- Istilah teknis menggunakan English (contoh: `Controller`, `UseCase`, `Repository`, `Request`, `Policy`, `scope`, `level`).
+- Nama teknis yang sudah menjadi kontrak kode/schema tidak diubah tanpa migration/refactor terencana.
+- Nama function/method pada test menggunakan Bahasa Indonesia untuk mendeskripsikan perilaku domain yang diuji.
+
 ## Catatan Legacy
 Tabel `kecamatans`, `desas`, dan `user_assignments` masih ada untuk kompatibilitas. Fitur baru harus memakai `areas`.
+
+

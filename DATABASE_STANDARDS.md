@@ -13,10 +13,10 @@ Fokusnya: konsistensi model data wilayah, integritas relasi, dan performa query 
 ## Hasil Review (Prioritas)
 
 ### High
-1. Konflik naming kolom pada entitas Desa.
-   - Migration memakai `desas.nama` (`database/migrations/2026_01_22_232047_create_desas_table.php`),
-   - Model `Desa` memakai fillable `name` (`app/Models/Desa.php`).
-   - Dampak: mass assignment `Desa::create()`/`firstOrCreate()` dapat tidak konsisten dan berpotensi bug tersembunyi.
+1. Kebijakan bahasa penamaan belum didefinisikan eksplisit lintas dokumen.
+   - Domain term di proyek cenderung Bahasa Indonesia (`kecamatan`, `desa`, `bantuan`, `anggota_pokja`).
+   - Technical term cenderung English (`Controller`, `UseCase`, `Repository`, `scope`, `level`).
+   - Dampak: tanpa aturan tertulis, naming drift mudah terjadi saat modul baru ditambahkan.
 
 2. Dual source-of-truth wilayah belum dipisah tegas.
    - `areas` dipakai modul aktif, tetapi `kecamatans/desas` masih ditulis oleh seeder (`database/seeders/WilayahSeeder.php`).
@@ -42,10 +42,10 @@ Fokusnya: konsistensi model data wilayah, integritas relasi, dan performa query 
 - Jika masih butuh compatibility, lakukan sinkronisasi satu arah: `areas -> legacy`, bukan dua arah.
 
 ### 2) Konvensi Penamaan
-- Gunakan satu bahasa untuk kolom baru dalam satu bounded context.
-- Untuk wilayah canonical, standar: `name`, bukan `nama`.
-- Jika tabel lama sudah terlanjur (`nama`), jangan campur atribut alias di model baru.
-- Model `$fillable`, DTO, Request validation, dan migration harus memakai nama kolom yang identik.
+- Istilah domain bisnis: gunakan Bahasa Indonesia (contoh: `kecamatan`, `desa`, `bantuan`, `anggota_pokja`, `nama`, `jabatan`).
+- Istilah teknis: gunakan English (contoh: `Controller`, `UseCase`, `Repository`, `Request`, `Policy`, `scope`, `level`).
+- Nama kolom/model/DTO/request harus konsisten dalam satu modul; dilarang alias ganda untuk makna yang sama.
+- Kontrak schema yang sudah berjalan (mis. `areas.name`) dipertahankan sampai ada migration/refactor terencana.
 
 ### 3) Relasi dan Foreign Key
 - Semua FK wajib eksplisit dan memiliki aksi delete yang jelas:
@@ -103,7 +103,10 @@ Fokusnya: konsistensi model data wilayah, integritas relasi, dan performa query 
 - [ ] Jika menyentuh legacy, ada catatan kompatibilitas dan rencana deprecasi.
 
 ## Rekomendasi Tindak Lanjut Cepat
-1. Perbaiki mismatch `Desa` (`name` vs `nama`) agar konsisten dengan schema.
+1. Tetapkan dan terapkan aturan bahasa: domain = Bahasa Indonesia, technical term = English.
 2. Tetapkan status resmi tabel legacy dan target deprecasinya.
 3. Tambahkan validasi lintas tabel untuk kecocokan `level` terhadap `areas.level`.
 4. Audit index di semua tabel domain berdasarkan query paling sering dipakai.
+
+
+

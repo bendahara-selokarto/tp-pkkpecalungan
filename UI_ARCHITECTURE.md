@@ -50,3 +50,6 @@ Pada template `admin-one` (`resources/js/admin-one/layouts/LayoutAuthenticated.v
 - Saat menambah halaman Vue baru, gunakan `DashboardLayout` secara default.
 - Jika menambah halaman Blade, pastikan pola navigasi/role mengikuti layout app Blade.
 - Hindari membuat layout ketiga tanpa alasan kuat; sinkronkan behavior sidebar agar konsisten.
+- Gunakan Bahasa Indonesia untuk label domain bisnis di UI.
+- Gunakan English untuk istilah teknis UI (contoh: `Dashboard`, `Sidebar`, `Layout`, `Auth`).
+

@@ -24,6 +24,8 @@ Dokumen ini menetapkan arsitektur default proyek. Semua fitur baru wajib mengiku
 5. Authorization policy harus delegasi ke service/domain source of truth (contoh activity: `ActivityScopeService`).
 6. Dilarang memakai service locator `app()` di service/use case/action. Gunakan constructor injection.
 7. Query lintas modul tidak boleh bypass repository.
+8. Gunakan Bahasa Indonesia untuk istilah domain, dan English untuk istilah teknis pada code artifact (class, method, layer, contract).
+9. Khusus test, nama function/method test wajib menggunakan Bahasa Indonesia agar deskripsi skenario domain konsisten.
 
 ## Layering
 
@@ -56,3 +58,5 @@ Sebuah perubahan dianggap selesai jika:
 2. Tidak menambah dependency ke concrete repository pada layer aplikasi.
 3. Tidak menambah service locator `app()` di layer aplikasi.
 4. `php artisan test` PASS.
+
+
