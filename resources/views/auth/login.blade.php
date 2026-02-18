@@ -2,6 +2,10 @@
     <!-- Session Status -->
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
+    <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+        Registrasi akun dikelola oleh super-admin.
+    </p>
+
     <form method="POST" action="{{ route('login') }}">
         @csrf
 

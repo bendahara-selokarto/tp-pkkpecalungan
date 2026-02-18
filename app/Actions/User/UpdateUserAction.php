@@ -12,8 +12,8 @@ class UpdateUserAction
         $user->update([
             'name'  => $data['name'],
             'email' => $data['email'],
-            'scope' => $data['scope'],
-            'area_id' => $data['area_id'],
+            'scope' => $data['scope'] ?? $user->scope,
+            'area_id' => $data['area_id'] ?? $user->area_id,
         ]);
 
         if (!empty($data['password'])) {

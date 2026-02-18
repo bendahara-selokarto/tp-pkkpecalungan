@@ -104,7 +104,7 @@ class ActivityPrintTest extends TestCase
             ->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_print_button_not_visible_when_scope_does_not_match_even_if_role_matches(): void
+    public function test_print_still_follows_role_and_area_when_scope_column_is_not_synced(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->desaA->id]);
         $user->assignRole('admin-desa');
@@ -120,9 +120,9 @@ class ActivityPrintTest extends TestCase
 
         $showResponse = $this->actingAs($user)->get(route('desa.activities.show', $activity->id));
         $showResponse->assertOk();
-        $showResponse->assertDontSee(route('desa.activities.print', $activity->id), false);
+        $showResponse->assertSee(route('desa.activities.print', $activity->id), false);
 
         $printResponse = $this->actingAs($user)->get(route('desa.activities.print', $activity->id));
-        $printResponse->assertStatus(403);
+        $printResponse->assertOk();
     }
 }

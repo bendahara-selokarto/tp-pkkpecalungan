@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -71,13 +72,14 @@ class DashboardActivityChartTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertViewHas('dashboardStats', function (array $stats) {
-            return $stats['total'] === 2
-                && $stats['this_month'] === 1
-                && $stats['published'] === 1
-                && $stats['draft'] === 1;
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardStats.total', 2)
+                ->where('dashboardStats.this_month', 1)
+                ->where('dashboardStats.published', 1)
+                ->where('dashboardStats.draft', 1);
         });
-        $response->assertSee('dashboard-chart-data', false);
     }
 
     public function test_kecamatan_user_dashboard_chart_includes_own_kecamatan_and_child_desas(): void
@@ -132,14 +134,14 @@ class DashboardActivityChartTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertViewHas('dashboardStats', function (array $stats) {
-            return $stats['total'] === 2
-                && $stats['this_month'] === 1
-                && $stats['published'] === 1
-                && $stats['draft'] === 1;
-        });
-        $response->assertViewHas('dashboardCharts', function (array $charts) {
-            return $charts['level']['values'] === [1, 1];
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardStats.total', 2)
+                ->where('dashboardStats.this_month', 1)
+                ->where('dashboardStats.published', 1)
+                ->where('dashboardStats.draft', 1)
+                ->where('dashboardCharts.level.values', [1, 1]);
         });
     }
 }

@@ -1,0 +1,30 @@
+<?php
+
+namespace App\Domains\Wilayah\AnggotaPokja\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdateAnggotaPokjaRequest extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'nama' => 'required|string|max:255',
+            'jabatan' => 'required|string|max:255',
+            'jenis_kelamin' => 'required|in:L,P',
+            'tempat_lahir' => 'required|string|max:255',
+            'tanggal_lahir' => 'required|date|before_or_equal:today',
+            'status_perkawinan' => 'required|in:kawin,tidak_kawin',
+            'alamat' => 'required|string',
+            'pendidikan' => 'required|string|max:255',
+            'pekerjaan' => 'required|string|max:255',
+            'keterangan' => 'nullable|string',
+            'pokja' => 'required|string|max:50',
+        ];
+    }
+}

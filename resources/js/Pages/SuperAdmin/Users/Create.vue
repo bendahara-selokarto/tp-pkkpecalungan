@@ -1,0 +1,132 @@
+<script setup>
+import CardBox from '@/admin-one/components/CardBox.vue'
+import SectionMain from '@/admin-one/components/SectionMain.vue'
+import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { Link, useForm } from '@inertiajs/vue3'
+import { mdiAccountPlus } from '@mdi/js'
+
+const props = defineProps({
+  roles: {
+    type: Array,
+    required: true,
+  },
+  areas: {
+    type: Array,
+    required: true,
+  },
+})
+
+const form = useForm({
+  name: '',
+  email: '',
+  password: '',
+  role: props.roles[0] ?? '',
+  scope: 'desa',
+  area_id: '',
+})
+
+const submit = () => {
+  form.post('/super-admin/users')
+}
+</script>
+
+<template>
+  <SectionMain>
+    <SectionTitleLineWithButton :icon="mdiAccountPlus" title="Tambah User" main />
+
+    <CardBox class="max-w-3xl">
+      <form class="space-y-5" @submit.prevent="submit">
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama</label>
+          <input
+            v-model="form.name"
+            type="text"
+            class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            required
+          >
+          <p v-if="form.errors.name" class="mt-1 text-xs text-rose-600">{{ form.errors.name }}</p>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+          <input
+            v-model="form.email"
+            type="email"
+            class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            required
+          >
+          <p v-if="form.errors.email" class="mt-1 text-xs text-rose-600">{{ form.errors.email }}</p>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+          <input
+            v-model="form.password"
+            type="password"
+            class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            required
+          >
+          <p v-if="form.errors.password" class="mt-1 text-xs text-rose-600">{{ form.errors.password }}</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Role</label>
+            <select
+              v-model="form.role"
+              class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              required
+            >
+              <option v-for="role in roles" :key="role" :value="role">{{ role }}</option>
+            </select>
+            <p v-if="form.errors.role" class="mt-1 text-xs text-rose-600">{{ form.errors.role }}</p>
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Scope</label>
+            <select
+              v-model="form.scope"
+              class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              required
+            >
+              <option value="kecamatan">Kecamatan</option>
+              <option value="desa">Desa</option>
+            </select>
+            <p v-if="form.errors.scope" class="mt-1 text-xs text-rose-600">{{ form.errors.scope }}</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Wilayah</label>
+          <select
+            v-model="form.area_id"
+            class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            required
+          >
+            <option value="">Pilih wilayah</option>
+            <option v-for="area in areas" :key="area.id" :value="area.id">
+              {{ area.level }} - {{ area.name }}
+            </option>
+          </select>
+          <p v-if="form.errors.area_id" class="mt-1 text-xs text-rose-600">{{ form.errors.area_id }}</p>
+        </div>
+
+        <div class="flex items-center justify-end gap-2">
+          <Link
+            href="/super-admin/users"
+            class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+          >
+            Batal
+          </Link>
+          <button
+            type="submit"
+            class="inline-flex rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+            :disabled="form.processing"
+          >
+            Simpan
+          </button>
+        </div>
+      </form>
+    </CardBox>
+  </SectionMain>
+</template>

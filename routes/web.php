@@ -8,10 +8,24 @@ use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
 use App\Domains\Wilayah\Activities\Controllers\ActivityPrintController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanActivityController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanDesaActivityController;
+use App\Domains\Wilayah\Inventaris\Controllers\DesaInventarisController;
+use App\Domains\Wilayah\Inventaris\Controllers\KecamatanInventarisController;
+use App\Domains\Wilayah\Bantuan\Controllers\DesaBantuanController;
+use App\Domains\Wilayah\Bantuan\Controllers\KecamatanBantuanController;
+use App\Domains\Wilayah\AnggotaPokja\Controllers\DesaAnggotaPokjaController;
+use App\Domains\Wilayah\AnggotaPokja\Controllers\KecamatanAnggotaPokjaController;
 
 
 Route::get('/', function () {
-    return view('welcome');
+    if (auth()->user()?->hasRole('super-admin')) {
+        return redirect()->route('super-admin.users.index');
+    }
+
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return redirect()->route('login');
 });
 
 Route::get('/dashboard', DashboardController::class)
@@ -37,6 +51,9 @@ Route::prefix('desa')
     ->group(function () {
 
         Route::resource('activities', DesaActivityController::class);
+        Route::resource('inventaris', DesaInventarisController::class);
+        Route::resource('bantuans', DesaBantuanController::class);
+        Route::resource('anggota-pokja', DesaAnggotaPokjaController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printDesa'])->name('activities.print');
     });
 
@@ -46,6 +63,9 @@ Route::prefix('kecamatan')
     ->group(function () {
 
         Route::resource('activities', KecamatanActivityController::class);
+        Route::resource('inventaris', KecamatanInventarisController::class);
+        Route::resource('bantuans', KecamatanBantuanController::class);
+        Route::resource('anggota-pokja', KecamatanAnggotaPokjaController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printKecamatan'])->name('activities.print');
         Route::get('desa-activities', [KecamatanDesaActivityController::class, 'index'])->name('desa-activities.index');
         Route::get('desa-activities/{id}', [KecamatanDesaActivityController::class, 'show'])->name('desa-activities.show');
