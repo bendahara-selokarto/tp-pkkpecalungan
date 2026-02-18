@@ -4,15 +4,16 @@ namespace App\Domains\Wilayah\Repositories;
 
 use App\Models\User;
 use App\Domains\Wilayah\Models\Area;
+use Illuminate\Support\Collection;
 
-class AreaRepository
+class AreaRepository implements AreaRepositoryInterface
 {
     public function find(int $id): Area
     {
         return Area::findOrFail($id);
     }
 
-    public function getDesaByKecamatan(int $kecamatanId)
+    public function getDesaByKecamatan(int $kecamatanId): Collection
     {
         return Area::where('parent_id', $kecamatanId)
             ->where('level', 'desa')
@@ -22,7 +23,7 @@ class AreaRepository
     /**
      * 🔥 Tambahkan ini
      */
-    public function getByUser(User $user)
+    public function getByUser(User $user): Collection
     {
         // Jika user level kecamatan
         if ($user->scope === 'kecamatan') {
