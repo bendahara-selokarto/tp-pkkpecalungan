@@ -90,3 +90,9 @@ Beberapa aturan dasar yang dipegang dalam pengembangan:
 > Struktur ini disiapkan agar developer dapat fokus pada logika bisnis
 > tanpa harus terus-menerus merapikan ulang kode dasar aplikasi.
 
+---
+
+## Dokumentasi Standar
+
+- Arsitektur backend: `ARCHITECTURE.md`
+- Arsitektur UI dan template aktif: `UI_ARCHITECTURE.md`
