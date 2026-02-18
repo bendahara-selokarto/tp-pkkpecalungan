@@ -9,18 +9,25 @@ use App\Models\User;
 
 class UserService
 {
+    public function __construct(
+        private readonly CreateUserAction $createUserAction,
+        private readonly UpdateUserAction $updateUserAction,
+        private readonly DeleteUserAction $deleteUserAction
+    ) {
+    }
+
     public function create(array $data): User
     {
-        return app(CreateUserAction::class)->execute($data);
+        return $this->createUserAction->execute($data);
     }
 
     public function update(User $user, array $data): User
     {
-        return app(UpdateUserAction::class)->execute($user, $data);
+        return $this->updateUserAction->execute($user, $data);
     }
 
     public function delete(User $user): void
     {
-        app(DeleteUserAction::class)->execute($user);
+        $this->deleteUserAction->execute($user);
     }
 }
