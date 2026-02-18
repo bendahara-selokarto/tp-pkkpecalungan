@@ -2,6 +2,12 @@
 
 Dokumen ini menetapkan arsitektur default proyek. Semua fitur baru wajib mengikuti pola ini.
 
+## Konteks Dokumen
+- Mulai dari `CONTEXT_INDEX.md` untuk peta dokumentasi.
+- Standar database: `DATABASE_STANDARDS.md`.
+- Standar UI: `UI_ARCHITECTURE.md`.
+- Instruksi agent: `AGENTS.md`.
+
 ## Tujuan
 
 - Konsisten antar modul
@@ -50,4 +56,3 @@ Sebuah perubahan dianggap selesai jika:
 2. Tidak menambah dependency ke concrete repository pada layer aplikasi.
 3. Tidak menambah service locator `app()` di layer aplikasi.
 4. `php artisan test` PASS.
-
