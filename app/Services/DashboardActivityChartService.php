@@ -2,14 +2,18 @@
 
 namespace App\Services;
 
-use App\Domains\Wilayah\Activities\Models\Activity;
-use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\Activities\Repositories\ActivityRepository;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 class DashboardActivityChartService
 {
+    public function __construct(
+        private readonly ActivityRepository $activityRepository
+    ) {
+    }
+
     public function buildForUser(User $user): array
     {
         $baseQuery = $this->buildScopedQuery($user);
@@ -46,34 +50,7 @@ class DashboardActivityChartService
 
     private function buildScopedQuery(User $user): Builder
     {
-        $query = Activity::query();
-
-        if ($user->hasRole('super-admin')) {
-            return $query;
-        }
-
-        $areaId = (int) $user->area_id;
-
-        if ($user->scope === 'desa') {
-            return $query->where('level', 'desa')->where('area_id', $areaId);
-        }
-
-        if ($user->scope === 'kecamatan') {
-            $desaIds = Area::query()
-                ->where('level', 'desa')
-                ->where('parent_id', $areaId)
-                ->pluck('id');
-
-            return $query->where(function (Builder $scoped) use ($areaId, $desaIds) {
-                $scoped->where(function (Builder $kecamatanScope) use ($areaId) {
-                    $kecamatanScope->where('level', 'kecamatan')->where('area_id', $areaId);
-                })->orWhere(function (Builder $desaScope) use ($desaIds) {
-                    $desaScope->where('level', 'desa')->whereIn('area_id', $desaIds);
-                });
-            });
-        }
-
-        return $query->whereRaw('1 = 0');
+        return $this->activityRepository->queryScopedByUser($user);
     }
 
     private function buildMonthlyChart(Builder $query): array
