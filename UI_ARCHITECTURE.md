@@ -39,6 +39,15 @@ Pada `resources/js/Pages/SuperAdmin/Users/Create.vue` dan `resources/js/Pages/Su
 
 Ini menjaga sinkronisasi payload form dengan validasi backend.
 
+## Standar Format Tanggal (Aktif)
+- Semua input tanggal pada form aplikasi wajib menggunakan format `DD/MM/YYYY`.
+- Field tanggal di UI menggunakan input teks terkontrol (bukan native `type="date"`) agar format konsisten lintas browser/locale.
+- Contoh field domain yang mengikuti aturan ini:
+  - `activity_date`
+  - `received_date`
+  - `tanggal_lahir`
+- Untuk halaman edit, nilai prefill tanggal dari backend juga harus dikirim dalam format `DD/MM/YYYY`.
+
 ## Catatan Konsistensi
 - Saat menambah halaman Vue baru, gunakan `DashboardLayout` secara default.
 - Hindari menambah halaman Blade untuk flow aplikasi utama kecuali ada kebutuhan khusus (contoh: dokumen cetak/PDF).

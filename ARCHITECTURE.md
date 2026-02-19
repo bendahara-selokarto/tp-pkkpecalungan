@@ -34,6 +34,12 @@ Urutan authorization:
 8. Istilah domain bisnis memakai Bahasa Indonesia; istilah teknis memakai English.
 9. Nama function/method test menggunakan Bahasa Indonesia.
 
+## Aturan Input Tanggal (Aktif)
+1. Payload tanggal dari UI untuk form domain wajib memakai format `DD/MM/YYYY`.
+2. Validasi format tanggal wajib dijaga di `FormRequest`.
+3. Setelah lolos validasi, request wajib menormalisasi tanggal ke format canonical `Y-m-d` sebelum masuk `Action/UseCase/Repository`.
+4. Untuk kompatibilitas transisi, penerimaan format legacy `Y-m-d` diperbolehkan jika diperlukan, tetapi UI tetap source-of-truth format `DD/MM/YYYY`.
+
 ## Aturan Authorization Scope (Aktif)
 1. Akses data domain wilayah ditentukan oleh kombinasi:
 - scoped role pengguna (matrix `scope -> role` via `RoleScopeMatrix`)
