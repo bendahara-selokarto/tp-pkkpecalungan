@@ -1,53 +1,148 @@
-# Aplikasi PKK
+# TP PKK Pecalungan - Human Guide
 
-Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur terstruktur dan konsisten lintas modul.
+Dokumen ini adalah panduan manusia untuk memahami dan mengimplementasikan proyek.
+Dokumen AI dan optimasi rate limiter ada di `AGENTS.md`.
 
-## Tujuan
-- Menjaga konsistensi struktur kode antar modul.
-- Memisahkan alur bisnis dari layer HTTP.
-- Mempermudah maintenance dan pengujian.
+## 1. Tujuan Proyek
 
-## Stack
+Aplikasi ini dipakai untuk manajemen data PKK berbasis wilayah.
+Target utama:
+- Konsistensi arsitektur lintas modul.
+- Pemisahan business flow dari layer HTTP.
+- Authorization yang ketat per scope wilayah.
+- Perawatan dan pengujian yang mudah.
+
+## 2. Stack Aktif
+
 - Backend: Laravel 12
-- Frontend: Inertia + Vue 3 (default), Blade untuk kebutuhan khusus seperti template PDF
+- UI utama: Inertia + Vue 3
+- UI khusus: Blade (non-interaktif, misal PDF)
 - Build tool: Vite
 - Styling: Tailwind CSS
 
-## Prinsip Arsitektur
-- Controller tipis.
-- Alur bisnis ada di `UseCases`/`Actions`.
-- Akses data domain melalui `Repositories`.
-- Otorisasi melalui `Policies` yang mendelegasikan ke `Scope Service`.
-- Akses data wilayah mengikuti scoped role + konteks area user.
+## 3. Arsitektur Backend
 
-## Ringkas Authorization Scope
-- Scope domain aktif: `desa` dan `kecamatan`.
-- Role scoped aktif:
-  - `desa-sekretaris`, `desa-bendahara`, `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv`
-  - `kecamatan-sekretaris`, `kecamatan-bendahara`, `kecamatan-pokja-i`, `kecamatan-pokja-ii`, `kecamatan-pokja-iii`, `kecamatan-pokja-iv`
-- Compatibility role legacy masih didukung: `admin-desa`, `admin-kecamatan`.
-- Guard route domain memakai middleware `scope.role:{desa|kecamatan}`.
+Layer wajib:
 
-## Status Implementasi UI
-- `activities`, `inventaris`, `bantuans`, `anggota_pokja`, `super-admin/users`: Inertia Vue
-- `profile`, `auth/verify-email`, `auth/confirm-password`: Inertia Vue
-- Blade dipertahankan untuk use case khusus (contoh: `pdf/activity`)
+`Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`
 
-## Konteks Dokumentasi
-- Indeks konteks: `CONTEXT_INDEX.md`
-- Arsitektur backend: `ARCHITECTURE.md`
-- Standar database: `DATABASE_STANDARDS.md`
-- Arsitektur UI: `UI_ARCHITECTURE.md`
-- Protokol eksekusi agent: `CODEX_EXECUTION_PROTOCOL.md`
-- Instruksi agen AI: `AGENTS.md`
+Pola authorization wajib:
 
-## Konvensi Bahasa
+`Policy -> Scope Service`
+
+Aturan implementasi:
+- Controller harus tipis (orchestration request/response).
+- Business flow di `UseCase/Action`, bukan di controller.
+- Query domain melalui repository.
+- Dependency repository di layer aplikasi harus via interface.
+- Hindari service locator `app()` di use case/action/service.
+
+## 4. Domain Wilayah dan Source of Truth
+
+- Source wilayah canonical: tabel `areas`.
+- Hierarki aktif: `kecamatan -> desa` dengan `parent_id`.
+- Tabel `kecamatans`, `desas`, `user_assignments` dianggap legacy/transitional.
+- Fitur baru tidak boleh menambah dependency ke tabel legacy.
+
+## 5. Authorization dan Scope
+
+Scope aktif:
+- `desa`
+- `kecamatan`
+
+Role scoped aktif:
+- `desa-sekretaris`, `desa-bendahara`, `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv`
+- `kecamatan-sekretaris`, `kecamatan-bendahara`, `kecamatan-pokja-i`, `kecamatan-pokja-ii`, `kecamatan-pokja-iii`, `kecamatan-pokja-iv`
+
+Role kompatibilitas legacy:
+- `admin-desa`
+- `admin-kecamatan`
+
+Aturan penting:
+- Source of truth authorization: `Policy -> Scope Service`.
+- Guard route domain: middleware `scope.role:{desa|kecamatan}`.
+- `role`, `scope`, `area_id` harus konsisten.
+- `area_id` harus mengacu ke `areas.id` dengan `areas.level` yang cocok dengan scope.
+
+## 6. Standar Database
+
+Untuk tabel domain wilayah, kolom berikut wajib ada:
+- `level` (`desa|kecamatan`)
+- `area_id` (FK ke `areas.id`)
+- `created_by` (FK ke `users.id`)
+
+Standar wajib:
+- Relasi penting harus FK eksplisit.
+- Aksi delete harus jelas (`cascadeOnDelete`, `nullOnDelete`, `restrict`).
+- Index minimal tabel domain wilayah: `index(['level', 'area_id'])`.
+- Gunakan index tambahan sesuai pola query repository (filter/sort nyata).
+- Seeder harus idempotent (`firstOrCreate` atau `updateOrCreate`).
+
+Status saat ini:
+- Struktur utama sudah mengikuti pola scope wilayah.
+- Constraint DB untuk memaksa kecocokan `record.level` dan `areas.level` lintas tabel belum penuh.
+- Enum literal masih tersebar lintas migration/request/UI (target refactor bertahap).
+
+## 7. Standar UI
+
+Entrypoint utama:
+- `resources/js/app.js`
+- Pages: `resources/js/Pages/**/*.vue`
+
+Layout default:
+- Auth: `resources/js/admin-one/layouts/LayoutGuest.vue`
+- App: `resources/js/Layouts/DashboardLayout.vue`
+
+Aturan UI:
+- Sidebar menyesuaikan `scope` dan role user.
+- Akses riil tetap ditentukan backend (middleware + policy).
+- Hindari menambah Blade untuk flow aplikasi utama kecuali kebutuhan khusus.
+
+Standar input tanggal:
+- UI form domain memakai `DD/MM/YYYY`.
+- Validasi dan normalisasi tanggal dilakukan di `FormRequest`.
+- Format canonical backend: `Y-m-d`.
+- Format legacy `Y-m-d` boleh diterima untuk transisi jika diperlukan.
+
+## 8. Modul Inertia Aktif
+
+Sudah berbasis Inertia Vue:
+- `activities`
+- `inventaris`
+- `bantuans`
+- `anggota_pokja`
+- `super-admin/users`
+- `profile`
+- `auth/verify-email`
+- `auth/confirm-password`
+
+Blade dipertahankan untuk use case khusus:
+- Contoh: template PDF activity.
+
+## 9. Konvensi Bahasa
+
 - Istilah domain bisnis: Bahasa Indonesia.
-- Istilah teknis implementasi: English.
-- Kontrak teknis yang sudah dipakai di schema/API dipertahankan sampai ada refactor terencana.
-- Nama function/method test ditulis dalam Bahasa Indonesia.
+- Istilah teknis: English.
+- Nama function/method test: Bahasa Indonesia.
+- Kontrak teknis yang sudah berjalan tidak diubah tanpa refactor/migration terencana.
 
-## Catatan Database
-- Sumber wilayah canonical: tabel `areas`.
-- Tabel `kecamatans`, `desas`, dan `user_assignments` adalah legacy compatibility.
+## 10. Definition of Done
 
+Perubahan dianggap selesai jika:
+- Mengikuti layering dan authorization pattern di dokumen ini.
+- Tidak menambah bypass repository untuk query domain baru.
+- Tidak menambah dependency baru ke tabel legacy.
+- Test lulus (`php artisan test`).
+
+## 11. Known Debt dan Arah Refactor
+
+Known debt aktif:
+- Sebagian controller administratif masih query model langsung.
+- Enum domain belum sepenuhnya terpusat.
+- Enforcement DB level-area match lintas tabel belum menyeluruh.
+
+Arah refactor prioritas:
+1. Sentralisasi enum domain.
+2. Eliminasi query langsung controller administratif.
+3. Tambah constraint DB untuk validasi level-area.
+4. Formalisasi milestone deprecasi legacy table.
