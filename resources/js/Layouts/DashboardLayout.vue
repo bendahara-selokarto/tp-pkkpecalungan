@@ -69,8 +69,11 @@ const toggleTheme = () => {
             </svg>
             <span class="text-xs font-medium">{{ sidebarCollapsed ? 'Expand' : 'Minimize' }}</span>
           </button>
-          <Link :href="primaryHref" class="text-sm font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-100 truncate">
-            {{ page.props.appName ?? 'Laravel' }}
+          <Link :href="primaryHref" class="flex items-center gap-2 min-w-0">
+            <img src="/images/pkk-logo.png" alt="Logo PKK" class="h-6 w-6 object-contain">
+            <span class="text-sm font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-100 truncate">
+              {{ page.props.appName ?? 'Laravel' }}
+            </span>
           </Link>
         </div>
 
@@ -97,7 +100,7 @@ const toggleTheme = () => {
       <div class="h-full flex flex-col">
         <div class="h-14 px-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-700">
           <Link :href="primaryHref" :class="sidebarCollapsed ? 'justify-center w-full' : ''" class="flex items-center gap-2 min-w-0">
-            <span class="h-7 w-7 rounded-md bg-emerald-600" />
+            <img src="/images/pkk-logo.png" alt="Logo PKK" class="h-7 w-7 object-contain">
             <span v-show="!sidebarCollapsed" class="text-sm font-semibold text-slate-700 dark:text-slate-100 truncate">
               {{ page.props.appName ?? 'Laravel' }}
             </span>
@@ -270,4 +273,3 @@ const toggleTheme = () => {
     </div>
   </div>
 </template>
-

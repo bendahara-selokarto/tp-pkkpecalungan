@@ -27,7 +27,14 @@ const toggleTheme = () => {
       <div class="grid w-full max-w-5xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl dark:border-slate-700 dark:bg-slate-900 lg:grid-cols-2">
         <div class="hidden bg-emerald-600 p-10 text-white lg:flex lg:flex-col lg:justify-between">
           <div>
-            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">TP PKK Pecalungan</p>
+            <div class="inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/25 backdrop-blur">
+              <img
+                src="/images/pkk-logo.png"
+                alt="Logo PKK"
+                class="h-24 w-24 object-contain xl:h-28 xl:w-28"
+              >
+            </div>
+            <p class="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">TP PKK Pecalungan</p>
             <h1 class="mt-4 text-3xl font-semibold leading-tight">
               Sistem Administrasi Tim Penggerak PKK Kecamatan Pecalungan
             </h1>
