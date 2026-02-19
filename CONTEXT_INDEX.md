@@ -11,7 +11,7 @@ Dokumen ini adalah pintu masuk konteks proyek untuk developer dan AI agent.
 
 ## Ringkasan Proyek (Kondisi Saat Ini)
 - Framework: Laravel 12
-- UI: hybrid Blade + Inertia Vue 3
+- UI: Inertia + Vue 3 sebagai default, Blade tersisa untuk kebutuhan non-interaktif (contoh: template PDF)
 - Domain utama: data berbasis wilayah (`kecamatan`, `desa`)
 - Sumber wilayah canonical: tabel `areas`
 - Pola backend aktif: `Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`
@@ -19,8 +19,8 @@ Dokumen ini adalah pintu masuk konteks proyek untuk developer dan AI agent.
 - Matrix role-scope aktif: role scoped `desa-*` dan `kecamatan-*` + legacy compatibility role
 
 ## Catatan Implementasi Penting
-- Modul `activities` masih dominan Blade.
-- Modul `bantuans`, `inventaris`, `anggota_pokja`, dan `super-admin/users` menggunakan Inertia Vue.
+- Modul `activities`, `bantuans`, `inventaris`, `anggota_pokja`, dan `super-admin/users` sudah menggunakan Inertia Vue.
+- Halaman `profile`, `auth/verify-email`, dan `auth/confirm-password` juga sudah menggunakan Inertia Vue.
 - Validasi manajemen user sudah mewajibkan konsistensi `role`, `scope`, dan `area_id` (dengan kecocokan `areas.level`).
 - Guard route domain wilayah memakai middleware `scope.role:{desa|kecamatan}`.
 
@@ -39,5 +39,4 @@ Dokumen ini adalah pintu masuk konteks proyek untuk developer dan AI agent.
 
 ## Catatan Legacy
 Tabel `kecamatans`, `desas`, dan `user_assignments` masih ada untuk kompatibilitas. Fitur baru wajib memakai `areas`.
-
 

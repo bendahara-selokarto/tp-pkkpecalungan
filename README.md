@@ -9,7 +9,7 @@ Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur terstruktur 
 
 ## Stack
 - Backend: Laravel 12
-- Frontend: Blade + Inertia + Vue 3
+- Frontend: Inertia + Vue 3 (default), Blade untuk kebutuhan khusus seperti template PDF
 - Build tool: Vite
 - Styling: Tailwind CSS
 
@@ -29,8 +29,9 @@ Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur terstruktur 
 - Guard route domain memakai middleware `scope.role:{desa|kecamatan}`.
 
 ## Status Implementasi UI
-- `activities`: Blade
-- `inventaris`, `bantuans`, `anggota_pokja`, `super-admin/users`: Inertia Vue
+- `activities`, `inventaris`, `bantuans`, `anggota_pokja`, `super-admin/users`: Inertia Vue
+- `profile`, `auth/verify-email`, `auth/confirm-password`: Inertia Vue
+- Blade dipertahankan untuk use case khusus (contoh: `pdf/activity`)
 
 ## Konteks Dokumentasi
 - Indeks konteks: `CONTEXT_INDEX.md`
@@ -49,5 +50,4 @@ Aplikasi ini digunakan untuk pengelolaan data PKK dengan arsitektur terstruktur 
 ## Catatan Database
 - Sumber wilayah canonical: tabel `areas`.
 - Tabel `kecamatans`, `desas`, dan `user_assignments` adalah legacy compatibility.
-
 
