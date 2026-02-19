@@ -6,11 +6,13 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-use App\Services\User\UserService;
 use App\Domains\Wilayah\Models\Area;
+use App\Services\User\UserService;
+use App\UseCases\User\GetUserManagementFormOptionsUseCase;
+use App\UseCases\User\ListUsersForManagementUseCase;
+use DomainException;
 use Illuminate\Http\RedirectResponse;
 use App\Models\User;
-use Spatie\Permission\Models\Role;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -18,18 +20,17 @@ class UserManagementController extends Controller
 {
     
     public function __construct(
-        protected UserService $userService
+        protected UserService $userService,
+        private readonly ListUsersForManagementUseCase $listUsersForManagementUseCase,
+        private readonly GetUserManagementFormOptionsUseCase $getUserManagementFormOptionsUseCase
     ) {
         $this->authorizeResource(User::class, 'user');
     }
 
     public function index(): Response
     {
-        $users = User::query()
-            ->with(['roles:id,name', 'area:id,name,level'])
-            ->orderBy('name')
-            ->paginate(10)
-            ->withQueryString()
+        $users = $this->listUsersForManagementUseCase
+            ->execute(10)
             ->through(fn (User $user) => [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -52,11 +53,11 @@ class UserManagementController extends Controller
 
     public function create(): Response
     {
-        $roles = Role::all();
-        $areas = Area::orderBy('level')->orderBy('name')->get();
+        $roles = $this->getUserManagementFormOptionsUseCase->roles();
+        $areas = $this->getUserManagementFormOptionsUseCase->areas();
 
         return Inertia::render('SuperAdmin/Users/Create', [
-            'roles' => $roles->pluck('name')->values(),
+            'roles' => $roles,
             'areas' => $areas->map(fn (Area $area) => [
                 'id' => $area->id,
                 'name' => $area->name,
@@ -74,8 +75,8 @@ class UserManagementController extends Controller
 
     public function edit(User $user): Response
     {
-        $roles = Role::all();
-        $areas = Area::orderBy('level')->orderBy('name')->get();
+        $roles = $this->getUserManagementFormOptionsUseCase->roles();
+        $areas = $this->getUserManagementFormOptionsUseCase->areas();
         $user->load('roles:id,name');
 
         return Inertia::render('SuperAdmin/Users/Edit', [
@@ -87,7 +88,7 @@ class UserManagementController extends Controller
                 'area_id' => $user->area_id,
                 'roles' => $user->roles->pluck('name')->values(),
             ],
-            'roles' => $roles->pluck('name')->values(),
+            'roles' => $roles,
             'areas' => $areas->map(fn (Area $area) => [
                 'id' => $area->id,
                 'name' => $area->name,
@@ -105,7 +106,13 @@ class UserManagementController extends Controller
 
     public function destroy(User $user): RedirectResponse
     {
-        $this->userService->delete($user);
+        try {
+            $this->userService->delete($user);
+        } catch (DomainException $exception) {
+            return redirect()
+                ->route('super-admin.users.index')
+                ->with('error', $exception->getMessage());
+        }
 
         return redirect()->route('super-admin.users.index')->with('success', 'User berhasil dihapus');
     }

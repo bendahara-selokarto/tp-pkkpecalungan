@@ -20,6 +20,8 @@ use App\Policies\AnggotaPokjaPolicy;
 use App\Policies\BantuanPolicy;
 use App\Policies\InventarisPolicy;
 use App\Policies\UserPolicy;
+use App\Repositories\SuperAdmin\UserManagementRepository;
+use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use App\Domains\Wilayah\Repositories\{
@@ -57,6 +59,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             AnggotaPokjaRepositoryInterface::class,
             AnggotaPokjaRepository::class
+        );
+
+        $this->app->bind(
+            UserManagementRepositoryInterface::class,
+            UserManagementRepository::class
         );
     }
 

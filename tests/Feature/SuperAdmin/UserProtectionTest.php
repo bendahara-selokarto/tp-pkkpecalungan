@@ -22,22 +22,24 @@ class UserProtectionTest extends TestCase
    #[Test]
     public function super_admin_tidak_dapat_menghapus_super_admin_lain()
     {
-        $this->withoutExceptionHandling();
-
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Super Admin tidak boleh dihapus');
-
         $superAdmin = User::factory()->create();
         $superAdmin->assignRole('super-admin');
 
         $target = User::factory()->create();
         $target->assignRole('super-admin');
 
-        $this->actingAs($superAdmin)
+        $response = $this->actingAs($superAdmin)
             ->delete(route('super-admin.users.destroy', $target));
+
+        $response
+            ->assertRedirect(route('super-admin.users.index'))
+            ->assertSessionHas('error', 'Super Admin tidak boleh dihapus');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $target->id,
+        ]);
     }
 
 }
-
 
 

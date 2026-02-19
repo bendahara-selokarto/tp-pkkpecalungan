@@ -1,15 +1,21 @@
 <?php
 namespace App\Actions\User;
 
-use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use App\Support\RoleScopeMatrix;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class CreateUserAction
 {
+    public function __construct(
+        private readonly AreaRepositoryInterface $areaRepository
+    ) {
+    }
+
     public function execute(array $data): User
     {
         $this->assertValidRoleScopeArea($data);
@@ -35,7 +41,14 @@ class CreateUserAction
         $role = (string) ($data['role'] ?? '');
         $areaId = isset($data['area_id']) ? (int) $data['area_id'] : 0;
 
-        $area = Area::find($areaId);
+        try {
+            $area = $this->areaRepository->find($areaId);
+        } catch (ModelNotFoundException) {
+            throw ValidationException::withMessages([
+                'area_id' => 'Area tidak sesuai dengan scope yang dipilih.',
+            ]);
+        }
+
         if (! $area || $area->level !== $scope) {
             throw ValidationException::withMessages([
                 'area_id' => 'Area tidak sesuai dengan scope yang dipilih.',
