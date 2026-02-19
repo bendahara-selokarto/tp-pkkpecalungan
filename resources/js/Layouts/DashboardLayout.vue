@@ -45,6 +45,10 @@ const toggleTheme = () => {
 }
 
 const pkkLogo = '/images/pkk-logo.png'
+
+const hideBrokenImage = (event) => {
+  event.target.style.display = 'none'
+}
 </script>
 
 <template>
@@ -72,7 +76,7 @@ const pkkLogo = '/images/pkk-logo.png'
             <span class="text-xs font-medium">{{ sidebarCollapsed ? 'Expand' : 'Minimize' }}</span>
           </button>
           <Link :href="primaryHref" class="flex items-center gap-2 min-w-0">
-            <img :src="pkkLogo" alt="Logo PKK" class="h-6 w-6 object-contain">
+            <img :src="pkkLogo" alt="" aria-hidden="true" class="h-6 w-6 object-contain" @error="hideBrokenImage">
             <span class="text-sm font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-100 truncate">
               {{ page.props.appName ?? 'Laravel' }}
             </span>
@@ -102,7 +106,7 @@ const pkkLogo = '/images/pkk-logo.png'
       <div class="h-full flex flex-col">
         <div class="h-14 px-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-700">
           <Link :href="primaryHref" :class="sidebarCollapsed ? 'justify-center w-full' : ''" class="flex items-center gap-2 min-w-0">
-            <img :src="pkkLogo" alt="Logo PKK" class="h-7 w-7 object-contain">
+            <img :src="pkkLogo" alt="" aria-hidden="true" class="h-7 w-7 object-contain" @error="hideBrokenImage">
             <span v-show="!sidebarCollapsed" class="text-sm font-semibold text-slate-700 dark:text-slate-100 truncate">
               {{ page.props.appName ?? 'Laravel' }}
             </span>

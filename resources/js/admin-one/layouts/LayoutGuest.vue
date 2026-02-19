@@ -10,6 +10,10 @@ const toggleTheme = () => {
 }
 
 const pkkLogo = '/images/pkk-logo.png'
+
+const hideBrokenImage = (event) => {
+  event.target.style.display = 'none'
+}
 </script>
 
 <template>
@@ -32,8 +36,10 @@ const pkkLogo = '/images/pkk-logo.png'
             <div class="inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/25 backdrop-blur">
               <img
                 :src="pkkLogo"
-                alt="Logo PKK"
+                alt=""
+                aria-hidden="true"
                 class="h-24 w-24 object-contain xl:h-28 xl:w-28"
+                @error="hideBrokenImage"
               >
             </div>
             <p class="mt-6 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-100">TP PKK Pecalungan</p>
