@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -120,10 +121,13 @@ class ActivityPrintTest extends TestCase
 
         $showResponse = $this->actingAs($user)->get(route('desa.activities.show', $activity->id));
         $showResponse->assertOk();
-        $showResponse->assertSee(route('desa.activities.print', $activity->id), false);
+        $showResponse->assertInertia(function (AssertableInertia $page) use ($activity) {
+            $page
+                ->component('Desa/Activities/Show')
+                ->where('routes.print', route('desa.activities.print', $activity->id));
+        });
 
         $printResponse = $this->actingAs($user)->get(route('desa.activities.print', $activity->id));
         $printResponse->assertOk();
     }
 }
-

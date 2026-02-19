@@ -11,6 +11,9 @@ use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\Activities\UseCases\GetScopedActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\ListScopedActivitiesUseCase;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class KecamatanActivityController extends Controller
 {
@@ -24,60 +27,90 @@ class KecamatanActivityController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index()
+    public function index(): Response
     {
         $this->authorize('viewAny', Activity::class);
         $activities = $this->listScopedActivitiesUseCase->execute('kecamatan');
 
-        return view('kecamatan.activities.index', compact('activities'));
+        return Inertia::render('Kecamatan/Activities/Index', [
+            'activities' => $activities->map(fn (Activity $activity) => [
+                'id' => $activity->id,
+                'title' => $activity->title,
+                'description' => $activity->description,
+                'activity_date' => $activity->activity_date,
+                'status' => $activity->status,
+            ])->values(),
+        ]);
     }
 
-    public function create()
+    public function create(): Response
     {
         $this->authorize('create', Activity::class);
-        return view('kecamatan.activities.create');
+
+        return Inertia::render('Kecamatan/Activities/Create');
     }
 
-    public function store(StoreActivityRequest $request)
+    public function store(StoreActivityRequest $request): RedirectResponse
     {
         $this->authorize('create', Activity::class);
         $this->createScopedActivityAction->execute($request->validated(), 'kecamatan');
 
-        return redirect('/kecamatan/activities');
+        return redirect()->route('kecamatan.activities.index')->with('success', 'Kegiatan berhasil dibuat');
     }
 
-    public function show(int $id)
+    public function show(int $id): Response
     {
         $activity = $this->getScopedActivityUseCase->execute($id, 'kecamatan');
         $this->authorize('view', $activity);
 
-        return view('kecamatan.activities.show', compact('activity'));
+        return Inertia::render('Kecamatan/Activities/Show', [
+            'activity' => [
+                'id' => $activity->id,
+                'title' => $activity->title,
+                'description' => $activity->description,
+                'activity_date' => $activity->activity_date,
+                'status' => $activity->status,
+            ],
+            'can' => [
+                'print' => auth()->user()->can('print', $activity),
+            ],
+            'routes' => [
+                'print' => route('kecamatan.activities.print', $activity->id),
+            ],
+        ]);
     }
 
-    public function edit(int $id)
+    public function edit(int $id): Response
     {
         $activity = $this->getScopedActivityUseCase->execute($id, 'kecamatan');
         $this->authorize('update', $activity);
 
-        return view('kecamatan.activities.edit', compact('activity'));
+        return Inertia::render('Kecamatan/Activities/Edit', [
+            'activity' => [
+                'id' => $activity->id,
+                'title' => $activity->title,
+                'description' => $activity->description,
+                'activity_date' => $activity->activity_date,
+                'status' => $activity->status,
+            ],
+        ]);
     }
 
-    public function update(UpdateActivityRequest $request, int $id)
+    public function update(UpdateActivityRequest $request, int $id): RedirectResponse
     {
         $activity = $this->getScopedActivityUseCase->execute($id, 'kecamatan');
         $this->authorize('update', $activity);
         $this->updateActivityAction->execute($activity, $request->validated());
 
-        return redirect('/kecamatan/activities');
+        return redirect()->route('kecamatan.activities.index')->with('success', 'Kegiatan berhasil diperbarui');
     }
 
-    public function destroy(int $id)
+    public function destroy(int $id): RedirectResponse
     {
         $activity = $this->getScopedActivityUseCase->execute($id, 'kecamatan');
         $this->authorize('delete', $activity);
         $this->activityRepository->delete($activity);
 
-        return redirect('/kecamatan/activities');
+        return redirect()->route('kecamatan.activities.index')->with('success', 'Kegiatan berhasil dihapus');
     }
 }
-
