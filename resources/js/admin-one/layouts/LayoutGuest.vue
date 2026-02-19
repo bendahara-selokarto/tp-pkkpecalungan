@@ -8,6 +8,8 @@ const darkModeStore = useDarkModeStore()
 const toggleTheme = () => {
   darkModeStore.set(null, true)
 }
+
+const pkkLogo = '/images/pkk-logo.png'
 </script>
 
 <template>
@@ -29,7 +31,7 @@ const toggleTheme = () => {
           <div>
             <div class="inline-flex rounded-2xl bg-white/10 p-3 ring-1 ring-white/25 backdrop-blur">
               <img
-                src="/images/pkk-logo.png"
+                :src="pkkLogo"
                 alt="Logo PKK"
                 class="h-24 w-24 object-contain xl:h-28 xl:w-28"
               >
