@@ -11,6 +11,7 @@ use App\Domains\Wilayah\Bantuan\Requests\UpdateBantuanRequest;
 use App\Domains\Wilayah\Bantuan\UseCases\GetScopedBantuanUseCase;
 use App\Domains\Wilayah\Bantuan\UseCases\ListScopedBantuanUseCase;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -91,7 +92,7 @@ class KecamatanBantuanController extends Controller
                 'description' => $bantuan->description,
                 'source' => $bantuan->source,
                 'amount' => $bantuan->amount,
-                'received_date' => $bantuan->received_date,
+                'received_date' => Carbon::parse($bantuan->received_date)->format('d/m/Y'),
             ],
         ]);
     }
@@ -114,5 +115,3 @@ class KecamatanBantuanController extends Controller
         return redirect()->route('kecamatan.bantuans.index')->with('success', 'Data bantuan berhasil dihapus');
     }
 }
-
-

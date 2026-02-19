@@ -11,6 +11,7 @@ use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\Activities\UseCases\GetScopedActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\ListScopedActivitiesUseCase;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -90,7 +91,7 @@ class DesaActivityController extends Controller
                 'id' => $activity->id,
                 'title' => $activity->title,
                 'description' => $activity->description,
-                'activity_date' => $activity->activity_date,
+                'activity_date' => Carbon::parse($activity->activity_date)->format('d/m/Y'),
                 'status' => $activity->status,
             ],
         ]);

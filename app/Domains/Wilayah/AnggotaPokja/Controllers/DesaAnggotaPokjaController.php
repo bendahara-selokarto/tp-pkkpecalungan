@@ -95,7 +95,7 @@ class DesaAnggotaPokjaController extends Controller
                 'jabatan' => $anggotaPokja->jabatan,
                 'jenis_kelamin' => $anggotaPokja->jenis_kelamin,
                 'tempat_lahir' => $anggotaPokja->tempat_lahir,
-                'tanggal_lahir' => optional($anggotaPokja->tanggal_lahir)->format('Y-m-d'),
+                'tanggal_lahir' => optional($anggotaPokja->tanggal_lahir)->format('d/m/Y'),
                 'status_perkawinan' => $anggotaPokja->status_perkawinan,
                 'alamat' => $anggotaPokja->alamat,
                 'pendidikan' => $anggotaPokja->pendidikan,
@@ -124,5 +124,4 @@ class DesaAnggotaPokjaController extends Controller
         return redirect()->route('desa.anggota-pokja.index')->with('success', 'Data anggota pokja berhasil dihapus');
     }
 }
-
 
