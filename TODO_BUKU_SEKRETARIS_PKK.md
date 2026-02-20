@@ -21,11 +21,11 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
     - [x] 4.14.4c Data Isian Koperasi -> `koperasi`.
     - [x] 4.14.4d Data Isian Kejar Paket -> `kejar-paket`.
     - [x] 4.14.4e Data Isian Posyandu oleh TP PKK -> `posyandu`.
+    - [x] 4.14.4b Data Isian Taman Bacaan/Perpustakaan -> `taman-bacaan` (label domain sudah dinormalisasi).
   - [ ] TODO Ubah (sudah ada implementasi, tetapi belum identik pedoman):
     - [ ] 4.9b Buku Daftar Kader Tim Penggerak PKK: saat ini ditandai sebagai report gabungan anggota+kader; perlu diselaraskan menjadi buku kader sesuai lampiran.
     - [ ] 4.11 Buku Keuangan: saat ini report `bantuans` hanya menutup arus pemasukan; perlu sinkronisasi struktur buku keuangan pedoman.
     - [ ] 4.14.4a Data Aset (Sarana) Desa/Kelurahan: domain saat ini `warung-pkk`, perlu penamaan domain/label yang identik dengan lampiran.
-    - [ ] 4.14.4b Data Isian Taman Bacaan/Perpustakaan: domain saat ini `taman-bacaan`, perlu normalisasi istilah agar identik lampiran.
     - [ ] 4.14.4f Data Isian Kelompok Simulasi dan Penyuluhan: domain saat ini `simulasi-penyuluhan`, perlu normalisasi istilah agar identik lampiran.
   - [ ] List Baru (belum ada modul/domain khusus):
     - [ ] 4.14.1a Data Warga.
