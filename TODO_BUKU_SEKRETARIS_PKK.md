@@ -24,7 +24,7 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
     - [x] Implementasi domain + report `4.14.4b Taman Bacaan`.
     - [x] Implementasi domain + report `4.14.4c Koperasi`.
     - [x] Implementasi domain + report `4.14.4d Kejar Paket/KF/PAUD`.
-    - [ ] Implementasi domain + report `4.14.4e Posyandu`.
+    - [x] Implementasi domain + report `4.14.4e Posyandu`.
 
 ## Catatan anti-konflik
 - `agenda-surat` dipakai sebagai source of truth surat masuk/keluar.

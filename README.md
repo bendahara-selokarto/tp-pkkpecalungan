@@ -116,6 +116,11 @@ Sudah berbasis Inertia Vue:
 - `prestasi-lomba`
 - `bkl`
 - `bkr`
+- `koperasi`
+- `warung-pkk`
+- `taman-bacaan`
+- `kejar-paket`
+- `posyandu`
 - `simulasi-penyuluhan`
 - `program-prioritas`
 - `super-admin/users`
