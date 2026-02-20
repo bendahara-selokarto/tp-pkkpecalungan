@@ -66,7 +66,7 @@
         </tbody>
     </table>
 
-    <div class="section-title">B. KADER KHUSUS</div>
+    <div class="section-title">B. KADER TIM PENGGERAK PKK</div>
     <table>
         <thead>
             <tr>
@@ -77,7 +77,7 @@
                 <th style="width: 86px;">TANGGAL LAHIR</th>
                 <th style="width: 64px;">STATUS</th>
                 <th style="width: 80px;">PENDIDIKAN</th>
-                <th style="width: 115px;">JENIS KADER</th>
+                <th style="width: 115px;">JENIS KADER TP PKK</th>
                 <th>KETERANGAN</th>
             </tr>
         </thead>
@@ -96,10 +96,12 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" class="center">Data kader khusus belum tersedia.</td>
+                    <td colspan="9" class="center">Data kader TP PKK belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 </body>
 </html>
+
+

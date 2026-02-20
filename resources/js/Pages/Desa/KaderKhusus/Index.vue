@@ -20,7 +20,7 @@ const formatJenisKelamin = (value) => (value === 'L' ? 'Laki-laki' : 'Perempuan'
 const formatStatusPerkawinan = (value) => (value === 'kawin' ? 'Nikah' : 'Belum Nikah')
 
 const hapusKaderKhusus = (id) => {
-  if (!window.confirm('Apakah Anda yakin ingin menghapus data kader khusus ini?')) {
+  if (!window.confirm('Apakah Anda yakin ingin menghapus data kader TP PKK ini?')) {
     return
   }
 
@@ -30,7 +30,7 @@ const hapusKaderKhusus = (id) => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Kader Khusus Desa" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Buku Daftar Kader Tim Penggerak PKK Desa" main />
 
     <div
       v-if="flashSuccess"
@@ -41,7 +41,7 @@ const hapusKaderKhusus = (id) => {
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Kader Khusus</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Kader Tim Penggerak PKK</h3>
         <div class="flex items-center gap-2">
           <a
             href="/desa/kader-khusus/report/pdf"
@@ -55,7 +55,7 @@ const hapusKaderKhusus = (id) => {
             href="/desa/kader-khusus/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Kader Khusus
+            + Tambah Kader TP PKK
           </Link>
         </div>
       </div>
@@ -68,7 +68,7 @@ const hapusKaderKhusus = (id) => {
               <th class="px-3 py-3 font-semibold">Jenis Kelamin</th>
               <th class="px-3 py-3 font-semibold">Umur</th>
               <th class="px-3 py-3 font-semibold">Status</th>
-              <th class="px-3 py-3 font-semibold">Jenis Kader Khusus</th>
+              <th class="px-3 py-3 font-semibold">Jenis Kader TP PKK</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>
             </tr>
           </thead>
@@ -109,7 +109,7 @@ const hapusKaderKhusus = (id) => {
             </tr>
             <tr v-if="kaderKhususItems.length === 0">
               <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data kader khusus belum tersedia.
+                Data kader TP PKK belum tersedia.
               </td>
             </tr>
           </tbody>
@@ -118,3 +118,5 @@ const hapusKaderKhusus = (id) => {
     </CardBox>
   </SectionMain>
 </template>
+
+

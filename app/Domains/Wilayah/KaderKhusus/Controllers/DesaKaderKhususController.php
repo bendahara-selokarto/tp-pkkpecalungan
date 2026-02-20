@@ -57,7 +57,7 @@ class DesaKaderKhususController extends Controller
         $this->authorize('create', KaderKhusus::class);
         $this->createScopedKaderKhususAction->execute($request->validated(), ScopeLevel::DESA->value);
 
-        return redirect()->route('desa.kader-khusus.index')->with('success', 'Data kader khusus berhasil dibuat');
+        return redirect()->route('desa.kader-khusus.index')->with('success', 'Data buku daftar kader tim penggerak PKK berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -109,7 +109,7 @@ class DesaKaderKhususController extends Controller
         $this->authorize('update', $kaderKhusus);
         $this->updateKaderKhususAction->execute($kaderKhusus, $request->validated());
 
-        return redirect()->route('desa.kader-khusus.index')->with('success', 'Data kader khusus berhasil diupdate');
+        return redirect()->route('desa.kader-khusus.index')->with('success', 'Data buku daftar kader tim penggerak PKK berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -118,6 +118,8 @@ class DesaKaderKhususController extends Controller
         $this->authorize('delete', $kaderKhusus);
         $this->kaderKhususRepository->delete($kaderKhusus);
 
-        return redirect()->route('desa.kader-khusus.index')->with('success', 'Data kader khusus berhasil dihapus');
+        return redirect()->route('desa.kader-khusus.index')->with('success', 'Data buku daftar kader tim penggerak PKK berhasil dihapus');
     }
 }
+
+

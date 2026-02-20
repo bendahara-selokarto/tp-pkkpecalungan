@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Kader Khusus</title>
+    <title>Buku Daftar Kader Tim Penggerak PKK</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
@@ -14,9 +14,15 @@
     </style>
 </head>
 <body>
-    <div class="title">Laporan Kader Khusus {{ strtoupper($level) }}</div>
+    @php
+        $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
+        $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $level);
+        $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
+    @endphp
+
+    <div class="title">BUKU DAFTAR KADER TIM PENGGERAK PKK {{ $levelLabel }}</div>
     <div class="meta">
-        Wilayah: {{ $areaName }}<br>
+        {{ $areaLabel }}: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
@@ -31,7 +37,7 @@
                 <th colspan="2" style="width: 90px;">STATUS</th>
                 <th rowspan="2" style="width: 85px;">ALAMAT</th>
                 <th rowspan="2" style="width: 70px;">PENDIDIKAN</th>
-                <th rowspan="2" style="width: 95px;">JENIS KADER KHUSUS</th>
+                <th rowspan="2" style="width: 95px;">JENIS KADER TP PKK</th>
                 <th rowspan="2">KETERANGAN</th>
             </tr>
             <tr>
@@ -63,10 +69,11 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="11" class="center">Data belum tersedia.</td>
+                    <td colspan="11" class="center">Data kader tim penggerak PKK belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 </body>
 </html>
+
