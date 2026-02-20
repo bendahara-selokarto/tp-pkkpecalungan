@@ -7,7 +7,7 @@ import { mdiAccountGroup } from '@mdi/js'
 import { computed } from 'vue'
 
 defineProps({
-  anggotaPokjas: {
+  kaderKhususItems: {
     type: Array,
     required: true,
   },
@@ -16,18 +16,21 @@ defineProps({
 const page = usePage()
 const flashSuccess = computed(() => page.props.flash?.success)
 
-const hapusAnggotaPokja = (id) => {
-  if (!window.confirm('Apakah Anda yakin ingin menghapus data anggota pokja ini?')) {
+const formatJenisKelamin = (value) => (value === 'L' ? 'Laki-laki' : 'Perempuan')
+const formatStatusPerkawinan = (value) => (value === 'kawin' ? 'Nikah' : 'Belum Nikah')
+
+const hapusKaderKhusus = (id) => {
+  if (!window.confirm('Apakah Anda yakin ingin menghapus data kader khusus ini?')) {
     return
   }
 
-  router.delete(`/desa/anggota-pokja/${id}`)
+  router.delete(`/kecamatan/kader-khusus/${id}`)
 }
 </script>
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Anggota Pokja Desa" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Kader Khusus Kecamatan" main />
 
     <div
       v-if="flashSuccess"
@@ -38,10 +41,10 @@ const hapusAnggotaPokja = (id) => {
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Anggota Pokja</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Kader Khusus</h3>
         <div class="flex items-center gap-2">
           <a
-            href="/desa/anggota-pokja/report/pdf"
+            href="/kecamatan/kader-khusus/report/pdf"
             target="_blank"
             rel="noopener"
             class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
@@ -49,47 +52,47 @@ const hapusAnggotaPokja = (id) => {
             Cetak PDF
           </a>
           <Link
-            href="/desa/anggota-pokja/create"
+            href="/kecamatan/kader-khusus/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Anggota Pokja
+            + Tambah Kader Khusus
           </Link>
         </div>
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full min-w-[900px] text-sm">
+        <table class="w-full min-w-[960px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
               <th class="px-3 py-3 font-semibold">Nama</th>
-              <th class="px-3 py-3 font-semibold">Jabatan</th>
-              <th class="px-3 py-3 font-semibold">Pokja</th>
-              <th class="px-3 py-3 font-semibold">JK</th>
+              <th class="px-3 py-3 font-semibold">Jenis Kelamin</th>
               <th class="px-3 py-3 font-semibold">Umur</th>
+              <th class="px-3 py-3 font-semibold">Status</th>
+              <th class="px-3 py-3 font-semibold">Jenis Kader Khusus</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="item in anggotaPokjas"
+              v-for="item in kaderKhususItems"
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
               <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.nama }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.jabatan }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.pokja }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.jenis_kelamin }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatJenisKelamin(item.jenis_kelamin) }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.umur ?? '-' }} tahun</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatStatusPerkawinan(item.status_perkawinan) }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.jenis_kader_khusus }}</td>
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
                   <Link
-                    :href="`/desa/anggota-pokja/${item.id}`"
+                    :href="`/kecamatan/kader-khusus/${item.id}`"
                     class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
                   >
                     Lihat
                   </Link>
                   <Link
-                    :href="`/desa/anggota-pokja/${item.id}/edit`"
+                    :href="`/kecamatan/kader-khusus/${item.id}/edit`"
                     class="inline-flex rounded-md border border-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
                   >
                     Edit
@@ -97,16 +100,16 @@ const hapusAnggotaPokja = (id) => {
                   <button
                     type="button"
                     class="inline-flex rounded-md border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
-                    @click="hapusAnggotaPokja(item.id)"
+                    @click="hapusKaderKhusus(item.id)"
                   >
                     Hapus
                   </button>
                 </div>
               </td>
             </tr>
-            <tr v-if="anggotaPokjas.length === 0">
+            <tr v-if="kaderKhususItems.length === 0">
               <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data anggota pokja belum tersedia.
+                Data kader khusus belum tersedia.
               </td>
             </tr>
           </tbody>
@@ -115,3 +118,4 @@ const hapusAnggotaPokja = (id) => {
     </CardBox>
   </SectionMain>
 </template>
+

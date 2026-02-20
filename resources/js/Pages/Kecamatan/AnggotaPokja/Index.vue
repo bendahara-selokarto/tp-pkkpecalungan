@@ -39,12 +39,22 @@ const hapusAnggotaPokja = (id) => {
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Anggota Pokja</h3>
-        <Link
-          href="/kecamatan/anggota-pokja/create"
-          class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-        >
-          + Tambah Anggota Pokja
-        </Link>
+        <div class="flex items-center gap-2">
+          <a
+            href="/kecamatan/anggota-pokja/report/pdf"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
+          >
+            Cetak PDF
+          </a>
+          <Link
+            href="/kecamatan/anggota-pokja/create"
+            class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+          >
+            + Tambah Anggota Pokja
+          </Link>
+        </div>
       </div>
 
       <div class="overflow-x-auto">

@@ -17,12 +17,16 @@ use App\Domains\Wilayah\Activities\Repositories\ActivityRepository;
 use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\ProgramPrioritas\Repositories\ProgramPrioritasRepository;
 use App\Domains\Wilayah\ProgramPrioritas\Repositories\ProgramPrioritasRepositoryInterface;
+use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
+use App\Domains\Wilayah\KaderKhusus\Repositories\KaderKhususRepository;
+use App\Domains\Wilayah\KaderKhusus\Repositories\KaderKhususRepositoryInterface;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
 use App\Policies\ProgramPrioritasPolicy;
 use App\Policies\AnggotaPokjaPolicy;
 use App\Policies\BantuanPolicy;
 use App\Policies\InventarisPolicy;
+use App\Policies\KaderKhususPolicy;
 use App\Policies\UserPolicy;
 use App\Repositories\SuperAdmin\UserManagementRepository;
 use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
@@ -71,6 +75,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            KaderKhususRepositoryInterface::class,
+            KaderKhususRepository::class
+        );
+
+        $this->app->bind(
             UserManagementRepositoryInterface::class,
             UserManagementRepository::class
         );
@@ -87,6 +96,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Bantuan::class, BantuanPolicy::class);
         Gate::policy(Inventaris::class, InventarisPolicy::class);
         Gate::policy(AnggotaPokja::class, AnggotaPokjaPolicy::class);
+        Gate::policy(KaderKhusus::class, KaderKhususPolicy::class);
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin') ? true : null;
