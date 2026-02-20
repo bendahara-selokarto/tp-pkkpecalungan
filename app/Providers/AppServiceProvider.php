@@ -23,6 +23,12 @@ use App\Domains\Wilayah\KaderKhusus\Repositories\KaderKhususRepositoryInterface;
 use App\Domains\Wilayah\PrestasiLomba\Models\PrestasiLomba;
 use App\Domains\Wilayah\PrestasiLomba\Repositories\PrestasiLombaRepository;
 use App\Domains\Wilayah\PrestasiLomba\Repositories\PrestasiLombaRepositoryInterface;
+use App\Domains\Wilayah\Bkl\Models\Bkl;
+use App\Domains\Wilayah\Bkl\Repositories\BklRepository;
+use App\Domains\Wilayah\Bkl\Repositories\BklRepositoryInterface;
+use App\Domains\Wilayah\Bkr\Models\Bkr;
+use App\Domains\Wilayah\Bkr\Repositories\BkrRepository;
+use App\Domains\Wilayah\Bkr\Repositories\BkrRepositoryInterface;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanRepository;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanRepositoryInterface;
@@ -34,6 +40,8 @@ use App\Policies\BantuanPolicy;
 use App\Policies\InventarisPolicy;
 use App\Policies\KaderKhususPolicy;
 use App\Policies\PrestasiLombaPolicy;
+use App\Policies\BklPolicy;
+use App\Policies\BkrPolicy;
 use App\Policies\SimulasiPenyuluhanPolicy;
 use App\Policies\UserPolicy;
 use App\Repositories\SuperAdmin\UserManagementRepository;
@@ -93,6 +101,16 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            BklRepositoryInterface::class,
+            BklRepository::class
+        );
+
+        $this->app->bind(
+            BkrRepositoryInterface::class,
+            BkrRepository::class
+        );
+
+        $this->app->bind(
             SimulasiPenyuluhanRepositoryInterface::class,
             SimulasiPenyuluhanRepository::class
         );
@@ -116,6 +134,8 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(AnggotaPokja::class, AnggotaPokjaPolicy::class);
         Gate::policy(KaderKhusus::class, KaderKhususPolicy::class);
         Gate::policy(PrestasiLomba::class, PrestasiLombaPolicy::class);
+        Gate::policy(Bkl::class, BklPolicy::class);
+        Gate::policy(Bkr::class, BkrPolicy::class);
         Gate::policy(SimulasiPenyuluhan::class, SimulasiPenyuluhanPolicy::class);
 
         Gate::before(function ($user, $ability) {
