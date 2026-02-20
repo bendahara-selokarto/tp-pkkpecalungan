@@ -69,6 +69,9 @@ Checklist ini harus ditempel pada deskripsi PR saat trigger aktif:
 - [ ] `php artisan test --filter=scope_metadata_tidak_sinkron` hijau.
 - [ ] Test tambahan yang relevan dengan dampak perubahan sudah hijau.
 
+Catatan implementasi:
+- Repository menyediakan template siap pakai di `.github/pull_request_template.md`.
+
 ## 6) Bukti Validasi T9
 
 Perintah yang dijalankan pada baseline saat dokumen ini dibuat:
