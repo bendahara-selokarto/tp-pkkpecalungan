@@ -64,12 +64,21 @@ Sumber validasi:
 - File report: `resources/views/pdf/anggota_dan_kader_report.blade.php`.
 
 3. `LAMPIRAN 4.14.4a` s.d. `4.14.4e` (hal. 25-34) dan lampiran lanjutan lain.
-- Butuh pemetaan domain tambahan agar tidak terjadi duplikasi dengan modul existing.
-- Progress parsial terbaru:
-  - Label level/area telah dinormalisasi pada report kandidat existing:
-    - `resources/views/pdf/bkl_report.blade.php`
-    - `resources/views/pdf/bkr_report.blade.php`
-    - `resources/views/pdf/simulasi_penyuluhan_report.blade.php`
-    - `resources/views/pdf/program_prioritas_report.blade.php`
-    - `resources/views/pdf/prestasi_lomba_report.blade.php`
-  - Verifikasi nama buku/struktur kolom per lampiran masih menunggu pembacaan referensi PDF halaman 25-34 secara manual.
+- Status pemetaan final: `terverifikasi` dari PDF halaman 25-34.
+  - `4.14.4a` -> Warung PKK
+  - `4.14.4b` -> Taman Bacaan/Perpustakaan
+  - `4.14.4c` -> Koperasi
+  - `4.14.4d` -> Kejar Paket/KF/PAUD
+  - `4.14.4e` -> Posyandu
+- Progress implementasi:
+  - `4.14.4a` Warung PKK: `implemented` (`resources/views/pdf/warung_pkk_report.blade.php`).
+  - `4.14.4b` Taman Bacaan: `implemented` (`resources/views/pdf/taman_bacaan_report.blade.php`).
+  - `4.14.4c` Koperasi: `implemented` (`resources/views/pdf/koperasi_report.blade.php`).
+  - `4.14.4d` Kejar Paket/KF/PAUD: `pending`.
+  - `4.14.4e` Posyandu: `pending`.
+- Label level/area pada report kandidat existing tetap sudah dinormalisasi:
+  - `resources/views/pdf/bkl_report.blade.php`
+  - `resources/views/pdf/bkr_report.blade.php`
+  - `resources/views/pdf/simulasi_penyuluhan_report.blade.php`
+  - `resources/views/pdf/program_prioritas_report.blade.php`
+  - `resources/views/pdf/prestasi_lomba_report.blade.php`

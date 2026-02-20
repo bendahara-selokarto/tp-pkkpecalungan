@@ -42,6 +42,9 @@ use App\Domains\Wilayah\Koperasi\Repositories\KoperasiRepositoryInterface;
 use App\Domains\Wilayah\WarungPkk\Models\WarungPkk;
 use App\Domains\Wilayah\WarungPkk\Repositories\WarungPkkRepository;
 use App\Domains\Wilayah\WarungPkk\Repositories\WarungPkkRepositoryInterface;
+use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
+use App\Domains\Wilayah\TamanBacaan\Repositories\TamanBacaanRepository;
+use App\Domains\Wilayah\TamanBacaan\Repositories\TamanBacaanRepositoryInterface;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanRepository;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanRepositoryInterface;
@@ -59,6 +62,7 @@ use App\Policies\BklPolicy;
 use App\Policies\BkrPolicy;
 use App\Policies\KoperasiPolicy;
 use App\Policies\WarungPkkPolicy;
+use App\Policies\TamanBacaanPolicy;
 use App\Policies\SimulasiPenyuluhanPolicy;
 use App\Policies\UserPolicy;
 use App\Repositories\SuperAdmin\UserManagementRepository;
@@ -150,6 +154,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            TamanBacaanRepositoryInterface::class,
+            TamanBacaanRepository::class
+        );
+
+        $this->app->bind(
             SimulasiPenyuluhanRepositoryInterface::class,
             SimulasiPenyuluhanRepository::class
         );
@@ -179,6 +188,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Bkr::class, BkrPolicy::class);
         Gate::policy(Koperasi::class, KoperasiPolicy::class);
         Gate::policy(WarungPkk::class, WarungPkkPolicy::class);
+        Gate::policy(TamanBacaan::class, TamanBacaanPolicy::class);
         Gate::policy(SimulasiPenyuluhan::class, SimulasiPenyuluhanPolicy::class);
 
         Gate::before(function ($user, $ability) {

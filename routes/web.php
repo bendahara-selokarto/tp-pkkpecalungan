@@ -41,6 +41,9 @@ use App\Domains\Wilayah\Koperasi\Controllers\KoperasiPrintController;
 use App\Domains\Wilayah\WarungPkk\Controllers\DesaWarungPkkController;
 use App\Domains\Wilayah\WarungPkk\Controllers\KecamatanWarungPkkController;
 use App\Domains\Wilayah\WarungPkk\Controllers\WarungPkkPrintController;
+use App\Domains\Wilayah\TamanBacaan\Controllers\DesaTamanBacaanController;
+use App\Domains\Wilayah\TamanBacaan\Controllers\KecamatanTamanBacaanController;
+use App\Domains\Wilayah\TamanBacaan\Controllers\TamanBacaanPrintController;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Controllers\DesaSimulasiPenyuluhanController;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Controllers\KecamatanSimulasiPenyuluhanController;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Controllers\SimulasiPenyuluhanPrintController;
@@ -95,6 +98,7 @@ Route::prefix('desa')
         Route::resource('bkr', DesaBkrController::class);
         Route::resource('koperasi', DesaKoperasiController::class);
         Route::resource('warung-pkk', DesaWarungPkkController::class);
+        Route::resource('taman-bacaan', DesaTamanBacaanController::class);
         Route::resource('simulasi-penyuluhan', DesaSimulasiPenyuluhanController::class);
         Route::resource('program-prioritas', DesaProgramPrioritasController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printDesa'])->name('activities.print');
@@ -112,6 +116,7 @@ Route::prefix('desa')
         Route::get('bkr/report/pdf', [BkrPrintController::class, 'printDesaReport'])->name('bkr.report');
         Route::get('koperasi/report/pdf', [KoperasiPrintController::class, 'printDesaReport'])->name('koperasi.report');
         Route::get('warung-pkk/report/pdf', [WarungPkkPrintController::class, 'printDesaReport'])->name('warung-pkk.report');
+        Route::get('taman-bacaan/report/pdf', [TamanBacaanPrintController::class, 'printDesaReport'])->name('taman-bacaan.report');
         Route::get('simulasi-penyuluhan/report/pdf', [SimulasiPenyuluhanPrintController::class, 'printDesaReport'])->name('simulasi-penyuluhan.report');
         Route::get('program-prioritas/report/pdf', [ProgramPrioritasPrintController::class, 'printDesaReport'])->name('program-prioritas.report');
     });
@@ -133,6 +138,7 @@ Route::prefix('kecamatan')
         Route::resource('bkr', KecamatanBkrController::class);
         Route::resource('koperasi', KecamatanKoperasiController::class);
         Route::resource('warung-pkk', KecamatanWarungPkkController::class);
+        Route::resource('taman-bacaan', KecamatanTamanBacaanController::class);
         Route::resource('simulasi-penyuluhan', KecamatanSimulasiPenyuluhanController::class);
         Route::resource('program-prioritas', KecamatanProgramPrioritasController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printKecamatan'])->name('activities.print');
@@ -150,6 +156,7 @@ Route::prefix('kecamatan')
         Route::get('bkr/report/pdf', [BkrPrintController::class, 'printKecamatanReport'])->name('bkr.report');
         Route::get('koperasi/report/pdf', [KoperasiPrintController::class, 'printKecamatanReport'])->name('koperasi.report');
         Route::get('warung-pkk/report/pdf', [WarungPkkPrintController::class, 'printKecamatanReport'])->name('warung-pkk.report');
+        Route::get('taman-bacaan/report/pdf', [TamanBacaanPrintController::class, 'printKecamatanReport'])->name('taman-bacaan.report');
         Route::get('simulasi-penyuluhan/report/pdf', [SimulasiPenyuluhanPrintController::class, 'printKecamatanReport'])->name('simulasi-penyuluhan.report');
         Route::get('desa-activities', [KecamatanDesaActivityController::class, 'index'])->name('desa-activities.index');
         Route::get('desa-activities/{id}', [KecamatanDesaActivityController::class, 'show'])->name('desa-activities.show');
