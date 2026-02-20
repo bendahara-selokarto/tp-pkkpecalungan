@@ -8,6 +8,9 @@ use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
 use App\Domains\Wilayah\Activities\Controllers\ActivityPrintController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanActivityController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanDesaActivityController;
+use App\Domains\Wilayah\AgendaSurat\Controllers\DesaAgendaSuratController;
+use App\Domains\Wilayah\AgendaSurat\Controllers\KecamatanAgendaSuratController;
+use App\Domains\Wilayah\AgendaSurat\Controllers\AgendaSuratReportPrintController;
 use App\Domains\Wilayah\Inventaris\Controllers\DesaInventarisController;
 use App\Domains\Wilayah\Inventaris\Controllers\KecamatanInventarisController;
 use App\Domains\Wilayah\Inventaris\Controllers\InventarisReportPrintController;
@@ -75,6 +78,7 @@ Route::prefix('desa')
     ->group(function () {
 
         Route::resource('activities', DesaActivityController::class);
+        Route::resource('agenda-surat', DesaAgendaSuratController::class);
         Route::resource('inventaris', DesaInventarisController::class);
         Route::resource('bantuans', DesaBantuanController::class);
         Route::resource('anggota-pokja', DesaAnggotaPokjaController::class);
@@ -86,6 +90,8 @@ Route::prefix('desa')
         Route::resource('simulasi-penyuluhan', DesaSimulasiPenyuluhanController::class);
         Route::resource('program-prioritas', DesaProgramPrioritasController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printDesa'])->name('activities.print');
+        Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaReport'])->name('agenda-surat.report');
+        Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printDesaReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printDesaReport'])->name('bantuans.report');
         Route::get('anggota-pokja/report/pdf', [AnggotaPokjaReportPrintController::class, 'printDesaReport'])->name('anggota-pokja.report');
@@ -104,6 +110,7 @@ Route::prefix('kecamatan')
     ->group(function () {
 
         Route::resource('activities', KecamatanActivityController::class);
+        Route::resource('agenda-surat', KecamatanAgendaSuratController::class);
         Route::resource('inventaris', KecamatanInventarisController::class);
         Route::resource('bantuans', KecamatanBantuanController::class);
         Route::resource('anggota-pokja', KecamatanAnggotaPokjaController::class);
@@ -115,6 +122,8 @@ Route::prefix('kecamatan')
         Route::resource('simulasi-penyuluhan', KecamatanSimulasiPenyuluhanController::class);
         Route::resource('program-prioritas', KecamatanProgramPrioritasController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printKecamatan'])->name('activities.print');
+        Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanReport'])->name('agenda-surat.report');
+        Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printKecamatanReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printKecamatanReport'])->name('bantuans.report');
         Route::get('anggota-pokja/report/pdf', [AnggotaPokjaReportPrintController::class, 'printKecamatanReport'])->name('anggota-pokja.report');

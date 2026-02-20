@@ -10,6 +10,7 @@ const sidebarOpen = ref(false)
 const sidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === '1')
 const districtOpen = ref(
   page.url.startsWith('/kecamatan/activities')
+    || page.url.startsWith('/kecamatan/agenda-surat')
     || page.url.startsWith('/kecamatan/inventaris')
     || page.url.startsWith('/kecamatan/bantuans')
     || page.url.startsWith('/kecamatan/anggota-pokja')
@@ -172,6 +173,15 @@ const hideBrokenImage = (event) => {
             </a>
             <a
               v-if="isDesaScope"
+              href="/desa/agenda-surat"
+              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/agenda-surat') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
+            >
+              <span v-show="!sidebarCollapsed">Agenda Surat Desa</span>
+              <span v-show="sidebarCollapsed">ASD</span>
+            </a>
+            <a
+              v-if="isDesaScope"
               href="/desa/inventaris"
               :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/inventaris') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
@@ -264,7 +274,7 @@ const hideBrokenImage = (event) => {
             <button
               v-if="isKecamatanScope"
               type="button"
-              :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/bantuans') || isActive('/kecamatan/anggota-pokja') || isActive('/kecamatan/anggota-tim-penggerak') || isActive('/kecamatan/kader-khusus') || isActive('/kecamatan/prestasi-lomba') || isActive('/kecamatan/bkl') || isActive('/kecamatan/bkr') || isActive('/kecamatan/simulasi-penyuluhan') || isActive('/kecamatan/program-prioritas') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/agenda-surat') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/bantuans') || isActive('/kecamatan/anggota-pokja') || isActive('/kecamatan/anggota-tim-penggerak') || isActive('/kecamatan/kader-khusus') || isActive('/kecamatan/prestasi-lomba') || isActive('/kecamatan/bkl') || isActive('/kecamatan/bkr') || isActive('/kecamatan/simulasi-penyuluhan') || isActive('/kecamatan/program-prioritas') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="w-full flex items-center rounded-md px-3 py-2 text-sm"
               @click="sidebarCollapsed ? (window.location.href = '/kecamatan/activities') : (districtOpen = !districtOpen)"
             >
@@ -284,6 +294,13 @@ const hideBrokenImage = (event) => {
                 class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
               >
                 Activities Kecamatan
+              </a>
+              <a
+                href="/kecamatan/agenda-surat"
+                :class="isActive('/kecamatan/agenda-surat') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
+                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
+              >
+                Agenda Surat Kecamatan
               </a>
               <a
                 href="/kecamatan/inventaris"

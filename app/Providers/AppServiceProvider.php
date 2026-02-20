@@ -14,6 +14,9 @@ use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
 use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepository;
 use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepositoryInterface;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
+use App\Domains\Wilayah\AgendaSurat\Repositories\AgendaSuratRepository;
+use App\Domains\Wilayah\AgendaSurat\Repositories\AgendaSuratRepositoryInterface;
+use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepository;
 use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
@@ -42,6 +45,7 @@ use App\Policies\ProgramPrioritasPolicy;
 use App\Policies\AnggotaPokjaPolicy;
 use App\Policies\AnggotaTimPenggerakPolicy;
 use App\Policies\BantuanPolicy;
+use App\Policies\AgendaSuratPolicy;
 use App\Policies\InventarisPolicy;
 use App\Policies\KaderKhususPolicy;
 use App\Policies\PrestasiLombaPolicy;
@@ -90,6 +94,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             InventarisRepositoryInterface::class,
             InventarisRepository::class
+        );
+
+        $this->app->bind(
+            AgendaSuratRepositoryInterface::class,
+            AgendaSuratRepository::class
         );
 
         $this->app->bind(
@@ -143,6 +152,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ProgramPrioritas::class, ProgramPrioritasPolicy::class);
         Gate::policy(Bantuan::class, BantuanPolicy::class);
         Gate::policy(Inventaris::class, InventarisPolicy::class);
+        Gate::policy(AgendaSurat::class, AgendaSuratPolicy::class);
         Gate::policy(AnggotaPokja::class, AnggotaPokjaPolicy::class);
         Gate::policy(AnggotaTimPenggerak::class, AnggotaTimPenggerakPolicy::class);
         Gate::policy(KaderKhusus::class, KaderKhususPolicy::class);
