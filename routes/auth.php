@@ -34,11 +34,18 @@ Route::middleware('auth')->group(function () {
         ->name('verification.notice');
 
     Route::get('verify-email/{id}/{hash}', VerifyEmailController::class)
-        ->middleware(['signed', 'throttle:6,1'])
+        ->middleware([
+            'signed',
+            'throttle:'.max(1, (int) config('auth.rate_limits.verification.max_attempts', 6))
+                .','.max(1, (int) config('auth.rate_limits.verification.decay_minutes', 1)),
+        ])
         ->name('verification.verify');
 
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware('throttle:6,1')
+        ->middleware(
+            'throttle:'.max(1, (int) config('auth.rate_limits.verification.max_attempts', 6))
+                .','.max(1, (int) config('auth.rate_limits.verification.decay_minutes', 1))
+        )
         ->name('verification.send');
 
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])

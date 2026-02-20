@@ -56,10 +56,36 @@ rg -n "prestasi|lomba|jenis_lomba|prestasi_" app tests resources -S
 ## 3. Status Lanjutan
 
 ### Status terakhir (checkpoint)
-- Commit terakhir modul: `62885ad`
-- Modul baru selesai: `simulasi-penyuluhan`, `bkl`, `bkr` (belum commit pada sesi ini)
+- Commit terakhir modul: `c91e478`
+- Modul baru selesai: `simulasi-penyuluhan`, `bkl`, `bkr` (sudah commit)
 - Verifikasi terakhir: `php artisan test` lulus penuh (175 test).
 - TODO domain prioritas saat ini: `tidak ada` (sudah dihapus karena selesai).
+- Peningkatan terbaru: throttle auth sudah disentralisasi ke `config/auth.php` + `.env`.
+
+### TODO berikutnya (non-domain)
+1. Tambahkan dokumentasi runbook jika terjadi lonjakan 429 (indikator, tindakan cepat, rollback).
+2. Tambahkan observability ringan (log/metric) untuk endpoint yang sering kena throttle.
+3. Evaluasi cache untuk response berat (misal report list/filter) agar request ke backend lebih hemat.
+
+## 4. Hal Penting Rate Limiter
+
+1. Apakah kuota rate limiter bisa ditambah? `Bisa`, tergantung jenis rate limiter.
+- Rate limiter internal aplikasi Laravel: bisa dinaikkan lewat konfigurasi/rule throttling.
+- Rate limiter layanan pihak ketiga (mis. provider API): tidak bisa dinaikkan dari kode aplikasi saja.
+
+2. Titik throttle yang terdeteksi saat ini di proyek.
+- `app/Http/Requests/Auth/LoginRequest.php`: batas percobaan login saat ini 5 attempt.
+- `routes/auth.php`: middleware `throttle:6,1` pada flow verifikasi email.
+
+3. Cara menaikkan kuota dengan aman (disarankan bertahap).
+- Naikkan limit internal per endpoint secara konservatif, lalu pantau error rate + anomali keamanan.
+- Pisahkan limit untuk endpoint sensitif (login/reset) dan endpoint baca biasa.
+- Terapkan cache, debounce di frontend, dan batched fetch untuk menurunkan konsumsi request.
+
+4. Risiko jika menaikkan kuota tanpa guard tambahan.
+- Brute-force risk meningkat pada endpoint auth.
+- Potensi lonjakan beban DB dan CPU.
+- Sulit investigasi jika belum ada log/metric throttle.
 
 ### Resume protocol (jika sesi terputus / mati listrik)
 1. Cek posisi terbaru:

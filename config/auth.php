@@ -112,4 +112,24 @@ return [
 
     'password_timeout' => env('AUTH_PASSWORD_TIMEOUT', 10800),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Authentication Rate Limits
+    |--------------------------------------------------------------------------
+    |
+    | Nilai ini dipakai untuk throttle endpoint autentikasi agar kebijakan
+    | rate limit tidak tersebar hardcoded di banyak file.
+    |
+    */
+    'rate_limits' => [
+        'login' => [
+            'max_attempts' => (int) env('AUTH_LOGIN_MAX_ATTEMPTS', 5),
+            'decay_seconds' => (int) env('AUTH_LOGIN_DECAY_SECONDS', 60),
+        ],
+        'verification' => [
+            'max_attempts' => (int) env('AUTH_VERIFICATION_MAX_ATTEMPTS', 6),
+            'decay_minutes' => (int) env('AUTH_VERIFICATION_DECAY_MINUTES', 1),
+        ],
+    ],
+
 ];
