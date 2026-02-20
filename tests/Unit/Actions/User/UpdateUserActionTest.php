@@ -5,6 +5,7 @@ namespace Tests\Unit\Actions\User;
 use App\Actions\User\UpdateUserAction;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
+use DomainException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Role;
@@ -88,5 +89,29 @@ class UpdateUserActionTest extends TestCase
         ]);
 
         $this->assertSame('desa', $user->fresh()->scope);
+    }
+
+    public function test_gagal_memperbarui_super_admin(): void
+    {
+        $this->expectException(DomainException::class);
+
+        Role::create(['name' => 'super-admin']);
+        Role::create(['name' => 'admin-desa']);
+        $desaArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $desaArea->id,
+        ]);
+        $user->assignRole('super-admin');
+
+        $action = app(UpdateUserAction::class);
+        $action->execute($user, [
+            'name' => 'Should Not Update',
+            'email' => 'should-not-update@email.com',
+            'scope' => 'desa',
+            'area_id' => $desaArea->id,
+            'role' => 'admin-desa',
+        ]);
     }
 }

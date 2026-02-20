@@ -105,7 +105,13 @@ class UserManagementController extends Controller
     
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
-        $this->userService->update($user, $request->validated());
+        try {
+            $this->userService->update($user, $request->validated());
+        } catch (DomainException $exception) {
+            return redirect()
+                ->route('super-admin.users.index')
+                ->with('error', $exception->getMessage());
+        }
 
         return redirect()->route('super-admin.users.index')->with('success', 'User berhasil diupdate');
     }

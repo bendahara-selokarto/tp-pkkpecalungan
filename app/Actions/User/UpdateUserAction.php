@@ -4,6 +4,7 @@ namespace App\Actions\User;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use App\Support\RoleScopeMatrix;
+use DomainException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -16,6 +17,10 @@ class UpdateUserAction
 
     public function execute(User $user, array $data): User
     {
+        if ($user->hasRole('super-admin')) {
+            throw new DomainException('Super Admin tidak boleh diubah');
+        }
+
         $resolvedScopeAndArea = $this->resolveScopeAndArea($user, $data);
 
         $updatePayload = [
