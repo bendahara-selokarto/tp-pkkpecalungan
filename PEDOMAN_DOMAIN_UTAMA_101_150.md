@@ -164,14 +164,14 @@ Kriteria selesai:
 
 ### Task Operasional Berulang (Setiap Modul Baru/Perubahan Besar)
 
-- [ ] `R1` Jalankan `php artisan route:list --name=<slug-modul>` dan simpan ringkasan hasil.
-- [ ] `R2` Jalankan test targeted modul terkait + policy/scope test.
-- [ ] `R3` Jalankan `php artisan test` sebelum merge perubahan signifikan.
-- [ ] `R4` Verifikasi PDF sample `desa` dan `kecamatan` terhadap pedoman utama.
+- [x] `R1` Jalankan `php artisan route:list --name=<slug-modul>` dan simpan ringkasan hasil. (baseline 2026-02-20, ulang setiap perubahan)
+- [x] `R2` Jalankan test targeted modul terkait + policy/scope test. (baseline 2026-02-20, ulang setiap perubahan)
+- [x] `R3` Jalankan `php artisan test` sebelum merge perubahan signifikan. (baseline 2026-02-20, ulang setiap perubahan)
+- [x] `R4` Verifikasi PDF sample `desa` dan `kecamatan` terhadap pedoman utama. (baseline otomatis 2026-02-20, ulang setiap perubahan)
 
 ### Definition of Done TODO Lanjutan
 
-- [ ] Tidak ada mismatch label/header PDF terhadap pedoman domain utama.
-- [ ] Tidak ada drift akses antara `role`, `scope`, `area level`, dan policy.
-- [ ] Setiap perubahan domain memiliki jejak referensi pedoman dan bukti test validasi.
-- [ ] Semua artefak pada `docs/domain`, `docs/security`, `docs/pdf`, dan `docs/process` tersedia dan terisi.
+- [x] Tidak ada mismatch label/header PDF terhadap pedoman domain utama. (baseline 2026-02-20)
+- [x] Tidak ada drift akses antara `role`, `scope`, `area level`, dan policy. (baseline 2026-02-20)
+- [x] Setiap perubahan domain memiliki jejak referensi pedoman dan bukti test validasi. (baseline 2026-02-20)
+- [x] Semua artefak pada `docs/domain`, `docs/security`, `docs/pdf`, dan `docs/process` tersedia dan terisi. (baseline 2026-02-20)
