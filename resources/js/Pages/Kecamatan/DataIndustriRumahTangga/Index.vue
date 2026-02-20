@@ -1,10 +1,11 @@
 ﻿<script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
+import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
-import { Link, router, usePage } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
 import { mdiAccountGroup } from '@mdi/js'
-import { computed } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   dataIndustriRumahTanggaItems: {
@@ -13,28 +14,38 @@ const props = defineProps({
   },
 })
 
-const page = usePage()
-const flashSuccess = computed(() => page.props.flash?.success)
+
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data ini?'
+const isDeleteModalActive = ref(false)
+const deletingId = ref(null)
 
 const hapusDataIndustri = (id) => {
-  if (!window.confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+  deletingId.value = id
+  isDeleteModalActive.value = true
+}
+
+const confirmDelete = () => {
+  if (deletingId.value === null) {
     return
   }
 
-  router.delete(`/kecamatan/data-industri-rumah-tangga/${id}`)
+  router.delete(`/kecamatan/data-industri-rumah-tangga/${deletingId.value}`, {
+    onFinish: () => {
+      isDeleteModalActive.value = false
+      deletingId.value = null
+    },
+  })
+}
+
+const cancelDelete = () => {
+  isDeleteModalActive.value = false
+  deletingId.value = null
 }
 </script>
 
 <template>
   <SectionMain>
     <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Data Industri Rumah Tangga Kecamatan" main />
-
-    <div
-      v-if="flashSuccess"
-      class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-300"
-    >
-      {{ flashSuccess }}
-    </div>
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
@@ -109,6 +120,15 @@ const hapusDataIndustri = (id) => {
         </table>
       </div>
     </CardBox>
+
+    <ConfirmActionModal
+      v-model="isDeleteModalActive"
+      title="Konfirmasi Hapus"
+      :message="deleteConfirmationMessage"
+      confirm-label="Ya, Hapus"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </SectionMain>
 </template>
 

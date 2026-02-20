@@ -1,10 +1,11 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
+import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
-import { Link, router, usePage } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
 import { mdiAccountMultiple } from '@mdi/js'
-import { computed } from 'vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   users: {
@@ -13,17 +14,31 @@ const props = defineProps({
   },
 })
 
-const page = usePage()
-
-const flashSuccess = computed(() => page.props.flash?.success)
-const flashError = computed(() => page.props.flash?.error)
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus user ini?'
+const isDeleteModalActive = ref(false)
+const deletingId = ref(null)
 
 const deleteUser = (userId) => {
-  if (!window.confirm('Apakah Anda yakin ingin menghapus user ini?')) {
+  deletingId.value = userId
+  isDeleteModalActive.value = true
+}
+
+const confirmDelete = () => {
+  if (deletingId.value === null) {
     return
   }
 
-  router.delete(`/super-admin/users/${userId}`)
+  router.delete(`/super-admin/users/${deletingId.value}`, {
+    onFinish: () => {
+      isDeleteModalActive.value = false
+      deletingId.value = null
+    },
+  })
+}
+
+const cancelDelete = () => {
+  isDeleteModalActive.value = false
+  deletingId.value = null
 }
 
 const formatArea = (area) => {
@@ -38,19 +53,6 @@ const formatArea = (area) => {
 <template>
   <SectionMain>
     <SectionTitleLineWithButton :icon="mdiAccountMultiple" title="User Management" main />
-
-    <div
-      v-if="flashSuccess"
-      class="mb-6 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-300"
-    >
-      {{ flashSuccess }}
-    </div>
-    <div
-      v-if="flashError"
-      class="mb-6 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-900/40 dark:bg-rose-900/20 dark:text-rose-300"
-    >
-      {{ flashError }}
-    </div>
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
@@ -132,5 +134,14 @@ const formatArea = (area) => {
         </template>
       </div>
     </CardBox>
+
+    <ConfirmActionModal
+      v-model="isDeleteModalActive"
+      title="Konfirmasi Hapus"
+      :message="deleteConfirmationMessage"
+      confirm-label="Ya, Hapus"
+      @confirm="confirmDelete"
+      @cancel="cancelDelete"
+    />
   </SectionMain>
 </template>

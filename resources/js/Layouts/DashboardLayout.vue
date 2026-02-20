@@ -1,6 +1,7 @@
 <script setup>
 import { Link, router, usePage } from '@inertiajs/vue3'
 import { useDarkModeStore } from '@/admin-one/stores/darkMode'
+import FlashMessageBar from '@/admin-one/components/FlashMessageBar.vue'
 import { computed, ref } from 'vue'
 
 const page = usePage()
@@ -12,6 +13,7 @@ const sidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === '1')
 const user = computed(() => page.props.auth?.user ?? null)
 const roles = computed(() => user.value?.roles ?? [])
 const activeRoles = computed(() => roles.value.join(', ') || '-')
+const flash = computed(() => page.props.flash ?? {})
 const userScope = computed(() => user.value?.scope ?? null)
 const isDesaScope = computed(() => userScope.value === 'desa')
 const isKecamatanScope = computed(() => userScope.value === 'kecamatan')
@@ -430,6 +432,7 @@ const hideBrokenImage = (event) => {
 
     <div :class="sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'" class="pt-14 transition-all duration-200">
       <main class="px-4 sm:px-6 lg:px-8 py-6">
+        <FlashMessageBar :flash="flash" />
         <slot />
       </main>
     </div>

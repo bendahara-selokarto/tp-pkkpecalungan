@@ -23,6 +23,10 @@ const props = defineProps({
   },
   hasCustomLayout: Boolean,
   hasCancel: Boolean,
+  cancelLabel: {
+    type: String,
+    default: 'Cancel',
+  },
   isForm: Boolean,
   isProcessing: Boolean,
   modelValue: [String, Number, Boolean],
@@ -90,7 +94,7 @@ onUnmounted(() => {
               :disabled="isProcessing"
               :class="{ 'opacity-25': isProcessing }"
             />
-            <BaseButton v-if="hasCancel" label="Cancel" :color="button" outline @click="cancel" />
+            <BaseButton v-if="hasCancel" :label="cancelLabel" :color="button" outline @click="cancel" />
           </BaseButtons>
         </CardBoxComponentFooter>
       </template>
