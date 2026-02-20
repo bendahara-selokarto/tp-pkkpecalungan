@@ -49,7 +49,12 @@ Sumber validasi:
 ## Item yang belum tercover penuh (lebih asumtif)
 
 1. `LAMPIRAN 4.11` (hal. 7-8) - Buku Tabungan/Keuangan.
-- Belum ada modul domain khusus buku keuangan.
+- Status terbaru: `implemented` sebagai report turunan domain `bantuans` (tanpa tabel/domain baru).
+- Endpoint report:
+  - `/desa/bantuans/keuangan/report/pdf`
+  - `/kecamatan/bantuans/keuangan/report/pdf`
+- File report: `resources/views/pdf/buku_keuangan_report.blade.php`.
+- Catatan: report saat ini mencatat transaksi pemasukan dari bantuan berkategori `uang/keuangan`.
 
 2. `LAMPIRAN 4.9b` (hal. 3-4) - Daftar anggota TP PKK dan kader (format gabungan).
 - Status terbaru: `implemented` via reuse domain existing (tanpa tabel baru).

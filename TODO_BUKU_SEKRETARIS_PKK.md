@@ -11,7 +11,7 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - [x] Tahap 4 - Penyesuaian format cetak jika ada perbedaan istilah/header antar level (medium risk, tetap reuse domain existing).
 - [ ] Tahap 5 - Modul baru yang belum ada padanan domain (high assumption, hanya jika tidak bisa dipenuhi lewat reuse domain yang sudah ada).
   - [x] 4.9b report gabungan anggota TP PKK + kader dibuat dengan reuse domain existing (tanpa tabel baru).
-  - [ ] 4.11 buku tabungan/keuangan (belum ada padanan domain).
+  - [x] 4.11 buku tabungan/keuangan dibuat sebagai report turunan domain `bantuans` (kategori uang/keuangan).
   - [ ] 4.14.4a s.d. 4.14.4e dan lampiran lanjutan (perlu pemetaan domain lanjutan).
 
 ## Catatan anti-konflik
