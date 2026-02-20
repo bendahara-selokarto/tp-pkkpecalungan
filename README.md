@@ -112,6 +112,7 @@ Sudah berbasis Inertia Vue:
 - `bantuans`
 - `anggota_pokja`
 - `kader_khusus`
+- `prestasi-lomba`
 - `program-prioritas`
 - `super-admin/users`
 - `profile`

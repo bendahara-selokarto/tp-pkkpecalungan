@@ -20,6 +20,9 @@ use App\Domains\Wilayah\AnggotaPokja\Controllers\AnggotaPokjaReportPrintControll
 use App\Domains\Wilayah\KaderKhusus\Controllers\DesaKaderKhususController;
 use App\Domains\Wilayah\KaderKhusus\Controllers\KecamatanKaderKhususController;
 use App\Domains\Wilayah\KaderKhusus\Controllers\KaderKhususReportPrintController;
+use App\Domains\Wilayah\PrestasiLomba\Controllers\DesaPrestasiLombaController;
+use App\Domains\Wilayah\PrestasiLomba\Controllers\KecamatanPrestasiLombaController;
+use App\Domains\Wilayah\PrestasiLomba\Controllers\PrestasiLombaPrintController;
 use App\Domains\Wilayah\ProgramPrioritas\Controllers\DesaProgramPrioritasController;
 use App\Domains\Wilayah\ProgramPrioritas\Controllers\KecamatanProgramPrioritasController;
 use App\Domains\Wilayah\ProgramPrioritas\Controllers\ProgramPrioritasPrintController;
@@ -64,12 +67,14 @@ Route::prefix('desa')
         Route::resource('bantuans', DesaBantuanController::class);
         Route::resource('anggota-pokja', DesaAnggotaPokjaController::class);
         Route::resource('kader-khusus', DesaKaderKhususController::class);
+        Route::resource('prestasi-lomba', DesaPrestasiLombaController::class);
         Route::resource('program-prioritas', DesaProgramPrioritasController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printDesa'])->name('activities.print');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printDesaReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printDesaReport'])->name('bantuans.report');
         Route::get('anggota-pokja/report/pdf', [AnggotaPokjaReportPrintController::class, 'printDesaReport'])->name('anggota-pokja.report');
         Route::get('kader-khusus/report/pdf', [KaderKhususReportPrintController::class, 'printDesaReport'])->name('kader-khusus.report');
+        Route::get('prestasi-lomba/report/pdf', [PrestasiLombaPrintController::class, 'printDesaReport'])->name('prestasi-lomba.report');
         Route::get('program-prioritas/report/pdf', [ProgramPrioritasPrintController::class, 'printDesaReport'])->name('program-prioritas.report');
     });
 
@@ -83,12 +88,14 @@ Route::prefix('kecamatan')
         Route::resource('bantuans', KecamatanBantuanController::class);
         Route::resource('anggota-pokja', KecamatanAnggotaPokjaController::class);
         Route::resource('kader-khusus', KecamatanKaderKhususController::class);
+        Route::resource('prestasi-lomba', KecamatanPrestasiLombaController::class);
         Route::resource('program-prioritas', KecamatanProgramPrioritasController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printKecamatan'])->name('activities.print');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printKecamatanReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printKecamatanReport'])->name('bantuans.report');
         Route::get('anggota-pokja/report/pdf', [AnggotaPokjaReportPrintController::class, 'printKecamatanReport'])->name('anggota-pokja.report');
         Route::get('kader-khusus/report/pdf', [KaderKhususReportPrintController::class, 'printKecamatanReport'])->name('kader-khusus.report');
+        Route::get('prestasi-lomba/report/pdf', [PrestasiLombaPrintController::class, 'printKecamatanReport'])->name('prestasi-lomba.report');
         Route::get('desa-activities', [KecamatanDesaActivityController::class, 'index'])->name('desa-activities.index');
         Route::get('desa-activities/{id}', [KecamatanDesaActivityController::class, 'show'])->name('desa-activities.show');
         Route::get('desa-activities/{id}/print', [ActivityPrintController::class, 'printKecamatanDesa'])->name('desa-activities.print');
