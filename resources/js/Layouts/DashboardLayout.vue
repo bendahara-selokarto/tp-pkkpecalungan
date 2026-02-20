@@ -40,6 +40,7 @@ const desaMenuGroups = [
     code: 'L41',
     items: [
       { href: '/desa/data-warga', label: 'Data Warga' },
+      { href: '/desa/data-kegiatan-warga', label: 'Data Kegiatan Warga' },
     ],
   },
   {
@@ -89,6 +90,7 @@ const kecamatanMenuGroups = [
     code: 'L41',
     items: [
       { href: '/kecamatan/data-warga', label: 'Data Warga' },
+      { href: '/kecamatan/data-kegiatan-warga', label: 'Data Kegiatan Warga' },
     ],
   },
   {
