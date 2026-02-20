@@ -57,7 +57,7 @@ class DesaWarungPkkController extends Controller
         $this->authorize('create', WarungPkk::class);
         $this->createScopedWarungPkkAction->execute($request->validated(), ScopeLevel::DESA->value);
 
-        return redirect()->route('desa.warung-pkk.index')->with('success', 'Data warung PKK berhasil dibuat');
+        return redirect()->route('desa.warung-pkk.index')->with('success', 'Data aset (sarana) desa/kelurahan berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -100,7 +100,7 @@ class DesaWarungPkkController extends Controller
         $this->authorize('update', $warungPkk);
         $this->updateWarungPkkAction->execute($warungPkk, $request->validated());
 
-        return redirect()->route('desa.warung-pkk.index')->with('success', 'Data warung PKK berhasil diperbarui');
+        return redirect()->route('desa.warung-pkk.index')->with('success', 'Data aset (sarana) desa/kelurahan berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -109,6 +109,8 @@ class DesaWarungPkkController extends Controller
         $this->authorize('delete', $warungPkk);
         $this->warungPkkRepository->delete($warungPkk);
 
-        return redirect()->route('desa.warung-pkk.index')->with('success', 'Data warung PKK berhasil dihapus');
+        return redirect()->route('desa.warung-pkk.index')->with('success', 'Data aset (sarana) desa/kelurahan berhasil dihapus');
     }
 }
+
+

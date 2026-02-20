@@ -15,12 +15,12 @@ const props = defineProps({
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiStore" title="Detail Warung PKK Desa" main />
+    <SectionTitleLineWithButton :icon="mdiStore" title="Detail Data Aset (Sarana) Desa/Kelurahan (Desa)" main />
 
     <CardBox class="max-w-4xl space-y-4">
       <div class="grid gap-4 md:grid-cols-2">
         <div>
-          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Nama Warung PKK</p>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Nama Aset/Sarana</p>
           <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.warungPkk.nama_warung_pkk }}</p>
         </div>
         <div>
@@ -55,3 +55,4 @@ const props = defineProps({
     </CardBox>
   </SectionMain>
 </template>
+

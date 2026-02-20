@@ -17,7 +17,7 @@ const page = usePage()
 const flashSuccess = computed(() => page.props.flash?.success)
 
 const hapusWarungPkk = (id) => {
-  if (!window.confirm('Apakah Anda yakin ingin menghapus data warung PKK ini?')) {
+  if (!window.confirm('Apakah Anda yakin ingin menghapus Data aset (sarana) desa/kelurahan ini?')) {
     return
   }
 
@@ -27,7 +27,7 @@ const hapusWarungPkk = (id) => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiStore" title="Warung PKK Desa" main />
+    <SectionTitleLineWithButton :icon="mdiStore" title="Data aset (sarana) desa/kelurahan (Desa)" main />
 
     <div
       v-if="flashSuccess"
@@ -38,7 +38,7 @@ const hapusWarungPkk = (id) => {
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Warung PKK</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data aset (sarana) desa/kelurahan</h3>
         <div class="flex items-center gap-2">
           <a
             href="/desa/warung-pkk/report/pdf"
@@ -61,7 +61,7 @@ const hapusWarungPkk = (id) => {
         <table class="w-full min-w-[980px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
-              <th class="px-3 py-3 font-semibold">Nama Warung PKK</th>
+              <th class="px-3 py-3 font-semibold">NAMA ASET/SARANA</th>
               <th class="px-3 py-3 font-semibold">Nama Pengelola</th>
               <th class="px-3 py-3 font-semibold">Komoditi</th>
               <th class="px-3 py-3 font-semibold">Kategori</th>
@@ -106,7 +106,7 @@ const hapusWarungPkk = (id) => {
             </tr>
             <tr v-if="props.warungPkkItems.length === 0">
               <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data warung PKK belum tersedia.
+                Data aset (sarana) desa/kelurahan belum tersedia.
               </td>
             </tr>
           </tbody>
@@ -115,3 +115,5 @@ const hapusWarungPkk = (id) => {
     </CardBox>
   </SectionMain>
 </template>
+
+

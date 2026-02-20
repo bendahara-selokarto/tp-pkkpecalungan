@@ -39,7 +39,7 @@ const desaMenuGroups = [
     label: 'Lampiran 4.14.4',
     code: 'L44',
     items: [
-      { href: '/desa/warung-pkk', label: 'Data Aset (Warung PKK)' },
+      { href: '/desa/warung-pkk', label: 'Data Aset (Sarana) Desa/Kelurahan' },
       { href: '/desa/taman-bacaan', label: 'Data Isian Taman Bacaan/Perpustakaan' },
       { href: '/desa/koperasi', label: 'Data Isian Koperasi' },
       { href: '/desa/kejar-paket', label: 'Data Isian Kejar Paket/KF/PAUD' },
@@ -80,7 +80,7 @@ const kecamatanMenuGroups = [
     label: 'Lampiran 4.14.4',
     code: 'L44',
     items: [
-      { href: '/kecamatan/warung-pkk', label: 'Data Aset (Warung PKK)' },
+      { href: '/kecamatan/warung-pkk', label: 'Data Aset (Sarana) Desa/Kelurahan' },
       { href: '/kecamatan/taman-bacaan', label: 'Data Isian Taman Bacaan/Perpustakaan' },
       { href: '/kecamatan/koperasi', label: 'Data Isian Koperasi' },
       { href: '/kecamatan/kejar-paket', label: 'Data Isian Kejar Paket/KF/PAUD' },
@@ -365,3 +365,4 @@ const hideBrokenImage = (event) => {
     </div>
   </div>
 </template>
+

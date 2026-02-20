@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Warung PKK</title>
+    <title>Data aset (sarana) desa/kelurahan</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
@@ -20,7 +20,7 @@
         $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
     @endphp
 
-    <div class="title">Laporan Warung PKK {{ $levelLabel }}</div>
+    <div class="title">Data aset (sarana) desa/kelurahan {{ $levelLabel }}</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
@@ -31,7 +31,7 @@
         <thead>
             <tr>
                 <th style="width: 28px;">NO</th>
-                <th style="width: 170px;">NAMA WARUNG PKK</th>
+                <th style="width: 170px;">NAMA ASET/SARANA</th>
                 <th style="width: 150px;">NAMA PENGELOLA</th>
                 <th style="width: 170px;">KOMODITI</th>
                 <th style="width: 130px;">KATEGORI</th>
@@ -50,10 +50,12 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="center">Data belum tersedia.</td>
+                    <td colspan="6" class="center">Data aset (sarana) desa/kelurahan belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 </body>
 </html>
+
+
