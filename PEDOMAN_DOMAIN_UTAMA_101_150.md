@@ -72,35 +72,106 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - Buku ekspedisi tidak menambah tabel/domain baru untuk menghindari duplikasi data surat keluar.
 - Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi masuk fase bertahap. Modul 4.14.1a (`data-warga`), 4.14.1b (`data-kegiatan-warga`), 4.14.2a (`data-keluarga`), 4.14.2b (`data-pemanfaatan-tanah-pekarangan-hatinya-pkk`), 4.14.2c (`data-industri-rumah-tangga`), 4.14.3 (`data-pelatihan-kader`), dan 4.15 (`catatan-keluarga`) sudah selesai.
 
-## TODO Lanjutan - Strategi Analisis Pedoman Domain (Profesional)
+## TODO Lanjutan - Backlog Tugas Nyata
 
-Tujuan: menjaga keamanan autentikasi/otorisasi dan memastikan output PDF tetap koheren dengan dokumen baku.
+Tujuan:
+- Menjaga keamanan autentikasi/otorisasi tetap konsisten lintas modul.
+- Menjaga koherensi istilah domain sesuai pedoman utama.
+- Memastikan output generate PDF identik dengan dokumen baku.
 
-### A. Strategi Kontrak Domain
-- [ ] Bangun `Domain Contract Matrix` per lampiran (nama modul, field canonical, label kolom PDF, sumber halaman pedoman).
-- [ ] Tambahkan `aturan normalisasi istilah` (contoh domain teknis vs label pedoman) agar tidak terjadi drift naming.
-- [ ] Tetapkan `traceability id` per kolom PDF ke sumber pedoman (halaman + label referensi).
+Aturan eksekusi:
+- Semua task harus menghasilkan artefak yang bisa direview.
+- Semua task wajib mencantumkan bukti validasi (`route:list`, test targeted, `php artisan test` bila relevan).
+- Jika ada deviasi dari pedoman, wajib dicatat di log deviasi.
 
-### B. Strategi Autentikasi dan Otorisasi
-- [ ] Susun `Auth Coherence Matrix`: `role -> scope -> area level -> module access` untuk semua modul buku sekretaris.
-- [ ] Tambahkan regression checklist mismatch metadata (`role/scope/area_id`) sebelum rilis domain baru.
-- [ ] Audit berkala kebijakan `Policy -> Scope Service` untuk memastikan tidak ada bypass di controller/repository.
+### Sprint 1 - Baseline Kontrak dan Akses
 
-### C. Strategi Validasi PDF ke Dokumen Baku
-- [ ] Definisikan `PDF Compliance Checklist` per modul:
-- urutan kolom
-- penamaan header
-- format nilai
-- orientasi halaman (default `landscape`)
-- [ ] Tambahkan test assertion untuk header PDF utama agar mismatch label pedoman terdeteksi dini.
-- [ ] Siapkan baseline fixture output PDF per modul untuk review visual terkontrol saat ada perubahan template.
+- [x] `T1` Bangun `Domain Contract Matrix` lintas lampiran 4.9-4.15.
+Output:
+  - File baru `docs/domain/DOMAIN_CONTRACT_MATRIX.md`.
+Kriteria selesai:
+  - Setiap modul memiliki: `slug`, label pedoman, field canonical, label PDF, sumber halaman.
 
-### D. Strategi Operasional Perubahan Dokumen
-- [ ] Terapkan `change gate` dokumen: perubahan kontrak domain wajib memperbarui `Domain Contract Matrix` dan test terkait.
-- [ ] Terapkan `release checklist` khusus modul PDF: lulus test scoped auth + lulus checklist koherensi pedoman.
-- [ ] Tambahkan log keputusan deviasi (jika ada) beserta alasan teknis dan dampak.
+- [ ] `T2` Bangun `Terminology Normalization Map`.
+Output:
+  - File baru `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`.
+Kriteria selesai:
+  - Semua perbedaan domain teknis vs label pedoman terdokumentasi.
+  - Tidak ada label UI/PDF yang ambigu.
+
+- [ ] `T3` Bangun `Auth Coherence Matrix` untuk modul buku sekretaris.
+Output:
+  - File baru `docs/security/AUTH_COHERENCE_MATRIX.md`.
+Kriteria selesai:
+  - Memetakan `role -> scope -> area level -> akses modul (view/create/update/delete/print)`.
+  - Mencakup role kompatibilitas (`admin-desa`, `admin-kecamatan`) dan `super-admin`.
+
+- [ ] `T4` Audit policy dan scope service untuk anti-bypass.
+Output:
+  - File baru `docs/security/POLICY_SCOPE_AUDIT_REPORT.md`.
+Kriteria selesai:
+  - Semua controller domain buku sekretaris diverifikasi memakai `authorize(...)`.
+  - Tidak ada query akses lintas area tanpa guard `Policy -> Scope Service`.
+
+### Sprint 2 - PDF Compliance dan Regression Guard
+
+- [ ] `T5` Buat `PDF Compliance Checklist` per modul.
+Output:
+  - File baru `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`.
+Kriteria selesai:
+  - Checklist mencakup: urutan kolom, header, format nilai, orientasi, footer metadata cetak.
+
+- [ ] `T6` Tambahkan test assertion header PDF untuk modul prioritas.
+Output:
+  - Update test feature report print pada modul prioritas.
+Kriteria selesai:
+  - Test gagal jika header kolom PDF berubah dari pedoman.
+  - Minimal mencakup modul 4.14.1a-4.15.
+
+- [ ] `T7` Siapkan baseline fixture PDF untuk visual review.
+Output:
+  - Folder baru `tests/Fixtures/pdf-baseline/` + petunjuk penggunaan.
+Kriteria selesai:
+  - Setiap modul punya minimal 1 baseline fixture.
+  - Ada prosedur compare manual/otomatis antar revisi.
+
+- [ ] `T8` Tambahkan regression checklist mismatch metadata akses.
+Output:
+  - File baru `docs/security/REGRESSION_CHECKLIST_AUTH_SCOPE.md`.
+Kriteria selesai:
+  - Memiliki skenario stale metadata: `scope=desa area=kecamatan` dan sebaliknya.
+  - Ada mapping ke test yang menutup skenario tersebut.
+
+### Sprint 3 - Change Gate dan Operasional Rilis
+
+- [ ] `T9` Terapkan `change gate` untuk perubahan kontrak domain.
+Output:
+  - File baru `docs/process/CHANGE_GATE_DOMAIN_CONTRACT.md`.
+Kriteria selesai:
+  - PR yang mengubah kontrak domain wajib update matrix + test terkait.
+
+- [ ] `T10` Terapkan release checklist khusus modul PDF.
+Output:
+  - File baru `docs/process/RELEASE_CHECKLIST_PDF.md`.
+Kriteria selesai:
+  - Checklist minimal: test scoped auth hijau, compliance checklist lulus, uji PDF sample per level.
+
+- [ ] `T11` Buat log deviasi pedoman domain.
+Output:
+  - File baru `docs/domain/DOMAIN_DEVIATION_LOG.md`.
+Kriteria selesai:
+  - Setiap deviasi memiliki: alasan teknis, dampak, rencana mitigasi, status.
+
+### Task Operasional Berulang (Setiap Modul Baru/Perubahan Besar)
+
+- [ ] `R1` Jalankan `php artisan route:list --name=<slug-modul>` dan simpan ringkasan hasil.
+- [ ] `R2` Jalankan test targeted modul terkait + policy/scope test.
+- [ ] `R3` Jalankan `php artisan test` sebelum merge perubahan signifikan.
+- [ ] `R4` Verifikasi PDF sample `desa` dan `kecamatan` terhadap pedoman utama.
 
 ### Definition of Done TODO Lanjutan
+
 - [ ] Tidak ada mismatch label/header PDF terhadap pedoman domain utama.
 - [ ] Tidak ada drift akses antara `role`, `scope`, `area level`, dan policy.
-- [ ] Setiap perubahan domain memiliki jejak referensi ke sumber pedoman dan test validasi yang relevan.
+- [ ] Setiap perubahan domain memiliki jejak referensi pedoman dan bukti test validasi.
+- [ ] Semua artefak pada `docs/domain`, `docs/security`, `docs/pdf`, dan `docs/process` tersedia dan terisi.
