@@ -19,7 +19,7 @@ const flashSuccess = computed(() => page.props.flash?.success)
 const totalKader = (item) => Number(item.jumlah_kader_l || 0) + Number(item.jumlah_kader_p || 0)
 
 const hapusSimulasiPenyuluhan = (id) => {
-  if (!window.confirm('Apakah Anda yakin ingin menghapus data simulasi penyuluhan ini?')) {
+  if (!window.confirm('Apakah Anda yakin ingin menghapus data isian kelompok simulasi dan penyuluhan ini?')) {
     return
   }
 
@@ -29,7 +29,7 @@ const hapusSimulasiPenyuluhan = (id) => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Simulasi/Penyuluhan Desa" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Data Isian Kelompok Simulasi dan Penyuluhan (Desa)" main />
 
     <div
       v-if="flashSuccess"
@@ -40,7 +40,7 @@ const hapusSimulasiPenyuluhan = (id) => {
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Simulasi/Penyuluhan</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Isian Kelompok Simulasi dan Penyuluhan</h3>
         <div class="flex items-center gap-2">
           <a
             href="/desa/simulasi-penyuluhan/report/pdf"
@@ -64,7 +64,7 @@ const hapusSimulasiPenyuluhan = (id) => {
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
               <th class="px-3 py-3 font-semibold">Nama Kegiatan</th>
-              <th class="px-3 py-3 font-semibold">Jenis Simulasi/Penyuluhan</th>
+              <th class="px-3 py-3 font-semibold">Jenis Simulasi dan Penyuluhan</th>
               <th class="px-3 py-3 font-semibold text-center">Kelompok</th>
               <th class="px-3 py-3 font-semibold text-center">Sosialisasi</th>
               <th class="px-3 py-3 font-semibold text-center">Kader L</th>
@@ -112,7 +112,7 @@ const hapusSimulasiPenyuluhan = (id) => {
             </tr>
             <tr v-if="simulasiPenyuluhanItems.length === 0">
               <td colspan="8" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data simulasi penyuluhan belum tersedia.
+                Data isian kelompok simulasi dan penyuluhan belum tersedia.
               </td>
             </tr>
           </tbody>
@@ -121,3 +121,5 @@ const hapusSimulasiPenyuluhan = (id) => {
     </CardBox>
   </SectionMain>
 </template>
+
+

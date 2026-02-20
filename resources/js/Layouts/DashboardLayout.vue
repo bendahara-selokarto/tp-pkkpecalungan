@@ -44,7 +44,7 @@ const desaMenuGroups = [
       { href: '/desa/koperasi', label: 'Data Isian Koperasi' },
       { href: '/desa/kejar-paket', label: 'Data Isian Kejar Paket/KF/PAUD' },
       { href: '/desa/posyandu', label: 'Data Isian Posyandu' },
-      { href: '/desa/simulasi-penyuluhan', label: 'Data Isian Kelompok Simulasi/Penyuluhan' },
+      { href: '/desa/simulasi-penyuluhan', label: 'Data Isian Kelompok Simulasi dan Penyuluhan' },
     ],
   },
   {
@@ -85,7 +85,7 @@ const kecamatanMenuGroups = [
       { href: '/kecamatan/koperasi', label: 'Data Isian Koperasi' },
       { href: '/kecamatan/kejar-paket', label: 'Data Isian Kejar Paket/KF/PAUD' },
       { href: '/kecamatan/posyandu', label: 'Data Isian Posyandu' },
-      { href: '/kecamatan/simulasi-penyuluhan', label: 'Data Isian Kelompok Simulasi/Penyuluhan' },
+      { href: '/kecamatan/simulasi-penyuluhan', label: 'Data Isian Kelompok Simulasi dan Penyuluhan' },
     ],
   },
   {
@@ -365,4 +365,5 @@ const hideBrokenImage = (event) => {
     </div>
   </div>
 </template>
+
 

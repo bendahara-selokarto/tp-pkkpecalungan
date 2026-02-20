@@ -59,7 +59,7 @@ class DesaSimulasiPenyuluhanController extends Controller
         $this->authorize('create', SimulasiPenyuluhan::class);
         $this->createScopedSimulasiPenyuluhanAction->execute($request->validated(), ScopeLevel::DESA->value);
 
-        return redirect()->route('desa.simulasi-penyuluhan.index')->with('success', 'Data simulasi penyuluhan berhasil dibuat');
+        return redirect()->route('desa.simulasi-penyuluhan.index')->with('success', 'Data isian kelompok simulasi dan penyuluhan berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -106,7 +106,7 @@ class DesaSimulasiPenyuluhanController extends Controller
         $this->authorize('update', $simulasiPenyuluhan);
         $this->updateSimulasiPenyuluhanAction->execute($simulasiPenyuluhan, $request->validated());
 
-        return redirect()->route('desa.simulasi-penyuluhan.index')->with('success', 'Data simulasi penyuluhan berhasil diupdate');
+        return redirect()->route('desa.simulasi-penyuluhan.index')->with('success', 'Data isian kelompok simulasi dan penyuluhan berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -115,6 +115,8 @@ class DesaSimulasiPenyuluhanController extends Controller
         $this->authorize('delete', $simulasiPenyuluhan);
         $this->simulasiPenyuluhanRepository->delete($simulasiPenyuluhan);
 
-        return redirect()->route('desa.simulasi-penyuluhan.index')->with('success', 'Data simulasi penyuluhan berhasil dihapus');
+        return redirect()->route('desa.simulasi-penyuluhan.index')->with('success', 'Data isian kelompok simulasi dan penyuluhan berhasil dihapus');
     }
 }
+
+

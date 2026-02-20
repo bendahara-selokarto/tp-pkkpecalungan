@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Simulasi/Penyuluhan</title>
+    <title>Data Isian Kelompok Simulasi dan Penyuluhan</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
@@ -20,7 +20,7 @@
         $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
     @endphp
 
-    <div class="title">Laporan Simulasi/Penyuluhan {{ $levelLabel }}</div>
+    <div class="title">DATA ISIAN KELOMPOK SIMULASI DAN PENYULUHAN {{ $levelLabel }}</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
@@ -32,7 +32,7 @@
             <tr>
                 <th style="width: 28px;">NO</th>
                 <th style="width: 135px;">NAMA KEGIATAN</th>
-                <th style="width: 145px;">JENIS SIMULASI/PENYULUHAN</th>
+                <th style="width: 145px;">JENIS SIMULASI DAN PENYULUHAN</th>
                 <th style="width: 72px;">JUMLAH KELOMPOK</th>
                 <th style="width: 82px;">JUMLAH SOSIALISASI</th>
                 <th colspan="2" style="width: 95px;">JUMLAH KADER</th>
@@ -56,10 +56,12 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="center">Data belum tersedia.</td>
+                    <td colspan="7" class="center">Data isian kelompok simulasi dan penyuluhan belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 </body>
 </html>
+
+

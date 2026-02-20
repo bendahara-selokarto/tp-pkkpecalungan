@@ -17,7 +17,7 @@ const totalKader = (item) => Number(item.jumlah_kader_l || 0) + Number(item.juml
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Simulasi/Penyuluhan Desa" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Data Isian Kelompok Simulasi dan Penyuluhan (Desa)" main />
 
     <CardBox class="max-w-4xl space-y-4">
       <div>
@@ -27,7 +27,7 @@ const totalKader = (item) => Number(item.jumlah_kader_l || 0) + Number(item.juml
 
       <div class="grid gap-4 md:grid-cols-2">
         <div>
-          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jenis Simulasi/Penyuluhan</p>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jenis Simulasi dan Penyuluhan</p>
           <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.simulasiPenyuluhan.jenis_simulasi_penyuluhan }}</p>
         </div>
         <div>
@@ -72,3 +72,4 @@ const totalKader = (item) => Number(item.jumlah_kader_l || 0) + Number(item.juml
     </CardBox>
   </SectionMain>
 </template>
+
