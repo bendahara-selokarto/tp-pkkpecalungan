@@ -4,13 +4,19 @@ namespace App\Domains\Wilayah\Activities\Repositories;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Activities\DTOs\ActivityData;
-use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class ActivityRepository implements ActivityRepositoryInterface
 {
+    public function __construct(
+        private readonly AreaRepositoryInterface $areaRepository
+    ) {
+    }
+
     public function store(ActivityData $data): Activity
     {
         return Activity::create([
@@ -33,15 +39,14 @@ class ActivityRepository implements ActivityRepositoryInterface
 
     public function getDesaActivitiesByKecamatan(int $kecamatanAreaId): Collection
     {
+        $desaIds = $this->areaRepository
+            ->getDesaByKecamatan($kecamatanAreaId)
+            ->pluck('id');
+
         return Activity::query()
             ->with(['area', 'creator'])
-            ->where('level', 'desa')
-            ->whereIn('area_id', function ($query) use ($kecamatanAreaId) {
-                $query->select('id')
-                    ->from((new Area())->getTable())
-                    ->where('level', 'desa')
-                    ->where('parent_id', $kecamatanAreaId);
-            })
+            ->where('level', ScopeLevel::DESA->value)
+            ->whereIn('area_id', $desaIds)
             ->latest('activity_date')
             ->latest('id')
             ->get();
@@ -62,23 +67,34 @@ class ActivityRepository implements ActivityRepositoryInterface
         $areaId = (int) $user->area_id;
         $areaLevel = $user->relationLoaded('area')
             ? $user->area?->level
-            : Area::query()->whereKey($areaId)->value('level');
+            : $this->areaRepository->getLevelById($areaId);
 
-        if ($user->hasRoleForScope('desa') && $areaLevel === 'desa') {
-            return $query->where('level', 'desa')->where('area_id', $areaId);
+        if (
+            $user->hasRoleForScope(ScopeLevel::DESA->value)
+            && $areaLevel === ScopeLevel::DESA->value
+        ) {
+            return $query
+                ->where('level', ScopeLevel::DESA->value)
+                ->where('area_id', $areaId);
         }
 
-        if ($user->hasRoleForScope('kecamatan') && $areaLevel === 'kecamatan') {
-            $desaIds = Area::query()
-                ->where('level', 'desa')
-                ->where('parent_id', $areaId)
+        if (
+            $user->hasRoleForScope(ScopeLevel::KECAMATAN->value)
+            && $areaLevel === ScopeLevel::KECAMATAN->value
+        ) {
+            $desaIds = $this->areaRepository
+                ->getDesaByKecamatan($areaId)
                 ->pluck('id');
 
             return $query->where(function (Builder $scoped) use ($areaId, $desaIds) {
                 $scoped->where(function (Builder $kecamatanScope) use ($areaId) {
-                    $kecamatanScope->where('level', 'kecamatan')->where('area_id', $areaId);
+                    $kecamatanScope
+                        ->where('level', ScopeLevel::KECAMATAN->value)
+                        ->where('area_id', $areaId);
                 })->orWhere(function (Builder $desaScope) use ($desaIds) {
-                    $desaScope->where('level', 'desa')->whereIn('area_id', $desaIds);
+                    $desaScope
+                        ->where('level', ScopeLevel::DESA->value)
+                        ->whereIn('area_id', $desaIds);
                 });
             });
         }

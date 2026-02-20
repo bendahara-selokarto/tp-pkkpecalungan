@@ -2,6 +2,7 @@
 
 namespace App\Domains\Wilayah\Activities\Services;
 
+use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
@@ -36,31 +37,31 @@ class ActivityScopeService
 
     public function isDesaInKecamatan(Activity $activity, int $kecamatanAreaId): bool
     {
-        return $activity->level === 'desa'
-            && $activity->area?->level === 'desa'
+        return $activity->level === ScopeLevel::DESA->value
+            && $activity->area?->level === ScopeLevel::DESA->value
             && $activity->area?->parent_id === $kecamatanAreaId;
     }
 
     public function canView(User $user, Activity $activity): bool
     {
-        if ($user->hasRoleForScope('desa')) {
-            if (! $this->canAccessLevel($user, 'desa')) {
+        if ($user->hasRoleForScope(ScopeLevel::DESA->value)) {
+            if (! $this->canAccessLevel($user, ScopeLevel::DESA->value)) {
                 return false;
             }
 
-            return $this->isSameLevelAndArea($activity, 'desa', (int) $user->area_id);
+            return $this->isSameLevelAndArea($activity, ScopeLevel::DESA->value, (int) $user->area_id);
         }
 
-        if ($user->hasRoleForScope('kecamatan')) {
-            if (! $this->canAccessLevel($user, 'kecamatan')) {
+        if ($user->hasRoleForScope(ScopeLevel::KECAMATAN->value)) {
+            if (! $this->canAccessLevel($user, ScopeLevel::KECAMATAN->value)) {
                 return false;
             }
 
-            if ($activity->level === 'kecamatan') {
-                return $this->isSameLevelAndArea($activity, 'kecamatan', (int) $user->area_id);
+            if ($activity->level === ScopeLevel::KECAMATAN->value) {
+                return $this->isSameLevelAndArea($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id);
             }
 
-            if ($activity->level === 'desa') {
+            if ($activity->level === ScopeLevel::DESA->value) {
                 return $this->isDesaInKecamatan($activity, (int) $user->area_id);
             }
         }
@@ -70,20 +71,20 @@ class ActivityScopeService
 
     public function canUpdate(User $user, Activity $activity): bool
     {
-        if ($user->hasRoleForScope('desa')) {
-            if (! $this->canAccessLevel($user, 'desa')) {
+        if ($user->hasRoleForScope(ScopeLevel::DESA->value)) {
+            if (! $this->canAccessLevel($user, ScopeLevel::DESA->value)) {
                 return false;
             }
 
-            return $this->isSameLevelAndArea($activity, 'desa', (int) $user->area_id);
+            return $this->isSameLevelAndArea($activity, ScopeLevel::DESA->value, (int) $user->area_id);
         }
 
-        if ($user->hasRoleForScope('kecamatan')) {
-            if (! $this->canAccessLevel($user, 'kecamatan')) {
+        if ($user->hasRoleForScope(ScopeLevel::KECAMATAN->value)) {
+            if (! $this->canAccessLevel($user, ScopeLevel::KECAMATAN->value)) {
                 return false;
             }
 
-            return $this->isSameLevelAndArea($activity, 'kecamatan', (int) $user->area_id);
+            return $this->isSameLevelAndArea($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id);
         }
 
         return false;

@@ -191,4 +191,49 @@ class DashboardActivityChartTest extends TestCase
                 ->where('dashboardCharts.level.values', [0, 0]);
         });
     }
+
+    public function test_grafik_dashboard_tidak_bocor_saat_role_kecamatan_tetapi_area_level_desa(): void
+    {
+        Carbon::setTestNow('2026-02-14');
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create();
+        // Simulasi data legacy/stale: role kecamatan tetapi area level desa.
+        $user->forceFill(['scope' => 'kecamatan', 'area_id' => $desa->id])->save();
+        $user->assignRole('admin-kecamatan');
+
+        Activity::create([
+            'title' => 'Kegiatan Kecamatan',
+            'level' => 'kecamatan',
+            'area_id' => $kecamatan->id,
+            'created_by' => $user->id,
+            'activity_date' => '2026-02-10',
+            'status' => 'published',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Desa',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => '2026-02-09',
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('auth.user.scope', null)
+                ->where('dashboardStats.total', 0)
+                ->where('dashboardStats.this_month', 0)
+                ->where('dashboardStats.published', 0)
+                ->where('dashboardStats.draft', 0)
+                ->where('dashboardCharts.level.values', [0, 0]);
+        });
+    }
 }
