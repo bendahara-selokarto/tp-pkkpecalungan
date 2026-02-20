@@ -10,6 +10,7 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - [x] Tahap 5 - Refactor TODO sinkronisasi pedoman domain + kontrak domain baru.
 - [x] Tahap 6 - Implementasi modul 4.14.1a `data-warga` (desa + kecamatan + report + policy + test matrix).
 - [x] Tahap 7 - Implementasi modul 4.14.1b `data-kegiatan-warga` (desa + kecamatan + report + policy + test matrix).
+- [x] Tahap 8 - Implementasi modul 4.14.2a `data-keluarga` (desa + kecamatan + report + policy + test matrix).
 
 ## Ringkasan Sinkronisasi Pedoman
 - [x] Sumber canonical dipakai: https://pubhtml5.com/zsnqq/vjcf/basic/101-150
@@ -42,7 +43,7 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 ### Roadmap Implementasi Modul Baru (Refactor TODO)
 - [x] 4.14.1a Data Warga -> `data-warga` sudah terimplementasi end-to-end.
 - [x] 4.14.1b Data Kegiatan Warga -> `data-kegiatan-warga` sudah terimplementasi end-to-end.
-- [ ] 4.14.2a Data Keluarga -> `data-keluarga`.
+- [x] 4.14.2a Data Keluarga -> `data-keluarga` sudah terimplementasi end-to-end.
 - [ ] 4.14.2b Data Pemanfaatan Tanah Pekarangan/HATINYA PKK -> `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`.
 - [ ] 4.14.2c Data Industri Rumah Tangga -> `data-industri-rumah-tangga`.
 - [ ] 4.14.3 Data Pelatihan Kader -> `data-pelatihan-kader`.
@@ -62,4 +63,4 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 ## Catatan Anti-Konflik
 - `agenda-surat` dipakai sebagai source of truth surat masuk/keluar.
 - Buku ekspedisi tidak menambah tabel/domain baru untuk menghindari duplikasi data surat keluar.
-- Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi masuk fase bertahap. Modul 4.14.1a (`data-warga`) dan 4.14.1b (`data-kegiatan-warga`) sudah selesai.
+- Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi masuk fase bertahap. Modul 4.14.1a (`data-warga`), 4.14.1b (`data-kegiatan-warga`), dan 4.14.2a (`data-keluarga`) sudah selesai.

@@ -44,6 +44,14 @@ const desaMenuGroups = [
     ],
   },
   {
+    key: 'lampiran4142',
+    label: 'Lampiran 4.14.2',
+    code: 'L42',
+    items: [
+      { href: '/desa/data-keluarga', label: 'Data Keluarga' },
+    ],
+  },
+  {
     key: 'lampiran4144',
     label: 'Lampiran 4.14.4',
     code: 'L44',
@@ -91,6 +99,14 @@ const kecamatanMenuGroups = [
     items: [
       { href: '/kecamatan/data-warga', label: 'Data Warga' },
       { href: '/kecamatan/data-kegiatan-warga', label: 'Data Kegiatan Warga' },
+    ],
+  },
+  {
+    key: 'lampiran4142',
+    label: 'Lampiran 4.14.2',
+    code: 'L42',
+    items: [
+      { href: '/kecamatan/data-keluarga', label: 'Data Keluarga' },
     ],
   },
   {

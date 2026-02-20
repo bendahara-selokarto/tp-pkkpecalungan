@@ -48,6 +48,9 @@ use App\Domains\Wilayah\DataWarga\Repositories\DataWargaRepositoryInterface;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\DataKegiatanWarga\Repositories\DataKegiatanWargaRepository;
 use App\Domains\Wilayah\DataKegiatanWarga\Repositories\DataKegiatanWargaRepositoryInterface;
+use App\Domains\Wilayah\DataKeluarga\Models\DataKeluarga;
+use App\Domains\Wilayah\DataKeluarga\Repositories\DataKeluargaRepository;
+use App\Domains\Wilayah\DataKeluarga\Repositories\DataKeluargaRepositoryInterface;
 use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
 use App\Domains\Wilayah\TamanBacaan\Repositories\TamanBacaanRepository;
 use App\Domains\Wilayah\TamanBacaan\Repositories\TamanBacaanRepositoryInterface;
@@ -76,6 +79,7 @@ use App\Policies\KoperasiPolicy;
 use App\Policies\WarungPkkPolicy;
 use App\Policies\DataWargaPolicy;
 use App\Policies\DataKegiatanWargaPolicy;
+use App\Policies\DataKeluargaPolicy;
 use App\Policies\TamanBacaanPolicy;
 use App\Policies\KejarPaketPolicy;
 use App\Policies\PosyanduPolicy;
@@ -180,6 +184,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            DataKeluargaRepositoryInterface::class,
+            DataKeluargaRepository::class
+        );
+
+        $this->app->bind(
             TamanBacaanRepositoryInterface::class,
             TamanBacaanRepository::class
         );
@@ -226,6 +235,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(WarungPkk::class, WarungPkkPolicy::class);
         Gate::policy(DataWarga::class, DataWargaPolicy::class);
         Gate::policy(DataKegiatanWarga::class, DataKegiatanWargaPolicy::class);
+        Gate::policy(DataKeluarga::class, DataKeluargaPolicy::class);
         Gate::policy(TamanBacaan::class, TamanBacaanPolicy::class);
         Gate::policy(KejarPaket::class, KejarPaketPolicy::class);
         Gate::policy(Posyandu::class, PosyanduPolicy::class);
