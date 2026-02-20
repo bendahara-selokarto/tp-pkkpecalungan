@@ -21,12 +21,17 @@ class ActivityRepository implements ActivityRepositoryInterface
     {
         return Activity::create([
             'title'         => $data->title,
+            'nama_petugas'  => $data->nama_petugas,
+            'jabatan_petugas' => $data->jabatan_petugas,
             'description'   => $data->description,
+            'uraian'        => $data->uraian,
             'level'         => $data->level,
             'area_id'       => $data->area_id,
             'created_by'    => $data->created_by,
             'activity_date' => $data->activity_date,
+            'tempat_kegiatan' => $data->tempat_kegiatan,
             'status'        => $data->status,
+            'tanda_tangan'  => $data->tanda_tangan,
         ]);
     }
 
@@ -111,9 +116,14 @@ class ActivityRepository implements ActivityRepositoryInterface
     {
         $activity->update([
             'title'         => $data->title,
+            'nama_petugas' => $data->nama_petugas,
+            'jabatan_petugas' => $data->jabatan_petugas,
             'description'   => $data->description,
+            'uraian'        => $data->uraian,
             'activity_date' => $data->activity_date,
+            'tempat_kegiatan' => $data->tempat_kegiatan,
             'status'        => $data->status,
+            'tanda_tangan' => $data->tanda_tangan,
         ]);
 
         return $activity;

@@ -51,7 +51,8 @@ const hapusKegiatan = (id) => {
         <table class="w-full min-w-[900px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
-              <th class="px-3 py-3 font-semibold">Judul</th>
+              <th class="px-3 py-3 font-semibold">Nama Bertugas</th>
+              <th class="px-3 py-3 font-semibold">Tempat</th>
               <th class="px-3 py-3 font-semibold">Tanggal</th>
               <th class="px-3 py-3 font-semibold">Status</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>
@@ -63,7 +64,8 @@ const hapusKegiatan = (id) => {
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
-              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.title }}</td>
+              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.nama_petugas || item.title }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.tempat_kegiatan || '-' }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.activity_date }}</td>
               <td class="px-3 py-3">
                 <span class="inline-flex rounded-full bg-slate-100 px-2 py-1 text-xs font-medium uppercase text-slate-700 dark:bg-slate-700 dark:text-slate-200">
@@ -95,7 +97,7 @@ const hapusKegiatan = (id) => {
               </td>
             </tr>
             <tr v-if="activities.length === 0">
-              <td colspan="4" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <td colspan="5" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Data kegiatan belum tersedia.
               </td>
             </tr>

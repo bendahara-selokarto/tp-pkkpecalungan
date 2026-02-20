@@ -11,6 +11,7 @@ use App\Domains\Wilayah\Inventaris\Requests\UpdateInventarisRequest;
 use App\Domains\Wilayah\Inventaris\UseCases\GetScopedInventarisUseCase;
 use App\Domains\Wilayah\Inventaris\UseCases\ListScopedInventarisUseCase;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -36,9 +37,15 @@ class DesaInventarisController extends Controller
             'inventaris' => $inventaris->values()->map(fn (Inventaris $item) => [
                 'id' => $item->id,
                 'name' => $item->name,
+                'asal_barang' => $item->asal_barang,
                 'description' => $item->description,
+                'keterangan' => $item->keterangan ?? $item->description,
                 'quantity' => $item->quantity,
                 'unit' => $item->unit,
+                'tanggal_penerimaan' => $item->tanggal_penerimaan
+                    ? Carbon::parse($item->tanggal_penerimaan)->format('d/m/Y')
+                    : null,
+                'tempat_penyimpanan' => $item->tempat_penyimpanan,
                 'condition' => $item->condition,
             ]),
         ]);
@@ -68,9 +75,15 @@ class DesaInventarisController extends Controller
             'inventaris' => [
                 'id' => $inventaris->id,
                 'name' => $inventaris->name,
+                'asal_barang' => $inventaris->asal_barang,
                 'description' => $inventaris->description,
+                'keterangan' => $inventaris->keterangan ?? $inventaris->description,
                 'quantity' => $inventaris->quantity,
                 'unit' => $inventaris->unit,
+                'tanggal_penerimaan' => $inventaris->tanggal_penerimaan
+                    ? Carbon::parse($inventaris->tanggal_penerimaan)->format('d/m/Y')
+                    : null,
+                'tempat_penyimpanan' => $inventaris->tempat_penyimpanan,
                 'condition' => $inventaris->condition,
             ],
         ]);
@@ -85,9 +98,15 @@ class DesaInventarisController extends Controller
             'inventaris' => [
                 'id' => $inventaris->id,
                 'name' => $inventaris->name,
+                'asal_barang' => $inventaris->asal_barang,
                 'description' => $inventaris->description,
+                'keterangan' => $inventaris->keterangan ?? $inventaris->description,
                 'quantity' => $inventaris->quantity,
                 'unit' => $inventaris->unit,
+                'tanggal_penerimaan' => $inventaris->tanggal_penerimaan
+                    ? Carbon::parse($inventaris->tanggal_penerimaan)->format('d/m/Y')
+                    : null,
+                'tempat_penyimpanan' => $inventaris->tempat_penyimpanan,
                 'condition' => $inventaris->condition,
             ],
         ]);
@@ -111,5 +130,3 @@ class DesaInventarisController extends Controller
         return redirect()->route('desa.inventaris.index')->with('success', 'Inventaris berhasil dihapus');
     }
 }
-
-

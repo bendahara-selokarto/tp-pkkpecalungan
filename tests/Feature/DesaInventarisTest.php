@@ -118,7 +118,10 @@ class DesaInventarisTest extends TestCase
 
         $response = $this->actingAs($adminDesa)->post('/desa/inventaris', [
             'name' => 'Proyektor Aula',
-            'description' => 'Untuk rapat warga',
+            'asal_barang' => 'Bantuan Kabupaten',
+            'tanggal_penerimaan' => '12/02/2026',
+            'tempat_penyimpanan' => 'Gudang Balai Desa',
+            'keterangan' => 'Untuk rapat warga',
             'quantity' => 1,
             'unit' => 'unit',
             'condition' => 'baik',
@@ -128,6 +131,10 @@ class DesaInventarisTest extends TestCase
 
         $this->assertDatabaseHas('inventaris', [
             'name' => 'Proyektor Aula',
+            'asal_barang' => 'Bantuan Kabupaten',
+            'tanggal_penerimaan' => '2026-02-12',
+            'tempat_penyimpanan' => 'Gudang Balai Desa',
+            'keterangan' => 'Untuk rapat warga',
             'area_id' => $this->desaA->id,
             'level' => 'desa',
         ]);
@@ -155,7 +162,10 @@ class DesaInventarisTest extends TestCase
 
         $response = $this->actingAs($adminDesa)->put(route('desa.inventaris.update', $inventaris->id), [
             'name' => 'Sound System',
-            'description' => 'Sudah diperbaiki',
+            'asal_barang' => 'Swadaya',
+            'tanggal_penerimaan' => '20/02/2026',
+            'tempat_penyimpanan' => 'Ruang Sekretariat',
+            'keterangan' => 'Sudah diperbaiki',
             'quantity' => 2,
             'unit' => 'set',
             'condition' => 'baik',
@@ -165,6 +175,10 @@ class DesaInventarisTest extends TestCase
 
         $this->assertDatabaseHas('inventaris', [
             'id' => $inventaris->id,
+            'asal_barang' => 'Swadaya',
+            'tanggal_penerimaan' => '2026-02-20',
+            'tempat_penyimpanan' => 'Ruang Sekretariat',
+            'keterangan' => 'Sudah diperbaiki',
             'description' => 'Sudah diperbaiki',
             'quantity' => 2,
             'condition' => 'baik',
@@ -211,5 +225,4 @@ class DesaInventarisTest extends TestCase
         $response->assertStatus(403);
     }
 }
-
 

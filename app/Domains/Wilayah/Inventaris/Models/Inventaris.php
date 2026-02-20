@@ -12,9 +12,13 @@ class Inventaris extends Model
 
     protected $fillable = [
         'name',
+        'asal_barang',
         'description',
+        'keterangan',
         'quantity',
         'unit',
+        'tanggal_penerimaan',
+        'tempat_penyimpanan',
         'condition',
         'level',
         'area_id',

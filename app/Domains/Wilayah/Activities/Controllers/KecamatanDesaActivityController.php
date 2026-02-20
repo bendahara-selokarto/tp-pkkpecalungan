@@ -28,6 +28,11 @@ class KecamatanDesaActivityController extends Controller
                 'id' => $activity->id,
                 'title' => $activity->title,
                 'description' => $activity->description,
+                'nama_petugas' => $activity->nama_petugas ?? $activity->title,
+                'jabatan_petugas' => $activity->jabatan_petugas,
+                'tempat_kegiatan' => $activity->tempat_kegiatan,
+                'uraian' => $activity->uraian ?? $activity->description,
+                'tanda_tangan' => $activity->tanda_tangan,
                 'activity_date' => $activity->activity_date,
                 'status' => $activity->status,
                 'area' => $activity->area
@@ -56,6 +61,11 @@ class KecamatanDesaActivityController extends Controller
                 'id' => $activity->id,
                 'title' => $activity->title,
                 'description' => $activity->description,
+                'nama_petugas' => $activity->nama_petugas ?? $activity->title,
+                'jabatan_petugas' => $activity->jabatan_petugas,
+                'tempat_kegiatan' => $activity->tempat_kegiatan,
+                'uraian' => $activity->uraian ?? $activity->description,
+                'tanda_tangan' => $activity->tanda_tangan,
                 'activity_date' => $activity->activity_date,
                 'status' => $activity->status,
                 'area' => $activity->area

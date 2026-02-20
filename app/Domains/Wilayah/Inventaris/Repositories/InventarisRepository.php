@@ -12,9 +12,13 @@ class InventarisRepository implements InventarisRepositoryInterface
     {
         return Inventaris::create([
             'name' => $data->name,
+            'asal_barang' => $data->asal_barang,
             'description' => $data->description,
+            'keterangan' => $data->keterangan,
             'quantity' => $data->quantity,
             'unit' => $data->unit,
+            'tanggal_penerimaan' => $data->tanggal_penerimaan,
+            'tempat_penyimpanan' => $data->tempat_penyimpanan,
             'condition' => $data->condition,
             'level' => $data->level,
             'area_id' => $data->area_id,
@@ -40,9 +44,13 @@ class InventarisRepository implements InventarisRepositoryInterface
     {
         $inventaris->update([
             'name' => $data->name,
+            'asal_barang' => $data->asal_barang,
             'description' => $data->description,
+            'keterangan' => $data->keterangan,
             'quantity' => $data->quantity,
             'unit' => $data->unit,
+            'tanggal_penerimaan' => $data->tanggal_penerimaan,
+            'tempat_penyimpanan' => $data->tempat_penyimpanan,
             'condition' => $data->condition,
         ]);
 
@@ -54,4 +62,3 @@ class InventarisRepository implements InventarisRepositoryInterface
         $inventaris->delete();
     }
 }
-

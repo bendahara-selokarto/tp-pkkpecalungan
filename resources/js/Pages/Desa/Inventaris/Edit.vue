@@ -14,14 +14,22 @@ const props = defineProps({
 
 const form = useForm({
   name: props.inventaris.name ?? '',
-  description: props.inventaris.description ?? '',
+  asal_barang: props.inventaris.asal_barang ?? '',
+  tanggal_penerimaan: props.inventaris.tanggal_penerimaan ?? '',
+  tempat_penyimpanan: props.inventaris.tempat_penyimpanan ?? '',
+  keterangan: props.inventaris.keterangan ?? props.inventaris.description ?? '',
   quantity: props.inventaris.quantity ?? 1,
   unit: props.inventaris.unit ?? 'unit',
   condition: props.inventaris.condition ?? 'baik',
 })
 
 const submit = () => {
-  form.put(`/desa/inventaris/${props.inventaris.id}`)
+  form
+    .transform((data) => ({
+      ...data,
+      description: data.keterangan || null,
+    }))
+    .put(`/desa/inventaris/${props.inventaris.id}`)
 }
 </script>
 
@@ -43,13 +51,46 @@ const submit = () => {
         </div>
 
         <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Deskripsi</label>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Asal Barang</label>
+          <input
+            v-model="form.asal_barang"
+            type="text"
+            class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          >
+          <p v-if="form.errors.asal_barang" class="mt-1 text-xs text-rose-600">{{ form.errors.asal_barang }}</p>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Keterangan</label>
           <textarea
-            v-model="form.description"
+            v-model="form.keterangan"
             rows="3"
             class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           />
-          <p v-if="form.errors.description" class="mt-1 text-xs text-rose-600">{{ form.errors.description }}</p>
+          <p v-if="form.errors.keterangan" class="mt-1 text-xs text-rose-600">{{ form.errors.keterangan }}</p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Penerimaan/Pembelian</label>
+            <input
+              v-model="form.tanggal_penerimaan"
+              type="text"
+              inputmode="numeric"
+              placeholder="DD/MM/YYYY"
+              class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            >
+            <p v-if="form.errors.tanggal_penerimaan" class="mt-1 text-xs text-rose-600">{{ form.errors.tanggal_penerimaan }}</p>
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tempat Penyimpanan</label>
+            <input
+              v-model="form.tempat_penyimpanan"
+              type="text"
+              class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            >
+            <p v-if="form.errors.tempat_penyimpanan" class="mt-1 text-xs text-rose-600">{{ form.errors.tempat_penyimpanan }}</p>
+          </div>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">

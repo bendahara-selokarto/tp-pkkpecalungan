@@ -18,7 +18,10 @@ class UpdateActivityRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
+            'nama_petugas' => 'nullable|string|max:255',
+            'jabatan_petugas' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'uraian' => 'nullable|string',
             'activity_date' => [
                 'required',
                 function (string $attribute, mixed $value, \Closure $fail): void {
@@ -27,7 +30,9 @@ class UpdateActivityRequest extends FormRequest
                     }
                 },
             ],
+            'tempat_kegiatan' => 'nullable|string|max:255',
             'status' => 'required|in:draft,published',
+            'tanda_tangan' => 'nullable|string|max:255',
         ];
     }
 

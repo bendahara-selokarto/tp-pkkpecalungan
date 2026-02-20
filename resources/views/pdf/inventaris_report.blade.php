@@ -39,12 +39,14 @@
                 <tr>
                     <td class="center">{{ $index + 1 }}</td>
                     <td>{{ $item->name }}</td>
-                    <td class="center">-</td>
-                    <td class="center">{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
+                    <td>{{ $item->asal_barang ?: '-' }}</td>
+                    <td class="center">
+                        {{ $item->tanggal_penerimaan ? \Carbon\Carbon::parse($item->tanggal_penerimaan)->format('d/m/Y') : \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                    </td>
                     <td class="center">{{ $item->quantity }} {{ $item->unit }}</td>
-                    <td class="center">-</td>
+                    <td>{{ $item->tempat_penyimpanan ?: '-' }}</td>
                     <td>{{ strtoupper(str_replace('_', ' ', (string) $item->condition)) }}</td>
-                    <td>{{ $item->description ?: '-' }}</td>
+                    <td>{{ $item->keterangan ?: ($item->description ?: '-') }}</td>
                 </tr>
             @empty
                 <tr>

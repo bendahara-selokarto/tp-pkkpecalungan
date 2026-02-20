@@ -7,12 +7,21 @@ import { mdiClipboardList } from '@mdi/js'
 
 const form = useForm({
   title: '',
-  description: '',
+  nama_petugas: '',
+  jabatan_petugas: '',
+  tempat_kegiatan: '',
+  uraian: '',
+  tanda_tangan: '',
   activity_date: '',
 })
 
 const submit = () => {
-  form.post('/desa/activities')
+  form
+    .transform((data) => ({
+      ...data,
+      description: data.uraian || null,
+    }))
+    .post('/desa/activities')
 }
 </script>
 
@@ -23,21 +32,47 @@ const submit = () => {
     <CardBox class="max-w-3xl">
       <form class="space-y-5" @submit.prevent="submit">
         <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Judul</label>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Judul Kegiatan</label>
           <input v-model="form.title" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
           <p v-if="form.errors.title" class="mt-1 text-xs text-rose-600">{{ form.errors.title }}</p>
         </div>
 
-        <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Deskripsi</label>
-          <textarea v-model="form.description" rows="4" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
-          <p v-if="form.errors.description" class="mt-1 text-xs text-rose-600">{{ form.errors.description }}</p>
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Bertugas</label>
+            <input v-model="form.nama_petugas" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <p v-if="form.errors.nama_petugas" class="mt-1 text-xs text-rose-600">{{ form.errors.nama_petugas }}</p>
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jabatan</label>
+            <input v-model="form.jabatan_petugas" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <p v-if="form.errors.jabatan_petugas" class="mt-1 text-xs text-rose-600">{{ form.errors.jabatan_petugas }}</p>
+          </div>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Kegiatan</label>
+            <input v-model="form.activity_date" type="text" inputmode="numeric" placeholder="DD/MM/YYYY" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <p v-if="form.errors.activity_date" class="mt-1 text-xs text-rose-600">{{ form.errors.activity_date }}</p>
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tempat Kegiatan</label>
+            <input v-model="form.tempat_kegiatan" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <p v-if="form.errors.tempat_kegiatan" class="mt-1 text-xs text-rose-600">{{ form.errors.tempat_kegiatan }}</p>
+          </div>
         </div>
 
         <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Kegiatan</label>
-          <input v-model="form.activity_date" type="text" inputmode="numeric" placeholder="DD/MM/YYYY" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
-          <p v-if="form.errors.activity_date" class="mt-1 text-xs text-rose-600">{{ form.errors.activity_date }}</p>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Uraian</label>
+          <textarea v-model="form.uraian" rows="4" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
+          <p v-if="form.errors.uraian" class="mt-1 text-xs text-rose-600">{{ form.errors.uraian }}</p>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tanda Tangan</label>
+          <input v-model="form.tanda_tangan" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+          <p v-if="form.errors.tanda_tangan" class="mt-1 text-xs text-rose-600">{{ form.errors.tanda_tangan }}</p>
         </div>
 
         <div class="flex items-center justify-end gap-2">

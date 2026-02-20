@@ -64,6 +64,8 @@ const formatCondition = (value) => value.replace('_', ' ')
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
               <th class="px-3 py-3 font-semibold">Nama</th>
+              <th class="px-3 py-3 font-semibold">Asal</th>
+              <th class="px-3 py-3 font-semibold">Tanggal</th>
               <th class="px-3 py-3 font-semibold">Jumlah</th>
               <th class="px-3 py-3 font-semibold">Kondisi</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>
@@ -76,6 +78,8 @@ const formatCondition = (value) => value.replace('_', ' ')
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
               <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.name }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.asal_barang || '-' }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.tanggal_penerimaan || '-' }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.quantity }} {{ item.unit }}</td>
               <td class="px-3 py-3 capitalize text-gray-700 dark:text-gray-300">{{ formatCondition(item.condition) }}</td>
               <td class="px-3 py-3">
@@ -103,7 +107,7 @@ const formatCondition = (value) => value.replace('_', ' ')
               </td>
             </tr>
             <tr v-if="inventaris.length === 0">
-              <td colspan="4" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Data inventaris belum tersedia.
               </td>
             </tr>

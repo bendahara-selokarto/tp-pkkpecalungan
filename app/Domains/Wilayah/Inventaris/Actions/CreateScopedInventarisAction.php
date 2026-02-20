@@ -19,9 +19,13 @@ class CreateScopedInventarisAction
     {
         $data = InventarisData::fromArray([
             'name' => $payload['name'],
-            'description' => $payload['description'] ?? null,
+            'asal_barang' => $payload['asal_barang'] ?? null,
+            'description' => $payload['description'] ?? $payload['keterangan'] ?? null,
+            'keterangan' => $payload['keterangan'] ?? $payload['description'] ?? null,
             'quantity' => $payload['quantity'],
             'unit' => $payload['unit'],
+            'tanggal_penerimaan' => $payload['tanggal_penerimaan'] ?? null,
+            'tempat_penyimpanan' => $payload['tempat_penyimpanan'] ?? null,
             'condition' => $payload['condition'],
             'level' => $level,
             'area_id' => $this->inventarisScopeService->requireUserAreaId(),
@@ -31,4 +35,3 @@ class CreateScopedInventarisAction
         return $this->inventarisRepository->store($data);
     }
 }
-

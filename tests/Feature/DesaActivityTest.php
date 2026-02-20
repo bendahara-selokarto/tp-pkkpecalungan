@@ -51,7 +51,11 @@ class DesaActivityTest extends TestCase
 
         $response = $this->post('/desa/activities', [
             'title' => 'Musyawarah Desa',
-            'description' => 'Rapat tahunan',
+            'nama_petugas' => 'Siti Aminah',
+            'jabatan_petugas' => 'Sekretaris',
+            'tempat_kegiatan' => 'Balai Desa',
+            'uraian' => 'Rapat tahunan',
+            'tanda_tangan' => 'Siti Aminah',
             'activity_date' => '12/02/2026',
         ]);
 
@@ -59,6 +63,12 @@ class DesaActivityTest extends TestCase
 
         $this->assertDatabaseHas('activities', [
             'title' => 'Musyawarah Desa',
+            'nama_petugas' => 'Siti Aminah',
+            'jabatan_petugas' => 'Sekretaris',
+            'tempat_kegiatan' => 'Balai Desa',
+            'uraian' => 'Rapat tahunan',
+            'tanda_tangan' => 'Siti Aminah',
+            'description' => 'Rapat tahunan',
             'area_id' => $this->desa->id,
         ]);
     }
@@ -163,4 +173,3 @@ class DesaActivityTest extends TestCase
         ]);
     }
 }
-

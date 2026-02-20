@@ -11,14 +11,19 @@ class Activity extends Model
     protected $table = 'activities';
 
     protected $fillable = [
-    'title',
-    'description',
-    'level',
-    'area_id',
-    'created_by',
-    'activity_date',
-    'status',
-];
+        'title',
+        'nama_petugas',
+        'jabatan_petugas',
+        'description',
+        'uraian',
+        'level',
+        'area_id',
+        'created_by',
+        'activity_date',
+        'tempat_kegiatan',
+        'status',
+        'tanda_tangan',
+    ];
 
     public function area()
     {

@@ -27,7 +27,18 @@ const formatCondition = (value) => value.replace('_', ' ')
 
       <div>
         <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Deskripsi</p>
-        <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.inventaris.description || '-' }}</p>
+        <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.inventaris.keterangan || props.inventaris.description || '-' }}</p>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Asal Barang</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.inventaris.asal_barang || '-' }}</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal Penerimaan/Pembelian</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.inventaris.tanggal_penerimaan || '-' }}</p>
+        </div>
       </div>
 
       <div class="grid gap-4 md:grid-cols-2">
@@ -39,6 +50,11 @@ const formatCondition = (value) => value.replace('_', ' ')
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Kondisi</p>
           <p class="text-sm capitalize text-gray-700 dark:text-gray-300">{{ formatCondition(props.inventaris.condition) }}</p>
         </div>
+      </div>
+
+      <div>
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tempat Penyimpanan</p>
+        <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.inventaris.tempat_penyimpanan || '-' }}</p>
       </div>
 
       <div class="flex items-center justify-end gap-2">

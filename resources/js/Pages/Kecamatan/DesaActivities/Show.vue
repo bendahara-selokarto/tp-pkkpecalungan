@@ -31,13 +31,8 @@ const props = defineProps({
 
     <CardBox class="max-w-3xl space-y-4">
       <div>
-        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Judul</p>
-        <p class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ props.activity.title }}</p>
-      </div>
-
-      <div>
-        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Deskripsi</p>
-        <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.activity.description || '-' }}</p>
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Nama Bertugas</p>
+        <p class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ props.activity.nama_petugas || props.activity.title }}</p>
       </div>
 
       <div class="grid gap-4 md:grid-cols-2">
@@ -57,9 +52,30 @@ const props = defineProps({
           <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.activity.activity_date }}</p>
         </div>
         <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jabatan</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.activity.jabatan_petugas || '-' }}</p>
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tempat</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.activity.tempat_kegiatan || '-' }}</p>
+        </div>
+        <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Status</p>
           <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.activity.status }}</p>
         </div>
+      </div>
+
+      <div>
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Uraian</p>
+        <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.activity.uraian || props.activity.description || '-' }}</p>
+      </div>
+
+      <div>
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanda Tangan</p>
+        <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.activity.tanda_tangan || props.activity.nama_petugas || '-' }}</p>
       </div>
 
       <div class="flex items-center justify-end gap-2">

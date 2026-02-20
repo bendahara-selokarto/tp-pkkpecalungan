@@ -2,53 +2,67 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Activity #{{ $activity->id }}</title>
+    <title>Buku Kegiatan #{{ $activity->id }}</title>
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
-            font-size: 12px;
+            font-size: 11px;
             color: #111827;
             line-height: 1.5;
         }
         .title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 12px;
+            text-align: center;
+            margin-bottom: 8px;
         }
         .meta {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
+            font-size: 11px;
         }
-        .label {
-            font-weight: 700;
-            display: inline-block;
-            width: 120px;
-        }
-        .section {
-            margin-top: 16px;
-        }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
+        th { background: #f3f4f6; text-align: center; font-size: 10px; }
+        .center { text-align: center; }
         .footer {
-            margin-top: 24px;
+            margin-top: 12px;
             font-size: 11px;
             color: #374151;
-            border-top: 1px solid #d1d5db;
-            padding-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="title">Laporan Activity</div>
-
-    <div class="meta"><span class="label">Judul</span>: {{ $activity->title }}</div>
-    <div class="meta"><span class="label">Level</span>: {{ ucfirst($activity->level) }}</div>
-    <div class="meta"><span class="label">Wilayah</span>: {{ $activity->area?->name ?? '-' }}</div>
-    <div class="meta"><span class="label">Tanggal</span>: {{ $activity->activity_date }}</div>
-    <div class="meta"><span class="label">Status</span>: {{ ucfirst($activity->status) }}</div>
-    <div class="meta"><span class="label">Dibuat Oleh</span>: {{ $activity->creator?->name ?? '-' }}</div>
-
-    <div class="section">
-        <div class="label">Deskripsi</div>
-        <div>{{ $activity->description ?: '-' }}</div>
+    <div class="title">BUKU KEGIATAN TP PKK</div>
+    <div class="meta">
+        Wilayah: {{ $activity->area?->name ?? '-' }}<br>
+        Level: {{ strtoupper($activity->level) }}<br>
+        Dibuat oleh sistem: {{ $activity->creator?->name ?? '-' }}
     </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 28px;">NO</th>
+                <th style="width: 110px;">NAMA</th>
+                <th style="width: 100px;">JABATAN</th>
+                <th style="width: 80px;">TANGGAL</th>
+                <th style="width: 100px;">TEMPAT</th>
+                <th>URAIAN</th>
+                <th style="width: 90px;">TANDA TANGAN</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="center">1</td>
+                <td>{{ $activity->nama_petugas ?: $activity->title }}</td>
+                <td>{{ $activity->jabatan_petugas ?: '-' }}</td>
+                <td class="center">{{ \Carbon\Carbon::parse($activity->activity_date)->format('d/m/Y') }}</td>
+                <td>{{ $activity->tempat_kegiatan ?: ($activity->area?->name ?? '-') }}</td>
+                <td>{{ $activity->uraian ?: ($activity->description ?: '-') }}</td>
+                <td>{{ $activity->tanda_tangan ?: ($activity->nama_petugas ?: ($activity->creator?->name ?? '-')) }}</td>
+            </tr>
+        </tbody>
+    </table>
 
     <div class="footer">
         Dicetak oleh {{ $printedBy?->name ?? '-' }} pada {{ $printedAt->format('Y-m-d H:i:s') }}.
