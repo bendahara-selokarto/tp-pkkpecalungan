@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Auth\Events\Lockout;
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
 use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepository;
@@ -46,7 +47,9 @@ use App\Policies\SimulasiPenyuluhanPolicy;
 use App\Policies\UserPolicy;
 use App\Repositories\SuperAdmin\UserManagementRepository;
 use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use App\Domains\Wilayah\Repositories\{
     AreaRepository,
@@ -140,6 +143,16 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin') ? true : null;
+        });
+
+        // Lightweight observability for auth throttling.
+        Event::listen(Lockout::class, function (Lockout $event): void {
+            Log::warning('auth.lockout', [
+                'ip' => $event->request->ip(),
+                'email' => (string) $event->request->input('email', ''),
+                'user_agent' => (string) $event->request->userAgent(),
+                'path' => $event->request->path(),
+            ]);
         });
     }
 }

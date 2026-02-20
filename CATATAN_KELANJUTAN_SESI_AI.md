@@ -63,9 +63,14 @@ rg -n "prestasi|lomba|jenis_lomba|prestasi_" app tests resources -S
 - Peningkatan terbaru: throttle auth sudah disentralisasi ke `config/auth.php` + `.env`.
 
 ### TODO berikutnya (non-domain)
-1. Tambahkan dokumentasi runbook jika terjadi lonjakan 429 (indikator, tindakan cepat, rollback).
-2. Tambahkan observability ringan (log/metric) untuk endpoint yang sering kena throttle.
-3. Evaluasi cache untuk response berat (misal report list/filter) agar request ke backend lebih hemat.
+1. `Selesai` Tambahkan dokumentasi runbook jika terjadi lonjakan 429:
+   - `RUNBOOK_429_RATE_LIMITER.md`
+2. `Selesai` Tambahkan observability ringan (log/metric) untuk endpoint yang sering kena throttle:
+   - log `auth.lockout` di `app/Providers/AppServiceProvider.php`
+   - log `http.throttle` di `bootstrap/app.php`
+3. `Selesai` Evaluasi cache untuk response berat:
+   - `EVALUASI_CACHE_RESPONSE_BERAT.md`
+4. TODO non-domain aktif saat ini: `tidak ada`.
 
 ## 4. Hal Penting Rate Limiter
 
@@ -75,7 +80,7 @@ rg -n "prestasi|lomba|jenis_lomba|prestasi_" app tests resources -S
 
 2. Titik throttle yang terdeteksi saat ini di proyek.
 - `app/Http/Requests/Auth/LoginRequest.php`: batas percobaan login saat ini 5 attempt.
-- `routes/auth.php`: middleware `throttle:6,1` pada flow verifikasi email.
+- `routes/auth.php`: middleware verifikasi email sudah configurable via `config/auth.php` (`auth.rate_limits.verification`).
 
 3. Cara menaikkan kuota dengan aman (disarankan bertahap).
 - Naikkan limit internal per endpoint secara konservatif, lalu pantau error rate + anomali keamanan.
