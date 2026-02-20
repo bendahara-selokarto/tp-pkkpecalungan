@@ -2,19 +2,19 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Agenda Surat</title>
+    <title>Buku Agenda Surat Masuk/Keluar</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #111827; }
+        body { font-family: DejaVu Sans, sans-serif; font-size: 9px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
-        th { background: #f3f4f6; text-align: center; font-size: 9px; }
+        th { background: #f3f4f6; text-align: center; font-size: 8px; }
         .center { text-align: center; }
     </style>
 </head>
 <body>
-    <div class="title">BUKU AGENDA SURAT {{ strtoupper($level) }}</div>
+    <div class="title">BUKU AGENDA SURAT MASUK/KELUAR {{ strtoupper($level) }}</div>
     <div class="meta">
         Wilayah: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
@@ -24,41 +24,79 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 26px;">NO</th>
-                <th style="width: 44px;">JENIS</th>
-                <th style="width: 66px;">TGL TERIMA</th>
-                <th style="width: 66px;">TGL SURAT</th>
-                <th style="width: 78px;">NO SURAT</th>
-                <th style="width: 70px;">ASAL</th>
-                <th style="width: 70px;">DARI</th>
-                <th style="width: 70px;">KEPADA</th>
-                <th style="width: 90px;">PERIHAL</th>
-                <th style="width: 70px;">LAMPIRAN</th>
-                <th style="width: 78px;">DITERUSKAN</th>
-                <th style="width: 78px;">TEMBUSAN</th>
-                <th>KET</th>
+                <th rowspan="2" style="width: 22px;">NO</th>
+                <th colspan="7">SURAT MASUK</th>
+                <th rowspan="2" style="width: 22px;">NO</th>
+                <th colspan="6">SURAT KELUAR</th>
+            </tr>
+            <tr>
+                <th style="width: 58px;">TGL TERIMA</th>
+                <th style="width: 58px;">TGL SURAT</th>
+                <th style="width: 68px;">NOMOR SURAT</th>
+                <th style="width: 92px;">ASAL SURAT/DARI</th>
+                <th style="width: 112px;">PERIHAL</th>
+                <th style="width: 72px;">LAMPIRAN</th>
+                <th style="width: 88px;">DITERUSKAN KEPADA</th>
+                <th style="width: 82px;">NOMOR DAN KODE SURAT</th>
+                <th style="width: 58px;">TGL SURAT</th>
+                <th style="width: 90px;">KEPADA</th>
+                <th style="width: 112px;">PERIHAL</th>
+                <th style="width: 72px;">LAMPIRAN</th>
+                <th style="width: 86px;">TEMBUSAN</th>
             </tr>
         </thead>
         <tbody>
+            @php
+                $nomorMasuk = 0;
+                $nomorKeluar = 0;
+            @endphp
             @forelse ($items as $index => $item)
                 <tr>
-                    <td class="center">{{ $index + 1 }}</td>
-                    <td class="center">{{ strtoupper($item->jenis_surat) }}</td>
-                    <td class="center">{{ $item->tanggal_terima ? \Carbon\Carbon::parse($item->tanggal_terima)->format('d/m/Y') : '-' }}</td>
-                    <td class="center">{{ \Carbon\Carbon::parse($item->tanggal_surat)->format('d/m/Y') }}</td>
-                    <td>{{ $item->nomor_surat }}</td>
-                    <td>{{ $item->asal_surat ?: '-' }}</td>
-                    <td>{{ $item->dari ?: '-' }}</td>
-                    <td>{{ $item->kepada ?: '-' }}</td>
-                    <td>{{ $item->perihal }}</td>
-                    <td>{{ $item->lampiran ?: '-' }}</td>
-                    <td>{{ $item->diteruskan_kepada ?: '-' }}</td>
-                    <td>{{ $item->tembusan ?: '-' }}</td>
-                    <td>{{ $item->keterangan ?: '-' }}</td>
+                    @if ($item->jenis_surat === 'masuk')
+                        @php
+                            $nomorMasuk++;
+                            $asalDari = collect([$item->asal_surat, $item->dari])
+                                ->filter(fn ($value) => filled($value))
+                                ->implode(' / ');
+                        @endphp
+                        <td class="center">{{ $nomorMasuk }}</td>
+                        <td class="center">{{ $item->tanggal_terima ? \Carbon\Carbon::parse($item->tanggal_terima)->format('d/m/Y') : '-' }}</td>
+                        <td class="center">{{ \Carbon\Carbon::parse($item->tanggal_surat)->format('d/m/Y') }}</td>
+                        <td>{{ $item->nomor_surat }}</td>
+                        <td>{{ $asalDari !== '' ? $asalDari : '-' }}</td>
+                        <td>{{ $item->perihal }}</td>
+                        <td>{{ $item->lampiran ?: '-' }}</td>
+                        <td>{{ $item->diteruskan_kepada ?: '-' }}</td>
+                        <td class="center">-</td>
+                        <td class="center">-</td>
+                        <td class="center">-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                    @else
+                        @php
+                            $nomorKeluar++;
+                        @endphp
+                        <td class="center">-</td>
+                        <td class="center">-</td>
+                        <td class="center">-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td>-</td>
+                        <td class="center">{{ $nomorKeluar }}</td>
+                        <td>{{ $item->nomor_surat }}</td>
+                        <td class="center">{{ \Carbon\Carbon::parse($item->tanggal_surat)->format('d/m/Y') }}</td>
+                        <td>{{ $item->kepada ?: '-' }}</td>
+                        <td>{{ $item->perihal }}</td>
+                        <td>{{ $item->lampiran ?: '-' }}</td>
+                        <td>{{ $item->tembusan ?: '-' }}</td>
+                    @endif
                 </tr>
             @empty
                 <tr>
-                    <td colspan="13" class="center">Data belum tersedia.</td>
+                    <td colspan="15" class="center">Data belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>

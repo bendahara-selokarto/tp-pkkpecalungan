@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Inventaris</title>
+    <title>Buku Inventaris</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <div class="title">Laporan Inventaris {{ strtoupper($level) }}</div>
+    <div class="title">BUKU INVENTARIS {{ strtoupper($level) }}</div>
     <div class="meta">
         Wilayah: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
