@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Buku Tabungan/Keuangan</title>
+    <title>Buku Keuangan</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
@@ -23,7 +23,7 @@
         $saldo = 0;
     @endphp
 
-    <div class="title">BUKU TABUNGAN/KEUANGAN {{ $levelLabel }}</div>
+    <div class="title">BUKU KEUANGAN {{ $levelLabel }}</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
@@ -43,18 +43,19 @@
             </tr>
         </thead>
         <tbody>
-            @forelse ($items as $index => $item)
+            @forelse ($entries as $index => $entry)
                 @php
-                    $nominalMasuk = (float) $item->amount;
-                    $saldo += $nominalMasuk;
+                    $nominalMasuk = (float) $entry['pemasukan'];
+                    $nominalKeluar = (float) $entry['pengeluaran'];
+                    $saldo += $nominalMasuk - $nominalKeluar;
                 @endphp
                 <tr>
                     <td class="center">{{ $index + 1 }}</td>
-                    <td class="center">{{ \Carbon\Carbon::parse($item->received_date)->format('d/m/Y') }}</td>
-                    <td>{{ $item->name }}</td>
-                    <td class="center">{{ strtoupper(str_replace('_', ' ', (string) $item->source)) }}</td>
-                    <td class="right">{{ number_format($nominalMasuk, 0, ',', '.') }}</td>
-                    <td class="center">-</td>
+                    <td class="center">{{ \Carbon\Carbon::parse($entry['tanggal'])->format('d/m/Y') }}</td>
+                    <td>{{ $entry['uraian'] }}</td>
+                    <td class="center">{{ strtoupper(str_replace('_', ' ', (string) $entry['sumber'])) }}</td>
+                    <td class="right">{{ $nominalMasuk > 0 ? number_format($nominalMasuk, 0, ',', '.') : '-' }}</td>
+                    <td class="right">{{ $nominalKeluar > 0 ? number_format($nominalKeluar, 0, ',', '.') : '-' }}</td>
                     <td class="right">{{ number_format($saldo, 0, ',', '.') }}</td>
                 </tr>
             @empty
@@ -66,7 +67,8 @@
     </table>
 
     <div class="note">
-        Sumber data diambil dari transaksi bantuan berkategori keuangan/uang.
+        Sumber data diambil dari transaksi bantuan kategori keuangan. Kategori berisi kata
+        "pengeluaran/keluar/belanja/debit" diperlakukan sebagai pengeluaran.
     </div>
 </body>
 </html>

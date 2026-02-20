@@ -68,9 +68,24 @@ class BantuanReportPrintController extends Controller
             ->sortBy(fn (Bantuan $item): string => sprintf('%s-%010d', $item->received_date, $item->id))
             ->values();
 
+        $entries = $items->map(function (Bantuan $item): array {
+            $amount = (float) $item->amount;
+            $isPengeluaran = $this->isPengeluaranCategory((string) $item->category) || $amount < 0;
+            $nominal = abs($amount);
+
+            return [
+                'tanggal' => $item->received_date,
+                'uraian' => $item->name,
+                'sumber' => $item->source,
+                'kategori' => $item->category,
+                'pemasukan' => $isPengeluaran ? 0.0 : $nominal,
+                'pengeluaran' => $isPengeluaran ? $nominal : 0.0,
+            ];
+        });
+
         $user = auth()->user()->loadMissing('area');
         $pdf = $this->pdfViewFactory->loadView('pdf.buku_keuangan_report', [
-            'items' => $items,
+            'entries' => $entries,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
             'printedBy' => $user,
@@ -85,6 +100,18 @@ class BantuanReportPrintController extends Controller
         $normalizedCategory = strtolower($category);
 
         return str_contains($normalizedCategory, 'keuangan')
-            || str_contains($normalizedCategory, 'uang');
+            || str_contains($normalizedCategory, 'uang')
+            || str_contains($normalizedCategory, 'kas')
+            || $this->isPengeluaranCategory($normalizedCategory);
+    }
+
+    private function isPengeluaranCategory(string $category): bool
+    {
+        $normalizedCategory = strtolower($category);
+
+        return str_contains($normalizedCategory, 'pengeluaran')
+            || str_contains($normalizedCategory, 'keluar')
+            || str_contains($normalizedCategory, 'belanja')
+            || str_contains($normalizedCategory, 'debit');
     }
 }
