@@ -106,7 +106,7 @@ Kriteria selesai:
   - Memetakan `role -> scope -> area level -> akses modul (view/create/update/delete/print)`.
   - Mencakup role kompatibilitas (`admin-desa`, `admin-kecamatan`) dan `super-admin`.
 
-- [ ] `T4` Audit policy dan scope service untuk anti-bypass.
+- [x] `T4` Audit policy dan scope service untuk anti-bypass.
 Output:
   - File baru `docs/security/POLICY_SCOPE_AUDIT_REPORT.md`.
 Kriteria selesai:
