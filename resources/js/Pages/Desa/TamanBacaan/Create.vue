@@ -21,13 +21,13 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiStore" title="Tambah Taman Bacaan Desa" main />
+    <SectionTitleLineWithButton :icon="mdiStore" title="Tambah Data Isian Taman Bacaan/Perpustakaan Desa" main />
 
     <CardBox class="max-w-4xl">
       <form class="space-y-5" @submit.prevent="submit">
         <div class="grid gap-5 md:grid-cols-3">
           <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Taman Bacaan</label>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Taman Bacaan/Perpustakaan</label>
             <input v-model="form.nama_taman_bacaan" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
             <p v-if="form.errors.nama_taman_bacaan" class="mt-1 text-xs text-rose-600">{{ form.errors.nama_taman_bacaan }}</p>
           </div>

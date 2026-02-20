@@ -17,7 +17,7 @@ const page = usePage()
 const flashSuccess = computed(() => page.props.flash?.success)
 
 const hapusTamanBacaan = (id) => {
-  if (!window.confirm('Apakah Anda yakin ingin menghapus data taman bacaan ini?')) {
+  if (!window.confirm('Apakah Anda yakin ingin menghapus data isian taman bacaan/perpustakaan ini?')) {
     return
   }
 
@@ -27,7 +27,7 @@ const hapusTamanBacaan = (id) => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiStore" title="Taman Bacaan Desa" main />
+    <SectionTitleLineWithButton :icon="mdiStore" title="Data Isian Taman Bacaan/Perpustakaan Desa" main />
 
     <div
       v-if="flashSuccess"
@@ -38,7 +38,7 @@ const hapusTamanBacaan = (id) => {
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Taman Bacaan</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Isian Taman Bacaan/Perpustakaan</h3>
         <div class="flex items-center gap-2">
           <a
             href="/desa/taman-bacaan/report/pdf"
@@ -61,7 +61,7 @@ const hapusTamanBacaan = (id) => {
         <table class="w-full min-w-[980px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
-              <th class="px-3 py-3 font-semibold">Nama Taman Bacaan</th>
+              <th class="px-3 py-3 font-semibold">Nama Taman Bacaan/Perpustakaan</th>
               <th class="px-3 py-3 font-semibold">Nama Pengelola</th>
               <th class="px-3 py-3 font-semibold">Jumlah Buku Bacaan</th>
               <th class="px-3 py-3 font-semibold">Jenis Buku</th>
@@ -108,7 +108,7 @@ const hapusTamanBacaan = (id) => {
             </tr>
             <tr v-if="props.tamanBacaanItems.length === 0">
               <td colspan="7" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data taman bacaan belum tersedia.
+                Data isian taman bacaan/perpustakaan belum tersedia.
               </td>
             </tr>
           </tbody>

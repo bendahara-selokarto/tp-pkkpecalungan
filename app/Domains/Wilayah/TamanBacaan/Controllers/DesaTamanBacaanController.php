@@ -58,7 +58,7 @@ class DesaTamanBacaanController extends Controller
         $this->authorize('create', TamanBacaan::class);
         $this->createScopedTamanBacaanAction->execute($request->validated(), ScopeLevel::DESA->value);
 
-        return redirect()->route('desa.taman-bacaan.index')->with('success', 'Data taman bacaan berhasil dibuat');
+        return redirect()->route('desa.taman-bacaan.index')->with('success', 'Data isian taman bacaan/perpustakaan berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -103,7 +103,7 @@ class DesaTamanBacaanController extends Controller
         $this->authorize('update', $tamanBacaan);
         $this->updateTamanBacaanAction->execute($tamanBacaan, $request->validated());
 
-        return redirect()->route('desa.taman-bacaan.index')->with('success', 'Data taman bacaan berhasil diperbarui');
+        return redirect()->route('desa.taman-bacaan.index')->with('success', 'Data isian taman bacaan/perpustakaan berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -112,7 +112,7 @@ class DesaTamanBacaanController extends Controller
         $this->authorize('delete', $tamanBacaan);
         $this->tamanBacaanRepository->delete($tamanBacaan);
 
-        return redirect()->route('desa.taman-bacaan.index')->with('success', 'Data taman bacaan berhasil dihapus');
+        return redirect()->route('desa.taman-bacaan.index')->with('success', 'Data isian taman bacaan/perpustakaan berhasil dihapus');
     }
 }
 

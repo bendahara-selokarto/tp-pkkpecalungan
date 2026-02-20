@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Laporan Taman Bacaan</title>
+    <title>Data Isian Taman Bacaan/Perpustakaan</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
@@ -20,7 +20,7 @@
         $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
     @endphp
 
-    <div class="title">Laporan Taman Bacaan {{ $levelLabel }}</div>
+    <div class="title">DATA ISIAN TAMAN BACAAN/PERPUSTAKAAN {{ $levelLabel }}</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
@@ -31,7 +31,7 @@
         <thead>
             <tr>
                 <th style="width: 28px;">NO</th>
-                <th style="width: 150px;">NAMA TAMAN BACAAN</th>
+                <th style="width: 150px;">NAMA TAMAN BACAAN/PERPUSTAKAAN</th>
                 <th style="width: 120px;">NAMA PENGELOLA</th>
                 <th style="width: 100px;">JUMLAH BUKU</th>
                 <th style="width: 160px;">JENIS BUKU</th>
