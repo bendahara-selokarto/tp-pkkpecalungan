@@ -53,11 +53,13 @@ class UserManagementController extends Controller
 
     public function create(): Response
     {
-        $roles = $this->getUserManagementFormOptionsUseCase->roles();
+        $roleOptionsByScope = $this->getUserManagementFormOptionsUseCase->roleOptionsByScope();
+        $roleLabels = $this->getUserManagementFormOptionsUseCase->roleLabels($roleOptionsByScope);
         $areas = $this->getUserManagementFormOptionsUseCase->areas();
 
         return Inertia::render('SuperAdmin/Users/Create', [
-            'roles' => $roles,
+            'roleOptionsByScope' => $roleOptionsByScope,
+            'roleLabels' => $roleLabels,
             'areas' => $areas->map(fn (Area $area) => [
                 'id' => $area->id,
                 'name' => $area->name,
@@ -75,7 +77,8 @@ class UserManagementController extends Controller
 
     public function edit(User $user): Response
     {
-        $roles = $this->getUserManagementFormOptionsUseCase->roles();
+        $roleOptionsByScope = $this->getUserManagementFormOptionsUseCase->roleOptionsByScope();
+        $roleLabels = $this->getUserManagementFormOptionsUseCase->roleLabels($roleOptionsByScope);
         $areas = $this->getUserManagementFormOptionsUseCase->areas();
         $user->load('roles:id,name');
 
@@ -88,7 +91,8 @@ class UserManagementController extends Controller
                 'area_id' => $user->area_id,
                 'roles' => $user->roles->pluck('name')->values(),
             ],
-            'roles' => $roles,
+            'roleOptionsByScope' => $roleOptionsByScope,
+            'roleLabels' => $roleLabels,
             'areas' => $areas->map(fn (Area $area) => [
                 'id' => $area->id,
                 'name' => $area->name,

@@ -7,12 +7,16 @@ import { mdiAccountPlus } from '@mdi/js'
 import { computed, watch } from 'vue'
 
 const props = defineProps({
-  roles: {
+  areas: {
     type: Array,
     required: true,
   },
-  areas: {
-    type: Array,
+  roleOptionsByScope: {
+    type: Object,
+    required: true,
+  },
+  roleLabels: {
+    type: Object,
     required: true,
   },
 })
@@ -21,31 +25,13 @@ const form = useForm({
   name: '',
   email: '',
   password: '',
-  role: 'desa-sekretaris',
+  role: props.roleOptionsByScope?.desa?.[0] ?? '',
   scope: 'desa',
   area_id: '',
 })
 
-const scopeRoleMap = {
-  desa: ['desa-sekretaris', 'desa-bendahara', 'desa-pokja-i', 'desa-pokja-ii', 'desa-pokja-iii', 'desa-pokja-iv'],
-  kecamatan: ['kecamatan-sekretaris', 'kecamatan-bendahara', 'kecamatan-pokja-i', 'kecamatan-pokja-ii', 'kecamatan-pokja-iii', 'kecamatan-pokja-iv', 'super-admin'],
-}
-
-const roleLabelMap = {
-  'desa-sekretaris': 'Sekretaris (Desa)',
-  'desa-bendahara': 'Bendahara (Desa)',
-  'desa-pokja-i': 'Pokja I (Desa)',
-  'desa-pokja-ii': 'Pokja II (Desa)',
-  'desa-pokja-iii': 'Pokja III (Desa)',
-  'desa-pokja-iv': 'Pokja IV (Desa)',
-  'kecamatan-sekretaris': 'Sekretaris (Kecamatan)',
-  'kecamatan-bendahara': 'Bendahara (Kecamatan)',
-  'kecamatan-pokja-i': 'Pokja I (Kecamatan)',
-  'kecamatan-pokja-ii': 'Pokja II (Kecamatan)',
-  'kecamatan-pokja-iii': 'Pokja III (Kecamatan)',
-  'kecamatan-pokja-iv': 'Pokja IV (Kecamatan)',
-  'super-admin': 'Super Admin',
-}
+const scopeRoleMap = props.roleOptionsByScope
+const roleLabelMap = props.roleLabels
 
 const filteredRoles = computed(() => scopeRoleMap[form.scope] ?? [])
 const filteredAreas = computed(() => props.areas.filter((area) => area.level === form.scope))

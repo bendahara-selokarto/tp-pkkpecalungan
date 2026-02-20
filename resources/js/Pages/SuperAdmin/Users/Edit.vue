@@ -11,12 +11,16 @@ const props = defineProps({
     type: Object,
     required: true,
   },
-  roles: {
+  areas: {
     type: Array,
     required: true,
   },
-  areas: {
-    type: Array,
+  roleOptionsByScope: {
+    type: Object,
+    required: true,
+  },
+  roleLabels: {
+    type: Object,
     required: true,
   },
 })
@@ -25,31 +29,13 @@ const form = useForm({
   name: props.user.name ?? '',
   email: props.user.email ?? '',
   password: '',
-  role: props.user.roles?.[0] ?? props.roles[0] ?? '',
+  role: props.user.roles?.[0] ?? (props.roleOptionsByScope?.[props.user.scope ?? 'desa']?.[0] ?? ''),
   scope: props.user.scope ?? 'desa',
   area_id: props.user.area_id ?? '',
 })
 
-const scopeRoleMap = {
-  desa: ['desa-sekretaris', 'desa-bendahara', 'desa-pokja-i', 'desa-pokja-ii', 'desa-pokja-iii', 'desa-pokja-iv'],
-  kecamatan: ['kecamatan-sekretaris', 'kecamatan-bendahara', 'kecamatan-pokja-i', 'kecamatan-pokja-ii', 'kecamatan-pokja-iii', 'kecamatan-pokja-iv', 'super-admin'],
-}
-
-const roleLabelMap = {
-  'desa-sekretaris': 'Sekretaris (Desa)',
-  'desa-bendahara': 'Bendahara (Desa)',
-  'desa-pokja-i': 'Pokja I (Desa)',
-  'desa-pokja-ii': 'Pokja II (Desa)',
-  'desa-pokja-iii': 'Pokja III (Desa)',
-  'desa-pokja-iv': 'Pokja IV (Desa)',
-  'kecamatan-sekretaris': 'Sekretaris (Kecamatan)',
-  'kecamatan-bendahara': 'Bendahara (Kecamatan)',
-  'kecamatan-pokja-i': 'Pokja I (Kecamatan)',
-  'kecamatan-pokja-ii': 'Pokja II (Kecamatan)',
-  'kecamatan-pokja-iii': 'Pokja III (Kecamatan)',
-  'kecamatan-pokja-iv': 'Pokja IV (Kecamatan)',
-  'super-admin': 'Super Admin',
-}
+const scopeRoleMap = props.roleOptionsByScope
+const roleLabelMap = props.roleLabels
 
 const filteredRoles = computed(() => scopeRoleMap[form.scope] ?? [])
 const filteredAreas = computed(() => props.areas.filter((area) => area.level === form.scope))

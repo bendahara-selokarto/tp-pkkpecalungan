@@ -2,12 +2,13 @@
 
 namespace App\Domains\Wilayah\Bantuan\Requests;
 
-use Carbon\Carbon;
+use App\Http\Requests\Concerns\ParsesUiDate;
 use Illuminate\Foundation\Http\FormRequest;
-use Throwable;
 
 class StoreBantuanRequest extends FormRequest
 {
+    use ParsesUiDate;
+
     public function authorize(): bool
     {
         return true;
@@ -24,7 +25,7 @@ class StoreBantuanRequest extends FormRequest
             'received_date' => [
                 'required',
                 function (string $attribute, mixed $value, \Closure $fail): void {
-                    if ($this->parseDate((string) $value) === null) {
+                    if ($this->parseUiDate((string) $value) === null) {
                         $fail('Format tanggal harus DD/MM/YYYY.');
                     }
                 },
@@ -35,29 +36,7 @@ class StoreBantuanRequest extends FormRequest
     protected function passedValidation(): void
     {
         $this->merge([
-            'received_date' => $this->normalizeDate($this->string('received_date')->toString()),
+            'received_date' => $this->normalizeUiDate($this->string('received_date')->toString()),
         ]);
-    }
-
-    private function normalizeDate(string $value): string
-    {
-        return $this->parseDate($value)?->format('Y-m-d') ?? $value;
-    }
-
-    private function parseDate(string $value): ?Carbon
-    {
-        foreach (['d/m/Y', 'Y-m-d'] as $format) {
-            try {
-                $date = Carbon::createFromFormat($format, $value);
-            } catch (Throwable) {
-                continue;
-            }
-
-            if ($date->format($format) === $value) {
-                return $date;
-            }
-        }
-
-        return null;
     }
 }
