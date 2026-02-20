@@ -33,10 +33,8 @@ class UpdateBantuanRequest extends FormRequest
         ];
     }
 
-    protected function passedValidation(): void
+    protected function uiDateFields(): array
     {
-        $this->merge([
-            'received_date' => $this->normalizeUiDate($this->string('received_date')->toString()),
-        ]);
+        return ['received_date'];
     }
 }

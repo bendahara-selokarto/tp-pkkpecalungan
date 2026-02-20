@@ -42,10 +42,8 @@ class StoreKaderKhususRequest extends FormRequest
         ];
     }
 
-    protected function passedValidation(): void
+    protected function uiDateFields(): array
     {
-        $this->merge([
-            'tanggal_lahir' => $this->normalizeUiDate($this->string('tanggal_lahir')->toString()),
-        ]);
+        return ['tanggal_lahir'];
     }
 }

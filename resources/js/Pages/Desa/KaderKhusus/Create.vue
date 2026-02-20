@@ -60,7 +60,7 @@ const submit = () => {
 
           <div>
             <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Lahir</label>
-            <input v-model="form.tanggal_lahir" type="text" inputmode="numeric" placeholder="DD/MM/YYYY" pattern="^\d{2}/\d{2}/\d{4}$" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <input v-model="form.tanggal_lahir" type="text" inputmode="numeric" placeholder="DD/MM/YYYY" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
             <p v-if="form.errors.tanggal_lahir" class="mt-1 text-xs text-rose-600">{{ form.errors.tanggal_lahir }}</p>
           </div>
         </div>
@@ -106,3 +106,4 @@ const submit = () => {
     </CardBox>
   </SectionMain>
 </template>
+

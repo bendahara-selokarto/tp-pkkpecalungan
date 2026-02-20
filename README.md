@@ -102,7 +102,7 @@ Standar input tanggal:
 - UI form domain memakai `DD/MM/YYYY`.
 - Validasi dan normalisasi tanggal dilakukan di `FormRequest`.
 - Format canonical backend: `Y-m-d`.
-- Format legacy `Y-m-d` boleh diterima untuk transisi jika diperlukan.
+- Input tanggal dari UI wajib `DD/MM/YYYY` (bukan `MM/DD/YYYY`).
 
 ## 8. Modul Inertia Aktif
 

@@ -14,19 +14,43 @@ trait ParsesUiDate
 
     protected function parseUiDate(string $value): ?Carbon
     {
-        foreach (['d/m/Y', 'Y-m-d'] as $format) {
-            try {
-                $date = Carbon::createFromFormat($format, $value);
-            } catch (Throwable) {
+        $trimmed = trim($value);
+
+        if (! preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $trimmed)) {
+            return null;
+        }
+
+        try {
+            $date = Carbon::createFromFormat('!d/m/Y', $trimmed);
+        } catch (Throwable) {
+            return null;
+        }
+
+        return $date->format('d/m/Y') === $trimmed ? $date : null;
+    }
+
+    protected function uiDateFields(): array
+    {
+        return [];
+    }
+
+    public function validated($key = null, $default = null): mixed
+    {
+        $validated = parent::validated($key, $default);
+
+        if ($key !== null || ! is_array($validated)) {
+            return $validated;
+        }
+
+        foreach ($this->uiDateFields() as $field) {
+            if (! array_key_exists($field, $validated) || ! is_string($validated[$field])) {
                 continue;
             }
 
-            if ($date->format($format) === $value) {
-                return $date;
-            }
+            $normalized = $this->normalizeUiDate($validated[$field]);
+            $validated[$field] = $normalized;
         }
 
-        return null;
+        return $validated;
     }
 }
-

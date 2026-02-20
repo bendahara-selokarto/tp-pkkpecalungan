@@ -31,10 +31,8 @@ class UpdateActivityRequest extends FormRequest
         ];
     }
 
-    protected function passedValidation(): void
+    protected function uiDateFields(): array
     {
-        $this->merge([
-            'activity_date' => $this->normalizeUiDate($this->string('activity_date')->toString()),
-        ]);
+        return ['activity_date'];
     }
 }

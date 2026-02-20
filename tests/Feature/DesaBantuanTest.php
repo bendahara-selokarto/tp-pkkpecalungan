@@ -98,7 +98,7 @@ class DesaBantuanTest extends TestCase
             'description' => 'Tahap awal',
             'source' => 'provinsi',
             'amount' => 25000000,
-            'received_date' => '2026-02-10',
+            'received_date' => '10/02/2026',
         ])->assertStatus(302);
 
         $bantuan = Bantuan::where('name', 'Bantuan Provinsi')->firstOrFail();
@@ -109,7 +109,7 @@ class DesaBantuanTest extends TestCase
             'description' => 'Tahap final',
             'source' => 'provinsi',
             'amount' => 30000000,
-            'received_date' => '2026-02-12',
+            'received_date' => '12/02/2026',
         ])->assertStatus(302);
 
         $this->assertDatabaseHas('bantuans', [
@@ -138,5 +138,4 @@ class DesaBantuanTest extends TestCase
         $response->assertStatus(403);
     }
 }
-
 
