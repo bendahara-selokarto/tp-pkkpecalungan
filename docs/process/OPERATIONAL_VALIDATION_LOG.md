@@ -100,3 +100,28 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk rollout dashboard coverage dokumen.
+
+## Siklus UI Admin-One Alert Standardization: 2026-02-20
+
+Ruang lingkup:
+- Eksekusi `U5-U8` untuk standardisasi alert/konfirmasi UI pada halaman dashboard.
+- Migrasi dari flash inline dan native dialog ke komponen reusable admin-one.
+
+Perintah audit:
+- `rg "flashSuccess|flashError" resources/js/Pages -l`
+  - hasil: `0` file.
+- `rg "window\\.confirm" resources/js/Pages -l`
+  - hasil: `0` file.
+- `rg "window\\.alert|alert\\(" resources/js -l`
+  - hasil: `0` file.
+- `rg "border-emerald-200 bg-emerald-50|border-rose-200 bg-rose-50" resources/js/Pages -l`
+  - hasil: `2` file (`Auth/Login.vue`, `Profile/Edit.vue`, di luar modul dashboard utama).
+
+Perintah validasi:
+- `npm run build`
+  - hasil: `PASS`.
+- `php artisan test`
+  - hasil: `424` tests pass (`1544` assertions).
+
+Status:
+- `PASS` untuk standardisasi alert/konfirmasi modul dashboard berbasis admin-one.
