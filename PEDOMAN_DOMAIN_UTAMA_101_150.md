@@ -175,3 +175,17 @@ Kriteria selesai:
 - [x] Tidak ada drift akses antara `role`, `scope`, `area level`, dan policy. (baseline 2026-02-20)
 - [x] Setiap perubahan domain memiliki jejak referensi pedoman dan bukti test validasi. (baseline 2026-02-20)
 - [x] Semua artefak pada `docs/domain`, `docs/security`, `docs/pdf`, dan `docs/process` tersedia dan terisi. (baseline 2026-02-20)
+
+## Backlog Berikutnya - Dashboard Coverage Dokumen
+
+Latar belakang:
+- Dashboard saat ini masih dominan berbasis domain `activities`, belum merepresentasikan cakupan dokumen 4.9a-4.15 secara utuh.
+
+Rujukan rencana:
+- `docs/process/DASHBOARD_CHART_ALIGNMENT_PLAN.md`
+
+- [x] `D1` Bangun kontrak data dashboard lintas modul (4.9a-4.15) via UseCase + Repository.
+- [x] `D2` Render chart coverage dokumen di `Dashboard.vue` (bukan hanya widget activity).
+- [x] `D3` Tambahkan feature test scope dashboard coverage (desa, kecamatan, stale metadata).
+- [x] `D4` Tambahkan unit test agregasi coverage per modul/lampiran.
+- [x] `D5` (opsional) Tambahkan cache TTL pendek untuk query dashboard coverage besar.

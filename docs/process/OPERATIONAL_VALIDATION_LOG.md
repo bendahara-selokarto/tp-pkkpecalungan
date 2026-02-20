@@ -85,3 +85,18 @@ Status:
 - Log ini harus diperbarui setiap kali ada perubahan besar domain/PDF/auth-scope.
 - Jika ada mismatch pedoman yang ditemukan di siklus berikutnya, wajib dicatat ke:
   - `docs/domain/DOMAIN_DEVIATION_LOG.md`
+
+## Siklus Dashboard Coverage: 2026-02-20
+
+Ruang lingkup:
+- Eksekusi `D1-D5` dashboard coverage dokumen 4.9a-4.15.
+- Kontrak backend `UseCase + Repository`, chart dashboard, test coverage scope, dan cache TTL.
+
+Perintah validasi:
+- `php artisan test tests/Feature/DashboardActivityChartTest.php tests/Feature/DashboardDocumentCoverageTest.php tests/Unit/UseCases/BuildDashboardDocumentCoverageUseCaseTest.php`
+  - hasil: `9` tests pass (`171` assertions).
+- `php artisan test`
+  - hasil: `424` tests pass (`1544` assertions).
+
+Status:
+- `PASS` untuk rollout dashboard coverage dokumen.
