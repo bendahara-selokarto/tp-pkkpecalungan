@@ -2,12 +2,18 @@
 
 Dokumen ini adalah source of truth AI untuk repository ini.
 Dokumen manusia ada di `README.md`.
+Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_101_150.md` (sumber: https://pubhtml5.com/zsnqq/vjcf/basic/101-150).
 
 ## 0. Priority
 
 Jika konflik dokumen:
-1. `AGENTS.md` (file ini)
-2. `README.md`
+1. `AGENTS.md` (aturan teknis, arsitektur, eksekusi agent)
+2. `PEDOMAN_DOMAIN_UTAMA_101_150.md` (terminologi/kontrak domain lampiran 4.9-4.15)
+3. `README.md`
+
+Aturan koherensi domain:
+- Jika ada perbedaan istilah, label, atau kontrak domain antara dokumen internal dan pedoman utama, utamakan `PEDOMAN_DOMAIN_UTAMA_101_150.md`.
+- Aspek teknis implementasi (arsitektur, policy/scope, quality gate, test matrix) tetap mengikuti `AGENTS.md`.
 
 ## 1. Fast Context
 

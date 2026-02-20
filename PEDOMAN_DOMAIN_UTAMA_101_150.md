@@ -1,4 +1,11 @@
-# TODO Buku Sekretaris TP PKK (Bertahap)
+# Pedoman Domain Utama 101-150 (Roadmap Implementasi)
+
+Sumber utama domain:
+- https://pubhtml5.com/zsnqq/vjcf/basic/101-150
+
+Aturan koherensi:
+- Jika ada ketidaksesuaian istilah/label domain dengan dokumen lain, dokumen ini menjadi acuan domain utama.
+- Aspek teknis implementasi (arsitektur, boundary repository, policy/scope, quality gate) tetap mengikuti `AGENTS.md`.
 
 Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampai yang lebih asumtif.
 

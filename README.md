@@ -3,6 +3,13 @@
 Dokumen ini adalah panduan manusia untuk memahami dan mengimplementasikan proyek.
 Dokumen AI dan optimasi rate limiter ada di `AGENTS.md`.
 
+## 0. Referensi Domain Utama
+
+- Pedoman domain utama: https://pubhtml5.com/zsnqq/vjcf/basic/101-150
+- Ringkasan sinkronisasi lokal: `PEDOMAN_DOMAIN_UTAMA_101_150.md`
+- Jika ada ketidakkoherenan istilah/label domain, utamakan pedoman domain utama di atas.
+- Aturan teknis implementasi tetap mengacu ke `AGENTS.md`.
+
 ## 1. Tujuan Proyek
 
 Aplikasi ini dipakai untuk manajemen data PKK berbasis wilayah.
