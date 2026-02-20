@@ -27,7 +27,7 @@ const hapusPosyandu = (id) => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiStore" title="Posyandu Desa" main />
+    <SectionTitleLineWithButton :icon="mdiStore" title="Data Isian Posyandu oleh TP PKK Desa" main />
 
     <div
       v-if="flashSuccess"
@@ -38,7 +38,7 @@ const hapusPosyandu = (id) => {
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Posyandu</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Isian Posyandu oleh TP PKK</h3>
         <div class="flex items-center gap-2">
           <a
             href="/desa/posyandu/report/pdf"

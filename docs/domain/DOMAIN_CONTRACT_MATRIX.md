@@ -24,9 +24,9 @@ Aturan baca:
 | 4.14.3 | `data-pelatihan-kader` | Data Pelatihan Kader | `nomor_registrasi`, `nama_lengkap_kader`, `tanggal_masuk_tp_pkk`, `jabatan_fungsi`, `nomor_urut_pelatihan`, `judul_pelatihan`, `jenis_kriteria_kaderisasi`, `tahun_penyelenggaraan`, `institusi_penyelenggara`, `status_sertifikat` | `DATA PELATIHAN KADER` | PubHTML5 101-150 (Lampiran 4.14.3) | match |
 | 4.14.4a | `warung-pkk` | Data Aset (Sarana) Desa/Kelurahan | `nama_warung_pkk`, `nama_pengelola`, `komoditi`, `kategori`, `volume` | `Data aset (sarana) desa/kelurahan` | PubHTML5 101-150 (Lampiran 4.14.4a) | match |
 | 4.14.4b | `taman-bacaan` | Data Isian Taman Bacaan/Perpustakaan | `nama_taman_bacaan`, `nama_pengelola`, `jumlah_buku_bacaan`, `jenis_buku`, `kategori`, `jumlah` | `DATA ISIAN TAMAN BACAAN/PERPUSTAKAAN` | PubHTML5 101-150 (Lampiran 4.14.4b) | match |
-| 4.14.4c | `koperasi` | Data Isian Koperasi | `nama_koperasi`, `jenis_usaha`, `berbadan_hukum`, `belum_berbadan_hukum`, `jumlah_anggota_l`, `jumlah_anggota_p` | `Laporan Koperasi` | PubHTML5 101-150 (Lampiran 4.14.4c) | perlu normalisasi label PDF ke pedoman |
-| 4.14.4d | `kejar-paket` | Data Isian Kejar Paket | `nama_kejar_paket`, `jenis_kejar_paket`, `jumlah_warga_belajar_l`, `jumlah_warga_belajar_p`, `jumlah_pengajar_l`, `jumlah_pengajar_p` | `Laporan Kejar Paket/KF/PAUD` | PubHTML5 101-150 (Lampiran 4.14.4d) | perlu normalisasi label PDF ke pedoman |
-| 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | `nama_posyandu`, `nama_pengelola`, `nama_sekretaris`, `jenis_posyandu`, `jumlah_kader`, `jenis_kegiatan`, `frekuensi_layanan`, `jumlah_pengunjung_l`, `jumlah_pengunjung_p`, `jumlah_petugas_l`, `jumlah_petugas_p` | `Laporan Posyandu` | PubHTML5 101-150 (Lampiran 4.14.4e) | perlu normalisasi label PDF ke pedoman |
+| 4.14.4c | `koperasi` | Data Isian Koperasi | `nama_koperasi`, `jenis_usaha`, `berbadan_hukum`, `belum_berbadan_hukum`, `jumlah_anggota_l`, `jumlah_anggota_p` | `DATA ISIAN KOPERASI` | PubHTML5 101-150 (Lampiran 4.14.4c) | match |
+| 4.14.4d | `kejar-paket` | Data Isian Kejar Paket/KF/PAUD | `nama_kejar_paket`, `jenis_kejar_paket`, `jumlah_warga_belajar_l`, `jumlah_warga_belajar_p`, `jumlah_pengajar_l`, `jumlah_pengajar_p` | `DATA ISIAN KEJAR PAKET/KF/PAUD` | PubHTML5 101-150 (Lampiran 4.14.4d) | match |
+| 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | `nama_posyandu`, `nama_pengelola`, `nama_sekretaris`, `jenis_posyandu`, `jumlah_kader`, `jenis_kegiatan`, `frekuensi_layanan`, `jumlah_pengunjung_l`, `jumlah_pengunjung_p`, `jumlah_petugas_l`, `jumlah_petugas_p` | `DATA ISIAN POSYANDU OLEH TP PKK` | PubHTML5 101-150 (Lampiran 4.14.4e) | match |
 | 4.14.4f | `simulasi-penyuluhan` | Data Isian Kelompok Simulasi dan Penyuluhan | `nama_kegiatan`, `jenis_simulasi_penyuluhan`, `jumlah_kelompok`, `jumlah_sosialisasi`, `jumlah_kader_l`, `jumlah_kader_p`, `keterangan` | `DATA ISIAN KELOMPOK SIMULASI DAN PENYULUHAN` | PubHTML5 101-150 (Lampiran 4.14.4f) | match |
 | 4.15 | `catatan-keluarga` | Catatan Keluarga | Read-only rekap dari `data-warga` + `data-kegiatan-warga`: `nama_kepala_rumah_tangga`, `jumlah_anggota_rumah_tangga`, `kerja_bakti`, `rukun_kematian`, `kegiatan_keagamaan`, `jimpitan`, `arisan`, `lain_lain`, `keterangan` | `CATATAN KELUARGA` | PubHTML5 101-150 (Lampiran 4.15) | match (rekap, tanpa tabel baru) |
 
@@ -55,4 +55,3 @@ Aturan baca:
   - `database/migrations/2026_02_20_230000_create_simulasi_penyuluhans_table.php`
 - Catatan keluarga rekap source:
   - `app/Domains/Wilayah/CatatanKeluarga/Repositories/CatatanKeluargaRepository.php`
-

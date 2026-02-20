@@ -32,9 +32,9 @@ Tujuan:
 | 4.14.3 | `data-pelatihan-kader` | Data Pelatihan Kader | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.14.4a | `warung-pkk` | Data Aset (Sarana) Desa/Kelurahan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.14.4b | `taman-bacaan` | Data Isian Taman Bacaan/Perpustakaan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
-| 4.14.4c | `koperasi` | Data Isian Koperasi | UI: `Koperasi Desa/Kecamatan`; PDF: `Laporan Koperasi` | Ubah label menu/index/PDF jadi `Data Isian Koperasi` | pending normalization |
-| 4.14.4d | `kejar-paket` | Data Isian Kejar Paket/KF/PAUD | UI: `Kejar Paket Desa/Kecamatan`; PDF: `Laporan Kejar Paket/KF/PAUD` | Ubah label menu/index/PDF jadi `Data Isian Kejar Paket/KF/PAUD` | pending normalization |
-| 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | UI: `Posyandu Desa/Kecamatan`; PDF: `Laporan Posyandu` | Ubah label menu/index/PDF jadi `Data Isian Posyandu oleh TP PKK` | pending normalization |
+| 4.14.4c | `koperasi` | Data Isian Koperasi | UI/PDF sudah memakai `Data Isian Koperasi` | Pertahankan | match |
+| 4.14.4d | `kejar-paket` | Data Isian Kejar Paket/KF/PAUD | UI/PDF sudah memakai `Data Isian Kejar Paket/KF/PAUD` | Pertahankan | match |
+| 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | UI/PDF sudah memakai `Data Isian Posyandu oleh TP PKK` | Pertahankan | match |
 | 4.14.4f | `simulasi-penyuluhan` | Data Isian Kelompok Simulasi dan Penyuluhan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.15 | `catatan-keluarga` | Catatan Keluarga | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 
@@ -62,4 +62,3 @@ Tujuan:
   - `resources/views/pdf/koperasi_report.blade.php`
   - `resources/views/pdf/kejar_paket_report.blade.php`
   - `resources/views/pdf/posyandu_report.blade.php`
-

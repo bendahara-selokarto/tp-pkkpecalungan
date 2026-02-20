@@ -27,7 +27,7 @@ const hapusKejarPaket = (id) => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiStore" title="Kejar Paket Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiStore" title="Data Isian Kejar Paket/KF/PAUD Kecamatan" main />
 
     <div
       v-if="flashSuccess"
@@ -38,7 +38,7 @@ const hapusKejarPaket = (id) => {
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Kejar Paket</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Isian Kejar Paket/KF/PAUD</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/kejar-paket/report/pdf"

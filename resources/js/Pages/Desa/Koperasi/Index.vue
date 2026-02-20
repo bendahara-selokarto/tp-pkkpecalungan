@@ -39,7 +39,7 @@ const statusHukumLabel = (item) => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Koperasi Desa" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Data Isian Koperasi Desa" main />
 
     <div
       v-if="flashSuccess"
@@ -50,7 +50,7 @@ const statusHukumLabel = (item) => {
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Koperasi</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Isian Koperasi</h3>
         <div class="flex items-center gap-2">
           <a
             href="/desa/koperasi/report/pdf"
