@@ -71,3 +71,36 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - `agenda-surat` dipakai sebagai source of truth surat masuk/keluar.
 - Buku ekspedisi tidak menambah tabel/domain baru untuk menghindari duplikasi data surat keluar.
 - Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi masuk fase bertahap. Modul 4.14.1a (`data-warga`), 4.14.1b (`data-kegiatan-warga`), 4.14.2a (`data-keluarga`), 4.14.2b (`data-pemanfaatan-tanah-pekarangan-hatinya-pkk`), 4.14.2c (`data-industri-rumah-tangga`), 4.14.3 (`data-pelatihan-kader`), dan 4.15 (`catatan-keluarga`) sudah selesai.
+
+## TODO Lanjutan - Strategi Analisis Pedoman Domain (Profesional)
+
+Tujuan: menjaga keamanan autentikasi/otorisasi dan memastikan output PDF tetap koheren dengan dokumen baku.
+
+### A. Strategi Kontrak Domain
+- [ ] Bangun `Domain Contract Matrix` per lampiran (nama modul, field canonical, label kolom PDF, sumber halaman pedoman).
+- [ ] Tambahkan `aturan normalisasi istilah` (contoh domain teknis vs label pedoman) agar tidak terjadi drift naming.
+- [ ] Tetapkan `traceability id` per kolom PDF ke sumber pedoman (halaman + label referensi).
+
+### B. Strategi Autentikasi dan Otorisasi
+- [ ] Susun `Auth Coherence Matrix`: `role -> scope -> area level -> module access` untuk semua modul buku sekretaris.
+- [ ] Tambahkan regression checklist mismatch metadata (`role/scope/area_id`) sebelum rilis domain baru.
+- [ ] Audit berkala kebijakan `Policy -> Scope Service` untuk memastikan tidak ada bypass di controller/repository.
+
+### C. Strategi Validasi PDF ke Dokumen Baku
+- [ ] Definisikan `PDF Compliance Checklist` per modul:
+- urutan kolom
+- penamaan header
+- format nilai
+- orientasi halaman (default `landscape`)
+- [ ] Tambahkan test assertion untuk header PDF utama agar mismatch label pedoman terdeteksi dini.
+- [ ] Siapkan baseline fixture output PDF per modul untuk review visual terkontrol saat ada perubahan template.
+
+### D. Strategi Operasional Perubahan Dokumen
+- [ ] Terapkan `change gate` dokumen: perubahan kontrak domain wajib memperbarui `Domain Contract Matrix` dan test terkait.
+- [ ] Terapkan `release checklist` khusus modul PDF: lulus test scoped auth + lulus checklist koherensi pedoman.
+- [ ] Tambahkan log keputusan deviasi (jika ada) beserta alasan teknis dan dampak.
+
+### Definition of Done TODO Lanjutan
+- [ ] Tidak ada mismatch label/header PDF terhadap pedoman domain utama.
+- [ ] Tidak ada drift akses antara `role`, `scope`, `area level`, dan policy.
+- [ ] Setiap perubahan domain memiliki jejak referensi ke sumber pedoman dan test validasi yang relevan.
