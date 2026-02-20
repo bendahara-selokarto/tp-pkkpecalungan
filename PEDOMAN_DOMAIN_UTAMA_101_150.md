@@ -144,7 +144,7 @@ Kriteria selesai:
 
 ### Sprint 3 - Change Gate dan Operasional Rilis
 
-- [ ] `T9` Terapkan `change gate` untuk perubahan kontrak domain.
+- [x] `T9` Terapkan `change gate` untuk perubahan kontrak domain.
 Output:
   - File baru `docs/process/CHANGE_GATE_DOMAIN_CONTRACT.md`.
 Kriteria selesai:
