@@ -156,7 +156,7 @@ Output:
 Kriteria selesai:
   - Checklist minimal: test scoped auth hijau, compliance checklist lulus, uji PDF sample per level.
 
-- [ ] `T11` Buat log deviasi pedoman domain.
+- [x] `T11` Buat log deviasi pedoman domain.
 Output:
   - File baru `docs/domain/DOMAIN_DEVIATION_LOG.md`.
 Kriteria selesai:
