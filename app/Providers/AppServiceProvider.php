@@ -75,6 +75,8 @@ use App\Domains\Wilayah\Posyandu\Repositories\PosyanduRepositoryInterface;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanRepository;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanRepositoryInterface;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepository;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
 use App\Policies\ProgramPrioritasPolicy;
@@ -247,6 +249,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             UserManagementRepositoryInterface::class,
             UserManagementRepository::class
+        );
+
+        $this->app->bind(
+            DashboardDocumentCoverageRepositoryInterface::class,
+            DashboardDocumentCoverageRepository::class
         );
     }
 
