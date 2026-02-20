@@ -74,7 +74,7 @@ Sumber validasi:
   - `4.14.4a` Warung PKK: `implemented` (`resources/views/pdf/warung_pkk_report.blade.php`).
   - `4.14.4b` Taman Bacaan: `implemented` (`resources/views/pdf/taman_bacaan_report.blade.php`).
   - `4.14.4c` Koperasi: `implemented` (`resources/views/pdf/koperasi_report.blade.php`).
-  - `4.14.4d` Kejar Paket/KF/PAUD: `pending`.
+  - `4.14.4d` Kejar Paket/KF/PAUD: `implemented` (`resources/views/pdf/kejar_paket_report.blade.php`).
   - `4.14.4e` Posyandu: `pending`.
 - Label level/area pada report kandidat existing tetap sudah dinormalisasi:
   - `resources/views/pdf/bkl_report.blade.php`
