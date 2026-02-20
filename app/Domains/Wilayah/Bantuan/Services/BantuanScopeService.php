@@ -3,41 +3,25 @@
 namespace App\Domains\Wilayah\Bantuan\Services;
 
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
-use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
+use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class BantuanScopeService
 {
     public function __construct(
-        private readonly AreaRepositoryInterface $areaRepository
+        private readonly UserAreaContextService $userAreaContextService
     ) {
     }
 
     public function canAccessLevel(User $user, string $level): bool
     {
-        $areaLevel = $this->resolveUserAreaLevel($user);
-
-        if ($level === 'desa') {
-            return $user->hasRoleForScope('desa') && $areaLevel === 'desa';
-        }
-
-        if ($level === 'kecamatan') {
-            return $user->hasRoleForScope('kecamatan') && $areaLevel === 'kecamatan';
-        }
-
-        return false;
+        return $this->userAreaContextService->canAccessLevel($user, $level);
     }
 
     public function canEnterModule(User $user): bool
     {
-        $areaLevel = $this->resolveUserAreaLevel($user);
-
-        if (! is_string($areaLevel)) {
-            return false;
-        }
-
-        return $this->canAccessLevel($user, $areaLevel);
+        return $this->userAreaContextService->canEnterModule($user);
     }
 
     public function canView(User $user, Bantuan $bantuan): bool
@@ -56,13 +40,7 @@ class BantuanScopeService
 
     public function requireUserAreaId(): int
     {
-        $areaId = auth()->user()?->area_id;
-
-        if (! is_numeric($areaId)) {
-            throw new HttpException(403, 'Area pengguna belum ditentukan.');
-        }
-
-        return (int) $areaId;
+        return $this->userAreaContextService->requireUserAreaId();
     }
 
     public function authorizeSameLevelAndArea(Bantuan $bantuan, string $level, int $areaId): Bantuan
@@ -72,19 +50,5 @@ class BantuanScopeService
         }
 
         return $bantuan;
-    }
-
-    private function resolveUserAreaLevel(User $user): ?string
-    {
-        if (! is_numeric($user->area_id)) {
-            return null;
-        }
-
-        $loadedLevel = $user->relationLoaded('area') ? $user->area?->level : null;
-        if (is_string($loadedLevel)) {
-            return $loadedLevel;
-        }
-
-        return $this->areaRepository->getLevelById((int) $user->area_id);
     }
 }

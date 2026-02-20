@@ -3,41 +3,25 @@
 namespace App\Domains\Wilayah\AnggotaPokja\Services;
 
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
-use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
+use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AnggotaPokjaScopeService
 {
     public function __construct(
-        private readonly AreaRepositoryInterface $areaRepository
+        private readonly UserAreaContextService $userAreaContextService
     ) {
     }
 
     public function canAccessLevel(User $user, string $level): bool
     {
-        $areaLevel = $this->resolveUserAreaLevel($user);
-
-        if ($level === 'desa') {
-            return $user->hasRoleForScope('desa') && $areaLevel === 'desa';
-        }
-
-        if ($level === 'kecamatan') {
-            return $user->hasRoleForScope('kecamatan') && $areaLevel === 'kecamatan';
-        }
-
-        return false;
+        return $this->userAreaContextService->canAccessLevel($user, $level);
     }
 
     public function canEnterModule(User $user): bool
     {
-        $areaLevel = $this->resolveUserAreaLevel($user);
-
-        if (! is_string($areaLevel)) {
-            return false;
-        }
-
-        return $this->canAccessLevel($user, $areaLevel);
+        return $this->userAreaContextService->canEnterModule($user);
     }
 
     public function canView(User $user, AnggotaPokja $anggotaPokja): bool
@@ -56,13 +40,7 @@ class AnggotaPokjaScopeService
 
     public function requireUserAreaId(): int
     {
-        $areaId = auth()->user()?->area_id;
-
-        if (! is_numeric($areaId)) {
-            throw new HttpException(403, 'Area pengguna belum ditentukan.');
-        }
-
-        return (int) $areaId;
+        return $this->userAreaContextService->requireUserAreaId();
     }
 
     public function authorizeSameLevelAndArea(AnggotaPokja $anggotaPokja, string $level, int $areaId): AnggotaPokja
@@ -72,19 +50,5 @@ class AnggotaPokjaScopeService
         }
 
         return $anggotaPokja;
-    }
-
-    private function resolveUserAreaLevel(User $user): ?string
-    {
-        if (! is_numeric($user->area_id)) {
-            return null;
-        }
-
-        $loadedLevel = $user->relationLoaded('area') ? $user->area?->level : null;
-        if (is_string($loadedLevel)) {
-            return $loadedLevel;
-        }
-
-        return $this->areaRepository->getLevelById((int) $user->area_id);
     }
 }

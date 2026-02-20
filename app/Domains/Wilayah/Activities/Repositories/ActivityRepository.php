@@ -55,13 +55,20 @@ class ActivityRepository implements ActivityRepositoryInterface
             return $query;
         }
 
-        $areaId = (int) $user->area_id;
+        if (! is_numeric($user->area_id)) {
+            return $query->whereRaw('1 = 0');
+        }
 
-        if ($user->scope === 'desa') {
+        $areaId = (int) $user->area_id;
+        $areaLevel = $user->relationLoaded('area')
+            ? $user->area?->level
+            : Area::query()->whereKey($areaId)->value('level');
+
+        if ($user->hasRoleForScope('desa') && $areaLevel === 'desa') {
             return $query->where('level', 'desa')->where('area_id', $areaId);
         }
 
-        if ($user->scope === 'kecamatan') {
+        if ($user->hasRoleForScope('kecamatan') && $areaLevel === 'kecamatan') {
             $desaIds = Area::query()
                 ->where('level', 'desa')
                 ->where('parent_id', $areaId)
