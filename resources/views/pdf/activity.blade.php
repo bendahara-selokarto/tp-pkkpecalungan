@@ -32,10 +32,16 @@
     </style>
 </head>
 <body>
+    @php
+        $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $activity->level);
+        $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $activity->level);
+        $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
+    @endphp
+
     <div class="title">BUKU KEGIATAN TP PKK</div>
     <div class="meta">
-        Wilayah: {{ $activity->area?->name ?? '-' }}<br>
-        Level: {{ strtoupper($activity->level) }}<br>
+        {{ $areaLabel }}: {{ $activity->area?->name ?? '-' }}<br>
+        Level: {{ $levelLabel }}<br>
         Dibuat oleh sistem: {{ $activity->creator?->name ?? '-' }}
     </div>
 

@@ -30,6 +30,22 @@ Sumber validasi:
 - Status: `match` untuk kolom inti.
 - File report: `resources/views/pdf/simulasi_penyuluhan_report.blade.php`.
 
+## Update tahap 4 (istilah/header antar level)
+
+- Status: `selesai` untuk report sekretaris utama.
+- Penyesuaian:
+  - Suffix level pada judul report diubah menjadi label canonical:
+    - `DESA/KELURAHAN` untuk scope desa.
+    - `KECAMATAN` untuk scope kecamatan.
+  - Label metadata area di report menyesuaikan scope:
+    - `Desa/Kelurahan: ...` atau `Kecamatan: ...`.
+- File terdampak:
+  - `resources/views/pdf/anggota_tim_penggerak_report.blade.php`
+  - `resources/views/pdf/agenda_surat_report.blade.php`
+  - `resources/views/pdf/ekspedisi_surat_report.blade.php`
+  - `resources/views/pdf/inventaris_report.blade.php`
+  - `resources/views/pdf/activity.blade.php`
+
 ## Item yang belum tercover penuh (lebih asumtif)
 
 1. `LAMPIRAN 4.11` (hal. 7-8) - Buku Tabungan/Keuangan.
