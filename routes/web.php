@@ -14,6 +14,9 @@ use App\Domains\Wilayah\Bantuan\Controllers\DesaBantuanController;
 use App\Domains\Wilayah\Bantuan\Controllers\KecamatanBantuanController;
 use App\Domains\Wilayah\AnggotaPokja\Controllers\DesaAnggotaPokjaController;
 use App\Domains\Wilayah\AnggotaPokja\Controllers\KecamatanAnggotaPokjaController;
+use App\Domains\Wilayah\ProgramPrioritas\Controllers\DesaProgramPrioritasController;
+use App\Domains\Wilayah\ProgramPrioritas\Controllers\KecamatanProgramPrioritasController;
+use App\Domains\Wilayah\ProgramPrioritas\Controllers\ProgramPrioritasPrintController;
 
 
 Route::get('/', function () {
@@ -54,7 +57,9 @@ Route::prefix('desa')
         Route::resource('inventaris', DesaInventarisController::class);
         Route::resource('bantuans', DesaBantuanController::class);
         Route::resource('anggota-pokja', DesaAnggotaPokjaController::class);
+        Route::resource('program-prioritas', DesaProgramPrioritasController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printDesa'])->name('activities.print');
+        Route::get('program-prioritas/report/pdf', [ProgramPrioritasPrintController::class, 'printDesaReport'])->name('program-prioritas.report');
     });
 
 Route::prefix('kecamatan')
@@ -66,11 +71,12 @@ Route::prefix('kecamatan')
         Route::resource('inventaris', KecamatanInventarisController::class);
         Route::resource('bantuans', KecamatanBantuanController::class);
         Route::resource('anggota-pokja', KecamatanAnggotaPokjaController::class);
+        Route::resource('program-prioritas', KecamatanProgramPrioritasController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printKecamatan'])->name('activities.print');
         Route::get('desa-activities', [KecamatanDesaActivityController::class, 'index'])->name('desa-activities.index');
         Route::get('desa-activities/{id}', [KecamatanDesaActivityController::class, 'show'])->name('desa-activities.show');
         Route::get('desa-activities/{id}/print', [ActivityPrintController::class, 'printKecamatanDesa'])->name('desa-activities.print');
+        Route::get('program-prioritas/report/pdf', [ProgramPrioritasPrintController::class, 'printKecamatanReport'])->name('program-prioritas.report');
     });
 
 require __DIR__.'/auth.php';
-

@@ -111,6 +111,7 @@ Sudah berbasis Inertia Vue:
 - `inventaris`
 - `bantuans`
 - `anggota_pokja`
+- `program-prioritas`
 - `super-admin/users`
 - `profile`
 - `auth/verify-email`

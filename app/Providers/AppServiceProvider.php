@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
 use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepository;
 use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepositoryInterface;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
@@ -14,8 +15,11 @@ use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Activities\Repositories\ActivityRepository;
 use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
+use App\Domains\Wilayah\ProgramPrioritas\Repositories\ProgramPrioritasRepository;
+use App\Domains\Wilayah\ProgramPrioritas\Repositories\ProgramPrioritasRepositoryInterface;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
+use App\Policies\ProgramPrioritasPolicy;
 use App\Policies\AnggotaPokjaPolicy;
 use App\Policies\BantuanPolicy;
 use App\Policies\InventarisPolicy;
@@ -47,6 +51,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            ProgramPrioritasRepositoryInterface::class,
+            ProgramPrioritasRepository::class
+        );
+
+        $this->app->bind(
             BantuanRepositoryInterface::class,
             BantuanRepository::class
         );
@@ -74,6 +83,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Activity::class, ActivityPolicy::class);
+        Gate::policy(ProgramPrioritas::class, ProgramPrioritasPolicy::class);
         Gate::policy(Bantuan::class, BantuanPolicy::class);
         Gate::policy(Inventaris::class, InventarisPolicy::class);
         Gate::policy(AnggotaPokja::class, AnggotaPokjaPolicy::class);
