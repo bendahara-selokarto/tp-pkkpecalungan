@@ -2,6 +2,7 @@
 
 namespace App\UseCases\User;
 
+use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
 use App\Support\RoleLabelFormatter;
 use App\Support\RoleScopeMatrix;
@@ -32,7 +33,7 @@ class GetUserManagementFormOptionsUseCase
         $existingRoles = $this->roles()->all();
         $options = [];
 
-        foreach (['desa', 'kecamatan'] as $scope) {
+        foreach (ScopeLevel::values() as $scope) {
             $options[$scope] = array_values(array_filter(
                 RoleScopeMatrix::assignableRolesForScope($scope),
                 static fn (string $role): bool => in_array($role, $existingRoles, true)
@@ -49,8 +50,8 @@ class GetUserManagementFormOptionsUseCase
     {
         $labels = [];
         $allRoles = array_unique(array_merge(
-            $roleOptionsByScope['desa'] ?? [],
-            $roleOptionsByScope['kecamatan'] ?? []
+            $roleOptionsByScope[ScopeLevel::DESA->value] ?? [],
+            $roleOptionsByScope[ScopeLevel::KECAMATAN->value] ?? []
         ));
 
         foreach ($allRoles as $role) {

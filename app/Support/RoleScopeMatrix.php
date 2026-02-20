@@ -2,6 +2,7 @@
 
 namespace App\Support;
 
+use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Models\User;
 
 class RoleScopeMatrix
@@ -12,7 +13,7 @@ class RoleScopeMatrix
     public static function scopedRoles(): array
     {
         return [
-            'desa' => [
+            ScopeLevel::DESA->value => [
                 'desa-sekretaris',
                 'desa-bendahara',
                 'desa-pokja-i',
@@ -22,7 +23,7 @@ class RoleScopeMatrix
                 // Backward compatibility.
                 'admin-desa',
             ],
-            'kecamatan' => [
+            ScopeLevel::KECAMATAN->value => [
                 'kecamatan-sekretaris',
                 'kecamatan-bendahara',
                 'kecamatan-pokja-i',

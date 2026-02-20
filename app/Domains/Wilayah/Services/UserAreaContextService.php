@@ -2,6 +2,7 @@
 
 namespace App\Domains\Wilayah\Services;
 
+use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -17,12 +18,12 @@ class UserAreaContextService
     {
         $areaLevel = $this->resolveUserAreaLevel($user);
 
-        if ($level === 'desa') {
-            return $user->hasRoleForScope('desa') && $areaLevel === 'desa';
+        if ($level === ScopeLevel::DESA->value) {
+            return $user->hasRoleForScope(ScopeLevel::DESA->value) && $areaLevel === ScopeLevel::DESA->value;
         }
 
-        if ($level === 'kecamatan') {
-            return $user->hasRoleForScope('kecamatan') && $areaLevel === 'kecamatan';
+        if ($level === ScopeLevel::KECAMATAN->value) {
+            return $user->hasRoleForScope(ScopeLevel::KECAMATAN->value) && $areaLevel === ScopeLevel::KECAMATAN->value;
         }
 
         return false;
@@ -64,4 +65,3 @@ class UserAreaContextService
         return $this->areaRepository->getLevelById((int) $user->area_id);
     }
 }
-

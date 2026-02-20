@@ -1,6 +1,7 @@
 <?php
 namespace App\Actions\User;
 
+use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use App\Support\RoleScopeMatrix;
@@ -25,7 +26,7 @@ class CreateUserAction
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => Hash::make($data['password']),
-                'scope' => $data['scope'] ?? 'desa',
+                'scope' => $data['scope'] ?? ScopeLevel::DESA->value,
                 'area_id' => $data['area_id'] ?? null,
             ]);
 

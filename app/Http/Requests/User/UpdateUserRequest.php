@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Models\User;
 use App\Support\RoleScopeMatrix;
 use Illuminate\Foundation\Http\FormRequest;
@@ -43,7 +44,7 @@ class UpdateUserRequest extends FormRequest
                     }
                 },
             ],
-            'scope' => 'required|in:kecamatan,desa',
+            'scope' => ['required', Rule::in(ScopeLevel::values())],
             'area_id' => [
                 'required',
                 Rule::exists('areas', 'id')->where(

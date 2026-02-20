@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Models\Area;
 use App\Support\RoleScopeMatrix;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,12 +59,12 @@ class User extends Authenticatable
 
     public function isKecamatan(): bool
     {
-        return $this->scope === 'kecamatan';
+        return $this->scope === ScopeLevel::KECAMATAN->value;
     }
 
     public function isDesa(): bool
     {
-        return $this->scope === 'desa';
+        return $this->scope === ScopeLevel::DESA->value;
     }
 
     public function hasRoleForScope(string $scope): bool
