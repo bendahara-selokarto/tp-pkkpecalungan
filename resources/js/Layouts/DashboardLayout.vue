@@ -54,6 +54,14 @@ const desaMenuGroups = [
     ],
   },
   {
+    key: 'lampiran4143',
+    label: 'Lampiran 4.14.3',
+    code: 'L43',
+    items: [
+      { href: '/desa/data-pelatihan-kader', label: 'Data Pelatihan Kader' },
+    ],
+  },
+  {
     key: 'lampiran4144',
     label: 'Lampiran 4.14.4',
     code: 'L44',
@@ -111,6 +119,14 @@ const kecamatanMenuGroups = [
       { href: '/kecamatan/data-keluarga', label: 'Data Keluarga' },
       { href: '/kecamatan/data-industri-rumah-tangga', label: 'Data Industri Rumah Tangga' },
       { href: '/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk', label: 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK' },
+    ],
+  },
+  {
+    key: 'lampiran4143',
+    label: 'Lampiran 4.14.3',
+    code: 'L43',
+    items: [
+      { href: '/kecamatan/data-pelatihan-kader', label: 'Data Pelatihan Kader' },
     ],
   },
   {

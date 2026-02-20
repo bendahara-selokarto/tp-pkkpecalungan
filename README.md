@@ -122,6 +122,7 @@ Sudah berbasis Inertia Vue:
 - `data-kegiatan-warga`
 - `data-keluarga`
 - `data-industri-rumah-tangga`
+- `data-pelatihan-kader`
 - `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`
 - `warung-pkk`
 - `taman-bacaan`
