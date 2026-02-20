@@ -6,8 +6,10 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
+use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Models\User;
 use App\Domains\Wilayah\Models\Area;
+use Spatie\Permission\Models\Role;
 
 class WilayahScopeTest extends TestCase
 {
@@ -21,22 +23,25 @@ class WilayahScopeTest extends TestCase
     {
         parent::setUp();
 
+        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'admin-desa']);
+
         // Kecamatan
         $this->kecamatan = Area::create([
             'name'  => 'Pecalungan',
-            'level' => 'kecamatan'
+            'level' => ScopeLevel::KECAMATAN->value
         ]);
 
         // Desa
         $this->desa1 = Area::create([
             'name'      => 'Bandung',
-            'level'     => 'desa',
+            'level'     => ScopeLevel::DESA->value,
             'parent_id' => $this->kecamatan->id
         ]);
 
         $this->desa2 = Area::create([
             'name'      => 'Gombong',
-            'level'     => 'desa',
+            'level'     => ScopeLevel::DESA->value,
             'parent_id' => $this->kecamatan->id
         ]);
     }
@@ -45,9 +50,10 @@ class WilayahScopeTest extends TestCase
     public function pengguna_kecamatan_dapat_mengakses_semua_desa()
     {
         $user = User::factory()->create([
-            'scope'   => 'kecamatan',
+            'scope'   => ScopeLevel::KECAMATAN->value,
             'area_id' => $this->kecamatan->id,
         ]);
+        $user->assignRole('admin-kecamatan');
 
         $this->actingAs($user);
 
@@ -61,9 +67,10 @@ class WilayahScopeTest extends TestCase
     public function pengguna_desa_hanya_dapat_mengakses_desanya_sendiri()
     {
         $user = User::factory()->create([
-            'scope'   => 'desa',
+            'scope'   => ScopeLevel::DESA->value,
             'area_id' => $this->desa1->id,
         ]);
+        $user->assignRole('admin-desa');
 
         $this->actingAs($user);
 
@@ -78,6 +85,5 @@ class WilayahScopeTest extends TestCase
         );
     }
 }
-
 
 

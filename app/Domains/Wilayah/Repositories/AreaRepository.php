@@ -30,16 +30,27 @@ class AreaRepository implements AreaRepositoryInterface
 
     public function getByUser(User $user): Collection
     {
-        if ($user->scope === ScopeLevel::KECAMATAN->value) {
-            $kecamatan = Area::findOrFail($user->area_id);
+        if (! is_numeric($user->area_id)) {
+            return collect();
+        }
 
-            return Area::where('parent_id', $kecamatan->id)
+        $areaId = (int) $user->area_id;
+        $areaLevel = $this->getLevelById($areaId);
+
+        if (
+            $user->hasRoleForScope(ScopeLevel::KECAMATAN->value)
+            && $areaLevel === ScopeLevel::KECAMATAN->value
+        ) {
+            return Area::where('parent_id', $areaId)
                 ->where('level', ScopeLevel::DESA->value)
                 ->get();
         }
 
-        if ($user->scope === ScopeLevel::DESA->value) {
-            return Area::where('id', $user->area_id)
+        if (
+            $user->hasRoleForScope(ScopeLevel::DESA->value)
+            && $areaLevel === ScopeLevel::DESA->value
+        ) {
+            return Area::where('id', $areaId)
                 ->where('level', ScopeLevel::DESA->value)
                 ->get();
         }

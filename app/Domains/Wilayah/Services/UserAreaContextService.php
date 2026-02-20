@@ -31,13 +31,7 @@ class UserAreaContextService
 
     public function canEnterModule(User $user): bool
     {
-        $areaLevel = $this->resolveUserAreaLevel($user);
-
-        if (! is_string($areaLevel)) {
-            return false;
-        }
-
-        return $this->canAccessLevel($user, $areaLevel);
+        return is_string($this->resolveEffectiveScope($user));
     }
 
     public function requireUserAreaId(): int
@@ -63,5 +57,16 @@ class UserAreaContextService
         }
 
         return $this->areaRepository->getLevelById((int) $user->area_id);
+    }
+
+    public function resolveEffectiveScope(User $user): ?string
+    {
+        $areaLevel = $this->resolveUserAreaLevel($user);
+
+        if (! is_string($areaLevel)) {
+            return null;
+        }
+
+        return $this->canAccessLevel($user, $areaLevel) ? $areaLevel : null;
     }
 }

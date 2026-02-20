@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Services\User\UserService;
 use App\UseCases\User\GetUserManagementFormOptionsUseCase;
 use App\UseCases\User\ListUsersForManagementUseCase;
@@ -22,7 +23,8 @@ class UserManagementController extends Controller
     public function __construct(
         protected UserService $userService,
         private readonly ListUsersForManagementUseCase $listUsersForManagementUseCase,
-        private readonly GetUserManagementFormOptionsUseCase $getUserManagementFormOptionsUseCase
+        private readonly GetUserManagementFormOptionsUseCase $getUserManagementFormOptionsUseCase,
+        private readonly UserAreaContextService $userAreaContextService
     ) {
         $this->authorizeResource(User::class, 'user');
     }
@@ -35,7 +37,7 @@ class UserManagementController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'scope' => $user->scope,
+                'scope' => $this->userAreaContextService->resolveUserAreaLevel($user),
                 'area' => $user->area
                     ? [
                         'id' => $user->area->id,
@@ -80,14 +82,14 @@ class UserManagementController extends Controller
         $roleOptionsByScope = $this->getUserManagementFormOptionsUseCase->roleOptionsByScope();
         $roleLabels = $this->getUserManagementFormOptionsUseCase->roleLabels($roleOptionsByScope);
         $areas = $this->getUserManagementFormOptionsUseCase->areas();
-        $user->load('roles:id,name');
+        $user->load('roles:id,name', 'area:id,level');
 
         return Inertia::render('SuperAdmin/Users/Edit', [
             'user' => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'scope' => $user->scope,
+                'scope' => $this->userAreaContextService->resolveUserAreaLevel($user),
                 'area_id' => $user->area_id,
                 'roles' => $user->roles->pluck('name')->values(),
             ],

@@ -2,11 +2,17 @@
 
 namespace App\Http\Middleware;
 
+use App\Domains\Wilayah\Services\UserAreaContextService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
 class HandleInertiaRequests extends Middleware
 {
+    public function __construct(
+        private readonly UserAreaContextService $userAreaContextService
+    ) {
+    }
+
     /**
      * The root template that is loaded on the first page visit.
      *
@@ -31,15 +37,21 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             'auth' => [
-                'user' => fn () => $request->user()
-                    ? [
-                        'id' => $request->user()->id,
-                        'name' => $request->user()->name,
-                        'email' => $request->user()->email,
-                        'scope' => $request->user()->scope,
-                        'roles' => $request->user()->getRoleNames()->values(),
-                    ]
-                    : null,
+                'user' => function () use ($request): ?array {
+                    $user = $request->user();
+
+                    if (! $user) {
+                        return null;
+                    }
+
+                    return [
+                        'id' => $user->id,
+                        'name' => $user->name,
+                        'email' => $user->email,
+                        'scope' => $this->userAreaContextService->resolveEffectiveScope($user),
+                        'roles' => $user->getRoleNames()->values(),
+                    ];
+                },
             ],
             'flash' => [
                 'status' => fn () => $request->session()->get('status'),

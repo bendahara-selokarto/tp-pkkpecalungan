@@ -75,6 +75,7 @@ class DashboardActivityChartTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Dashboard')
+                ->where('auth.user.scope', 'desa')
                 ->where('dashboardStats.total', 2)
                 ->where('dashboardStats.this_month', 1)
                 ->where('dashboardStats.published', 1)
@@ -137,6 +138,7 @@ class DashboardActivityChartTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Dashboard')
+                ->where('auth.user.scope', 'kecamatan')
                 ->where('dashboardStats.total', 2)
                 ->where('dashboardStats.this_month', 1)
                 ->where('dashboardStats.published', 1)
@@ -181,6 +183,7 @@ class DashboardActivityChartTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Dashboard')
+                ->where('auth.user.scope', null)
                 ->where('dashboardStats.total', 0)
                 ->where('dashboardStats.this_month', 0)
                 ->where('dashboardStats.published', 0)
