@@ -92,7 +92,7 @@ Output:
 Kriteria selesai:
   - Setiap modul memiliki: `slug`, label pedoman, field canonical, label PDF, sumber halaman.
 
-- [ ] `T2` Bangun `Terminology Normalization Map`.
+- [x] `T2` Bangun `Terminology Normalization Map`.
 Output:
   - File baru `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`.
 Kriteria selesai:
