@@ -1,0 +1,23 @@
+<?php
+
+namespace App\Domains\Wilayah\AnggotaTimPenggerak\Repositories;
+
+use App\Domains\Wilayah\AnggotaTimPenggerak\DTOs\AnggotaTimPenggerakData;
+use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
+use Illuminate\Support\Collection;
+
+interface AnggotaTimPenggerakRepositoryInterface
+{
+    public function store(AnggotaTimPenggerakData $data): AnggotaTimPenggerak;
+
+    public function getByLevelAndArea(string $level, int $areaId): Collection;
+
+    public function find(int $id): AnggotaTimPenggerak;
+
+    public function update(AnggotaTimPenggerak $anggotaTimPenggerak, AnggotaTimPenggerakData $data): AnggotaTimPenggerak;
+
+    public function delete(AnggotaTimPenggerak $anggotaTimPenggerak): void;
+}
+
+
+

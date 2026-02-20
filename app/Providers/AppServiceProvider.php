@@ -8,6 +8,9 @@ use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
 use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepository;
 use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepositoryInterface;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
+use App\Domains\Wilayah\AnggotaTimPenggerak\Repositories\AnggotaTimPenggerakRepository;
+use App\Domains\Wilayah\AnggotaTimPenggerak\Repositories\AnggotaTimPenggerakRepositoryInterface;
+use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
 use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepository;
 use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepositoryInterface;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
@@ -37,6 +40,7 @@ use App\Models\User;
 use App\Policies\ActivityPolicy;
 use App\Policies\ProgramPrioritasPolicy;
 use App\Policies\AnggotaPokjaPolicy;
+use App\Policies\AnggotaTimPenggerakPolicy;
 use App\Policies\BantuanPolicy;
 use App\Policies\InventarisPolicy;
 use App\Policies\KaderKhususPolicy;
@@ -94,6 +98,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            AnggotaTimPenggerakRepositoryInterface::class,
+            AnggotaTimPenggerakRepository::class
+        );
+
+        $this->app->bind(
             KaderKhususRepositoryInterface::class,
             KaderKhususRepository::class
         );
@@ -135,6 +144,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Bantuan::class, BantuanPolicy::class);
         Gate::policy(Inventaris::class, InventarisPolicy::class);
         Gate::policy(AnggotaPokja::class, AnggotaPokjaPolicy::class);
+        Gate::policy(AnggotaTimPenggerak::class, AnggotaTimPenggerakPolicy::class);
         Gate::policy(KaderKhusus::class, KaderKhususPolicy::class);
         Gate::policy(PrestasiLomba::class, PrestasiLombaPolicy::class);
         Gate::policy(Bkl::class, BklPolicy::class);

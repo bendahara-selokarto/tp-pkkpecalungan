@@ -31,7 +31,7 @@ defineProps({
 
     <CardBox>
       <p class="text-sm text-gray-600 dark:text-gray-300">
-        Integrasi Admin One berhasil. Anda bisa lanjut migrasi halaman Blade lain ke Inertia secara bertahap.
+        Aplikasi Sistem Administerasi TIM Penggerak PKK masih dalam mode pengembangan, kritik dan saran masih sangat diperlukan.
       </p>
     </CardBox>
   </SectionMain>

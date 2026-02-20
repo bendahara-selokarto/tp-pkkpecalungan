@@ -111,6 +111,7 @@ Sudah berbasis Inertia Vue:
 - `inventaris`
 - `bantuans`
 - `anggota_pokja`
+- `anggota-tim-penggerak`
 - `kader_khusus`
 - `prestasi-lomba`
 - `bkl`
