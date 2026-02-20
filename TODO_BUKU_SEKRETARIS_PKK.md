@@ -12,19 +12,25 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - [ ] Tahap 5 - Modul baru yang belum ada padanan domain (high assumption, hanya jika tidak bisa dipenuhi lewat reuse domain yang sudah ada).
   - [x] 4.9b report gabungan anggota TP PKK + kader dibuat dengan reuse domain existing (tanpa tabel baru).
   - [x] 4.11 buku tabungan/keuangan dibuat sebagai report turunan domain `bantuans` (kategori uang/keuangan).
-  - [ ] 4.14.4a s.d. 4.14.4e dan lampiran lanjutan (pengerjaan bertahap).
-    - [x] Verifikasi pemetaan final lampiran 25-34 dari PDF sumber:
-      - 4.14.4a `Warung PKK`
-      - 4.14.4b `Taman Bacaan/Perpustakaan`
-      - 4.14.4c `Koperasi`
-      - 4.14.4d `Kejar Paket/KF/PAUD`
-      - 4.14.4e `Posyandu`
+  - [ ] Sinkronisasi checklist domain berdasarkan pedoman halaman 101-150.
+    - Sumber: https://pubhtml5.com/zsnqq/vjcf/basic/101-150
+    - [ ] 4.14.1a (domain baru, belum dipetakan ke modul existing).
+    - [ ] 4.14.1b (domain baru, belum dipetakan ke modul existing).
+    - [ ] 4.14.2a (domain baru, belum dipetakan ke modul existing).
+    - [ ] 4.14.2b (domain baru, belum dipetakan ke modul existing).
+    - [ ] 4.14.3a (domain baru, belum dipetakan ke modul existing).
+    - [ ] 4.14.3b (domain baru, belum dipetakan ke modul existing).
+    - [x] 4.14.4a `Warung PKK`.
+    - [x] 4.14.4b `Taman Bacaan/Perpustakaan`.
+    - [x] 4.14.4c `Koperasi`.
+    - [x] 4.14.4d `Kejar Paket/KF/PAUD`.
+    - [x] 4.14.4e `Posyandu`.
+    - [x] 4.14.4f `Kelompok Simulasi dan Penyuluhan`.
+    - [ ] 4.14.5a (belum dipetakan final ke modul existing).
+    - [ ] 4.14.5b (belum dipetakan final ke modul existing).
+    - [ ] 4.14.5c (belum dipetakan final ke modul existing).
+    - [ ] 4.15 (domain baru, belum dipetakan ke modul existing).
     - [x] Normalisasi label level/area pada report kandidat existing (`bkl`, `bkr`, `simulasi-penyuluhan`, `program-prioritas`, `prestasi-lomba`).
-    - [x] Implementasi domain + report `4.14.4a Warung PKK`.
-    - [x] Implementasi domain + report `4.14.4b Taman Bacaan`.
-    - [x] Implementasi domain + report `4.14.4c Koperasi`.
-    - [x] Implementasi domain + report `4.14.4d Kejar Paket/KF/PAUD`.
-    - [x] Implementasi domain + report `4.14.4e Posyandu`.
 
 ## Catatan anti-konflik
 - `agenda-surat` dipakai sebagai source of truth surat masuk/keluar.
