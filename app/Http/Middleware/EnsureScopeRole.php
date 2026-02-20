@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
+use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Support\RoleScopeMatrix;
 use Closure;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 class EnsureScopeRole
 {
     public function __construct(
-        private readonly AreaRepositoryInterface $areaRepository
+        private readonly UserAreaContextService $userAreaContextService
     ) {
     }
 
@@ -27,9 +27,7 @@ class EnsureScopeRole
             abort(403, 'Area pengguna belum ditentukan.');
         }
 
-        $areaLevel = $user->relationLoaded('area')
-            ? $user->area?->level
-            : $this->areaRepository->getLevelById((int) $user->area_id);
+        $areaLevel = $this->userAreaContextService->resolveUserAreaLevel($user);
 
         if ($areaLevel !== $scope) {
             abort(403, 'Scope pengguna tidak sesuai area.');

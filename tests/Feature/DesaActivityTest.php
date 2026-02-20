@@ -121,7 +121,22 @@ class DesaActivityTest extends TestCase
 
         $response->assertStatus(403);
     }
-}
 
+    #[Test]
+    public function pengguna_role_desa_tetapi_area_bukan_desa_tidak_dapat_mengakses_rute_desa()
+    {
+        $user = User::factory()->create([
+            'area_id' => $this->kecamatan->id,
+            'scope' => 'desa',
+        ]);
+        $user->assignRole('admin-desa');
+
+        $this->actingAs($user);
+
+        $response = $this->get('/desa/activities');
+
+        $response->assertStatus(403);
+    }
+}
 
 

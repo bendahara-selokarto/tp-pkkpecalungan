@@ -128,7 +128,22 @@ class KecamatanDesaActivityTest extends TestCase
 
         $response->assertStatus(403);
     }
-}
 
+    #[Test]
+    public function pengguna_role_kecamatan_tetapi_area_desa_tidak_dapat_mengakses_menu_kecamatan(): void
+    {
+        $invalidKecamatanUser = User::factory()->create([
+            'area_id' => $this->desaA1->id,
+            'scope' => 'kecamatan',
+        ]);
+        $invalidKecamatanUser->assignRole('admin-kecamatan');
+
+        $this->actingAs($invalidKecamatanUser);
+
+        $response = $this->get(route('kecamatan.desa-activities.index'));
+
+        $response->assertStatus(403);
+    }
+}
 
 
