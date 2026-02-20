@@ -115,7 +115,7 @@ Kriteria selesai:
 
 ### Sprint 2 - PDF Compliance dan Regression Guard
 
-- [ ] `T5` Buat `PDF Compliance Checklist` per modul.
+- [x] `T5` Buat `PDF Compliance Checklist` per modul.
 Output:
   - File baru `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`.
 Kriteria selesai:
