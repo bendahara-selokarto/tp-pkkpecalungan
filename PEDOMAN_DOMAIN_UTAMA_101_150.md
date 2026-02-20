@@ -99,7 +99,7 @@ Kriteria selesai:
   - Semua perbedaan domain teknis vs label pedoman terdokumentasi.
   - Tidak ada label UI/PDF yang ambigu.
 
-- [ ] `T3` Bangun `Auth Coherence Matrix` untuk modul buku sekretaris.
+- [x] `T3` Bangun `Auth Coherence Matrix` untuk modul buku sekretaris.
 Output:
   - File baru `docs/security/AUTH_COHERENCE_MATRIX.md`.
 Kriteria selesai:
