@@ -49,6 +49,7 @@ const desaMenuGroups = [
     code: 'L42',
     items: [
       { href: '/desa/data-keluarga', label: 'Data Keluarga' },
+      { href: '/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk', label: 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK' },
     ],
   },
   {
@@ -107,6 +108,7 @@ const kecamatanMenuGroups = [
     code: 'L42',
     items: [
       { href: '/kecamatan/data-keluarga', label: 'Data Keluarga' },
+      { href: '/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk', label: 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK' },
     ],
   },
   {

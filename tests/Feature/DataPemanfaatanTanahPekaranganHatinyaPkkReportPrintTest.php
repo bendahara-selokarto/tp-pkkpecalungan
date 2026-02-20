@@ -35,9 +35,9 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
         $user->assignRole('admin-desa');
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Sejahtera I',
-            'jumlah_kk_memanfaatkan' => 25,
-            'keterangan' => 'Rekap desa',
+            'kategori_pemanfaatan_lahan' => 'Peternakan',
+            'komoditi' => 'Ayam',
+            'jumlah_komoditi' => '25 ekor',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $user->id,
@@ -55,9 +55,9 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
         $user->assignRole('admin-kecamatan');
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Sejahtera II',
-            'jumlah_kk_memanfaatkan' => 40,
-            'keterangan' => 'Rekap kecamatan',
+            'kategori_pemanfaatan_lahan' => 'Perikanan',
+            'komoditi' => 'Lele',
+            'jumlah_komoditi' => '40 kolam',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $user->id,

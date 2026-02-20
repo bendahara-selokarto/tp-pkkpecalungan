@@ -20,7 +20,7 @@
         $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
     @endphp
 
-    <div class="title">Data Pemanfaatan Tanah Pekarangan/HATINYA PKK {{ $levelLabel }}</div>
+    <div class="title">DATA PEMANFAATAN TANAH PEKARANGAN/HATINYA PKK {{ $levelLabel }}</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
@@ -31,18 +31,18 @@
         <thead>
             <tr>
                 <th style="width: 28px;">NO</th>
-                <th style="width: 260px;">KATEGORI KELUARGA</th>
-                <th style="width: 120px;">JUMLAH KELUARGA</th>
-                <th>KETERANGAN</th>
+                <th style="width: 220px;">KATEGORI JENIS PEMANFAATAN LAHAN</th>
+                <th style="width: 220px;">KOMODITI DIBUDIDAYAKAN</th>
+                <th>JUMLAH KOMODITI DIBUDIDAYAKAN</th>
             </tr>
         </thead>
         <tbody>
             @forelse ($items as $index => $item)
                 <tr>
                     <td class="center">{{ $index + 1 }}</td>
-                    <td>{{ $item->kategori_pemanfaatan }}</td>
-                    <td class="center">{{ $item->jumlah_kk_memanfaatkan }}</td>
-                    <td>{{ $item->keterangan ?: '-' }}</td>
+                    <td>{{ $item->kategori_pemanfaatan_lahan }}</td>
+                    <td>{{ $item->komoditi }}</td>
+                    <td class="center">{{ $item->jumlah_komoditi }}</td>
                 </tr>
             @empty
                 <tr>

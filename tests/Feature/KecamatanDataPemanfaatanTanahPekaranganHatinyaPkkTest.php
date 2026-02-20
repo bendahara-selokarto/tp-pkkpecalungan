@@ -45,18 +45,18 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $adminKecamatan->assignRole('admin-kecamatan');
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Sejahtera III',
-            'jumlah_kk_memanfaatkan' => 30,
-            'keterangan' => 'Rekap kecamatan A',
+            'kategori_pemanfaatan_lahan' => 'Peternakan',
+            'komoditi' => 'Kambing',
+            'jumlah_komoditi' => '30 ekor',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $adminKecamatan->id,
         ]);
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Sejahtera III Plus',
-            'jumlah_kk_memanfaatkan' => 22,
-            'keterangan' => 'Rekap kecamatan B',
+            'kategori_pemanfaatan_lahan' => 'Perikanan',
+            'komoditi' => 'Nila',
+            'jumlah_komoditi' => '22 kolam',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
@@ -65,8 +65,8 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk');
 
         $response->assertOk();
-        $response->assertSee('Sejahtera III');
-        $response->assertDontSee('Sejahtera III Plus');
+        $response->assertSee('Peternakan');
+        $response->assertDontSee('Perikanan');
     }
 
     #[Test]
@@ -79,9 +79,9 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $adminKecamatan->assignRole('admin-kecamatan');
 
         $DataPemanfaatanTanahPekaranganHatinyaPkkLuar = DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Pra Sejahtera',
-            'jumlah_kk_memanfaatkan' => 18,
-            'keterangan' => 'Data luar',
+            'kategori_pemanfaatan_lahan' => 'Lainnya',
+            'komoditi' => 'Hidroponik',
+            'jumlah_komoditi' => '18 instalasi',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,

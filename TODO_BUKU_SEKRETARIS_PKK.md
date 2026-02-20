@@ -44,7 +44,7 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - [x] 4.14.1a Data Warga -> `data-warga` sudah terimplementasi end-to-end.
 - [x] 4.14.1b Data Kegiatan Warga -> `data-kegiatan-warga` sudah terimplementasi end-to-end.
 - [x] 4.14.2a Data Keluarga -> `data-keluarga` sudah terimplementasi end-to-end.
-- [ ] 4.14.2b Data Pemanfaatan Tanah Pekarangan/HATINYA PKK -> `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`.
+- [x] 4.14.2b Data Pemanfaatan Tanah Pekarangan/HATINYA PKK -> `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`.
 - [ ] 4.14.2c Data Industri Rumah Tangga -> `data-industri-rumah-tangga`.
 - [ ] 4.14.3 Data Pelatihan Kader -> `data-pelatihan-kader`.
 - [ ] 4.15 Catatan Keluarga -> `catatan-keluarga`.
@@ -63,4 +63,4 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 ## Catatan Anti-Konflik
 - `agenda-surat` dipakai sebagai source of truth surat masuk/keluar.
 - Buku ekspedisi tidak menambah tabel/domain baru untuk menghindari duplikasi data surat keluar.
-- Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi masuk fase bertahap. Modul 4.14.1a (`data-warga`), 4.14.1b (`data-kegiatan-warga`), dan 4.14.2a (`data-keluarga`) sudah selesai.
+- Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi masuk fase bertahap. Modul 4.14.1a (`data-warga`), 4.14.1b (`data-kegiatan-warga`), 4.14.2a (`data-keluarga`), dan 4.14.2b (`data-pemanfaatan-tanah-pekarangan-hatinya-pkk`) sudah selesai.

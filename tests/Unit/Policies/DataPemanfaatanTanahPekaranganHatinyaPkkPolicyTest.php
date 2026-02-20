@@ -28,18 +28,18 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkPolicyTest extends TestCase
         $user->assignRole('admin-desa');
 
         $milikSendiri = DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Sejahtera I',
-            'jumlah_kk_memanfaatkan' => 10,
-            'keterangan' => 'Data sendiri',
+            'kategori_pemanfaatan_lahan' => 'Peternakan',
+            'komoditi' => 'Ayam',
+            'jumlah_komoditi' => '10 ekor',
             'level' => 'desa',
             'area_id' => $desaA->id,
             'created_by' => $user->id,
         ]);
 
         $milikDesaLain = DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Sejahtera II',
-            'jumlah_kk_memanfaatkan' => 12,
-            'keterangan' => 'Data desa lain',
+            'kategori_pemanfaatan_lahan' => 'Perikanan',
+            'komoditi' => 'Lele',
+            'jumlah_komoditi' => '12 kolam',
             'level' => 'desa',
             'area_id' => $desaB->id,
             'created_by' => $user->id,
@@ -63,9 +63,9 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkPolicyTest extends TestCase
         $user->assignRole('admin-kecamatan');
 
         $DataPemanfaatanTanahPekaranganHatinyaPkkLuar = DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Pra Sejahtera',
-            'jumlah_kk_memanfaatkan' => 9,
-            'keterangan' => 'Data luar',
+            'kategori_pemanfaatan_lahan' => 'Lainnya',
+            'komoditi' => 'Hidroponik',
+            'jumlah_komoditi' => '9 instalasi',
             'level' => 'kecamatan',
             'area_id' => $kecamatanB->id,
             'created_by' => $user->id,

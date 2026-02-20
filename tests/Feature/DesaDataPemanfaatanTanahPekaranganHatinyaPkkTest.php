@@ -53,18 +53,18 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $adminDesa->assignRole('admin-desa');
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Sejahtera I',
-            'jumlah_kk_memanfaatkan' => 20,
-            'keterangan' => 'Data semester 1',
+            'kategori_pemanfaatan_lahan' => 'Peternakan',
+            'komoditi' => 'Ayam',
+            'jumlah_komoditi' => '20 ekor',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
         ]);
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
-            'kategori_pemanfaatan' => 'Sejahtera II',
-            'jumlah_kk_memanfaatkan' => 15,
-            'keterangan' => 'Data semester 1',
+            'kategori_pemanfaatan_lahan' => 'Perikanan',
+            'komoditi' => 'Lele',
+            'jumlah_komoditi' => '15 kolam',
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
@@ -73,8 +73,8 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $response = $this->actingAs($adminDesa)->get('/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk');
 
         $response->assertOk();
-        $response->assertSee('Sejahtera I');
-        $response->assertDontSee('Sejahtera II');
+        $response->assertSee('Peternakan');
+        $response->assertDontSee('Perikanan');
     }
 
     #[Test]
@@ -87,23 +87,22 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $adminDesa->assignRole('admin-desa');
 
         $this->actingAs($adminDesa)->post('/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk', [
-            'kategori_pemanfaatan' => 'Pra Sejahtera',
-            'jumlah_kk_memanfaatkan' => 12,
-            'keterangan' => 'Pendataan awal',
+            'kategori_pemanfaatan_lahan' => 'Peternakan',
+            'komoditi' => 'Ayam Kampung',
+            'jumlah_komoditi' => '12 ekor',
         ])->assertStatus(302);
 
-        $DataPemanfaatanTanahPekaranganHatinyaPkk = DataPemanfaatanTanahPekaranganHatinyaPkk::where('kategori_pemanfaatan', 'Pra Sejahtera')->firstOrFail();
+        $DataPemanfaatanTanahPekaranganHatinyaPkk = DataPemanfaatanTanahPekaranganHatinyaPkk::where('kategori_pemanfaatan_lahan', 'Peternakan')->firstOrFail();
 
         $this->actingAs($adminDesa)->put(route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.update', $DataPemanfaatanTanahPekaranganHatinyaPkk->id), [
-            'kategori_pemanfaatan' => 'Pra Sejahtera',
-            'jumlah_kk_memanfaatkan' => 14,
-            'keterangan' => 'Verifikasi ulang',
+            'kategori_pemanfaatan_lahan' => 'Peternakan',
+            'komoditi' => 'Ayam Kampung',
+            'jumlah_komoditi' => '14 ekor',
         ])->assertStatus(302);
 
         $this->assertDatabaseHas('data_pemanfaatan_tanah_pekarangan_hatinya_pkks', [
             'id' => $DataPemanfaatanTanahPekaranganHatinyaPkk->id,
-            'jumlah_kk_memanfaatkan' => 14,
-            'keterangan' => 'Verifikasi ulang',
+            'jumlah_komoditi' => '14 ekor',
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.destroy', $DataPemanfaatanTanahPekaranganHatinyaPkk->id))
