@@ -1,0 +1,19 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.4d",
+    "moduleSlug":  "kejar-paket",
+    "view":  "pdf.kejar_paket_report",
+    "titleToken":  "DATA ISIAN KEJAR PAKET/KF/PAUD",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "NAMA KEJAR PAKET/KF/PAUD",
+                                "JENIS",
+                                "JUMLAH WARGA BELAJAR/SISWA",
+                                "JUMLAH PENGAJAR",
+                                "L",
+                                "P",
+                                "L",
+                                "P"
+                            ]
+}

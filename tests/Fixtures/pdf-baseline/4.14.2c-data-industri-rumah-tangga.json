@@ -1,0 +1,14 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.2c",
+    "moduleSlug":  "data-industri-rumah-tangga",
+    "view":  "pdf.data_industri_rumah_tangga_report",
+    "titleToken":  "DATA INDUSTRI RUMAH TANGGA",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "KATEGORI JENIS INDUSTRI RUMAH TANGGA",
+                                "KOMODITI YANG DIUSAHAKAN",
+                                "JUMLAH KOMODITI YANG DIKELOLA"
+                            ]
+}

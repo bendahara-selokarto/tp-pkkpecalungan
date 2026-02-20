@@ -1,0 +1,14 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.2a",
+    "moduleSlug":  "data-keluarga",
+    "view":  "pdf.data_keluarga_report",
+    "titleToken":  "DATA KELUARGA",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "KATEGORI KELUARGA",
+                                "JUMLAH KELUARGA",
+                                "KETERANGAN"
+                            ]
+}

@@ -1,0 +1,21 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.3",
+    "moduleSlug":  "data-pelatihan-kader",
+    "view":  "pdf.data_pelatihan_kader_report",
+    "titleToken":  "DATA PELATIHAN KADER",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "NO REGISTRASI",
+                                "NAMA LENGKAP KADER",
+                                "TGL/TH MASUK TP PKK",
+                                "JABATAN/FUNGSI",
+                                "NO URUT PELATIHAN",
+                                "JUDUL PELATIHAN",
+                                "JENIS KRITERIA KADERISASI",
+                                "TAHUN",
+                                "INSTITUSI PENYELENGGARA",
+                                "BERSERTIFIKAT/TIDAK"
+                            ]
+}

@@ -1,0 +1,18 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.1a",
+    "moduleSlug":  "data-warga",
+    "view":  "pdf.data_warga_report",
+    "titleToken":  "DATA WARGA",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "DASAWISMA",
+                                "NAMA KEPALA KELUARGA",
+                                "ALAMAT",
+                                "WARGA L",
+                                "WARGA P",
+                                "TOTAL",
+                                "KETERANGAN"
+                            ]
+}

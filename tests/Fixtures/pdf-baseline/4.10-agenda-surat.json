@@ -1,0 +1,27 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.10",
+    "moduleSlug":  "agenda-surat",
+    "view":  "pdf.agenda_surat_report",
+    "titleToken":  "BUKU AGENDA SURAT MASUK/KELUAR",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "SURAT MASUK",
+                                "NO",
+                                "SURAT KELUAR",
+                                "TGL TERIMA",
+                                "TGL SURAT",
+                                "NOMOR SURAT",
+                                "ASAL SURAT/DARI",
+                                "PERIHAL",
+                                "LAMPIRAN",
+                                "DITERUSKAN KEPADA",
+                                "NOMOR DAN KODE SURAT",
+                                "TGL SURAT",
+                                "KEPADA",
+                                "PERIHAL",
+                                "LAMPIRAN",
+                                "TEMBUSAN"
+                            ]
+}

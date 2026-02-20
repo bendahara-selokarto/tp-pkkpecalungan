@@ -1,0 +1,17 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.4b",
+    "moduleSlug":  "taman-bacaan",
+    "view":  "pdf.taman_bacaan_report",
+    "titleToken":  "DATA ISIAN TAMAN BACAAN/PERPUSTAKAAN",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "NAMA TAMAN BACAAN/PERPUSTAKAAN",
+                                "NAMA PENGELOLA",
+                                "JUMLAH BUKU",
+                                "JENIS BUKU",
+                                "KATEGORI",
+                                "JUMLAH"
+                            ]
+}

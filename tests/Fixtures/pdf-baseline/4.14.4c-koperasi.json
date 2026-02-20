@@ -1,0 +1,17 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.4c",
+    "moduleSlug":  "koperasi",
+    "view":  "pdf.koperasi_report",
+    "titleToken":  "DATA ISIAN KOPERASI",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "NAMA KOPERASI",
+                                "JENIS USAHA",
+                                "BERBADAN HUKUM",
+                                "BLM. BERBADAN HUKUM",
+                                "JUMLAH ANGGOTA L",
+                                "JUMLAH ANGGOTA P"
+                            ]
+}

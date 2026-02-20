@@ -1,0 +1,16 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.4a",
+    "moduleSlug":  "warung-pkk",
+    "view":  "pdf.warung_pkk_report",
+    "titleToken":  "DATA ASET (SARANA) DESA/KELURAHAN",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "NAMA ASET/SARANA",
+                                "NAMA PENGELOLA",
+                                "KOMODITI",
+                                "KATEGORI",
+                                "VOLUME"
+                            ]
+}

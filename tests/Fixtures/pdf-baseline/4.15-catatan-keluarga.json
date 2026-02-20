@@ -1,0 +1,20 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.15",
+    "moduleSlug":  "catatan-keluarga",
+    "view":  "pdf.catatan_keluarga_report",
+    "titleToken":  "CATATAN KELUARGA",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "NAMA KEPALA RUMAH TANGGA",
+                                "JUMLAH ANGGOTA RUMAH TANGGA",
+                                "KERJA BAKTI",
+                                "RUKUN KEMATIAN",
+                                "KEAGAMAAN",
+                                "JIMPITAN",
+                                "ARISAN",
+                                "LAIN-LAIN",
+                                "KETERANGAN"
+                            ]
+}

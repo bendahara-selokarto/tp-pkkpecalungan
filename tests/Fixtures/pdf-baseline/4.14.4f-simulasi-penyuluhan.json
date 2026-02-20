@@ -1,0 +1,18 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.4f",
+    "moduleSlug":  "simulasi-penyuluhan",
+    "view":  "pdf.simulasi_penyuluhan_report",
+    "titleToken":  "DATA ISIAN KELOMPOK SIMULASI DAN PENYULUHAN",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "NAMA KEGIATAN",
+                                "JENIS SIMULASI DAN PENYULUHAN",
+                                "JUMLAH KELOMPOK",
+                                "JUMLAH SOSIALISASI",
+                                "JUMLAH KADER",
+                                "L",
+                                "P"
+                            ]
+}

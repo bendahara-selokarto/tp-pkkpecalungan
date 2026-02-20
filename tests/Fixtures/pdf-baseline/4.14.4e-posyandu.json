@@ -1,0 +1,24 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.4e",
+    "moduleSlug":  "posyandu",
+    "view":  "pdf.posyandu_report",
+    "titleToken":  "DATA ISIAN POSYANDU OLEH TP PKK",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "NAMA POSYANDU",
+                                "PENGELOLA",
+                                "SEKRETARIS",
+                                "JENIS POSYANDU",
+                                "JML KADER",
+                                "JENIS KEGIATAN",
+                                "FREK.",
+                                "PENGUNJUNG",
+                                "PETUGAS",
+                                "L",
+                                "P",
+                                "L",
+                                "P"
+                            ]
+}

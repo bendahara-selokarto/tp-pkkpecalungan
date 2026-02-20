@@ -1,0 +1,18 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.12",
+    "moduleSlug":  "inventaris",
+    "view":  "pdf.inventaris_report",
+    "titleToken":  "BUKU INVENTARIS",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "NAMA BARANG",
+                                "ASAL BARANG",
+                                "TANGGAL PENERIMAAN/PEMBELIAN",
+                                "JUMLAH",
+                                "TEMPAT PENYIMPANAN",
+                                "KONDISI BARANG",
+                                "KETERANGAN"
+                            ]
+}

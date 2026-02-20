@@ -1,0 +1,14 @@
+{
+    "fixtureVersion":  1,
+    "lampiran":  "4.14.1b",
+    "moduleSlug":  "data-kegiatan-warga",
+    "view":  "pdf.data_kegiatan_warga_report",
+    "titleToken":  "DATA KEGIATAN WARGA",
+    "defaultOrientation":  "landscape",
+    "expectedHeaderOrder":  [
+                                "NO",
+                                "KEGIATAN",
+                                "AKTIVITAS (Y/T)",
+                                "KETERANGAN (JENIS KEGIATAN YANG DIIKUTI)"
+                            ]
+}

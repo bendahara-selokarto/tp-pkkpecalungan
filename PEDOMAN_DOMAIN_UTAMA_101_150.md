@@ -128,7 +128,7 @@ Kriteria selesai:
   - Test gagal jika header kolom PDF berubah dari pedoman.
   - Minimal mencakup modul 4.14.1a-4.15.
 
-- [ ] `T7` Siapkan baseline fixture PDF untuk visual review.
+- [x] `T7` Siapkan baseline fixture PDF untuk visual review.
 Output:
   - Folder baru `tests/Fixtures/pdf-baseline/` + petunjuk penggunaan.
 Kriteria selesai:
