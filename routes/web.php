@@ -56,6 +56,9 @@ use App\Domains\Wilayah\DataIndustriRumahTangga\Controllers\DataIndustriRumahTan
 use App\Domains\Wilayah\DataPelatihanKader\Controllers\DesaDataPelatihanKaderController;
 use App\Domains\Wilayah\DataPelatihanKader\Controllers\KecamatanDataPelatihanKaderController;
 use App\Domains\Wilayah\DataPelatihanKader\Controllers\DataPelatihanKaderPrintController;
+use App\Domains\Wilayah\CatatanKeluarga\Controllers\DesaCatatanKeluargaController;
+use App\Domains\Wilayah\CatatanKeluarga\Controllers\KecamatanCatatanKeluargaController;
+use App\Domains\Wilayah\CatatanKeluarga\Controllers\CatatanKeluargaPrintController;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Controllers\DesaDataPemanfaatanTanahPekaranganHatinyaPkkController;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Controllers\KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Controllers\DataPemanfaatanTanahPekaranganHatinyaPkkPrintController;
@@ -128,6 +131,7 @@ Route::prefix('desa')
         Route::resource('data-pelatihan-kader', DesaDataPelatihanKaderController::class);
         Route::resource('data-pemanfaatan-tanah-pekarangan-hatinya-pkk', DesaDataPemanfaatanTanahPekaranganHatinyaPkkController::class)
             ->parameters(['data-pemanfaatan-tanah-pekarangan-hatinya-pkk' => 'dataPemanfaatan']);
+        Route::get('catatan-keluarga', [DesaCatatanKeluargaController::class, 'index'])->name('catatan-keluarga.index');
         Route::resource('warung-pkk', DesaWarungPkkController::class);
         Route::resource('taman-bacaan', DesaTamanBacaanController::class);
         Route::resource('kejar-paket', DesaKejarPaketController::class);
@@ -154,6 +158,7 @@ Route::prefix('desa')
         Route::get('data-industri-rumah-tangga/report/pdf', [DataIndustriRumahTanggaPrintController::class, 'printDesaReport'])->name('data-industri-rumah-tangga.report');
         Route::get('data-pelatihan-kader/report/pdf', [DataPelatihanKaderPrintController::class, 'printDesaReport'])->name('data-pelatihan-kader.report');
         Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf', [DataPemanfaatanTanahPekaranganHatinyaPkkPrintController::class, 'printDesaReport'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report');
+        Route::get('catatan-keluarga/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaReport'])->name('catatan-keluarga.report');
         Route::get('warung-pkk/report/pdf', [WarungPkkPrintController::class, 'printDesaReport'])->name('warung-pkk.report');
         Route::get('taman-bacaan/report/pdf', [TamanBacaanPrintController::class, 'printDesaReport'])->name('taman-bacaan.report');
         Route::get('kejar-paket/report/pdf', [KejarPaketPrintController::class, 'printDesaReport'])->name('kejar-paket.report');
@@ -185,6 +190,7 @@ Route::prefix('kecamatan')
         Route::resource('data-pelatihan-kader', KecamatanDataPelatihanKaderController::class);
         Route::resource('data-pemanfaatan-tanah-pekarangan-hatinya-pkk', KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController::class)
             ->parameters(['data-pemanfaatan-tanah-pekarangan-hatinya-pkk' => 'dataPemanfaatan']);
+        Route::get('catatan-keluarga', [KecamatanCatatanKeluargaController::class, 'index'])->name('catatan-keluarga.index');
         Route::resource('warung-pkk', KecamatanWarungPkkController::class);
         Route::resource('taman-bacaan', KecamatanTamanBacaanController::class);
         Route::resource('kejar-paket', KecamatanKejarPaketController::class);
@@ -211,6 +217,7 @@ Route::prefix('kecamatan')
         Route::get('data-industri-rumah-tangga/report/pdf', [DataIndustriRumahTanggaPrintController::class, 'printKecamatanReport'])->name('data-industri-rumah-tangga.report');
         Route::get('data-pelatihan-kader/report/pdf', [DataPelatihanKaderPrintController::class, 'printKecamatanReport'])->name('data-pelatihan-kader.report');
         Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf', [DataPemanfaatanTanahPekaranganHatinyaPkkPrintController::class, 'printKecamatanReport'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report');
+        Route::get('catatan-keluarga/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanReport'])->name('catatan-keluarga.report');
         Route::get('warung-pkk/report/pdf', [WarungPkkPrintController::class, 'printKecamatanReport'])->name('warung-pkk.report');
         Route::get('taman-bacaan/report/pdf', [TamanBacaanPrintController::class, 'printKecamatanReport'])->name('taman-bacaan.report');
         Route::get('kejar-paket/report/pdf', [KejarPaketPrintController::class, 'printKecamatanReport'])->name('kejar-paket.report');

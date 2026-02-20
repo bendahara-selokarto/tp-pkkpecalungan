@@ -75,6 +75,14 @@ const desaMenuGroups = [
     ],
   },
   {
+    key: 'lampiran415',
+    label: 'Lampiran 4.15',
+    code: 'L45',
+    items: [
+      { href: '/desa/catatan-keluarga', label: 'Catatan Keluarga' },
+    ],
+  },
+  {
     key: 'pendukung',
     label: 'Program Pendukung',
     code: 'PRG',
@@ -140,6 +148,14 @@ const kecamatanMenuGroups = [
       { href: '/kecamatan/kejar-paket', label: 'Data Isian Kejar Paket/KF/PAUD' },
       { href: '/kecamatan/posyandu', label: 'Data Isian Posyandu' },
       { href: '/kecamatan/simulasi-penyuluhan', label: 'Data Isian Kelompok Simulasi dan Penyuluhan' },
+    ],
+  },
+  {
+    key: 'lampiran415',
+    label: 'Lampiran 4.15',
+    code: 'L45',
+    items: [
+      { href: '/kecamatan/catatan-keluarga', label: 'Catatan Keluarga' },
     ],
   },
   {

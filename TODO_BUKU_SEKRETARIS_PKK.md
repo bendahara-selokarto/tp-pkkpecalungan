@@ -47,7 +47,7 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - [x] 4.14.2b Data Pemanfaatan Tanah Pekarangan/HATINYA PKK -> `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`.
 - [x] 4.14.2c Data Industri Rumah Tangga -> `data-industri-rumah-tangga`.
 - [x] 4.14.3 Data Pelatihan Kader -> `data-pelatihan-kader`.
-- [ ] 4.15 Catatan Keluarga -> `catatan-keluarga`.
+- [x] 4.15 Catatan Keluarga -> `catatan-keluarga`.
 
 ## Akses Tulis Data (Scope Policy)
 - `desa`: `desa-sekretaris`, `desa-bendahara`, `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv`, kompatibilitas `admin-desa`.
@@ -63,4 +63,4 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 ## Catatan Anti-Konflik
 - `agenda-surat` dipakai sebagai source of truth surat masuk/keluar.
 - Buku ekspedisi tidak menambah tabel/domain baru untuk menghindari duplikasi data surat keluar.
-- Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi masuk fase bertahap. Modul 4.14.1a (`data-warga`), 4.14.1b (`data-kegiatan-warga`), 4.14.2a (`data-keluarga`), 4.14.2b (`data-pemanfaatan-tanah-pekarangan-hatinya-pkk`), 4.14.2c (`data-industri-rumah-tangga`), dan 4.14.3 (`data-pelatihan-kader`) sudah selesai.
+- Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi masuk fase bertahap. Modul 4.14.1a (`data-warga`), 4.14.1b (`data-kegiatan-warga`), 4.14.2a (`data-keluarga`), 4.14.2b (`data-pemanfaatan-tanah-pekarangan-hatinya-pkk`), 4.14.2c (`data-industri-rumah-tangga`), 4.14.3 (`data-pelatihan-kader`), dan 4.15 (`catatan-keluarga`) sudah selesai.
