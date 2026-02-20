@@ -1,5 +1,7 @@
 <script setup>
+import NotificationBar from '@/admin-one/components/NotificationBar.vue';
 import { useForm, usePage } from '@inertiajs/vue3';
+import { mdiCheckCircle } from '@mdi/js';
 import { computed } from 'vue';
 
 const props = defineProps({
@@ -55,9 +57,9 @@ const submit = () => {
 
 <template>
     <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-700 dark:bg-slate-800/70">
-        <div v-if="status" class="mb-4 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:border-emerald-900/50 dark:bg-emerald-900/30 dark:text-emerald-300">
+        <NotificationBar v-if="status" color="success" :icon="mdiCheckCircle">
             {{ status }}
-        </div>
+        </NotificationBar>
 
         <form method="POST" :action="routes.login" class="space-y-5" @submit.prevent="submit">
             <div>

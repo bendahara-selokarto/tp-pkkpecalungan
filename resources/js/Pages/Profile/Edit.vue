@@ -1,5 +1,6 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
+import CardBoxModal from '@/admin-one/components/CardBoxModal.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { router, useForm } from '@inertiajs/vue3'
@@ -61,10 +62,25 @@ const resendVerification = () => {
   router.post('/email/verification-notification', {}, { preserveScroll: true })
 }
 
+const openDeleteConfirm = () => {
+  deleteForm.reset()
+  deleteForm.clearErrors()
+  showDeleteConfirm.value = true
+}
+
+const cancelDeleteConfirm = () => {
+  showDeleteConfirm.value = false
+  deleteForm.reset()
+  deleteForm.clearErrors()
+}
+
 const submitDelete = () => {
   deleteForm.delete('/profile', {
     errorBag: 'userDeletion',
     preserveScroll: true,
+    onSuccess: () => {
+      cancelDeleteConfirm()
+    },
   })
 }
 </script>
@@ -146,29 +162,34 @@ const submitDelete = () => {
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Delete Account</h3>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Once your account is deleted, all of its resources and data will be permanently deleted.</p>
 
-        <button type="button" class="mt-5 inline-flex rounded-md bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700" @click="showDeleteConfirm = true">
+        <button type="button" class="mt-5 inline-flex rounded-md bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700" @click="openDeleteConfirm">
           Delete Account
         </button>
-
-        <div v-if="showDeleteConfirm" class="mt-5 rounded-lg border border-rose-200 bg-rose-50 p-4 dark:border-rose-900/40 dark:bg-rose-900/20">
-          <p class="text-sm text-rose-700 dark:text-rose-300">
-            Please enter your password to confirm account deletion.
-          </p>
-
-          <form class="mt-4 space-y-3" @submit.prevent="submitDelete">
-            <input v-model="deleteForm.password" type="password" class="w-full rounded-md border-rose-300 text-sm shadow-sm focus:border-rose-500 focus:ring-rose-500 dark:border-rose-800 dark:bg-slate-900 dark:text-slate-100" placeholder="Password">
-            <p v-if="deleteForm.errors.password" class="text-xs text-rose-600">{{ deleteForm.errors.password }}</p>
-            <div class="flex items-center justify-end gap-2">
-              <button type="button" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800" @click="showDeleteConfirm = false">
-                Cancel
-              </button>
-              <button type="submit" class="inline-flex rounded-md bg-rose-600 px-4 py-2 text-sm font-medium text-white hover:bg-rose-700 disabled:cursor-not-allowed disabled:opacity-60" :disabled="deleteForm.processing">
-                Delete Account
-              </button>
-            </div>
-          </form>
-        </div>
       </CardBox>
     </div>
+
+    <CardBoxModal
+      v-model="showDeleteConfirm"
+      title="Delete Account"
+      button="danger"
+      button-label="Delete Account"
+      cancel-label="Cancel"
+      :is-processing="deleteForm.processing"
+      has-cancel
+      is-form
+      @confirm="submitDelete"
+      @cancel="cancelDeleteConfirm"
+    >
+      <p class="mb-4 text-sm text-gray-700 dark:text-gray-200">
+        Please enter your password to confirm account deletion.
+      </p>
+      <input
+        v-model="deleteForm.password"
+        type="password"
+        class="w-full rounded-md border-rose-300 text-sm shadow-sm focus:border-rose-500 focus:ring-rose-500 dark:border-rose-800 dark:bg-slate-900 dark:text-slate-100"
+        placeholder="Password"
+      >
+      <p v-if="deleteForm.errors.password" class="mt-2 text-xs text-rose-600">{{ deleteForm.errors.password }}</p>
+    </CardBoxModal>
   </SectionMain>
 </template>
