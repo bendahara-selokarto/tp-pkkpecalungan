@@ -51,6 +51,9 @@ use App\Domains\Wilayah\DataKegiatanWarga\Repositories\DataKegiatanWargaReposito
 use App\Domains\Wilayah\DataKeluarga\Models\DataKeluarga;
 use App\Domains\Wilayah\DataKeluarga\Repositories\DataKeluargaRepository;
 use App\Domains\Wilayah\DataKeluarga\Repositories\DataKeluargaRepositoryInterface;
+use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
+use App\Domains\Wilayah\DataIndustriRumahTangga\Repositories\DataIndustriRumahTanggaRepository;
+use App\Domains\Wilayah\DataIndustriRumahTangga\Repositories\DataIndustriRumahTanggaRepositoryInterface;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPemanfaatanTanahPekaranganHatinyaPkk;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Repositories\DataPemanfaatanTanahPekaranganHatinyaPkkRepository;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Repositories\DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface;
@@ -83,6 +86,7 @@ use App\Policies\WarungPkkPolicy;
 use App\Policies\DataWargaPolicy;
 use App\Policies\DataKegiatanWargaPolicy;
 use App\Policies\DataKeluargaPolicy;
+use App\Policies\DataIndustriRumahTanggaPolicy;
 use App\Policies\DataPemanfaatanTanahPekaranganHatinyaPkkPolicy;
 use App\Policies\TamanBacaanPolicy;
 use App\Policies\KejarPaketPolicy;
@@ -193,6 +197,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            DataIndustriRumahTanggaRepositoryInterface::class,
+            DataIndustriRumahTanggaRepository::class
+        );
+
+        $this->app->bind(
             DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface::class,
             DataPemanfaatanTanahPekaranganHatinyaPkkRepository::class
         );
@@ -245,6 +254,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(DataWarga::class, DataWargaPolicy::class);
         Gate::policy(DataKegiatanWarga::class, DataKegiatanWargaPolicy::class);
         Gate::policy(DataKeluarga::class, DataKeluargaPolicy::class);
+        Gate::policy(DataIndustriRumahTangga::class, DataIndustriRumahTanggaPolicy::class);
         Gate::policy(DataPemanfaatanTanahPekaranganHatinyaPkk::class, DataPemanfaatanTanahPekaranganHatinyaPkkPolicy::class);
         Gate::policy(TamanBacaan::class, TamanBacaanPolicy::class);
         Gate::policy(KejarPaket::class, KejarPaketPolicy::class);

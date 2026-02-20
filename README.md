@@ -118,6 +118,11 @@ Sudah berbasis Inertia Vue:
 - `bkl`
 - `bkr`
 - `koperasi`
+- `data-warga`
+- `data-kegiatan-warga`
+- `data-keluarga`
+- `data-industri-rumah-tangga`
+- `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`
 - `warung-pkk`
 - `taman-bacaan`
 - `kejar-paket`
