@@ -67,10 +67,39 @@ Legacy tables (compatibility only):
 - Scope authorization tetap aman.
 - Tidak ada bypass baru ke legacy table.
 - Tidak ada coupling baru yang tidak perlu.
+- Tidak ada drift `role` vs `scope` vs `areas.level`.
 - Test relevan lulus (`php artisan test` untuk perubahan signifikan).
 - Tidak ada perubahan perilaku yang tidak diminta.
 
-## 7. Output Contract
+## 7. New Menu/Domain Protocol (Mandatory)
+
+Urutan eksekusi untuk modul/menu baru:
+1. Tetapkan kontrak: nama domain, scope target, role aktif, boundary data.
+2. Route + middleware: gunakan `scope.role:{desa|kecamatan}`.
+3. Request: validasi + normalisasi input (tanggal UI ke format canonical).
+4. UseCase/Action: business flow hanya di layer ini.
+5. Repository Interface + Repository: semua query domain lewat boundary repository.
+6. Policy + Scope Service: source of truth akses backend.
+7. Inertia page mapping: data disiapkan backend, frontend hanya consume.
+8. Tests: penuhi matrix minimum di bagian 8.
+
+Aturan konsistensi generasi kode:
+- Gunakan enum (`ScopeLevel`) untuk scope/level di PHP, hindari literal berulang.
+- Untuk flow yang bergantung wilayah, `area_id` harus jadi acuan canonical level.
+- Jangan jadikan frontend sebagai authority akses.
+- Untuk flow user management, cegah mutasi `super-admin` pada path administratif.
+
+## 8. Minimum Test Matrix (Mandatory)
+
+Untuk modul/menu baru, minimal harus ada:
+1. Feature test jalur sukses untuk role/scope valid.
+2. Feature test tolak role tidak valid.
+3. Feature test tolak mismatch role-area level (stale metadata scenario).
+4. Unit test policy/scope service untuk akses inti (`view`, `update`/`delete`).
+5. Jika ada scoped query kompleks, tambah test use case/repository anti data leak.
+6. Jalankan `php artisan test` sebelum final report.
+
+## 9. Output Contract
 
 - Laporan harus menyebut: apa yang diubah, kenapa, file terdampak, dan hasil validasi.
 - Jika gagal, laporkan root cause + opsi solusi + dampak tiap opsi.

@@ -132,6 +132,7 @@ Perubahan dianggap selesai jika:
 - Mengikuti layering dan authorization pattern di dokumen ini.
 - Tidak menambah bypass repository untuk query domain baru.
 - Tidak menambah dependency baru ke tabel legacy.
+- Untuk flow user/scope, tidak ada drift antara role, `scope`, dan `areas.level`.
 - Test lulus (`php artisan test`).
 
 ## 11. Known Debt dan Arah Refactor
@@ -146,3 +147,31 @@ Arah refactor prioritas:
 2. Eliminasi query langsung controller administratif.
 3. Tambah constraint DB untuk validasi level-area.
 4. Formalisasi milestone deprecasi legacy table.
+
+## 12. Playbook Modul/Menu Baru
+
+Gunakan urutan ini agar implementasi konsisten:
+1. Tetapkan kontrak domain: nama modul, scope aktif (`desa`/`kecamatan`), role yang diizinkan, dan boundary data.
+2. Definisikan route + middleware: group route wajib pakai `scope.role:{desa|kecamatan}`.
+3. Buat `FormRequest` untuk validasi + normalisasi input (termasuk tanggal `DD/MM/YYYY` ke `Y-m-d`).
+4. Implement `UseCase/Action` untuk business flow, bukan di controller.
+5. Implement `Repository Interface + Repository` untuk query domain.
+6. Implement policy berbasis `Scope Service`.
+7. Tambahkan halaman Inertia (Index/Create/Edit/Show sesuai kebutuhan) dan pakai data yang sudah dipetakan backend.
+8. Tutup dengan test matrix minimum (lihat bagian 13).
+
+Aturan implementasi penting:
+- Untuk nilai scope/level di PHP, gunakan enum domain (`ScopeLevel`) dan hindari literal berulang.
+- Data domain wilayah baru harus tetap menyimpan `level`, `area_id`, `created_by`.
+- Flow create/update harus menjaga konsistensi `area_id` terhadap `areas.level`.
+- Data akses UI (`auth.user.scope`) harus dianggap derived/effective dari backend, bukan authority di frontend.
+
+## 13. Test Matrix Minimum (Modul Baru)
+
+Minimal test yang wajib ada:
+1. Feature test jalur sukses untuk role/scope yang valid.
+2. Feature test jalur tolak untuk role tidak valid.
+3. Feature test jalur tolak untuk mismatch role vs level area (simulasi data stale/legacy).
+4. Unit test policy/scope service untuk `view` dan `update`/`delete`.
+5. Jika query scoped kompleks, test repository/use case untuk memastikan data luar scope tidak bocor.
+6. Jalankan `php artisan test` sebelum finalisasi.
