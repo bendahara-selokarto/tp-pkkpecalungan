@@ -10,8 +10,9 @@ interface AreaRepositoryInterface
 {
     public function find(int $id): Area;
 
+    public function getLevelById(int $id): ?string;
+
     public function getDesaByKecamatan(int $kecamatanId): Collection;
 
     public function getByUser(User $user): Collection;
 }
-

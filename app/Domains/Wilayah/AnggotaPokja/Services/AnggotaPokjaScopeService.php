@@ -3,12 +3,17 @@
 namespace App\Domains\Wilayah\AnggotaPokja\Services;
 
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
-use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AnggotaPokjaScopeService
 {
+    public function __construct(
+        private readonly AreaRepositoryInterface $areaRepository
+    ) {
+    }
+
     public function canAccessLevel(User $user, string $level): bool
     {
         $areaLevel = $this->resolveUserAreaLevel($user);
@@ -80,8 +85,6 @@ class AnggotaPokjaScopeService
             return $loadedLevel;
         }
 
-        return Area::query()
-            ->whereKey((int) $user->area_id)
-            ->value('level');
+        return $this->areaRepository->getLevelById((int) $user->area_id);
     }
 }
