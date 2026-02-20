@@ -8,26 +8,6 @@ const darkModeStore = useDarkModeStore()
 
 const sidebarOpen = ref(false)
 const sidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === '1')
-const districtOpen = ref(
-  page.url.startsWith('/kecamatan/activities')
-    || page.url.startsWith('/kecamatan/agenda-surat')
-    || page.url.startsWith('/kecamatan/inventaris')
-    || page.url.startsWith('/kecamatan/bantuans')
-    || page.url.startsWith('/kecamatan/anggota-pokja')
-    || page.url.startsWith('/kecamatan/anggota-tim-penggerak')
-    || page.url.startsWith('/kecamatan/kader-khusus')
-    || page.url.startsWith('/kecamatan/prestasi-lomba')
-    || page.url.startsWith('/kecamatan/bkl')
-    || page.url.startsWith('/kecamatan/bkr')
-    || page.url.startsWith('/kecamatan/koperasi')
-    || page.url.startsWith('/kecamatan/warung-pkk')
-    || page.url.startsWith('/kecamatan/taman-bacaan')
-    || page.url.startsWith('/kecamatan/kejar-paket')
-    || page.url.startsWith('/kecamatan/posyandu')
-    || page.url.startsWith('/kecamatan/simulasi-penyuluhan')
-    || page.url.startsWith('/kecamatan/program-prioritas')
-    || page.url.startsWith('/kecamatan/desa-activities'),
-)
 
 const user = computed(() => page.props.auth?.user ?? null)
 const roles = computed(() => user.value?.roles ?? [])
@@ -39,6 +19,128 @@ const isKecamatanScope = computed(() => userScope.value === 'kecamatan')
 const hasRole = (role) => roles.value.includes(role)
 
 const isActive = (prefix) => page.url.startsWith(prefix)
+
+const desaMenuGroups = [
+  {
+    key: 'sekretaris',
+    label: 'Buku Sekretaris 4.9-4.13',
+    code: 'S1',
+    items: [
+      { href: '/desa/anggota-tim-penggerak', label: 'Buku Daftar Anggota TP PKK' },
+      { href: '/desa/kader-khusus', label: 'Buku Daftar Kader TP PKK' },
+      { href: '/desa/agenda-surat', label: 'Buku Agenda Surat' },
+      { href: '/desa/bantuans', label: 'Buku Keuangan' },
+      { href: '/desa/inventaris', label: 'Buku Inventaris' },
+      { href: '/desa/activities', label: 'Buku Kegiatan' },
+    ],
+  },
+  {
+    key: 'lampiran4144',
+    label: 'Lampiran 4.14.4',
+    code: 'L44',
+    items: [
+      { href: '/desa/warung-pkk', label: 'Data Aset (Warung PKK)' },
+      { href: '/desa/taman-bacaan', label: 'Data Isian Taman Bacaan/Perpustakaan' },
+      { href: '/desa/koperasi', label: 'Data Isian Koperasi' },
+      { href: '/desa/kejar-paket', label: 'Data Isian Kejar Paket/KF/PAUD' },
+      { href: '/desa/posyandu', label: 'Data Isian Posyandu' },
+      { href: '/desa/simulasi-penyuluhan', label: 'Data Isian Kelompok Simulasi/Penyuluhan' },
+    ],
+  },
+  {
+    key: 'pendukung',
+    label: 'Program Pendukung',
+    code: 'PRG',
+    items: [
+      { href: '/desa/anggota-pokja', label: 'Anggota Pokja' },
+      { href: '/desa/prestasi-lomba', label: 'Prestasi Lomba' },
+      { href: '/desa/bkl', label: 'BKL' },
+      { href: '/desa/bkr', label: 'BKR' },
+      { href: '/desa/program-prioritas', label: 'Program Prioritas' },
+    ],
+  },
+]
+
+const kecamatanMenuGroups = [
+  {
+    key: 'sekretaris',
+    label: 'Buku Sekretaris 4.9-4.13',
+    code: 'S1',
+    items: [
+      { href: '/kecamatan/anggota-tim-penggerak', label: 'Buku Daftar Anggota TP PKK' },
+      { href: '/kecamatan/kader-khusus', label: 'Buku Daftar Kader TP PKK' },
+      { href: '/kecamatan/agenda-surat', label: 'Buku Agenda Surat' },
+      { href: '/kecamatan/bantuans', label: 'Buku Keuangan' },
+      { href: '/kecamatan/inventaris', label: 'Buku Inventaris' },
+      { href: '/kecamatan/activities', label: 'Buku Kegiatan' },
+    ],
+  },
+  {
+    key: 'lampiran4144',
+    label: 'Lampiran 4.14.4',
+    code: 'L44',
+    items: [
+      { href: '/kecamatan/warung-pkk', label: 'Data Aset (Warung PKK)' },
+      { href: '/kecamatan/taman-bacaan', label: 'Data Isian Taman Bacaan/Perpustakaan' },
+      { href: '/kecamatan/koperasi', label: 'Data Isian Koperasi' },
+      { href: '/kecamatan/kejar-paket', label: 'Data Isian Kejar Paket/KF/PAUD' },
+      { href: '/kecamatan/posyandu', label: 'Data Isian Posyandu' },
+      { href: '/kecamatan/simulasi-penyuluhan', label: 'Data Isian Kelompok Simulasi/Penyuluhan' },
+    ],
+  },
+  {
+    key: 'pendukung',
+    label: 'Program Pendukung',
+    code: 'PRG',
+    items: [
+      { href: '/kecamatan/anggota-pokja', label: 'Anggota Pokja' },
+      { href: '/kecamatan/prestasi-lomba', label: 'Prestasi Lomba' },
+      { href: '/kecamatan/bkl', label: 'BKL' },
+      { href: '/kecamatan/bkr', label: 'BKR' },
+      { href: '/kecamatan/program-prioritas', label: 'Program Prioritas' },
+    ],
+  },
+  {
+    key: 'monitoring',
+    label: 'Monitoring Kecamatan',
+    code: 'MON',
+    items: [
+      { href: '/kecamatan/desa-activities', label: 'Kegiatan Desa' },
+    ],
+  },
+]
+
+const buildGroupState = (groups) => groups.reduce((state, group) => {
+  state[group.key] = group.items.some((item) => isActive(item.href))
+  return state
+}, {})
+
+const desaGroupOpen = ref(buildGroupState(desaMenuGroups))
+const kecamatanGroupOpen = ref(buildGroupState(kecamatanMenuGroups))
+
+const isGroupActive = (group) => group.items.some((item) => isActive(item.href))
+
+const isGroupOpen = (scope, key) => {
+  if (scope === 'desa') {
+    return !!desaGroupOpen.value[key]
+  }
+
+  return !!kecamatanGroupOpen.value[key]
+}
+
+const toggleGroup = (scope, group) => {
+  if (sidebarCollapsed.value) {
+    window.location.href = group.items[0].href
+    return
+  }
+
+  if (scope === 'desa') {
+    desaGroupOpen.value[group.key] = !desaGroupOpen.value[group.key]
+    return
+  }
+
+  kecamatanGroupOpen.value[group.key] = !kecamatanGroupOpen.value[group.key]
+}
 
 const primaryHref = computed(() =>
   hasRole('super-admin') ? '/super-admin/users' : '/dashboard',
@@ -165,306 +267,69 @@ const hideBrokenImage = (event) => {
           </div>
 
           <div class="space-y-1">
-            <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Activity</p>
+            <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Menu Domain</p>
 
-            <a
-              v-if="isDesaScope"
-              href="/desa/activities"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Activities Desa</span>
-              <span v-show="sidebarCollapsed">AD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/agenda-surat"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/agenda-surat') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Agenda Surat Desa</span>
-              <span v-show="sidebarCollapsed">ASD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/inventaris"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/inventaris') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Inventaris Desa</span>
-              <span v-show="sidebarCollapsed">ID</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/bantuans"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/bantuans') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Bantuan Desa</span>
-              <span v-show="sidebarCollapsed">BD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/anggota-pokja"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/anggota-pokja') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Anggota Pokja Desa</span>
-              <span v-show="sidebarCollapsed">APD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/anggota-tim-penggerak"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/anggota-tim-penggerak') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Buku Anggota TP PKK</span>
-              <span v-show="sidebarCollapsed">ATP</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/kader-khusus"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/kader-khusus') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Kader Khusus Desa</span>
-              <span v-show="sidebarCollapsed">KKD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/prestasi-lomba"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/prestasi-lomba') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Prestasi Lomba Desa</span>
-              <span v-show="sidebarCollapsed">PLD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/bkl"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/bkl') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">BKL Desa</span>
-              <span v-show="sidebarCollapsed">BKL</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/bkr"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/bkr') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">BKR Desa</span>
-              <span v-show="sidebarCollapsed">BKR</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/koperasi"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/koperasi') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Koperasi Desa</span>
-              <span v-show="sidebarCollapsed">KOP</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/warung-pkk"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/warung-pkk') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Warung PKK Desa</span>
-              <span v-show="sidebarCollapsed">WPK</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/taman-bacaan"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/taman-bacaan') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Taman Bacaan Desa</span>
-              <span v-show="sidebarCollapsed">TBD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/kejar-paket"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/kejar-paket') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Kejar Paket Desa</span>
-              <span v-show="sidebarCollapsed">KPD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/posyandu"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/posyandu') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Posyandu Desa</span>
-              <span v-show="sidebarCollapsed">PSD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/simulasi-penyuluhan"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/simulasi-penyuluhan') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Simulasi/Penyuluhan Desa</span>
-              <span v-show="sidebarCollapsed">SPD</span>
-            </a>
-            <a
-              v-if="isDesaScope"
-              href="/desa/program-prioritas"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/program-prioritas') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Program Prioritas Desa</span>
-              <span v-show="sidebarCollapsed">PPD</span>
-            </a>
+            <template v-if="isDesaScope">
+              <div v-for="group in desaMenuGroups" :key="`desa-${group.key}`" class="space-y-1">
+                <button
+                  type="button"
+                  :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isGroupActive(group) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+                  class="w-full flex items-center rounded-md px-3 py-2 text-sm"
+                  @click="toggleGroup('desa', group)"
+                >
+                  <span class="flex items-center gap-3">
+                    <span v-show="!sidebarCollapsed">{{ group.label }}</span>
+                    <span v-show="sidebarCollapsed">{{ group.code }}</span>
+                  </span>
+                  <svg v-show="!sidebarCollapsed" class="h-4 w-4 transition-transform" :class="{ 'rotate-180': isGroupOpen('desa', group.key) }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
 
-            <button
-              v-if="isKecamatanScope"
-              type="button"
-              :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/agenda-surat') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/bantuans') || isActive('/kecamatan/anggota-pokja') || isActive('/kecamatan/anggota-tim-penggerak') || isActive('/kecamatan/kader-khusus') || isActive('/kecamatan/prestasi-lomba') || isActive('/kecamatan/bkl') || isActive('/kecamatan/bkr') || isActive('/kecamatan/koperasi') || isActive('/kecamatan/warung-pkk') || isActive('/kecamatan/taman-bacaan') || isActive('/kecamatan/kejar-paket') || isActive('/kecamatan/posyandu') || isActive('/kecamatan/simulasi-penyuluhan') || isActive('/kecamatan/program-prioritas') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="w-full flex items-center rounded-md px-3 py-2 text-sm"
-              @click="sidebarCollapsed ? (window.location.href = '/kecamatan/activities') : (districtOpen = !districtOpen)"
-            >
-              <span class="flex items-center gap-3">
-                <span v-show="!sidebarCollapsed">Kecamatan</span>
-                <span v-show="sidebarCollapsed">K</span>
-              </span>
-              <svg v-show="!sidebarCollapsed" class="h-4 w-4 transition-transform" :class="{ 'rotate-180': districtOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
+                <div v-show="isGroupOpen('desa', group.key) && !sidebarCollapsed" class="space-y-1 pl-4">
+                  <a
+                    v-for="item in group.items"
+                    :key="item.href"
+                    :href="item.href"
+                    :class="isActive(item.href) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
+                    class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
+                  >
+                    {{ item.label }}
+                  </a>
+                </div>
+              </div>
+            </template>
 
-            <div v-show="districtOpen && !sidebarCollapsed" class="space-y-1 pl-4">
-              <a
-                href="/kecamatan/activities"
-                :class="isActive('/kecamatan/activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Activities Kecamatan
-              </a>
-              <a
-                href="/kecamatan/agenda-surat"
-                :class="isActive('/kecamatan/agenda-surat') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Agenda Surat Kecamatan
-              </a>
-              <a
-                href="/kecamatan/inventaris"
-                :class="isActive('/kecamatan/inventaris') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Inventaris Kecamatan
-              </a>
-              <a
-                href="/kecamatan/bantuans"
-                :class="isActive('/kecamatan/bantuans') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Bantuan Kecamatan
-              </a>
-              <a
-                href="/kecamatan/anggota-pokja"
-                :class="isActive('/kecamatan/anggota-pokja') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Anggota Pokja Kecamatan
-              </a>
-              <a
-                href="/kecamatan/anggota-tim-penggerak"
-                :class="isActive('/kecamatan/anggota-tim-penggerak') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Buku Anggota TP PKK
-              </a>
-              <a
-                href="/kecamatan/kader-khusus"
-                :class="isActive('/kecamatan/kader-khusus') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Kader Khusus Kecamatan
-              </a>
-              <a
-                href="/kecamatan/prestasi-lomba"
-                :class="isActive('/kecamatan/prestasi-lomba') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Prestasi Lomba
-              </a>
-              <a
-                href="/kecamatan/bkl"
-                :class="isActive('/kecamatan/bkl') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                BKL
-              </a>
-              <a
-                href="/kecamatan/bkr"
-                :class="isActive('/kecamatan/bkr') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                BKR
-              </a>
-              <a
-                href="/kecamatan/koperasi"
-                :class="isActive('/kecamatan/koperasi') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Koperasi
-              </a>
-              <a
-                href="/kecamatan/warung-pkk"
-                :class="isActive('/kecamatan/warung-pkk') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Warung PKK
-              </a>
-              <a
-                href="/kecamatan/taman-bacaan"
-                :class="isActive('/kecamatan/taman-bacaan') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Taman Bacaan
-              </a>
-              <a
-                href="/kecamatan/kejar-paket"
-                :class="isActive('/kecamatan/kejar-paket') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Kejar Paket
-              </a>
-              <a
-                href="/kecamatan/posyandu"
-                :class="isActive('/kecamatan/posyandu') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Posyandu
-              </a>
-              <a
-                href="/kecamatan/simulasi-penyuluhan"
-                :class="isActive('/kecamatan/simulasi-penyuluhan') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Simulasi/Penyuluhan
-              </a>
-              <a
-                href="/kecamatan/desa-activities"
-                :class="isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Activities Desa
-              </a>
-              <a
-                href="/kecamatan/program-prioritas"
-                :class="isActive('/kecamatan/program-prioritas') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
-              >
-                Program Prioritas
-              </a>
-            </div>
+            <template v-if="isKecamatanScope">
+              <div v-for="group in kecamatanMenuGroups" :key="`kecamatan-${group.key}`" class="space-y-1">
+                <button
+                  type="button"
+                  :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isGroupActive(group) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+                  class="w-full flex items-center rounded-md px-3 py-2 text-sm"
+                  @click="toggleGroup('kecamatan', group)"
+                >
+                  <span class="flex items-center gap-3">
+                    <span v-show="!sidebarCollapsed">{{ group.label }}</span>
+                    <span v-show="sidebarCollapsed">{{ group.code }}</span>
+                  </span>
+                  <svg v-show="!sidebarCollapsed" class="h-4 w-4 transition-transform" :class="{ 'rotate-180': isGroupOpen('kecamatan', group.key) }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                <div v-show="isGroupOpen('kecamatan', group.key) && !sidebarCollapsed" class="space-y-1 pl-4">
+                  <a
+                    v-for="item in group.items"
+                    :key="item.href"
+                    :href="item.href"
+                    :class="isActive(item.href) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
+                    class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
+                  >
+                    {{ item.label }}
+                  </a>
+                </div>
+              </div>
+            </template>
           </div>
 
           <div class="space-y-1">
