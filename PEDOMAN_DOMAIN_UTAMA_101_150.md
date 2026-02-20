@@ -135,7 +135,7 @@ Kriteria selesai:
   - Setiap modul punya minimal 1 baseline fixture.
   - Ada prosedur compare manual/otomatis antar revisi.
 
-- [ ] `T8` Tambahkan regression checklist mismatch metadata akses.
+- [x] `T8` Tambahkan regression checklist mismatch metadata akses.
 Output:
   - File baru `docs/security/REGRESSION_CHECKLIST_AUTH_SCOPE.md`.
 Kriteria selesai:
