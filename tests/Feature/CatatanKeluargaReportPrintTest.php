@@ -7,11 +7,13 @@ use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
+use Tests\Feature\Concerns\AssertsPdfReportHeaders;
 use Tests\TestCase;
 
 class CatatanKeluargaReportPrintTest extends TestCase
 {
     use RefreshDatabase;
+    use AssertsPdfReportHeaders;
 
     protected Area $kecamatanA;
     protected Area $kecamatanB;
@@ -27,6 +29,22 @@ class CatatanKeluargaReportPrintTest extends TestCase
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
         $this->desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $this->kecamatanA->id]);
+    }
+
+    public function test_header_kolom_pdf_catatan_keluarga_tetap_sesuai_pedoman(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.catatan_keluarga_report', [
+            'NO',
+            'NAMA KEPALA RUMAH TANGGA',
+            'JUMLAH ANGGOTA RUMAH TANGGA',
+            'KERJA BAKTI',
+            'RUKUN KEMATIAN',
+            'KEAGAMAAN',
+            'JIMPITAN',
+            'ARISAN',
+            'LAIN-LAIN',
+            'KETERANGAN',
+        ]);
     }
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_catatan_keluarga_desanya_sendiri(): void
@@ -85,4 +103,3 @@ class CatatanKeluargaReportPrintTest extends TestCase
         $response->assertStatus(403);
     }
 }
-

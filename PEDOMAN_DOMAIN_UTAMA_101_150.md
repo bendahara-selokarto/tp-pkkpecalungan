@@ -121,7 +121,7 @@ Output:
 Kriteria selesai:
   - Checklist mencakup: urutan kolom, header, format nilai, orientasi, footer metadata cetak.
 
-- [ ] `T6` Tambahkan test assertion header PDF untuk modul prioritas.
+- [x] `T6` Tambahkan test assertion header PDF untuk modul prioritas.
 Output:
   - Update test feature report print pada modul prioritas.
 Kriteria selesai:

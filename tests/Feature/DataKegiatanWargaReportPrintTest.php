@@ -7,11 +7,13 @@ use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
+use Tests\Feature\Concerns\AssertsPdfReportHeaders;
 use Tests\TestCase;
 
 class DataKegiatanWargaReportPrintTest extends TestCase
 {
     use RefreshDatabase;
+    use AssertsPdfReportHeaders;
 
     protected Area $kecamatanA;
     protected Area $kecamatanB;
@@ -27,6 +29,16 @@ class DataKegiatanWargaReportPrintTest extends TestCase
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
         $this->desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $this->kecamatanA->id]);
+    }
+
+    public function test_header_kolom_pdf_data_kegiatan_warga_tetap_sesuai_pedoman(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.data_kegiatan_warga_report', [
+            'NO',
+            'KEGIATAN',
+            'AKTIVITAS (Y/T)',
+            'KETERANGAN (JENIS KEGIATAN YANG DIIKUTI)',
+        ]);
     }
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_data_kegiatan_warga_desanya_sendiri(): void

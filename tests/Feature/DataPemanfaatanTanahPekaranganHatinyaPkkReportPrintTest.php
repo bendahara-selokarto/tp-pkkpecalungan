@@ -7,11 +7,13 @@ use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
+use Tests\Feature\Concerns\AssertsPdfReportHeaders;
 use Tests\TestCase;
 
 class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
 {
     use RefreshDatabase;
+    use AssertsPdfReportHeaders;
 
     protected Area $kecamatanA;
     protected Area $kecamatanB;
@@ -27,6 +29,16 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
         $this->desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $this->kecamatanA->id]);
+    }
+
+    public function test_header_kolom_pdf_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_tetap_sesuai_pedoman(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.data_pemanfaatan_tanah_pekarangan_hatinya_pkk_report', [
+            'NO',
+            'KATEGORI JENIS PEMANFAATAN LAHAN',
+            'KOMODITI DIBUDIDAYAKAN',
+            'JUMLAH KOMODITI DIBUDIDAYAKAN',
+        ]);
     }
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_desanya_sendiri(): void
