@@ -35,6 +35,14 @@ const desaMenuGroups = [
     ],
   },
   {
+    key: 'lampiran4141',
+    label: 'Lampiran 4.14.1',
+    code: 'L41',
+    items: [
+      { href: '/desa/data-warga', label: 'Data Warga' },
+    ],
+  },
+  {
     key: 'lampiran4144',
     label: 'Lampiran 4.14.4',
     code: 'L44',
@@ -73,6 +81,14 @@ const kecamatanMenuGroups = [
       { href: '/kecamatan/bantuans', label: 'Buku Keuangan' },
       { href: '/kecamatan/inventaris', label: 'Buku Inventaris' },
       { href: '/kecamatan/activities', label: 'Buku Kegiatan' },
+    ],
+  },
+  {
+    key: 'lampiran4141',
+    label: 'Lampiran 4.14.1',
+    code: 'L41',
+    items: [
+      { href: '/kecamatan/data-warga', label: 'Data Warga' },
     ],
   },
   {

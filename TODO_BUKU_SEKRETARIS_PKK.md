@@ -8,6 +8,7 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - [x] Tahap 3 - Validasi ulang kolom laporan terhadap template PDF sumber per lembar.
 - [x] Tahap 4 - Penyesuaian format cetak jika ada perbedaan istilah/header antar level (medium risk, tetap reuse domain existing).
 - [x] Tahap 5 - Refactor TODO sinkronisasi pedoman domain + kontrak domain baru.
+- [x] Tahap 6 - Implementasi modul 4.14.1a `data-warga` (desa + kecamatan + report + policy + test matrix).
 
 ## Ringkasan Sinkronisasi Pedoman
 - [x] Sumber canonical dipakai: https://pubhtml5.com/zsnqq/vjcf/basic/101-150
@@ -37,6 +38,15 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - [x] 4.15 Catatan Keluarga -> kontrak domain: `catatan-keluarga` (rekap lintas lampiran terkait).
 - [x] Verifikasi 4.14.5 pada baseline halaman 101-150: belum ditemukan pada sumber canonical saat ini.
 
+### Roadmap Implementasi Modul Baru (Refactor TODO)
+- [x] 4.14.1a Data Warga -> `data-warga` sudah terimplementasi end-to-end.
+- [ ] 4.14.1b Data Kegiatan Warga -> `data-kegiatan-warga`.
+- [ ] 4.14.2a Data Keluarga -> `data-keluarga`.
+- [ ] 4.14.2b Data Pemanfaatan Tanah Pekarangan/HATINYA PKK -> `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`.
+- [ ] 4.14.2c Data Industri Rumah Tangga -> `data-industri-rumah-tangga`.
+- [ ] 4.14.3 Data Pelatihan Kader -> `data-pelatihan-kader`.
+- [ ] 4.15 Catatan Keluarga -> `catatan-keluarga`.
+
 ## Akses Tulis Data (Scope Policy)
 - `desa`: `desa-sekretaris`, `desa-bendahara`, `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv`, kompatibilitas `admin-desa`.
 - `kecamatan`: `kecamatan-sekretaris`, `kecamatan-bendahara`, `kecamatan-pokja-i`, `kecamatan-pokja-ii`, `kecamatan-pokja-iii`, `kecamatan-pokja-iv`, kompatibilitas `admin-kecamatan`, `super-admin`.
@@ -51,4 +61,4 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 ## Catatan Anti-Konflik
 - `agenda-surat` dipakai sebagai source of truth surat masuk/keluar.
 - Buku ekspedisi tidak menambah tabel/domain baru untuk menghindari duplikasi data surat keluar.
-- Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi modul dilakukan pada fase pengembangan berikutnya agar tetap patch-minimal dan terukur.
+- Kontrak domain baru (4.14.1a-4.15) sudah dipetakan; implementasi masuk fase bertahap. Modul 4.14.1a (`data-warga`) sudah selesai.

@@ -41,6 +41,9 @@ use App\Domains\Wilayah\Koperasi\Controllers\KoperasiPrintController;
 use App\Domains\Wilayah\WarungPkk\Controllers\DesaWarungPkkController;
 use App\Domains\Wilayah\WarungPkk\Controllers\KecamatanWarungPkkController;
 use App\Domains\Wilayah\WarungPkk\Controllers\WarungPkkPrintController;
+use App\Domains\Wilayah\DataWarga\Controllers\DesaDataWargaController;
+use App\Domains\Wilayah\DataWarga\Controllers\KecamatanDataWargaController;
+use App\Domains\Wilayah\DataWarga\Controllers\DataWargaPrintController;
 use App\Domains\Wilayah\TamanBacaan\Controllers\DesaTamanBacaanController;
 use App\Domains\Wilayah\TamanBacaan\Controllers\KecamatanTamanBacaanController;
 use App\Domains\Wilayah\TamanBacaan\Controllers\TamanBacaanPrintController;
@@ -103,6 +106,7 @@ Route::prefix('desa')
         Route::resource('bkl', DesaBklController::class);
         Route::resource('bkr', DesaBkrController::class);
         Route::resource('koperasi', DesaKoperasiController::class);
+        Route::resource('data-warga', DesaDataWargaController::class);
         Route::resource('warung-pkk', DesaWarungPkkController::class);
         Route::resource('taman-bacaan', DesaTamanBacaanController::class);
         Route::resource('kejar-paket', DesaKejarPaketController::class);
@@ -123,6 +127,7 @@ Route::prefix('desa')
         Route::get('bkl/report/pdf', [BklPrintController::class, 'printDesaReport'])->name('bkl.report');
         Route::get('bkr/report/pdf', [BkrPrintController::class, 'printDesaReport'])->name('bkr.report');
         Route::get('koperasi/report/pdf', [KoperasiPrintController::class, 'printDesaReport'])->name('koperasi.report');
+        Route::get('data-warga/report/pdf', [DataWargaPrintController::class, 'printDesaReport'])->name('data-warga.report');
         Route::get('warung-pkk/report/pdf', [WarungPkkPrintController::class, 'printDesaReport'])->name('warung-pkk.report');
         Route::get('taman-bacaan/report/pdf', [TamanBacaanPrintController::class, 'printDesaReport'])->name('taman-bacaan.report');
         Route::get('kejar-paket/report/pdf', [KejarPaketPrintController::class, 'printDesaReport'])->name('kejar-paket.report');
@@ -147,6 +152,7 @@ Route::prefix('kecamatan')
         Route::resource('bkl', KecamatanBklController::class);
         Route::resource('bkr', KecamatanBkrController::class);
         Route::resource('koperasi', KecamatanKoperasiController::class);
+        Route::resource('data-warga', KecamatanDataWargaController::class);
         Route::resource('warung-pkk', KecamatanWarungPkkController::class);
         Route::resource('taman-bacaan', KecamatanTamanBacaanController::class);
         Route::resource('kejar-paket', KecamatanKejarPaketController::class);
@@ -167,6 +173,7 @@ Route::prefix('kecamatan')
         Route::get('bkl/report/pdf', [BklPrintController::class, 'printKecamatanReport'])->name('bkl.report');
         Route::get('bkr/report/pdf', [BkrPrintController::class, 'printKecamatanReport'])->name('bkr.report');
         Route::get('koperasi/report/pdf', [KoperasiPrintController::class, 'printKecamatanReport'])->name('koperasi.report');
+        Route::get('data-warga/report/pdf', [DataWargaPrintController::class, 'printKecamatanReport'])->name('data-warga.report');
         Route::get('warung-pkk/report/pdf', [WarungPkkPrintController::class, 'printKecamatanReport'])->name('warung-pkk.report');
         Route::get('taman-bacaan/report/pdf', [TamanBacaanPrintController::class, 'printKecamatanReport'])->name('taman-bacaan.report');
         Route::get('kejar-paket/report/pdf', [KejarPaketPrintController::class, 'printKecamatanReport'])->name('kejar-paket.report');

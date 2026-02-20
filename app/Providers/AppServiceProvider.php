@@ -42,6 +42,9 @@ use App\Domains\Wilayah\Koperasi\Repositories\KoperasiRepositoryInterface;
 use App\Domains\Wilayah\WarungPkk\Models\WarungPkk;
 use App\Domains\Wilayah\WarungPkk\Repositories\WarungPkkRepository;
 use App\Domains\Wilayah\WarungPkk\Repositories\WarungPkkRepositoryInterface;
+use App\Domains\Wilayah\DataWarga\Models\DataWarga;
+use App\Domains\Wilayah\DataWarga\Repositories\DataWargaRepository;
+use App\Domains\Wilayah\DataWarga\Repositories\DataWargaRepositoryInterface;
 use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
 use App\Domains\Wilayah\TamanBacaan\Repositories\TamanBacaanRepository;
 use App\Domains\Wilayah\TamanBacaan\Repositories\TamanBacaanRepositoryInterface;
@@ -68,6 +71,7 @@ use App\Policies\BklPolicy;
 use App\Policies\BkrPolicy;
 use App\Policies\KoperasiPolicy;
 use App\Policies\WarungPkkPolicy;
+use App\Policies\DataWargaPolicy;
 use App\Policies\TamanBacaanPolicy;
 use App\Policies\KejarPaketPolicy;
 use App\Policies\PosyanduPolicy;
@@ -162,6 +166,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            DataWargaRepositoryInterface::class,
+            DataWargaRepository::class
+        );
+
+        $this->app->bind(
             TamanBacaanRepositoryInterface::class,
             TamanBacaanRepository::class
         );
@@ -206,6 +215,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Bkr::class, BkrPolicy::class);
         Gate::policy(Koperasi::class, KoperasiPolicy::class);
         Gate::policy(WarungPkk::class, WarungPkkPolicy::class);
+        Gate::policy(DataWarga::class, DataWargaPolicy::class);
         Gate::policy(TamanBacaan::class, TamanBacaanPolicy::class);
         Gate::policy(KejarPaket::class, KejarPaketPolicy::class);
         Gate::policy(Posyandu::class, PosyanduPolicy::class);
