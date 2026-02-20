@@ -22,6 +22,7 @@ const districtOpen = ref(
     || page.url.startsWith('/kecamatan/koperasi')
     || page.url.startsWith('/kecamatan/warung-pkk')
     || page.url.startsWith('/kecamatan/taman-bacaan')
+    || page.url.startsWith('/kecamatan/kejar-paket')
     || page.url.startsWith('/kecamatan/simulasi-penyuluhan')
     || page.url.startsWith('/kecamatan/program-prioritas')
     || page.url.startsWith('/kecamatan/desa-activities'),
@@ -284,6 +285,15 @@ const hideBrokenImage = (event) => {
             </a>
             <a
               v-if="isDesaScope"
+              href="/desa/kejar-paket"
+              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/kejar-paket') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
+            >
+              <span v-show="!sidebarCollapsed">Kejar Paket Desa</span>
+              <span v-show="sidebarCollapsed">KPD</span>
+            </a>
+            <a
+              v-if="isDesaScope"
               href="/desa/simulasi-penyuluhan"
               :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/desa/simulasi-penyuluhan') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
@@ -304,7 +314,7 @@ const hideBrokenImage = (event) => {
             <button
               v-if="isKecamatanScope"
               type="button"
-              :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/agenda-surat') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/bantuans') || isActive('/kecamatan/anggota-pokja') || isActive('/kecamatan/anggota-tim-penggerak') || isActive('/kecamatan/kader-khusus') || isActive('/kecamatan/prestasi-lomba') || isActive('/kecamatan/bkl') || isActive('/kecamatan/bkr') || isActive('/kecamatan/koperasi') || isActive('/kecamatan/warung-pkk') || isActive('/kecamatan/taman-bacaan') || isActive('/kecamatan/simulasi-penyuluhan') || isActive('/kecamatan/program-prioritas') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isActive('/kecamatan/activities') || isActive('/kecamatan/agenda-surat') || isActive('/kecamatan/inventaris') || isActive('/kecamatan/bantuans') || isActive('/kecamatan/anggota-pokja') || isActive('/kecamatan/anggota-tim-penggerak') || isActive('/kecamatan/kader-khusus') || isActive('/kecamatan/prestasi-lomba') || isActive('/kecamatan/bkl') || isActive('/kecamatan/bkr') || isActive('/kecamatan/koperasi') || isActive('/kecamatan/warung-pkk') || isActive('/kecamatan/taman-bacaan') || isActive('/kecamatan/kejar-paket') || isActive('/kecamatan/simulasi-penyuluhan') || isActive('/kecamatan/program-prioritas') || isActive('/kecamatan/desa-activities') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="w-full flex items-center rounded-md px-3 py-2 text-sm"
               @click="sidebarCollapsed ? (window.location.href = '/kecamatan/activities') : (districtOpen = !districtOpen)"
             >
@@ -408,6 +418,13 @@ const hideBrokenImage = (event) => {
                 class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
               >
                 Taman Bacaan
+              </a>
+              <a
+                href="/kecamatan/kejar-paket"
+                :class="isActive('/kecamatan/kejar-paket') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
+                class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
+              >
+                Kejar Paket
               </a>
               <a
                 href="/kecamatan/simulasi-penyuluhan"
