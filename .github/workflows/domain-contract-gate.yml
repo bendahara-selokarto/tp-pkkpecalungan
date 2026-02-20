@@ -1,0 +1,146 @@
+name: Domain Contract Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: domain-contract-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed paths
+        id: changes
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            domain_contract:
+              - 'database/migrations/**'
+              - 'routes/web.php'
+              - 'resources/views/pdf/**'
+              - 'app/**/Models/**'
+              - 'app/**/Repositories/**'
+              - 'app/**/UseCases/**'
+              - 'app/**/Controllers/**'
+              - 'app/Policies/**'
+              - 'app/Http/Middleware/EnsureScopeRole.php'
+              - 'app/Support/RoleScopeMatrix.php'
+              - 'app/Domains/Wilayah/Services/UserAreaContextService.php'
+            pdf_contract:
+              - 'resources/views/pdf/**'
+            auth_scope:
+              - 'routes/web.php'
+              - 'app/Policies/**'
+              - 'app/Http/Middleware/EnsureScopeRole.php'
+              - 'app/Support/RoleScopeMatrix.php'
+              - 'app/Domains/Wilayah/Services/UserAreaContextService.php'
+            domain_matrix_updated:
+              - 'docs/domain/DOMAIN_CONTRACT_MATRIX.md'
+            pdf_compliance_updated:
+              - 'docs/pdf/PDF_COMPLIANCE_CHECKLIST.md'
+            pdf_baseline_updated:
+              - 'tests/Fixtures/pdf-baseline/**'
+            auth_docs_updated:
+              - 'docs/security/AUTH_COHERENCE_MATRIX.md'
+              - 'docs/security/REGRESSION_CHECKLIST_AUTH_SCOPE.md'
+
+      - name: Enforce mandatory docs updates
+        shell: bash
+        run: |
+          if [[ "${{ steps.changes.outputs.domain_contract }}" == "true" && "${{ steps.changes.outputs.domain_matrix_updated }}" != "true" ]]; then
+            echo "::error::Domain contract changed but docs/domain/DOMAIN_CONTRACT_MATRIX.md was not updated."
+            exit 1
+          fi
+
+          if [[ "${{ steps.changes.outputs.pdf_contract }}" == "true" && "${{ steps.changes.outputs.pdf_compliance_updated }}" != "true" ]]; then
+            echo "::error::PDF contract changed but docs/pdf/PDF_COMPLIANCE_CHECKLIST.md was not updated."
+            exit 1
+          fi
+
+          if [[ "${{ steps.changes.outputs.pdf_contract }}" == "true" && "${{ steps.changes.outputs.pdf_baseline_updated }}" != "true" ]]; then
+            echo "::error::PDF contract changed but tests/Fixtures/pdf-baseline/*.json was not updated."
+            exit 1
+          fi
+
+          if [[ "${{ steps.changes.outputs.auth_scope }}" == "true" && "${{ steps.changes.outputs.auth_docs_updated }}" != "true" ]]; then
+            echo "::error::Auth/scope contract changed but security checklist docs were not updated."
+            exit 1
+          fi
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, dom, pdo_sqlite, sqlite3
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Prepare application environment
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+          CACHE_STORE: array
+          SESSION_DRIVER: array
+          QUEUE_CONNECTION: sync
+          MAIL_MAILER: array
+        run: |
+          cp .env.example .env
+          mkdir -p database
+          touch database/database.sqlite
+          php artisan key:generate
+          php artisan migrate --force
+
+      - name: Run mandatory domain/PDF gates
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+          CACHE_STORE: array
+          SESSION_DRIVER: array
+          QUEUE_CONNECTION: sync
+          MAIL_MAILER: array
+        run: |
+          php artisan route:list --name=report
+          php artisan test --filter=PdfBaselineFixtureComplianceTest
+          php artisan test --filter=scope_metadata_tidak_sinkron
+
+      - name: Run conditional PDF header regression gates
+        if: steps.changes.outputs.pdf_contract == 'true'
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+          CACHE_STORE: array
+          SESSION_DRIVER: array
+          QUEUE_CONNECTION: sync
+          MAIL_MAILER: array
+        run: php artisan test --filter=header_kolom_pdf
+
+      - name: Run conditional auth/scope regression gates
+        if: steps.changes.outputs.auth_scope == 'true'
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: database/database.sqlite
+          CACHE_STORE: array
+          SESSION_DRIVER: array
+          QUEUE_CONNECTION: sync
+          MAIL_MAILER: array
+        run: |
+          php artisan test --filter=role_dan_level_area_tidak_sinkron
+          php artisan test --filter=role_kecamatan_tetapi_area_level_desa
