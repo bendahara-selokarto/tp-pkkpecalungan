@@ -150,7 +150,7 @@ Output:
 Kriteria selesai:
   - PR yang mengubah kontrak domain wajib update matrix + test terkait.
 
-- [ ] `T10` Terapkan release checklist khusus modul PDF.
+- [x] `T10` Terapkan release checklist khusus modul PDF.
 Output:
   - File baru `docs/process/RELEASE_CHECKLIST_PDF.md`.
 Kriteria selesai:
