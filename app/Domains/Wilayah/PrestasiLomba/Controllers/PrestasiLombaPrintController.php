@@ -6,13 +6,14 @@ use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\PrestasiLomba\Models\PrestasiLomba;
 use App\Domains\Wilayah\PrestasiLomba\UseCases\ListScopedPrestasiLombaUseCase;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class PrestasiLombaPrintController extends Controller
 {
     public function __construct(
-        private readonly ListScopedPrestasiLombaUseCase $listScopedPrestasiLombaUseCase
+        private readonly ListScopedPrestasiLombaUseCase $listScopedPrestasiLombaUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -36,7 +37,7 @@ class PrestasiLombaPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
-        $pdf = Pdf::loadView('pdf.prestasi_lomba_report', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.prestasi_lomba_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',

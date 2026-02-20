@@ -6,13 +6,14 @@ use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Bantuan\UseCases\ListScopedBantuanUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class BantuanReportPrintController extends Controller
 {
     public function __construct(
-        private readonly ListScopedBantuanUseCase $listScopedBantuanUseCase
+        private readonly ListScopedBantuanUseCase $listScopedBantuanUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -36,7 +37,7 @@ class BantuanReportPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
-        $pdf = Pdf::loadView('pdf.bantuan_report', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.bantuan_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',

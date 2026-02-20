@@ -6,13 +6,14 @@ use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use App\Domains\Wilayah\KaderKhusus\UseCases\ListScopedKaderKhususUseCase;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class KaderKhususReportPrintController extends Controller
 {
     public function __construct(
-        private readonly ListScopedKaderKhususUseCase $listScopedKaderKhususUseCase
+        private readonly ListScopedKaderKhususUseCase $listScopedKaderKhususUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -36,7 +37,7 @@ class KaderKhususReportPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
-        $pdf = Pdf::loadView('pdf.kader_khusus_report', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.kader_khusus_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',

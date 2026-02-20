@@ -6,13 +6,14 @@ use App\Domains\Wilayah\Bkl\Models\Bkl;
 use App\Domains\Wilayah\Bkl\UseCases\ListScopedBklUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class BklPrintController extends Controller
 {
     public function __construct(
-        private readonly ListScopedBklUseCase $listScopedBklUseCase
+        private readonly ListScopedBklUseCase $listScopedBklUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -36,7 +37,7 @@ class BklPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
-        $pdf = Pdf::loadView('pdf.bkl_report', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.bkl_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',

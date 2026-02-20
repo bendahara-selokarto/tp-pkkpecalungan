@@ -175,16 +175,23 @@ PHP;
 
 namespace App\Domains\Reports\\{$name}\Pdf;
 
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 
 class {$class}
 {
-    public function generate(array \$data)
+    public function __construct(
+        private readonly PdfViewFactory \$pdfViewFactory
+    ) {}
+
+    public function generate(array \$data, ?string \$orientation = null)
     {
-        return Pdf::loadView(
-            'reports.' . strtolower('{$name}') . '.pdf',
-            \$data
-        )->download(strtolower('{$name}') . '-report.pdf');
+        return \$this->pdfViewFactory
+            ->loadView(
+                'reports.' . strtolower('{$name}') . '.pdf',
+                \$data,
+                \$orientation
+            )
+            ->download(strtolower('{$name}') . '-report.pdf');
     }
 }
 PHP;

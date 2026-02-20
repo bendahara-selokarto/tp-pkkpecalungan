@@ -6,13 +6,14 @@ use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\SimulasiPenyuluhan\UseCases\ListScopedSimulasiPenyuluhanUseCase;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class SimulasiPenyuluhanPrintController extends Controller
 {
     public function __construct(
-        private readonly ListScopedSimulasiPenyuluhanUseCase $listScopedSimulasiPenyuluhanUseCase
+        private readonly ListScopedSimulasiPenyuluhanUseCase $listScopedSimulasiPenyuluhanUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -36,7 +37,7 @@ class SimulasiPenyuluhanPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
-        $pdf = Pdf::loadView('pdf.simulasi_penyuluhan_report', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.simulasi_penyuluhan_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',

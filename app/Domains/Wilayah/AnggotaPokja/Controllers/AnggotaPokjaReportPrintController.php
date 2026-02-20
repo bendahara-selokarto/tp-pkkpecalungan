@@ -6,13 +6,14 @@ use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
 use App\Domains\Wilayah\AnggotaPokja\UseCases\ListScopedAnggotaPokjaUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class AnggotaPokjaReportPrintController extends Controller
 {
     public function __construct(
-        private readonly ListScopedAnggotaPokjaUseCase $listScopedAnggotaPokjaUseCase
+        private readonly ListScopedAnggotaPokjaUseCase $listScopedAnggotaPokjaUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -36,7 +37,7 @@ class AnggotaPokjaReportPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
-        $pdf = Pdf::loadView('pdf.anggota_pokja_report', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.anggota_pokja_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',

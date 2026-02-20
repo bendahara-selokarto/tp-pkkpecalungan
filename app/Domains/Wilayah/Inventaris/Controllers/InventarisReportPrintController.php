@@ -6,13 +6,14 @@ use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Inventaris\UseCases\ListScopedInventarisUseCase;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class InventarisReportPrintController extends Controller
 {
     public function __construct(
-        private readonly ListScopedInventarisUseCase $listScopedInventarisUseCase
+        private readonly ListScopedInventarisUseCase $listScopedInventarisUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -36,7 +37,7 @@ class InventarisReportPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
-        $pdf = Pdf::loadView('pdf.inventaris_report', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.inventaris_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',

@@ -38,6 +38,7 @@ Legacy tables (compatibility only):
 - `level` data harus konsisten dengan `areas.level`.
 - `role`, `scope`, `area_id` user harus konsisten.
 - `area_id` user harus cocok levelnya dengan scope.
+- Default orientasi output PDF adalah `landscape`; `portrait` hanya jika diminta eksplisit.
 
 ## 3. Execution Flow (Mandatory)
 

@@ -6,14 +6,15 @@ use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Activities\UseCases\GetKecamatanDesaActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\GetScopedActivityUseCase;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class ActivityPrintController extends Controller
 {
     public function __construct(
         private readonly GetScopedActivityUseCase $getScopedActivityUseCase,
-        private readonly GetKecamatanDesaActivityUseCase $getKecamatanDesaActivityUseCase
+        private readonly GetKecamatanDesaActivityUseCase $getKecamatanDesaActivityUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -43,7 +44,7 @@ class ActivityPrintController extends Controller
 
     private function streamPdf(Activity $activity, string $context): Response
     {
-        $pdf = Pdf::loadView('pdf.activity', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.activity', [
             'activity' => $activity,
             'printedBy' => auth()->user(),
             'printedAt' => now(),

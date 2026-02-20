@@ -6,13 +6,14 @@ use App\Domains\Wilayah\Bkr\Models\Bkr;
 use App\Domains\Wilayah\Bkr\UseCases\ListScopedBkrUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class BkrPrintController extends Controller
 {
     public function __construct(
-        private readonly ListScopedBkrUseCase $listScopedBkrUseCase
+        private readonly ListScopedBkrUseCase $listScopedBkrUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -36,7 +37,7 @@ class BkrPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
-        $pdf = Pdf::loadView('pdf.bkr_report', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.bkr_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',

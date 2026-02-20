@@ -154,7 +154,13 @@ Arah refactor prioritas:
 3. Tambah constraint DB untuk validasi level-area.
 4. Formalisasi milestone deprecasi legacy table.
 
-## 12. Playbook Modul/Menu Baru
+## 12. Standar Output PDF
+
+- Default orientasi PDF adalah `landscape` untuk seluruh flow report/print.
+- Orientasi `portrait` hanya dipakai jika diminta eksplisit pada flow terkait.
+- Implementasi PDF baru wajib menggunakan helper terpusat agar konsisten lintas domain.
+
+## 13. Playbook Modul/Menu Baru
 
 Gunakan urutan ini agar implementasi konsisten:
 1. Tetapkan kontrak domain: nama modul, scope aktif (`desa`/`kecamatan`), role yang diizinkan, dan boundary data.
@@ -164,7 +170,7 @@ Gunakan urutan ini agar implementasi konsisten:
 5. Implement `Repository Interface + Repository` untuk query domain.
 6. Implement policy berbasis `Scope Service`.
 7. Tambahkan halaman Inertia (Index/Create/Edit/Show sesuai kebutuhan) dan pakai data yang sudah dipetakan backend.
-8. Tutup dengan test matrix minimum (lihat bagian 13).
+8. Tutup dengan test matrix minimum (lihat bagian 14).
 
 Aturan implementasi penting:
 - Untuk nilai scope/level di PHP, gunakan enum domain (`ScopeLevel`) dan hindari literal berulang.
@@ -172,7 +178,7 @@ Aturan implementasi penting:
 - Flow create/update harus menjaga konsistensi `area_id` terhadap `areas.level`.
 - Data akses UI (`auth.user.scope`) harus dianggap derived/effective dari backend, bukan authority di frontend.
 
-## 13. Test Matrix Minimum (Modul Baru)
+## 14. Test Matrix Minimum (Modul Baru)
 
 Minimal test yang wajib ada:
 1. Feature test jalur sukses untuk role/scope yang valid.

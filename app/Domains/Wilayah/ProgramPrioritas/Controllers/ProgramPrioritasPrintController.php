@@ -6,13 +6,14 @@ use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
 use App\Domains\Wilayah\ProgramPrioritas\UseCases\ListScopedProgramPrioritasUseCase;
 use App\Http\Controllers\Controller;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProgramPrioritasPrintController extends Controller
 {
     public function __construct(
-        private readonly ListScopedProgramPrioritasUseCase $listScopedProgramPrioritasUseCase
+        private readonly ListScopedProgramPrioritasUseCase $listScopedProgramPrioritasUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -36,7 +37,7 @@ class ProgramPrioritasPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
-        $pdf = Pdf::loadView('pdf.program_prioritas_report', [
+        $pdf = $this->pdfViewFactory->loadView('pdf.program_prioritas_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
