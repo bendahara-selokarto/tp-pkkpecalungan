@@ -14,9 +14,15 @@
     </style>
 </head>
 <body>
-    <div class="title">Laporan BKR {{ strtoupper($level) }}</div>
+    @php
+        $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
+        $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $level);
+        $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
+    @endphp
+
+    <div class="title">Laporan BKR {{ $levelLabel }}</div>
     <div class="meta">
-        Wilayah: {{ $areaName }}<br>
+        {{ $areaLabel }}: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>

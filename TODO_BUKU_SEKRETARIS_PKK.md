@@ -13,6 +13,8 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
   - [x] 4.9b report gabungan anggota TP PKK + kader dibuat dengan reuse domain existing (tanpa tabel baru).
   - [x] 4.11 buku tabungan/keuangan dibuat sebagai report turunan domain `bantuans` (kategori uang/keuangan).
   - [ ] 4.14.4a s.d. 4.14.4e dan lampiran lanjutan (perlu pemetaan domain lanjutan).
+    - [x] Normalisasi label level/area pada report kandidat existing (`bkl`, `bkr`, `simulasi-penyuluhan`, `program-prioritas`, `prestasi-lomba`).
+    - [ ] Verifikasi pemetaan final per lampiran terhadap PDF sumber (nama buku + kolom detail per lembar).
 
 ## Catatan anti-konflik
 - `agenda-surat` dipakai sebagai source of truth surat masuk/keluar.

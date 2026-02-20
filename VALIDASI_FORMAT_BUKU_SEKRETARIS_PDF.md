@@ -65,3 +65,11 @@ Sumber validasi:
 
 3. `LAMPIRAN 4.14.4a` s.d. `4.14.4e` (hal. 25-34) dan lampiran lanjutan lain.
 - Butuh pemetaan domain tambahan agar tidak terjadi duplikasi dengan modul existing.
+- Progress parsial terbaru:
+  - Label level/area telah dinormalisasi pada report kandidat existing:
+    - `resources/views/pdf/bkl_report.blade.php`
+    - `resources/views/pdf/bkr_report.blade.php`
+    - `resources/views/pdf/simulasi_penyuluhan_report.blade.php`
+    - `resources/views/pdf/program_prioritas_report.blade.php`
+    - `resources/views/pdf/prestasi_lomba_report.blade.php`
+  - Verifikasi nama buku/struktur kolom per lampiran masih menunggu pembacaan referensi PDF halaman 25-34 secara manual.
