@@ -52,7 +52,11 @@ Sumber validasi:
 - Belum ada modul domain khusus buku keuangan.
 
 2. `LAMPIRAN 4.9b` (hal. 3-4) - Daftar anggota TP PKK dan kader (format gabungan).
-- Sudah ada modul terkait anggota/kader, namun belum ada satu report gabungan persis format lampiran.
+- Status terbaru: `implemented` via reuse domain existing (tanpa tabel baru).
+- Endpoint report:
+  - `/desa/anggota-tim-penggerak-kader/report/pdf`
+  - `/kecamatan/anggota-tim-penggerak-kader/report/pdf`
+- File report: `resources/views/pdf/anggota_dan_kader_report.blade.php`.
 
 3. `LAMPIRAN 4.14.4a` s.d. `4.14.4e` (hal. 25-34) dan lampiran lanjutan lain.
 - Butuh pemetaan domain tambahan agar tidak terjadi duplikasi dengan modul existing.
