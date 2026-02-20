@@ -97,6 +97,7 @@ Aturan UI:
 - Sidebar menyesuaikan `scope` dan role user.
 - Akses riil tetap ditentukan backend (middleware + policy).
 - Hindari menambah Blade untuk flow aplikasi utama kecuali kebutuhan khusus.
+- Kode domain/menu (contoh: `S1`, `L44`, `PRG`, `MON`) boleh disertakan pada dokumen resmi sebagai kode kecil di kanan atas area header.
 
 Standar input tanggal:
 - UI form domain memakai `DD/MM/YYYY`.
@@ -107,7 +108,7 @@ Standar input tanggal:
 ## 8. Modul Inertia Aktif
 
 Sudah berbasis Inertia Vue:
-- `activities`
+- `kegiatan` (route teknis saat ini: `activities`)
 - `inventaris`
 - `bantuans`
 - `anggota_pokja`
@@ -129,7 +130,7 @@ Sudah berbasis Inertia Vue:
 - `auth/confirm-password`
 
 Blade dipertahankan untuk use case khusus:
-- Contoh: template PDF activity.
+- Contoh: template PDF kegiatan.
 
 ## 9. Konvensi Bahasa
 
