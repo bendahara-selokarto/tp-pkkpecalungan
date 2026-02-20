@@ -109,3 +109,31 @@ Catatan sisa 2 file:
 Kesimpulan batch:
 - Target utama audit alert dashboard/admin-one tercapai untuk seluruh halaman modul.
 - Native dialog pada flow utama (`window.confirm`/`alert`) sudah dieliminasi.
+
+## 8) Eksekusi Batch 3 (Harmonisasi Non-Modul)
+
+Perubahan yang sudah dieksekusi:
+- Harmonisasi status message login ke komponen Admin-One:
+  - `resources/js/Pages/Auth/Login.vue`
+  - inline success alert diganti `NotificationBar`.
+- Harmonisasi konfirmasi hapus akun profil ke modal Admin-One:
+  - `resources/js/Pages/Profile/Edit.vue`
+  - blok inline konfirmasi diganti `CardBoxModal`.
+
+## 9) Status Final Setelah Harmonisasi
+
+Perintah audit:
+- `rg "flashSuccess|flashError" resources/js/Pages -l`
+- `rg "window\\.confirm" resources/js/Pages -l`
+- `rg "window\\.alert|\\balert\\(" resources/js -l`
+- `rg "border-emerald-200 bg-emerald-50|border-rose-200 bg-rose-50" resources/js/Pages -l`
+
+Hasil final:
+- `FLASH_FILES_FINAL_HARD`: `0` file.
+- `CONFIRM_FILES_FINAL_HARD`: `0` file.
+- `ALERT_FILES_FINAL_HARD`: `0` file.
+- `INLINE_FLASH_BLOCK_FILES_FINAL_HARD`: `0` file.
+
+Kesimpulan akhir:
+- Tidak ada sisa alert inline hardcoded pada `resources/js/Pages`.
+- Pola feedback/konfirmasi UI konsisten ke komponen Admin-One lintas modul dan non-modul.

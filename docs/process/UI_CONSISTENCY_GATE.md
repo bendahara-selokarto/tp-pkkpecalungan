@@ -30,7 +30,4 @@ rg "border-emerald-200 bg-emerald-50|border-rose-200 bg-rose-50" resources/js/Pa
 
 ## 4) Pengecualian Saat Ini (Tercatat)
 
-- `resources/js/Pages/Auth/Login.vue`: status login sukses.
-- `resources/js/Pages/Profile/Edit.vue`: blok konfirmasi hapus akun.
-
-Kedua pengecualian di atas tidak termasuk modul dashboard operasional desa/kecamatan.
+- Tidak ada pengecualian aktif.

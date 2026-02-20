@@ -125,3 +125,29 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk standardisasi alert/konfirmasi modul dashboard berbasis admin-one.
+
+## Siklus UI Admin-One Harmonization (Auth/Profile): 2026-02-20
+
+Ruang lingkup:
+- Harmonisasi dua halaman non-modul yang tersisa:
+  - `resources/js/Pages/Auth/Login.vue`
+  - `resources/js/Pages/Profile/Edit.vue`
+
+Perintah audit:
+- `rg "flashSuccess|flashError" resources/js/Pages -l`
+  - hasil: `0` file.
+- `rg "window\\.confirm" resources/js/Pages -l`
+  - hasil: `0` file.
+- `rg "window\\.alert|\\balert\\(" resources/js -l`
+  - hasil: `0` file.
+- `rg "border-emerald-200 bg-emerald-50|border-rose-200 bg-rose-50" resources/js/Pages -l`
+  - hasil: `0` file.
+
+Perintah validasi:
+- `npm run build`
+  - hasil: `PASS`.
+- `php artisan test tests/Feature/Auth/AuthenticationTest.php tests/Feature/ProfileTest.php`
+  - hasil: `12` tests pass (`36` assertions).
+
+Status:
+- `PASS` untuk harmonisasi akhir UI alert/konfirmasi lintas halaman.
