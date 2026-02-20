@@ -4,7 +4,6 @@ namespace App\Actions\User;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use App\Support\RoleScopeMatrix;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -17,13 +16,13 @@ class UpdateUserAction
 
     public function execute(User $user, array $data): User
     {
-        $this->assertValidRoleScopeArea($data);
+        $resolvedScopeAndArea = $this->resolveScopeAndArea($user, $data);
 
         $updatePayload = [
             'name' => $data['name'],
             'email' => $data['email'],
-            'scope' => $data['scope'] ?? $user->scope,
-            'area_id' => $data['area_id'] ?? $user->area_id,
+            'scope' => $resolvedScopeAndArea['scope'],
+            'area_id' => $resolvedScopeAndArea['area_id'],
         ];
 
         $user->update($updatePayload);
@@ -39,30 +38,38 @@ class UpdateUserAction
         return $user;
     }
 
-    private function assertValidRoleScopeArea(array $data): void
+    /**
+     * @return array{scope: string, area_id: int}
+     */
+    private function resolveScopeAndArea(User $user, array $data): array
     {
-        $scope = (string) ($data['scope'] ?? '');
         $role = (string) ($data['role'] ?? '');
-        $areaId = isset($data['area_id']) ? (int) $data['area_id'] : 0;
+        $areaIdSource = $data['area_id'] ?? $user->area_id;
+        $areaId = is_numeric($areaIdSource) ? (int) $areaIdSource : 0;
 
-        try {
-            $area = $this->areaRepository->find($areaId);
-        } catch (ModelNotFoundException) {
+        $scopeFromArea = $this->areaRepository->getLevelById($areaId);
+        if (! is_string($scopeFromArea)) {
             throw ValidationException::withMessages([
                 'area_id' => 'Area tidak sesuai dengan scope yang dipilih.',
             ]);
         }
 
-        if (! $area || $area->level !== $scope) {
+        $requestedScope = (string) ($data['scope'] ?? '');
+        if ($requestedScope !== '' && $requestedScope !== $scopeFromArea) {
             throw ValidationException::withMessages([
-                'area_id' => 'Area tidak sesuai dengan scope yang dipilih.',
+                'scope' => 'Scope tidak sesuai dengan area yang dipilih.',
             ]);
         }
 
-        if (! RoleScopeMatrix::isRoleCompatibleWithScope($role, $scope)) {
+        if (! RoleScopeMatrix::isRoleCompatibleWithScope($role, $scopeFromArea)) {
             throw ValidationException::withMessages([
                 'role' => 'Role tidak sesuai dengan scope yang dipilih.',
             ]);
         }
+
+        return [
+            'scope' => $scopeFromArea,
+            'area_id' => $areaId,
+        ];
     }
 }

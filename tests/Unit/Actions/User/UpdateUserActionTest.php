@@ -66,4 +66,27 @@ class UpdateUserActionTest extends TestCase
             'role' => 'admin-desa',
         ]);
     }
+
+    public function test_memperbarui_pengguna_memulihkan_scope_stale_berdasarkan_area(): void
+    {
+        Role::create(['name' => 'admin-desa']);
+        $desaArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $desaArea->id,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $action = app(UpdateUserAction::class);
+
+        $action->execute($user, [
+            'name' => 'Normalized Scope',
+            'email' => 'normalized-scope@email.com',
+            'area_id' => $desaArea->id,
+            'role' => 'admin-desa',
+        ]);
+
+        $this->assertSame('desa', $user->fresh()->scope);
+    }
 }

@@ -68,4 +68,24 @@ class CreateUserActionTest extends TestCase
             'role' => 'admin-kecamatan',
         ]);
     }
+
+    public function test_membuat_pengguna_tetap_mengikuti_scope_canonical_dari_area(): void
+    {
+        $action = app(CreateUserAction::class);
+        $area = Area::create([
+            'name' => 'Gombong',
+            'level' => 'desa',
+            'parent_id' => null,
+        ]);
+
+        $user = $action->execute([
+            'name' => 'Canonical Scope User',
+            'email' => 'canonical-scope@example.com',
+            'password' => 'password123',
+            'area_id' => $area->id,
+            'role' => 'admin-desa',
+        ]);
+
+        $this->assertSame('desa', $user->fresh()->scope);
+    }
 }
