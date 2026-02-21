@@ -104,7 +104,7 @@ class DesaInventarisController extends Controller
                 'quantity' => $inventaris->quantity,
                 'unit' => $inventaris->unit,
                 'tanggal_penerimaan' => $inventaris->tanggal_penerimaan
-                    ? Carbon::parse($inventaris->tanggal_penerimaan)->format('d/m/Y')
+                    ? Carbon::parse($inventaris->tanggal_penerimaan)->format('Y-m-d')
                     : null,
                 'tempat_penyimpanan' => $inventaris->tempat_penyimpanan,
                 'condition' => $inventaris->condition,

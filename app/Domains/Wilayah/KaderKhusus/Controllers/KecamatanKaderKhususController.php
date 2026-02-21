@@ -93,7 +93,7 @@ class KecamatanKaderKhususController extends Controller
                 'nama' => $kaderKhusus->nama,
                 'jenis_kelamin' => $kaderKhusus->jenis_kelamin,
                 'tempat_lahir' => $kaderKhusus->tempat_lahir,
-                'tanggal_lahir' => optional($kaderKhusus->tanggal_lahir)->format('d/m/Y'),
+                'tanggal_lahir' => optional($kaderKhusus->tanggal_lahir)->format('Y-m-d'),
                 'status_perkawinan' => $kaderKhusus->status_perkawinan,
                 'alamat' => $kaderKhusus->alamat,
                 'pendidikan' => $kaderKhusus->pendidikan,

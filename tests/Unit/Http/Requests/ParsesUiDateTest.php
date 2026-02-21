@@ -24,11 +24,14 @@ class ParsesUiDateTest extends TestCase
         $this->assertNull($parser->parse('02/20/2026'));
     }
 
-    public function test_parse_iso_date_ditolak_untuk_input_ui(): void
+    public function test_parse_iso_date_diterima_sebagai_format_canonical(): void
     {
         $parser = $this->makeParser();
 
-        $this->assertNull($parser->parse('2026-01-31'));
+        $date = $parser->parse('2026-01-31');
+
+        $this->assertNotNull($date);
+        $this->assertSame('2026-01-31', $parser->normalize('2026-01-31'));
     }
 
     private function makeParser(): object

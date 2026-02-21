@@ -106,7 +106,7 @@ class DesaActivityController extends Controller
                 'tempat_kegiatan' => $activity->tempat_kegiatan,
                 'uraian' => $activity->uraian ?? $activity->description,
                 'tanda_tangan' => $activity->tanda_tangan,
-                'activity_date' => Carbon::parse($activity->activity_date)->format('d/m/Y'),
+                'activity_date' => Carbon::parse($activity->activity_date)->format('Y-m-d'),
                 'status' => $activity->status,
             ],
         ]);

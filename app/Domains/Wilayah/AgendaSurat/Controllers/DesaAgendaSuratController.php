@@ -97,10 +97,10 @@ class DesaAgendaSuratController extends Controller
             'id' => $item->id,
             'jenis_surat' => $item->jenis_surat,
             'tanggal_terima' => $forForm && $item->tanggal_terima
-                ? Carbon::parse($item->tanggal_terima)->format('d/m/Y')
+                ? Carbon::parse($item->tanggal_terima)->format('Y-m-d')
                 : $item->tanggal_terima,
             'tanggal_surat' => $forForm
-                ? Carbon::parse($item->tanggal_surat)->format('d/m/Y')
+                ? Carbon::parse($item->tanggal_surat)->format('Y-m-d')
                 : $item->tanggal_surat,
             'nomor_surat' => $item->nomor_surat,
             'asal_surat' => $item->asal_surat,

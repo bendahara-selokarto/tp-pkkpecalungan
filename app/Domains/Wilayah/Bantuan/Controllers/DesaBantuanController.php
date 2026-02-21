@@ -92,7 +92,7 @@ class DesaBantuanController extends Controller
                 'description' => $bantuan->description,
                 'source' => $bantuan->source,
                 'amount' => $bantuan->amount,
-                'received_date' => Carbon::parse($bantuan->received_date)->format('d/m/Y'),
+                'received_date' => Carbon::parse($bantuan->received_date)->format('Y-m-d'),
             ],
         ]);
     }

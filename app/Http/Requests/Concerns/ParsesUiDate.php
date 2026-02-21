@@ -16,17 +16,26 @@ trait ParsesUiDate
     {
         $trimmed = trim($value);
 
-        if (! preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $trimmed)) {
-            return null;
+        if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $trimmed)) {
+            return $this->parseDateByFormat($trimmed, '!Y-m-d', 'Y-m-d');
         }
 
+        if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $trimmed)) {
+            return $this->parseDateByFormat($trimmed, '!d/m/Y', 'd/m/Y');
+        }
+
+        return null;
+    }
+
+    private function parseDateByFormat(string $value, string $carbonFormat, string $expectedFormat): ?Carbon
+    {
         try {
-            $date = Carbon::createFromFormat('!d/m/Y', $trimmed);
+            $date = Carbon::createFromFormat($carbonFormat, $value);
         } catch (Throwable) {
             return null;
         }
 
-        return $date->format('d/m/Y') === $trimmed ? $date : null;
+        return $date->format($expectedFormat) === $value ? $date : null;
     }
 
     protected function uiDateFields(): array

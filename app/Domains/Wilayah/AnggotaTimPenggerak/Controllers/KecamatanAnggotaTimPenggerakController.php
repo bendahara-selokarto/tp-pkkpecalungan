@@ -93,7 +93,7 @@ class KecamatanAnggotaTimPenggerakController extends Controller
                 'jabatan' => $anggotaTimPenggerak->jabatan,
                 'jenis_kelamin' => $anggotaTimPenggerak->jenis_kelamin,
                 'tempat_lahir' => $anggotaTimPenggerak->tempat_lahir,
-                'tanggal_lahir' => optional($anggotaTimPenggerak->tanggal_lahir)->format('d/m/Y'),
+                'tanggal_lahir' => optional($anggotaTimPenggerak->tanggal_lahir)->format('Y-m-d'),
                 'status_perkawinan' => $anggotaTimPenggerak->status_perkawinan,
                 'alamat' => $anggotaTimPenggerak->alamat,
                 'pendidikan' => $anggotaTimPenggerak->pendidikan,
