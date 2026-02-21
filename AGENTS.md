@@ -110,3 +110,10 @@ Untuk modul/menu baru, minimal harus ada:
 
 - Laporan harus menyebut: apa yang diubah, kenapa, file terdampak, dan hasil validasi.
 - Jika gagal, laporkan root cause + opsi solusi + dampak tiap opsi.
+
+## 10. AI-Friendly Pattern Evolution
+
+- Pattern eksekusi reusable lintas domain disimpan di `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`.
+- Jika ditemukan jalur baru yang lebih efisien/akurat/valid, update playbook tersebut pada sesi yang sama.
+- Jika pattern lama sudah kurang efektif, ubah status pattern (mis. `deprecated`) dan tulis alternatifnya.
+- Jangan simpan pattern penting hanya di chat; wajib masuk dokumen agar bisa dipakai project berikutnya.

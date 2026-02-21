@@ -24,6 +24,7 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
 ## docs/process
 - Runbook, rencana eksekusi, gate operasional, dan log validasi.
 - File utama:
+  - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
   - `docs/process/RUNBOOK_429_RATE_LIMITER.md`
   - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
   - `docs/process/RELEASE_CHECKLIST_PDF.md`
