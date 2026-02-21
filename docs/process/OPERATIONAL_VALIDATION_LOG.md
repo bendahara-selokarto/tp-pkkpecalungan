@@ -202,3 +202,27 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk tahap implementasi F5-F9.
+
+## Siklus Sidebar Grouping by Domain (Sekretaris TPK + Pokja I-IV): 2026-02-22
+
+Ruang lingkup:
+- Refactor pengelompokan menu domain pada sidebar:
+  - dari struktur berbasis lampiran (`4.14.1`, `4.14.2`, dst)
+  - menjadi struktur organisasi `Sekretaris TPK`, `Pokja I`, `Pokja II`, `Pokja III`, `Pokja IV`.
+- Scope `desa` dan `kecamatan` diselaraskan.
+- Group `Monitoring Kecamatan` dipertahankan untuk `kecamatan`.
+
+Artefak:
+- `resources/js/Layouts/DashboardLayout.vue`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md` (section mapping sidebar by domain)
+- `docs/domain/DOMAIN_DEVIATION_LOG.md` (`DV-004`)
+- `docs/process/SIDEBAR_DOMAIN_GROUPING_PLAN.md`
+
+Perintah validasi:
+- `npm run build`
+  - hasil: `PASS`.
+- `php artisan test`
+  - hasil: `446` tests pass (`1604` assertions).
+
+Status:
+- `PASS` untuk siklus refactor grouping sidebar by domain.

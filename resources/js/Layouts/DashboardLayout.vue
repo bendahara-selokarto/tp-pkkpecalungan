@@ -22,174 +22,74 @@ const hasRole = (role) => roles.value.includes(role)
 
 const isActive = (prefix) => page.url.startsWith(prefix)
 
-const desaMenuGroups = [
+const buildScopedMenuGroups = (scope) => [
   {
-    key: 'sekretaris',
-    label: 'Buku Sekretaris 4.9-4.13',
-    code: 'S1',
+    key: 'sekretaris-tpk',
+    label: 'Sekretaris TPK',
+    code: 'ST',
     items: [
-      { href: '/desa/anggota-tim-penggerak', label: 'Buku Daftar Anggota TP PKK' },
-      { href: '/desa/kader-khusus', label: 'Buku Daftar Kader TP PKK' },
-      { href: '/desa/agenda-surat', label: 'Buku Agenda Surat' },
-      { href: '/desa/bantuans', label: 'Buku Keuangan' },
-      { href: '/desa/inventaris', label: 'Buku Inventaris' },
-      { href: '/desa/activities', label: 'Buku Kegiatan' },
+      { href: `/${scope}/anggota-tim-penggerak`, label: 'Buku Daftar Anggota TP PKK' },
+      { href: `/${scope}/kader-khusus`, label: 'Buku Daftar Kader TP PKK' },
+      { href: `/${scope}/agenda-surat`, label: 'Buku Agenda Surat' },
+      { href: `/${scope}/bantuans`, label: 'Buku Keuangan' },
+      { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
+      { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
+      { href: `/${scope}/anggota-pokja`, label: 'Anggota Pokja' },
+      { href: `/${scope}/prestasi-lomba`, label: 'Prestasi Lomba' },
     ],
   },
   {
-    key: 'lampiran4141',
-    label: 'Lampiran 4.14.1',
-    code: 'L41',
+    key: 'pokja-i',
+    label: 'Pokja I',
+    code: 'P1',
     items: [
-      { href: '/desa/data-warga', label: 'Data Warga' },
-      { href: '/desa/data-kegiatan-warga', label: 'Data Kegiatan Warga' },
+      { href: `/${scope}/data-warga`, label: 'Data Warga' },
+      { href: `/${scope}/data-kegiatan-warga`, label: 'Data Kegiatan Warga' },
+      { href: `/${scope}/bkl`, label: 'BKL' },
+      { href: `/${scope}/bkr`, label: 'BKR' },
     ],
   },
   {
-    key: 'lampiran4142',
-    label: 'Lampiran 4.14.2',
-    code: 'L42',
+    key: 'pokja-ii',
+    label: 'Pokja II',
+    code: 'P2',
     items: [
-      { href: '/desa/data-keluarga', label: 'Data Keluarga' },
-      { href: '/desa/data-industri-rumah-tangga', label: 'Data Industri Rumah Tangga' },
-      { href: '/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk', label: 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK' },
+      { href: `/${scope}/data-pelatihan-kader`, label: 'Data Pelatihan Kader' },
+      { href: `/${scope}/taman-bacaan`, label: 'Data Isian Taman Bacaan/Perpustakaan' },
+      { href: `/${scope}/koperasi`, label: 'Data Isian Koperasi' },
+      { href: `/${scope}/kejar-paket`, label: 'Data Isian Kejar Paket/KF/PAUD' },
     ],
   },
   {
-    key: 'lampiran4143',
-    label: 'Lampiran 4.14.3',
-    code: 'L43',
+    key: 'pokja-iii',
+    label: 'Pokja III',
+    code: 'P3',
     items: [
-      { href: '/desa/data-pelatihan-kader', label: 'Data Pelatihan Kader' },
+      { href: `/${scope}/data-keluarga`, label: 'Data Keluarga' },
+      { href: `/${scope}/data-industri-rumah-tangga`, label: 'Data Industri Rumah Tangga' },
+      { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK' },
+      { href: `/${scope}/warung-pkk`, label: 'Data Aset (Sarana) Desa/Kelurahan' },
     ],
   },
   {
-    key: 'lampiran4144',
-    label: 'Lampiran 4.14.4',
-    code: 'L44',
+    key: 'pokja-iv',
+    label: 'Pokja IV',
+    code: 'P4',
     items: [
-      { href: '/desa/warung-pkk', label: 'Data Aset (Sarana) Desa/Kelurahan' },
-      { href: '/desa/taman-bacaan', label: 'Data Isian Taman Bacaan/Perpustakaan' },
-      { href: '/desa/koperasi', label: 'Data Isian Koperasi' },
-      { href: '/desa/kejar-paket', label: 'Data Isian Kejar Paket/KF/PAUD' },
-      { href: '/desa/posyandu', label: 'Data Isian Posyandu oleh TP PKK' },
-      { href: '/desa/simulasi-penyuluhan', label: 'Data Isian Kelompok Simulasi dan Penyuluhan' },
-    ],
-  },
-  {
-    key: 'lampiran415',
-    label: 'Lampiran 4.15',
-    code: 'L45',
-    items: [
-      { href: '/desa/catatan-keluarga', label: 'Catatan Keluarga' },
-    ],
-  },
-  {
-    key: 'pilotproject',
-    label: 'Pilot Project Pokja IV',
-    code: 'PP4',
-    items: [
-      { href: '/desa/pilot-project-naskah-pelaporan', label: 'Naskah Pelaporan (220-221)' },
-      { href: '/desa/pilot-project-keluarga-sehat', label: '6.c Laporan Manual Pilot Project' },
-    ],
-  },
-  {
-    key: 'pendukung',
-    label: 'Program Pendukung',
-    code: 'PRG',
-    items: [
-      { href: '/desa/anggota-pokja', label: 'Anggota Pokja' },
-      { href: '/desa/prestasi-lomba', label: 'Prestasi Lomba' },
-      { href: '/desa/bkl', label: 'BKL' },
-      { href: '/desa/bkr', label: 'BKR' },
-      { href: '/desa/program-prioritas', label: 'Program Prioritas' },
+      { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
+      { href: `/${scope}/simulasi-penyuluhan`, label: 'Data Isian Kelompok Simulasi dan Penyuluhan' },
+      { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga' },
+      { href: `/${scope}/program-prioritas`, label: 'Program Prioritas' },
+      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project (220-221)' },
+      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Manual Pilot Project (6.c)' },
     ],
   },
 ]
 
+const desaMenuGroups = buildScopedMenuGroups('desa')
+
 const kecamatanMenuGroups = [
-  {
-    key: 'sekretaris',
-    label: 'Buku Sekretaris 4.9-4.13',
-    code: 'S1',
-    items: [
-      { href: '/kecamatan/anggota-tim-penggerak', label: 'Buku Daftar Anggota TP PKK' },
-      { href: '/kecamatan/kader-khusus', label: 'Buku Daftar Kader TP PKK' },
-      { href: '/kecamatan/agenda-surat', label: 'Buku Agenda Surat' },
-      { href: '/kecamatan/bantuans', label: 'Buku Keuangan' },
-      { href: '/kecamatan/inventaris', label: 'Buku Inventaris' },
-      { href: '/kecamatan/activities', label: 'Buku Kegiatan' },
-    ],
-  },
-  {
-    key: 'lampiran4141',
-    label: 'Lampiran 4.14.1',
-    code: 'L41',
-    items: [
-      { href: '/kecamatan/data-warga', label: 'Data Warga' },
-      { href: '/kecamatan/data-kegiatan-warga', label: 'Data Kegiatan Warga' },
-    ],
-  },
-  {
-    key: 'lampiran4142',
-    label: 'Lampiran 4.14.2',
-    code: 'L42',
-    items: [
-      { href: '/kecamatan/data-keluarga', label: 'Data Keluarga' },
-      { href: '/kecamatan/data-industri-rumah-tangga', label: 'Data Industri Rumah Tangga' },
-      { href: '/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk', label: 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK' },
-    ],
-  },
-  {
-    key: 'lampiran4143',
-    label: 'Lampiran 4.14.3',
-    code: 'L43',
-    items: [
-      { href: '/kecamatan/data-pelatihan-kader', label: 'Data Pelatihan Kader' },
-    ],
-  },
-  {
-    key: 'lampiran4144',
-    label: 'Lampiran 4.14.4',
-    code: 'L44',
-    items: [
-      { href: '/kecamatan/warung-pkk', label: 'Data Aset (Sarana) Desa/Kelurahan' },
-      { href: '/kecamatan/taman-bacaan', label: 'Data Isian Taman Bacaan/Perpustakaan' },
-      { href: '/kecamatan/koperasi', label: 'Data Isian Koperasi' },
-      { href: '/kecamatan/kejar-paket', label: 'Data Isian Kejar Paket/KF/PAUD' },
-      { href: '/kecamatan/posyandu', label: 'Data Isian Posyandu oleh TP PKK' },
-      { href: '/kecamatan/simulasi-penyuluhan', label: 'Data Isian Kelompok Simulasi dan Penyuluhan' },
-    ],
-  },
-  {
-    key: 'lampiran415',
-    label: 'Lampiran 4.15',
-    code: 'L45',
-    items: [
-      { href: '/kecamatan/catatan-keluarga', label: 'Catatan Keluarga' },
-    ],
-  },
-  {
-    key: 'pilotproject',
-    label: 'Pilot Project Pokja IV',
-    code: 'PP4',
-    items: [
-      { href: '/kecamatan/pilot-project-naskah-pelaporan', label: 'Naskah Pelaporan (220-221)' },
-      { href: '/kecamatan/pilot-project-keluarga-sehat', label: '6.c Laporan Manual Pilot Project' },
-    ],
-  },
-  {
-    key: 'pendukung',
-    label: 'Program Pendukung',
-    code: 'PRG',
-    items: [
-      { href: '/kecamatan/anggota-pokja', label: 'Anggota Pokja' },
-      { href: '/kecamatan/prestasi-lomba', label: 'Prestasi Lomba' },
-      { href: '/kecamatan/bkl', label: 'BKL' },
-      { href: '/kecamatan/bkr', label: 'BKR' },
-      { href: '/kecamatan/program-prioritas', label: 'Program Prioritas' },
-    ],
-  },
+  ...buildScopedMenuGroups('kecamatan'),
   {
     key: 'monitoring',
     label: 'Monitoring Kecamatan',
@@ -456,4 +356,3 @@ const hideBrokenImage = (event) => {
     </div>
   </div>
 </template>
-

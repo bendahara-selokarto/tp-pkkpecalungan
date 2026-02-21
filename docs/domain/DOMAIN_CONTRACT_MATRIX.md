@@ -58,3 +58,21 @@ Aturan baca:
   - `app/Domains/Wilayah/CatatanKeluarga/Repositories/CatatanKeluargaRepository.php`
 - Ekstensi pilot project source:
   - `PEDOMAN_DOMAIN_UTAMA_202_211.md`
+
+## Mapping Sidebar by Domain (Sekretaris TPK + Pokja I-IV)
+
+Tujuan:
+- Menyatukan navigasi domain dari struktur lampiran pedoman menjadi struktur kerja organisasi `Sekretaris TPK` dan `Pokja I-IV`.
+
+Mapping grup sidebar:
+
+| Grup Sidebar | Slug Modul |
+| --- | --- |
+| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `bantuans`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba` |
+| Pokja I | `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr` |
+| Pokja II | `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
+| Pokja III | `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |
+| Pokja IV | `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`, `program-prioritas`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` |
+
+Implementasi aktif:
+- `resources/js/Layouts/DashboardLayout.vue`
