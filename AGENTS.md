@@ -89,6 +89,9 @@ Urutan eksekusi untuk modul/menu baru:
 6. Policy + Scope Service: source of truth akses backend.
 7. Inertia page mapping: data disiapkan backend, frontend hanya consume.
 8. Tests: penuhi matrix minimum di bagian 8.
+9. Dashboard trigger (wajib): setiap menu/domain baru harus memicu audit dashboard dan penyesuaian representasi dashboard.
+   - Minimal cek: apakah menu baru masuk KPI coverage, chart coverage, dan ringkasan progress input.
+   - Jika tidak relevan ditampilkan, wajib tulis justifikasi eksplisit pada dokumen perubahan.
 
 Aturan konsistensi generasi kode:
 - Gunakan enum (`ScopeLevel`) untuk scope/level di PHP, hindari literal berulang.

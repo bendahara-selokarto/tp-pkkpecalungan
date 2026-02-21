@@ -16,6 +16,7 @@ Gate ini wajib dijalankan jika PR mengubah salah satu:
 - Blade PDF (`resources/views/pdf/*.blade.php`) pada judul, header, urutan kolom, format nilai.
 - Route name/path report (`*.report`, `*.print`) atau middleware `scope.role`.
 - Policy/scope service yang mempengaruhi akses `view/create/update/delete/print`.
+- Penambahan menu/domain baru atau perubahan struktur sidebar yang mempengaruhi cakupan dokumen.
 
 ## 2) Artefak Wajib di PR
 
@@ -27,6 +28,10 @@ Jika trigger aktif, PR wajib mengandung:
 - Update checklist auth-scope jika ada perubahan akses:
   - `docs/security/AUTH_COHERENCE_MATRIX.md`
   - `docs/security/REGRESSION_CHECKLIST_AUTH_SCOPE.md`
+- Hasil audit dashboard untuk menu/domain baru:
+  - Apakah menu baru sudah terwakili di KPI/chart dashboard.
+  - Jika belum relevan ditampilkan, sertakan justifikasi teknis yang eksplisit.
+  - Dokumentasikan pada `docs/process/OPERATIONAL_VALIDATION_LOG.md`.
 - Penjelasan dampak perubahan di deskripsi PR (bagian "Domain Contract Impact").
 
 ## 3) Test Gate Wajib
@@ -44,6 +49,10 @@ Tambahan wajib sesuai jenis perubahan:
   - `php artisan test --filter=role_kecamatan_tetapi_area_level_desa`
 - Perubahan besar lintas modul:
   - `php artisan test`
+- Penambahan menu/domain baru:
+  - `php artisan test --filter=DashboardDocumentCoverageTest`
+  - Jika dashboard contract berubah, jalankan juga:
+    - `php artisan test --filter=DashboardActivityChartTest`
 
 ## 4) Aturan Keputusan Merge
 
@@ -69,6 +78,7 @@ Checklist ini harus ditempel pada deskripsi PR saat trigger aktif:
 - [ ] `php artisan test --filter=PdfBaselineFixtureComplianceTest` hijau.
 - [ ] `php artisan test --filter=scope_metadata_tidak_sinkron` hijau.
 - [ ] Test tambahan yang relevan dengan dampak perubahan sudah hijau.
+- [ ] Jika menambah menu/domain, audit dashboard sudah dijalankan dan hasilnya didokumentasikan.
 
 Catatan implementasi:
 - Repository menyediakan template siap pakai di `.github/pull_request_template.md`.
