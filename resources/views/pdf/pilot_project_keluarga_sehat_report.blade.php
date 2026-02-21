@@ -25,21 +25,6 @@
             font-size: 10px;
             font-weight: 700;
         }
-        .narrative-grid {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 8px;
-        }
-        .narrative-grid td {
-            border: 1px solid #111827;
-            vertical-align: top;
-            padding: 4px;
-        }
-        .narrative-label {
-            width: 120px;
-            font-weight: 700;
-            background: #f3f4f6;
-        }
         table.data-table {
             width: 100%;
             border-collapse: collapse;
@@ -109,33 +94,6 @@
             Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
             Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
         </div>
-
-        <table class="narrative-grid">
-            <tr>
-                <td class="narrative-label">Dasar Pelaksanaan</td>
-                <td>{{ data_get($report, 'dasar_hukum') ?: '-' }}</td>
-            </tr>
-            <tr>
-                <td class="narrative-label">Pendahuluan</td>
-                <td>{{ data_get($report, 'pendahuluan') ?: '-' }}</td>
-            </tr>
-            <tr>
-                <td class="narrative-label">Maksud dan Tujuan</td>
-                <td>{{ data_get($report, 'maksud_tujuan') ?: '-' }}</td>
-            </tr>
-            <tr>
-                <td class="narrative-label">Pelaksanaan</td>
-                <td>{{ data_get($report, 'pelaksanaan') ?: '-' }}</td>
-            </tr>
-            <tr>
-                <td class="narrative-label">Dokumentasi</td>
-                <td>{{ data_get($report, 'dokumentasi') ?: '-' }}</td>
-            </tr>
-            <tr>
-                <td class="narrative-label">Penutup</td>
-                <td>{{ data_get($report, 'penutup') ?: '-' }}</td>
-            </tr>
-        </table>
 
         @foreach ($catalogSections as $section)
             @php

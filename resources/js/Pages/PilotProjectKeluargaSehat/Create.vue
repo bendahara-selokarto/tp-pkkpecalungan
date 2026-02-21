@@ -108,12 +108,6 @@ const buildCatalogValues = (sections, tahunAwal, tahunAkhir, existingValues = []
 
 const form = useForm({
   judul_laporan: props.defaultTitle || '',
-  dasar_hukum: '',
-  pendahuluan: '',
-  maksud_tujuan: '',
-  pelaksanaan: '',
-  dokumentasi: '',
-  penutup: '',
   tahun_awal: props.defaultPeriod?.tahun_awal ?? 2021,
   tahun_akhir: props.defaultPeriod?.tahun_akhir ?? 2024,
   values: buildCatalogValues(
@@ -238,33 +232,6 @@ const submit = () => {
               type="number"
               class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             >
-          </div>
-        </div>
-
-        <div class="grid gap-4 md:grid-cols-2">
-          <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Dasar Hukum</label>
-            <textarea v-model="form.dasar_hukum" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
-          </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Pendahuluan</label>
-            <textarea v-model="form.pendahuluan" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
-          </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Maksud dan Tujuan</label>
-            <textarea v-model="form.maksud_tujuan" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
-          </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Pelaksanaan</label>
-            <textarea v-model="form.pelaksanaan" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
-          </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Dokumentasi</label>
-            <textarea v-model="form.dokumentasi" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
-          </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Penutup</label>
-            <textarea v-model="form.penutup" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
           </div>
         </div>
 

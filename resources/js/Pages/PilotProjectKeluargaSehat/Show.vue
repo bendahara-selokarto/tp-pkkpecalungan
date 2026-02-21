@@ -51,33 +51,6 @@ defineProps({
         </div>
       </div>
 
-      <div class="mt-5 grid gap-4 md:grid-cols-2">
-        <div class="rounded-md border border-gray-200 p-3 dark:border-slate-700">
-          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Dasar Hukum</p>
-          <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ report.dasar_hukum || '-' }}</p>
-        </div>
-        <div class="rounded-md border border-gray-200 p-3 dark:border-slate-700">
-          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Pendahuluan</p>
-          <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ report.pendahuluan || '-' }}</p>
-        </div>
-        <div class="rounded-md border border-gray-200 p-3 dark:border-slate-700">
-          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Maksud dan Tujuan</p>
-          <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ report.maksud_tujuan || '-' }}</p>
-        </div>
-        <div class="rounded-md border border-gray-200 p-3 dark:border-slate-700">
-          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Pelaksanaan</p>
-          <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ report.pelaksanaan || '-' }}</p>
-        </div>
-        <div class="rounded-md border border-gray-200 p-3 dark:border-slate-700">
-          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Dokumentasi</p>
-          <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ report.dokumentasi || '-' }}</p>
-        </div>
-        <div class="rounded-md border border-gray-200 p-3 dark:border-slate-700">
-          <p class="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Penutup</p>
-          <p class="mt-1 text-sm text-gray-700 dark:text-gray-300">{{ report.penutup || '-' }}</p>
-        </div>
-      </div>
-
       <div class="mt-6 overflow-x-auto">
         <table class="w-full min-w-[960px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
@@ -116,4 +89,3 @@ defineProps({
     </CardBox>
   </SectionMain>
 </template>
-
