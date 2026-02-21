@@ -21,6 +21,24 @@ const isKecamatanScope = computed(() => userScope.value === 'kecamatan')
 const hasRole = (role) => roles.value.includes(role)
 
 const isActive = (prefix) => page.url.startsWith(prefix)
+const isExternalItem = (item) => item.external === true
+const isItemActive = (item) => !isExternalItem(item) && isActive(item.href)
+const openExternal = (href) => {
+  window.open(href, '_blank', 'noopener,noreferrer')
+}
+
+const officialReferenceItems = [
+  {
+    href: 'https://pubhtml5.com/zsnqq/vjcf/basic/101-150',
+    label: 'Pedoman Domain Utama 101-150',
+    external: true,
+  },
+  {
+    href: 'https://pubhtml5.com/zsnqq/vjcf/basic/201-241',
+    label: 'Pedoman Lanjutan 201-241',
+    external: true,
+  },
+]
 
 const buildScopedMenuGroups = (scope) => [
   {
@@ -84,6 +102,12 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Manual Pilot Project (6.c)' },
     ],
   },
+  {
+    key: 'referensi',
+    label: 'Referensi',
+    code: 'REF',
+    items: officialReferenceItems,
+  },
 ]
 
 const desaMenuGroups = buildScopedMenuGroups('desa')
@@ -101,14 +125,28 @@ const kecamatanMenuGroups = [
 ]
 
 const buildGroupState = (groups) => groups.reduce((state, group) => {
-  state[group.key] = group.items.some((item) => isActive(item.href))
+  state[group.key] = group.items.some((item) => isItemActive(item))
   return state
 }, {})
 
 const desaGroupOpen = ref(buildGroupState(desaMenuGroups))
 const kecamatanGroupOpen = ref(buildGroupState(kecamatanMenuGroups))
 
-const isGroupActive = (group) => group.items.some((item) => isActive(item.href))
+const isGroupActive = (group) => group.items.some((item) => isItemActive(item))
+
+const openGroupPrimaryItem = (group) => {
+  const firstItem = group.items[0]
+  if (!firstItem) {
+    return
+  }
+
+  if (isExternalItem(firstItem)) {
+    openExternal(firstItem.href)
+    return
+  }
+
+  window.location.href = firstItem.href
+}
 
 const isGroupOpen = (scope, key) => {
   if (scope === 'desa') {
@@ -120,7 +158,7 @@ const isGroupOpen = (scope, key) => {
 
 const toggleGroup = (scope, group) => {
   if (sidebarCollapsed.value) {
-    window.location.href = group.items[0].href
+    openGroupPrimaryItem(group)
     return
   }
 
@@ -281,7 +319,9 @@ const hideBrokenImage = (event) => {
                     v-for="item in group.items"
                     :key="item.href"
                     :href="item.href"
-                    :class="isActive(item.href) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
+                    :target="isExternalItem(item) ? '_blank' : null"
+                    :rel="isExternalItem(item) ? 'noopener noreferrer' : null"
+                    :class="isItemActive(item) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
                     class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
                   >
                     {{ item.label }}
@@ -312,7 +352,9 @@ const hideBrokenImage = (event) => {
                     v-for="item in group.items"
                     :key="item.href"
                     :href="item.href"
-                    :class="isActive(item.href) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
+                    :target="isExternalItem(item) ? '_blank' : null"
+                    :rel="isExternalItem(item) ? 'noopener noreferrer' : null"
+                    :class="isItemActive(item) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
                     class="flex items-center gap-2 rounded-md px-3 py-2 text-sm"
                   >
                     {{ item.label }}

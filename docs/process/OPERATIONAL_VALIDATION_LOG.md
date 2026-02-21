@@ -226,3 +226,25 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk siklus refactor grouping sidebar by domain.
+
+## Siklus Sidebar Referensi Dokumen Baku: 2026-02-22
+
+Ruang lingkup:
+- Menambahkan grup menu `Referensi` pada sidebar domain (`desa` dan `kecamatan`).
+- Menyertakan link resmi dokumen baku:
+  - `https://pubhtml5.com/zsnqq/vjcf/basic/101-150`
+  - `https://pubhtml5.com/zsnqq/vjcf/basic/201-241`
+- Memastikan link eksternal aman dibuka pada tab baru dan tetap ergonomis saat sidebar collapsed.
+
+Artefak:
+- `resources/js/Layouts/DashboardLayout.vue`
+- `docs/process/SIDEBAR_DOMAIN_GROUPING_PLAN.md`
+
+Perintah validasi:
+- `npm run build`
+  - hasil: `PASS`.
+- `php artisan test`
+  - hasil: `446` tests pass (`1604` assertions).
+
+Status:
+- `PASS` untuk penambahan menu referensi dokumen baku.

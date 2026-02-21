@@ -51,6 +51,11 @@ Sumber acuan:
 - `pilot-project-naskah-pelaporan`
 - `pilot-project-keluarga-sehat`
 
+6. Referensi
+- Link eksternal dokumen baku:
+  - `https://pubhtml5.com/zsnqq/vjcf/basic/101-150`
+  - `https://pubhtml5.com/zsnqq/vjcf/basic/201-241`
+
 Catatan:
 - Untuk scope kecamatan, group `Monitoring Kecamatan` tetap dipertahankan (`desa-activities`).
 
@@ -62,7 +67,11 @@ Catatan:
 - active state berdasarkan prefix URL
 - collapse/expand sidebar tetap sama
 - policy/scope backend tetap jadi authority akses
-4. Validasi:
+4. Item referensi eksternal wajib:
+- dibuka tab baru (`target="_blank"`)
+- aman (`rel="noopener noreferrer"`)
+- saat sidebar collapsed dan grup dipilih, membuka link referensi pertama di tab baru
+5. Validasi:
 - `npm run build`
 - `php artisan test` (full suite)
 
