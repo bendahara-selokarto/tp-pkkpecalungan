@@ -89,7 +89,8 @@ const desaMenuGroups = [
     label: 'Pilot Project Pokja IV',
     code: 'PP4',
     items: [
-      { href: '/desa/pilot-project-keluarga-sehat', label: 'Laporan Pilot Project Keluarga Sehat' },
+      { href: '/desa/pilot-project-naskah-pelaporan', label: 'Naskah Pelaporan (220-221)' },
+      { href: '/desa/pilot-project-keluarga-sehat', label: '6.c Laporan Manual Pilot Project' },
     ],
   },
   {
@@ -173,7 +174,8 @@ const kecamatanMenuGroups = [
     label: 'Pilot Project Pokja IV',
     code: 'PP4',
     items: [
-      { href: '/kecamatan/pilot-project-keluarga-sehat', label: 'Laporan Pilot Project Keluarga Sehat' },
+      { href: '/kecamatan/pilot-project-naskah-pelaporan', label: 'Naskah Pelaporan (220-221)' },
+      { href: '/kecamatan/pilot-project-keluarga-sehat', label: '6.c Laporan Manual Pilot Project' },
     ],
   },
   {
@@ -454,5 +456,4 @@ const hideBrokenImage = (event) => {
     </div>
   </div>
 </template>
-
 

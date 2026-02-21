@@ -80,6 +80,9 @@ use App\Domains\Wilayah\ProgramPrioritas\Controllers\ProgramPrioritasPrintContro
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Controllers\DesaPilotProjectKeluargaSehatController;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Controllers\KecamatanPilotProjectKeluargaSehatController;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Controllers\PilotProjectKeluargaSehatPrintController;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Controllers\DesaPilotProjectNaskahPelaporanController;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Controllers\KecamatanPilotProjectNaskahPelaporanController;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Controllers\PilotProjectNaskahPelaporanPrintController;
 
 
 Route::get('/', function () {
@@ -142,6 +145,7 @@ Route::prefix('desa')
         Route::resource('simulasi-penyuluhan', DesaSimulasiPenyuluhanController::class);
         Route::resource('program-prioritas', DesaProgramPrioritasController::class);
         Route::resource('pilot-project-keluarga-sehat', DesaPilotProjectKeluargaSehatController::class);
+        Route::resource('pilot-project-naskah-pelaporan', DesaPilotProjectNaskahPelaporanController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printDesa'])->name('activities.print');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaReport'])->name('agenda-surat.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
@@ -170,6 +174,7 @@ Route::prefix('desa')
         Route::get('simulasi-penyuluhan/report/pdf', [SimulasiPenyuluhanPrintController::class, 'printDesaReport'])->name('simulasi-penyuluhan.report');
         Route::get('program-prioritas/report/pdf', [ProgramPrioritasPrintController::class, 'printDesaReport'])->name('program-prioritas.report');
         Route::get('pilot-project-keluarga-sehat/report/pdf', [PilotProjectKeluargaSehatPrintController::class, 'printDesaReport'])->name('pilot-project-keluarga-sehat.report');
+        Route::get('pilot-project-naskah-pelaporan/report/pdf', [PilotProjectNaskahPelaporanPrintController::class, 'printDesaReport'])->name('pilot-project-naskah-pelaporan.report');
     });
 
 Route::prefix('kecamatan')
@@ -203,6 +208,7 @@ Route::prefix('kecamatan')
         Route::resource('simulasi-penyuluhan', KecamatanSimulasiPenyuluhanController::class);
         Route::resource('program-prioritas', KecamatanProgramPrioritasController::class);
         Route::resource('pilot-project-keluarga-sehat', KecamatanPilotProjectKeluargaSehatController::class);
+        Route::resource('pilot-project-naskah-pelaporan', KecamatanPilotProjectNaskahPelaporanController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printKecamatan'])->name('activities.print');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanReport'])->name('agenda-surat.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
@@ -234,6 +240,7 @@ Route::prefix('kecamatan')
         Route::get('desa-activities/{id}/print', [ActivityPrintController::class, 'printKecamatanDesa'])->name('desa-activities.print');
         Route::get('program-prioritas/report/pdf', [ProgramPrioritasPrintController::class, 'printKecamatanReport'])->name('program-prioritas.report');
         Route::get('pilot-project-keluarga-sehat/report/pdf', [PilotProjectKeluargaSehatPrintController::class, 'printKecamatanReport'])->name('pilot-project-keluarga-sehat.report');
+        Route::get('pilot-project-naskah-pelaporan/report/pdf', [PilotProjectNaskahPelaporanPrintController::class, 'printKecamatanReport'])->name('pilot-project-naskah-pelaporan.report');
     });
 
 require __DIR__.'/auth.php';

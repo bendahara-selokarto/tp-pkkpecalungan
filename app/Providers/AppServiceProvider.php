@@ -78,6 +78,9 @@ use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanReposi
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Models\PilotProjectKeluargaSehatReport;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Repositories\PilotProjectKeluargaSehatRepository;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Repositories\PilotProjectKeluargaSehatRepositoryInterface;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanReport;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNaskahPelaporanRepository;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNaskahPelaporanRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepository;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Models\User;
@@ -106,6 +109,7 @@ use App\Policies\KejarPaketPolicy;
 use App\Policies\PosyanduPolicy;
 use App\Policies\SimulasiPenyuluhanPolicy;
 use App\Policies\PilotProjectKeluargaSehatPolicy;
+use App\Policies\PilotProjectNaskahPelaporanPolicy;
 use App\Policies\UserPolicy;
 use App\Repositories\SuperAdmin\UserManagementRepository;
 use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
@@ -256,6 +260,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            PilotProjectNaskahPelaporanRepositoryInterface::class,
+            PilotProjectNaskahPelaporanRepository::class
+        );
+
+        $this->app->bind(
             UserManagementRepositoryInterface::class,
             UserManagementRepository::class
         );
@@ -297,6 +306,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Posyandu::class, PosyanduPolicy::class);
         Gate::policy(SimulasiPenyuluhan::class, SimulasiPenyuluhanPolicy::class);
         Gate::policy(PilotProjectKeluargaSehatReport::class, PilotProjectKeluargaSehatPolicy::class);
+        Gate::policy(PilotProjectNaskahPelaporanReport::class, PilotProjectNaskahPelaporanPolicy::class);
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin') ? true : null;
