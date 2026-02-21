@@ -3,6 +3,7 @@ import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiEmailFastOutline } from '@mdi/js'
 import { ref } from 'vue'
@@ -42,8 +43,7 @@ const cancelDelete = () => {
 }
 
 const formatDate = (value) => {
-  if (!value) return '-'
-  return value
+  return formatDateForDisplay(value)
 }
 </script>
 
