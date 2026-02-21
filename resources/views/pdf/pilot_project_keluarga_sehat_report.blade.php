@@ -188,6 +188,7 @@
                                 $indicatorCode = (string) data_get($indicator, 'code', '');
                                 $indicatorLabel = (string) data_get($indicator, 'label', $indicatorCode);
                                 $evaluationText = '-';
+                                $keteranganText = '-';
                             @endphp
                             <tr>
                                 <td class="center">{{ $indicatorNo++ }}</td>
@@ -198,9 +199,13 @@
                                             $key = implode('|', [$storageSection, $clusterCode, $indicatorCode, $year, $semester]);
                                             $found = $valueMap->get($key);
                                             $nilai = data_get($found, 'value');
-                                            $catatan = data_get($found, 'evaluation_note');
-                                            if (is_string($catatan) && trim($catatan) !== '') {
-                                                $evaluationText = trim($catatan);
+                                            $evaluasi = data_get($found, 'evaluation_note');
+                                            $keterangan = data_get($found, 'keterangan_note');
+                                            if (is_string($evaluasi) && trim($evaluasi) !== '') {
+                                                $evaluationText = trim($evaluasi);
+                                            }
+                                            if (is_string($keterangan) && trim($keterangan) !== '') {
+                                                $keteranganText = trim($keterangan);
                                             }
                                         @endphp
                                         <td class="center">{{ is_numeric($nilai) ? (int) $nilai : '-' }}</td>
@@ -208,7 +213,7 @@
                                 @endforeach
                                 <td>{{ $evaluationText }}</td>
                                 @if ($hasKeteranganColumn)
-                                    <td>{{ $evaluationText }}</td>
+                                    <td>{{ $keteranganText }}</td>
                                 @endif
                             </tr>
                         @endforeach

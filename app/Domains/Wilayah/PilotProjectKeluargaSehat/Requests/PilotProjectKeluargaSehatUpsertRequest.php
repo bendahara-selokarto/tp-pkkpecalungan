@@ -32,6 +32,7 @@ abstract class PilotProjectKeluargaSehatUpsertRequest extends FormRequest
             'values.*.semester' => 'required|integer|in:1,2',
             'values.*.value' => 'required|integer|min:0',
             'values.*.evaluation_note' => 'nullable|string',
+            'values.*.keterangan_note' => 'nullable|string',
             'values.*.sort_order' => 'nullable|integer|min:0',
         ];
     }
@@ -55,6 +56,7 @@ abstract class PilotProjectKeluargaSehatUpsertRequest extends FormRequest
                     'semester' => $this->normalizeSemester($item['semester'] ?? 1),
                     'value' => is_numeric($item['value'] ?? null) ? (int) $item['value'] : $item['value'] ?? null,
                     'evaluation_note' => $this->normalizeTextOrNull($item['evaluation_note'] ?? null),
+                    'keterangan_note' => $this->normalizeTextOrNull($item['keterangan_note'] ?? null),
                     'sort_order' => is_numeric($item['sort_order'] ?? null) ? (int) $item['sort_order'] : null,
                 ];
             })

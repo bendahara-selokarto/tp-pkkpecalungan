@@ -146,9 +146,9 @@ class DesaPilotProjectKeluargaSehatController extends Controller
                     'semester' => $value->semester,
                     'value' => $value->value,
                     'evaluation_note' => $value->evaluation_note,
+                    'keterangan_note' => $value->keterangan_note,
                     'sort_order' => $value->sort_order,
                 ]),
         ];
     }
 }
-

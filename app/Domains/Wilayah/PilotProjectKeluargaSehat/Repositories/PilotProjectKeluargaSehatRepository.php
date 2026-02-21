@@ -81,6 +81,7 @@ class PilotProjectKeluargaSehatRepository implements PilotProjectKeluargaSehatRe
                         'semester' => (int) ($item['semester'] ?? 1),
                         'value' => (int) ($item['value'] ?? 0),
                         'evaluation_note' => $item['evaluation_note'] ?? null,
+                        'keterangan_note' => $item['keterangan_note'] ?? null,
                         'sort_order' => (int) ($item['sort_order'] ?? 0),
                         'level' => $level,
                         'area_id' => $areaId,
@@ -106,4 +107,3 @@ class PilotProjectKeluargaSehatRepository implements PilotProjectKeluargaSehatRe
         $report->delete();
     }
 }
-

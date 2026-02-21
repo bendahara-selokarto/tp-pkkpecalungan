@@ -74,6 +74,7 @@ class DesaPilotProjectKeluargaSehatTest extends TestCase
                     'semester' => 'I',
                     'value' => 120,
                     'evaluation_note' => 'Baseline',
+                    'keterangan_note' => 'Data sumber BPS',
                     'sort_order' => 1,
                 ],
             ],
@@ -95,6 +96,8 @@ class DesaPilotProjectKeluargaSehatTest extends TestCase
             'cluster_code' => 'SUPPORT',
             'semester' => 1,
             'value' => 120,
+            'evaluation_note' => 'Baseline',
+            'keterangan_note' => 'Data sumber BPS',
         ]);
 
         $this->actingAs($adminDesa)->put(route('desa.pilot-project-keluarga-sehat.update', $report->id), [
@@ -117,6 +120,7 @@ class DesaPilotProjectKeluargaSehatTest extends TestCase
                     'semester' => 'II',
                     'value' => 145,
                     'evaluation_note' => 'Semester dua',
+                    'keterangan_note' => 'Update semester dua',
                     'sort_order' => 1,
                 ],
             ],
@@ -127,6 +131,8 @@ class DesaPilotProjectKeluargaSehatTest extends TestCase
             'indicator_code' => 'jumlah_penduduk',
             'semester' => 2,
             'value' => 145,
+            'evaluation_note' => 'Semester dua',
+            'keterangan_note' => 'Update semester dua',
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.pilot-project-keluarga-sehat.destroy', $report->id))

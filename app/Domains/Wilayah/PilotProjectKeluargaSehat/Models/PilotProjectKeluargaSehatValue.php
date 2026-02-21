@@ -21,6 +21,7 @@ class PilotProjectKeluargaSehatValue extends Model
         'semester',
         'value',
         'evaluation_note',
+        'keterangan_note',
         'sort_order',
         'level',
         'area_id',
@@ -52,4 +53,3 @@ class PilotProjectKeluargaSehatValue extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-
