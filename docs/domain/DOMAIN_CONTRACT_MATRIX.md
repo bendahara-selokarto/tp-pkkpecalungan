@@ -57,7 +57,7 @@ Aturan baca:
 - Catatan keluarga rekap source:
   - `app/Domains/Wilayah/CatatanKeluarga/Repositories/CatatanKeluargaRepository.php`
 - Ekstensi pilot project source:
-  - `PEDOMAN_DOMAIN_UTAMA_202_211.md`
+  - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
 
 ## Mapping Sidebar by Domain (Sekretaris TPK + Pokja I-IV)
 

@@ -66,4 +66,4 @@ Tujuan:
   - `resources/views/pdf/kejar_paket_report.blade.php`
   - `resources/views/pdf/posyandu_report.blade.php`
 - Ekstensi pedoman:
-  - `PEDOMAN_DOMAIN_UTAMA_202_211.md`
+  - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`

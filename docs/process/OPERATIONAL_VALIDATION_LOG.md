@@ -159,7 +159,7 @@ Ruang lingkup:
 - Eksekusi `F1` (kontrak domain + terminology map), `F2` (data layer scaffold), `F3` (authorization + scope), dan `F4` (use case/action).
 
 Artefak:
-- `PEDOMAN_DOMAIN_UTAMA_202_211.md`
+- `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 - `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
 - `database/migrations/2026_02_22_010000_create_pilot_project_keluarga_sehat_reports_table.php`

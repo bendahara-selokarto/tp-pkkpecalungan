@@ -3,7 +3,7 @@
 Sumber validasi:
 - `d:\Buku kegiatan sekretaris (1).pdf` (66 halaman)
 
-## Ringkasan hasil tahap 3
+## Ringkasan validasi utama
 
 1. `LAMPIRAN 4.9a` (hal. 1-2) - **Buku Daftar Anggota Tim Penggerak PKK**
 - Status: `match` dengan modul `anggota-tim-penggerak`.
@@ -30,7 +30,7 @@ Sumber validasi:
 - Status: `match` untuk kolom inti.
 - File report: `resources/views/pdf/simulasi_penyuluhan_report.blade.php`.
 
-## Update tahap 4 (istilah/header antar level)
+## Update istilah/header antar level
 
 - Status: `selesai` untuk report sekretaris utama.
 - Penyesuaian:
@@ -46,7 +46,7 @@ Sumber validasi:
   - `resources/views/pdf/inventaris_report.blade.php`
   - `resources/views/pdf/activity.blade.php`
 
-## Item yang belum tercover penuh (lebih asumtif)
+## Item yang belum tervalidasi penuh (berisiko asumsi)
 
 1. `LAMPIRAN 4.11` (hal. 7-8) - Buku Tabungan/Keuangan.
 - Status terbaru: `implemented` sebagai report turunan domain `bantuans` (tanpa tabel/domain baru).

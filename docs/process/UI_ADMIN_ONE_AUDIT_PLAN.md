@@ -5,7 +5,11 @@ Tujuan:
 - Menghilangkan alert inline yang tidak memakai template `admin-one`.
 - Menurunkan duplikasi style dan memperkecil drift visual lintas halaman.
 
-Status eksekusi awal (2026-02-20):
+Status dokumen:
+- Arsip rencana + baseline implementasi.
+- Operasional harian gunakan `docs/process/UI_CONSISTENCY_GATE.md`.
+
+Status eksekusi terbaru (baseline 2026-02-20):
 - `U1` selesai (inventory awal + delta batch 1): `docs/ui/UI_ALERT_INVENTORY.md`.
 - `U2` selesai (kontrak komponen feedback): `FlashMessageBar` berbasis `NotificationBar`.
 - `U3` selesai (integrasi global layout): `DashboardLayout` sudah merender flash global.
@@ -15,9 +19,9 @@ Status eksekusi awal (2026-02-20):
 - `U7` selesai (regression guard): command audit menghasilkan `0` untuk pattern utama.
 - `U8` selesai (change gate): checklist operasional ditulis di `docs/process/UI_CONSISTENCY_GATE.md`.
 
-## 1) Temuan Baseline (Audit Cepat)
+## 1) Temuan Baseline Historis (Saat Audit Dimulai)
 
-Temuan awal pada codebase saat ini:
+Temuan awal pada codebase saat audit dimulai:
 - Pattern `flashSuccess|flashError` ditemukan luas di halaman `resources/js/Pages/*` (indikasi alert dibuat manual per halaman).
 - Pemakaian `NotificationBar` pada folder `resources/js/Pages` belum ada.
 - Masih ada penggunaan native browser dialog (`alert/confirm`) pada sebagian flow aksi.

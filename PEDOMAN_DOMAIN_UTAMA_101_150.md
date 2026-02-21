@@ -193,4 +193,4 @@ Rujukan rencana:
 ## Lanjutan Pedoman Domain
 
 - Analisis dan rencana implementasi untuk rentang halaman `202-211` tersedia di:
-  - `PEDOMAN_DOMAIN_UTAMA_202_211.md`
+  - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`

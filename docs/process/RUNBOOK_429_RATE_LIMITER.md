@@ -1,4 +1,4 @@
-# RUNBOOK_429_RATE_LIMITER.md
+# Runbook 429 Rate Limiter
 
 Dokumen ini adalah prosedur cepat saat terjadi lonjakan `429 Too Many Requests`.
 

@@ -1,0 +1,40 @@
+# Dokumentasi Proyek
+
+Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
+
+## Root (Dokumen Inti)
+- `AGENTS.md`: kontrak eksekusi AI dan aturan teknis utama.
+- `README.md`: panduan manusia untuk penggunaan dan pengembangan.
+- `PEDOMAN_DOMAIN_UTAMA_101_150.md`: ringkasan sinkronisasi pedoman domain utama (canonical lokal).
+
+## docs/domain
+- Kontrak domain, deviasi, normalisasi istilah, dan pedoman domain ekstensi.
+- File utama:
+  - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+  - `docs/domain/DOMAIN_DEVIATION_LOG.md`
+  - `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
+  - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
+
+## docs/pdf
+- Checklist dan validasi format output PDF.
+- File utama:
+  - `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`
+  - `docs/pdf/VALIDASI_FORMAT_BUKU_SEKRETARIS_PDF.md`
+
+## docs/process
+- Runbook, rencana eksekusi, gate operasional, dan log validasi.
+- File utama:
+  - `docs/process/RUNBOOK_429_RATE_LIMITER.md`
+  - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
+  - `docs/process/RELEASE_CHECKLIST_PDF.md`
+
+## docs/security
+- Audit policy/scope dan checklist regresi akses.
+
+## docs/ui
+- Inventaris dan audit konsistensi UI.
+
+## Konvensi Nama File
+- Gunakan pola `UPPER_SNAKE_CASE` untuk dokumen proses/kontrak/checklist.
+- Gunakan `README.md` untuk index folder.
+- Hindari membuat dokumen operasional baru di root project; tempatkan di `docs/<concern>/`.

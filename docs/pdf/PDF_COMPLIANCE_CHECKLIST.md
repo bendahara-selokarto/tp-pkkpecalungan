@@ -6,7 +6,7 @@ Tujuan:
 
 Sumber acuan:
 - Pedoman domain utama: https://pubhtml5.com/zsnqq/vjcf/basic/101-150
-- Validasi awal format: `VALIDASI_FORMAT_BUKU_SEKRETARIS_PDF.md`
+- Validasi awal format: `docs/pdf/VALIDASI_FORMAT_BUKU_SEKRETARIS_PDF.md`
 - Kontrak domain: `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 
 ## A. Checklist Global (Wajib untuk semua modul)

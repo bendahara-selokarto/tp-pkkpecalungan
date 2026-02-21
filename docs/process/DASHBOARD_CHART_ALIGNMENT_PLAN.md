@@ -3,6 +3,10 @@
 Tujuan:
 - Menyelaraskan dashboard agar merepresentasikan cakupan dokumen pedoman domain 4.9a-4.15, bukan hanya domain `activities`.
 
+Status dokumen:
+- Arsip rencana implementasi dashboard coverage lintas domain.
+- Operasional validasi lanjutan dicatat di `docs/process/OPERATIONAL_VALIDATION_LOG.md`.
+
 Status eksekusi (2026-02-20):
 - `D1` selesai: kontrak backend `UseCase + Repository` sudah aktif.
 - `D2` selesai: dashboard sudah menampilkan KPI dokumen + chart coverage.
@@ -10,16 +14,16 @@ Status eksekusi (2026-02-20):
 - `D4` selesai: unit test agregasi per modul/lampiran sudah ditambahkan.
 - `D5` selesai: cache TTL pendek per `scope:area` diterapkan pada use case dashboard dokumen.
 
-## 1) Analisa Kondisi Saat Ini
+## 1) Analisa Kondisi Awal (Historis)
 
-Temuan utama:
+Temuan utama saat audit dimulai:
 - Backend dashboard saat ini hanya menarik data dari `activities` melalui `DashboardActivityChartService`.
   - Referensi: `app/Services/DashboardActivityChartService.php`
-- Frontend dashboard belum merender komponen chart; saat ini hanya menampilkan 4 widget angka.
+- Frontend dashboard pada saat audit belum merender komponen chart; saat itu hanya menampilkan 4 widget angka.
   - Referensi: `resources/js/Pages/Dashboard.vue`
-- Akibatnya, dashboard tidak mewakili isi buku sekretaris secara keseluruhan (lampiran 4.9a-4.15).
+- Akibat kondisi awal tersebut, dashboard belum mewakili isi buku sekretaris secara keseluruhan (lampiran 4.9a-4.15).
 
-Gap terhadap pedoman:
+Gap terhadap pedoman pada kondisi awal:
 - Pedoman sudah mencakup banyak domain buku (anggota, surat, inventaris, keuangan, data warga, dst).
 - Dashboard belum memberi visibilitas lintas domain (coverage per buku, buku kosong, progres input per lampiran).
 
