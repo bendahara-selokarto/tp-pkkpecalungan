@@ -39,7 +39,7 @@ Legacy tables (compatibility only):
 
 ## 2. Hard Invariants
 
-- Fitur baru tidak boleh menambah dependency ke tabel legacy.
+- `areas` tetap single source of truth wilayah.
 - Data domain wilayah wajib punya `level`, `area_id`, `created_by`.
 - `level` data harus konsisten dengan `areas.level`.
 - `role`, `scope`, `area_id` user harus konsisten.
@@ -72,7 +72,7 @@ Legacy tables (compatibility only):
 ## 6. Quality Gate Before Finish
 
 - Scope authorization tetap aman.
-- Tidak ada bypass baru ke legacy table.
+- Jika ada upgrade/migrasi legacy, wajib ada mapping dampak + fallback plan.
 - Tidak ada coupling baru yang tidak perlu.
 - Tidak ada drift `role` vs `scope` vs `areas.level`.
 - Test relevan lulus (`php artisan test` untuk perubahan signifikan).
@@ -120,3 +120,31 @@ Untuk modul/menu baru, minimal harus ada:
 - Jika ditemukan jalur baru yang lebih efisien/akurat/valid, update playbook tersebut pada sesi yang sama.
 - Jika pattern lama sudah kurang efektif, ubah status pattern (mis. `deprecated`) dan tulis alternatifnya.
 - Jangan simpan pattern penting hanya di chat; wajib masuk dokumen agar bisa dipakai project berikutnya.
+
+## 11. Temporary Pre-Release Upgrade Policy (Aktif)
+
+Status saat ini:
+- Aplikasi belum release; reset data development diperbolehkan.
+- AI boleh melakukan upgrade/refactor dependency legacy secara terkontrol.
+
+Aturan eksekusi:
+- `php artisan migrate:fresh` diperbolehkan untuk pekerjaan refactor struktur data.
+- Saat memakai `migrate:fresh`, laporkan eksplisit bahwa seluruh data lokal ter-reset.
+- Upgrade legacy wajib mengarah ke pengurangan coupling ke tabel legacy, bukan menambah debt baru.
+- Setiap perubahan legacy wajib menyertakan:
+  1) tujuan migrasi,
+  2) area terdampak (route/request/use case/repository/test),
+  3) rollback/fallback plan minimal level teknis.
+
+Guardrail tetap:
+- Otorisasi backend tidak boleh melemah.
+- `areas` tetap canonical wilayah.
+- Konsistensi `role` vs `scope` vs `areas.level` tidak boleh drift.
+
+## 12. Markdown Documentation Rules (Upgrade)
+
+Aturan markdown operasional:
+- Semua rencana aksi lintas-file wajib dibuat dalam dokumen TODO terpisah di `docs/process/`.
+- Gunakan format checklist `- [ ]` untuk task dan `- [x]` untuk task selesai.
+- Setiap TODO wajib memuat: konteks, target hasil, langkah eksekusi, validasi, risiko, keputusan.
+- Setiap update dokumen harus ringkas, diff-first, dan hindari pengulangan konteks yang sama.

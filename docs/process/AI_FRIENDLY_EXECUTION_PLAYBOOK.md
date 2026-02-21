@@ -42,6 +42,7 @@ Gunakan status:
 | `P-005` | Docs Ref Path Normalization | Refactor dokumentasi | Link putus = 0 | Script cek referensi markdown | `active` |
 | `P-006` | New Menu -> Dashboard Trigger Audit | Ada menu/domain baru | Dashboard tetap representatif dan tidak drift | `DashboardDocumentCoverageTest` (+ `DashboardActivityChartTest` jika kontrak berubah) | `active` |
 | `P-007` | Canonical Date Input UI | Form menambah field tanggal | Format UI konsisten dan payload backend stabil | Cek `type="date"` + submit payload `YYYY-MM-DD` | `active` |
+| `P-008` | Pre-Release Legacy Upgrade Track | Refactor masih menyentuh legacy | Coupling legacy turun tanpa mengorbankan keamanan scope | Validasi mapping dampak + `php artisan migrate:fresh` + test relevan | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -117,3 +118,28 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Tampilan visual date picker dapat sedikit berbeda antar browser/OS, tetapi format payload tetap konsisten.
 - Catatan reuse lintas domain/project:
   - Gunakan pola ini sebagai default semua field tanggal baru, kecuali ada kebutuhan eksplisit format lain dari kontrak domain.
+
+### P-008 - Pre-Release Legacy Upgrade Track
+- Tanggal: 2026-02-21
+- Status: active
+- Konteks: Aplikasi masih pre-release dan diizinkan reset data development untuk percepatan upgrade legacy.
+- Trigger: Refactor yang mengubah kontrak data lama/legacy atau merapikan boundary repository dari dependency legacy.
+- Langkah eksekusi:
+  1) Petakan coupling legacy saat ini (request, controller, action, repository, tests).
+  2) Terapkan patch migrasi/refactor terkontrol dengan target pengurangan dependency legacy.
+  3) Jika perlu reset struktur data, jalankan `php artisan migrate:fresh`.
+  4) Validasi regresi area terdampak dengan test relevan.
+- Guardrail:
+  - Tetap pertahankan otorisasi backend.
+  - `areas` tetap canonical wilayah.
+  - Tidak boleh menambah debt legacy baru tanpa justifikasi tertulis.
+- Validasi minimum:
+  - Dokumen dampak dan fallback tersedia.
+  - Hasil `migrate:fresh` berhasil.
+  - Test relevan area terdampak lulus.
+- Bukti efisiensi/akurasi:
+  - Cocok untuk fase pre-release ketika perubahan struktur data masih aktif dan cepat berubah.
+- Risiko:
+  - Kehilangan data lokal development setelah `migrate:fresh`.
+- Catatan reuse lintas domain/project:
+  - Terapkan hanya untuk fase pre-release atau environment non-produksi.
