@@ -22,6 +22,7 @@ Dokumen referensi:
 - [ ] `docs/security/AUTH_COHERENCE_MATRIX.md` diperbarui (jika auth/scope berubah).
 - [ ] `docs/security/REGRESSION_CHECKLIST_AUTH_SCOPE.md` diperbarui (jika auth/scope berubah).
 - [ ] `docs/domain/DOMAIN_DEVIATION_LOG.md` diperbarui (jika ada deviasi baru).
+- [ ] `AGENTS.md` / `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md` / `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md` diperbarui jika ada perubahan canonical.
 
 ## Validation Evidence
 

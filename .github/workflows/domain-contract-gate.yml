@@ -50,6 +50,20 @@ jobs:
               - 'app/Http/Middleware/EnsureScopeRole.php'
               - 'app/Support/RoleScopeMatrix.php'
               - 'app/Domains/Wilayah/Services/UserAreaContextService.php'
+            canonical_signal:
+              - 'database/migrations/**'
+              - 'routes/web.php'
+              - 'resources/views/pdf/**'
+              - 'resources/js/Layouts/DashboardLayout.vue'
+              - 'app/**/Models/**'
+              - 'app/**/Repositories/**'
+              - 'app/**/UseCases/**'
+              - 'app/**/Requests/**'
+              - 'app/Policies/**'
+              - 'app/Http/Middleware/EnsureScopeRole.php'
+              - 'app/Support/RoleScopeMatrix.php'
+              - 'app/Domains/Wilayah/Services/UserAreaContextService.php'
+              - 'app/Http/Requests/Concerns/ParsesUiDate.php'
             domain_matrix_updated:
               - 'docs/domain/DOMAIN_CONTRACT_MATRIX.md'
             pdf_compliance_updated:
@@ -59,6 +73,10 @@ jobs:
             auth_docs_updated:
               - 'docs/security/AUTH_COHERENCE_MATRIX.md'
               - 'docs/security/REGRESSION_CHECKLIST_AUTH_SCOPE.md'
+            canonical_arch_docs_updated:
+              - 'AGENTS.md'
+              - 'docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md'
+              - 'docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md'
 
       - name: Enforce mandatory docs updates
         shell: bash
@@ -80,6 +98,11 @@ jobs:
 
           if [[ "${{ steps.changes.outputs.auth_scope }}" == "true" && "${{ steps.changes.outputs.auth_docs_updated }}" != "true" ]]; then
             echo "::error::Auth/scope contract changed but security checklist docs were not updated."
+            exit 1
+          fi
+
+          if [[ "${{ steps.changes.outputs.canonical_signal }}" == "true" && "${{ steps.changes.outputs.canonical_arch_docs_updated }}" != "true" ]]; then
+            echo "::error::Canonical signal changed but architecture markdown was not updated (AGENTS.md / playbook / terminology map)."
             exit 1
           fi
 

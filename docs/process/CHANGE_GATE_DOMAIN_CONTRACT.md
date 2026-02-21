@@ -17,6 +17,7 @@ Gate ini wajib dijalankan jika PR mengubah salah satu:
 - Route name/path report (`*.report`, `*.print`) atau middleware `scope.role`.
 - Policy/scope service yang mempengaruhi akses `view/create/update/delete/print`.
 - Penambahan menu/domain baru atau perubahan struktur sidebar yang mempengaruhi cakupan dokumen.
+- Request normalisasi/validasi canonical (contoh parser tanggal canonical) yang mempengaruhi kontrak input lintas modul.
 
 ## 2) Artefak Wajib di PR
 
@@ -28,6 +29,10 @@ Jika trigger aktif, PR wajib mengandung:
 - Update checklist auth-scope jika ada perubahan akses:
   - `docs/security/AUTH_COHERENCE_MATRIX.md`
   - `docs/security/REGRESSION_CHECKLIST_AUTH_SCOPE.md`
+- Update markdown arsitektur pribadi saat ada sinyal canonical:
+  - `AGENTS.md` atau
+  - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md` atau
+  - `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
 - Hasil audit dashboard untuk menu/domain baru:
   - Apakah menu baru sudah terwakili di KPI/chart dashboard.
   - Jika belum relevan ditampilkan, sertakan justifikasi teknis yang eksplisit.
@@ -60,6 +65,7 @@ PR `BLOCKED` jika salah satu kondisi berikut terjadi:
 - Trigger aktif, tetapi `DOMAIN_CONTRACT_MATRIX` tidak diperbarui.
 - Trigger aktif, tetapi test gate wajib tidak dijalankan atau gagal.
 - Ada mismatch pedoman vs output PDF tanpa catatan deviasi.
+- Trigger sinyal canonical aktif, tetapi tidak ada update markdown arsitektur pribadi (`AGENTS.md`/playbook/terminology map).
 
 PR `PASS` jika:
 - Artefak wajib lengkap.

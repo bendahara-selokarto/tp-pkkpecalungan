@@ -148,3 +148,4 @@ Aturan markdown operasional:
 - Gunakan format checklist `- [ ]` untuk task dan `- [x]` untuk task selesai.
 - Setiap TODO wajib memuat: konteks, target hasil, langkah eksekusi, validasi, risiko, keputusan.
 - Setiap update dokumen harus ringkas, diff-first, dan hindari pengulangan konteks yang sama.
+- Perubahan dengan sinyal canonical wajib mengupdate minimal satu markdown arsitektur (`AGENTS.md` / playbook / terminology map) dan diverifikasi oleh CI gate.
