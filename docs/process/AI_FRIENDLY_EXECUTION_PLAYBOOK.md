@@ -41,6 +41,7 @@ Gunakan status:
 | `P-004` | Targeted Test Before Full Suite | Perubahan terlokalisir | Feedback lebih cepat | L1 targeted, L3 jika signifikan | `active` |
 | `P-005` | Docs Ref Path Normalization | Refactor dokumentasi | Link putus = 0 | Script cek referensi markdown | `active` |
 | `P-006` | New Menu -> Dashboard Trigger Audit | Ada menu/domain baru | Dashboard tetap representatif dan tidak drift | `DashboardDocumentCoverageTest` (+ `DashboardActivityChartTest` jika kontrak berubah) | `active` |
+| `P-007` | Canonical Date Input UI | Form menambah field tanggal | Format UI konsisten dan payload backend stabil | Cek `type="date"` + submit payload `YYYY-MM-DD` | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -91,3 +92,28 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
 - Setiap menemukan jalur baru yang lebih efisien: update registry + protocol.
 - Setiap menemukan jalur lama tidak efektif: ubah status ke `deprecated` dan beri alternatif.
 - Jangan simpan pattern hanya di chat; wajib masuk dokumen agar reusable.
+
+## 7) Detail Pattern Tanggal
+
+### P-007 - Canonical Date Input UI
+- Tanggal: 2026-02-21
+- Status: active
+- Konteks: Standardisasi field tanggal lintas form Inertia + Vue agar konsisten di UI dan backend.
+- Trigger: Menambah atau mengubah field tanggal pada form.
+- Langkah eksekusi:
+  1) Gunakan `input` dengan `type="date"` pada komponen Vue.
+  2) Ikat nilai field dengan `v-model` ke properti form.
+  3) Pertahankan nilai submit dalam format canonical `YYYY-MM-DD`.
+- Guardrail:
+  - Jangan ubah ke format teks bebas di frontend.
+  - Hindari parsing manual tanggal di komponen jika tidak diperlukan.
+  - Validasi backend tetap source of truth untuk format tanggal.
+- Validasi minimum:
+  - Verifikasi field tanggal tampil sebagai date picker native browser.
+  - Verifikasi payload submit mengirim string tanggal canonical (`YYYY-MM-DD`).
+- Bukti efisiensi/akurasi:
+  - Sudah dipakai di `resources/js/admin-one/components/DataWargaAnggotaTable.vue` pada field `tanggal_lahir`.
+- Risiko:
+  - Tampilan visual date picker dapat sedikit berbeda antar browser/OS, tetapi format payload tetap konsisten.
+- Catatan reuse lintas domain/project:
+  - Gunakan pola ini sebagai default semua field tanggal baru, kecuali ada kebutuhan eksplisit format lain dari kontrak domain.
