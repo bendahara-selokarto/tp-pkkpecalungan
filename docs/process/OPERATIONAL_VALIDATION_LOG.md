@@ -203,7 +203,7 @@ Perintah validasi:
 Status:
 - `PASS` untuk tahap implementasi F5-F9.
 
-## Siklus Sidebar Grouping by Domain (Sekretaris TPK + Pokja I-IV): 2026-02-22
+## Siklus Sidebar Grouping by Domain (Sekretaris TPK + Pokja I-IV): 2026-02-21
 
 Ruang lingkup:
 - Refactor pengelompokan menu domain pada sidebar:
@@ -227,7 +227,7 @@ Perintah validasi:
 Status:
 - `PASS` untuk siklus refactor grouping sidebar by domain.
 
-## Siklus Sidebar Referensi Dokumen Baku: 2026-02-22
+## Siklus Sidebar Referensi Dokumen Baku: 2026-02-21
 
 Ruang lingkup:
 - Menambahkan grup menu `Referensi` pada sidebar domain (`desa` dan `kecamatan`).
@@ -248,3 +248,36 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk penambahan menu referensi dokumen baku.
+
+## Siklus Eksekusi Pending Checklist Markdown: 2026-02-21
+
+Ruang lingkup:
+- Menutup item `pending` yang dapat dieksekusi otomatis pada checklist `security/process/pdf`.
+- Memperbarui bukti validasi ke hasil command terbaru.
+
+Perintah validasi:
+- `php artisan route:list --name=report`
+  - hasil: `56` route report.
+- `php artisan test --filter=scope_metadata_tidak_sinkron`
+  - hasil: `27` test pass (`48` assertions).
+- `php artisan test --filter=role_dan_level_area_tidak_sinkron`
+  - hasil: `1` test pass (`1` assertion).
+- `php artisan test --filter=role_kecamatan_tetapi_area_level_desa`
+  - hasil: `20` test pass (`41` assertions).
+- `php artisan test --filter=PdfBaselineFixtureComplianceTest`
+  - hasil: `20` test pass (`484` assertions).
+- `php artisan test --filter=header_kolom_pdf`
+  - hasil: `8` test pass (`52` assertions).
+- `php artisan test --filter=ReportPrintTest`
+  - hasil: `89` test pass (`239` assertions).
+
+Artefak terdampak:
+- `docs/security/REGRESSION_CHECKLIST_AUTH_SCOPE.md`
+- `docs/process/CHANGE_GATE_DOMAIN_CONTRACT.md`
+- `docs/process/RELEASE_CHECKLIST_PDF.md`
+- `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`
+- `docs/domain/DOMAIN_DEVIATION_LOG.md`
+
+Status:
+- `PASS` untuk semua gate otomatis.
+- Catatan blocker tersisa: `DV-003` (`4.14.5`) tetap `open` karena sumber canonical belum tersedia.

@@ -51,7 +51,7 @@ Hasil audit ulang:
 Delta:
 - `FLASH_FILES`: turun `47 -> 38` (`-9`).
 - `INLINE_FLASH_BLOCK_FILES`: turun `49 -> 40` (`-9`).
-- `CONFIRM_FILES`: belum turun (belum masuk scope migrasi modal konfirmasi).
+- `CONFIRM_FILES`: pada batch 1 belum turun (migrasi modal konfirmasi belum masuk scope batch 1).
 
 ## 4) Sisa Inventaris (Ringkas)
 

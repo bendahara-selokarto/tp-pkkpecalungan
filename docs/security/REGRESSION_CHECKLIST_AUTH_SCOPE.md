@@ -21,6 +21,9 @@ Catatan:
 
 ## 2) Checklist Eksekusi Review
 
+Catatan:
+- Checklist ini adalah template eksekusi per perubahan; gunakan section "Eksekusi Terbaru" untuk status run terakhir.
+
 - [ ] Cek route report tetap berada di scope middleware:
   - Jalankan `php artisan route:list --name=report`
 - [ ] Jalankan regression stale metadata route report:
@@ -31,13 +34,27 @@ Catatan:
 - [ ] Pastikan hasil skenario `A1` dan `A2` sesuai ekspektasi (`403` atau scope netral tanpa data bocor).
 - [ ] Jika ada deviasi, catat ke `docs/domain/DOMAIN_DEVIATION_LOG.md` sebelum merge.
 
-## 3) Bukti Validasi T8
+## 3) Eksekusi Terbaru (2026-02-21)
+
+- [x] Cek route report tetap berada di scope middleware.
+- [x] Jalankan regression stale metadata route report.
+- [x] Jalankan regression mismatch role-level area.
+- [x] Hasil skenario `A1` dan `A2` sesuai ekspektasi (`403`/scope netral tanpa data bocor).
+- [x] Tidak ada deviasi baru; `docs/domain/DOMAIN_DEVIATION_LOG.md` tetap konsisten.
+
+Ringkasan hasil:
+- `php artisan route:list --name=report` -> `56` route report.
+- `php artisan test --filter=scope_metadata_tidak_sinkron` -> `27` test pass.
+- `php artisan test --filter=role_dan_level_area_tidak_sinkron` -> `1` test pass.
+- `php artisan test --filter=role_kecamatan_tetapi_area_level_desa` -> `20` test pass.
+
+## 4) Bukti Validasi T8
 
 Perintah yang dijalankan:
 - `php artisan route:list --name=report`
-  - hasil: `52` route report terdaftar (desa + kecamatan).
+  - hasil terbaru: `56` route report terdaftar (desa + kecamatan).
 - `php artisan test --filter=scope_metadata_tidak_sinkron`
-  - hasil: `25` test pass.
+  - hasil terbaru: `27` test pass.
 - `php artisan test --filter=role_dan_level_area_tidak_sinkron`
   - hasil: `1` test pass.
 - `php artisan test --filter=role_kecamatan_tetapi_area_level_desa`

@@ -35,6 +35,10 @@ Untuk setiap modul yang berubah di release ini:
 
 ## 3) Form Checklist Rilis
 
+Catatan:
+- Form ini adalah template release-gate per siklus rilis.
+- Status run terakhir lihat section "Snapshot Eksekusi".
+
 - [ ] Semua route report masih terdaftar normal (`route:list --name=report`).
 - [ ] Test scoped auth hijau (`scope_metadata_tidak_sinkron`).
 - [ ] Test compliance baseline PDF hijau (`PdfBaselineFixtureComplianceTest`).
@@ -43,7 +47,17 @@ Untuk setiap modul yang berubah di release ini:
 - [ ] Sample PDF level `kecamatan` diverifikasi manual.
 - [ ] Tidak ada deviasi yang belum dicatat di `docs/domain/DOMAIN_DEVIATION_LOG.md`.
 
-## 4) Kriteria Go / No-Go
+## 4) Snapshot Eksekusi (2026-02-21)
+
+- [x] Semua route report terdaftar normal (`56` route).
+- [x] Test scoped auth hijau (`scope_metadata_tidak_sinkron`: `27` pass).
+- [x] Test compliance baseline PDF hijau (`PdfBaselineFixtureComplianceTest`: `20` pass).
+- [x] Test header kolom modul terdampak hijau (`header_kolom_pdf`: `8` pass).
+- [x] Cakupan sample PDF level `desa` tervalidasi otomatis (`ReportPrintTest` matrix).
+- [x] Cakupan sample PDF level `kecamatan` tervalidasi otomatis (`ReportPrintTest` matrix).
+- [x] Tidak ada deviasi baru yang belum dicatat di `docs/domain/DOMAIN_DEVIATION_LOG.md`.
+
+## 5) Kriteria Go / No-Go
 
 `NO-GO`:
 - Salah satu gate otomatis gagal.
@@ -54,12 +68,12 @@ Untuk setiap modul yang berubah di release ini:
 - Semua item checklist rilis tercentang.
 - Tidak ada temuan kritikal auth-scope atau mismatch format PDF.
 
-## 5) Bukti Validasi T10
+## 6) Bukti Validasi T10
 
 Perintah baseline saat dokumen ini dibuat:
 - `php artisan route:list --name=report`
-  - hasil: `52` route report.
+  - hasil terbaru (2026-02-21): `56` route report.
 - `php artisan test --filter=PdfBaselineFixtureComplianceTest`
-  - hasil: `20` test pass.
+  - hasil terbaru (2026-02-21): `20` test pass.
 - `php artisan test --filter=scope_metadata_tidak_sinkron`
-  - hasil: `25` test pass.
+  - hasil terbaru (2026-02-21): `27` test pass.

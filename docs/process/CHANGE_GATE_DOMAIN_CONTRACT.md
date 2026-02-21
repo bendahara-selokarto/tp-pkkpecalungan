@@ -60,6 +60,7 @@ PR `PASS` jika:
 ## 5) Template Checklist PR
 
 Checklist ini harus ditempel pada deskripsi PR saat trigger aktif:
+- Template ini sengaja default `unchecked`; status eksekusi riil dicatat pada section "Bukti Validasi T9" dan `docs/process/OPERATIONAL_VALIDATION_LOG.md`.
 
 - [ ] Saya mengubah kontrak domain (schema/field/label/report/policy) dan sudah update matrix dokumen terkait.
 - [ ] `docs/domain/DOMAIN_CONTRACT_MATRIX.md` sudah diperbarui.
@@ -76,8 +77,8 @@ Catatan implementasi:
 
 Perintah yang dijalankan pada baseline saat dokumen ini dibuat:
 - `php artisan route:list --name=report`
-  - hasil: `52` route report.
+  - hasil terbaru (2026-02-21): `56` route report.
 - `php artisan test --filter=PdfBaselineFixtureComplianceTest`
-  - hasil: `20` test pass.
+  - hasil terbaru (2026-02-21): `20` test pass.
 - `php artisan test --filter=scope_metadata_tidak_sinkron`
-  - hasil: `25` test pass.
+  - hasil terbaru (2026-02-21): `27` test pass.
