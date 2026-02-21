@@ -85,6 +85,14 @@ const desaMenuGroups = [
     ],
   },
   {
+    key: 'pilotproject',
+    label: 'Pilot Project Pokja IV',
+    code: 'PP4',
+    items: [
+      { href: '/desa/pilot-project-keluarga-sehat', label: 'Laporan Pilot Project Keluarga Sehat' },
+    ],
+  },
+  {
     key: 'pendukung',
     label: 'Program Pendukung',
     code: 'PRG',
@@ -158,6 +166,14 @@ const kecamatanMenuGroups = [
     code: 'L45',
     items: [
       { href: '/kecamatan/catatan-keluarga', label: 'Catatan Keluarga' },
+    ],
+  },
+  {
+    key: 'pilotproject',
+    label: 'Pilot Project Pokja IV',
+    code: 'PP4',
+    items: [
+      { href: '/kecamatan/pilot-project-keluarga-sehat', label: 'Laporan Pilot Project Keluarga Sehat' },
     ],
   },
   {
