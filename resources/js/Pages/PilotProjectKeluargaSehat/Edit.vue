@@ -4,7 +4,7 @@ import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import { mdiFileDocumentEditOutline } from '@mdi/js'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 
 const props = defineProps({
   scopeLabel: {
@@ -199,6 +199,20 @@ const groupedValues = computed(() => {
 const regenerateCatalogValues = () => {
   form.values = buildCatalogValues(props.sections, form.tahun_awal, form.tahun_akhir, form.values)
 }
+
+const periodKey = computed(() => {
+  const { start, end } = normalizeYearRange(form.tahun_awal, form.tahun_akhir)
+
+  return `${start}-${end}`
+})
+
+watch(periodKey, (nextPeriodKey, previousPeriodKey) => {
+  if (nextPeriodKey === previousPeriodKey) {
+    return
+  }
+
+  regenerateCatalogValues()
+})
 
 const submit = () => {
   form.transform((data) => ({
