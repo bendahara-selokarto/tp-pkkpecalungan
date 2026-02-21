@@ -1,4 +1,4 @@
-# Domain Contract Matrix (Lampiran 4.9-4.15)
+# Domain Contract Matrix (Lampiran 4.9-4.15 + Ekstensi 202-211)
 
 Sumber canonical domain:
 - https://pubhtml5.com/zsnqq/vjcf/basic/101-150
@@ -29,6 +29,7 @@ Aturan baca:
 | 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | `nama_posyandu`, `nama_pengelola`, `nama_sekretaris`, `jenis_posyandu`, `jumlah_kader`, `jenis_kegiatan`, `frekuensi_layanan`, `jumlah_pengunjung_l`, `jumlah_pengunjung_p`, `jumlah_petugas_l`, `jumlah_petugas_p` | `DATA ISIAN POSYANDU OLEH TP PKK` | PubHTML5 101-150 (Lampiran 4.14.4e) | match |
 | 4.14.4f | `simulasi-penyuluhan` | Data Isian Kelompok Simulasi dan Penyuluhan | `nama_kegiatan`, `jenis_simulasi_penyuluhan`, `jumlah_kelompok`, `jumlah_sosialisasi`, `jumlah_kader_l`, `jumlah_kader_p`, `keterangan` | `DATA ISIAN KELOMPOK SIMULASI DAN PENYULUHAN` | PubHTML5 101-150 (Lampiran 4.14.4f) | match |
 | 4.15 | `catatan-keluarga` | Catatan Keluarga | Read-only rekap dari `data-warga` + `data-kegiatan-warga`: `nama_kepala_rumah_tangga`, `jumlah_anggota_rumah_tangga`, `kerja_bakti`, `rukun_kematian`, `kegiatan_keagamaan`, `jimpitan`, `arisan`, `lain_lain`, `keterangan` | `CATATAN KELUARGA` | PubHTML5 101-150 (Lampiran 4.15) | match (rekap, tanpa tabel baru) |
+| Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana (Pokja IV) | Header laporan: `judul_laporan`, `dasar_hukum`, `pendahuluan`, `maksud_tujuan`, `pelaksanaan`, `dokumentasi`, `penutup`; nilai indikator periodik: `section`, `cluster_code`, `indicator_code`, `year`, `semester`, `value`, `evaluation_note`, `sort_order` | `LAPORAN PELAKSANAAN PILOT PROJECT GERAKAN KELUARGA SEHAT TANGGAP DAN TANGGUH BENCANA` | PubHTML5 201-241 (Halaman 202-211) | implemented (catalog tahap awal) |
 
 ## Jejak Teknis (Acuan Verifikasi)
 
@@ -55,3 +56,5 @@ Aturan baca:
   - `database/migrations/2026_02_20_230000_create_simulasi_penyuluhans_table.php`
 - Catatan keluarga rekap source:
   - `app/Domains/Wilayah/CatatanKeluarga/Repositories/CatatanKeluargaRepository.php`
+- Ekstensi pilot project source:
+  - `PEDOMAN_DOMAIN_UTAMA_202_211.md`

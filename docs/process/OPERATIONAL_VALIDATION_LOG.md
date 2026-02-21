@@ -151,3 +151,54 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk harmonisasi akhir UI alert/konfirmasi lintas halaman.
+
+## Siklus Pilot Project Pokja IV (F1-F4): 2026-02-20
+
+Ruang lingkup:
+- Inisiasi implementasi pedoman halaman `202-211`.
+- Eksekusi `F1` (kontrak domain + terminology map), `F2` (data layer scaffold), `F3` (authorization + scope), dan `F4` (use case/action).
+
+Artefak:
+- `PEDOMAN_DOMAIN_UTAMA_202_211.md`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
+- `database/migrations/2026_02_22_010000_create_pilot_project_keluarga_sehat_reports_table.php`
+- `database/migrations/2026_02_22_011000_create_pilot_project_keluarga_sehat_values_table.php`
+- `app/Domains/Wilayah/PilotProjectKeluargaSehat/*`
+- `config/pilot_project_keluarga_sehat.php`
+
+Perintah validasi:
+- `php artisan test`
+  - hasil: `424` tests pass (`1544` assertions).
+
+Status:
+- `PASS` untuk tahap fondasi F1-F4, lanjut ke F5.
+
+## Siklus Pilot Project Pokja IV (F5-F9): 2026-02-21
+
+Ruang lingkup:
+- Eksekusi `F5` (HTTP layer), `F6` (Inertia pages), `F7` (PDF render), `F8` (test matrix), `F9` (operational validation).
+
+Artefak:
+- `app/Domains/Wilayah/PilotProjectKeluargaSehat/Controllers/*`
+- `app/Domains/Wilayah/PilotProjectKeluargaSehat/Requests/*`
+- `resources/js/Pages/PilotProjectKeluargaSehat/*`
+- `resources/views/pdf/pilot_project_keluarga_sehat_report.blade.php`
+- `tests/Feature/DesaPilotProjectKeluargaSehatTest.php`
+- `tests/Feature/KecamatanPilotProjectKeluargaSehatTest.php`
+- `tests/Feature/PilotProjectKeluargaSehatReportPrintTest.php`
+- `tests/Unit/Policies/PilotProjectKeluargaSehatPolicyTest.php`
+- `tests/Unit/UseCases/BuildPilotProjectKeluargaSehatReportUseCaseTest.php`
+
+Perintah validasi:
+- `php artisan route:list --name=pilot-project-keluarga-sehat`
+  - hasil: `16` route terdaftar (desa + kecamatan, termasuk print report).
+- `php artisan test tests/Feature/DesaPilotProjectKeluargaSehatTest.php tests/Feature/KecamatanPilotProjectKeluargaSehatTest.php tests/Feature/PilotProjectKeluargaSehatReportPrintTest.php tests/Unit/Policies/PilotProjectKeluargaSehatPolicyTest.php tests/Unit/UseCases/BuildPilotProjectKeluargaSehatReportUseCaseTest.php`
+  - hasil: `12` tests pass (`35` assertions).
+- `npm run build`
+  - hasil: `PASS`.
+- `php artisan test`
+  - hasil: `436` tests pass (`1579` assertions).
+
+Status:
+- `PASS` untuk tahap implementasi F5-F9.

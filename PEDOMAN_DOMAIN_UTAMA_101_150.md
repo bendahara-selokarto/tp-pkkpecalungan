@@ -189,3 +189,8 @@ Rujukan rencana:
 - [x] `D3` Tambahkan feature test scope dashboard coverage (desa, kecamatan, stale metadata).
 - [x] `D4` Tambahkan unit test agregasi coverage per modul/lampiran.
 - [x] `D5` (opsional) Tambahkan cache TTL pendek untuk query dashboard coverage besar.
+
+## Lanjutan Pedoman Domain
+
+- Analisis dan rencana implementasi untuk rentang halaman `202-211` tersedia di:
+  - `PEDOMAN_DOMAIN_UTAMA_202_211.md`

@@ -1,4 +1,4 @@
-# Terminology Normalization Map (Lampiran 4.9-4.15)
+# Terminology Normalization Map (Lampiran 4.9-4.15 + Ekstensi 202-211)
 
 Sumber canonical:
 - https://pubhtml5.com/zsnqq/vjcf/basic/101-150
@@ -37,6 +37,7 @@ Tujuan:
 | 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | UI/PDF sudah memakai `Data Isian Posyandu oleh TP PKK` | Pertahankan | match |
 | 4.14.4f | `simulasi-penyuluhan` | Data Isian Kelompok Simulasi dan Penyuluhan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.15 | `catatan-keluarga` | Catatan Keluarga | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
+| Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Label canonical sudah aktif pada menu/index/PDF | Pertahankan label canonical, lanjutkan pemetaan indikator detail katalog | implemented (catalog tahap awal) |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
 
@@ -46,6 +47,8 @@ Tujuan:
 - `Koperasi Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Koperasi Desa/Kecamatan`
 - `Kejar Paket Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Kejar Paket/KF/PAUD Desa/Kecamatan`
 - `Posyandu Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Posyandu oleh TP PKK Desa/Kecamatan`
+- `Pilot Project` (label tunggal tanpa konteks) -> gunakan `Laporan Pilot Project Keluarga Sehat`
+- `Laporan Pilot Project Bencana` -> gunakan `Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana`
 
 ## Jejak Verifikasi
 
@@ -62,3 +65,5 @@ Tujuan:
   - `resources/views/pdf/koperasi_report.blade.php`
   - `resources/views/pdf/kejar_paket_report.blade.php`
   - `resources/views/pdf/posyandu_report.blade.php`
+- Ekstensi pedoman:
+  - `PEDOMAN_DOMAIN_UTAMA_202_211.md`
