@@ -93,6 +93,7 @@ const buildCatalogValues = (sections, tahunAwal, tahunAkhir, existingValues = []
             semester: period.semester,
             value: Number.isFinite(Number(existing?.value)) ? Number(existing.value) : 0,
             evaluation_note: String(existing?.evaluation_note ?? ''),
+            keterangan_note: String(existing?.keterangan_note ?? ''),
             sort_order: sortOrder,
           })
 
@@ -300,8 +301,8 @@ const submit = () => {
                   </tr>
                   <tr class="text-left text-gray-600 dark:text-gray-300">
                     <template v-for="year in periodYears" :key="`${section.key}-${cluster.key}-sem-${year}`">
-                      <th class="px-2 py-2 font-semibold text-center w-14">I</th>
-                      <th class="px-2 py-2 font-semibold text-center w-14">II</th>
+                      <th class="w-20 min-w-[5rem] px-2 py-2 text-center font-semibold">I</th>
+                      <th class="w-20 min-w-[5rem] px-2 py-2 text-center font-semibold">II</th>
                     </template>
                   </tr>
                 </thead>
@@ -316,14 +317,14 @@ const submit = () => {
                     <td
                       v-for="cell in indicator.cells"
                       :key="`${section.key}-${cluster.key}-${indicator.code}-${cell?.year}-${cell?.semester}`"
-                      class="px-2 py-2"
+                      class="min-w-[5rem] px-1.5 py-2"
                     >
                       <input
                         v-if="cell"
                         v-model.number="cell.value"
                         type="number"
                         min="0"
-                        class="w-full rounded-md border-gray-300 text-xs shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                        class="w-full min-w-[5rem] rounded-md border-gray-300 px-2 text-center text-xs shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                       >
                       <span v-else class="text-gray-400">-</span>
                     </td>
@@ -339,7 +340,7 @@ const submit = () => {
                     <td v-if="section.key === 'data_dukung'" class="px-2 py-2">
                       <input
                         v-if="indicator.noteCell"
-                        v-model="indicator.noteCell.evaluation_note"
+                        v-model="indicator.noteCell.keterangan_note"
                         type="text"
                         class="w-full rounded-md border-gray-300 text-xs shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
                       >
