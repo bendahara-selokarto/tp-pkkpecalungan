@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
+use App\Domains\Wilayah\DataWarga\Models\DataWargaAnggota;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -122,6 +123,82 @@ class DesaDataWargaTest extends TestCase
             ->assertStatus(302);
 
         $this->assertDatabaseMissing('data_wargas', ['id' => $dataWarga->id]);
+    }
+
+    #[Test]
+    public function admin_desa_dapat_menyimpan_detail_anggota_dan_summary_otomatis(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        $this->actingAs($adminDesa)->post('/desa/data-warga', [
+            'dasawisma' => 'Melati 04',
+            'nama_kepala_keluarga' => 'Sulastri',
+            'alamat' => 'RT 04 RW 02',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => 'Header dibuat dari detail anggota',
+            'anggota' => [
+                [
+                    'nama' => 'Andi',
+                    'jenis_kelamin' => 'L',
+                    'ikut_koperasi' => true,
+                ],
+                [
+                    'nama' => 'Ana',
+                    'jenis_kelamin' => 'P',
+                    'ikut_paud' => true,
+                ],
+                [
+                    'nama' => 'Budi',
+                    'jenis_kelamin' => 'L',
+                    'aktif_posyandu' => true,
+                ],
+            ],
+        ])->assertStatus(302);
+
+        $dataWarga = DataWarga::where('nama_kepala_keluarga', 'Sulastri')->firstOrFail();
+
+        $this->assertSame(2, $dataWarga->jumlah_warga_laki_laki);
+        $this->assertSame(1, $dataWarga->jumlah_warga_perempuan);
+        $this->assertSame(3, DataWargaAnggota::query()->where('data_warga_id', $dataWarga->id)->count());
+
+        $this->assertDatabaseHas('data_warga_anggotas', [
+            'data_warga_id' => $dataWarga->id,
+            'nama' => 'Ana',
+            'jenis_kelamin' => 'P',
+            'ikut_paud' => true,
+        ]);
+
+        $this->actingAs($adminDesa)->put(route('desa.data-warga.update', $dataWarga->id), [
+            'dasawisma' => 'Melati 04',
+            'nama_kepala_keluarga' => 'Sulastri',
+            'alamat' => 'RT 04 RW 02',
+            'jumlah_warga_laki_laki' => 99,
+            'jumlah_warga_perempuan' => 99,
+            'keterangan' => 'Summary harus dihitung ulang',
+            'anggota' => [
+                [
+                    'nama' => 'Citra',
+                    'jenis_kelamin' => 'P',
+                    'ikut_bkb' => true,
+                ],
+            ],
+        ])->assertStatus(302);
+
+        $dataWarga->refresh();
+
+        $this->assertSame(0, $dataWarga->jumlah_warga_laki_laki);
+        $this->assertSame(1, $dataWarga->jumlah_warga_perempuan);
+        $this->assertSame(1, DataWargaAnggota::query()->where('data_warga_id', $dataWarga->id)->count());
+
+        $this->assertDatabaseMissing('data_warga_anggotas', [
+            'data_warga_id' => $dataWarga->id,
+            'nama' => 'Andi',
+        ]);
     }
 
     #[Test]

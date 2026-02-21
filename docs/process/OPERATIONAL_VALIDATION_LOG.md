@@ -281,3 +281,77 @@ Artefak terdampak:
 Status:
 - `PASS` untuk semua gate otomatis.
 - Catatan blocker tersisa: `DV-003` (`4.14.5`) tetap `open` karena sumber canonical belum tersedia.
+
+## Siklus Penyesuaian Autentik 4.14.1a (C1-C4): 2026-02-21
+
+Ruang lingkup:
+- Menetapkan ulang kontrak autentik lampiran `4.14.1a` berdasarkan dokumen `d:\pedoman\153.pdf`.
+- Menjalankan tahap awal implementasi non-breaking:
+  - `C1` update matrix/terminologi/deviasi.
+  - `C2` scaffold tabel detail anggota rumah tangga.
+  - `C3` backend payload detail anggota + sync repository + summary otomatis.
+  - `C4` UI form detail anggota pada halaman `create/edit` desa+kecamatan.
+
+Artefak:
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
+- `docs/domain/DOMAIN_DEVIATION_LOG.md` (`DV-005`)
+- `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`
+- `docs/domain/ADJUSTMENT_PLAN_4_14_1A_DAFTAR_WARGA_TP_PKK.md`
+- `database/migrations/2026_02_22_120000_create_data_warga_anggotas_table.php`
+- `app/Domains/Wilayah/DataWarga/Models/DataWargaAnggota.php`
+- `app/Domains/Wilayah/DataWarga/Models/DataWarga.php`
+- `app/Domains/Wilayah/DataWarga/Repositories/DataWargaAnggotaRepositoryInterface.php`
+- `app/Domains/Wilayah/DataWarga/Repositories/DataWargaAnggotaRepository.php`
+- `app/Domains/Wilayah/DataWarga/Actions/CreateScopedDataWargaAction.php`
+- `app/Domains/Wilayah/DataWarga/Actions/UpdateDataWargaAction.php`
+- `app/Domains/Wilayah/DataWarga/Requests/StoreDataWargaRequest.php`
+- `app/Domains/Wilayah/DataWarga/Requests/UpdateDataWargaRequest.php`
+- `tests/Feature/DesaDataWargaTest.php`
+- `app/Providers/AppServiceProvider.php`
+- `resources/js/admin-one/components/DataWargaAnggotaTable.vue`
+- `resources/js/Pages/Desa/DataWarga/Create.vue`
+- `resources/js/Pages/Desa/DataWarga/Edit.vue`
+- `resources/js/Pages/Kecamatan/DataWarga/Create.vue`
+- `resources/js/Pages/Kecamatan/DataWarga/Edit.vue`
+- `app/Domains/Wilayah/DataWarga/Controllers/DesaDataWargaController.php`
+- `app/Domains/Wilayah/DataWarga/Controllers/KecamatanDataWargaController.php`
+
+Perintah validasi:
+- `php artisan test tests/Feature/DesaDataWargaTest.php tests/Feature/KecamatanDataWargaTest.php tests/Feature/DataWargaReportPrintTest.php tests/Unit/UseCases/ListScopedCatatanKeluargaUseCaseTest.php`
+  - hasil: `14` test pass (`44` assertions).
+- `npm run build`
+  - hasil: `PASS`.
+
+Status:
+- `PASS` untuk tahap C1-C4 (kontrak + scaffold + backend + form detail non-breaking).
+- Catatan:
+  - `4.14.1a` pada checklist PDF kini `fail` by design sampai C5 selesai (PDF autentik kolom 1-20).
+
+## Siklus Penyesuaian Autentik 4.14.1a (C5-C7): 2026-02-21
+
+Ruang lingkup:
+- Menyelesaikan `C5` (render PDF autentik 4.14.1a) dengan orientasi `portrait`.
+- Menutup `C6` (kompatibilitas `catatan-keluarga`) melalui validasi summary turunan detail anggota.
+- Menjalankan `C7` (audit dashboard trigger) agar coverage dan chart tetap konsisten.
+
+Artefak:
+- `resources/views/pdf/data_warga_report.blade.php`
+- `tests/Feature/DataWargaReportPrintTest.php`
+- `tests/Fixtures/pdf-baseline/4.14.1a-data-warga.json`
+- `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
+- `docs/domain/DOMAIN_DEVIATION_LOG.md`
+- `docs/domain/ADJUSTMENT_PLAN_4_14_1A_DAFTAR_WARGA_TP_PKK.md`
+
+Perintah validasi:
+- `php artisan test tests/Feature/DataWargaReportPrintTest.php tests/Feature/PdfBaselineFixtureComplianceTest.php tests/Feature/DesaDataWargaTest.php tests/Unit/UseCases/ListScopedCatatanKeluargaUseCaseTest.php`
+  - hasil: `30` test pass (`552` assertions).
+- `php artisan test tests/Feature/DashboardDocumentCoverageTest.php tests/Feature/DashboardActivityChartTest.php`
+  - hasil: `7` test pass (`158` assertions).
+- `php artisan test`
+  - hasil: `447` test pass (`1644` assertions).
+
+Status:
+- `PASS` untuk C5-C7.

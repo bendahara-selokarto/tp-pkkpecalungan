@@ -33,6 +33,7 @@ class DataWargaPrintController extends Controller
 
         $items = $this->listScopedDataWargaUseCase
             ->execute($level)
+            ->load('anggota')
             ->sortBy('id')
             ->values();
 
@@ -43,7 +44,7 @@ class DataWargaPrintController extends Controller
             'areaName' => $user->area?->name ?? '-',
             'printedBy' => $user,
             'printedAt' => now(),
-        ]);
+        ], PdfViewFactory::ORIENTATION_PORTRAIT);
 
         return $pdf->stream("data-warga-{$level}-report.pdf");
     }

@@ -48,4 +48,9 @@ class DataWarga extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function anggota()
+    {
+        return $this->hasMany(DataWargaAnggota::class, 'data_warga_id')->orderBy('nomor_urut');
+    }
 }

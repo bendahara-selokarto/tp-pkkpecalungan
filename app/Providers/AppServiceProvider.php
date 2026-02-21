@@ -43,6 +43,8 @@ use App\Domains\Wilayah\WarungPkk\Models\WarungPkk;
 use App\Domains\Wilayah\WarungPkk\Repositories\WarungPkkRepository;
 use App\Domains\Wilayah\WarungPkk\Repositories\WarungPkkRepositoryInterface;
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
+use App\Domains\Wilayah\DataWarga\Repositories\DataWargaAnggotaRepository;
+use App\Domains\Wilayah\DataWarga\Repositories\DataWargaAnggotaRepositoryInterface;
 use App\Domains\Wilayah\DataWarga\Repositories\DataWargaRepository;
 use App\Domains\Wilayah\DataWarga\Repositories\DataWargaRepositoryInterface;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
@@ -202,6 +204,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             DataWargaRepositoryInterface::class,
             DataWargaRepository::class
+        );
+
+        $this->app->bind(
+            DataWargaAnggotaRepositoryInterface::class,
+            DataWargaAnggotaRepository::class
         );
 
         $this->app->bind(

@@ -4,6 +4,23 @@ import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { Link, useForm } from '@inertiajs/vue3'
 import { mdiAccountGroup } from '@mdi/js'
+import { defineAsyncComponent } from 'vue'
+
+const DataWargaAnggotaLoading = {
+  template: '<div class="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-700">Memuat tabel anggota...</div>',
+}
+
+const DataWargaAnggotaError = {
+  template: '<div class="rounded-md border border-rose-200 bg-rose-50 px-3 py-2 text-xs text-rose-700">Komponen tabel anggota gagal dimuat. Muat ulang halaman.</div>',
+}
+
+const DataWargaAnggotaTable = defineAsyncComponent({
+  loader: () => import('@/admin-one/components/DataWargaAnggotaTable.vue'),
+  loadingComponent: DataWargaAnggotaLoading,
+  errorComponent: DataWargaAnggotaError,
+  delay: 0,
+  timeout: 15000,
+})
 
 const form = useForm({
   dasawisma: '',
@@ -12,6 +29,7 @@ const form = useForm({
   jumlah_warga_laki_laki: 0,
   jumlah_warga_perempuan: 0,
   keterangan: '',
+  anggota: [],
 })
 
 const submit = () => {
@@ -46,16 +64,18 @@ const submit = () => {
 
         <div class="grid gap-5 md:grid-cols-2">
           <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jumlah Warga Laki-laki</label>
-            <input v-model="form.jumlah_warga_laki_laki" type="number" min="0" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jumlah Warga Laki-laki (otomatis)</label>
+            <input v-model="form.jumlah_warga_laki_laki" type="number" min="0" readonly class="w-full rounded-md border-gray-300 bg-gray-50 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100" required>
             <p v-if="form.errors.jumlah_warga_laki_laki" class="mt-1 text-xs text-rose-600">{{ form.errors.jumlah_warga_laki_laki }}</p>
           </div>
           <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jumlah Warga Perempuan</label>
-            <input v-model="form.jumlah_warga_perempuan" type="number" min="0" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jumlah Warga Perempuan (otomatis)</label>
+            <input v-model="form.jumlah_warga_perempuan" type="number" min="0" readonly class="w-full rounded-md border-gray-300 bg-gray-50 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100" required>
             <p v-if="form.errors.jumlah_warga_perempuan" class="mt-1 text-xs text-rose-600">{{ form.errors.jumlah_warga_perempuan }}</p>
           </div>
         </div>
+
+        <DataWargaAnggotaTable :form="form" />
 
         <div>
           <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Keterangan</label>

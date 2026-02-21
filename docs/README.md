@@ -14,6 +14,7 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
   - `docs/domain/DOMAIN_DEVIATION_LOG.md`
   - `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
+  - `docs/domain/ADJUSTMENT_PLAN_4_14_1A_DAFTAR_WARGA_TP_PKK.md`
 
 ## docs/pdf
 - Checklist dan validasi format output PDF.

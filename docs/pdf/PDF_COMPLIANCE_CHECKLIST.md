@@ -33,6 +33,8 @@ Siklus validasi terbaru:
   - `php artisan test --filter=PdfBaselineFixtureComplianceTest`
   - `php artisan test --filter=header_kolom_pdf`
   - `php artisan test --filter=ReportPrintTest`
+- `2026-02-21`: dokumen autentik 4.14.1a (`d:\\pedoman\\153.pdf`) mengubah baseline acuan menjadi format detail anggota kolom 1-20; status modul 4.14.1a ditandai `fail` sampai penyesuaian selesai.
+- `2026-02-21`: penyesuaian 4.14.1a selesai, PDF `data-warga` sudah memakai judul autentik `DAFTAR WARGA TP PKK`, header rumah tangga, kolom detail anggota, dan orientasi `portrait` eksplisit.
 
 | Lampiran | Modul | File PDF | Acuan urutan kolom/header | Format nilai kritikal | Orientasi | Footer metadata cetak | Status |
 | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -42,7 +44,7 @@ Siklus validasi terbaru:
 | 4.11 | `bantuans` (keuangan) | `resources/views/pdf/buku_keuangan_report.blade.php` | No, Tanggal, Uraian, Pemasukan, Pengeluaran, Saldo | Nominal uang, saldo berjalan, kategori debit/kredit | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.12 | `inventaris` | `resources/views/pdf/inventaris_report.blade.php` | No, Nama Barang, Asal, Tgl Terima, Jumlah, Satuan, Kondisi, Lokasi, Ket. | Angka jumlah valid; kondisi sesuai enum | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.13 | `activities` | `resources/views/pdf/activity.blade.php` | Identitas kegiatan, petugas, jabatan, tanggal, uraian, tanda tangan | Tanggal kegiatan dan status valid | `landscape` | area + printedBy + printedAt | `pass` |
-| 4.14.1a | `data-warga` | `resources/views/pdf/data_warga_report.blade.php` | No, Dasawisma, Kepala Keluarga, Alamat, L, P, Total, Ket. | Total = L + P | `landscape` | area + printedBy + printedAt | `pass` |
+| 4.14.1a | `data-warga` | `resources/views/pdf/data_warga_report.blade.php` | Judul autentik `DAFTAR WARGA TP PKK`; header rumah tangga `Dasa Wisma` + `Nama Kepala Rumah Tangga`; kolom detail anggota 1-20 (`No. Registrasi` s.d. `Ikut dalam Kegiatan Koperasi`) | Validasi detail identitas anggota, status partisipasi, dan konsistensi umur/tanggal | `portrait` (eksplisit untuk lampiran autentik 4.14.1a) | area + printedBy + printedAt | `pass` |
 | 4.14.1b | `data-kegiatan-warga` | `resources/views/pdf/data_kegiatan_warga_report.blade.php` | No, Kegiatan, Aktivitas, Ket. | Aktivitas tampil `Ya/Tidak` | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.14.2a | `data-keluarga` | `resources/views/pdf/data_keluarga_report.blade.php` | No, Kategori Keluarga, Jumlah, Ket. | Nilai jumlah numerik non-negatif | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.14.2b | `data-pemanfaatan-tanah-pekarangan-hatinya-pkk` | `resources/views/pdf/data_pemanfaatan_tanah_pekarangan_hatinya_pkk_report.blade.php` | No, Kategori Lahan, Komoditi, Jumlah | Nilai jumlah konsisten satuan | `landscape` | area + printedBy + printedAt | `pass` |

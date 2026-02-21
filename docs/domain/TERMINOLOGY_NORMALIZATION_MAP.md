@@ -24,7 +24,7 @@ Tujuan:
 | 4.11 | `bantuans` | Buku Keuangan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.12 | `inventaris` | Buku Inventaris | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.13 | `activities` | Buku Kegiatan | PDF judul utama sudah `BUKU KEGIATAN TP PKK` | Pertahankan | match |
-| 4.14.1a | `data-warga` | Data Warga | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
+| 4.14.1a | `data-warga` | Daftar Warga TP PKK | PDF sudah memakai judul autentik `Daftar Warga TP PKK`; menu/index masih mempertahankan label slug `Data Warga` | Pertahankan PDF autentik + evaluasi rename label menu/index di siklus UI terpisah agar tidak mengganggu kebiasaan operator | partial |
 | 4.14.1b | `data-kegiatan-warga` | Data Kegiatan Warga | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.14.2a | `data-keluarga` | Data Keluarga | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.14.2b | `data-pemanfaatan-tanah-pekarangan-hatinya-pkk` | Data Pemanfaatan Tanah Pekarangan/HATINYA PKK | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
@@ -44,6 +44,7 @@ Tujuan:
 - `Laporan Koperasi` -> gunakan `Data Isian Koperasi`
 - `Laporan Kejar Paket/KF/PAUD` -> gunakan `Data Isian Kejar Paket/KF/PAUD`
 - `Laporan Posyandu` -> gunakan `Data Isian Posyandu oleh TP PKK`
+- `Data Warga` (sebagai judul modul/PDF 4.14.1a) -> gunakan `Daftar Warga TP PKK`
 - `Koperasi Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Koperasi Desa/Kecamatan`
 - `Kejar Paket Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Kejar Paket/KF/PAUD Desa/Kecamatan`
 - `Posyandu Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Posyandu oleh TP PKK Desa/Kecamatan`
