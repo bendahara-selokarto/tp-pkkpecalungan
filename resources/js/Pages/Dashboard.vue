@@ -111,6 +111,42 @@ const levelDistributionChartData = computed(() => ({
     },
   ],
 }))
+
+const lampiranCoverageItems = computed(() => {
+  const rawItems = documentCharts.value.coverage_per_lampiran?.items
+  if (Array.isArray(rawItems) && rawItems.length > 0) {
+    return rawItems.map((item) => ({
+      label: String(item?.lampiran_group ?? '-'),
+      total: Number(item?.total ?? 0),
+    }))
+  }
+
+  const labels = documentCharts.value.coverage_per_lampiran?.labels ?? []
+  const values = documentCharts.value.coverage_per_lampiran?.values ?? []
+
+  return labels.map((label, index) => ({
+    label: String(label),
+    total: Number(values[index] ?? 0),
+  }))
+})
+
+const levelDistributionItems = computed(() => {
+  const labels = documentCharts.value.level_distribution?.labels ?? ['Desa', 'Kecamatan']
+  const values = documentCharts.value.level_distribution?.values ?? [0, 0]
+
+  return labels.map((label, index) => ({
+    label: String(label),
+    total: Number(values[index] ?? 0),
+  }))
+})
+
+const hasLampiranCoverageData = computed(() =>
+  lampiranCoverageItems.value.some((item) => item.total > 0)
+)
+
+const hasLevelDistributionData = computed(() =>
+  levelDistributionItems.value.some((item) => item.total > 0)
+)
 </script>
 
 <template>
@@ -143,6 +179,19 @@ const levelDistributionChartData = computed(() => ({
         <div class="h-96">
           <BarChart :data="coveragePerLampiranChartData" />
         </div>
+        <p v-if="!hasLampiranCoverageData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
+          Belum ada data terhitung pada cakupan per lampiran untuk scope ini.
+        </p>
+        <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <div
+            v-for="item in lampiranCoverageItems"
+            :key="`lampiran-${item.label}`"
+            class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
+          >
+            <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
+            <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
+          </div>
+        </div>
       </CardBox>
     </div>
 
@@ -151,6 +200,19 @@ const levelDistributionChartData = computed(() => ({
         <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Distribusi Level Data Dokumen</h3>
         <div class="h-72">
           <BarChart :data="levelDistributionChartData" />
+        </div>
+        <p v-if="!hasLevelDistributionData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
+          Belum ada data terhitung pada distribusi level dokumen untuk scope ini.
+        </p>
+        <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <div
+            v-for="item in levelDistributionItems"
+            :key="`level-${item.label}`"
+            class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
+          >
+            <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
+            <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
+          </div>
         </div>
       </CardBox>
     </div>
