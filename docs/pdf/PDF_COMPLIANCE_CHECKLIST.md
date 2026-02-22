@@ -73,4 +73,76 @@ Siklus validasi terbaru:
 5. Verifikasi metadata cetak (area, printedBy, printedAt) tersedia.
 6. Catat hasil `pass/fail` dan deviasi ke `docs/domain/DOMAIN_DEVIATION_LOG.md` jika ada.
 
+## D. Audit Trail Sumber Data PDF
+
+Tujuan:
+- Menjaga agar semua laporan PDF bertabel mengambil data dari tabel database yang tepat sesuai boundary domain.
+- Menyediakan jejak audit yang bisa diulang pada siklus berikutnya.
+
+### Riwayat Audit
+
+| Tanggal | Cakupan | Metode | Ringkasan hasil | Status |
+| --- | --- | --- | --- | --- |
+| 2026-02-22 | Semua endpoint print/report PDF (`desa` + `kecamatan`) | Route scan -> mapping `PrintController -> UseCase -> Repository -> Model -> Table` -> verifikasi tabel eksis | 90 route print/report teraudit, 46 view PDF teraudit, tidak ada mismatch tabel sumber data, tidak ditemukan query domain langsung di print controller | `pass` |
+
+### Ringkasan Baseline Audit 2026-02-22
+
+- Total route print/report yang diaudit: `90`.
+- Total view PDF unik dari print controller: `46`.
+- Seluruh tabel sumber data report yang dipakai repository terverifikasi `OK` (schema exists).
+- Tidak ditemukan penggunaan tabel legacy compatibility (`kecamatans`, `desas`, `user_assignments`) pada jalur print PDF.
+
+Catatan penting:
+- Domain `catatan-keluarga` memakai model marker policy (`CatatanKeluarga`) untuk otorisasi, namun sumber report berasal dari tabel operasional lintas modul.
+- Report `ekspedisi` berasal dari tabel `agenda_surats` dengan filter `jenis_surat = keluar` (bukan tabel ekspedisi terpisah).
+
+### Baseline Mapping Domain -> Tabel Sumber
+
+| Domain report | View PDF | Tabel sumber utama |
+| --- | --- | --- |
+| Activity | `pdf.activity` | `activities` |
+| Agenda Surat + Ekspedisi | `pdf.agenda_surat_report`, `pdf.ekspedisi_surat_report` | `agenda_surats` |
+| Anggota Pokja | `pdf.anggota_pokja_report` | `anggota_pokjas` |
+| Anggota Tim Penggerak | `pdf.anggota_tim_penggerak_report` | `anggota_tim_penggeraks` |
+| Anggota + Kader gabungan | `pdf.anggota_dan_kader_report` | `anggota_tim_penggeraks`, `kader_khusus` |
+| Bantuan + Buku Keuangan | `pdf.bantuan_report`, `pdf.buku_keuangan_report` | `bantuans` |
+| BKL | `pdf.bkl_report` | `bkls` |
+| BKR | `pdf.bkr_report` | `bkrs` |
+| Inventaris | `pdf.inventaris_report` | `inventaris` |
+| Kader Khusus | `pdf.kader_khusus_report` | `kader_khusus` |
+| Kejar Paket | `pdf.kejar_paket_report` | `kejar_pakets` |
+| Koperasi | `pdf.koperasi_report` | `koperasis` |
+| Posyandu | `pdf.posyandu_report` | `posyandus` |
+| Prestasi Lomba | `pdf.prestasi_lomba_report` | `prestasi_lombas` |
+| Program Prioritas | `pdf.program_prioritas_report` | `program_prioritas` |
+| Simulasi Penyuluhan | `pdf.simulasi_penyuluhan_report` | `simulasi_penyuluhans` |
+| Taman Bacaan | `pdf.taman_bacaan_report` | `taman_bacaans` |
+| Warung PKK | `pdf.warung_pkk_report` | `warung_pkks` |
+| Data Warga | `pdf.data_warga_report` | `data_wargas`, `data_warga_anggotas` |
+| Data Kegiatan Warga | `pdf.data_kegiatan_warga_report` | `data_kegiatan_wargas` |
+| Data Keluarga | `pdf.data_keluarga_report` | `data_keluargas` |
+| Data Industri Rumah Tangga | `pdf.data_industri_rumah_tangga_report` | `data_industri_rumah_tanggas` |
+| Data Pelatihan Kader | `pdf.data_pelatihan_kader_report` | `data_pelatihan_kaders` |
+| Data Pemanfaatan Tanah Pekarangan/Hatinya PKK | `pdf.data_pemanfaatan_tanah_pekarangan_hatinya_pkk_report` | `data_pemanfaatan_tanah_pekarangan_hatinya_pkks` |
+| Pilot Project Keluarga Sehat | `pdf.pilot_project_keluarga_sehat_report` | `pilot_project_keluarga_sehat_reports`, `pilot_project_keluarga_sehat_values` |
+| Pilot Project Naskah Pelaporan | `pdf.pilot_project_naskah_pelaporan_report` | `pilot_project_naskah_pelaporan_reports`, `pilot_project_naskah_pelaporan_attachments` |
+| Catatan Keluarga + seluruh turunan 4.15-4.24 | `pdf.catatan_keluarga_report` + seluruh view `catatan_*`, `rekap_*`, `data_umum_*`, `data_kegiatan_pkk_pokja_*` | `data_wargas`, `data_warga_anggotas`, `data_kegiatan_wargas`, `data_pemanfaatan_tanah_pekarangan_hatinya_pkks`, `data_industri_rumah_tanggas`, `anggota_tim_penggeraks`, `anggota_pokjas`, `kader_khusus`, `posyandus`, `program_prioritas`, `areas` |
+
+### Template Audit Berikutnya (Wajib Isi)
+
+Isi baris baru pada tabel `Riwayat Audit` dengan format:
+- Tanggal audit (`YYYY-MM-DD`)
+- Cakupan route/fitur
+- Metode verifikasi
+- Ringkasan hasil (angka route/view + mismatch/temuan)
+- Status (`pass`/`fail`)
+
+Checklist run minimum sebelum mengisi riwayat:
+1. `php artisan route:list --json` lalu filter route `report/pdf` dan `print`.
+2. Mapping `loadView('pdf.*')` dari seluruh `*PrintController.php`.
+3. Verifikasi chain `UseCase -> Repository`.
+4. Verifikasi query repository (`::query()`) dan tabel model (`getTable()`).
+5. Validasi tabel eksis (`Schema::hasTable`).
+6. Catat mismatch jika ada ke `docs/domain/DOMAIN_DEVIATION_LOG.md`.
+
 
