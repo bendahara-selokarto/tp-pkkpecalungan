@@ -49,11 +49,11 @@ const formatDate = (value) => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiEmailFastOutline" title="Agenda Surat Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiEmailFastOutline" title="Buku Agenda Surat Masuk/Keluar Kecamatan" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Buku Agenda Surat</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Buku Agenda Surat Masuk/Keluar</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/agenda-surat/ekspedisi/report/pdf"

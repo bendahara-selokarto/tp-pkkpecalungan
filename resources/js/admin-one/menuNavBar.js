@@ -6,7 +6,7 @@ export default [
     menu: [
       {
         icon: mdiAccount,
-        label: 'My Profile',
+        label: 'Profil Saya',
         href: '/profile',
       },
       {
@@ -14,20 +14,20 @@ export default [
       },
       {
         icon: mdiLogout,
-        label: 'Log Out',
+        label: 'Keluar (Log Out)',
         isLogout: true,
       },
     ],
   },
   {
     icon: mdiThemeLightDark,
-    label: 'Light/Dark',
+    label: 'Mode Terang/Gelap',
     isDesktopNoLabel: true,
     isToggleLightDark: true,
   },
   {
     icon: mdiLogout,
-    label: 'Log out',
+    label: 'Keluar (Log Out)',
     isDesktopNoLabel: true,
     isLogout: true,
   },

@@ -118,9 +118,9 @@ const levelDistributionChartData = computed(() => ({
     <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Dashboard" main />
 
     <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-      <CardBoxWidget :icon="mdiClipboardList" :number="activityStats.total" label="Total Activity" color="text-blue-500" />
+      <CardBoxWidget :icon="mdiClipboardList" :number="activityStats.total" label="Total Aktivitas" color="text-blue-500" />
       <CardBoxWidget :icon="mdiChartTimelineVariant" :number="activityStats.this_month" label="Bulan Ini" color="text-indigo-500" />
-      <CardBoxWidget :icon="mdiCheckCircle" :number="activityStats.published" label="Published" color="text-emerald-500" />
+      <CardBoxWidget :icon="mdiCheckCircle" :number="activityStats.published" label="Terpublikasi" color="text-emerald-500" />
       <CardBoxWidget :icon="mdiPencilCircle" :number="activityStats.draft" label="Draft" color="text-amber-500" />
     </div>
 
@@ -133,13 +133,13 @@ const levelDistributionChartData = computed(() => ({
 
     <div class="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
       <CardBox>
-        <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Coverage Per Buku</h3>
+        <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Buku</h3>
         <div class="h-96">
           <BarChart :data="coveragePerBukuChartData" horizontal />
         </div>
       </CardBox>
       <CardBox>
-        <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Coverage Per Lampiran</h3>
+        <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Lampiran</h3>
         <div class="h-96">
           <BarChart :data="coveragePerLampiranChartData" />
         </div>
@@ -157,7 +157,7 @@ const levelDistributionChartData = computed(() => ({
 
     <CardBox>
       <p class="text-sm text-gray-600 dark:text-gray-300">
-        Aplikasi Sistem Administerasi TIM Penggerak PKK masih dalam mode pengembangan, kritik dan saran masih sangat diperlukan.
+        Aplikasi Sistem Administrasi Tim Penggerak PKK masih dalam mode pengembangan, kritik dan saran masih sangat diperlukan.
       </p>
     </CardBox>
   </SectionMain>

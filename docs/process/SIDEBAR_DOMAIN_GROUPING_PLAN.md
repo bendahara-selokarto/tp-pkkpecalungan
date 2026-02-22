@@ -1,82 +1,107 @@
 # Sidebar Domain Grouping Plan
 
 Tujuan:
-- Mengelompokkan menu administrasi menjadi domain organisasi:
-  - Sekretaris TPK
-  - Pokja I
-  - Pokja II
-  - Pokja III
-  - Pokja IV
+- Menetapkan organisasi menu sidebar berbasis domain agar navigasi konsisten dengan struktur organisasi TP PKK.
+- Menjadi baseline untuk pengaturan `menu -> sub menu -> sub sub menu` pada scope `desa` dan `kecamatan`.
+- Menjadi referensi audit teks sidebar agar label mengikuti terminology canonical domain.
 
 Sumber acuan:
-- `AGENTS.md` (aturan teknis dan eksekusi)
-- `PEDOMAN_DOMAIN_UTAMA_101_150.md` (kontrak domain lampiran 4.9-4.15)
-- `docs/domain/DOMAIN_CONTRACT_MATRIX.md` (matrix slug domain)
+- `AGENTS.md`
+- `PEDOMAN_DOMAIN_UTAMA_101_150.md`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
 
-## Struktur Group Sidebar
+## Prinsip Organisasi Sidebar
 
-1. Sekretaris TPK
-- `anggota-tim-penggerak`
-- `kader-khusus`
-- `agenda-surat`
-- `bantuans`
-- `inventaris`
-- `activities`
-- `anggota-pokja`
-- `prestasi-lomba`
+1. Level menu:
+- `L1` = kategori utama sidebar (`Main`, `Menu Domain`, `Account`).
+- `L2` = group organisasi domain (`Sekretaris TPK`, `Pokja I-IV`, `Referensi`, `Monitoring Kecamatan`).
+- `L3` = item domain yang mengarah ke modul (route prefix berbasis scope).
+2. Semua item domain pada `L3` wajib punya hubungan langsung ke slug domain pada matrix kontrak.
+3. Label di `L2/L3` wajib mengacu terminology canonical (bukan istilah ad-hoc).
+4. Scope route tetap memakai pola `/{scope}/{slug}` dengan `scope = desa|kecamatan`.
 
-2. Pokja I
-- `data-warga`
-- `data-kegiatan-warga`
-- `bkl`
-- `bkr`
+## Struktur Hierarki Sidebar (L1 -> L2 -> L3)
 
-3. Pokja II
-- `data-pelatihan-kader`
-- `taman-bacaan`
-- `koperasi`
-- `kejar-paket`
+### L1: Main
 
-4. Pokja III
-- `data-keluarga`
-- `data-industri-rumah-tangga`
-- `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`
-- `warung-pkk`
+| L2 | L3 | Scope |
+| --- | --- | --- |
+| Dashboard | Dashboard | semua role non super-admin |
+| Manajemen User | Manajemen User | super-admin |
 
-5. Pokja IV
-- `posyandu`
-- `simulasi-penyuluhan`
-- `catatan-keluarga`
-- `program-prioritas`
-- `pilot-project-naskah-pelaporan`
-- `pilot-project-keluarga-sehat`
+### L1: Menu Domain
 
-6. Referensi
-- Link eksternal dokumen baku:
-  - `https://pubhtml5.com/zsnqq/vjcf/basic/101-150`
-  - `https://pubhtml5.com/zsnqq/vjcf/basic/201-241`
+| L2 | L3 (Domain) | Slug/Route Prefix |
+| --- | --- | --- |
+| Sekretaris TPK | Buku Daftar Anggota Tim Penggerak PKK | `/{scope}/anggota-tim-penggerak` |
+| Sekretaris TPK | Buku Daftar Kader Tim Penggerak PKK | `/{scope}/kader-khusus` |
+| Sekretaris TPK | Buku Agenda Surat Masuk/Keluar | `/{scope}/agenda-surat` |
+| Sekretaris TPK | Buku Keuangan | `/{scope}/bantuans` |
+| Sekretaris TPK | Buku Inventaris | `/{scope}/inventaris` |
+| Sekretaris TPK | Buku Kegiatan | `/{scope}/activities` |
+| Sekretaris TPK | Anggota Pokja | `/{scope}/anggota-pokja` |
+| Sekretaris TPK | Prestasi Lomba | `/{scope}/prestasi-lomba` |
+| Pokja I | Daftar Warga TP PKK | `/{scope}/data-warga` |
+| Pokja I | Data Kegiatan Warga | `/{scope}/data-kegiatan-warga` |
+| Pokja I | BKL | `/{scope}/bkl` |
+| Pokja I | BKR | `/{scope}/bkr` |
+| Pokja II | Data Pelatihan Kader | `/{scope}/data-pelatihan-kader` |
+| Pokja II | Data Isian Taman Bacaan/Perpustakaan | `/{scope}/taman-bacaan` |
+| Pokja II | Data Isian Koperasi | `/{scope}/koperasi` |
+| Pokja II | Data Isian Kejar Paket/KF/PAUD | `/{scope}/kejar-paket` |
+| Pokja III | Data Keluarga | `/{scope}/data-keluarga` |
+| Pokja III | Data Industri Rumah Tangga | `/{scope}/data-industri-rumah-tangga` |
+| Pokja III | Data Pemanfaatan Tanah Pekarangan/HATINYA PKK | `/{scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk` |
+| Pokja III | Data Aset (Sarana) Desa/Kelurahan | `/{scope}/warung-pkk` |
+| Pokja IV | Data Isian Posyandu oleh TP PKK | `/{scope}/posyandu` |
+| Pokja IV | Data Isian Kelompok Simulasi dan Penyuluhan | `/{scope}/simulasi-penyuluhan` |
+| Pokja IV | Catatan Keluarga | `/{scope}/catatan-keluarga` |
+| Pokja IV | Program Prioritas | `/{scope}/program-prioritas` |
+| Pokja IV | Naskah Pelaporan Pilot Project | `/{scope}/pilot-project-naskah-pelaporan` |
+| Pokja IV | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | `/{scope}/pilot-project-keluarga-sehat` |
+| Referensi | Pedoman Domain Utama 101-150 | eksternal |
+| Referensi | Pedoman Lanjutan 201-241 | eksternal |
+| Monitoring Kecamatan | Kegiatan Desa | `/kecamatan/desa-activities` |
 
-Catatan:
-- Untuk scope kecamatan, group `Monitoring Kecamatan` tetap dipertahankan (`desa-activities`).
+### L1: Account
 
-## Rencana Implementasi Teknis
+| L2 | L3 | Scope |
+| --- | --- | --- |
+| Akun | Profil | semua role |
+| Akun | Keluar (Log Out) | semua role |
 
-1. Update definisi menu group di `resources/js/Layouts/DashboardLayout.vue`.
-2. Gunakan generator scoped path (`/desa/*` dan `/kecamatan/*`) untuk mengurangi duplikasi.
-3. Pertahankan pola UI existing:
-- active state berdasarkan prefix URL
-- collapse/expand sidebar tetap sama
-- policy/scope backend tetap jadi authority akses
-4. Item referensi eksternal wajib:
-- dibuka tab baru (`target="_blank"`)
-- aman (`rel="noopener noreferrer"`)
-- saat sidebar collapsed dan grup dipilih, membuka link referensi pertama di tab baru
-5. Validasi:
-- `npm run build`
-- `php artisan test` (full suite)
+## Catatan Audit Teks Sidebar (2026-02-22)
+
+Status audit:
+- Fokus audit hanya teks pada `resources/js/Layouts/DashboardLayout.vue`.
+- Tujuan audit: memastikan label `L2/L3` relevan dengan domain dan sesuai acuan canonical.
+
+Temuan yang perlu dijaga:
+- Label sidebar harus sinkron dengan terminology map saat ada perubahan domain baru.
+- Penamaan item Pokja IV pilot project harus jelas membedakan:
+  - `Naskah Pelaporan Pilot Project` (modul naskah)
+  - `Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana` (modul indikator laporan)
+- Label administratif non-domain tetap konsisten bahasa:
+  - `Manajemen User`
+  - `Profil`
+  - `Keluar (Log Out)`
+
+Checklist audit sidebar berikutnya:
+- [ ] Verifikasi `L1/L2/L3` terhadap `TERMINOLOGY_NORMALIZATION_MAP`.
+- [ ] Verifikasi slug route di `DashboardLayout.vue` tetap match dengan matrix domain.
+- [ ] Verifikasi penempatan domain baru selalu masuk group organisasi yang benar.
+- [ ] Jika ada label baru/non-canonical, catat deviasi di `DOMAIN_DEVIATION_LOG`.
+
+## Implementasi Teknis
+
+1. Definisi struktur menu tetap di `resources/js/Layouts/DashboardLayout.vue`.
+2. Path domain tetap di-generate berbasis scope (`desa`/`kecamatan`).
+3. External reference wajib `target="_blank"` dan `rel="noopener noreferrer"`.
+4. Saat sidebar collapsed, klik group tetap membuka item utama group.
 
 ## Status
 
-- [x] Struktur group sidebar disusun per Sekretaris TPK + Pokja I-IV.
-- [x] Implementasi pada `DashboardLayout.vue`.
-- [x] Build + test suite pasca perubahan.
+- [x] Struktur organisasi sidebar `L1/L2/L3` terdokumentasi.
+- [x] Mapping domain sidebar ke slug route terdokumentasi.
+- [x] Catatan audit teks sidebar dan checklist audit lanjutan ditambahkan.

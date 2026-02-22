@@ -13,14 +13,14 @@ export const buildMenuAside = (roles = []) => {
     menu.push({
       route: '/super-admin/users',
       icon: mdiAccountMultiple,
-      label: 'Management User',
+      label: 'Manajemen User',
     })
   }
 
   menu.push({
     href: '/profile',
     icon: mdiAccountCircle,
-    label: 'Profile',
+    label: 'Profil',
   })
 
   return menu

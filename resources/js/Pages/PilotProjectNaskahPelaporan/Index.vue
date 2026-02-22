@@ -54,7 +54,7 @@ const cancelDelete = () => {
   <SectionMain>
     <SectionTitleLineWithButton
       :icon="mdiFileDocumentOutline"
-      :title="`Naskah Pelaporan Pilot Project ${scopeLabel}`"
+      :title="`Naskah Pelaporan Pilot Project Pokja IV ${scopeLabel}`"
       main
     />
 

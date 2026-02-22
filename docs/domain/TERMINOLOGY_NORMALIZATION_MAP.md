@@ -18,9 +18,9 @@ Tujuan:
 
 | Lampiran | Istilah teknis | Label canonical pedoman | Label saat ini (terdeteksi) | Normalisasi target | Status |
 | --- | --- | --- | --- | --- | --- |
-| 4.9a | `anggota-tim-penggerak` | Buku Daftar Anggota Tim Penggerak PKK | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
-| 4.9b | `kader-khusus` | Buku Daftar Kader Tim Penggerak PKK | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
-| 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
+| 4.9a | `anggota-tim-penggerak` | Buku Daftar Anggota Tim Penggerak PKK | Sidebar masih memakai `Buku Daftar Anggota TP PKK`; PDF sudah mengikuti pedoman | Sinkronkan label sidebar ke istilah canonical `Tim Penggerak` | partial |
+| 4.9b | `kader-khusus` | Buku Daftar Kader Tim Penggerak PKK | Sidebar masih memakai `Buku Daftar Kader TP PKK`; PDF sudah mengikuti pedoman | Sinkronkan label sidebar ke istilah canonical `Tim Penggerak` | partial |
+| 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | Sidebar dan index masih memakai `Buku Agenda Surat` | Lengkapi label menu/index menjadi `Buku Agenda Surat Masuk/Keluar` | partial |
 | 4.11 | `bantuans` | Buku Keuangan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.12 | `inventaris` | Buku Inventaris | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.13 | `activities` | Buku Kegiatan | PDF judul utama sudah `BUKU KEGIATAN TP PKK` | Pertahankan | match |
@@ -54,7 +54,7 @@ Tujuan:
 | 4.20b | `data-umum-pkk-kecamatan` | Data Umum PKK | Report PDF 21 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-21 untuk mencegah drift | implemented (report-only) |
 | 4.23 | `data-kegiatan-pkk-pokja-iii` | Data Kegiatan PKK (Pokja III) | Report PDF 20 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-20 untuk mencegah drift | implemented (report-only) |
 | 4.24 | `data-kegiatan-pkk-pokja-iv` | Data Kegiatan PKK (Pokja IV) | Report PDF 27 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-27 untuk mencegah drift | implemented (report-only) |
-| Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Label canonical sudah aktif pada menu/index/PDF | Pertahankan label canonical, lanjutkan pemetaan indikator detail katalog | implemented (catalog tahap awal) |
+| Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Menu/index masih memakai label ringkas (`Laporan Manual Pilot Project`, `Laporan Pilot Project Keluarga Sehat`); PDF sudah memuat judul canonical panjang | Sinkronkan label sidebar/index ke judul canonical agar konsisten lintas UI-PDF | partial |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
 
@@ -62,10 +62,15 @@ Tujuan:
 - `Laporan Kejar Paket/KF/PAUD` -> gunakan `Data Isian Kejar Paket/KF/PAUD`
 - `Laporan Posyandu` -> gunakan `Data Isian Posyandu oleh TP PKK`
 - `Data Warga` (sebagai judul modul/PDF 4.14.1a) -> gunakan `Daftar Warga TP PKK`
+- `Buku Daftar Anggota TP PKK` -> gunakan `Buku Daftar Anggota Tim Penggerak PKK`
+- `Buku Daftar Kader TP PKK` -> gunakan `Buku Daftar Kader Tim Penggerak PKK`
+- `Buku Agenda Surat` -> gunakan `Buku Agenda Surat Masuk/Keluar`
 - `Koperasi Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Koperasi Desa/Kecamatan`
 - `Kejar Paket Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Kejar Paket/KF/PAUD Desa/Kecamatan`
 - `Posyandu Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Posyandu oleh TP PKK Desa/Kecamatan`
 - `Pilot Project` (label tunggal tanpa konteks) -> gunakan `Laporan Pilot Project Keluarga Sehat`
+- `Laporan Manual Pilot Project` -> gunakan `Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana`
+- `Naskah Pelaporan Pilot Project` (tanpa konteks) -> gunakan `Naskah Pelaporan Pilot Project Pokja IV`
 - `Laporan Pilot Project Bencana` -> gunakan `Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana`
 
 ## Normalisasi Label UI Administratif (Role/Scope/Wilayah)

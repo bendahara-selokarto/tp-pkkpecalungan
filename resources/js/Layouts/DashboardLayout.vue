@@ -47,9 +47,9 @@ const buildScopedMenuGroups = (scope) => [
     label: 'Sekretaris TPK',
     code: 'ST',
     items: [
-      { href: `/${scope}/anggota-tim-penggerak`, label: 'Buku Daftar Anggota TP PKK' },
-      { href: `/${scope}/kader-khusus`, label: 'Buku Daftar Kader TP PKK' },
-      { href: `/${scope}/agenda-surat`, label: 'Buku Agenda Surat' },
+      { href: `/${scope}/anggota-tim-penggerak`, label: 'Buku Daftar Anggota Tim Penggerak PKK' },
+      { href: `/${scope}/kader-khusus`, label: 'Buku Daftar Kader Tim Penggerak PKK' },
+      { href: `/${scope}/agenda-surat`, label: 'Buku Agenda Surat Masuk/Keluar' },
       { href: `/${scope}/bantuans`, label: 'Buku Keuangan' },
       { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -62,7 +62,7 @@ const buildScopedMenuGroups = (scope) => [
     label: 'Pokja I',
     code: 'P1',
     items: [
-      { href: `/${scope}/data-warga`, label: 'Data Warga' },
+      { href: `/${scope}/data-warga`, label: 'Daftar Warga TP PKK' },
       { href: `/${scope}/data-kegiatan-warga`, label: 'Data Kegiatan Warga' },
       { href: `/${scope}/bkl`, label: 'BKL' },
       { href: `/${scope}/bkr`, label: 'BKR' },
@@ -99,8 +99,8 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/simulasi-penyuluhan`, label: 'Data Isian Kelompok Simulasi dan Penyuluhan' },
       { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga' },
       { href: `/${scope}/program-prioritas`, label: 'Program Prioritas' },
-      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project (220-221)' },
-      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Manual Pilot Project (6.c)' },
+      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },
+      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
     ],
   },
   {
@@ -238,9 +238,9 @@ const hideBrokenImage = (event) => {
             {{ darkModeStore.isEnabled ? 'Light mode' : 'Dark mode' }}
           </button>
           <span class="text-sm text-slate-700 dark:text-slate-200">{{ user?.name }}</span>
-          <a href="/profile" class="text-sm text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Profile</a>
+          <a href="/profile" class="text-sm text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Profil</a>
           <button type="button" class="text-sm text-rose-600 hover:text-rose-700 dark:text-rose-400" @click="logout">
-            Log Out
+            Keluar (Log Out)
           </button>
         </div>
       </div>
@@ -290,7 +290,7 @@ const hideBrokenImage = (event) => {
               :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/super-admin/users') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
             >
-              <span v-show="!sidebarCollapsed">Management User</span>
+              <span v-show="!sidebarCollapsed">Manajemen User</span>
               <span v-show="sidebarCollapsed">MU</span>
             </Link>
           </div>
@@ -366,13 +366,13 @@ const hideBrokenImage = (event) => {
           </div>
 
           <div class="space-y-1">
-            <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Account</p>
+            <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Akun</p>
             <a
               href="/profile"
               :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/profile') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
               class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
             >
-              <span v-show="!sidebarCollapsed">Profile</span>
+              <span v-show="!sidebarCollapsed">Profil</span>
               <span v-show="sidebarCollapsed">P</span>
             </a>
           </div>
@@ -384,7 +384,7 @@ const hideBrokenImage = (event) => {
             class="w-full rounded-md border border-rose-200 px-3 py-2 text-sm font-medium text-rose-600 hover:bg-rose-50 dark:border-rose-900/60 dark:text-rose-400 dark:hover:bg-rose-900/20"
             @click="logout"
           >
-            <span v-show="!sidebarCollapsed">Log Out</span>
+            <span v-show="!sidebarCollapsed">Keluar (Log Out)</span>
             <span v-show="sidebarCollapsed">LO</span>
           </button>
         </div>
