@@ -130,6 +130,14 @@ const props = defineProps({
         >
           Cetak 4.19b
         </a>
+        <a
+          href="/kecamatan/catatan-keluarga/data-umum-pkk/report/pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center rounded-md border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-900/20"
+        >
+          Cetak 4.20a
+        </a>
       </div>
 
       <div class="overflow-x-auto">

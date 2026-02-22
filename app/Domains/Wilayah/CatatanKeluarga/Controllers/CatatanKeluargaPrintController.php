@@ -15,6 +15,7 @@ use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilPkkDusun
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilPkkRtUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilPkkRwUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilTpPkkKecamatanUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataUmumPkkUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapPkkRtUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapRwUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
@@ -37,6 +38,7 @@ class CatatanKeluargaPrintController extends Controller
         private readonly ListScopedRekapIbuHamilPkkRtUseCase $listScopedRekapIbuHamilPkkRtUseCase,
         private readonly ListScopedRekapIbuHamilPkkRwUseCase $listScopedRekapIbuHamilPkkRwUseCase,
         private readonly ListScopedRekapIbuHamilTpPkkKecamatanUseCase $listScopedRekapIbuHamilTpPkkKecamatanUseCase,
+        private readonly ListScopedDataUmumPkkUseCase $listScopedDataUmumPkkUseCase,
         private readonly ListScopedRekapPkkRtUseCase $listScopedRekapPkkRtUseCase,
         private readonly ListScopedCatatanPkkRwUseCase $listScopedCatatanPkkRwUseCase,
         private readonly ListScopedRekapRwUseCase $listScopedRekapRwUseCase,
@@ -112,6 +114,16 @@ class CatatanKeluargaPrintController extends Controller
     public function printKecamatanRekapIbuHamilTpPkkKecamatanReport(): Response
     {
         return $this->streamRekapIbuHamilTpPkkKecamatanReport(ScopeLevel::KECAMATAN->value);
+    }
+
+    public function printDesaDataUmumPkkReport(): Response
+    {
+        return $this->streamDataUmumPkkReport(ScopeLevel::DESA->value);
+    }
+
+    public function printKecamatanDataUmumPkkReport(): Response
+    {
+        return $this->streamDataUmumPkkReport(ScopeLevel::KECAMATAN->value);
     }
 
     public function printDesaRekapPkkRtReport(): Response
@@ -549,6 +561,82 @@ class CatatanKeluargaPrintController extends Controller
         ]);
 
         return $pdf->stream("rekap-ibu-hamil-melahirkan-tp-pkk-kecamatan-{$level}-report.pdf");
+    }
+
+    private function streamDataUmumPkkReport(string $level): Response
+    {
+        $this->authorize('viewAny', CatatanKeluarga::class);
+
+        $items = $this->listScopedDataUmumPkkUseCase
+            ->execute($level)
+            ->values();
+
+        $totals = [
+            'jumlah_pkk_rw' => (int) $items->sum('jumlah_pkk_rw'),
+            'jumlah_pkk_rt' => (int) $items->sum('jumlah_pkk_rt'),
+            'jumlah_dasa_wisma' => (int) $items->sum('jumlah_dasa_wisma'),
+            'jumlah_krt' => (int) $items->sum('jumlah_krt'),
+            'jumlah_kk' => (int) $items->sum('jumlah_kk'),
+            'jumlah_jiwa_l' => (int) $items->sum('jumlah_jiwa_l'),
+            'jumlah_jiwa_p' => (int) $items->sum('jumlah_jiwa_p'),
+            'jumlah_kader_anggota_tp_pkk_l' => (int) $items->sum('jumlah_kader_anggota_tp_pkk_l'),
+            'jumlah_kader_anggota_tp_pkk_p' => (int) $items->sum('jumlah_kader_anggota_tp_pkk_p'),
+            'jumlah_kader_umum_l' => (int) $items->sum('jumlah_kader_umum_l'),
+            'jumlah_kader_umum_p' => (int) $items->sum('jumlah_kader_umum_p'),
+            'jumlah_kader_khusus_l' => (int) $items->sum('jumlah_kader_khusus_l'),
+            'jumlah_kader_khusus_p' => (int) $items->sum('jumlah_kader_khusus_p'),
+            'jumlah_tenaga_sekretariat_honorer_l' => (int) $items->sum('jumlah_tenaga_sekretariat_honorer_l'),
+            'jumlah_tenaga_sekretariat_honorer_p' => (int) $items->sum('jumlah_tenaga_sekretariat_honorer_p'),
+            'jumlah_tenaga_sekretariat_bantuan_l' => (int) $items->sum('jumlah_tenaga_sekretariat_bantuan_l'),
+            'jumlah_tenaga_sekretariat_bantuan_p' => (int) $items->sum('jumlah_tenaga_sekretariat_bantuan_p'),
+        ];
+
+        $tpPkkDesaKelurahanTotals = [
+            'jumlah_kader_anggota_tp_pkk_l' => $totals['jumlah_kader_anggota_tp_pkk_l'],
+            'jumlah_kader_anggota_tp_pkk_p' => $totals['jumlah_kader_anggota_tp_pkk_p'],
+            'jumlah_kader_umum_l' => $totals['jumlah_kader_umum_l'],
+            'jumlah_kader_umum_p' => $totals['jumlah_kader_umum_p'],
+            'jumlah_kader_khusus_l' => $totals['jumlah_kader_khusus_l'],
+            'jumlah_kader_khusus_p' => $totals['jumlah_kader_khusus_p'],
+            'jumlah_tenaga_sekretariat_honorer_l' => $totals['jumlah_tenaga_sekretariat_honorer_l'],
+            'jumlah_tenaga_sekretariat_honorer_p' => $totals['jumlah_tenaga_sekretariat_honorer_p'],
+            'jumlah_tenaga_sekretariat_bantuan_l' => $totals['jumlah_tenaga_sekretariat_bantuan_l'],
+            'jumlah_tenaga_sekretariat_bantuan_p' => $totals['jumlah_tenaga_sekretariat_bantuan_p'],
+        ];
+
+        $user = auth()->user()->loadMissing('area.parent');
+        $area = $user->area;
+
+        $meta = [
+            'tp_pkk_desa_kel' => '-',
+            'kecamatan' => '-',
+            'kab_kota' => '-',
+            'provinsi' => '-',
+        ];
+
+        if ($area?->level === ScopeLevel::DESA->value) {
+            $meta['tp_pkk_desa_kel'] = trim((string) ($area->name ?? '')) !== '' ? trim((string) $area->name) : '-';
+            $meta['kecamatan'] = trim((string) ($area->parent?->name ?? '')) !== '' ? trim((string) $area->parent?->name) : '-';
+        }
+
+        if ($area?->level === ScopeLevel::KECAMATAN->value) {
+            $meta['tp_pkk_desa_kel'] = 'MULTI';
+            $meta['kecamatan'] = trim((string) ($area->name ?? '')) !== '' ? trim((string) $area->name) : '-';
+        }
+
+        $pdf = $this->pdfViewFactory->loadView('pdf.data_umum_pkk_report', [
+            'items' => $items,
+            'level' => $level,
+            'areaName' => $area?->name ?? '-',
+            'meta' => $meta,
+            'totals' => $totals,
+            'tpPkkDesaKelurahanTotals' => $tpPkkDesaKelurahanTotals,
+            'printedBy' => $user,
+            'printedAt' => now(),
+            'tahun' => now()->format('Y'),
+        ]);
+
+        return $pdf->stream("data-umum-pkk-{$level}-report.pdf");
     }
 
     private function streamCatatanPkkRwReport(string $level): Response

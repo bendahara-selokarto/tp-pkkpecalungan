@@ -2,11 +2,14 @@
 
 namespace App\Domains\Wilayah\CatatanKeluarga\Repositories;
 
+use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
+use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPemanfaatanTanahPekaranganHatinyaPkk;
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\DataWarga\Models\DataWargaAnggota;
+use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -399,6 +402,207 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
                 'jumlah_balita_meninggal_l' => $this->sumArrayIntField($groupItems, 'jumlah_balita_meninggal_l'),
                 'jumlah_balita_meninggal_p' => $this->sumArrayIntField($groupItems, 'jumlah_balita_meninggal_p'),
                 'keterangan' => $keterangan !== '' ? $keterangan : '-',
+            ]);
+        }
+
+        return $result;
+    }
+
+    public function getDataUmumPkkByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $households = DataWarga::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->with('anggota')
+            ->orderBy('id')
+            ->get();
+
+        $grouped = [];
+
+        $ensureRow = function (string $label) use (&$grouped): void {
+            if (isset($grouped[$label])) {
+                return;
+            }
+
+            $grouped[$label] = [
+                'pkk_rw' => [],
+                'pkk_rt' => [],
+                'dasa_wisma' => [],
+                'krt' => 0,
+                'kk' => 0,
+                'jiwa_l' => 0,
+                'jiwa_p' => 0,
+                'anggota_tp_pkk_l' => 0,
+                'anggota_tp_pkk_p' => 0,
+                'kader_umum_l' => 0,
+                'kader_umum_p' => 0,
+                'kader_khusus_l' => 0,
+                'kader_khusus_p' => 0,
+                'tenaga_honorer_l' => 0,
+                'tenaga_honorer_p' => 0,
+                'tenaga_bantuan_l' => 0,
+                'tenaga_bantuan_p' => 0,
+                'keterangan' => [],
+            ];
+        };
+
+        $incrementGender = function (array &$row, string $keyPrefix, ?string $gender): void {
+            if ($gender === 'L') {
+                $row[$keyPrefix.'_l']++;
+
+                return;
+            }
+
+            if ($gender === 'P') {
+                $row[$keyPrefix.'_p']++;
+            }
+        };
+
+        foreach ($households as $household) {
+            $groupLabel = $this->normalizeDataUmumPkkGroupLabel(
+                $this->extractDusunLingkunganName($household)
+            );
+            $ensureRow($groupLabel);
+
+            $rw = $this->extractRwNumber($household);
+            if ($rw !== '-') {
+                $grouped[$groupLabel]['pkk_rw'][$rw] = true;
+            }
+
+            $rt = $this->extractRtNumber($household);
+            if ($rt !== '-') {
+                $grouped[$groupLabel]['pkk_rt'][$rt] = true;
+            }
+
+            $dasaWisma = $this->normalizeDasaWismaName($household->dasawisma);
+            if ($dasaWisma !== '-') {
+                $grouped[$groupLabel]['dasa_wisma'][$dasaWisma] = true;
+            }
+
+            $grouped[$groupLabel]['krt']++;
+            $grouped[$groupLabel]['kk']++;
+
+            $anggota = $household->relationLoaded('anggota') ? $household->anggota : collect();
+            $jiwaL = 0;
+            $jiwaP = 0;
+
+            if ($anggota->isNotEmpty()) {
+                $jiwaL = (int) $anggota->where('jenis_kelamin', 'L')->count();
+                $jiwaP = (int) $anggota->where('jenis_kelamin', 'P')->count();
+            }
+
+            if ($jiwaL === 0 && $jiwaP === 0) {
+                $jiwaL = (int) $household->jumlah_warga_laki_laki;
+                $jiwaP = (int) $household->jumlah_warga_perempuan;
+            }
+
+            $grouped[$groupLabel]['jiwa_l'] += $jiwaL;
+            $grouped[$groupLabel]['jiwa_p'] += $jiwaP;
+
+            $keterangan = trim((string) $household->keterangan);
+            if ($keterangan !== '') {
+                $grouped[$groupLabel]['keterangan'][] = $keterangan;
+            }
+        }
+
+        $anggotaTpPkk = AnggotaTimPenggerak::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->get(['jenis_kelamin', 'alamat', 'jabatan', 'keterangan']);
+
+        foreach ($anggotaTpPkk as $item) {
+            $groupLabel = $this->normalizeDataUmumPkkGroupLabel(
+                $this->extractDusunLingkunganFromText($item->alamat)
+            );
+            $ensureRow($groupLabel);
+
+            $incrementGender($grouped[$groupLabel], 'anggota_tp_pkk', $item->jenis_kelamin);
+
+            $jabatan = Str::lower(trim((string) $item->jabatan));
+            if ($jabatan !== '') {
+                if (str_contains($jabatan, 'honorer')) {
+                    $incrementGender($grouped[$groupLabel], 'tenaga_honorer', $item->jenis_kelamin);
+                }
+
+                if (str_contains($jabatan, 'bantuan')) {
+                    $incrementGender($grouped[$groupLabel], 'tenaga_bantuan', $item->jenis_kelamin);
+                }
+            }
+
+            $keterangan = trim((string) $item->keterangan);
+            if ($keterangan !== '') {
+                $grouped[$groupLabel]['keterangan'][] = $keterangan;
+            }
+        }
+
+        $kaderUmumItems = AnggotaPokja::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->get(['jenis_kelamin', 'alamat', 'keterangan']);
+
+        foreach ($kaderUmumItems as $item) {
+            $groupLabel = $this->normalizeDataUmumPkkGroupLabel(
+                $this->extractDusunLingkunganFromText($item->alamat)
+            );
+            $ensureRow($groupLabel);
+
+            $incrementGender($grouped[$groupLabel], 'kader_umum', $item->jenis_kelamin);
+
+            $keterangan = trim((string) $item->keterangan);
+            if ($keterangan !== '') {
+                $grouped[$groupLabel]['keterangan'][] = $keterangan;
+            }
+        }
+
+        $kaderKhususItems = KaderKhusus::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->get(['jenis_kelamin', 'alamat', 'keterangan']);
+
+        foreach ($kaderKhususItems as $item) {
+            $groupLabel = $this->normalizeDataUmumPkkGroupLabel(
+                $this->extractDusunLingkunganFromText($item->alamat)
+            );
+            $ensureRow($groupLabel);
+
+            $incrementGender($grouped[$groupLabel], 'kader_khusus', $item->jenis_kelamin);
+
+            $keterangan = trim((string) $item->keterangan);
+            if ($keterangan !== '') {
+                $grouped[$groupLabel]['keterangan'][] = $keterangan;
+            }
+        }
+
+        $sortedGroupLabels = collect(array_keys($grouped))
+            ->sort(fn (string $left, string $right): int => $this->compareDataUmumPkkLabels($left, $right))
+            ->values();
+
+        $result = collect();
+
+        foreach ($sortedGroupLabels as $groupLabel) {
+            $row = $grouped[$groupLabel];
+
+            $result->push([
+                'nomor_urut' => $result->count() + 1,
+                'nama_dusun_lingkungan_atau_sebutan_lain' => $groupLabel,
+                'jumlah_pkk_rw' => count($row['pkk_rw']),
+                'jumlah_pkk_rt' => count($row['pkk_rt']),
+                'jumlah_dasa_wisma' => count($row['dasa_wisma']),
+                'jumlah_krt' => (int) $row['krt'],
+                'jumlah_kk' => (int) $row['kk'],
+                'jumlah_jiwa_l' => (int) $row['jiwa_l'],
+                'jumlah_jiwa_p' => (int) $row['jiwa_p'],
+                'jumlah_kader_anggota_tp_pkk_l' => (int) $row['anggota_tp_pkk_l'],
+                'jumlah_kader_anggota_tp_pkk_p' => (int) $row['anggota_tp_pkk_p'],
+                'jumlah_kader_umum_l' => (int) $row['kader_umum_l'],
+                'jumlah_kader_umum_p' => (int) $row['kader_umum_p'],
+                'jumlah_kader_khusus_l' => (int) $row['kader_khusus_l'],
+                'jumlah_kader_khusus_p' => (int) $row['kader_khusus_p'],
+                'jumlah_tenaga_sekretariat_honorer_l' => (int) $row['tenaga_honorer_l'],
+                'jumlah_tenaga_sekretariat_honorer_p' => (int) $row['tenaga_honorer_p'],
+                'jumlah_tenaga_sekretariat_bantuan_l' => (int) $row['tenaga_bantuan_l'],
+                'jumlah_tenaga_sekretariat_bantuan_p' => (int) $row['tenaga_bantuan_p'],
+                'keterangan' => $this->composeScalarFieldLabel(collect($row['keterangan'])),
             ]);
         }
 
@@ -1239,6 +1443,54 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         return ((int) $left) <=> ((int) $right);
     }
 
+    private function compareDataUmumPkkLabels(string $left, string $right): int
+    {
+        if ($left === $right) {
+            return 0;
+        }
+
+        if ($left === 'SEBUTAN LAIN') {
+            return 1;
+        }
+
+        if ($right === 'SEBUTAN LAIN') {
+            return -1;
+        }
+
+        return strnatcasecmp($left, $right);
+    }
+
+    private function normalizeDataUmumPkkGroupLabel(string $label): string
+    {
+        $normalized = trim($label);
+
+        if ($normalized === '' || $normalized === '-') {
+            return 'SEBUTAN LAIN';
+        }
+
+        return $normalized;
+    }
+
+    private function extractDusunLingkunganFromText(?string $source): string
+    {
+        $normalized = trim((string) $source);
+
+        if ($normalized === '') {
+            return '-';
+        }
+
+        if (preg_match('/\b(DUSUN|LINGKUNGAN)\s+([^,;]+?)(?=\s+RT\b|\s+RW\b|$)/i', $normalized, $matches) === 1) {
+            $prefix = strtoupper(trim((string) $matches[1]));
+            $name = trim((string) $matches[2]);
+
+            if ($name !== '') {
+                return sprintf('%s %s', $prefix, $name);
+            }
+        }
+
+        return '-';
+    }
+
     /**
      * @return array{0: string|null, 1: string|null}
      */
@@ -1349,5 +1601,23 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         }
 
         return sprintf('%s / %s', $rtRw, $dusun);
+    }
+
+    /**
+     * @param Collection<int, mixed> $values
+     */
+    private function composeScalarFieldLabel(Collection $values): string
+    {
+        $normalized = $values
+            ->map(fn ($value): string => trim((string) $value))
+            ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
+            ->unique()
+            ->values();
+
+        if ($normalized->isEmpty()) {
+            return '-';
+        }
+
+        return $normalized->implode('; ');
     }
 }

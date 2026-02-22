@@ -50,6 +50,7 @@ Tujuan:
 | 4.18c | `rekap-ibu-hamil-pkk-rw` | Rekapitulasi Data/Buku Catatan Ibu Hamil, Melahirkan, Nifas, Ibu Meninggal, Kelahiran Bayi, Bayi Meninggal dan Kematian Balita dalam Kelompok PKK RW | Report PDF 16 kolom dengan kontrak cara pengisian autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-16 untuk mencegah drift | implemented (report-only) |
 | 4.18d | `rekap-ibu-hamil-pkk-dusun-lingkungan` | Buku Catatan Ibu Hamil, Kelahiran, Kematian Bayi, Kematian Balita dan Kematian Ibu Hamil, Melahirkan dan Nifas dalam Kelompok PKK Dusun/Lingkungan | Report PDF 17 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-17 untuk mencegah drift | implemented (report-only) |
 | 4.19b | `rekap-ibu-hamil-tp-pkk-kecamatan` | Rekapitulasi Data/Buku Catatan Ibu Hamil, Melahirkan, Nifas, Ibu Meninggal, Kelahiran Bayi, Bayi Meninggal dan Kematian Balita pada Tingkat TP PKK Kecamatan | Report PDF 19 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-19 untuk mencegah drift | implemented (report-only) |
+| 4.20a | `data-umum-pkk` | Data Umum PKK | Report PDF 20 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-20 untuk mencegah drift | implemented (report-only) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Label canonical sudah aktif pada menu/index/PDF | Pertahankan label canonical, lanjutkan pemetaan indikator detail katalog | implemented (catalog tahap awal) |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
@@ -127,5 +128,7 @@ Implementasi canonical:
   - `docs/domain/REKAP_IBU_HAMIL_DUSUN_LINGKUNGAN_4_18D_MAPPING.md`
 - Mapping Rekap Ibu Hamil 4.19b:
   - `docs/domain/REKAP_IBU_HAMIL_TP_PKK_KECAMATAN_4_19B_MAPPING.md`
+- Mapping Data Umum PKK 4.20a:
+  - `docs/domain/DATA_UMUM_PKK_4_20A_MAPPING.md`
 - Ekstensi pedoman:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`

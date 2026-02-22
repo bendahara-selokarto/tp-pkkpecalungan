@@ -41,4 +41,7 @@ interface CatatanKeluargaRepositoryInterface
 
     // Agregasi tingkat kecamatan dibangun dari rekap tingkat desa/kelurahan.
     public function getRekapIbuHamilTpPkkKecamatanByLevelAndArea(string $level, int $areaId): Collection;
+
+    // 4.20a data umum PKK
+    public function getDataUmumPkkByLevelAndArea(string $level, int $areaId): Collection;
 }
