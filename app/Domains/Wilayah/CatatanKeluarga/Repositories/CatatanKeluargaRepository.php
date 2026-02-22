@@ -94,6 +94,51 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         return $rows;
     }
 
+    public function getCatatanPkkRwByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $households = $this->scopedHouseholds($level, $areaId);
+        $activityFlags = $this->buildActivityFlags($level, $areaId);
+        $grouped = $households->groupBy(
+            fn (DataWarga $item): string => $this->extractRtNumber($item)
+        );
+
+        $sortedRtNumbers = $grouped
+            ->keys()
+            ->sort(fn (string $left, string $right): int => $this->compareRtNumbers($left, $right))
+            ->values();
+
+        $rows = collect();
+
+        foreach ($sortedRtNumbers as $rtNumber) {
+            $groupItems = $grouped->get($rtNumber, collect());
+            $metrics = $this->sumHouseholdMetrics($groupItems, $activityFlags);
+            $keterangan = $groupItems
+                ->pluck('keterangan')
+                ->filter(fn ($value) => is_string($value) && trim($value) !== '')
+                ->unique()
+                ->implode('; ');
+
+            $rows->push(array_merge([
+                'nomor_urut' => $rows->count() + 1,
+                'nomor_rt' => $rtNumber,
+                'jml_dasawisma' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->normalizeDasaWismaName($item->dasawisma))
+                    ->unique()
+                    ->count(),
+                'jml_krt' => $groupItems->count(),
+                'jml_kk' => $groupItems->count(),
+                'ket' => $keterangan !== '' ? $keterangan : null,
+            ], $metrics, [
+                'tiga_buta_l' => 0,
+                'tiga_buta_p' => 0,
+                'sungai' => 0,
+                'jumlah_sarana_mck' => (int) ($metrics['memiliki_mck_septic'] ?? 0),
+            ]));
+        }
+
+        return $rows;
+    }
+
     private function scopedHouseholds(string $level, int $areaId): Collection
     {
         return DataWarga::query()
@@ -231,6 +276,42 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         $trimmed = trim((string) $rawName);
 
         return $trimmed !== '' ? $trimmed : '-';
+    }
+
+    private function extractRtNumber(DataWarga $item): string
+    {
+        $sources = [$item->alamat, $item->dasawisma];
+
+        foreach ($sources as $source) {
+            $normalized = trim((string) $source);
+
+            if ($normalized === '') {
+                continue;
+            }
+
+            if (preg_match('/\bRT(?:\/RW)?\s*[:.\-]?\s*0*(\d{1,3})\b/i', $normalized, $matches) === 1) {
+                return str_pad((string) ((int) $matches[1]), 2, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return '-';
+    }
+
+    private function compareRtNumbers(string $left, string $right): int
+    {
+        if ($left === $right) {
+            return 0;
+        }
+
+        if ($left === '-') {
+            return 1;
+        }
+
+        if ($right === '-') {
+            return -1;
+        }
+
+        return ((int) $left) <=> ((int) $right);
     }
 
     private function isBalita(?int $umur): bool
