@@ -22,13 +22,13 @@
 - [x] Sinkronkan status awal ke terminology map dan contract matrix.
 - [x] Lakukan verifikasi visual header tabel hingga level `rowspan/colspan`.
 - [x] Konfirmasi peta final kolom + merge cell.
-- [ ] Sinkronkan implementasi report jika diputuskan perlu modul/report baru.
+- [x] Sinkronkan implementasi report 4.16c pada flow `catatan-keluarga` (report-only, tanpa menu input baru).
 
 ## Validasi
 - [x] Token identitas dokumen 4.16c terbaca.
 - [x] Mapping awal 4.16c tersedia.
 - [x] Peta header tabel lengkap tervalidasi visual.
-- [ ] Test baseline disiapkan setelah keputusan implementasi.
+- [x] Regression test report 4.16c disiapkan (header + akses scope + stale metadata).
 
 ## Risiko
 - Risiko salah mapping jika implementasi dilakukan sebelum verifikasi visual header tabel.
@@ -39,6 +39,10 @@
 - [x] Gunakan dokumen autentik sebagai source of truth saat parser tidak memadai.
 
 ## Catatan Keputusan Final Fase Dokumen
-- Status fase saat ini: **reference-verified**.
-- Sinkronisasi dokumen domain (`terminology map` + `contract matrix`) boleh dilanjutkan.
-- Implementasi report 4.16c masih menunggu keputusan concern terpisah.
+- Status fase saat ini: **implemented (report-only via catatan-keluarga)**.
+- Endpoint aktif:
+  - `/desa/catatan-keluarga/catatan-pkk-rw/report/pdf`
+  - `/kecamatan/catatan-keluarga/catatan-pkk-rw/report/pdf`
+- Catatan implementasi:
+  - Tidak ada menu/domain input baru.
+  - Agregasi 4.16c mengikuti data `data_wargas` + `data_warga_anggotas` + indikator area-level lintas modul, selaras pola 4.16a/4.16b.

@@ -85,10 +85,16 @@ Grup header:
 
 - Status header merge: **terverifikasi visual**.
 - Status sinkronisasi kontrak domain: **siap sinkronisasi dokumen**.
-- Status implementasi report: **belum diimplementasikan** (menunggu keputusan implementasi).
+- Status implementasi report: **implemented (report-only via catatan-keluarga)**.
 
 ## Dampak ke Kontrak Domain
 
 - Dokumen `183.pdf` ditetapkan sebagai sumber resmi Lampiran `4.16c`.
 - Struktur autentik 32 kolom sudah terkunci untuk referensi domain.
-- Implementasi modul/report belum dijalankan pada fase ini.
+- Implementasi aktif:
+  - view PDF: `resources/views/pdf/catatan_data_kegiatan_warga_pkk_rw_report.blade.php`
+  - endpoint desa: `/desa/catatan-keluarga/catatan-pkk-rw/report/pdf`
+  - endpoint kecamatan: `/kecamatan/catatan-keluarga/catatan-pkk-rw/report/pdf`
+- Catatan sumber data:
+  - Agregasi utama dihitung dari `data_wargas` + `data_warga_anggotas`.
+  - Indikator kegiatan 4.16c mengikuti indikator level area (belum granular per-keluarga/per-RT) untuk menjaga konsistensi kontrak input saat ini.
