@@ -45,12 +45,12 @@ Struktur tabel:
 | 11 | IBU MENYUSUI |
 | 12 | LANSIA |
 | 13 | 3 BUTA |
-| 14 | BERKEBUTUHAN KHUSUS (?) |
+| 14 | BERKEBUTUHAN KHUSUS |
 | 15 | SEHAT LAYAK HUNI |
 | 16 | TIDAK SEHAT LAYAK HUNI |
 | 17 | MEMILIKI TEMPAT PEMBUANGAN SAMPAH |
-| 18 | MEMILIKI SPAL (?): PEMBUANGAN AIR LIMBAH |
-| 19 | MEMILIKI JAMBAN KELUARGA SEPTIC TANK |
+| 18 | MEMILIKI SPAL/PEMBUANGAN AIR |
+| 19 | MEMILIKI SARANA MCK DAN SEPTIC TANK |
 | 20 | PDAM |
 | 21 | SUMUR |
 | 22 | DLL |
@@ -63,7 +63,7 @@ Struktur tabel:
 | 29 | KET |
 
 Catatan:
-- Item bertanda `(?)` memerlukan transkripsi manual final dari dokumen autentik karena teks sub-header sangat kecil dan tidak tersedia di text layer PDF.
+- Label sub-header kolom `14`, `18`, dan `19` telah difinalkan dengan verifikasi lintas-lampiran 4.16a/4.16b yang memiliki struktur indikator sepadan pada grup kriteria rumah.
 
 ## Temuan Akurasi Parser Node.js
 
@@ -80,4 +80,11 @@ Catatan:
   - `data-warga`
   - `data-kegiatan-warga`
   - `catatan-keluarga`
-- Saat ini belum ada modul report yang merepresentasikan layout 29 kolom autentik Lampiran 4.16a secara penuh.
+- Implementasi aktif:
+  - view PDF: `resources/views/pdf/rekap_catatan_data_kegiatan_warga_dasa_wisma_report.blade.php`
+  - endpoint desa: `/desa/catatan-keluarga/rekap-dasa-wisma/report/pdf`
+  - endpoint kecamatan: `/kecamatan/catatan-keluarga/rekap-dasa-wisma/report/pdf`
+- Status implementasi: `implemented (report-only via catatan-keluarga)`.
+- Catatan sumber data:
+  - Kolom berbasis anggota keluarga dihitung dari `data_warga_anggotas`.
+  - Indikator kegiatan 25-28 saat ini mengikuti indikator level area (belum per-keluarga) karena kontrak input per-keluarga belum tersedia.

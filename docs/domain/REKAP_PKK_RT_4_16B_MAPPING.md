@@ -85,4 +85,11 @@ Model merge header:
   - `data-warga`
   - `data-kegiatan-warga`
   - `catatan-keluarga`
-- Saat ini belum ada modul report yang merepresentasikan layout 30 kolom autentik Lampiran 4.16b secara penuh.
+- Implementasi aktif:
+  - view PDF: `resources/views/pdf/rekap_catatan_data_kegiatan_warga_pkk_rt_report.blade.php`
+  - endpoint desa: `/desa/catatan-keluarga/rekap-pkk-rt/report/pdf`
+  - endpoint kecamatan: `/kecamatan/catatan-keluarga/rekap-pkk-rt/report/pdf`
+- Status implementasi: `implemented (report-only via catatan-keluarga)`.
+- Catatan sumber data:
+  - Agregasi jumlah anggota keluarga dihitung dari `data_warga_anggotas` dan digrup per `dasawisma`.
+  - Indikator kegiatan 26-29 saat ini mengikuti indikator level area (belum per-keluarga/per-dasawisma detail) karena kontrak input granular belum tersedia.

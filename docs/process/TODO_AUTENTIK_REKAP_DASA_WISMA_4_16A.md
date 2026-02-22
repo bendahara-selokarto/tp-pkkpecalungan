@@ -19,18 +19,30 @@
 - [x] Baca dokumen autentik sesuai flow `Baca -> Laporkan/Konfirmasi -> Sinkronkan`.
 - [x] Buat mapping domain: `docs/domain/REKAP_DASA_WISMA_4_16A_MAPPING.md`.
 - [x] Sinkronkan terminology map dan domain contract matrix.
-- [ ] Finalisasi transkripsi label sub-header bertanda `(?)` langsung dari dokumen autentik.
-- [ ] Putuskan apakah akan dibuat modul/report baru Lampiran 4.16a atau dipertahankan sebagai referensi rekap lintas-modul.
+- [x] Finalisasi transkripsi label sub-header bertanda `(?)` langsung dari dokumen autentik.
+- [x] Putuskan apakah akan dibuat modul/report baru Lampiran 4.16a atau dipertahankan sebagai referensi rekap lintas-modul.
 
 ## Validasi
 - [x] Dokumen mapping 4.16a tersedia.
 - [x] Dokumen domain utama menunjuk referensi 4.16a.
-- [ ] Tersedia test baseline jika modul/report 4.16a diimplementasikan.
+- [x] Tersedia test baseline jika modul/report 4.16a diimplementasikan.
 
 ## Risiko
 - Risiko salah tafsir kolom jika transkripsi sub-header kecil tidak difinalkan.
-- Risiko drift data jika rekap dianggap sudah terimplementasi padahal belum ada layout 29 kolom di aplikasi.
+- Risiko drift data jika pemetaan sumber indikator area-level diperlakukan sebagai indikator per-keluarga tanpa catatan batasan.
 
 ## Fallback Plan
 - [x] Jika parser gagal baca header detail, gunakan verifikasi visual dokumen autentik sebagai sumber final.
-- [x] Pertahankan status `reference-only` sampai ada keputusan implementasi teknis.
+- [x] Jika implementasi report perlu dihentikan, fallback sementara ke mode referensi dengan menonaktifkan endpoint 4.16a.
+
+## Catatan Keputusan Final
+- Keputusan implementasi saat ini: Lampiran 4.16a **sudah diaktifkan sebagai report PDF** (tanpa menu domain baru) melalui flow `catatan-keluarga`.
+- Endpoint aktif:
+  - `/desa/catatan-keluarga/rekap-dasa-wisma/report/pdf`
+  - `/kecamatan/catatan-keluarga/rekap-dasa-wisma/report/pdf`
+- Baseline test yang aktif:
+  - feature test akses scope `desa`/`kecamatan`
+  - feature test anti data leak lintas area (`scope metadata stale`)
+  - regression header report 29 kolom (merge-header)
+- Dashboard trigger audit:
+  - Tidak ada menu/domain input baru (hanya endpoint report pada menu `catatan-keluarga`), sehingga metric dashboard coverage tidak berubah.

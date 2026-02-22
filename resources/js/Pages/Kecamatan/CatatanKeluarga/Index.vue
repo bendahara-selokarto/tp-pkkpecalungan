@@ -17,14 +17,30 @@ const props = defineProps({
     <SectionTitleLineWithButton :icon="mdiBookOpenVariant" title="Catatan Keluarga Kecamatan" main />
 
     <CardBox>
-      <div class="mb-4 flex items-center justify-end">
+      <div class="mb-4 flex flex-wrap items-center justify-end gap-2">
         <a
           href="/kecamatan/catatan-keluarga/report/pdf"
           target="_blank"
           rel="noopener"
           class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
         >
-          Cetak PDF
+          Cetak 4.15
+        </a>
+        <a
+          href="/kecamatan/catatan-keluarga/rekap-dasa-wisma/report/pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center rounded-md border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/20"
+        >
+          Cetak 4.16a
+        </a>
+        <a
+          href="/kecamatan/catatan-keluarga/rekap-pkk-rt/report/pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center rounded-md border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50 dark:border-indigo-900/50 dark:text-indigo-300 dark:hover:bg-indigo-900/20"
+        >
+          Cetak 4.16b
         </a>
       </div>
 
@@ -72,4 +88,3 @@ const props = defineProps({
     </CardBox>
   </SectionMain>
 </template>
-

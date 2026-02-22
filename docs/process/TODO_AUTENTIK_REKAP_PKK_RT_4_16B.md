@@ -19,17 +19,29 @@
 - [x] Baca dokumen autentik sesuai flow `Baca -> Laporkan/Konfirmasi -> Sinkronkan`.
 - [x] Buat mapping domain: `docs/domain/REKAP_PKK_RT_4_16B_MAPPING.md`.
 - [x] Sinkronkan terminology map dan domain contract matrix.
-- [ ] Putuskan apakah akan dibuat modul/report baru Lampiran 4.16b atau dipertahankan sebagai referensi rekap lintas-modul.
+- [x] Putuskan apakah akan dibuat modul/report baru Lampiran 4.16b atau dipertahankan sebagai referensi rekap lintas-modul.
 
 ## Validasi
 - [x] Dokumen mapping 4.16b tersedia.
 - [x] Dokumen domain utama menunjuk referensi 4.16b.
-- [ ] Tersedia test baseline jika modul/report 4.16b diimplementasikan.
+- [x] Tersedia test baseline jika modul/report 4.16b diimplementasikan.
 
 ## Risiko
 - Risiko salah tafsir kolom jika implementasi baru dibuat tanpa mengacu mapping merge header.
-- Risiko drift data jika rekap dianggap sudah terimplementasi padahal belum ada layout 30 kolom di aplikasi.
+- Risiko drift data jika agregasi per-dasawisma tidak sinkron dengan input sumber dari modul keluarga/kegiatan.
 
 ## Fallback Plan
 - [x] Jika parser gagal baca header detail, gunakan verifikasi visual dokumen autentik sebagai sumber final.
-- [x] Pertahankan status `reference-only` sampai ada keputusan implementasi teknis.
+- [x] Jika implementasi report perlu dihentikan, fallback sementara ke mode referensi dengan menonaktifkan endpoint 4.16b.
+
+## Catatan Keputusan Final
+- Keputusan implementasi saat ini: Lampiran 4.16b **sudah diaktifkan sebagai report PDF** (tanpa menu domain baru) melalui flow `catatan-keluarga`.
+- Endpoint aktif:
+  - `/desa/catatan-keluarga/rekap-pkk-rt/report/pdf`
+  - `/kecamatan/catatan-keluarga/rekap-pkk-rt/report/pdf`
+- Baseline test yang aktif:
+  - feature test akses scope `desa`/`kecamatan`
+  - feature test anti data leak lintas area (`scope metadata stale`)
+  - regression header report 30 kolom + merge header
+- Dashboard trigger audit:
+  - Tidak ada menu/domain input baru (hanya endpoint report pada menu `catatan-keluarga`), sehingga metric dashboard coverage tidak berubah.
