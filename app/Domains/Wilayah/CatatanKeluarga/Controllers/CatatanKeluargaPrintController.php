@@ -16,6 +16,9 @@ use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilPkkRtUse
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilPkkRwUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilTpPkkKecamatanUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataUmumPkkUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataUmumPkkKecamatanUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIiiUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIvUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapPkkRtUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapRwUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
@@ -39,6 +42,9 @@ class CatatanKeluargaPrintController extends Controller
         private readonly ListScopedRekapIbuHamilPkkRwUseCase $listScopedRekapIbuHamilPkkRwUseCase,
         private readonly ListScopedRekapIbuHamilTpPkkKecamatanUseCase $listScopedRekapIbuHamilTpPkkKecamatanUseCase,
         private readonly ListScopedDataUmumPkkUseCase $listScopedDataUmumPkkUseCase,
+        private readonly ListScopedDataUmumPkkKecamatanUseCase $listScopedDataUmumPkkKecamatanUseCase,
+        private readonly ListScopedDataKegiatanPkkPokjaIiiUseCase $listScopedDataKegiatanPkkPokjaIiiUseCase,
+        private readonly ListScopedDataKegiatanPkkPokjaIvUseCase $listScopedDataKegiatanPkkPokjaIvUseCase,
         private readonly ListScopedRekapPkkRtUseCase $listScopedRekapPkkRtUseCase,
         private readonly ListScopedCatatanPkkRwUseCase $listScopedCatatanPkkRwUseCase,
         private readonly ListScopedRekapRwUseCase $listScopedRekapRwUseCase,
@@ -124,6 +130,36 @@ class CatatanKeluargaPrintController extends Controller
     public function printKecamatanDataUmumPkkReport(): Response
     {
         return $this->streamDataUmumPkkReport(ScopeLevel::KECAMATAN->value);
+    }
+
+    public function printDesaDataUmumPkkKecamatanReport(): Response
+    {
+        return $this->streamDataUmumPkkKecamatanReport(ScopeLevel::DESA->value);
+    }
+
+    public function printKecamatanDataUmumPkkKecamatanReport(): Response
+    {
+        return $this->streamDataUmumPkkKecamatanReport(ScopeLevel::KECAMATAN->value);
+    }
+
+    public function printDesaDataKegiatanPkkPokjaIiiReport(): Response
+    {
+        return $this->streamDataKegiatanPkkPokjaIiiReport(ScopeLevel::DESA->value);
+    }
+
+    public function printKecamatanDataKegiatanPkkPokjaIiiReport(): Response
+    {
+        return $this->streamDataKegiatanPkkPokjaIiiReport(ScopeLevel::KECAMATAN->value);
+    }
+
+    public function printDesaDataKegiatanPkkPokjaIvReport(): Response
+    {
+        return $this->streamDataKegiatanPkkPokjaIvReport(ScopeLevel::DESA->value);
+    }
+
+    public function printKecamatanDataKegiatanPkkPokjaIvReport(): Response
+    {
+        return $this->streamDataKegiatanPkkPokjaIvReport(ScopeLevel::KECAMATAN->value);
     }
 
     public function printDesaRekapPkkRtReport(): Response
@@ -637,6 +673,172 @@ class CatatanKeluargaPrintController extends Controller
         ]);
 
         return $pdf->stream("data-umum-pkk-{$level}-report.pdf");
+    }
+
+    private function streamDataUmumPkkKecamatanReport(string $level): Response
+    {
+        $this->authorize('viewAny', CatatanKeluarga::class);
+
+        $items = $this->listScopedDataUmumPkkKecamatanUseCase
+            ->execute($level)
+            ->values();
+
+        $totals = [
+            'jumlah_dusun_lingkungan' => (int) $items->sum('jumlah_dusun_lingkungan'),
+            'jumlah_pkk_rw' => (int) $items->sum('jumlah_pkk_rw'),
+            'jumlah_pkk_rt' => (int) $items->sum('jumlah_pkk_rt'),
+            'jumlah_dasa_wisma' => (int) $items->sum('jumlah_dasa_wisma'),
+            'jumlah_krt' => (int) $items->sum('jumlah_krt'),
+            'jumlah_kk' => (int) $items->sum('jumlah_kk'),
+            'jumlah_jiwa_l' => (int) $items->sum('jumlah_jiwa_l'),
+            'jumlah_jiwa_p' => (int) $items->sum('jumlah_jiwa_p'),
+            'jumlah_kader_anggota_tp_pkk_l' => (int) $items->sum('jumlah_kader_anggota_tp_pkk_l'),
+            'jumlah_kader_anggota_tp_pkk_p' => (int) $items->sum('jumlah_kader_anggota_tp_pkk_p'),
+            'jumlah_kader_umum_l' => (int) $items->sum('jumlah_kader_umum_l'),
+            'jumlah_kader_umum_p' => (int) $items->sum('jumlah_kader_umum_p'),
+            'jumlah_kader_khusus_l' => (int) $items->sum('jumlah_kader_khusus_l'),
+            'jumlah_kader_khusus_p' => (int) $items->sum('jumlah_kader_khusus_p'),
+            'jumlah_tenaga_sekretariat_honorer_l' => (int) $items->sum('jumlah_tenaga_sekretariat_honorer_l'),
+            'jumlah_tenaga_sekretariat_honorer_p' => (int) $items->sum('jumlah_tenaga_sekretariat_honorer_p'),
+            'jumlah_tenaga_sekretariat_bantuan_l' => (int) $items->sum('jumlah_tenaga_sekretariat_bantuan_l'),
+            'jumlah_tenaga_sekretariat_bantuan_p' => (int) $items->sum('jumlah_tenaga_sekretariat_bantuan_p'),
+        ];
+
+        $tpPkkKecamatanTotals = [
+            'jumlah_kader_anggota_tp_pkk_l' => $totals['jumlah_kader_anggota_tp_pkk_l'],
+            'jumlah_kader_anggota_tp_pkk_p' => $totals['jumlah_kader_anggota_tp_pkk_p'],
+            'jumlah_kader_umum_l' => $totals['jumlah_kader_umum_l'],
+            'jumlah_kader_umum_p' => $totals['jumlah_kader_umum_p'],
+            'jumlah_kader_khusus_l' => $totals['jumlah_kader_khusus_l'],
+            'jumlah_kader_khusus_p' => $totals['jumlah_kader_khusus_p'],
+            'jumlah_tenaga_sekretariat_honorer_l' => $totals['jumlah_tenaga_sekretariat_honorer_l'],
+            'jumlah_tenaga_sekretariat_honorer_p' => $totals['jumlah_tenaga_sekretariat_honorer_p'],
+            'jumlah_tenaga_sekretariat_bantuan_l' => $totals['jumlah_tenaga_sekretariat_bantuan_l'],
+            'jumlah_tenaga_sekretariat_bantuan_p' => $totals['jumlah_tenaga_sekretariat_bantuan_p'],
+        ];
+
+        $user = auth()->user()->loadMissing('area.parent');
+        $area = $user->area;
+
+        $meta = [
+            'kecamatan' => '-',
+            'kab_kota' => '-',
+            'provinsi' => '-',
+        ];
+
+        if ($area?->level === ScopeLevel::DESA->value) {
+            $meta['kecamatan'] = trim((string) ($area->parent?->name ?? '')) !== '' ? trim((string) $area->parent?->name) : '-';
+        }
+
+        if ($area?->level === ScopeLevel::KECAMATAN->value) {
+            $meta['kecamatan'] = trim((string) ($area->name ?? '')) !== '' ? trim((string) $area->name) : '-';
+        }
+
+        $pdf = $this->pdfViewFactory->loadView('pdf.data_umum_pkk_kecamatan_report', [
+            'items' => $items,
+            'level' => $level,
+            'areaName' => $area?->name ?? '-',
+            'meta' => $meta,
+            'totals' => $totals,
+            'tpPkkKecamatanTotals' => $tpPkkKecamatanTotals,
+            'printedBy' => $user,
+            'printedAt' => now(),
+            'tahun' => now()->format('Y'),
+        ]);
+
+        return $pdf->stream("data-umum-pkk-kecamatan-{$level}-report.pdf");
+    }
+
+    private function streamDataKegiatanPkkPokjaIiiReport(string $level): Response
+    {
+        $this->authorize('viewAny', CatatanKeluarga::class);
+
+        $items = $this->listScopedDataKegiatanPkkPokjaIiiUseCase
+            ->execute($level)
+            ->values();
+
+        $totals = [
+            'jumlah_kader_pangan' => (int) $items->sum('jumlah_kader_pangan'),
+            'jumlah_kader_sandang' => (int) $items->sum('jumlah_kader_sandang'),
+            'jumlah_kader_tata_laksana_rumah_tangga' => (int) $items->sum('jumlah_kader_tata_laksana_rumah_tangga'),
+            'jumlah_keluarga_beras' => (int) $items->sum('jumlah_keluarga_beras'),
+            'jumlah_keluarga_non_beras' => (int) $items->sum('jumlah_keluarga_non_beras'),
+            'jumlah_peternakan' => (int) $items->sum('jumlah_peternakan'),
+            'jumlah_perikanan' => (int) $items->sum('jumlah_perikanan'),
+            'jumlah_warung_hidup' => (int) $items->sum('jumlah_warung_hidup'),
+            'jumlah_lumbung_hidup' => (int) $items->sum('jumlah_lumbung_hidup'),
+            'jumlah_toga' => (int) $items->sum('jumlah_toga'),
+            'jumlah_tanaman_keras' => (int) $items->sum('jumlah_tanaman_keras'),
+            'jumlah_tanaman_lainnya' => (int) $items->sum('jumlah_tanaman_lainnya'),
+            'jumlah_industri_pangan' => (int) $items->sum('jumlah_industri_pangan'),
+            'jumlah_industri_sandang' => (int) $items->sum('jumlah_industri_sandang'),
+            'jumlah_industri_jasa' => (int) $items->sum('jumlah_industri_jasa'),
+            'jumlah_rumah_sehat_layak_huni' => (int) $items->sum('jumlah_rumah_sehat_layak_huni'),
+            'jumlah_rumah_tidak_sehat_tidak_layak_huni' => (int) $items->sum('jumlah_rumah_tidak_sehat_tidak_layak_huni'),
+        ];
+
+        $user = auth()->user()->loadMissing('area');
+        $pdf = $this->pdfViewFactory->loadView('pdf.data_kegiatan_pkk_pokja_iii_report', [
+            'items' => $items,
+            'level' => $level,
+            'areaName' => $user->area?->name ?? '-',
+            'totals' => $totals,
+            'printedBy' => $user,
+            'printedAt' => now(),
+            'tahun' => now()->format('Y'),
+        ]);
+
+        return $pdf->stream("data-kegiatan-pkk-pokja-iii-{$level}-report.pdf");
+    }
+
+    private function streamDataKegiatanPkkPokjaIvReport(string $level): Response
+    {
+        $this->authorize('viewAny', CatatanKeluarga::class);
+
+        $items = $this->listScopedDataKegiatanPkkPokjaIvUseCase
+            ->execute($level)
+            ->values();
+
+        $totals = [
+            'jumlah_kader_kesehatan' => (int) $items->sum('jumlah_kader_kesehatan'),
+            'jumlah_kader_gizi' => (int) $items->sum('jumlah_kader_gizi'),
+            'jumlah_kader_kesling' => (int) $items->sum('jumlah_kader_kesling'),
+            'jumlah_kader_phbs' => (int) $items->sum('jumlah_kader_phbs'),
+            'jumlah_kader_kb' => (int) $items->sum('jumlah_kader_kb'),
+            'jumlah_posyandu' => (int) $items->sum('jumlah_posyandu'),
+            'jumlah_imunisasi_vaksinasi_bayi_balita' => (int) $items->sum('jumlah_imunisasi_vaksinasi_bayi_balita'),
+            'jumlah_pkg' => (int) $items->sum('jumlah_pkg'),
+            'jumlah_tbc' => (int) $items->sum('jumlah_tbc'),
+            'jumlah_rumah_memiliki_jamban' => (int) $items->sum('jumlah_rumah_memiliki_jamban'),
+            'jumlah_rumah_memiliki_spal' => (int) $items->sum('jumlah_rumah_memiliki_spal'),
+            'jumlah_rumah_memiliki_tps' => (int) $items->sum('jumlah_rumah_memiliki_tps'),
+            'jumlah_mck' => (int) $items->sum('jumlah_mck'),
+            'jumlah_krt_menggunakan_pdam' => (int) $items->sum('jumlah_krt_menggunakan_pdam'),
+            'jumlah_krt_menggunakan_sumur' => (int) $items->sum('jumlah_krt_menggunakan_sumur'),
+            'jumlah_krt_menggunakan_lain_lain' => (int) $items->sum('jumlah_krt_menggunakan_lain_lain'),
+            'jumlah_pus' => (int) $items->sum('jumlah_pus'),
+            'jumlah_wus' => (int) $items->sum('jumlah_wus'),
+            'jumlah_akseptor_kb_l' => (int) $items->sum('jumlah_akseptor_kb_l'),
+            'jumlah_akseptor_kb_p' => (int) $items->sum('jumlah_akseptor_kb_p'),
+            'jumlah_kk_memiliki_tabungan_keluarga' => (int) $items->sum('jumlah_kk_memiliki_tabungan_keluarga'),
+            'jumlah_kk_memiliki_asuransi_kesehatan' => (int) $items->sum('jumlah_kk_memiliki_asuransi_kesehatan'),
+            'program_unggulan_kesehatan' => (int) $items->sum('program_unggulan_kesehatan'),
+            'program_unggulan_kelestarian_lingkungan_hidup' => (int) $items->sum('program_unggulan_kelestarian_lingkungan_hidup'),
+            'program_unggulan_perencanaan_sehat' => (int) $items->sum('program_unggulan_perencanaan_sehat'),
+        ];
+
+        $user = auth()->user()->loadMissing('area');
+        $pdf = $this->pdfViewFactory->loadView('pdf.data_kegiatan_pkk_pokja_iv_report', [
+            'items' => $items,
+            'level' => $level,
+            'areaName' => $user->area?->name ?? '-',
+            'totals' => $totals,
+            'printedBy' => $user,
+            'printedAt' => now(),
+            'tahun' => now()->format('Y'),
+        ]);
+
+        return $pdf->stream("data-kegiatan-pkk-pokja-iv-{$level}-report.pdf");
     }
 
     private function streamCatatanPkkRwReport(string $level): Response

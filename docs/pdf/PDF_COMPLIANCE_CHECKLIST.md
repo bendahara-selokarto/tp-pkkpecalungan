@@ -1,4 +1,4 @@
-# PDF Compliance Checklist (Lampiran 4.9-4.15)
+# PDF Compliance Checklist (Lampiran 4.9-4.24)
 
 Tujuan:
 - Menjadi checklist baku verifikasi output PDF agar identik dengan pedoman domain utama.
@@ -33,6 +33,8 @@ Siklus validasi terbaru:
   - `php artisan test --filter=PdfBaselineFixtureComplianceTest`
   - `php artisan test --filter=header_kolom_pdf`
   - `php artisan test --filter=ReportPrintTest`
+- `2026-02-22`: sinkronisasi autentik 4.20b selesai, validasi header + route print ter-cover pada test feature `RekapCatatanDataKegiatanWargaReportPrintTest`.
+- `2026-02-22`: sinkronisasi autentik 4.23-4.24 selesai, validasi header + agregasi + route print ter-cover pada test feature `RekapCatatanDataKegiatanWargaReportPrintTest`.
 - `2026-02-21`: dokumen autentik 4.14.1a (`d:\\pedoman\\153.pdf`) mengubah baseline acuan menjadi format detail anggota kolom 1-20; status modul 4.14.1a ditandai `fail` sampai penyesuaian selesai.
 - `2026-02-21`: penyesuaian 4.14.1a selesai, PDF `data-warga` sudah memakai judul autentik `DAFTAR WARGA TP PKK`, header rumah tangga, kolom detail anggota, dan orientasi `portrait` eksplisit.
 
@@ -57,6 +59,10 @@ Siklus validasi terbaru:
 | 4.14.4e | `posyandu` | `resources/views/pdf/posyandu_report.blade.php` | No, Nama, Pengelola, Sekretaris, Jenis, Kader, Kegiatan, Frek, Pengunjung L/P, Petugas L/P | Seluruh angka kuantitatif numerik | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.14.4f | `simulasi-penyuluhan` | `resources/views/pdf/simulasi_penyuluhan_report.blade.php` | No, Nama Kegiatan, Jenis, Jml Kelompok, Jml Sosialisasi, Kader L/P, Ket. | Nilai jumlah numerik | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.15 | `catatan-keluarga` | `resources/views/pdf/catatan_keluarga_report.blade.php` | No, Nama KRT, Jml ART, Kerja Bakti, Rukun Kematian, Keagamaan, Jimpitan, Arisan, Lain-lain, Ket. | Nilai kegiatan tampil `Ya/Tidak` | `landscape` | area + printedBy + printedAt | `pass` |
+| 4.20a | `data-umum-pkk` | `resources/views/pdf/data_umum_pkk_report.blade.php` | Header merge 20 kolom (`NO` s.d. `KETERANGAN`) sesuai mapping autentik 4.20a | Nilai agregasi numerik per dusun/lingkungan; fallback teks `SEBUTAN LAIN` untuk sumber label kosong | `landscape` | level + printedBy + printedAt | `pass` |
+| 4.20b | `data-umum-pkk-kecamatan` | `resources/views/pdf/data_umum_pkk_kecamatan_report.blade.php` | Header merge 21 kolom (`NO` s.d. `KETERANGAN`) sesuai mapping autentik 4.20b | Nilai agregasi numerik per desa/kelurahan; fallback teks `SEBUTAN LAIN` untuk sumber label kosong | `landscape` | level + printedBy + printedAt | `pass` |
+| 4.23 | `data-kegiatan-pkk-pokja-iii` | `resources/views/pdf/data_kegiatan_pkk_pokja_iii_report.blade.php` | Header merge 20 kolom (`NO` s.d. `KETERANGAN`) sesuai mapping autentik 4.23 | Agregasi lintas modul Pokja III (kader pangan/sandang/tata laksana, pemanfaatan pekarangan, industri, indikator rumah) dengan fallback nilai `0` untuk data yang belum dedicated | `landscape` | level + printedBy + printedAt | `pass` |
+| 4.24 | `data-kegiatan-pkk-pokja-iv` | `resources/views/pdf/data_kegiatan_pkk_pokja_iv_report.blade.php` | Header merge 27 kolom (`NO` s.d. `PERENCANAAN SEHAT`) sesuai mapping autentik 4.24 | Agregasi lintas modul Pokja IV (kader kesehatan, posyandu, indikator lingkungan, perencanaan sehat, program unggulan) dengan inferensi keyword terkontrol | `landscape` | level + printedBy + printedAt | `pass` |
 
 ## C. Prosedur Eksekusi Checklist
 

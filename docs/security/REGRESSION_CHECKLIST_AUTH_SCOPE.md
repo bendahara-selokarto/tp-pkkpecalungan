@@ -13,7 +13,7 @@ Sumber acuan:
 
 | ID | Skenario | Setup user stale | Ekspektasi | Mapping test yang menutup |
 | --- | --- | --- | --- | --- |
-| `A1` | `scope=desa` tetapi `area_id` mengarah ke area level `kecamatan` | role `admin-desa`, scope `desa`, area kecamatan | request route `desa.*.report` ditolak `403` | `tests/Feature/AnggotaTimPenggerakReportPrintTest.php`, `tests/Feature/KaderKhususReportPrintTest.php`, `tests/Feature/AgendaSuratReportPrintTest.php`, `tests/Feature/BukuKeuanganReportPrintTest.php`, `tests/Feature/BklReportPrintTest.php`, `tests/Feature/BkrReportPrintTest.php`, `tests/Feature/DataWargaReportPrintTest.php`, `tests/Feature/DataKegiatanWargaReportPrintTest.php`, `tests/Feature/DataKeluargaReportPrintTest.php`, `tests/Feature/DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest.php`, `tests/Feature/DataIndustriRumahTanggaReportPrintTest.php`, `tests/Feature/DataPelatihanKaderReportPrintTest.php`, `tests/Feature/WarungPkkReportPrintTest.php`, `tests/Feature/TamanBacaanReportPrintTest.php`, `tests/Feature/KoperasiReportPrintTest.php`, `tests/Feature/KejarPaketReportPrintTest.php`, `tests/Feature/PosyanduReportPrintTest.php`, `tests/Feature/SimulasiPenyuluhanReportPrintTest.php`, `tests/Feature/CatatanKeluargaReportPrintTest.php`, `tests/Feature/StructuredDomainReportPrintTest.php`, `tests/Feature/AnggotaDanKaderGabunganReportPrintTest.php`, `tests/Feature/PrestasiLombaReportPrintTest.php`, `tests/Feature/ProgramPrioritasReportPrintTest.php`, `tests/Feature/DashboardDocumentCoverageTest.php` |
+| `A1` | `scope=desa` tetapi `area_id` mengarah ke area level `kecamatan` | role `admin-desa`, scope `desa`, area kecamatan | request route `desa.*.report` ditolak `403` | `tests/Feature/AnggotaTimPenggerakReportPrintTest.php`, `tests/Feature/KaderKhususReportPrintTest.php`, `tests/Feature/AgendaSuratReportPrintTest.php`, `tests/Feature/BukuKeuanganReportPrintTest.php`, `tests/Feature/BklReportPrintTest.php`, `tests/Feature/BkrReportPrintTest.php`, `tests/Feature/DataWargaReportPrintTest.php`, `tests/Feature/DataKegiatanWargaReportPrintTest.php`, `tests/Feature/DataKeluargaReportPrintTest.php`, `tests/Feature/DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest.php`, `tests/Feature/DataIndustriRumahTanggaReportPrintTest.php`, `tests/Feature/DataPelatihanKaderReportPrintTest.php`, `tests/Feature/WarungPkkReportPrintTest.php`, `tests/Feature/TamanBacaanReportPrintTest.php`, `tests/Feature/KoperasiReportPrintTest.php`, `tests/Feature/KejarPaketReportPrintTest.php`, `tests/Feature/PosyanduReportPrintTest.php`, `tests/Feature/SimulasiPenyuluhanReportPrintTest.php`, `tests/Feature/CatatanKeluargaReportPrintTest.php`, `tests/Feature/RekapCatatanDataKegiatanWargaReportPrintTest.php`, `tests/Feature/StructuredDomainReportPrintTest.php`, `tests/Feature/AnggotaDanKaderGabunganReportPrintTest.php`, `tests/Feature/PrestasiLombaReportPrintTest.php`, `tests/Feature/ProgramPrioritasReportPrintTest.php`, `tests/Feature/DashboardDocumentCoverageTest.php` |
 | `A2` | `scope=kecamatan` tetapi `area_id` mengarah ke area level `desa` | role `admin-kecamatan`, scope `kecamatan`, area desa | request route `kecamatan.*.report` ditolak `403` atau scope dinetralkan (no access) | `tests/Feature/KecamatanReportReverseAreaMismatchTest.php` (multi-route matrix), `tests/Feature/AgendaSuratReportPrintTest.php` (`ekspedisi.report`), `tests/Feature/DashboardActivityChartTest.php` (`role_kecamatan_tetapi_area_level_desa`) |
 
 Catatan:
@@ -40,10 +40,13 @@ Catatan:
 - [x] Jalankan regression stale metadata route report.
 - [x] Jalankan regression mismatch role-level area.
 - [x] Hasil skenario `A1` dan `A2` sesuai ekspektasi (`403`/scope netral tanpa data bocor).
-- [x] Tidak ada deviasi baru; `docs/domain/DOMAIN_DEVIATION_LOG.md` tetap konsisten.
+- [x] Deviasi baru untuk autentik 4.20b telah dicatat pada `docs/domain/DOMAIN_DEVIATION_LOG.md` (`DV-013`).
+- [x] Deviasi baru untuk autentik 4.23 dan 4.24 telah dicatat pada `docs/domain/DOMAIN_DEVIATION_LOG.md` (`DV-014`, `DV-015`).
+- [x] Route report autentik 4.20b (`data-umum-pkk-kecamatan`) ikut tercakup pada regression `scope_metadata_tidak_sinkron`.
+- [x] Route report autentik 4.23/4.24 (`data-kegiatan-pkk-pokja-iii`, `data-kegiatan-pkk-pokja-iv`) ikut tercakup pada regression `scope_metadata_tidak_sinkron`.
 
 Ringkasan hasil:
-- `php artisan route:list --name=report` -> `80` route report.
+- `php artisan route:list --name=report` -> `90` route report.
 - validasi middleware (`route:list --name=report --json`) -> `invalid_scope_middleware=0`.
 - `php artisan test --filter=scope_metadata_tidak_sinkron` -> `28` test pass.
 - `php artisan test --filter=role_dan_level_area_tidak_sinkron` -> `1` test pass.
@@ -53,7 +56,7 @@ Ringkasan hasil:
 
 Perintah yang dijalankan:
 - `php artisan route:list --name=report`
-  - hasil terbaru: `80` route report terdaftar (desa + kecamatan).
+  - hasil terbaru: `90` route report terdaftar (desa + kecamatan).
 - `php artisan route:list --name=report --json`
   - hasil terbaru: seluruh route report memiliki middleware `scope.role:{desa|kecamatan}` (`invalid_scope_middleware=0`).
 - `php artisan test --filter=scope_metadata_tidak_sinkron`

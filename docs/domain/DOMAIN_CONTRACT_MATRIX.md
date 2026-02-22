@@ -1,4 +1,4 @@
-# Domain Contract Matrix (Lampiran 4.9-4.15 + Ekstensi 202-211)
+# Domain Contract Matrix (Lampiran 4.9-4.24 + Ekstensi 202-211)
 
 Sumber canonical domain:
 - https://pubhtml5.com/zsnqq/vjcf/basic/101-150
@@ -43,6 +43,9 @@ Aturan baca:
 | 4.18d | `rekap-ibu-hamil-pkk-dusun-lingkungan` | Buku Catatan Ibu Hamil, Kelahiran, Kematian Bayi, Kematian Balita dan Kematian Ibu Hamil, Melahirkan dan Nifas dalam Kelompok PKK Dusun/Lingkungan | Report 17 kolom dengan merge-header autentik; agregasi per `nomor_rw` dari dataset 4.18a; kolom `3` merepresentasikan jumlah RT unik pada RW, kolom `4` merepresentasikan penjumlahan jumlah dasawisma per RT (sesuai cara pengisian), kolom `5-16` merupakan penjumlahan indikator maternal/kelahiran/kematian; referensi mapping: `docs/domain/REKAP_IBU_HAMIL_DUSUN_LINGKUNGAN_4_18D_MAPPING.md` | `BUKU CATATAN IBU HAMIL, KELAHIRAN, KEMATIAN BAYI, KEMATIAN BALITA DAN KEMATIAN IBU HAMIL, MELAHIRKAN DAN NIFAS DALAM KELOMPOK PKK DUSUN/LINGKUNGAN` | Screenshot dokumen autentik Lampiran 4.18d (sesi validasi 2026-02-22) | implemented (report-only via `catatan-keluarga`) |
 | 4.19b | `rekap-ibu-hamil-tp-pkk-kecamatan` | Rekapitulasi Data/Buku Catatan Ibu Hamil, Melahirkan, Nifas, Ibu Meninggal, Kelahiran Bayi, Bayi Meninggal dan Kematian Balita pada Tingkat TP PKK Kecamatan | Report 19 kolom dengan merge-header autentik; agregasi per `nama_desa_kelurahan` dari dataset turunan 4.18d (via agregasi 4.19a tingkat desa/kelurahan); kolom `3` merepresentasikan jumlah dusun/lingkungan unik, kolom `4-18` merepresentasikan penjumlahan indikator maternal/kelahiran/kematian; referensi mapping: `docs/domain/REKAP_IBU_HAMIL_TP_PKK_KECAMATAN_4_19B_MAPPING.md` | `REKAPITULASI DATA/BUKU CATATAN IBU HAMIL, MELAHIRKAN, NIFAS, IBU MENINGGAL, KELAHIRAN BAYI, BAYI MENINGGAL DAN KEMATIAN BALITA PADA TINGKAT TP PKK KECAMATAN` | Dokumen autentik `docs/referensi/207.pdf` + screenshot Lampiran 4.19b (sesi validasi 2026-02-22) | implemented (report-only via `catatan-keluarga`) |
 | 4.20a | `data-umum-pkk` | Data Umum PKK | Report 20 kolom dengan merge-header autentik; agregasi per `nama_dusun_lingkungan_atau_sebutan_lain`; kolom `3-9` dari `data_wargas`, kolom `10-15` dari `anggota_tim_penggeraks` + `anggota_pokjas` + `kader_khusus`, kolom `16-19` dari inferensi token `jabatan` (`honorer`/`bantuan`) pada `anggota_tim_penggeraks`; referensi mapping: `docs/domain/DATA_UMUM_PKK_4_20A_MAPPING.md` | `DATA UMUM PKK` | Dokumen autentik `docs/referensi/213.pdf` + screenshot Lampiran 4.20a (sesi validasi 2026-02-22) | implemented (report-only via `catatan-keluarga`) |
+| 4.20b | `data-umum-pkk-kecamatan` | Data Umum PKK | Report 21 kolom dengan merge-header autentik; agregasi per `nama_desa_kelurahan`; kolom `3-10` dari `data_wargas`, kolom `11-16` dari `anggota_tim_penggeraks` + `anggota_pokjas` + `kader_khusus`, kolom `17-20` dari inferensi token `jabatan` (`honorer`/`bantuan`) pada `anggota_tim_penggeraks`; referensi mapping: `docs/domain/DATA_UMUM_PKK_4_20B_MAPPING.md` | `DATA UMUM PKK` | Dokumen autentik `docs/referensi/215.pdf` + screenshot Lampiran 4.20b (sesi validasi 2026-02-22) | implemented (report-only via `catatan-keluarga`) |
+| 4.23 | `data-kegiatan-pkk-pokja-iii` | Data Kegiatan PKK (Pokja III) | Report 20 kolom dengan merge-header autentik; agregasi operasional lintas modul (`anggota_pokjas`, `data_pemanfaatan_tanah_pekarangan_hatinya_pkks`, `data_industri_rumah_tanggas`, `data_wargas`, `data_warga_anggotas`); referensi mapping: `docs/domain/DATA_KEGIATAN_PKK_POKJA_III_4_23_MAPPING.md` | `DATA KEGIATAN PKK` | Dokumen autentik `docs/referensi/229-230.pdf` + screenshot Lampiran 4.23 (sesi validasi 2026-02-23) | implemented (report-only via `catatan-keluarga`) |
+| 4.24 | `data-kegiatan-pkk-pokja-iv` | Data Kegiatan PKK (Pokja IV) | Report 27 kolom dengan merge-header autentik; agregasi operasional lintas modul (`kader_khusus`, `posyandus`, `data_kegiatan_wargas`, `data_wargas`, `data_warga_anggotas`, `program_prioritas`); referensi mapping: `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md` | `DATA KEGIATAN PKK` | Dokumen autentik `docs/referensi/232.pdf` + screenshot Lampiran 4.24 (sesi validasi 2026-02-23) | implemented (report-only via `catatan-keluarga`) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana (Pokja IV) | Header laporan: `judul_laporan`, `dasar_hukum`, `pendahuluan`, `maksud_tujuan`, `pelaksanaan`, `dokumentasi`, `penutup`; nilai indikator periodik: `section`, `cluster_code`, `indicator_code`, `year`, `semester`, `value`, `evaluation_note`, `sort_order` | `LAPORAN PELAKSANAAN PILOT PROJECT GERAKAN KELUARGA SEHAT TANGGAP DAN TANGGUH BENCANA` | PubHTML5 201-241 (Halaman 202-211) | implemented (catalog tahap awal) |
 
 ## Jejak Teknis (Acuan Verifikasi)
@@ -111,6 +114,15 @@ Aturan baca:
 - Data Umum PKK autentik:
   - `docs/domain/DATA_UMUM_PKK_4_20A_MAPPING.md`
   - `resources/views/pdf/data_umum_pkk_report.blade.php`
+- Data Umum PKK tingkat kecamatan autentik:
+  - `docs/domain/DATA_UMUM_PKK_4_20B_MAPPING.md`
+  - `resources/views/pdf/data_umum_pkk_kecamatan_report.blade.php`
+- Data Kegiatan PKK Pokja III autentik:
+  - `docs/domain/DATA_KEGIATAN_PKK_POKJA_III_4_23_MAPPING.md`
+  - `resources/views/pdf/data_kegiatan_pkk_pokja_iii_report.blade.php`
+- Data Kegiatan PKK Pokja IV autentik:
+  - `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md`
+  - `resources/views/pdf/data_kegiatan_pkk_pokja_iv_report.blade.php`
 - Ekstensi pilot project source:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
 

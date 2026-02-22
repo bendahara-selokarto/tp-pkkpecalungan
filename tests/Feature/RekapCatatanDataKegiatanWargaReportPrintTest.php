@@ -6,10 +6,14 @@ use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
 use App\Domains\Wilayah\CatatanKeluarga\Repositories\CatatanKeluargaRepositoryInterface;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
+use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
+use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPemanfaatanTanahPekaranganHatinyaPkk;
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\DataWarga\Models\DataWargaAnggota;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\Posyandu\Models\Posyandu;
+use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
@@ -501,6 +505,102 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         ]);
     }
 
+    public function test_header_kolom_pdf_data_umum_pkk_kecamatan_tetap_sesuai_mapping_autentik_420b(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.data_umum_pkk_kecamatan_report', [
+            'NO',
+            'NAMA DESA/KELURAHAN',
+            'JUMLAH KELOMPOK',
+            'JUMLAH',
+            'JUMLAH JIWA',
+            'JUMLAH KADER',
+            'JUMLAH TENAGA SEKRETARIAT',
+            'KETERANGAN',
+            'DUSUN/LINGKUNGAN',
+            'PKK RW',
+            'PKK RT',
+            'DASA WISMA',
+            'KRT',
+            'KK',
+            'L',
+            'P',
+            'ANGGOTA TP. PKK',
+            'UMUM',
+            'KHUSUS',
+            'HONORER',
+            'BANTUAN',
+        ]);
+    }
+
+    public function test_header_kolom_pdf_data_kegiatan_pkk_pokja_iii_tetap_sesuai_mapping_autentik_423(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.data_kegiatan_pkk_pokja_iii_report', [
+            'NO',
+            'NAMA WILAYAH',
+            'JUMLAH KADER',
+            'PANGAN',
+            'JUMLAH INDUSTRI',
+            'JUMLAH',
+            'KETERANGAN',
+            'SANDANG',
+            'TATA LAKSANA',
+            'RUMAH TANGGA',
+            'MAKANAN POKOK',
+            'PEMANFAATAN PEKARANGAN/HATINYA PKK',
+            'JASA',
+            'SEHAT LAYAK HUNI',
+            'TIDAK SEHAT DAN TIDAK LAYAK HUNI',
+            'BERAS',
+            'NON BERAS',
+            'PETERNAKAN',
+            'PERIKANAN',
+            'WARUNG HIDUP',
+            'LUMBUNG HIDUP',
+            'TOGA',
+            'TANAMAN KERAS',
+            'TANAMAN LAINNYA',
+        ]);
+    }
+
+    public function test_header_kolom_pdf_data_kegiatan_pkk_pokja_iv_tetap_sesuai_mapping_autentik_424(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.data_kegiatan_pkk_pokja_iv_report', [
+            'NO',
+            'NAMA WILAYAH',
+            'JUMLAH KADER',
+            'POSYANDU',
+            'IMUNISASI / VAKSINASI BAYI/BALITA',
+            'PKG',
+            'TBC',
+            'KELESTARIAN LINGKUNGAN HIDUP',
+            'PERENCANAAN SEHAT',
+            'PROGRAM UNGGULAN',
+            'KADER KESEHATAN',
+            'KADER YANG ADA',
+            'JUMLAH RUMAH YANG MEMILIKI',
+            'JUMLAH MCK',
+            'JUMLAH KRT YANG MENGGUNAKAN AIR',
+            'JUMLAH PUS',
+            'JUMLAH WUS',
+            'JUMLAH AKSEPTOR KB',
+            'JML. KK YANG MEMILIKI TABUNGAN KELUARGA',
+            'JML. KK YANG MEMILIKI ASURANSI KESEHATAN',
+            'KESEHATAN',
+            'KELESTARIAN LINGKUNGAN HIDUP',
+            'PERENCANAAN SEHAT',
+            'GIZI',
+            'KESLING',
+            'PHBS',
+            'KB',
+            'JAMBAN',
+            'SPAL',
+            'TPS',
+            'PDAM',
+            'SUMUR',
+            'LAIN-LAIN',
+        ]);
+    }
+
     public function test_rekap_418d_menghitung_jumlah_dasawisma_sebagai_penjumlahan_per_rt_dalam_rw(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
@@ -842,7 +942,545 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $this->assertSame(0, $melati['jumlah_tenaga_sekretariat_bantuan_p']);
     }
 
-    public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_418b_418c_418d_419b_dan_420a_desanya_sendiri(): void
+    public function test_data_umum_pkk_kecamatan_mengagregasi_data_per_desa_kelurahan(): void
+    {
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+
+        DataWarga::create([
+            'dasawisma' => 'Melati',
+            'nama_kepala_keluarga' => 'Kepala 1',
+            'alamat' => 'Desa Gombong Dusun Anggrek RT 01 / RW 01',
+            'jumlah_warga_laki_laki' => 2,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataWarga::create([
+            'dasawisma' => 'Dahlia',
+            'nama_kepala_keluarga' => 'Kepala 2',
+            'alamat' => 'Desa Gombong Dusun Anggrek RT 02 / RW 01',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 2,
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataWarga::create([
+            'dasawisma' => 'Mawar',
+            'nama_kepala_keluarga' => 'Kepala 3',
+            'alamat' => 'Desa Karangasem Dusun Melati RT 01 / RW 02',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+        ]);
+
+        AnggotaTimPenggerak::create([
+            'nama' => 'ATPKK L Gombong',
+            'jabatan' => 'Ketua',
+            'jenis_kelamin' => 'L',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Desa Gombong Dusun Anggrek RT 01 / RW 01',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'Wiraswasta',
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+        ]);
+
+        AnggotaTimPenggerak::create([
+            'nama' => 'ATPKK P Gombong',
+            'jabatan' => 'Sekretariat Honorer',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1991-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Desa Gombong Dusun Anggrek RT 01 / RW 01',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'IRT',
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+        ]);
+
+        AnggotaTimPenggerak::create([
+            'nama' => 'ATPKK L Karangasem',
+            'jabatan' => 'Sekretariat Bantuan',
+            'jenis_kelamin' => 'L',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1992-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Desa Karangasem Dusun Melati RT 01 / RW 02',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'Wiraswasta',
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+        ]);
+
+        AnggotaPokja::create([
+            'nama' => 'Pokja Gombong',
+            'jabatan' => 'Anggota',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1993-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Desa Gombong Dusun Anggrek RT 02 / RW 01',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'IRT',
+            'keterangan' => null,
+            'pokja' => 'I',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+        ]);
+
+        KaderKhusus::create([
+            'nama' => 'Khusus Gombong',
+            'jenis_kelamin' => 'L',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1994-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Desa Gombong Dusun Anggrek RT 02 / RW 01',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Posyandu',
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+        ]);
+
+        KaderKhusus::create([
+            'nama' => 'Khusus Karangasem',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1995-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Desa Karangasem Dusun Melati RT 01 / RW 02',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'UP2K',
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+        ]);
+
+        $repository = app(CatatanKeluargaRepositoryInterface::class);
+        $rows = $repository->getDataUmumPkkKecamatanByLevelAndArea('kecamatan', $this->kecamatanA->id);
+
+        $this->assertCount(2, $rows);
+
+        $gombong = $rows->firstWhere('nama_desa_kelurahan', 'DESA Gombong');
+        $this->assertNotNull($gombong);
+        $this->assertSame(1, $gombong['jumlah_dusun_lingkungan']);
+        $this->assertSame(1, $gombong['jumlah_pkk_rw']);
+        $this->assertSame(2, $gombong['jumlah_pkk_rt']);
+        $this->assertSame(2, $gombong['jumlah_dasa_wisma']);
+        $this->assertSame(2, $gombong['jumlah_krt']);
+        $this->assertSame(2, $gombong['jumlah_kk']);
+        $this->assertSame(3, $gombong['jumlah_jiwa_l']);
+        $this->assertSame(3, $gombong['jumlah_jiwa_p']);
+        $this->assertSame(1, $gombong['jumlah_kader_anggota_tp_pkk_l']);
+        $this->assertSame(1, $gombong['jumlah_kader_anggota_tp_pkk_p']);
+        $this->assertSame(0, $gombong['jumlah_kader_umum_l']);
+        $this->assertSame(1, $gombong['jumlah_kader_umum_p']);
+        $this->assertSame(1, $gombong['jumlah_kader_khusus_l']);
+        $this->assertSame(0, $gombong['jumlah_kader_khusus_p']);
+        $this->assertSame(0, $gombong['jumlah_tenaga_sekretariat_honorer_l']);
+        $this->assertSame(1, $gombong['jumlah_tenaga_sekretariat_honorer_p']);
+        $this->assertSame(0, $gombong['jumlah_tenaga_sekretariat_bantuan_l']);
+        $this->assertSame(0, $gombong['jumlah_tenaga_sekretariat_bantuan_p']);
+
+        $karangasem = $rows->firstWhere('nama_desa_kelurahan', 'DESA Karangasem');
+        $this->assertNotNull($karangasem);
+        $this->assertSame(1, $karangasem['jumlah_dusun_lingkungan']);
+        $this->assertSame(1, $karangasem['jumlah_pkk_rw']);
+        $this->assertSame(1, $karangasem['jumlah_pkk_rt']);
+        $this->assertSame(1, $karangasem['jumlah_dasa_wisma']);
+        $this->assertSame(1, $karangasem['jumlah_krt']);
+        $this->assertSame(1, $karangasem['jumlah_kk']);
+        $this->assertSame(1, $karangasem['jumlah_jiwa_l']);
+        $this->assertSame(1, $karangasem['jumlah_jiwa_p']);
+        $this->assertSame(1, $karangasem['jumlah_kader_anggota_tp_pkk_l']);
+        $this->assertSame(0, $karangasem['jumlah_kader_anggota_tp_pkk_p']);
+        $this->assertSame(0, $karangasem['jumlah_kader_umum_l']);
+        $this->assertSame(0, $karangasem['jumlah_kader_umum_p']);
+        $this->assertSame(0, $karangasem['jumlah_kader_khusus_l']);
+        $this->assertSame(1, $karangasem['jumlah_kader_khusus_p']);
+        $this->assertSame(0, $karangasem['jumlah_tenaga_sekretariat_honorer_l']);
+        $this->assertSame(0, $karangasem['jumlah_tenaga_sekretariat_honorer_p']);
+        $this->assertSame(1, $karangasem['jumlah_tenaga_sekretariat_bantuan_l']);
+        $this->assertSame(0, $karangasem['jumlah_tenaga_sekretariat_bantuan_p']);
+    }
+
+    public function test_data_kegiatan_pkk_pokja_iii_mengagregasi_data_scope_aktif(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+
+        DataWarga::create([
+            'dasawisma' => 'Melati',
+            'nama_kepala_keluarga' => 'Kepala 1',
+            'alamat' => 'Dusun Anggrek RT 01 / RW 01',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        AnggotaPokja::create([
+            'nama' => 'Pokja III Pangan',
+            'jabatan' => 'Kader Pangan',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek RT 01 / RW 01',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'IRT',
+            'keterangan' => null,
+            'pokja' => 'III',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        AnggotaPokja::create([
+            'nama' => 'Pokja III Sandang',
+            'jabatan' => 'Kader Sandang',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek RT 01 / RW 01',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'IRT',
+            'keterangan' => null,
+            'pokja' => 'III',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        AnggotaPokja::create([
+            'nama' => 'Pokja III Tata Laksana',
+            'jabatan' => 'Tata Laksana Rumah Tangga',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek RT 01 / RW 01',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'IRT',
+            'keterangan' => null,
+            'pokja' => 'III',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'Peternakan',
+            'komoditi' => 'Ayam',
+            'jumlah_komoditi' => 2,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'Perikanan',
+            'komoditi' => 'Lele',
+            'jumlah_komoditi' => 3,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'Warung Hidup',
+            'komoditi' => 'Cabai',
+            'jumlah_komoditi' => 1,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'TOGA',
+            'komoditi' => 'Sereh',
+            'jumlah_komoditi' => 4,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'Tanaman Keras',
+            'komoditi' => 'Mangga',
+            'jumlah_komoditi' => 5,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'Lainnya',
+            'komoditi' => 'Lumbung Hidup',
+            'jumlah_komoditi' => 6,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataIndustriRumahTangga::create([
+            'kategori_jenis_industri' => 'Pangan',
+            'komoditi' => 'Keripik',
+            'jumlah_komoditi' => 2,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        DataIndustriRumahTangga::create([
+            'kategori_jenis_industri' => 'Sandang',
+            'komoditi' => 'Batik',
+            'jumlah_komoditi' => 1,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        DataIndustriRumahTangga::create([
+            'kategori_jenis_industri' => 'Jasa',
+            'komoditi' => 'Salon',
+            'jumlah_komoditi' => 3,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        $repository = app(CatatanKeluargaRepositoryInterface::class);
+        $rows = $repository->getDataKegiatanPkkPokjaIiiByLevelAndArea('desa', $this->desaA->id);
+
+        $this->assertCount(1, $rows);
+        $row = $rows->first();
+        $this->assertSame(1, $row['jumlah_kader_pangan']);
+        $this->assertSame(1, $row['jumlah_kader_sandang']);
+        $this->assertSame(1, $row['jumlah_kader_tata_laksana_rumah_tangga']);
+        $this->assertSame(2, $row['jumlah_peternakan']);
+        $this->assertSame(3, $row['jumlah_perikanan']);
+        $this->assertSame(1, $row['jumlah_warung_hidup']);
+        $this->assertSame(6, $row['jumlah_lumbung_hidup']);
+        $this->assertSame(4, $row['jumlah_toga']);
+        $this->assertSame(5, $row['jumlah_tanaman_keras']);
+        $this->assertSame(2, $row['jumlah_industri_pangan']);
+        $this->assertSame(1, $row['jumlah_industri_sandang']);
+        $this->assertSame(3, $row['jumlah_industri_jasa']);
+    }
+
+    public function test_data_kegiatan_pkk_pokja_iv_mengagregasi_data_scope_aktif(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+
+        $household = DataWarga::create([
+            'dasawisma' => 'Mawar',
+            'nama_kepala_keluarga' => 'Kepala 1',
+            'alamat' => 'Dusun Anggrek RT 01 / RW 01',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataWargaAnggota::create([
+            'data_warga_id' => $household->id,
+            'nomor_urut' => 1,
+            'nama' => 'Anggota L',
+            'jenis_kelamin' => 'L',
+            'umur_tahun' => 35,
+            'status_perkawinan' => 'Kawin',
+            'akseptor_kb' => true,
+            'memiliki_tabungan' => true,
+            'keterangan' => 'Peserta BPJS',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataWargaAnggota::create([
+            'data_warga_id' => $household->id,
+            'nomor_urut' => 2,
+            'nama' => 'Anggota P',
+            'jenis_kelamin' => 'P',
+            'umur_tahun' => 31,
+            'status_perkawinan' => 'Kawin',
+            'akseptor_kb' => true,
+            'memiliki_tabungan' => false,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        KaderKhusus::create([
+            'nama' => 'Kader Gizi',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1991-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Gizi',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        KaderKhusus::create([
+            'nama' => 'Kader Kesling',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1991-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Kesling',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        KaderKhusus::create([
+            'nama' => 'Kader PHBS',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1991-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'PHBS',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        KaderKhusus::create([
+            'nama' => 'Kader KB',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1991-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'KB',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        KaderKhusus::create([
+            'nama' => 'Kader Posyandu',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1991-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Posyandu',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        Posyandu::create([
+            'nama_posyandu' => 'Posyandu Mawar',
+            'nama_pengelola' => 'Pengelola',
+            'nama_sekretaris' => 'Sekretaris',
+            'jenis_posyandu' => 'Balita',
+            'jumlah_kader' => 5,
+            'jenis_kegiatan' => 'Pemeriksaan',
+            'frekuensi_layanan' => 1,
+            'jumlah_pengunjung_l' => 4,
+            'jumlah_pengunjung_p' => 6,
+            'jumlah_petugas_l' => 1,
+            'jumlah_petugas_p' => 2,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataKegiatanWarga::create([
+            'kegiatan' => 'Kerja Bakti',
+            'aktivitas' => true,
+            'keterangan' => 'Program PKG',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+        DataKegiatanWarga::create([
+            'kegiatan' => 'Lain-Lain',
+            'aktivitas' => true,
+            'keterangan' => 'Pendataan TBC',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        ProgramPrioritas::create([
+            'program' => 'Kesehatan Keluarga',
+            'prioritas_program' => 'Kelestarian Lingkungan Hidup',
+            'kegiatan' => 'Perencanaan Sehat',
+            'sasaran_target' => 'Keluarga',
+            'jadwal_i' => false,
+            'jadwal_ii' => false,
+            'jadwal_iii' => false,
+            'jadwal_iv' => false,
+            'sumber_dana_pusat' => false,
+            'sumber_dana_apbd' => false,
+            'sumber_dana_swd' => false,
+            'sumber_dana_bant' => false,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        $repository = app(CatatanKeluargaRepositoryInterface::class);
+        $rows = $repository->getDataKegiatanPkkPokjaIvByLevelAndArea('desa', $this->desaA->id);
+
+        $this->assertCount(1, $rows);
+        $row = $rows->first();
+        $this->assertSame(5, $row['jumlah_kader_kesehatan']);
+        $this->assertSame(1, $row['jumlah_kader_gizi']);
+        $this->assertSame(1, $row['jumlah_kader_kesling']);
+        $this->assertSame(1, $row['jumlah_kader_phbs']);
+        $this->assertSame(1, $row['jumlah_kader_kb']);
+        $this->assertSame(1, $row['jumlah_posyandu']);
+        $this->assertSame(10, $row['jumlah_imunisasi_vaksinasi_bayi_balita']);
+        $this->assertSame(1, $row['jumlah_pkg']);
+        $this->assertSame(1, $row['jumlah_tbc']);
+        $this->assertSame(1, $row['jumlah_pus']);
+        $this->assertSame(1, $row['jumlah_wus']);
+        $this->assertSame(1, $row['jumlah_akseptor_kb_l']);
+        $this->assertSame(1, $row['jumlah_akseptor_kb_p']);
+        $this->assertSame(1, $row['jumlah_kk_memiliki_tabungan_keluarga']);
+        $this->assertSame(1, $row['jumlah_kk_memiliki_asuransi_kesehatan']);
+        $this->assertSame(1, $row['program_unggulan_kesehatan']);
+        $this->assertSame(1, $row['program_unggulan_kelestarian_lingkungan_hidup']);
+        $this->assertSame(1, $row['program_unggulan_perencanaan_sehat']);
+    }
+
+    public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_418b_418c_418d_419b_420a_420b_423_dan_424_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
         $user->assignRole('admin-desa');
@@ -904,9 +1542,21 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $response420a = $this->actingAs($user)->get(route('desa.catatan-keluarga.data-umum-pkk.report'));
         $response420a->assertOk();
         $response420a->assertHeader('content-type', 'application/pdf');
+
+        $response420b = $this->actingAs($user)->get(route('desa.catatan-keluarga.data-umum-pkk-kecamatan.report'));
+        $response420b->assertOk();
+        $response420b->assertHeader('content-type', 'application/pdf');
+
+        $response423 = $this->actingAs($user)->get(route('desa.catatan-keluarga.data-kegiatan-pkk-pokja-iii.report'));
+        $response423->assertOk();
+        $response423->assertHeader('content-type', 'application/pdf');
+
+        $response424 = $this->actingAs($user)->get(route('desa.catatan-keluarga.data-kegiatan-pkk-pokja-iv.report'));
+        $response424->assertOk();
+        $response424->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_admin_kecamatan_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_418b_418c_418d_419b_dan_420a_kecamatannya_sendiri(): void
+    public function test_admin_kecamatan_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_418b_418c_418d_419b_420a_420b_423_dan_424_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
         $user->assignRole('admin-kecamatan');
@@ -968,9 +1618,21 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $response420a = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.data-umum-pkk.report'));
         $response420a->assertOk();
         $response420a->assertHeader('content-type', 'application/pdf');
+
+        $response420b = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.data-umum-pkk-kecamatan.report'));
+        $response420b->assertOk();
+        $response420b->assertHeader('content-type', 'application/pdf');
+
+        $response423 = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.data-kegiatan-pkk-pokja-iii.report'));
+        $response423->assertOk();
+        $response423->assertHeader('content-type', 'application/pdf');
+
+        $response424 = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.data-kegiatan-pkk-pokja-iv.report'));
+        $response424->assertOk();
+        $response424->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_laporan_pdf_rekap_416_417_418_419_dan_420_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
+    public function test_laporan_pdf_rekap_416_417_418_419_420_423_dan_424_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
         $user->assignRole('admin-desa');
@@ -1016,6 +1678,15 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
 
         $response420a = $this->actingAs($user)->get(route('desa.catatan-keluarga.data-umum-pkk.report'));
         $response420a->assertStatus(403);
+
+        $response420b = $this->actingAs($user)->get(route('desa.catatan-keluarga.data-umum-pkk-kecamatan.report'));
+        $response420b->assertStatus(403);
+
+        $response423 = $this->actingAs($user)->get(route('desa.catatan-keluarga.data-kegiatan-pkk-pokja-iii.report'));
+        $response423->assertStatus(403);
+
+        $response424 = $this->actingAs($user)->get(route('desa.catatan-keluarga.data-kegiatan-pkk-pokja-iv.report'));
+        $response424->assertStatus(403);
     }
 
     private function seedDataWargaDenganAnggota(User $user, string $level, int $areaId, string $dasaWisma, string $namaKepala): void

@@ -138,6 +138,30 @@ const props = defineProps({
         >
           Cetak 4.20a
         </a>
+        <a
+          href="/desa/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-900/20"
+        >
+          Cetak 4.20b
+        </a>
+        <a
+          href="/desa/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center rounded-md border border-emerald-400 px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50 dark:border-emerald-700 dark:text-emerald-300 dark:hover:bg-emerald-900/20"
+        >
+          Cetak 4.23
+        </a>
+        <a
+          href="/desa/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center rounded-md border border-cyan-400 px-4 py-2 text-sm font-medium text-cyan-700 hover:bg-cyan-50 dark:border-cyan-700 dark:text-cyan-300 dark:hover:bg-cyan-900/20"
+        >
+          Cetak 4.24
+        </a>
       </div>
 
       <div class="overflow-x-auto">
