@@ -41,6 +41,7 @@ Tujuan:
 | 4.16b | `rekap-catatan-data-kegiatan-warga-pkk-rt` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok PKK RT | Report PDF 30 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + kunci flow baca header tabel kompleks sebagai guardrail implementasi | implemented (report-only) |
 | 4.16c | `catatan-data-kegiatan-warga-pkk-rw` | Catatan Data dan Kegiatan Warga Kelompok PKK RW | Report PDF 32 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi merge-header 32 kolom sebagai kontrak | implemented (report-only) |
 | 4.16d | `rekap-catatan-data-kegiatan-warga-rw` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok PKK Desa/Kelurahan | Report PDF 33 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label implementasi saat ini, dan revisi jika token identitas final 4.16d berbeda | implemented (report-only, label final menunggu konfirmasi token identitas) |
+| 4.17a | `catatan-data-kegiatan-warga-tp-pkk-desa-kelurahan` | Catatan Data dan Kegiatan Warga TP PKK Desa/Kelurahan | Report PDF 33 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-33 untuk mencegah drift | implemented (report-only) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Label canonical sudah aktif pada menu/index/PDF | Pertahankan label canonical, lanjutkan pemetaan indikator detail katalog | implemented (catalog tahap awal) |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
@@ -80,5 +81,7 @@ Tujuan:
   - `docs/domain/CATATAN_PKK_RW_4_16C_MAPPING.md`
 - Mapping Lampiran 4.16d:
   - `docs/domain/LAMPIRAN_4_16D_MAPPING.md`
+- Mapping Catatan TP PKK 4.17a:
+  - `docs/domain/CATATAN_TP_PKK_DESA_KELURAHAN_4_17A_MAPPING.md`
 - Ekstensi pedoman:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
