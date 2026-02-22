@@ -111,8 +111,8 @@ class DesaAgendaSuratTest extends TestCase
 
         $this->actingAs($adminDesa)->post('/desa/agenda-surat', [
             'jenis_surat' => 'masuk',
-            'tanggal_terima' => '20/02/2026',
-            'tanggal_surat' => '19/02/2026',
+            'tanggal_terima' => '2026-02-20',
+            'tanggal_surat' => '2026-02-19',
             'nomor_surat' => '010/DSA/II/2026',
             'asal_surat' => 'Kecamatan',
             'dari' => 'Sekretariat Kecamatan',
@@ -126,7 +126,7 @@ class DesaAgendaSuratTest extends TestCase
 
         $this->actingAs($adminDesa)->put(route('desa.agenda-surat.update', $agenda->id), [
             'jenis_surat' => 'keluar',
-            'tanggal_surat' => '21/02/2026',
+            'tanggal_surat' => '2026-02-21',
             'nomor_surat' => '011/DSA/II/2026',
             'kepada' => 'Kecamatan',
             'perihal' => 'Laporan',

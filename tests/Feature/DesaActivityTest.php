@@ -56,7 +56,7 @@ class DesaActivityTest extends TestCase
             'tempat_kegiatan' => 'Balai Desa',
             'uraian' => 'Rapat tahunan',
             'tanda_tangan' => 'Siti Aminah',
-            'activity_date' => '12/02/2026',
+            'activity_date' => '2026-02-12',
         ]);
 
         $response->assertStatus(302);
@@ -149,7 +149,7 @@ class DesaActivityTest extends TestCase
     }
 
     #[Test]
-    public function tanggal_kegiatan_harus_format_dd_mm_yyyy_bukan_mm_dd_yyyy()
+    public function tanggal_kegiatan_harus_format_yyyy_mm_dd()
     {
         $user = User::factory()->create([
             'area_id' => $this->desa->id,
@@ -162,7 +162,7 @@ class DesaActivityTest extends TestCase
         $response = $this->post('/desa/activities', [
             'title' => 'Kegiatan Tidak Valid',
             'description' => 'Uji format tanggal',
-            'activity_date' => '02/20/2026',
+            'activity_date' => '20/02/2026',
         ]);
 
         $response->assertStatus(302);

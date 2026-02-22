@@ -119,7 +119,7 @@ class DesaInventarisTest extends TestCase
         $response = $this->actingAs($adminDesa)->post('/desa/inventaris', [
             'name' => 'Proyektor Aula',
             'asal_barang' => 'Bantuan Kabupaten',
-            'tanggal_penerimaan' => '12/02/2026',
+            'tanggal_penerimaan' => '2026-02-12',
             'tempat_penyimpanan' => 'Gudang Balai Desa',
             'keterangan' => 'Untuk rapat warga',
             'quantity' => 1,
@@ -163,7 +163,7 @@ class DesaInventarisTest extends TestCase
         $response = $this->actingAs($adminDesa)->put(route('desa.inventaris.update', $inventaris->id), [
             'name' => 'Sound System',
             'asal_barang' => 'Swadaya',
-            'tanggal_penerimaan' => '20/02/2026',
+            'tanggal_penerimaan' => '2026-02-20',
             'tempat_penyimpanan' => 'Ruang Sekretariat',
             'keterangan' => 'Sudah diperbaiki',
             'quantity' => 2,
@@ -225,4 +225,3 @@ class DesaInventarisTest extends TestCase
         $response->assertStatus(403);
     }
 }
-
