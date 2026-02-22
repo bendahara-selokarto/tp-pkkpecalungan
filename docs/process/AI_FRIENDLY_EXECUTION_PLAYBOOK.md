@@ -44,6 +44,7 @@ Gunakan status:
 | `P-007` | Canonical Date Input UI | Form menambah field tanggal | Format UI konsisten dan payload backend stabil | Cek `type="date"` + submit payload `YYYY-MM-DD` | `active` |
 | `P-008` | Pre-Release Legacy Upgrade Track | Refactor masih menyentuh legacy | Coupling legacy turun tanpa mengorbankan keamanan scope | Validasi mapping dampak + `php artisan migrate:fresh` + test relevan | `active` |
 | `P-009` | Hybrid PDF Authenticity Verification | PDF lampiran punya merge-row/merge-col kompleks | Kontrak domain tetap akurat walau parser teks terbatas | Parser text extraction + verifikasi manual terhadap dokumen autentik + dokumen mapping | `active` |
+| `P-010` | Date Output Harmonization Without Persistence Drift | Standardisasi tanggal menyentuh model + controller + test DB assertion | Output tanggal konsisten tanpa mengubah format simpan data | Targeted regression + assert DB value tetap kompatibel | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -173,3 +174,28 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Tambahan kerja manual transkripsi pada struktur tabel kompleks.
 - Catatan reuse lintas domain/project:
   - Gunakan pattern ini untuk seluruh lampiran yang memiliki header bertingkat atau kolom gabungan yang padat.
+
+### P-010 - Date Output Harmonization Without Persistence Drift
+- Tanggal: 2026-02-22
+- Status: active
+- Konteks: Harmonisasi output tanggal sering membutuhkan konsistensi `Y-m-d` di payload controller, tetapi penambahan cast `date` pada model bisa mengubah format persistence (`YYYY-MM-DD HH:MM:SS`) pada tabel tertentu.
+- Trigger: Refactor tanggal lintas layer yang menyentuh model cast + controller serializer + assert database di test.
+- Langkah eksekusi:
+  1) Terapkan strict validation di request (`date_format:Y-m-d`) terlebih dahulu.
+  2) Harmonisasikan output tanggal di controller ke `Y-m-d` saat serialize payload (form/list/show).
+  3) Gunakan formatter frontend terpusat untuk display (`DD/MM/YYYY`), bukan format ad-hoc.
+  4) Verifikasi bahwa perubahan tidak menggeser format simpan di database pada tabel existing.
+- Guardrail:
+  - Jangan menambah cast model tanggal jika berdampak ke format simpan data existing tanpa kebutuhan eksplisit migrasi.
+  - Jika cast model menimbulkan drift persistence, rollback cast dan pindahkan normalisasi ke layer controller/presenter.
+  - Utamakan backward compatibility untuk assertion database di test existing.
+- Validasi minimum:
+  - Test fitur create/update modul terdampak tetap lulus.
+  - Test invalid format tanggal (`DD/MM/YYYY`) ditolak untuk field canonical.
+  - Nilai database existing tetap kompatibel dengan kontrak yang sedang berjalan.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada harmonisasi tanggal modul Activity, Bantuan, AgendaSurat, Inventaris, DataWarga, dan PilotProjectNaskahPelaporan.
+- Risiko:
+  - Jika coverage regression kurang, drift persistence bisa lolos ke branch utama.
+- Catatan reuse lintas domain/project:
+  - Jadikan controller serialization sebagai titik normalisasi utama saat schema historis belum seragam antar tabel.

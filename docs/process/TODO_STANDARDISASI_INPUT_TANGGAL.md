@@ -15,11 +15,11 @@
 - Tidak ada regression otorisasi dan scope.
 
 ## Keputusan Kontrak
-- [ ] Tetapkan canonical: tanggal kalender = `Y-m-d` end-to-end.
-- [ ] Tetapkan exception domain:
+- [x] Tetapkan canonical: tanggal kalender = `Y-m-d` end-to-end.
+- [x] Tetapkan exception domain:
   - `tanggal_masuk_tp_pkk` tetap string domain (bisa tanggal/sejak tahun).
   - `no_tgl_sk` tetap string dokumen.
-- [ ] Tetapkan aturan display:
+- [x] Tetapkan aturan display:
   - Form edit/create: canonical (`Y-m-d` untuk input date).
   - Halaman list/show/report: format presentasi (`DD/MM/YYYY`) via formatter terpusat.
 
@@ -48,13 +48,13 @@
 - [x] Pertahankan parser lama hanya jika dibutuhkan compatibility window sementara.
 
 ### Phase 4 - Controller/Presenter Harmonization
-- [ ] Konsolidasikan mapping tanggal di controller agar:
+- [x] Konsolidasikan mapping tanggal di controller agar:
   - payload ke form edit selalu `Y-m-d`,
   - payload ke show/index memakai formatter presentasi.
-- [ ] Hapus formatter ad-hoc yang hanya return raw value.
+- [x] Hapus formatter ad-hoc yang hanya return raw value.
 
 ### Phase 5 - Data dan Migrasi Skema (Jika Diperlukan)
-- [ ] Audit cast model tanggal pada field yang seharusnya date.
+- [x] Audit cast model tanggal pada field yang seharusnya date.
 - [ ] Jika ada perubahan skema/normalisasi besar, jalankan:
   - `php artisan migrate:fresh`
   - `php artisan db:seed` (jika dibutuhkan)
@@ -62,14 +62,27 @@
 
 ### Phase 6 - Test dan Regression Gate
 - [ ] Tambah/upgrade feature test create+update untuk semua modul tanggal (Desa + Kecamatan).
-- [ ] Tambah negative test format invalid untuk kontrak `Y-m-d`.
+- [x] Tambah negative test format invalid untuk kontrak `Y-m-d`.
 - [x] Jalankan `php artisan test` penuh setelah migrasi lintas-modul.
 
 ## Validasi Minimum
 - [x] Semua field tanggal kalender menerima `Y-m-d`.
-- [ ] Tidak ada mismatch format antara create/edit/show/index.
+- [x] Tidak ada mismatch format antara create/edit/show/index.
 - [x] Tidak ada perubahan tak diminta pada policy/scope authorization.
 - [x] Test suite relevan lulus.
+
+## Catatan Eksekusi 2026-02-22
+- Backend strict `Y-m-d` ditutup untuk:
+  - `anggota.*.tanggal_lahir` (DataWarga)
+  - `surat_tanggal` (Pilot Project Naskah Pelaporan)
+- Presentasi tanggal `DD/MM/YYYY` diseragamkan via util frontend:
+  - Activity (Desa/Kecamatan + monitoring desa oleh kecamatan)
+  - Bantuan (Desa/Kecamatan)
+  - Agenda Surat (Desa/Kecamatan)
+  - Inventaris (Desa/Kecamatan)
+  - Anggota Tim Penggerak, Anggota Pokja, Kader Khusus (halaman show Desa/Kecamatan)
+- Regression check lulus:
+  - `php artisan test --filter="DesaDataWargaTest|DesaPilotProjectNaskahPelaporanTest|DesaActivityTest|KecamatanActivityTest|KecamatanDesaActivityTest|DesaBantuanTest|KecamatanBantuanTest|DesaInventarisTest|KecamatanInventarisTest|DesaAgendaSuratTest|KecamatanAgendaSuratTest"`
 
 ## Risiko
 - Risiko regression form edit jika prefill belum canonical.

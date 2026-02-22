@@ -20,8 +20,8 @@ Scope audit: form tanggal di modul Desa + Kecamatan
 | AnggotaTimPenggerak | `tanggal_lahir` | `type="date"` | `required|date_format:Y-m-d|before_or_equal:today` | `CANONICAL_DONE` |
 | AnggotaPokja | `tanggal_lahir` | `type="date"` | `required|date_format:Y-m-d|before_or_equal:today` | `CANONICAL_DONE` |
 | KaderKhusus | `tanggal_lahir` | `type="date"` | `required|date_format:Y-m-d|before_or_equal:today` | `CANONICAL_DONE` |
-| DataWargaAnggota | `anggota.tanggal_lahir` | `type="date"` | `nullable|date` | `CANONICAL_KEEP_STRICTEN` |
-| PilotProjectNaskahPelaporan | `surat_tanggal` | `type="date"` | `nullable|date` | `CANONICAL_KEEP_STRICTEN` |
+| DataWargaAnggota | `anggota.tanggal_lahir` | `type="date"` | `nullable|date_format:Y-m-d` | `CANONICAL_DONE` |
+| PilotProjectNaskahPelaporan | `surat_tanggal` | `type="date"` | `nullable|date_format:Y-m-d` | `CANONICAL_DONE` |
 | DataPelatihanKader | `tanggal_masuk_tp_pkk` | Text bebas (contoh `12/05/2020` atau `2020`) | `required|string|max:100` | `EXCEPTION_DOMAIN` |
 | BKL / BKR | `no_tgl_sk` | Text bebas dokumen | `required|string|max:255` | `EXCEPTION_DOMAIN` |
 
