@@ -365,7 +365,47 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         ]);
     }
 
-    public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_dan_417d_desanya_sendiri(): void
+    public function test_header_kolom_pdf_rekap_ibu_hamil_dasawisma_tetap_sesuai_mapping_autentik_418a(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.rekap_ibu_hamil_melahirkan_dasawisma_report', [
+            'NO.',
+            'NAMA IBU',
+            'NAMA SUAMI',
+            'STATUS(HAMIL/MELAHIRKAN/NIFAS)',
+            'CATATAN KELAHIRAN',
+            'CATATAN KEMATIAN',
+            'NAMA BAYI',
+            'JENIS KELAMIN',
+            'TGL. LAHIR',
+            'AKTE KELAHIRAN',
+            'NAMA IBU/BAYI/BALITA',
+            'STATUS(IBU/BALITA/BAYI)',
+            'TGL. MENINGGAL',
+            'SEBAB MENINGGAL',
+            'KETERANGAN',
+        ]);
+    }
+
+    public function test_header_kolom_pdf_rekap_ibu_hamil_pkk_rt_tetap_sesuai_mapping_autentik_418b(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.rekap_ibu_hamil_melahirkan_pkk_rt_report', [
+            'NO.',
+            'NAMA KELOMPOK DASA WISMA',
+            'JUMLAH IBU',
+            'JUMLAH BAYI',
+            'JUMLAH BALITA MENINGGAL',
+            'KETERANGAN',
+            'HAMIL',
+            'MELAHIRKAN',
+            'NIFAS',
+            'MENINGGAL',
+            'LAHIR',
+            'AKTE KELAHIRAN',
+            'MENINGGAL',
+        ]);
+    }
+
+    public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_dan_418b_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
         $user->assignRole('admin-desa');
@@ -403,9 +443,17 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $response417d = $this->actingAs($user)->get(route('desa.catatan-keluarga.tp-pkk-provinsi.report'));
         $response417d->assertOk();
         $response417d->assertHeader('content-type', 'application/pdf');
+
+        $response418a = $this->actingAs($user)->get(route('desa.catatan-keluarga.rekap-ibu-hamil-dasawisma.report'));
+        $response418a->assertOk();
+        $response418a->assertHeader('content-type', 'application/pdf');
+
+        $response418b = $this->actingAs($user)->get(route('desa.catatan-keluarga.rekap-ibu-hamil-pkk-rt.report'));
+        $response418b->assertOk();
+        $response418b->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_admin_kecamatan_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_dan_417d_kecamatannya_sendiri(): void
+    public function test_admin_kecamatan_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_dan_418b_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
         $user->assignRole('admin-kecamatan');
@@ -443,9 +491,17 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $response417d = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.tp-pkk-provinsi.report'));
         $response417d->assertOk();
         $response417d->assertHeader('content-type', 'application/pdf');
+
+        $response418a = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.rekap-ibu-hamil-dasawisma.report'));
+        $response418a->assertOk();
+        $response418a->assertHeader('content-type', 'application/pdf');
+
+        $response418b = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.rekap-ibu-hamil-pkk-rt.report'));
+        $response418b->assertOk();
+        $response418b->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_laporan_pdf_rekap_416_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
+    public function test_laporan_pdf_rekap_416_417_dan_418_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
         $user->assignRole('admin-desa');
@@ -473,6 +529,12 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
 
         $response417d = $this->actingAs($user)->get(route('desa.catatan-keluarga.tp-pkk-provinsi.report'));
         $response417d->assertStatus(403);
+
+        $response418a = $this->actingAs($user)->get(route('desa.catatan-keluarga.rekap-ibu-hamil-dasawisma.report'));
+        $response418a->assertStatus(403);
+
+        $response418b = $this->actingAs($user)->get(route('desa.catatan-keluarga.rekap-ibu-hamil-pkk-rt.report'));
+        $response418b->assertStatus(403);
     }
 
     private function seedDataWargaDenganAnggota(User $user, string $level, int $areaId, string $dasaWisma, string $namaKepala): void

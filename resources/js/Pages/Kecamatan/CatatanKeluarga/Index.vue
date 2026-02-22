@@ -90,6 +90,22 @@ const props = defineProps({
         >
           Cetak 4.17d
         </a>
+        <a
+          href="/kecamatan/catatan-keluarga/rekap-ibu-hamil-dasawisma/report/pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center rounded-md border border-lime-300 px-4 py-2 text-sm font-medium text-lime-700 hover:bg-lime-50 dark:border-lime-900/50 dark:text-lime-300 dark:hover:bg-lime-900/20"
+        >
+          Cetak 4.18a
+        </a>
+        <a
+          href="/kecamatan/catatan-keluarga/rekap-ibu-hamil-pkk-rt/report/pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center rounded-md border border-orange-300 px-4 py-2 text-sm font-medium text-orange-700 hover:bg-orange-50 dark:border-orange-900/50 dark:text-orange-300 dark:hover:bg-orange-900/20"
+        >
+          Cetak 4.18b
+        </a>
       </div>
 
       <div class="overflow-x-auto">

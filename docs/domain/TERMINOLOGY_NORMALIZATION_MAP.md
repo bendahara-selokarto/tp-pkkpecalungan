@@ -45,6 +45,8 @@ Tujuan:
 | 4.17b | `catatan-data-kegiatan-warga-tp-pkk-kecamatan` | Catatan Data dan Kegiatan Warga TP PKK Kecamatan | Report PDF 35 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-35 untuk mencegah drift | implemented (report-only) |
 | 4.17c | `catatan-data-kegiatan-warga-tp-pkk-kabupaten-kota` | Catatan Data dan Kegiatan Warga TP PKK Kabupaten/Kota | Report PDF 36 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-36 untuk mencegah drift | implemented (report-only) |
 | 4.17d | `catatan-data-kegiatan-warga-tp-pkk-provinsi` | Catatan Data dan Kegiatan Warga TP PKK Provinsi | Report PDF 37 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-37 untuk mencegah drift | implemented (report-only) |
+| 4.18a | `rekap-ibu-hamil-melahirkan-dasawisma` | Rekapitulasi Data/Buku Catatan Ibu Hamil, Melahirkan, Nifas, Ibu Meninggal, Kelahiran Bayi, Bayi Meninggal dan Kematian Balita dalam Kelompok Dasawisma | Report PDF 17 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-17 untuk mencegah drift | implemented (report-only) |
+| 4.18b | `rekap-ibu-hamil-melahirkan-pkk-rt` | Rekapitulasi Data/Buku Catatan Ibu Hamil, Melahirkan, Nifas, Ibu Meninggal, Kelahiran Bayi, Bayi Meninggal dan Kematian Balita dalam Kelompok PKK RT | Report PDF 15 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-15 untuk mencegah drift | implemented (report-only) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Label canonical sudah aktif pada menu/index/PDF | Pertahankan label canonical, lanjutkan pemetaan indikator detail katalog | implemented (catalog tahap awal) |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
@@ -92,5 +94,9 @@ Tujuan:
   - `docs/domain/CATATAN_TP_PKK_KABUPATEN_KOTA_4_17C_MAPPING.md`
 - Mapping Catatan TP PKK 4.17d:
   - `docs/domain/CATATAN_TP_PKK_PROVINSI_4_17D_MAPPING.md`
+- Mapping Rekap Ibu Hamil 4.18a:
+  - `docs/domain/REKAP_IBU_HAMIL_DASAWISMA_4_18A_MAPPING.md`
+- Mapping Rekap Ibu Hamil 4.18b:
+  - `docs/domain/REKAP_IBU_HAMIL_PKK_RT_4_18B_MAPPING.md`
 - Ekstensi pedoman:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`

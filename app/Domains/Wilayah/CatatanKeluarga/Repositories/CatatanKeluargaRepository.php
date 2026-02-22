@@ -104,6 +104,57 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             });
     }
 
+    public function getRekapIbuHamilPkkRtByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $rows = $this->getRekapIbuHamilDasaWismaByLevelAndArea($level, $areaId);
+        $grouped = $rows->groupBy(
+            fn (array $item): string => trim((string) ($item['kelompok_dasawisma'] ?? '-')) !== ''
+                ? trim((string) ($item['kelompok_dasawisma'] ?? '-'))
+                : '-'
+        );
+
+        $result = collect();
+
+        foreach ($grouped as $namaKelompokDasaWisma => $groupItems) {
+            $groupItems = $groupItems->values();
+            $keterangan = $groupItems
+                ->pluck('keterangan')
+                ->filter(fn ($value): bool => is_string($value) && trim($value) !== '' && trim($value) !== '-')
+                ->unique()
+                ->implode('; ');
+
+            $result->push([
+                'nomor_urut' => $result->count() + 1,
+                'nama_kelompok_dasa_wisma' => $namaKelompokDasaWisma,
+                'jumlah_ibu_hamil' => $this->countArrayItemsByValue($groupItems, 'status_ibu', 'HAMIL'),
+                'jumlah_ibu_melahirkan' => $this->countArrayItemsByValue($groupItems, 'status_ibu', 'MELAHIRKAN'),
+                'jumlah_ibu_nifas' => $this->countArrayItemsByValue($groupItems, 'status_ibu', 'NIFAS'),
+                'jumlah_ibu_meninggal' => $this->countArrayItemsByValue($groupItems, 'catatan_kematian_status', 'IBU'),
+                'jumlah_bayi_lahir_l' => $this->sumArrayIntField($groupItems, 'kelahiran_l'),
+                'jumlah_bayi_lahir_p' => $this->sumArrayIntField($groupItems, 'kelahiran_p'),
+                'jumlah_akte_kelahiran_ada' => $this->sumArrayIntField($groupItems, 'akta_ada'),
+                'jumlah_akte_kelahiran_tidak_ada' => $this->sumArrayIntField($groupItems, 'akta_tidak_ada'),
+                'jumlah_bayi_meninggal_l' => (int) $groupItems
+                    ->filter(fn (array $item): bool => ($item['catatan_kematian_status'] ?? '-') === 'BAYI')
+                    ->sum(fn (array $item): int => (int) ($item['kematian_l'] ?? 0)),
+                'jumlah_bayi_meninggal_p' => (int) $groupItems
+                    ->filter(fn (array $item): bool => ($item['catatan_kematian_status'] ?? '-') === 'BAYI')
+                    ->sum(fn (array $item): int => (int) ($item['kematian_p'] ?? 0)),
+                'jumlah_balita_meninggal_l' => (int) $groupItems
+                    ->filter(fn (array $item): bool => ($item['catatan_kematian_status'] ?? '-') === 'BALITA')
+                    ->sum(fn (array $item): int => (int) ($item['kematian_l'] ?? 0)),
+                'jumlah_balita_meninggal_p' => (int) $groupItems
+                    ->filter(fn (array $item): bool => ($item['catatan_kematian_status'] ?? '-') === 'BALITA')
+                    ->sum(fn (array $item): int => (int) ($item['kematian_p'] ?? 0)),
+                'keterangan' => $keterangan !== '' ? $keterangan : '-',
+                'rt_rw_dus_ling' => $this->composeRtRwDusLingLabel($groupItems),
+                'desa_kelurahan' => $this->composeArrayFieldLabel($groupItems, 'desa_kelurahan'),
+            ]);
+        }
+
+        return $result;
+    }
+
     public function getRekapPkkRtByLevelAndArea(string $level, int $areaId): Collection
     {
         $households = $this->scopedHouseholds($level, $areaId);
@@ -977,5 +1028,76 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         $status = Str::lower(trim((string) $item->status_perkawinan));
 
         return $status !== '' && (str_contains($status, 'kawin') || str_contains($status, 'nikah'));
+    }
+
+    /**
+     * @param Collection<int, array<string, mixed>> $items
+     */
+    private function countArrayItemsByValue(Collection $items, string $key, string $value): int
+    {
+        return $items->filter(
+            fn (array $item): bool => strtoupper(trim((string) ($item[$key] ?? '-'))) === strtoupper($value)
+        )->count();
+    }
+
+    /**
+     * @param Collection<int, array<string, mixed>> $items
+     */
+    private function sumArrayIntField(Collection $items, string $key): int
+    {
+        return (int) $items->sum(
+            fn (array $item): int => (int) ($item[$key] ?? 0)
+        );
+    }
+
+    /**
+     * @param Collection<int, array<string, mixed>> $items
+     */
+    private function composeArrayFieldLabel(Collection $items, string $key): string
+    {
+        $values = $items
+            ->map(fn (array $item): string => trim((string) ($item[$key] ?? '-')))
+            ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
+            ->unique()
+            ->values();
+
+        if ($values->isEmpty()) {
+            return '-';
+        }
+
+        if ($values->count() === 1) {
+            return (string) $values->first();
+        }
+
+        return 'MULTI: '.$values->implode(', ');
+    }
+
+    /**
+     * @param Collection<int, array<string, mixed>> $items
+     */
+    private function composeRtRwDusLingLabel(Collection $items): string
+    {
+        $rt = $this->composeArrayFieldLabel($items, 'kelompok_pkk_rt');
+        $rw = $this->composeArrayFieldLabel($items, 'kelompok_pkk_rw');
+        $dusun = $this->composeArrayFieldLabel($items, 'dusun_lingkungan');
+
+        $rtRw = '-';
+        if ($rt !== '-' || $rw !== '-') {
+            $rtRw = sprintf('RT %s / RW %s', $rt, $rw);
+        }
+
+        if ($rtRw === '-' && $dusun === '-') {
+            return '-';
+        }
+
+        if ($dusun === '-') {
+            return $rtRw;
+        }
+
+        if ($rtRw === '-') {
+            return $dusun;
+        }
+
+        return sprintf('%s / %s', $rtRw, $dusun);
     }
 }
