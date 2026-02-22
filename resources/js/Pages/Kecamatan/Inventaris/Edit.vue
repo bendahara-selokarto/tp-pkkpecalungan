@@ -75,9 +75,7 @@ const submit = () => {
             <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Penerimaan/Pembelian</label>
             <input
               v-model="form.tanggal_penerimaan"
-              type="text"
-              inputmode="numeric"
-              placeholder="DD/MM/YYYY"
+              type="date"
               class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
             >
             <p v-if="form.errors.tanggal_penerimaan" class="mt-1 text-xs text-rose-600">{{ form.errors.tanggal_penerimaan }}</p>
