@@ -151,6 +151,7 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
 - Status: active
 - Konteks: Verifikasi struktur lampiran PDF dengan tabel kompleks (merge header) yang tidak stabil jika hanya mengandalkan ekstraksi text-layer otomatis.
 - Trigger: Dokumen PDF pedoman dipakai sebagai sumber kontrak domain dan hasil parser teks tidak mencerminkan struktur tabel utuh.
+- Status kontrak: metode default/baku project untuk pembacaan dokumen autentik bertabel hingga ada bukti metode baru yang lebih akurat.
 - Langkah eksekusi:
   1) Baca: jalankan ekstraksi otomatis (contoh: Node parser) untuk token identitas dokumen.
   2) Baca lanjutan (presisi header): jika text-layer tidak menangkap header tabel utuh, render visual halaman (screenshot) lalu verifikasi manual struktur header (jumlah kolom, merge row/col, label grup/sub-header).
@@ -174,6 +175,7 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Tambahan kerja manual transkripsi pada struktur tabel kompleks.
 - Catatan reuse lintas domain/project:
   - Gunakan pattern ini untuk seluruh lampiran yang memiliki header bertingkat atau kolom gabungan yang padat.
+  - Perubahan metode wajib memperbarui `AGENTS.md` dan registry pattern pada sesi yang sama agar kontrak tetap sinkron.
 
 ### P-010 - Date Output Harmonization Without Persistence Drift
 - Tanggal: 2026-02-22

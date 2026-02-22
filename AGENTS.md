@@ -46,6 +46,8 @@ Legacy tables (compatibility only):
 - `area_id` user harus cocok levelnya dengan scope.
 - Default orientasi output PDF adalah `landscape`; `portrait` hanya jika diminta eksplisit.
 - Untuk dokumen autentik bertabel, hasil pembacaan wajib mencapai peta header tabel sampai tingkat penggabungan sel (`rowspan`/`colspan`) sebelum sinkronisasi kontrak/implementasi.
+- Metode pembacaan dokumen autentik saat ini (`text-layer -> verifikasi visual manual -> laporkan/konfirmasi -> sinkronkan`) ditetapkan sebagai kontrak baku/default karena paling presisi sejauh ini.
+- Metode baku ini hanya boleh diganti jika ada metode baru yang terukur lebih akurat dan sudah didokumentasikan pada playbook + AGENTS di sesi yang sama.
 
 ## 3. Execution Flow (Mandatory)
 
