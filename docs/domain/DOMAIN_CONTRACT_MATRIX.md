@@ -32,6 +32,7 @@ Aturan baca:
 | 4.16a | `rekap-catatan-data-kegiatan-warga-dasawisma` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok Dasa Wisma | Report rekap 29 kolom dengan merge-header autentik; data diambil dari `data_wargas` + `data_warga_anggotas` + indikator area dari `data_kegiatan_wargas` (UP2K/kesehatan lingkungan) + keberadaan entri `data_pemanfaatan_tanah_pekarangan_hatinya_pkks` dan `data_industri_rumah_tanggas` | `REKAPITULASI CATATAN DATA DAN KEGIATAN WARGA KELOMPOK DASA WISMA` | Dokumen autentik `d:\\pedoman\\179.pdf` (Lampiran 4.16a) | implemented (report-only via `catatan-keluarga`) |
 | 4.16b | `rekap-catatan-data-kegiatan-warga-pkk-rt` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok PKK RT | Report rekap 30 kolom dengan merge-header autentik; agregasi per `dasawisma` dari `data_wargas` + `data_warga_anggotas` + indikator area dari `data_kegiatan_wargas`/modul terkait | `REKAPITULASI CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK RT` | Dokumen autentik `d:\\pedoman\\181.pdf` (Lampiran 4.16b) | implemented (report-only via `catatan-keluarga`) |
 | 4.16c | `catatan-data-kegiatan-warga-pkk-rw` | Catatan Data dan Kegiatan Warga Kelompok PKK RW | Report 32 kolom dengan merge-header autentik; agregasi per `nomor_rt` (ekstraksi dari data rumah tangga) dari `data_wargas` + `data_warga_anggotas` + indikator area-level lintas modul, referensi mapping: `docs/domain/CATATAN_PKK_RW_4_16C_MAPPING.md` | `CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK RW` | Dokumen autentik `d:\\pedoman\\183.pdf` (Lampiran 4.16c) | implemented (report-only via `catatan-keluarga`) |
+| 4.16d | `rekap-catatan-data-kegiatan-warga-rw` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok PKK Desa/Kelurahan | Report 33 kolom dengan merge-header autentik; agregasi per `nomor_rw` (ekstraksi dari data rumah tangga) dari `data_wargas` + `data_warga_anggotas` + indikator area-level lintas modul; `jml_rt` dihitung dari RT unik terdeteksi, referensi mapping: `docs/domain/LAMPIRAN_4_16D_MAPPING.md` | `REKAPITULASI CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK DESA/KELURAHAN` | Dokumen autentik `d:\\pedoman\\185.pdf` (Lampiran 4.16d) | implemented (report-only via `catatan-keluarga`, judul canonical final menunggu konfirmasi token identitas) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana (Pokja IV) | Header laporan: `judul_laporan`, `dasar_hukum`, `pendahuluan`, `maksud_tujuan`, `pelaksanaan`, `dokumentasi`, `penutup`; nilai indikator periodik: `section`, `cluster_code`, `indicator_code`, `year`, `semester`, `value`, `evaluation_note`, `sort_order` | `LAPORAN PELAKSANAAN PILOT PROJECT GERAKAN KELUARGA SEHAT TANGGAP DAN TANGGUH BENCANA` | PubHTML5 201-241 (Halaman 202-211) | implemented (catalog tahap awal) |
 
 ## Jejak Teknis (Acuan Verifikasi)
@@ -67,6 +68,9 @@ Aturan baca:
 - Catatan PKK RW autentik:
   - `docs/domain/CATATAN_PKK_RW_4_16C_MAPPING.md`
   - `resources/views/pdf/catatan_data_kegiatan_warga_pkk_rw_report.blade.php`
+- Lampiran 4.16d autentik:
+  - `docs/domain/LAMPIRAN_4_16D_MAPPING.md`
+  - `resources/views/pdf/rekap_catatan_data_kegiatan_warga_rw_report.blade.php`
 - Ekstensi pilot project source:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
 
