@@ -43,6 +43,7 @@ Gunakan status:
 | `P-006` | New Menu -> Dashboard Trigger Audit | Ada menu/domain baru | Dashboard tetap representatif dan tidak drift | `DashboardDocumentCoverageTest` (+ `DashboardActivityChartTest` jika kontrak berubah) | `active` |
 | `P-007` | Canonical Date Input UI | Form menambah field tanggal | Format UI konsisten dan payload backend stabil | Cek `type="date"` + submit payload `YYYY-MM-DD` | `active` |
 | `P-008` | Pre-Release Legacy Upgrade Track | Refactor masih menyentuh legacy | Coupling legacy turun tanpa mengorbankan keamanan scope | Validasi mapping dampak + `php artisan migrate:fresh` + test relevan | `active` |
+| `P-009` | Hybrid PDF Authenticity Verification | PDF lampiran punya merge-row/merge-col kompleks | Kontrak domain tetap akurat walau parser teks terbatas | Parser text extraction + verifikasi manual terhadap dokumen autentik + dokumen mapping | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -143,3 +144,27 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Kehilangan data lokal development setelah `migrate:fresh`.
 - Catatan reuse lintas domain/project:
   - Terapkan hanya untuk fase pre-release atau environment non-produksi.
+
+### P-009 - Hybrid PDF Authenticity Verification
+- Tanggal: 2026-02-22
+- Status: active
+- Konteks: Verifikasi struktur lampiran PDF dengan tabel kompleks (merge header) yang tidak stabil jika hanya mengandalkan ekstraksi text-layer otomatis.
+- Trigger: Dokumen PDF pedoman dipakai sebagai sumber kontrak domain dan hasil parser teks tidak mencerminkan struktur tabel utuh.
+- Langkah eksekusi:
+  1) Jalankan ekstraksi otomatis (contoh: Node parser) untuk token identitas dokumen.
+  2) Validasi struktur tabel (jumlah kolom, merge row/col, label grup) langsung ke dokumen autentik.
+  3) Simpan hasil transformasi pada dokumen mapping domain agar reusable dan auditable.
+- Guardrail:
+  - Jangan tetapkan kontrak tabel kompleks hanya dari OCR/parser teks.
+  - Saat hasil parser dan dokumen autentik konflik, dokumen autentik adalah sumber final.
+  - Dokumentasikan gap parsing secara eksplisit agar tidak dianggap bug data aplikasi.
+- Validasi minimum:
+  - Ada bukti token identitas dokumen terdeteksi oleh parser.
+  - Ada dokumen mapping domain yang mengunci transformasi struktur autentik ke representasi aplikasi.
+  - Terminology/domain matrix menunjuk dokumen mapping tersebut.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada Lampiran 4.15 (`d:\pedoman\177.pdf`) saat parser Node membaca identitas dokumen tetapi tidak merekonstruksi header tabel 19 kolom secara penuh.
+- Risiko:
+  - Tambahan kerja manual transkripsi pada struktur tabel kompleks.
+- Catatan reuse lintas domain/project:
+  - Gunakan pattern ini untuk seluruh lampiran yang memiliki header bertingkat atau kolom gabungan yang padat.
