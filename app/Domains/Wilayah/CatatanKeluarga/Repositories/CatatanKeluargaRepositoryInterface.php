@@ -27,4 +27,6 @@ interface CatatanKeluargaRepositoryInterface
     public function getRekapIbuHamilDasaWismaByLevelAndArea(string $level, int $areaId): Collection;
 
     public function getRekapIbuHamilPkkRtByLevelAndArea(string $level, int $areaId): Collection;
+
+    public function getRekapIbuHamilPkkRwByLevelAndArea(string $level, int $areaId): Collection;
 }

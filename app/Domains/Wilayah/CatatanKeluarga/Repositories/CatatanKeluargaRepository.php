@@ -155,6 +155,68 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         return $result;
     }
 
+    public function getRekapIbuHamilPkkRwByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $rows = $this->getRekapIbuHamilDasaWismaByLevelAndArea($level, $areaId);
+        $grouped = $rows->groupBy(
+            fn (array $item): string => trim((string) ($item['kelompok_pkk_rt'] ?? '-')) !== ''
+                ? trim((string) ($item['kelompok_pkk_rt'] ?? '-'))
+                : '-'
+        );
+
+        $sortedRtNumbers = $grouped
+            ->keys()
+            ->sort(fn (string $left, string $right): int => $this->compareRtNumbers($left, $right))
+            ->values();
+
+        $result = collect();
+
+        foreach ($sortedRtNumbers as $rtNumber) {
+            $groupItems = $grouped->get($rtNumber, collect())->values();
+            $keterangan = $groupItems
+                ->pluck('keterangan')
+                ->filter(fn ($value): bool => is_string($value) && trim($value) !== '' && trim($value) !== '-')
+                ->unique()
+                ->implode('; ');
+
+            $result->push([
+                'nomor_urut' => $result->count() + 1,
+                'nomor_rt' => $rtNumber,
+                'jumlah_kelompok_dasawisma' => $groupItems
+                    ->map(fn (array $item): string => trim((string) ($item['kelompok_dasawisma'] ?? '-')))
+                    ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
+                    ->unique()
+                    ->count(),
+                'jumlah_ibu_hamil' => $this->countArrayItemsByValue($groupItems, 'status_ibu', 'HAMIL'),
+                'jumlah_ibu_melahirkan' => $this->countArrayItemsByValue($groupItems, 'status_ibu', 'MELAHIRKAN'),
+                'jumlah_ibu_nifas' => $this->countArrayItemsByValue($groupItems, 'status_ibu', 'NIFAS'),
+                'jumlah_ibu_meninggal' => $this->countArrayItemsByValue($groupItems, 'catatan_kematian_status', 'IBU'),
+                'jumlah_bayi_lahir_l' => $this->sumArrayIntField($groupItems, 'kelahiran_l'),
+                'jumlah_bayi_lahir_p' => $this->sumArrayIntField($groupItems, 'kelahiran_p'),
+                'jumlah_akte_kelahiran_ada' => $this->sumArrayIntField($groupItems, 'akta_ada'),
+                'jumlah_akte_kelahiran_tidak_ada' => $this->sumArrayIntField($groupItems, 'akta_tidak_ada'),
+                'jumlah_bayi_meninggal_l' => (int) $groupItems
+                    ->filter(fn (array $item): bool => ($item['catatan_kematian_status'] ?? '-') === 'BAYI')
+                    ->sum(fn (array $item): int => (int) ($item['kematian_l'] ?? 0)),
+                'jumlah_bayi_meninggal_p' => (int) $groupItems
+                    ->filter(fn (array $item): bool => ($item['catatan_kematian_status'] ?? '-') === 'BAYI')
+                    ->sum(fn (array $item): int => (int) ($item['kematian_p'] ?? 0)),
+                'jumlah_balita_meninggal_l' => (int) $groupItems
+                    ->filter(fn (array $item): bool => ($item['catatan_kematian_status'] ?? '-') === 'BALITA')
+                    ->sum(fn (array $item): int => (int) ($item['kematian_l'] ?? 0)),
+                'jumlah_balita_meninggal_p' => (int) $groupItems
+                    ->filter(fn (array $item): bool => ($item['catatan_kematian_status'] ?? '-') === 'BALITA')
+                    ->sum(fn (array $item): int => (int) ($item['kematian_p'] ?? 0)),
+                'keterangan' => $keterangan !== '' ? $keterangan : '-',
+                'nomor_rw' => $this->composeArrayFieldLabel($groupItems, 'kelompok_pkk_rw'),
+                'dusun_lingkungan' => $this->composeArrayFieldLabel($groupItems, 'dusun_lingkungan'),
+                'desa_kelurahan' => $this->composeArrayFieldLabel($groupItems, 'desa_kelurahan'),
+            ]);
+        }
+
+        return $result;
+    }
+
     public function getRekapPkkRtByLevelAndArea(string $level, int $areaId): Collection
     {
         $households = $this->scopedHouseholds($level, $areaId);

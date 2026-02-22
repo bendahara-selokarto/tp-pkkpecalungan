@@ -47,6 +47,7 @@ Tujuan:
 | 4.17d | `catatan-data-kegiatan-warga-tp-pkk-provinsi` | Catatan Data dan Kegiatan Warga TP PKK Provinsi | Report PDF 37 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-37 untuk mencegah drift | implemented (report-only) |
 | 4.18a | `rekap-ibu-hamil-melahirkan-dasawisma` | Rekapitulasi Data/Buku Catatan Ibu Hamil, Melahirkan, Nifas, Ibu Meninggal, Kelahiran Bayi, Bayi Meninggal dan Kematian Balita dalam Kelompok Dasawisma | Report PDF 17 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-17 untuk mencegah drift | implemented (report-only) |
 | 4.18b | `rekap-ibu-hamil-melahirkan-pkk-rt` | Rekapitulasi Data/Buku Catatan Ibu Hamil, Melahirkan, Nifas, Ibu Meninggal, Kelahiran Bayi, Bayi Meninggal dan Kematian Balita dalam Kelompok PKK RT | Report PDF 15 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-15 untuk mencegah drift | implemented (report-only) |
+| 4.18c | `rekap-ibu-hamil-melahirkan-pkk-rw` | Rekapitulasi Data/Buku Catatan Ibu Hamil, Melahirkan, Nifas, Ibu Meninggal, Kelahiran Bayi, Bayi Meninggal dan Kematian Balita dalam Kelompok PKK RW | Report PDF 16 kolom dengan kontrak cara pengisian autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-16 untuk mencegah drift | implemented (report-only) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Label canonical sudah aktif pada menu/index/PDF | Pertahankan label canonical, lanjutkan pemetaan indikator detail katalog | implemented (catalog tahap awal) |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
@@ -98,5 +99,7 @@ Tujuan:
   - `docs/domain/REKAP_IBU_HAMIL_DASAWISMA_4_18A_MAPPING.md`
 - Mapping Rekap Ibu Hamil 4.18b:
   - `docs/domain/REKAP_IBU_HAMIL_PKK_RT_4_18B_MAPPING.md`
+- Mapping Rekap Ibu Hamil 4.18c:
+  - `docs/domain/REKAP_IBU_HAMIL_PKK_RW_4_18C_MAPPING.md`
 - Ekstensi pedoman:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
