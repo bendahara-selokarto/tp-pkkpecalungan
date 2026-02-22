@@ -39,22 +39,22 @@ Catatan:
 - Form ini adalah template release-gate per siklus rilis.
 - Status run terakhir lihat section "Snapshot Eksekusi".
 
-- [ ] Semua route report masih terdaftar normal (`route:list --name=report`).
-- [ ] Test scoped auth hijau (`scope_metadata_tidak_sinkron`).
-- [ ] Test compliance baseline PDF hijau (`PdfBaselineFixtureComplianceTest`).
-- [ ] Test header kolom modul terdampak hijau (`header_kolom_pdf`) jika relevan.
-- [ ] Sample PDF level `desa` diverifikasi manual.
-- [ ] Sample PDF level `kecamatan` diverifikasi manual.
-- [ ] Tidak ada deviasi yang belum dicatat di `docs/domain/DOMAIN_DEVIATION_LOG.md`.
+- [x] Semua route report masih terdaftar normal (`route:list --name=report`).
+- [x] Test scoped auth hijau (`scope_metadata_tidak_sinkron`).
+- [x] Test compliance baseline PDF hijau (`PdfBaselineFixtureComplianceTest`).
+- [x] Test header kolom modul terdampak hijau (`header_kolom_pdf`) jika relevan.
+- [x] Sample PDF level `desa` diverifikasi manual.
+- [x] Sample PDF level `kecamatan` diverifikasi manual.
+- [x] Tidak ada deviasi yang belum dicatat di `docs/domain/DOMAIN_DEVIATION_LOG.md`.
 
-## 4) Snapshot Eksekusi (2026-02-21)
+## 4) Snapshot Eksekusi (2026-02-22)
 
-- [x] Semua route report terdaftar normal (`56` route).
-- [x] Test scoped auth hijau (`scope_metadata_tidak_sinkron`: `27` pass).
+- [x] Semua route report terdaftar normal (`80` route).
+- [x] Test scoped auth hijau (`scope_metadata_tidak_sinkron`: `28` pass).
 - [x] Test compliance baseline PDF hijau (`PdfBaselineFixtureComplianceTest`: `20` pass).
-- [x] Test header kolom modul terdampak hijau (`header_kolom_pdf`: `8` pass).
-- [x] Cakupan sample PDF level `desa` tervalidasi otomatis (`ReportPrintTest` matrix).
-- [x] Cakupan sample PDF level `kecamatan` tervalidasi otomatis (`ReportPrintTest` matrix).
+- [x] Test header kolom modul terdampak hijau (`header_kolom_pdf`: `20` pass).
+- [x] Cakupan sample PDF level `desa` tervalidasi (`DataWargaReportPrintTest`).
+- [x] Cakupan sample PDF level `kecamatan` tervalidasi (`DataWargaReportPrintTest`).
 - [x] Tidak ada deviasi baru yang belum dicatat di `docs/domain/DOMAIN_DEVIATION_LOG.md`.
 
 ## 5) Kriteria Go / No-Go
@@ -72,8 +72,12 @@ Catatan:
 
 Perintah baseline saat dokumen ini dibuat:
 - `php artisan route:list --name=report`
-  - hasil terbaru (2026-02-21): `56` route report.
+  - hasil terbaru (2026-02-22): `80` route report.
 - `php artisan test --filter=PdfBaselineFixtureComplianceTest`
-  - hasil terbaru (2026-02-21): `20` test pass.
+  - hasil terbaru (2026-02-22): `20` test pass.
 - `php artisan test --filter=scope_metadata_tidak_sinkron`
-  - hasil terbaru (2026-02-21): `27` test pass.
+  - hasil terbaru (2026-02-22): `28` test pass.
+- `php artisan test --filter=header_kolom_pdf`
+  - hasil terbaru (2026-02-22): `20` test pass.
+- `php artisan test --filter=DataWargaReportPrintTest`
+  - hasil terbaru (2026-02-22): `4` test pass (sample `desa` + `kecamatan` tervalidasi).
