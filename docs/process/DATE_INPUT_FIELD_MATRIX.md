@@ -1,10 +1,11 @@
 # Date Input Field Matrix
 
-Tanggal audit: 2026-02-21
+Tanggal audit: 2026-02-22
 Scope audit: form tanggal di modul Desa + Kecamatan
 
 ## Klasifikasi
 - `MIGRATE_PHASE_2`: harus migrasi ke `type="date"` + payload `Y-m-d` + validasi strict.
+- `CANONICAL_DONE`: UI dan backend sudah canonical strict `Y-m-d`.
 - `CANONICAL_KEEP_STRICTEN`: UI sudah canonical; backend perlu diseragamkan ke validasi strict canonical.
 - `EXCEPTION_DOMAIN`: bukan tanggal kalender tunggal, tetap string domain.
 
@@ -12,13 +13,13 @@ Scope audit: form tanggal di modul Desa + Kecamatan
 
 | Domain | Field | UI Saat Ini | Backend Saat Ini | Klasifikasi |
 | --- | --- | --- | --- | --- |
-| Activities | `activity_date` | Text + placeholder `DD/MM/YYYY` | `ParsesUiDate` (`DD/MM/YYYY`) | `MIGRATE_PHASE_2` |
-| Bantuan | `received_date` | Text + placeholder `DD/MM/YYYY` | `ParsesUiDate` (`DD/MM/YYYY`) | `MIGRATE_PHASE_2` |
-| Inventaris | `tanggal_penerimaan` | Text + placeholder `DD/MM/YYYY` | `ParsesUiDate` (`DD/MM/YYYY`) | `MIGRATE_PHASE_2` |
-| AgendaSurat | `tanggal_surat`, `tanggal_terima` | Text + placeholder `DD/MM/YYYY` | `ParsesUiDate` (`DD/MM/YYYY`) | `MIGRATE_PHASE_2` |
-| AnggotaTimPenggerak | `tanggal_lahir` | Text + placeholder `DD/MM/YYYY` | `ParsesUiDate` (`DD/MM/YYYY`) | `MIGRATE_PHASE_2` |
-| AnggotaPokja | `tanggal_lahir` | Text + placeholder `DD/MM/YYYY` | `ParsesUiDate` (`DD/MM/YYYY`) | `MIGRATE_PHASE_2` |
-| KaderKhusus | `tanggal_lahir` | Text + placeholder `DD/MM/YYYY` | `ParsesUiDate` (`DD/MM/YYYY`) | `MIGRATE_PHASE_2` |
+| Activities | `activity_date` | `type="date"` | `required|date_format:Y-m-d` | `CANONICAL_DONE` |
+| Bantuan | `received_date` | `type="date"` | `required|date_format:Y-m-d` | `CANONICAL_DONE` |
+| Inventaris | `tanggal_penerimaan` | `type="date"` | `nullable|date_format:Y-m-d` | `CANONICAL_DONE` |
+| AgendaSurat | `tanggal_surat`, `tanggal_terima` | `type="date"` | `required/nullable + date_format:Y-m-d` | `CANONICAL_DONE` |
+| AnggotaTimPenggerak | `tanggal_lahir` | `type="date"` | `required|date_format:Y-m-d|before_or_equal:today` | `CANONICAL_DONE` |
+| AnggotaPokja | `tanggal_lahir` | `type="date"` | `required|date_format:Y-m-d|before_or_equal:today` | `CANONICAL_DONE` |
+| KaderKhusus | `tanggal_lahir` | `type="date"` | `required|date_format:Y-m-d|before_or_equal:today` | `CANONICAL_DONE` |
 | DataWargaAnggota | `anggota.tanggal_lahir` | `type="date"` | `nullable|date` | `CANONICAL_KEEP_STRICTEN` |
 | PilotProjectNaskahPelaporan | `surat_tanggal` | `type="date"` | `nullable|date` | `CANONICAL_KEEP_STRICTEN` |
 | DataPelatihanKader | `tanggal_masuk_tp_pkk` | Text bebas (contoh `12/05/2020` atau `2020`) | `required|string|max:100` | `EXCEPTION_DOMAIN` |
@@ -30,15 +31,21 @@ Scope audit: form tanggal di modul Desa + Kecamatan
   - `resources/js/admin-one/components/DataWargaAnggotaTable.vue`
   - `resources/js/Pages/PilotProjectNaskahPelaporan/Create.vue`
   - `resources/js/Pages/PilotProjectNaskahPelaporan/Edit.vue`
-- Frontend `DD/MM/YYYY` (contoh representatif):
+- Frontend canonical hasil migrasi Phase 2:
   - `resources/js/Pages/Desa/Activities/Create.vue`
+  - `resources/js/Pages/Desa/Bantuan/Create.vue`
+  - `resources/js/Pages/Desa/Inventaris/Create.vue`
   - `resources/js/Pages/Desa/AgendaSurat/Create.vue`
   - `resources/js/Pages/Desa/AnggotaTimPenggerak/Create.vue`
-  - `resources/js/Pages/Desa/Inventaris/Create.vue`
+  - `resources/js/Pages/Desa/AnggotaPokja/Create.vue`
+  - `resources/js/Pages/Desa/KaderKhusus/Create.vue`
   - `resources/js/Pages/Kecamatan/Activities/Create.vue`
+  - `resources/js/Pages/Kecamatan/Bantuan/Create.vue`
+  - `resources/js/Pages/Kecamatan/Inventaris/Create.vue`
   - `resources/js/Pages/Kecamatan/AgendaSurat/Create.vue`
   - `resources/js/Pages/Kecamatan/AnggotaTimPenggerak/Create.vue`
-  - `resources/js/Pages/Kecamatan/Inventaris/Create.vue`
+  - `resources/js/Pages/Kecamatan/AnggotaPokja/Create.vue`
+  - `resources/js/Pages/Kecamatan/KaderKhusus/Create.vue`
 - Backend request:
   - `app/Http/Requests/Concerns/ParsesUiDate.php`
   - `app/Domains/Wilayah/Activities/Requests/StoreActivityRequest.php`

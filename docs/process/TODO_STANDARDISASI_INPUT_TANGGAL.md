@@ -31,7 +31,7 @@
 - [x] Tambah util formatter frontend terpusat untuk tampilan tanggal. (`resources/js/utils/dateFormatter.js`)
 
 ### Phase 2 - Migrasi UI Form
-- [ ] Ubah form tanggal kalender dari `type="text"` ke `type="date"`:
+- [x] Ubah form tanggal kalender dari `type="text"` ke `type="date"`:
   - Activities
   - Bantuan
   - Inventaris
@@ -40,12 +40,12 @@
   - AnggotaPokja
   - KaderKhusus
 - [x] Pastikan data prefill edit sudah `Y-m-d`.
-- [ ] Hapus placeholder `DD/MM/YYYY` pada field yang sudah `type="date"`.
+- [x] Hapus placeholder `DD/MM/YYYY` pada field yang sudah `type="date"`.
 
 ### Phase 3 - Migrasi Request/Validation
-- [ ] Untuk field tanggal kalender, ubah request ke kontrak `date_format:Y-m-d` (atau equivalent strict).
-- [ ] Deprecate jalur normalisasi `DD/MM/YYYY` bertahap.
-- [ ] Pertahankan parser lama hanya jika dibutuhkan compatibility window sementara.
+- [x] Untuk field tanggal kalender, ubah request ke kontrak `date_format:Y-m-d` (atau equivalent strict).
+- [x] Deprecate jalur normalisasi `DD/MM/YYYY` bertahap.
+- [x] Pertahankan parser lama hanya jika dibutuhkan compatibility window sementara.
 
 ### Phase 4 - Controller/Presenter Harmonization
 - [ ] Konsolidasikan mapping tanggal di controller agar:
@@ -63,13 +63,13 @@
 ### Phase 6 - Test dan Regression Gate
 - [ ] Tambah/upgrade feature test create+update untuk semua modul tanggal (Desa + Kecamatan).
 - [ ] Tambah negative test format invalid untuk kontrak `Y-m-d`.
-- [ ] Jalankan `php artisan test` penuh setelah migrasi lintas-modul.
+- [x] Jalankan `php artisan test` penuh setelah migrasi lintas-modul.
 
 ## Validasi Minimum
-- [ ] Semua field tanggal kalender menerima `Y-m-d`.
+- [x] Semua field tanggal kalender menerima `Y-m-d`.
 - [ ] Tidak ada mismatch format antara create/edit/show/index.
-- [ ] Tidak ada perubahan tak diminta pada policy/scope authorization.
-- [ ] Test suite relevan lulus.
+- [x] Tidak ada perubahan tak diminta pada policy/scope authorization.
+- [x] Test suite relevan lulus.
 
 ## Risiko
 - Risiko regression form edit jika prefill belum canonical.
