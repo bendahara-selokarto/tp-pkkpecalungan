@@ -10,11 +10,13 @@ use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkDesaKelur
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkProvinsiUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanPkkRwUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapDasaWismaUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilDasaWismaUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapPkkRtUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapRwUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\Response;
 
 class CatatanKeluargaPrintController extends Controller
@@ -26,6 +28,7 @@ class CatatanKeluargaPrintController extends Controller
         private readonly ListScopedCatatanTpPkkKabupatenKotaUseCase $listScopedCatatanTpPkkKabupatenKotaUseCase,
         private readonly ListScopedCatatanTpPkkProvinsiUseCase $listScopedCatatanTpPkkProvinsiUseCase,
         private readonly ListScopedRekapDasaWismaUseCase $listScopedRekapDasaWismaUseCase,
+        private readonly ListScopedRekapIbuHamilDasaWismaUseCase $listScopedRekapIbuHamilDasaWismaUseCase,
         private readonly ListScopedRekapPkkRtUseCase $listScopedRekapPkkRtUseCase,
         private readonly ListScopedCatatanPkkRwUseCase $listScopedCatatanPkkRwUseCase,
         private readonly ListScopedRekapRwUseCase $listScopedRekapRwUseCase,
@@ -51,6 +54,16 @@ class CatatanKeluargaPrintController extends Controller
     public function printKecamatanRekapDasaWismaReport(): Response
     {
         return $this->streamRekapDasaWismaReport(ScopeLevel::KECAMATAN->value);
+    }
+
+    public function printDesaRekapIbuHamilDasaWismaReport(): Response
+    {
+        return $this->streamRekapIbuHamilDasaWismaReport(ScopeLevel::DESA->value);
+    }
+
+    public function printKecamatanRekapIbuHamilDasaWismaReport(): Response
+    {
+        return $this->streamRekapIbuHamilDasaWismaReport(ScopeLevel::KECAMATAN->value);
     }
 
     public function printDesaRekapPkkRtReport(): Response
@@ -183,6 +196,59 @@ class CatatanKeluargaPrintController extends Controller
         ]);
 
         return $pdf->stream("rekap-catatan-data-kegiatan-warga-pkk-rt-{$level}-report.pdf");
+    }
+
+    private function streamRekapIbuHamilDasaWismaReport(string $level): Response
+    {
+        $this->authorize('viewAny', CatatanKeluarga::class);
+
+        $items = $this->listScopedRekapIbuHamilDasaWismaUseCase
+            ->execute($level)
+            ->values();
+
+        $notes = [
+            'jumlah_ibu_hamil' => $items->where('status_ibu', 'HAMIL')->count(),
+            'jumlah_ibu_melahirkan' => $items->where('status_ibu', 'MELAHIRKAN')->count(),
+            'jumlah_ibu_nifas' => $items->where('status_ibu', 'NIFAS')->count(),
+            'jumlah_ibu_meninggal' => $items->where('catatan_kematian_status', 'IBU')->count(),
+            'jumlah_bayi_lahir' => $items->filter(fn (array $item): bool => ($item['nama_bayi'] ?? '-') !== '-')->count(),
+            'jumlah_bayi_meninggal' => $items->where('catatan_kematian_status', 'BAYI')->count(),
+            'jumlah_kematian_balita' => $items->where('catatan_kematian_status', 'BALITA')->count(),
+            'jumlah_ibu_meninggal_risiko' => $items->where('catatan_kematian_status', 'IBU')->count(),
+        ];
+
+        $totals = [
+            'kelahiran_l' => (int) $items->sum('kelahiran_l'),
+            'kelahiran_p' => (int) $items->sum('kelahiran_p'),
+            'akta_ada' => (int) $items->sum('akta_ada'),
+            'akta_tidak_ada' => (int) $items->sum('akta_tidak_ada'),
+            'kematian_l' => (int) $items->sum('kematian_l'),
+            'kematian_p' => (int) $items->sum('kematian_p'),
+        ];
+
+        $meta = [
+            'kelompok_dasawisma' => $this->composeMetaLabel($items->pluck('kelompok_dasawisma')),
+            'kelompok_pkk_rt' => $this->composeMetaLabel($items->pluck('kelompok_pkk_rt')),
+            'kelompok_pkk_rw' => $this->composeMetaLabel($items->pluck('kelompok_pkk_rw')),
+            'dusun_lingkungan' => $this->composeMetaLabel($items->pluck('dusun_lingkungan')),
+            'desa_kelurahan' => $this->composeMetaLabel($items->pluck('desa_kelurahan')),
+        ];
+
+        $user = auth()->user()->loadMissing('area');
+        $pdf = $this->pdfViewFactory->loadView('pdf.rekap_ibu_hamil_melahirkan_dasawisma_report', [
+            'items' => $items,
+            'level' => $level,
+            'areaName' => $user->area?->name ?? '-',
+            'notes' => $notes,
+            'totals' => $totals,
+            'meta' => $meta,
+            'printedBy' => $user,
+            'printedAt' => now(),
+            'bulan' => now()->translatedFormat('F'),
+            'tahun' => now()->format('Y'),
+        ]);
+
+        return $pdf->stream("rekap-ibu-hamil-melahirkan-dasawisma-{$level}-report.pdf");
     }
 
     private function streamCatatanPkkRwReport(string $level): Response
@@ -335,5 +401,27 @@ class CatatanKeluargaPrintController extends Controller
         ]);
 
         return $pdf->stream("catatan-data-kegiatan-warga-tp-pkk-provinsi-{$level}-report.pdf");
+    }
+
+    /**
+     * @param Collection<int, mixed> $values
+     */
+    private function composeMetaLabel(Collection $values): string
+    {
+        $normalized = $values
+            ->map(fn ($value): string => trim((string) $value))
+            ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
+            ->unique()
+            ->values();
+
+        if ($normalized->isEmpty()) {
+            return '-';
+        }
+
+        if ($normalized->count() === 1) {
+            return (string) $normalized->first();
+        }
+
+        return 'MULTI: '.$normalized->implode(', ');
     }
 }

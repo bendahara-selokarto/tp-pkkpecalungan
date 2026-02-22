@@ -23,4 +23,6 @@ interface CatatanKeluargaRepositoryInterface
     public function getCatatanTpPkkKabupatenKotaByLevelAndArea(string $level, int $areaId): Collection;
 
     public function getCatatanTpPkkProvinsiByLevelAndArea(string $level, int $areaId): Collection;
+
+    public function getRekapIbuHamilDasaWismaByLevelAndArea(string $level, int $areaId): Collection;
 }

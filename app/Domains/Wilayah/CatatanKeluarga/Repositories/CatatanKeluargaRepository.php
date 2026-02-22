@@ -64,6 +64,46 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             });
     }
 
+    public function getRekapIbuHamilDasaWismaByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $households = $this->scopedHouseholds($level, $areaId);
+
+        return $households
+            ->values()
+            ->map(function (DataWarga $item, int $index): array {
+                $anggota = $item->relationLoaded('anggota') ? $item->anggota : collect();
+                $ibu = $this->findIbuCandidate($anggota);
+                $bayi = $this->findBayiCandidate($anggota);
+                $statusIbu = $this->extractMaternalStatus($item, $ibu);
+                $deathInfo = $this->extractDeathInfo($item, $ibu, $bayi);
+
+                return [
+                    'nomor_urut' => $index + 1,
+                    'kelompok_dasawisma' => $this->normalizeDasaWismaName($item->dasawisma),
+                    'kelompok_pkk_rt' => $this->extractRtNumber($item),
+                    'kelompok_pkk_rw' => $this->extractRwNumber($item),
+                    'dusun_lingkungan' => $this->extractDusunLingkunganName($item),
+                    'desa_kelurahan' => $this->extractDesaKelurahanNameOrFallback($item),
+                    'nama_ibu' => $ibu?->nama ?? '-',
+                    'nama_suami' => trim((string) $item->nama_kepala_keluarga) !== '' ? (string) $item->nama_kepala_keluarga : '-',
+                    'status_ibu' => $statusIbu,
+                    'nama_bayi' => $bayi?->nama ?? '-',
+                    'kelahiran_l' => $bayi && $bayi->jenis_kelamin === 'L' ? 1 : 0,
+                    'kelahiran_p' => $bayi && $bayi->jenis_kelamin === 'P' ? 1 : 0,
+                    'tanggal_lahir' => $bayi?->tanggal_lahir?->format('Y-m-d') ?? '-',
+                    'akta_ada' => 0,
+                    'akta_tidak_ada' => $bayi ? 1 : 0,
+                    'catatan_kematian_nama' => $deathInfo['nama'],
+                    'catatan_kematian_status' => $deathInfo['status'],
+                    'kematian_l' => $deathInfo['l'],
+                    'kematian_p' => $deathInfo['p'],
+                    'tanggal_meninggal' => $deathInfo['tanggal'],
+                    'sebab_meninggal' => $deathInfo['sebab'],
+                    'keterangan' => trim((string) $item->keterangan) !== '' ? (string) $item->keterangan : '-',
+                ];
+            });
+    }
+
     public function getRekapPkkRtByLevelAndArea(string $level, int $areaId): Collection
     {
         $households = $this->scopedHouseholds($level, $areaId);
@@ -719,6 +759,149 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         }
 
         return '-';
+    }
+
+    /**
+     * @param Collection<int, mixed> $anggota
+     */
+    private function findIbuCandidate(Collection $anggota): ?DataWargaAnggota
+    {
+        $perempuan = $anggota
+            ->filter(fn ($item): bool => $item instanceof DataWargaAnggota && $item->jenis_kelamin === 'P')
+            ->values();
+
+        if ($perempuan->isEmpty()) {
+            return null;
+        }
+
+        $menikah = $perempuan
+            ->filter(fn (DataWargaAnggota $item): bool => $this->containsAnyKeyword($item->status_perkawinan, ['kawin', 'nikah']))
+            ->values();
+
+        if ($menikah->isNotEmpty()) {
+            return $menikah->sortBy('nomor_urut')->first();
+        }
+
+        return $perempuan->sortBy('nomor_urut')->first();
+    }
+
+    /**
+     * @param Collection<int, mixed> $anggota
+     */
+    private function findBayiCandidate(Collection $anggota): ?DataWargaAnggota
+    {
+        $bayi = $anggota
+            ->filter(fn ($item): bool => $item instanceof DataWargaAnggota && is_int($item->umur_tahun) && $item->umur_tahun <= 1)
+            ->values();
+
+        if ($bayi->isEmpty()) {
+            return null;
+        }
+
+        return $bayi
+            ->sortBy(fn (DataWargaAnggota $item): string => sprintf('%03d-%03d', (int) $item->umur_tahun, (int) $item->nomor_urut))
+            ->first();
+    }
+
+    private function extractMaternalStatus(DataWarga $household, ?DataWargaAnggota $ibu): string
+    {
+        $text = Str::lower(trim(implode(' ', array_filter([
+            (string) ($household->keterangan ?? ''),
+            (string) ($ibu?->keterangan ?? ''),
+        ]))));
+
+        if ($text === '') {
+            return '-';
+        }
+
+        if (str_contains($text, 'melahirkan')) {
+            return 'MELAHIRKAN';
+        }
+
+        if (str_contains($text, 'nifas')) {
+            return 'NIFAS';
+        }
+
+        if (str_contains($text, 'hamil')) {
+            return 'HAMIL';
+        }
+
+        return '-';
+    }
+
+    /**
+     * @return array{nama: string, status: string, l: int, p: int, tanggal: string, sebab: string}
+     */
+    private function extractDeathInfo(DataWarga $household, ?DataWargaAnggota $ibu, ?DataWargaAnggota $bayi): array
+    {
+        $text = Str::lower(trim(implode(' ', array_filter([
+            (string) ($household->keterangan ?? ''),
+            (string) ($ibu?->keterangan ?? ''),
+            (string) ($bayi?->keterangan ?? ''),
+        ]))));
+
+        $default = [
+            'nama' => '-',
+            'status' => '-',
+            'l' => 0,
+            'p' => 0,
+            'tanggal' => '-',
+            'sebab' => '-',
+        ];
+
+        if ($text === '' || ! str_contains($text, 'meninggal')) {
+            return $default;
+        }
+
+        if (preg_match('/karena\s+([^.]+)/i', $text, $matches) === 1) {
+            $default['sebab'] = trim((string) $matches[1]) !== '' ? trim((string) $matches[1]) : '-';
+        }
+
+        if (str_contains($text, 'ibu meninggal')) {
+            $default['nama'] = $ibu?->nama ?? '-';
+            $default['status'] = 'IBU';
+            $default['p'] = 1;
+
+            return $default;
+        }
+
+        if (str_contains($text, 'balita meninggal')) {
+            $default['nama'] = $bayi?->nama ?? '-';
+            $default['status'] = 'BALITA';
+            $default['l'] = $bayi?->jenis_kelamin === 'L' ? 1 : 0;
+            $default['p'] = $bayi?->jenis_kelamin === 'P' ? 1 : 0;
+
+            return $default;
+        }
+
+        if (str_contains($text, 'bayi meninggal')) {
+            $default['nama'] = $bayi?->nama ?? '-';
+            $default['status'] = 'BAYI';
+            $default['l'] = $bayi?->jenis_kelamin === 'L' ? 1 : 0;
+            $default['p'] = $bayi?->jenis_kelamin === 'P' ? 1 : 0;
+        }
+
+        return $default;
+    }
+
+    /**
+     * @param string[] $keywords
+     */
+    private function containsAnyKeyword(?string $value, array $keywords): bool
+    {
+        $normalized = Str::lower(trim((string) $value));
+
+        if ($normalized === '') {
+            return false;
+        }
+
+        foreach ($keywords as $keyword) {
+            if (str_contains($normalized, Str::lower($keyword))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function compareRtNumbers(string $left, string $right): int
