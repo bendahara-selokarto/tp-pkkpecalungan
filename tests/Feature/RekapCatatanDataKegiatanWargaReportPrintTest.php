@@ -320,7 +320,52 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         ]);
     }
 
-    public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_dan_417c_desanya_sendiri(): void
+    public function test_header_kolom_pdf_catatan_tp_pkk_provinsi_tetap_sesuai_mapping_autentik_417d(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.catatan_data_kegiatan_warga_tp_pkk_provinsi_report', [
+            'NO',
+            'NAMA KAB/KOTA',
+            'JML KEC',
+            'JUML DESA/KEL',
+            'JUML DUSUN/LINGK',
+            'JUML RW',
+            'JUML RT',
+            'JUML DASAWISMA',
+            'JUML KRT',
+            'JUML KK',
+            'JUMLAH ANGGOTA KELUARGA',
+            'KRITERIA RUMAH',
+            'SUMBER AIR KELUARGA',
+            'JUMLAH SARANA MCK',
+            'MAKANAN POKOK',
+            'WARGA MENGIKUTI KEGIATAN',
+            'KETERANGAN',
+            'TOTAL',
+            'BALITA',
+            'PUS',
+            'WUS',
+            'IBU HAMIL',
+            'IBU MENYUSUI',
+            'LANSIA',
+            '3 BUTA',
+            'SEHAT LAYAK HUNI',
+            'TIDAK SEHAT LAYAK HUNI',
+            'MEMILIKI TTMP. PEMB SAMPAH',
+            'MEMILIKI SPAL DAN PENYERAPAN AIR',
+            'PDAM',
+            'SUMUR',
+            'SUNGAI',
+            'DLL',
+            'BERAS',
+            'NON BERAS',
+            'UP2K',
+            'PEMANFAATAN TANAH PEKARANGAN',
+            'INDUSTRI RUMAH TANGGA',
+            'KESEHATAN LINGKUNGAN',
+        ]);
+    }
+
+    public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_dan_417d_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
         $user->assignRole('admin-desa');
@@ -354,9 +399,13 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $response417c = $this->actingAs($user)->get(route('desa.catatan-keluarga.tp-pkk-kabupaten-kota.report'));
         $response417c->assertOk();
         $response417c->assertHeader('content-type', 'application/pdf');
+
+        $response417d = $this->actingAs($user)->get(route('desa.catatan-keluarga.tp-pkk-provinsi.report'));
+        $response417d->assertOk();
+        $response417d->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_admin_kecamatan_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_dan_417c_kecamatannya_sendiri(): void
+    public function test_admin_kecamatan_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_dan_417d_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
         $user->assignRole('admin-kecamatan');
@@ -390,6 +439,10 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $response417c = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.tp-pkk-kabupaten-kota.report'));
         $response417c->assertOk();
         $response417c->assertHeader('content-type', 'application/pdf');
+
+        $response417d = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.tp-pkk-provinsi.report'));
+        $response417d->assertOk();
+        $response417d->assertHeader('content-type', 'application/pdf');
     }
 
     public function test_laporan_pdf_rekap_416_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
@@ -417,6 +470,9 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
 
         $response417c = $this->actingAs($user)->get(route('desa.catatan-keluarga.tp-pkk-kabupaten-kota.report'));
         $response417c->assertStatus(403);
+
+        $response417d = $this->actingAs($user)->get(route('desa.catatan-keluarga.tp-pkk-provinsi.report'));
+        $response417d->assertStatus(403);
     }
 
     private function seedDataWargaDenganAnggota(User $user, string $level, int $areaId, string $dasaWisma, string $namaKepala): void

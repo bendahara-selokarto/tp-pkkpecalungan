@@ -174,6 +174,7 @@ Route::prefix('desa')
         Route::get('catatan-keluarga/tp-pkk-desa-kelurahan/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaCatatanTpPkkDesaKelurahanReport'])->name('catatan-keluarga.tp-pkk-desa-kelurahan.report');
         Route::get('catatan-keluarga/tp-pkk-kecamatan/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaCatatanTpPkkKecamatanReport'])->name('catatan-keluarga.tp-pkk-kecamatan.report');
         Route::get('catatan-keluarga/tp-pkk-kabupaten-kota/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaCatatanTpPkkKabupatenKotaReport'])->name('catatan-keluarga.tp-pkk-kabupaten-kota.report');
+        Route::get('catatan-keluarga/tp-pkk-provinsi/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaCatatanTpPkkProvinsiReport'])->name('catatan-keluarga.tp-pkk-provinsi.report');
         Route::get('warung-pkk/report/pdf', [WarungPkkPrintController::class, 'printDesaReport'])->name('warung-pkk.report');
         Route::get('taman-bacaan/report/pdf', [TamanBacaanPrintController::class, 'printDesaReport'])->name('taman-bacaan.report');
         Route::get('kejar-paket/report/pdf', [KejarPaketPrintController::class, 'printDesaReport'])->name('kejar-paket.report');
@@ -244,6 +245,7 @@ Route::prefix('kecamatan')
         Route::get('catatan-keluarga/tp-pkk-desa-kelurahan/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanCatatanTpPkkDesaKelurahanReport'])->name('catatan-keluarga.tp-pkk-desa-kelurahan.report');
         Route::get('catatan-keluarga/tp-pkk-kecamatan/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanCatatanTpPkkKecamatanReport'])->name('catatan-keluarga.tp-pkk-kecamatan.report');
         Route::get('catatan-keluarga/tp-pkk-kabupaten-kota/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanCatatanTpPkkKabupatenKotaReport'])->name('catatan-keluarga.tp-pkk-kabupaten-kota.report');
+        Route::get('catatan-keluarga/tp-pkk-provinsi/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanCatatanTpPkkProvinsiReport'])->name('catatan-keluarga.tp-pkk-provinsi.report');
         Route::get('warung-pkk/report/pdf', [WarungPkkPrintController::class, 'printKecamatanReport'])->name('warung-pkk.report');
         Route::get('taman-bacaan/report/pdf', [TamanBacaanPrintController::class, 'printKecamatanReport'])->name('taman-bacaan.report');
         Route::get('kejar-paket/report/pdf', [KejarPaketPrintController::class, 'printKecamatanReport'])->name('kejar-paket.report');

@@ -349,6 +349,70 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         return $rows;
     }
 
+    public function getCatatanTpPkkProvinsiByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $households = $this->scopedHouseholds($level, $areaId);
+        $activityFlags = $this->buildActivityFlags($level, $areaId);
+        $grouped = $households->groupBy(
+            fn (DataWarga $item): string => $this->extractKabKotaName($item)
+        );
+
+        $rows = collect();
+
+        foreach ($grouped as $namaKabKota => $groupItems) {
+            $metrics = $this->sumHouseholdMetrics($groupItems, $activityFlags);
+            $keterangan = $groupItems
+                ->pluck('keterangan')
+                ->filter(fn ($value) => is_string($value) && trim($value) !== '')
+                ->unique()
+                ->implode('; ');
+
+            $rows->push(array_merge([
+                'nomor_urut' => $rows->count() + 1,
+                'nama_kab_kota' => $namaKabKota,
+                'jml_kecamatan' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->extractKecamatanName($item))
+                    ->filter(fn (string $value): bool => $value !== '-')
+                    ->unique()
+                    ->count(),
+                'jml_desa_kelurahan' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->extractDesaKelurahanNameOrFallback($item))
+                    ->filter(fn (string $value): bool => $value !== '-')
+                    ->unique()
+                    ->count(),
+                'jml_dusun_lingkungan' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->extractDusunLingkunganName($item))
+                    ->filter(fn (string $value): bool => $value !== '-')
+                    ->unique()
+                    ->count(),
+                'jml_rw' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->extractRwNumber($item))
+                    ->filter(fn (string $rw): bool => $rw !== '-')
+                    ->unique()
+                    ->count(),
+                'jml_rt' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->extractRtNumber($item))
+                    ->filter(fn (string $rt): bool => $rt !== '-')
+                    ->unique()
+                    ->count(),
+                'jml_dasawisma' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->normalizeDasaWismaName($item->dasawisma))
+                    ->unique()
+                    ->count(),
+                'jml_krt' => $groupItems->count(),
+                'jml_kk' => $groupItems->count(),
+                'ket' => $keterangan !== '' ? $keterangan : null,
+            ], $metrics, [
+                'tiga_buta_l' => 0,
+                'tiga_buta_p' => 0,
+                'sungai' => 0,
+                'jumlah_sarana_mck' => (int) ($metrics['memiliki_mck_septic'] ?? 0),
+            ]));
+        }
+
+        return $rows;
+    }
+
     private function scopedHouseholds(string $level, int $areaId): Collection
     {
         return DataWarga::query()
@@ -627,6 +691,31 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
         if ($area?->level === 'desa' && $area->parent && is_string($area->parent->name) && trim($area->parent->name) !== '') {
             return trim($area->parent->name);
+        }
+
+        return '-';
+    }
+
+    private function extractKabKotaName(DataWarga $item): string
+    {
+        $sources = [$item->alamat, $item->dasawisma];
+
+        foreach ($sources as $source) {
+            $normalized = trim((string) $source);
+
+            if ($normalized === '') {
+                continue;
+            }
+
+            if (preg_match('/\b(KAB(?:UPATEN)?|KOTA)\s+([^,;]+?)(?=\s+KECAMATAN\b|\s+DESA\b|\s+KELURAHAN\b|\s+KEL\.?\b|\s+DUSUN\b|\s+LINGKUNGAN\b|\s+RT\b|\s+RW\b|$)/i', $normalized, $matches) === 1) {
+                $prefixRaw = strtoupper(trim((string) $matches[1]));
+                $prefix = $prefixRaw === 'KABUPATEN' ? 'KAB' : $prefixRaw;
+                $name = trim((string) $matches[2]);
+
+                if ($name !== '') {
+                    return sprintf('%s %s', $prefix, $name);
+                }
+            }
         }
 
         return '-';
