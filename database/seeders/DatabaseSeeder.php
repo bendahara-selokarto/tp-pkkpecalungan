@@ -18,6 +18,8 @@ class DatabaseSeeder extends Seeder
             AdminWilayahUserSeeder::class,
             RoleScopeSimulationSeeder::class,
             SyncUserScopeAreaSeeder::class,
+            DashboardNaturalBatangSeeder::class,
+            WilayahMissingDomainSeeder::class,
         ]);
     }
 }
