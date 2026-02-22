@@ -151,9 +151,9 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
 - Konteks: Verifikasi struktur lampiran PDF dengan tabel kompleks (merge header) yang tidak stabil jika hanya mengandalkan ekstraksi text-layer otomatis.
 - Trigger: Dokumen PDF pedoman dipakai sebagai sumber kontrak domain dan hasil parser teks tidak mencerminkan struktur tabel utuh.
 - Langkah eksekusi:
-  1) Jalankan ekstraksi otomatis (contoh: Node parser) untuk token identitas dokumen.
-  2) Validasi struktur tabel (jumlah kolom, merge row/col, label grup) langsung ke dokumen autentik.
-  3) Simpan hasil transformasi pada dokumen mapping domain agar reusable dan auditable.
+  1) Baca: jalankan ekstraksi otomatis (contoh: Node parser) untuk token identitas dan verifikasi struktur tabel langsung ke dokumen autentik.
+  2) Laporkan/Konfirmasi: laporkan temuan baca (termasuk gap parser) dan konfirmasi keputusan kontrak sebelum patch sinkronisasi.
+  3) Sinkronkan: simpan hasil transformasi pada dokumen mapping domain, lalu sinkronkan terminology/domain matrix/implementasi yang terdampak.
 - Guardrail:
   - Jangan tetapkan kontrak tabel kompleks hanya dari OCR/parser teks.
   - Saat hasil parser dan dokumen autentik konflik, dokumen autentik adalah sumber final.
