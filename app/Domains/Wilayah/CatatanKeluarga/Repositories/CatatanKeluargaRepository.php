@@ -291,6 +291,59 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         return $result;
     }
 
+    public function getRekapIbuHamilTpPkkDesaKelurahanByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $rows = $this->getRekapIbuHamilPkkDusunLingkunganByLevelAndArea($level, $areaId);
+        $grouped = $rows->groupBy(
+            fn (array $item): string => trim((string) ($item['desa_kelurahan'] ?? '-')) !== ''
+                ? trim((string) ($item['desa_kelurahan'] ?? '-'))
+                : '-'
+        );
+
+        $result = collect();
+
+        foreach ($grouped as $namaDesaKelurahan => $groupItems) {
+            $groupItems = $groupItems->values();
+            $keterangan = $groupItems
+                ->pluck('keterangan')
+                ->filter(fn ($value): bool => is_string($value) && trim($value) !== '' && trim($value) !== '-')
+                ->unique()
+                ->implode('; ');
+
+            $result->push([
+                'nomor_urut' => $result->count() + 1,
+                'desa_kelurahan' => $namaDesaKelurahan,
+                'jumlah_dusun_lingkungan' => $groupItems
+                    ->map(fn (array $item): string => trim((string) ($item['dusun_lingkungan'] ?? '-')))
+                    ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
+                    ->unique()
+                    ->count(),
+                'jumlah_rw' => $groupItems
+                    ->map(fn (array $item): string => trim((string) ($item['nomor_rw'] ?? '-')))
+                    ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
+                    ->unique()
+                    ->count(),
+                'jumlah_rt' => $this->sumArrayIntField($groupItems, 'jumlah_rt'),
+                'jumlah_kelompok_dasawisma' => $this->sumArrayIntField($groupItems, 'jumlah_kelompok_dasawisma'),
+                'jumlah_ibu_hamil' => $this->sumArrayIntField($groupItems, 'jumlah_ibu_hamil'),
+                'jumlah_ibu_melahirkan' => $this->sumArrayIntField($groupItems, 'jumlah_ibu_melahirkan'),
+                'jumlah_ibu_nifas' => $this->sumArrayIntField($groupItems, 'jumlah_ibu_nifas'),
+                'jumlah_ibu_meninggal' => $this->sumArrayIntField($groupItems, 'jumlah_ibu_meninggal'),
+                'jumlah_bayi_lahir_l' => $this->sumArrayIntField($groupItems, 'jumlah_bayi_lahir_l'),
+                'jumlah_bayi_lahir_p' => $this->sumArrayIntField($groupItems, 'jumlah_bayi_lahir_p'),
+                'jumlah_akte_kelahiran_ada' => $this->sumArrayIntField($groupItems, 'jumlah_akte_kelahiran_ada'),
+                'jumlah_akte_kelahiran_tidak_ada' => $this->sumArrayIntField($groupItems, 'jumlah_akte_kelahiran_tidak_ada'),
+                'jumlah_bayi_meninggal_l' => $this->sumArrayIntField($groupItems, 'jumlah_bayi_meninggal_l'),
+                'jumlah_bayi_meninggal_p' => $this->sumArrayIntField($groupItems, 'jumlah_bayi_meninggal_p'),
+                'jumlah_balita_meninggal_l' => $this->sumArrayIntField($groupItems, 'jumlah_balita_meninggal_l'),
+                'jumlah_balita_meninggal_p' => $this->sumArrayIntField($groupItems, 'jumlah_balita_meninggal_p'),
+                'keterangan' => $keterangan !== '' ? $keterangan : '-',
+            ]);
+        }
+
+        return $result;
+    }
+
     public function getRekapPkkRtByLevelAndArea(string $level, int $areaId): Collection
     {
         $households = $this->scopedHouseholds($level, $areaId);

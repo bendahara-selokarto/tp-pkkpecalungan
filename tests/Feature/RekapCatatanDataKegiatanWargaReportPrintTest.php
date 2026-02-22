@@ -486,6 +486,60 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $this->assertSame(2, $row['jumlah_kelompok_dasawisma']);
     }
 
+    public function test_rekap_tp_pkk_desa_kelurahan_mengagregasi_data_418d_per_desa_kelurahan(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+
+        DataWarga::create([
+            'dasawisma' => 'Melati',
+            'nama_kepala_keluarga' => 'Kepala 1',
+            'alamat' => 'Dusun Anggrek RT 01 / RW 07',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataWarga::create([
+            'dasawisma' => 'Melati',
+            'nama_kepala_keluarga' => 'Kepala 2',
+            'alamat' => 'Dusun Anggrek RT 02 / RW 07',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataWarga::create([
+            'dasawisma' => 'Dahlia',
+            'nama_kepala_keluarga' => 'Kepala 3',
+            'alamat' => 'Dusun Melati RT 01 / RW 08',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        $repository = app(CatatanKeluargaRepositoryInterface::class);
+        $rows = $repository->getRekapIbuHamilTpPkkDesaKelurahanByLevelAndArea('desa', $this->desaA->id);
+
+        $this->assertCount(1, $rows);
+        $row = $rows->first();
+        $this->assertSame('DESA Gombong', $row['desa_kelurahan']);
+        $this->assertSame(2, $row['jumlah_dusun_lingkungan']);
+        $this->assertSame(2, $row['jumlah_rw']);
+        $this->assertSame(3, $row['jumlah_rt']);
+        $this->assertSame(3, $row['jumlah_kelompok_dasawisma']);
+        $this->assertArrayHasKey('jumlah_ibu_hamil', $row);
+        $this->assertArrayHasKey('jumlah_bayi_lahir_l', $row);
+    }
+
     public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_418b_418c_dan_418d_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
