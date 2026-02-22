@@ -151,15 +151,20 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
 - Konteks: Verifikasi struktur lampiran PDF dengan tabel kompleks (merge header) yang tidak stabil jika hanya mengandalkan ekstraksi text-layer otomatis.
 - Trigger: Dokumen PDF pedoman dipakai sebagai sumber kontrak domain dan hasil parser teks tidak mencerminkan struktur tabel utuh.
 - Langkah eksekusi:
-  1) Baca: jalankan ekstraksi otomatis (contoh: Node parser) untuk token identitas dan verifikasi struktur tabel langsung ke dokumen autentik.
-  2) Laporkan/Konfirmasi: laporkan temuan baca (termasuk gap parser) dan konfirmasi keputusan kontrak sebelum patch sinkronisasi.
-  3) Sinkronkan: simpan hasil transformasi pada dokumen mapping domain, lalu sinkronkan terminology/domain matrix/implementasi yang terdampak.
+  1) Baca: jalankan ekstraksi otomatis (contoh: Node parser) untuk token identitas dokumen.
+  2) Baca lanjutan (presisi header): jika text-layer tidak menangkap header tabel utuh, render visual halaman (screenshot) lalu verifikasi manual struktur header (jumlah kolom, merge row/col, label grup/sub-header).
+  3) Laporkan/Konfirmasi: laporkan temuan baca (termasuk gap parser) dan konfirmasi keputusan kontrak sebelum patch sinkronisasi.
+  4) Sinkronkan: simpan hasil transformasi pada dokumen mapping domain, lalu sinkronkan terminology/domain matrix/implementasi yang terdampak.
 - Guardrail:
   - Jangan tetapkan kontrak tabel kompleks hanya dari OCR/parser teks.
+  - Jangan tetapkan kontrak header tabel hanya dari text-layer jika hasil baca parsial.
   - Saat hasil parser dan dokumen autentik konflik, dokumen autentik adalah sumber final.
   - Dokumentasikan gap parsing secara eksplisit agar tidak dianggap bug data aplikasi.
+  - Dilarang melanjutkan implementasi bila peta header belum lengkap sampai tingkat penggabungan sel (`rowspan`/`colspan`).
 - Validasi minimum:
   - Ada bukti token identitas dokumen terdeteksi oleh parser.
+  - Ada bukti visual (screenshot/crop) saat header tabel perlu verifikasi manual.
+  - Ada peta header tabel lengkap yang mencakup urutan kolom + penggabungan sel (`rowspan`/`colspan`).
   - Ada dokumen mapping domain yang mengunci transformasi struktur autentik ke representasi aplikasi.
   - Terminology/domain matrix menunjuk dokumen mapping tersebut.
 - Bukti efisiensi/akurasi:

@@ -45,6 +45,7 @@ Legacy tables (compatibility only):
 - `role`, `scope`, `area_id` user harus konsisten.
 - `area_id` user harus cocok levelnya dengan scope.
 - Default orientasi output PDF adalah `landscape`; `portrait` hanya jika diminta eksplisit.
+- Untuk dokumen autentik bertabel, hasil pembacaan wajib mencapai peta header tabel sampai tingkat penggabungan sel (`rowspan`/`colspan`) sebelum sinkronisasi kontrak/implementasi.
 
 ## 3. Execution Flow (Mandatory)
 
@@ -54,9 +55,13 @@ Legacy tables (compatibility only):
 4. Validate: jalankan test/cek dampak, pastikan tidak ada behavior drift.
 
 Flow pembacaan dokumen (wajib, terutama header tabel):
-1. Baca: verifikasi dokumen autentik dan struktur tabel (jumlah kolom, merge row/col, label header).
-2. Laporkan/Konfirmasi: laporkan hasil baca dan konfirmasi gap/ambigu sebelum sinkronisasi kontrak.
-3. Sinkronkan: sinkronkan kontrak domain (terminology/matrix/mapping) dan implementasi terkait sesuai hasil konfirmasi.
+1. Baca:
+   - Lakukan ekstraksi text-layer terlebih dahulu untuk token identitas dokumen.
+   - Jika header tabel tidak terbaca utuh, wajib render visual halaman (screenshot) lalu verifikasi manual struktur tabel (jumlah kolom, merge row/col, label header).
+2. Laporkan/Konfirmasi:
+   - Laporkan hasil baca sampai level peta header + penggabungan sel (`rowspan`/`colspan`).
+   - Jika level ini belum tercapai, status wajib `belum siap sinkronisasi` (tidak boleh lanjut implementasi).
+3. Sinkronkan: sinkronkan kontrak domain (terminology/matrix/mapping) dan implementasi terkait hanya setelah konfirmasi peta header lengkap.
 
 ## 4. Rate-Limiter Efficiency Rules
 
@@ -82,6 +87,7 @@ Flow pembacaan dokumen (wajib, terutama header tabel):
 - Tidak ada drift `role` vs `scope` vs `areas.level`.
 - Test relevan lulus (`php artisan test` untuk perubahan signifikan).
 - Tidak ada perubahan perilaku yang tidak diminta.
+- Untuk dokumen autentik bertabel: peta header sampai level merge (`rowspan`/`colspan`) sudah tervalidasi sebelum patch implementasi.
 
 ## 7. New Menu/Domain Protocol (Mandatory)
 
