@@ -4,6 +4,7 @@ Tanggal baca: 2026-02-22
 
 Sumber autentik:
 - Screenshot dokumen resmi Lampiran 4.18d dari user pada sesi validasi 2026-02-22.
+- Screenshot halaman `cara pengisian` Lampiran 4.18d dari user pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
 - Lampiran: `4.18d`.
@@ -33,7 +34,7 @@ Grup header:
 | --- | --- |
 | 1 | NO |
 | 2 | NOMOR RW |
-| 3 | JUMLAH RT |
+| 3 | JUMLAH KELOMPOK PKK RT (RT) |
 | 4 | JUMLAH DASA WISMA |
 | 5 | HAMIL |
 | 6 | MELAHIRKAN |
@@ -44,6 +45,14 @@ Grup header:
 | 13-14 | MENINGGAL BAYI (L/P) |
 | 15-16 | MENINGGAL BALITA (L/P) |
 | 17 | KETERANGAN |
+
+## Konfirmasi Cara Pengisian
+
+Hasil baca halaman `cara pengisian` Lampiran 4.18d mengunci kontrak berikut:
+- `kolom 2`: nomor RW pada dusun/lingkungan.
+- `kolom 3`: jumlah kelompok PKK RT pada lingkup RW tersebut.
+- `kolom 4-16`: nilai penjumlahan dari buku catatan tingkat PKK RW.
+- `kolom 17`: keterangan.
 
 ## Status Presisi
 
@@ -58,6 +67,6 @@ Grup header:
   - endpoint kecamatan: `/kecamatan/catatan-keluarga/rekap-ibu-hamil-pkk-dusun-lingkungan/report/pdf`
 - Catatan sumber data:
   - Agregasi utama dihitung per `NOMOR RW` dari dataset 4.18a.
-  - `JUMLAH RT` dihitung dari RT unik terdeteksi pada grup RW.
-  - `JUMLAH DASA WISMA` dihitung dari nama dasawisma unik pada grup RW.
+  - `JUMLAH KELOMPOK PKK RT` dihitung dari RT unik terdeteksi pada grup RW.
+  - `JUMLAH DASA WISMA` dihitung sebagai penjumlahan jumlah dasawisma per RT (sesuai aturan `kolom 4-16` dari cara pengisian), bukan unique lintas seluruh RW.
   - Kolom `5-16` dijumlahkan dari indikator maternal/kelahiran/kematian yang sama dengan 4.18b/4.18c.

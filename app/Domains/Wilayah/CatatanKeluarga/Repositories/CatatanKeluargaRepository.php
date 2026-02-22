@@ -240,6 +240,9 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
                 ->filter(fn ($value): bool => is_string($value) && trim($value) !== '' && trim($value) !== '-')
                 ->unique()
                 ->implode('; ');
+            $groupByRt = $groupItems->groupBy(
+                fn (array $item): string => trim((string) ($item['kelompok_pkk_rt'] ?? '-'))
+            );
 
             $result->push([
                 'nomor_urut' => $result->count() + 1,
@@ -249,11 +252,16 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
                     ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
                     ->unique()
                     ->count(),
-                'jumlah_kelompok_dasawisma' => $groupItems
-                    ->map(fn (array $item): string => trim((string) ($item['kelompok_dasawisma'] ?? '-')))
-                    ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
-                    ->unique()
-                    ->count(),
+                // Kolom 4.18d mengikuti cara pengisian: penjumlahan dari buku tingkat PKK RW per RT.
+                'jumlah_kelompok_dasawisma' => (int) $groupByRt
+                    ->reject(fn (Collection $items, string $rt): bool => $rt === '' || $rt === '-')
+                    ->sum(function (Collection $items): int {
+                        return $items
+                            ->map(fn (array $item): string => trim((string) ($item['kelompok_dasawisma'] ?? '-')))
+                            ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
+                            ->unique()
+                            ->count();
+                    }),
                 'jumlah_ibu_hamil' => $this->countArrayItemsByValue($groupItems, 'status_ibu', 'HAMIL'),
                 'jumlah_ibu_melahirkan' => $this->countArrayItemsByValue($groupItems, 'status_ibu', 'MELAHIRKAN'),
                 'jumlah_ibu_nifas' => $this->countArrayItemsByValue($groupItems, 'status_ibu', 'NIFAS'),

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Domains\Wilayah\CatatanKeluarga\Repositories\CatatanKeluargaRepositoryInterface;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\DataWarga\Models\DataWargaAnggota;
@@ -445,6 +446,44 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
             'AKTE KELAHIRAN',
             'MENINGGAL',
         ]);
+    }
+
+    public function test_rekap_418d_menghitung_jumlah_dasawisma_sebagai_penjumlahan_per_rt_dalam_rw(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+
+        DataWarga::create([
+            'dasawisma' => 'Melati',
+            'nama_kepala_keluarga' => 'Kepala 1',
+            'alamat' => 'Dusun Anggrek RT 01 / RW 07',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        DataWarga::create([
+            'dasawisma' => 'Melati',
+            'nama_kepala_keluarga' => 'Kepala 2',
+            'alamat' => 'Dusun Anggrek RT 02 / RW 07',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        $repository = app(CatatanKeluargaRepositoryInterface::class);
+        $rows = $repository->getRekapIbuHamilPkkDusunLingkunganByLevelAndArea('desa', $this->desaA->id);
+
+        $this->assertCount(1, $rows);
+        $row = $rows->first();
+        $this->assertSame('07', $row['nomor_rw']);
+        $this->assertSame(2, $row['jumlah_rt']);
+        $this->assertSame(2, $row['jumlah_kelompok_dasawisma']);
     }
 
     public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_418b_418c_dan_418d_desanya_sendiri(): void
