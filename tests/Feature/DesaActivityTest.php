@@ -74,6 +74,59 @@ class DesaActivityTest extends TestCase
     }
 
     #[Test]
+    public function pengguna_desa_dapat_memperbarui_kegiatan()
+    {
+        $user = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+
+        $user->assignRole('admin-desa');
+        $this->actingAs($user);
+
+        $activity = Activity::create([
+            'title' => 'Kegiatan Awal',
+            'nama_petugas' => 'Petugas Awal',
+            'jabatan_petugas' => 'Sekretaris',
+            'tempat_kegiatan' => 'Balai Desa',
+            'uraian' => 'Uraian awal',
+            'description' => 'Uraian awal',
+            'tanda_tangan' => 'Petugas Awal',
+            'activity_date' => '2026-02-12',
+            'status' => 'draft',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $user->id,
+        ]);
+
+        $response = $this->put(route('desa.activities.update', $activity->id), [
+            'title' => 'Kegiatan Revisi',
+            'nama_petugas' => 'Petugas Revisi',
+            'jabatan_petugas' => 'Ketua',
+            'tempat_kegiatan' => 'Aula Desa',
+            'uraian' => 'Uraian revisi',
+            'tanda_tangan' => 'Petugas Revisi',
+            'activity_date' => '2026-02-21',
+            'status' => 'published',
+        ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('activities', [
+            'id' => $activity->id,
+            'title' => 'Kegiatan Revisi',
+            'nama_petugas' => 'Petugas Revisi',
+            'jabatan_petugas' => 'Ketua',
+            'tempat_kegiatan' => 'Aula Desa',
+            'uraian' => 'Uraian revisi',
+            'description' => 'Uraian revisi',
+            'tanda_tangan' => 'Petugas Revisi',
+            'activity_date' => '2026-02-21',
+            'status' => 'published',
+        ]);
+    }
+
+    #[Test]
     public function pengguna_desa_hanya_melihat_kegiatannya_sendiri()
     {
         $desaUser = User::factory()->create([

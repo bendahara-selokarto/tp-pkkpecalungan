@@ -111,6 +111,54 @@ class KecamatanKaderKhususTest extends TestCase
     }
 
     #[Test]
+    public function admin_kecamatan_dapat_menambah_dan_memperbarui_kader_khusus(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $this->actingAs($adminKecamatan)->post('/kecamatan/kader-khusus', [
+            'nama' => 'Lina Marlina',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1992-07-07',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Teratai 1',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Kader Posyandu',
+            'keterangan' => 'Data awal',
+        ])->assertStatus(302);
+
+        $kader = KaderKhusus::query()
+            ->where('area_id', $this->kecamatanA->id)
+            ->where('nama', 'Lina Marlina')
+            ->firstOrFail();
+
+        $this->actingAs($adminKecamatan)->put(route('kecamatan.kader-khusus.update', $kader->id), [
+            'nama' => 'Lina Marlina',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1992-07-07',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Teratai 2',
+            'pendidikan' => 'D3',
+            'jenis_kader_khusus' => 'Kader Lansia',
+            'keterangan' => 'Data revisi',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('kader_khusus', [
+            'id' => $kader->id,
+            'alamat' => 'Jl. Teratai 2',
+            'pendidikan' => 'D3',
+            'jenis_kader_khusus' => 'Kader Lansia',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+        ]);
+    }
+
+    #[Test]
     public function pengguna_non_admin_kecamatan_tidak_bisa_mengakses_modul_kader_khusus_kecamatan(): void
     {
         $desa = Area::create([

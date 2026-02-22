@@ -125,6 +125,62 @@ class KecamatanAgendaSuratTest extends TestCase
     }
 
     #[Test]
+    public function admin_kecamatan_dapat_menambah_dan_memperbarui_agenda_surat(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $this->actingAs($adminKecamatan)->post('/kecamatan/agenda-surat', [
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2026-02-20',
+            'tanggal_surat' => '2026-02-19',
+            'nomor_surat' => '010/KCA/II/2026',
+            'asal_surat' => 'Kabupaten',
+            'dari' => 'Sekretariat Kabupaten',
+            'kepada' => null,
+            'perihal' => 'Arahan',
+            'lampiran' => '1 berkas',
+            'diteruskan_kepada' => 'Ketua',
+            'tembusan' => null,
+            'keterangan' => 'Catatan awal',
+        ])->assertStatus(302);
+
+        $agenda = AgendaSurat::query()
+            ->where('area_id', $this->kecamatanA->id)
+            ->where('nomor_surat', '010/KCA/II/2026')
+            ->firstOrFail();
+
+        $this->actingAs($adminKecamatan)->put(route('kecamatan.agenda-surat.update', $agenda->id), [
+            'jenis_surat' => 'keluar',
+            'tanggal_terima' => null,
+            'tanggal_surat' => '2026-02-21',
+            'nomor_surat' => '011/KCA/II/2026',
+            'asal_surat' => null,
+            'dari' => null,
+            'kepada' => 'Kabupaten',
+            'perihal' => 'Laporan',
+            'lampiran' => '2 berkas',
+            'diteruskan_kepada' => null,
+            'tembusan' => 'Arsip Kecamatan',
+            'keterangan' => 'Sudah dikirim',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('agenda_surats', [
+            'id' => $agenda->id,
+            'jenis_surat' => 'keluar',
+            'tanggal_surat' => '2026-02-21',
+            'nomor_surat' => '011/KCA/II/2026',
+            'kepada' => 'Kabupaten',
+            'tembusan' => 'Arsip Kecamatan',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+        ]);
+    }
+
+    #[Test]
     public function pengguna_non_admin_kecamatan_tidak_bisa_mengakses_modul_agenda_surat_kecamatan()
     {
         $desa = Area::create([

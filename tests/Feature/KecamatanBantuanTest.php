@@ -102,6 +102,49 @@ class KecamatanBantuanTest extends TestCase
     }
 
     #[Test]
+    public function admin_kecamatan_dapat_menambah_dan_memperbarui_data_bantuan()
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $this->actingAs($adminKecamatan)->post('/kecamatan/bantuans', [
+            'name' => 'Bantuan Operasional Kecamatan',
+            'category' => 'Keuangan',
+            'description' => 'Tahap awal',
+            'source' => 'kabupaten',
+            'amount' => 5000000,
+            'received_date' => '2026-02-12',
+        ])->assertStatus(302);
+
+        $bantuan = Bantuan::query()
+            ->where('area_id', $this->kecamatanA->id)
+            ->where('name', 'Bantuan Operasional Kecamatan')
+            ->firstOrFail();
+
+        $this->actingAs($adminKecamatan)->put(route('kecamatan.bantuans.update', $bantuan->id), [
+            'name' => 'Bantuan Operasional Kecamatan',
+            'category' => 'Keuangan',
+            'description' => 'Tahap revisi',
+            'source' => 'lainnya',
+            'amount' => 7000000,
+            'received_date' => '2026-02-20',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('bantuans', [
+            'id' => $bantuan->id,
+            'source' => 'lainnya',
+            'amount' => 7000000,
+            'received_date' => '2026-02-20',
+            'description' => 'Tahap revisi',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+        ]);
+    }
+
+    #[Test]
     public function pengguna_non_admin_kecamatan_tidak_bisa_mengakses_modul_bantuan_kecamatan()
     {
         $desa = Area::create([
@@ -121,5 +164,3 @@ class KecamatanBantuanTest extends TestCase
         $response->assertStatus(403);
     }
 }
-
-

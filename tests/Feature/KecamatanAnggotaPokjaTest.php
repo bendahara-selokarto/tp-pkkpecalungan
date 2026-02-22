@@ -117,6 +117,58 @@ class KecamatanAnggotaPokjaTest extends TestCase
     }
 
     #[Test]
+    public function admin_kecamatan_dapat_menambah_dan_memperbarui_anggota_pokja()
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $this->actingAs($adminKecamatan)->post('/kecamatan/anggota-pokja', [
+            'nama' => 'Rita Anggraini',
+            'jabatan' => 'Sekretaris',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1991-06-06',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Kenanga 10',
+            'pendidikan' => 'S1',
+            'pekerjaan' => 'Wiraswasta',
+            'pokja' => 'Pokja III',
+            'keterangan' => 'Data awal',
+        ])->assertStatus(302);
+
+        $anggota = AnggotaPokja::query()
+            ->where('area_id', $this->kecamatanA->id)
+            ->where('nama', 'Rita Anggraini')
+            ->firstOrFail();
+
+        $this->actingAs($adminKecamatan)->put(route('kecamatan.anggota-pokja.update', $anggota->id), [
+            'nama' => 'Rita Anggraini',
+            'jabatan' => 'Ketua',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1991-06-06',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Kenanga 12',
+            'pendidikan' => 'S2',
+            'pekerjaan' => 'Wiraswasta',
+            'pokja' => 'Pokja IV',
+            'keterangan' => 'Data revisi',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('anggota_pokjas', [
+            'id' => $anggota->id,
+            'jabatan' => 'Ketua',
+            'pokja' => 'Pokja IV',
+            'alamat' => 'Jl. Kenanga 12',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+        ]);
+    }
+
+    #[Test]
     public function pengguna_non_admin_kecamatan_tidak_bisa_mengakses_modul_anggota_pokja_kecamatan()
     {
         $desa = Area::create([

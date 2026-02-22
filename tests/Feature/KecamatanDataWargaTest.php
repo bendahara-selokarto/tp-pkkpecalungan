@@ -103,6 +103,67 @@ class KecamatanDataWargaTest extends TestCase
     }
 
     #[Test]
+    public function admin_kecamatan_dapat_menambah_dan_memperbarui_data_warga(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $this->actingAs($adminKecamatan)->post('/kecamatan/data-warga', [
+            'dasawisma' => 'Anyelir 02',
+            'nama_kepala_keluarga' => 'Nuryanti',
+            'alamat' => 'RW 02',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => 'Input awal',
+            'anggota' => [
+                [
+                    'nama' => 'Nina',
+                    'jenis_kelamin' => 'P',
+                    'tanggal_lahir' => '1998-02-22',
+                ],
+            ],
+        ])->assertStatus(302);
+
+        $dataWarga = DataWarga::query()
+            ->where('area_id', $this->kecamatanA->id)
+            ->where('nama_kepala_keluarga', 'Nuryanti')
+            ->firstOrFail();
+
+        $this->actingAs($adminKecamatan)->put(route('kecamatan.data-warga.update', $dataWarga->id), [
+            'dasawisma' => 'Anyelir 02',
+            'nama_kepala_keluarga' => 'Nuryanti',
+            'alamat' => 'RW 02',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => 'Input revisi',
+            'anggota' => [
+                [
+                    'nama' => 'Nina',
+                    'jenis_kelamin' => 'P',
+                    'tanggal_lahir' => '1998-02-22',
+                ],
+                [
+                    'nama' => 'Niko',
+                    'jenis_kelamin' => 'L',
+                    'tanggal_lahir' => '1996-01-10',
+                ],
+            ],
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('data_wargas', [
+            'id' => $dataWarga->id,
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => 'Input revisi',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+        ]);
+    }
+
+    #[Test]
     public function pengguna_non_admin_kecamatan_tidak_bisa_mengakses_modul_data_warga_kecamatan(): void
     {
         $desa = Area::create([

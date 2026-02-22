@@ -55,13 +55,13 @@
 
 ### Phase 5 - Data dan Migrasi Skema (Jika Diperlukan)
 - [x] Audit cast model tanggal pada field yang seharusnya date.
-- [ ] Jika ada perubahan skema/normalisasi besar, jalankan:
+- [x] Jika ada perubahan skema/normalisasi besar, jalankan:
   - `php artisan migrate:fresh`
   - `php artisan db:seed` (jika dibutuhkan)
-- [ ] Catat bahwa data lokal development ter-reset.
+- [x] Catat bahwa data lokal development ter-reset.
 
 ### Phase 6 - Test dan Regression Gate
-- [ ] Tambah/upgrade feature test create+update untuk semua modul tanggal (Desa + Kecamatan).
+- [x] Tambah/upgrade feature test create+update untuk semua modul tanggal (Desa + Kecamatan).
 - [x] Tambah negative test format invalid untuk kontrak `Y-m-d`.
 - [x] Jalankan `php artisan test` penuh setelah migrasi lintas-modul.
 
@@ -83,6 +83,16 @@
   - Anggota Tim Penggerak, Anggota Pokja, Kader Khusus (halaman show Desa/Kecamatan)
 - Regression check lulus:
   - `php artisan test --filter="DesaDataWargaTest|DesaPilotProjectNaskahPelaporanTest|DesaActivityTest|KecamatanActivityTest|KecamatanDesaActivityTest|DesaBantuanTest|KecamatanBantuanTest|DesaInventarisTest|KecamatanInventarisTest|DesaAgendaSuratTest|KecamatanAgendaSuratTest"`
+- Tidak ada perubahan skema database pada eksekusi ini, sehingga `migrate:fresh`/`db:seed` tidak dijalankan dan tidak ada reset data development.
+- Coverage create+update modul tanggal sisi kecamatan ditambahkan untuk:
+  - `KecamatanActivityTest`
+  - `KecamatanAgendaSuratTest`
+  - `KecamatanBantuanTest`
+  - `KecamatanAnggotaTimPenggerakTest`
+  - `KecamatanAnggotaPokjaTest`
+  - `KecamatanKaderKhususTest`
+  - `KecamatanDataWargaTest`
+  - `KecamatanPilotProjectNaskahPelaporanTest`
 
 ## Risiko
 - Risiko regression form edit jika prefill belum canonical.
@@ -90,6 +100,11 @@
 - Risiko data dev hilang saat `migrate:fresh`.
 
 ## Fallback Plan
-- [ ] Simpan branch checkpoint sebelum migrasi lintas-modul.
-- [ ] Jika regression tinggi, rollback per-phase (bukan rollback massal).
-- [ ] Aktifkan compatibility parser sementara sambil menyelesaikan modul prioritas.
+- [x] Simpan branch checkpoint sebelum migrasi lintas-modul.
+- [x] Jika regression tinggi, rollback per-phase (bukan rollback massal).
+- [x] Aktifkan compatibility parser sementara sambil menyelesaikan modul prioritas.
+
+Catatan fallback:
+- Checkpoint tersimpan sebagai commit by concern pada branch aktif.
+- Rollback per-phase dapat dilakukan dengan revert commit concern terkait.
+- Compatibility parser tanggal tidak diaktifkan karena seluruh modul target sudah strict `Y-m-d`.

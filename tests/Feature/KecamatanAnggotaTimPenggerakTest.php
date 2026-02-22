@@ -114,6 +114,56 @@ class KecamatanAnggotaTimPenggerakTest extends TestCase
     }
 
     #[Test]
+    public function admin_kecamatan_dapat_menambah_dan_memperbarui_anggota_tim_penggerak()
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $this->actingAs($adminKecamatan)->post('/kecamatan/anggota-tim-penggerak', [
+            'nama' => 'Dewi Lestari',
+            'jabatan' => 'Sekretaris',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-04-23',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Melati 7',
+            'pendidikan' => 'S1',
+            'pekerjaan' => 'ASN',
+            'keterangan' => 'Data awal',
+        ])->assertStatus(302);
+
+        $anggota = AnggotaTimPenggerak::query()
+            ->where('area_id', $this->kecamatanA->id)
+            ->where('nama', 'Dewi Lestari')
+            ->firstOrFail();
+
+        $this->actingAs($adminKecamatan)->put(route('kecamatan.anggota-tim-penggerak.update', $anggota->id), [
+            'nama' => 'Dewi Lestari',
+            'jabatan' => 'Ketua',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-04-23',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Melati 8',
+            'pendidikan' => 'S2',
+            'pekerjaan' => 'ASN',
+            'keterangan' => 'Data revisi',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('anggota_tim_penggeraks', [
+            'id' => $anggota->id,
+            'jabatan' => 'Ketua',
+            'alamat' => 'Jl. Melati 8',
+            'pendidikan' => 'S2',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+        ]);
+    }
+
+    #[Test]
     public function pengguna_non_admin_kecamatan_tidak_bisa_mengakses_modul_anggota_tim_penggerak_kecamatan()
     {
         $desa = Area::create([
