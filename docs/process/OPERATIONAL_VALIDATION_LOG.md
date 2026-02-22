@@ -468,3 +468,40 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk normalisasi label UI administratif dan sinkronisasi canonical.
+
+## Siklus Audit UI Chart Dashboard: 2026-02-22
+
+Ruang lingkup:
+- Audit chart dashboard:
+  - `Cakupan per Lampiran`
+  - `Distribusi Level Data Dokumen`
+- Verifikasi end-to-end dari payload backend sampai render UI.
+
+Artefak:
+- `app/Http/Controllers/DashboardController.php`
+- `app/Domains/Wilayah/Dashboard/UseCases/BuildDashboardDocumentCoverageUseCase.php`
+- `app/Domains/Wilayah/Dashboard/Repositories/DashboardDocumentCoverageRepository.php`
+- `resources/js/Pages/Dashboard.vue`
+- `resources/js/admin-one/components/Charts/BarChart.vue`
+- `docs/process/DASHBOARD_CHART_ALIGNMENT_PLAN.md`
+
+Perintah audit/validasi:
+- `php artisan tinker` (sample user scope `kecamatan` dan `desa`) untuk cek:
+  - `stats`
+  - `charts.coverage_per_lampiran`
+  - `charts.level_distribution`
+  - hasil: payload chart terisi pada kedua scope.
+- `php artisan tinker` (seluruh user non-super-admin) untuk cek agregat nol:
+  - indikator: `sum(coverage_per_lampiran.values)` dan `sum(level_distribution.values)`.
+  - hasil: tidak ada user dengan payload chart kosong total.
+- `npm run build`
+  - hasil: `PASS`.
+
+Keputusan:
+- Tidak ada bug query backend pada chart dokumen.
+- Perbaikan difokuskan di UI:
+  - tambah daftar item numerik per chart,
+  - tambah empty-state message saat seluruh nilai bernilai `0`.
+
+Status:
+- `PASS` untuk audit end-to-end chart dashboard.

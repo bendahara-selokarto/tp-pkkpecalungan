@@ -125,3 +125,36 @@ Mitigasi:
 - Data chart ter-scope sesuai role/scope/area.
 - Test dashboard coverage hijau.
 - Tidak ada regresi auth-scope.
+
+## 7) Audit UI Chart (2026-02-22)
+
+Tujuan audit:
+- Memastikan chart `Cakupan per Lampiran` dan `Distribusi Level Data Dokumen` benar-benar terlihat dan terbaca oleh user.
+- Memastikan sumber data chart berasal dari payload backend yang tepat.
+
+Ruang lingkup:
+- Backend data flow:
+  - `app/Http/Controllers/DashboardController.php`
+  - `app/Domains/Wilayah/Dashboard/UseCases/BuildDashboardDocumentCoverageUseCase.php`
+  - `app/Domains/Wilayah/Dashboard/Repositories/DashboardDocumentCoverageRepository.php`
+- Frontend render:
+  - `resources/js/Pages/Dashboard.vue`
+  - `resources/js/admin-one/components/Charts/BarChart.vue`
+
+Temuan audit:
+- Payload backend untuk `coverage_per_lampiran` dan `level_distribution` terisi (bukan kosong).
+- Untuk user scope `desa`, distribusi level memang wajar dominan/100% pada level `Desa`.
+- Persepsi "chart kosong/tidak ada item" terjadi di UI karena chart vertikal tidak menampilkan daftar item eksplisit; ketika nilai kecil/0, bar terlihat minim.
+
+Keputusan implementasi UI:
+- Tambah daftar item numerik di bawah chart `Cakupan per Lampiran`.
+- Tambah daftar item numerik di bawah chart `Distribusi Level Data Dokumen`.
+- Tambah empty-state message jika semua nilai chart bernilai `0`.
+- Tidak mengubah kontrak payload backend dashboard.
+
+Checklist audit UI chart berikutnya:
+- [x] Verifikasi payload backend `documents.coverage_per_lampiran` dan `documents.level_distribution`.
+- [x] Verifikasi chart merender data + label item secara eksplisit pada dashboard.
+- [x] Verifikasi state semua nilai `0` menampilkan pesan yang jelas.
+- [ ] Tambahkan feature test frontend (jika test harness UI tersedia) untuk guard tampilan list item chart.
+- [ ] Monitor feedback user 1 siklus operasional untuk keterbacaan chart pada data rendah.
