@@ -24,17 +24,17 @@ Catatan:
 Catatan:
 - Checklist ini adalah template eksekusi per perubahan; gunakan section "Eksekusi Terbaru" untuk status run terakhir.
 
-- [ ] Cek route report tetap berada di scope middleware:
+- [x] Cek route report tetap berada di scope middleware:
   - Jalankan `php artisan route:list --name=report`
-- [ ] Jalankan regression stale metadata route report:
+- [x] Jalankan regression stale metadata route report:
   - `php artisan test --filter=scope_metadata_tidak_sinkron`
-- [ ] Jalankan regression mismatch role-level area:
+- [x] Jalankan regression mismatch role-level area:
   - `php artisan test --filter=role_dan_level_area_tidak_sinkron`
   - `php artisan test --filter=role_kecamatan_tetapi_area_level_desa`
-- [ ] Pastikan hasil skenario `A1` dan `A2` sesuai ekspektasi (`403` atau scope netral tanpa data bocor).
-- [ ] Jika ada deviasi, catat ke `docs/domain/DOMAIN_DEVIATION_LOG.md` sebelum merge.
+- [x] Pastikan hasil skenario `A1` dan `A2` sesuai ekspektasi (`403` atau scope netral tanpa data bocor).
+- [x] Jika ada deviasi, catat ke `docs/domain/DOMAIN_DEVIATION_LOG.md` sebelum merge.
 
-## 3) Eksekusi Terbaru (2026-02-21)
+## 3) Eksekusi Terbaru (2026-02-22)
 
 - [x] Cek route report tetap berada di scope middleware.
 - [x] Jalankan regression stale metadata route report.
@@ -43,8 +43,9 @@ Catatan:
 - [x] Tidak ada deviasi baru; `docs/domain/DOMAIN_DEVIATION_LOG.md` tetap konsisten.
 
 Ringkasan hasil:
-- `php artisan route:list --name=report` -> `56` route report.
-- `php artisan test --filter=scope_metadata_tidak_sinkron` -> `27` test pass.
+- `php artisan route:list --name=report` -> `80` route report.
+- validasi middleware (`route:list --name=report --json`) -> `invalid_scope_middleware=0`.
+- `php artisan test --filter=scope_metadata_tidak_sinkron` -> `28` test pass.
 - `php artisan test --filter=role_dan_level_area_tidak_sinkron` -> `1` test pass.
 - `php artisan test --filter=role_kecamatan_tetapi_area_level_desa` -> `20` test pass.
 
@@ -52,9 +53,11 @@ Ringkasan hasil:
 
 Perintah yang dijalankan:
 - `php artisan route:list --name=report`
-  - hasil terbaru: `56` route report terdaftar (desa + kecamatan).
+  - hasil terbaru: `80` route report terdaftar (desa + kecamatan).
+- `php artisan route:list --name=report --json`
+  - hasil terbaru: seluruh route report memiliki middleware `scope.role:{desa|kecamatan}` (`invalid_scope_middleware=0`).
 - `php artisan test --filter=scope_metadata_tidak_sinkron`
-  - hasil terbaru: `27` test pass.
+  - hasil terbaru: `28` test pass.
 - `php artisan test --filter=role_dan_level_area_tidak_sinkron`
   - hasil: `1` test pass.
 - `php artisan test --filter=role_kecamatan_tetapi_area_level_desa`
