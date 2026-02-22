@@ -13,4 +13,6 @@ interface CatatanKeluargaRepositoryInterface
     public function getRekapPkkRtByLevelAndArea(string $level, int $areaId): Collection;
 
     public function getCatatanPkkRwByLevelAndArea(string $level, int $areaId): Collection;
+
+    public function getRekapRwByLevelAndArea(string $level, int $areaId): Collection;
 }

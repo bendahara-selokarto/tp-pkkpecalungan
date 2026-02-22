@@ -7,6 +7,7 @@ use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanKeluargaUseCas
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanPkkRwUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapDasaWismaUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapPkkRtUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapRwUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
@@ -19,6 +20,7 @@ class CatatanKeluargaPrintController extends Controller
         private readonly ListScopedRekapDasaWismaUseCase $listScopedRekapDasaWismaUseCase,
         private readonly ListScopedRekapPkkRtUseCase $listScopedRekapPkkRtUseCase,
         private readonly ListScopedCatatanPkkRwUseCase $listScopedCatatanPkkRwUseCase,
+        private readonly ListScopedRekapRwUseCase $listScopedRekapRwUseCase,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -61,6 +63,16 @@ class CatatanKeluargaPrintController extends Controller
     public function printKecamatanCatatanPkkRwReport(): Response
     {
         return $this->streamCatatanPkkRwReport(ScopeLevel::KECAMATAN->value);
+    }
+
+    public function printDesaRekapRwReport(): Response
+    {
+        return $this->streamRekapRwReport(ScopeLevel::DESA->value);
+    }
+
+    public function printKecamatanRekapRwReport(): Response
+    {
+        return $this->streamRekapRwReport(ScopeLevel::KECAMATAN->value);
     }
 
     private function streamReport(string $level): Response
@@ -144,5 +156,26 @@ class CatatanKeluargaPrintController extends Controller
         ]);
 
         return $pdf->stream("catatan-data-kegiatan-warga-pkk-rw-{$level}-report.pdf");
+    }
+
+    private function streamRekapRwReport(string $level): Response
+    {
+        $this->authorize('viewAny', CatatanKeluarga::class);
+
+        $items = $this->listScopedRekapRwUseCase
+            ->execute($level)
+            ->values();
+
+        $user = auth()->user()->loadMissing('area');
+        $pdf = $this->pdfViewFactory->loadView('pdf.rekap_catatan_data_kegiatan_warga_rw_report', [
+            'items' => $items,
+            'level' => $level,
+            'areaName' => $user->area?->name ?? '-',
+            'printedBy' => $user,
+            'printedAt' => now(),
+            'tahun' => now()->format('Y'),
+        ]);
+
+        return $pdf->stream("rekap-catatan-data-kegiatan-warga-rw-{$level}-report.pdf");
     }
 }

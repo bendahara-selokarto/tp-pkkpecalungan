@@ -139,6 +139,56 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         return $rows;
     }
 
+    public function getRekapRwByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $households = $this->scopedHouseholds($level, $areaId);
+        $activityFlags = $this->buildActivityFlags($level, $areaId);
+        $grouped = $households->groupBy(
+            fn (DataWarga $item): string => $this->extractRwNumber($item)
+        );
+
+        $sortedRwNumbers = $grouped
+            ->keys()
+            ->sort(fn (string $left, string $right): int => $this->compareRwNumbers($left, $right))
+            ->values();
+
+        $rows = collect();
+
+        foreach ($sortedRwNumbers as $rwNumber) {
+            $groupItems = $grouped->get($rwNumber, collect());
+            $metrics = $this->sumHouseholdMetrics($groupItems, $activityFlags);
+            $keterangan = $groupItems
+                ->pluck('keterangan')
+                ->filter(fn ($value) => is_string($value) && trim($value) !== '')
+                ->unique()
+                ->implode('; ');
+
+            $rows->push(array_merge([
+                'nomor_urut' => $rows->count() + 1,
+                'nomor_rw' => $rwNumber,
+                'jml_rt' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->extractRtNumber($item))
+                    ->filter(fn (string $rt): bool => $rt !== '-')
+                    ->unique()
+                    ->count(),
+                'jml_dasawisma' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->normalizeDasaWismaName($item->dasawisma))
+                    ->unique()
+                    ->count(),
+                'jml_krt' => $groupItems->count(),
+                'jml_kk' => $groupItems->count(),
+                'ket' => $keterangan !== '' ? $keterangan : null,
+            ], $metrics, [
+                'tiga_buta_l' => 0,
+                'tiga_buta_p' => 0,
+                'sungai' => 0,
+                'jumlah_sarana_mck' => (int) ($metrics['memiliki_mck_septic'] ?? 0),
+            ]));
+        }
+
+        return $rows;
+    }
+
     private function scopedHouseholds(string $level, int $areaId): Collection
     {
         return DataWarga::query()
@@ -289,7 +339,36 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
                 continue;
             }
 
+            [$rt,] = $this->extractRtRwPair($normalized);
+            if ($rt !== null) {
+                return $rt;
+            }
+
             if (preg_match('/\bRT(?:\/RW)?\s*[:.\-]?\s*0*(\d{1,3})\b/i', $normalized, $matches) === 1) {
+                return str_pad((string) ((int) $matches[1]), 2, '0', STR_PAD_LEFT);
+            }
+        }
+
+        return '-';
+    }
+
+    private function extractRwNumber(DataWarga $item): string
+    {
+        $sources = [$item->alamat, $item->dasawisma];
+
+        foreach ($sources as $source) {
+            $normalized = trim((string) $source);
+
+            if ($normalized === '') {
+                continue;
+            }
+
+            [, $rw] = $this->extractRtRwPair($normalized);
+            if ($rw !== null) {
+                return $rw;
+            }
+
+            if (preg_match('/\bRW\s*[:.\-]?\s*0*(\d{1,3})\b/i', $normalized, $matches) === 1) {
                 return str_pad((string) ((int) $matches[1]), 2, '0', STR_PAD_LEFT);
             }
         }
@@ -312,6 +391,38 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         }
 
         return ((int) $left) <=> ((int) $right);
+    }
+
+    private function compareRwNumbers(string $left, string $right): int
+    {
+        if ($left === $right) {
+            return 0;
+        }
+
+        if ($left === '-') {
+            return 1;
+        }
+
+        if ($right === '-') {
+            return -1;
+        }
+
+        return ((int) $left) <=> ((int) $right);
+    }
+
+    /**
+     * @return array{0: string|null, 1: string|null}
+     */
+    private function extractRtRwPair(string $value): array
+    {
+        if (preg_match('/\bRT\s*\/\s*RW\s*[:.\-]?\s*0*(\d{1,3})\s*\/\s*0*(\d{1,3})\b/i', $value, $matches) !== 1) {
+            return [null, null];
+        }
+
+        return [
+            str_pad((string) ((int) $matches[1]), 2, '0', STR_PAD_LEFT),
+            str_pad((string) ((int) $matches[2]), 2, '0', STR_PAD_LEFT),
+        ];
     }
 
     private function isBalita(?int $umur): bool
