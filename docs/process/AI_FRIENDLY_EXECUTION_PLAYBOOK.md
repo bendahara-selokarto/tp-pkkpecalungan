@@ -161,11 +161,17 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Jangan tetapkan kontrak tabel kompleks hanya dari OCR/parser teks.
   - Jangan tetapkan kontrak header tabel hanya dari text-layer jika hasil baca parsial.
   - Saat hasil parser dan dokumen autentik konflik, dokumen autentik adalah sumber final.
+  - Screenshot header tabel yang memenuhi kriteria validasi adalah bukti kontrak resmi untuk merge cell (`rowspan`/`colspan`).
   - Dokumentasikan gap parsing secara eksplisit agar tidak dianggap bug data aplikasi.
   - Dilarang melanjutkan implementasi bila peta header belum lengkap sampai tingkat penggabungan sel (`rowspan`/`colspan`).
 - Validasi minimum:
   - Ada bukti token identitas dokumen terdeteksi oleh parser.
   - Ada bukti visual (screenshot/crop) saat header tabel perlu verifikasi manual.
+  - Bukti visual untuk merge cell dinyatakan valid jika:
+    - mencakup area header tabel secara utuh,
+    - grid/garis sel cukup jelas untuk identifikasi penggabungan,
+    - baris nomor kolom terlihat,
+    - label header utama/sub-header masih terbaca.
   - Ada peta header tabel lengkap yang mencakup urutan kolom + penggabungan sel (`rowspan`/`colspan`).
   - Ada dokumen mapping domain yang mengunci transformasi struktur autentik ke representasi aplikasi.
   - Terminology/domain matrix menunjuk dokumen mapping tersebut.

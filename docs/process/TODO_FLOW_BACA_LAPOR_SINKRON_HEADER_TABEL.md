@@ -17,6 +17,7 @@
 - [x] Dokumen autentik tetap source of truth saat hasil parser bertentangan.
 - [x] Metode baca presisi ditetapkan: `text-layer terlebih dahulu`, lanjut `render visual + verifikasi manual` jika header tabel tidak terbaca utuh.
 - [x] Implementasi dilarang lanjut jika peta header + penggabungan sel belum lengkap dan terkonfirmasi.
+- [x] Screenshot header tabel yang memenuhi kriteria validasi ditetapkan sebagai bukti kontrak resmi untuk `rowspan`/`colspan`.
 
 ## Langkah Eksekusi
 - [x] Tambahkan flow pembacaan dokumen pada `AGENTS.md`.

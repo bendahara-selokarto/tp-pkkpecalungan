@@ -48,6 +48,7 @@ Legacy tables (compatibility only):
 - Untuk dokumen autentik bertabel, hasil pembacaan wajib mencapai peta header tabel sampai tingkat penggabungan sel (`rowspan`/`colspan`) sebelum sinkronisasi kontrak/implementasi.
 - Metode pembacaan dokumen autentik saat ini (`text-layer -> verifikasi visual manual -> laporkan/konfirmasi -> sinkronkan`) ditetapkan sebagai kontrak baku/default karena paling presisi sejauh ini.
 - Metode baku ini hanya boleh diganti jika ada metode baru yang terukur lebih akurat dan sudah didokumentasikan pada playbook + AGENTS di sesi yang sama.
+- Bukti visual berupa screenshot header tabel yang memenuhi kriteria validasi ditetapkan sebagai bukti kontrak resmi untuk penetapan struktur merge cell (`rowspan`/`colspan`).
 
 ## 3. Execution Flow (Mandatory)
 
@@ -60,6 +61,12 @@ Flow pembacaan dokumen (wajib, terutama header tabel):
 1. Baca:
    - Lakukan ekstraksi text-layer terlebih dahulu untuk token identitas dokumen.
    - Jika header tabel tidak terbaca utuh, wajib render visual halaman (screenshot) lalu verifikasi manual struktur tabel (jumlah kolom, merge row/col, label header).
+   - Screenshot valid sebagai bukti merge cell jika memenuhi syarat minimum:
+     - mencakup seluruh area header tabel (bukan potongan acak),
+     - garis batas sel terlihat jelas,
+     - baris nomor kolom terlihat,
+     - teks header masih terbaca.
+   - Jika syarat terpenuhi, hasil identifikasi merge dari screenshot dianggap final untuk kontrak header tabel.
 2. Laporkan/Konfirmasi:
    - Laporkan hasil baca sampai level peta header + penggabungan sel (`rowspan`/`colspan`).
    - Jika level ini belum tercapai, status wajib `belum siap sinkronisasi` (tidak boleh lanjut implementasi).

@@ -39,6 +39,7 @@ Tujuan:
 | 4.15 | `catatan-keluarga` | Catatan Keluarga | UI/PDF sudah mengarah ke label pedoman; struktur autentik 19 kolom diproyeksikan operasional ke report 10 kolom | Pertahankan label pedoman + kunci transformasi 19->10 di dokumen mapping domain | match (with projection) |
 | 4.16a | `rekap-catatan-data-kegiatan-warga-dasawisma` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok Dasa Wisma | Report PDF 29 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + kunci flow baca header tabel kompleks sebagai guardrail implementasi | implemented (report-only) |
 | 4.16b | `rekap-catatan-data-kegiatan-warga-pkk-rt` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok PKK RT | Report PDF 30 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + kunci flow baca header tabel kompleks sebagai guardrail implementasi | implemented (report-only) |
+| 4.16c | `catatan-data-kegiatan-warga-pkk-rw` (reference) | Catatan Data dan Kegiatan Warga Kelompok PKK RW | Dokumen resmi 4.16c sudah terverifikasi visual sampai peta header merge 32 kolom; implementasi report belum dibuat | Kunci sebagai referensi autentik terverifikasi + putuskan roadmap implementasi terpisah | reference-verified |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Label canonical sudah aktif pada menu/index/PDF | Pertahankan label canonical, lanjutkan pemetaan indikator detail katalog | implemented (catalog tahap awal) |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
@@ -74,5 +75,7 @@ Tujuan:
   - `docs/domain/REKAP_DASA_WISMA_4_16A_MAPPING.md`
 - Mapping Rekap PKK RT:
   - `docs/domain/REKAP_PKK_RT_4_16B_MAPPING.md`
+- Mapping Catatan PKK RW:
+  - `docs/domain/CATATAN_PKK_RW_4_16C_MAPPING.md`
 - Ekstensi pedoman:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
