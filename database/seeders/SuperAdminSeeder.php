@@ -7,7 +7,6 @@ use App\Domains\Wilayah\Models\Area;
 use Spatie\Permission\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -44,28 +43,13 @@ class SuperAdminSeeder extends Seeder
         /**
          * 3. Buat user super admin
          */
-        $targetEmail = 'super-admin+pecalungan@gmail.com';
-        $superAdmin = User::query()
-            ->where('email', $targetEmail)
-            ->first();
-
-        if (! $superAdmin) {
-            $superAdmin = User::query()
-                ->whereHas('roles', fn ($query) => $query->where('name', $superAdminRole->name))
-                ->first();
-        }
-
-        if (! $superAdmin) {
-            $superAdmin = new User();
-        }
-
-        $superAdmin->forceFill([
-            'name' => 'Super Admin',
-            'email' => $targetEmail,
-            'password' => $superAdmin->exists ? $superAdmin->password : Hash::make('password123'),
-            'email_verified_at' => $superAdmin->email_verified_at ?? now(),
-            'remember_token' => $superAdmin->remember_token ?? Str::random(10),
-        ])->save();
+        $superAdmin = User::firstOrCreate(
+            ['email' => 'superadmin.tp-pkk-pecalungan@gmail.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => Hash::make('password123'),
+            ]
+        );
 
         // Scope tetap valid (enum) dan area diset ke level kecamatan default.
         $defaultKecamatanId = Area::where('level', 'kecamatan')->value('id');

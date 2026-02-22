@@ -21,7 +21,7 @@ class RoleScopeSimulationSeeder extends Seeder
         }
 
         foreach (RoleScopeMatrix::assignableRolesForScope('desa') as $roleName) {
-            $this->upsertDummyUser($roleName, 'desa', (int) $desaArea->id, (string) $desaArea->name);
+            $this->upsertDummyUser($roleName, 'desa', (int) $desaArea->id);
         }
 
         foreach (RoleScopeMatrix::assignableRolesForScope('kecamatan') as $roleName) {
@@ -29,34 +29,27 @@ class RoleScopeSimulationSeeder extends Seeder
                 continue;
             }
 
-            $this->upsertDummyUser($roleName, 'kecamatan', (int) $kecamatanArea->id, (string) $kecamatanArea->name);
+            $this->upsertDummyUser($roleName, 'kecamatan', (int) $kecamatanArea->id);
         }
     }
 
-    private function upsertDummyUser(string $roleName, string $scope, int $areaId, string $wilayahName): void
+    private function upsertDummyUser(string $roleName, string $scope, int $areaId): void
     {
         Role::firstOrCreate(['name' => $roleName]);
 
-        $email = sprintf('%s+%s@gmail.com', $roleName, $this->wilayahSlug($wilayahName));
+        $email = sprintf('%s.%s@dummy.pkk.local', $scope, $roleName);
 
-        $user = User::query()
-            ->where('scope', $scope)
-            ->where('area_id', $areaId)
-            ->whereHas('roles', fn ($query) => $query->where('name', $roleName))
-            ->first();
-
-        if (! $user) {
-            $user = User::query()->where('email', $email)->first();
-        }
-
-        if (! $user) {
-            $user = new User();
-        }
+        $user = User::updateOrCreate(
+            ['email' => $email],
+            [
+                'name' => $this->displayName($roleName, $scope),
+                'password' => Hash::make('password123'),
+                'scope' => $scope,
+                'area_id' => $areaId,
+            ]
+        );
 
         $user->forceFill([
-            'name' => $this->displayName($roleName, $scope),
-            'email' => $email,
-            'password' => Hash::make('password123'),
             'scope' => $scope,
             'area_id' => $areaId,
         ])->save();
@@ -73,16 +66,5 @@ class RoleScopeSimulationSeeder extends Seeder
             ->value();
 
         return sprintf('Dummy %s %s', ucfirst($scope), $baseLabel);
-    }
-
-    private function wilayahSlug(string $name): string
-    {
-        $slug = str($name)
-            ->lower()
-            ->replaceMatches('/[^a-z0-9]+/', '-')
-            ->trim('-')
-            ->value();
-
-        return $slug !== '' ? $slug : 'wilayah';
     }
 }

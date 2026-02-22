@@ -25,11 +25,9 @@ class AdminWilayahUserSeeder extends Seeder
             ->orderBy('id')
             ->get();
 
-        $kecamatanSlug = $this->wilayahSlug($kecamatanArea->name);
-
         $this->upsertUserWithRole(
             name: 'Admin Kecamatan',
-            email: 'admin-kecamatan+'.$kecamatanSlug.'@gmail.com',
+            email: 'admin.kecamatan@example.com',
             plainPassword: 'password123',
             scope: 'kecamatan',
             areaId: $kecamatanArea->id,
@@ -37,11 +35,11 @@ class AdminWilayahUserSeeder extends Seeder
         );
 
         foreach ($desaAreas as $desaArea) {
-            $desaSlug = $this->wilayahSlug($desaArea->name);
+            $desaSlug = str($desaArea->name)->lower()->replace(' ', '.')->value();
 
             $this->upsertUserWithRole(
                 name: 'Admin Desa '.$desaArea->name,
-                email: 'admin-desa+'.$desaSlug.'@gmail.com',
+                email: 'admin.desa.'.$desaSlug.'@example.com',
                 plainPassword: 'password123',
                 scope: 'desa',
                 areaId: $desaArea->id,
@@ -58,41 +56,21 @@ class AdminWilayahUserSeeder extends Seeder
         int $areaId,
         string $role,
     ): void {
-        $user = User::query()
-            ->where('scope', $scope)
-            ->where('area_id', $areaId)
-            ->whereHas('roles', fn ($query) => $query->where('name', $role))
-            ->first();
-
-        if (! $user) {
-            $user = User::query()->where('email', $email)->first();
-        }
-
-        if (! $user) {
-            $user = new User();
-        }
+        $user = User::updateOrCreate(
+            ['email' => $email],
+            [
+                'name' => $name,
+                'password' => Hash::make($plainPassword),
+                'email_verified_at' => now(),
+                'remember_token' => Str::random(10),
+            ]
+        );
 
         $user->forceFill([
-            'name' => $name,
-            'email' => $email,
-            'password' => Hash::make($plainPassword),
-            'email_verified_at' => now(),
-            'remember_token' => Str::random(10),
             'scope' => $scope,
             'area_id' => $areaId,
         ])->save();
 
         $user->syncRoles([$role]);
-    }
-
-    private function wilayahSlug(string $name): string
-    {
-        $slug = str($name)
-            ->lower()
-            ->replaceMatches('/[^a-z0-9]+/', '-')
-            ->trim('-')
-            ->value();
-
-        return $slug !== '' ? $slug : 'wilayah';
     }
 }
