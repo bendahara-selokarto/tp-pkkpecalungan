@@ -7,6 +7,10 @@ use Throwable;
 
 trait ParsesUiDate
 {
+    /**
+     * @deprecated Kebijakan canonical aktif memakai validasi strict `date_format:Y-m-d`
+     *             per request. Trait ini dipertahankan sementara untuk kompatibilitas lama.
+     */
     protected function normalizeUiDate(string $value): string
     {
         return $this->parseUiDate($value)?->format('Y-m-d') ?? $value;
