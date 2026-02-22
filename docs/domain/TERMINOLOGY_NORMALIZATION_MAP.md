@@ -36,7 +36,7 @@ Tujuan:
 | 4.14.4d | `kejar-paket` | Data Isian Kejar Paket/KF/PAUD | UI/PDF sudah memakai `Data Isian Kejar Paket/KF/PAUD` | Pertahankan | match |
 | 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | UI/PDF sudah memakai `Data Isian Posyandu oleh TP PKK` | Pertahankan | match |
 | 4.14.4f | `simulasi-penyuluhan` | Data Isian Kelompok Simulasi dan Penyuluhan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
-| 4.15 | `catatan-keluarga` | Catatan Keluarga | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
+| 4.15 | `catatan-keluarga` | Catatan Keluarga | UI/PDF sudah mengarah ke label pedoman; struktur autentik 19 kolom diproyeksikan operasional ke report 10 kolom | Pertahankan label pedoman + kunci transformasi 19->10 di dokumen mapping domain | match (with projection) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Label canonical sudah aktif pada menu/index/PDF | Pertahankan label canonical, lanjutkan pemetaan indikator detail katalog | implemented (catalog tahap awal) |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
@@ -66,5 +66,7 @@ Tujuan:
   - `resources/views/pdf/koperasi_report.blade.php`
   - `resources/views/pdf/kejar_paket_report.blade.php`
   - `resources/views/pdf/posyandu_report.blade.php`
+- Mapping Catatan Keluarga:
+  - `docs/domain/CATATAN_KELUARGA_19_TO_10_MAPPING.md`
 - Ekstensi pedoman:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
