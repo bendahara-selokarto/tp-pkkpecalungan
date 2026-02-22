@@ -71,6 +71,11 @@ const props = defineProps({
         </div>
       </div>
 
+      <div>
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Keterangan</p>
+        <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.posyandu.keterangan || '-' }}</p>
+      </div>
+
       <div class="flex items-center justify-end gap-2">
         <Link href="/desa/posyandu" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
           Kembali

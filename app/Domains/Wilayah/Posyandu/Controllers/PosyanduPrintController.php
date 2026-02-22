@@ -36,11 +36,12 @@ class PosyanduPrintController extends Controller
             ->sortBy('id')
             ->values();
 
-        $user = auth()->user()->loadMissing('area');
+        $user = auth()->user()->loadMissing('area.parent');
         $pdf = $this->pdfViewFactory->loadView('pdf.posyandu_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'area' => $user->area,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

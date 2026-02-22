@@ -25,6 +25,7 @@ class StorePosyanduRequest extends FormRequest
             'jumlah_pengunjung_p' => 'required|integer|min:0',
             'jumlah_petugas_l' => 'required|integer|min:0',
             'jumlah_petugas_p' => 'required|integer|min:0',
+            'keterangan' => 'nullable|string',
         ];
     }
 }

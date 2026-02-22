@@ -22,6 +22,7 @@ class Posyandu extends Model
         'jumlah_pengunjung_p',
         'jumlah_petugas_l',
         'jumlah_petugas_p',
+        'keterangan',
         'level',
         'area_id',
         'created_by',

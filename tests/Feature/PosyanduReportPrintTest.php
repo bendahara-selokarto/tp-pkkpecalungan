@@ -46,6 +46,7 @@ class PosyanduReportPrintTest extends TestCase
             'jumlah_pengunjung_p' => 25,
             'jumlah_petugas_l' => 2,
             'jumlah_petugas_p' => 3,
+            'keterangan' => 'Layanan balita rutin',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $user->id,
@@ -74,6 +75,7 @@ class PosyanduReportPrintTest extends TestCase
             'jumlah_pengunjung_p' => 14,
             'jumlah_petugas_l' => 1,
             'jumlah_petugas_p' => 2,
+            'keterangan' => 'Layanan imunisasi triwulan',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $user->id,
@@ -93,5 +95,49 @@ class PosyanduReportPrintTest extends TestCase
         $response = $this->actingAs($user)->get(route('desa.posyandu.report'));
 
         $response->assertStatus(403);
+    }
+
+    public function test_header_kolom_pdf_posyandu_tetap_sesuai_mapping_autentik(): void
+    {
+        $html = view('pdf.posyandu_report', [
+            'items' => collect(),
+            'level' => 'desa',
+            'areaName' => 'Gombong',
+            'area' => null,
+            'printedBy' => (object) ['name' => 'System Test'],
+            'printedAt' => now(),
+        ])->render();
+
+        $normalized = $this->normalizeText($html);
+        $this->assertHeadersInOrder($normalized, [
+            'NO',
+            'JENIS KEGIATAN/LAYANAN',
+            'FREKUENSI LAYANAN',
+            'JUMLAH',
+            'KETERANGAN',
+            'PENGUNJUNG',
+            'PETUGAS/PARAMEDIS',
+            'L',
+            'P',
+            'L',
+            'P',
+        ]);
+    }
+
+    private function assertHeadersInOrder(string $normalizedHtml, array $headers): void
+    {
+        $cursor = 0;
+        foreach ($headers as $header) {
+            $needle = $this->normalizeText($header);
+            $position = strpos($normalizedHtml, $needle, $cursor);
+
+            $this->assertNotFalse($position, sprintf('Header "%s" tidak ditemukan/urutannya berubah.', $header));
+            $cursor = $position + strlen($needle);
+        }
+    }
+
+    private function normalizeText(string $text): string
+    {
+        return trim((string) preg_replace('/\s+/u', ' ', strtoupper(strip_tags($text))));
     }
 }

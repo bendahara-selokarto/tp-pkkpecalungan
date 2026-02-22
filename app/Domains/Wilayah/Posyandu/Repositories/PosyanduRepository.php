@@ -22,6 +22,7 @@ class PosyanduRepository implements PosyanduRepositoryInterface
             'jumlah_pengunjung_p' => $data->jumlah_pengunjung_p,
             'jumlah_petugas_l' => $data->jumlah_petugas_l,
             'jumlah_petugas_p' => $data->jumlah_petugas_p,
+            'keterangan' => $data->keterangan,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
@@ -56,6 +57,7 @@ class PosyanduRepository implements PosyanduRepositoryInterface
             'jumlah_pengunjung_p' => $data->jumlah_pengunjung_p,
             'jumlah_petugas_l' => $data->jumlah_petugas_l,
             'jumlah_petugas_p' => $data->jumlah_petugas_p,
+            'keterangan' => $data->keterangan,
         ]);
 
         return $posyandu;

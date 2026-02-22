@@ -83,6 +83,7 @@ const cancelDelete = () => {
               <th class="px-3 py-3 font-semibold">Pengunjung (P)</th>
               <th class="px-3 py-3 font-semibold">Petugas (L)</th>
               <th class="px-3 py-3 font-semibold">Petugas (P)</th>
+              <th class="px-3 py-3 font-semibold">Keterangan</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>
             </tr>
           </thead>
@@ -103,6 +104,7 @@ const cancelDelete = () => {
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.jumlah_pengunjung_p }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.jumlah_petugas_l }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.jumlah_petugas_p }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.keterangan || '-' }}</td>
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
                   <Link
@@ -128,7 +130,7 @@ const cancelDelete = () => {
               </td>
             </tr>
             <tr v-if="props.posyanduItems.length === 0">
-              <td colspan="12" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <td colspan="13" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Data posyandu belum tersedia.
               </td>
             </tr>

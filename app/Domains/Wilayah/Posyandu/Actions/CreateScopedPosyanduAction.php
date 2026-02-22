@@ -29,6 +29,7 @@ class CreateScopedPosyanduAction
             'jumlah_pengunjung_p' => $payload['jumlah_pengunjung_p'],
             'jumlah_petugas_l' => $payload['jumlah_petugas_l'],
             'jumlah_petugas_p' => $payload['jumlah_petugas_p'],
+            'keterangan' => $payload['keterangan'] ?? null,
             'level' => $level,
             'area_id' => $this->posyanduScopeService->requireUserAreaId(),
             'created_by' => (int) auth()->id(),

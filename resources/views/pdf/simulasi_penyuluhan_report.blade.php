@@ -30,17 +30,26 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 28px;">NO</th>
-                <th style="width: 135px;">NAMA KEGIATAN</th>
-                <th style="width: 145px;">JENIS SIMULASI DAN PENYULUHAN</th>
-                <th style="width: 72px;">JUMLAH KELOMPOK</th>
-                <th style="width: 82px;">JUMLAH SOSIALISASI</th>
+                <th style="width: 28px;" rowspan="2">NO</th>
+                <th style="width: 135px;" rowspan="2">NAMA KEGIATAN</th>
+                <th style="width: 145px;" rowspan="2">JENIS SIMULASI/PENYULUHAN</th>
+                <th colspan="2">JUMLAH</th>
                 <th colspan="2" style="width: 95px;">JUMLAH KADER</th>
             </tr>
             <tr>
-                <th colspan="5"></th>
+                <th style="width: 72px;">KELOMPOK</th>
+                <th style="width: 82px;">SOSIALISASI</th>
                 <th style="width: 47px;">L</th>
                 <th style="width: 48px;">P</th>
+            </tr>
+            <tr>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
             </tr>
         </thead>
         <tbody>

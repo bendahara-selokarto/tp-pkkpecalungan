@@ -32,7 +32,7 @@
             <tr>
                 <th style="width: 28px;" rowspan="2">NO</th>
                 <th style="width: 190px;" rowspan="2">NAMA KEJAR PAKET/KF/PAUD</th>
-                <th style="width: 120px;" rowspan="2">JENIS</th>
+                <th style="width: 120px;" rowspan="2">JENIS KEJAR PAKET/KF/PAUD</th>
                 <th colspan="2">JUMLAH WARGA BELAJAR/SISWA</th>
                 <th colspan="2">JUMLAH PENGAJAR</th>
             </tr>
@@ -41,6 +41,15 @@
                 <th style="width: 70px;">P</th>
                 <th style="width: 70px;">L</th>
                 <th style="width: 70px;">P</th>
+            </tr>
+            <tr>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
             </tr>
         </thead>
         <tbody>

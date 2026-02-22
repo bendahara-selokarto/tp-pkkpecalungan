@@ -64,6 +64,7 @@ class DesaPosyanduTest extends TestCase
             'jumlah_pengunjung_p' => 25,
             'jumlah_petugas_l' => 2,
             'jumlah_petugas_p' => 3,
+            'keterangan' => 'Layanan rutin bulanan',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
@@ -81,6 +82,7 @@ class DesaPosyanduTest extends TestCase
             'jumlah_pengunjung_p' => 12,
             'jumlah_petugas_l' => 1,
             'jumlah_petugas_p' => 2,
+            'keterangan' => 'Data area lain',
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
@@ -114,6 +116,7 @@ class DesaPosyanduTest extends TestCase
             'jumlah_pengunjung_p' => 13,
             'jumlah_petugas_l' => 1,
             'jumlah_petugas_p' => 2,
+            'keterangan' => 'Entry awal',
         ])->assertStatus(302);
 
         $posyandu = Posyandu::where('nama_posyandu', 'Posyandu Anggrek')->firstOrFail();
@@ -130,6 +133,7 @@ class DesaPosyanduTest extends TestCase
             'jumlah_pengunjung_p' => 15,
             'jumlah_petugas_l' => 2,
             'jumlah_petugas_p' => 3,
+            'keterangan' => 'Entry revisi',
         ])->assertStatus(302);
 
         $this->assertDatabaseHas('posyandus', [
@@ -139,6 +143,7 @@ class DesaPosyanduTest extends TestCase
             'jumlah_pengunjung_l' => 12,
             'jumlah_pengunjung_p' => 15,
             'jumlah_petugas_p' => 3,
+            'keterangan' => 'Entry revisi',
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.posyandu.destroy', $posyandu->id))

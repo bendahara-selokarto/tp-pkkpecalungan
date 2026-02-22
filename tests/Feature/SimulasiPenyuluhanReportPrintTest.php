@@ -86,5 +86,46 @@ class SimulasiPenyuluhanReportPrintTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    public function test_header_kolom_pdf_simulasi_penyuluhan_tetap_sesuai_mapping_autentik(): void
+    {
+        $html = view('pdf.simulasi_penyuluhan_report', [
+            'items' => collect(),
+            'level' => 'desa',
+            'areaName' => 'Gombong',
+            'printedBy' => (object) ['name' => 'System Test'],
+            'printedAt' => now(),
+        ])->render();
+
+        $normalized = $this->normalizeText($html);
+        $this->assertHeadersInOrder($normalized, [
+            'NO',
+            'NAMA KEGIATAN',
+            'JENIS SIMULASI/PENYULUHAN',
+            'JUMLAH',
+            'JUMLAH KADER',
+            'KELOMPOK',
+            'SOSIALISASI',
+            'L',
+            'P',
+        ]);
+    }
+
+    private function assertHeadersInOrder(string $normalizedHtml, array $headers): void
+    {
+        $cursor = 0;
+        foreach ($headers as $header) {
+            $needle = $this->normalizeText($header);
+            $position = strpos($normalizedHtml, $needle, $cursor);
+
+            $this->assertNotFalse($position, sprintf('Header "%s" tidak ditemukan/urutannya berubah.', $header));
+            $cursor = $position + strlen($needle);
+        }
+    }
+
+    private function normalizeText(string $text): string
+    {
+        return trim((string) preg_replace('/\s+/u', ' ', strtoupper(strip_tags($text))));
+    }
 }
 

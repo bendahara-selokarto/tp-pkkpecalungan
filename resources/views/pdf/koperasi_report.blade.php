@@ -30,13 +30,26 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 28px;">NO</th>
-                <th style="width: 185px;">NAMA KOPERASI</th>
-                <th style="width: 170px;">JENIS USAHA</th>
+                <th style="width: 28px;" rowspan="2">NO</th>
+                <th style="width: 185px;" rowspan="2">NAMA KOPERASI</th>
+                <th style="width: 170px;" rowspan="2">JENIS USAHA</th>
+                <th colspan="2">STATUS HUKUM</th>
+                <th colspan="2">JUMLAH ANGGOTA</th>
+            </tr>
+            <tr>
                 <th style="width: 90px;">BERBADAN HUKUM</th>
                 <th style="width: 95px;">BLM. BERBADAN HUKUM</th>
-                <th style="width: 90px;">JUMLAH ANGGOTA L</th>
-                <th style="width: 90px;">JUMLAH ANGGOTA P</th>
+                <th style="width: 90px;">L</th>
+                <th style="width: 90px;">P</th>
+            </tr>
+            <tr>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
             </tr>
         </thead>
         <tbody>

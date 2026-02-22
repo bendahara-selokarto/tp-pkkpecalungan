@@ -9,9 +9,11 @@
                                 "NO",
                                 "NAMA KOPERASI",
                                 "JENIS USAHA",
+                                "STATUS HUKUM",
+                                "JUMLAH ANGGOTA",
                                 "BERBADAN HUKUM",
                                 "BLM. BERBADAN HUKUM",
-                                "JUMLAH ANGGOTA L",
-                                "JUMLAH ANGGOTA P"
+                                "L",
+                                "P"
                             ]
 }

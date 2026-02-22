@@ -27,6 +27,7 @@ class UpdatePosyanduAction
             'jumlah_pengunjung_p' => $payload['jumlah_pengunjung_p'],
             'jumlah_petugas_l' => $payload['jumlah_petugas_l'],
             'jumlah_petugas_p' => $payload['jumlah_petugas_p'],
+            'keterangan' => $payload['keterangan'] ?? null,
             'level' => $posyandu->level,
             'area_id' => $posyandu->area_id,
             'created_by' => $posyandu->created_by,

@@ -47,6 +47,7 @@ class DesaPosyanduController extends Controller
                 'jumlah_pengunjung_p' => $item->jumlah_pengunjung_p,
                 'jumlah_petugas_l' => $item->jumlah_petugas_l,
                 'jumlah_petugas_p' => $item->jumlah_petugas_p,
+                'keterangan' => $item->keterangan,
             ]),
         ]);
     }
@@ -85,6 +86,7 @@ class DesaPosyanduController extends Controller
                 'jumlah_pengunjung_p' => $posyandu->jumlah_pengunjung_p,
                 'jumlah_petugas_l' => $posyandu->jumlah_petugas_l,
                 'jumlah_petugas_p' => $posyandu->jumlah_petugas_p,
+                'keterangan' => $posyandu->keterangan,
             ],
         ]);
     }
@@ -108,6 +110,7 @@ class DesaPosyanduController extends Controller
                 'jumlah_pengunjung_p' => $posyandu->jumlah_pengunjung_p,
                 'jumlah_petugas_l' => $posyandu->jumlah_petugas_l,
                 'jumlah_petugas_p' => $posyandu->jumlah_petugas_p,
+                'keterangan' => $posyandu->keterangan,
             ],
         ]);
     }

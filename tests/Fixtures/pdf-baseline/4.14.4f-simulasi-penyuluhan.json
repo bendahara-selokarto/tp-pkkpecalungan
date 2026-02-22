@@ -8,10 +8,11 @@
     "expectedHeaderOrder":  [
                                 "NO",
                                 "NAMA KEGIATAN",
-                                "JENIS SIMULASI DAN PENYULUHAN",
-                                "JUMLAH KELOMPOK",
-                                "JUMLAH SOSIALISASI",
+                                "JENIS SIMULASI/PENYULUHAN",
+                                "JUMLAH",
                                 "JUMLAH KADER",
+                                "KELOMPOK",
+                                "SOSIALISASI",
                                 "L",
                                 "P"
                             ]

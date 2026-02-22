@@ -17,6 +17,7 @@ const form = useForm({
   jumlah_pengunjung_p: '',
   jumlah_petugas_l: '',
   jumlah_petugas_p: '',
+  keterangan: '',
 })
 
 const submit = () => {
@@ -95,6 +96,12 @@ const submit = () => {
             <input v-model="form.jumlah_petugas_p" type="number" min="0" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
             <p v-if="form.errors.jumlah_petugas_p" class="mt-1 text-xs text-rose-600">{{ form.errors.jumlah_petugas_p }}</p>
           </div>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Keterangan</label>
+          <textarea v-model="form.keterangan" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"></textarea>
+          <p v-if="form.errors.keterangan" class="mt-1 text-xs text-rose-600">{{ form.errors.keterangan }}</p>
         </div>
 
         <div class="flex items-center justify-end gap-2">
