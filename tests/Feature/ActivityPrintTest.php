@@ -52,6 +52,35 @@ class ActivityPrintTest extends TestCase
         $response->assertHeader('content-type', 'application/pdf');
     }
 
+    public function test_pengguna_desa_dapat_mencetak_pdf_daftar_kegiatan_all_pada_scopenya(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user->assignRole('admin-desa');
+
+        Activity::create([
+            'title' => 'Kegiatan A',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan B',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('desa.activities.report'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
     public function test_pengguna_desa_tidak_dapat_mencetak_kegiatan_desa_lain(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
@@ -103,6 +132,35 @@ class ActivityPrintTest extends TestCase
             ->get(route('kecamatan.desa-activities.print', $desaActivity->id))
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_pengguna_kecamatan_dapat_mencetak_pdf_daftar_kegiatan_all_pada_scopenya(): void
+    {
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+        $user->assignRole('admin-kecamatan');
+
+        Activity::create([
+            'title' => 'Rapat Kecamatan',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        Activity::create([
+            'title' => 'Evaluasi Kecamatan',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $user->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($user)->get(route('kecamatan.activities.report'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
     }
 
     public function test_cetak_tetap_mengikuti_peran_dan_area_saat_kolom_scope_belum_sinkron(): void
