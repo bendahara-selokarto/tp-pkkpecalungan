@@ -294,16 +294,29 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     public function getRekapIbuHamilTpPkkDesaKelurahanByLevelAndArea(string $level, int $areaId): Collection
     {
         $rows = $this->getRekapIbuHamilPkkDusunLingkunganByLevelAndArea($level, $areaId);
-        $grouped = $rows->groupBy(
-            fn (array $item): string => trim((string) ($item['desa_kelurahan'] ?? '-')) !== ''
-                ? trim((string) ($item['desa_kelurahan'] ?? '-'))
-                : '-'
-        );
+        $grouped = $rows->groupBy(function (array $item): string {
+            $dusunLingkungan = trim((string) ($item['dusun_lingkungan'] ?? '-'));
+            $desaKelurahan = trim((string) ($item['desa_kelurahan'] ?? '-'));
+
+            $normalizedDusunLingkungan = $dusunLingkungan !== '' ? $dusunLingkungan : '-';
+            $normalizedDesaKelurahan = $desaKelurahan !== '' ? $desaKelurahan : '-';
+
+            return sprintf('%s::%s', $normalizedDesaKelurahan, $normalizedDusunLingkungan);
+        });
+
+        $sortedGroupKeys = $grouped
+            ->keys()
+            ->sort(fn (string $left, string $right): int => strnatcasecmp($left, $right))
+            ->values();
 
         $result = collect();
 
-        foreach ($grouped as $namaDesaKelurahan => $groupItems) {
+        foreach ($sortedGroupKeys as $groupKey) {
+            $groupItems = $grouped->get($groupKey, collect());
             $groupItems = $groupItems->values();
+
+            [$namaDesaKelurahan, $namaDusunLingkungan] = array_pad(explode('::', $groupKey, 2), 2, '-');
+
             $keterangan = $groupItems
                 ->pluck('keterangan')
                 ->filter(fn ($value): bool => is_string($value) && trim($value) !== '' && trim($value) !== '-')
@@ -312,12 +325,8 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
             $result->push([
                 'nomor_urut' => $result->count() + 1,
+                'nama_dusun_lingkungan' => $namaDusunLingkungan,
                 'desa_kelurahan' => $namaDesaKelurahan,
-                'jumlah_dusun_lingkungan' => $groupItems
-                    ->map(fn (array $item): string => trim((string) ($item['dusun_lingkungan'] ?? '-')))
-                    ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
-                    ->unique()
-                    ->count(),
                 'jumlah_rw' => $groupItems
                     ->map(fn (array $item): string => trim((string) ($item['nomor_rw'] ?? '-')))
                     ->filter(fn (string $value): bool => $value !== '' && $value !== '-')
