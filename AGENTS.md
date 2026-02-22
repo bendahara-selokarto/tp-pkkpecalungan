@@ -53,6 +53,11 @@ Legacy tables (compatibility only):
 3. Patch minimal: perubahan sekecil mungkin, hindari rewrite luas.
 4. Validate: jalankan test/cek dampak, pastikan tidak ada behavior drift.
 
+Flow pembacaan dokumen (wajib, terutama header tabel):
+1. Baca: verifikasi dokumen autentik dan struktur tabel (jumlah kolom, merge row/col, label header).
+2. Laporkan/Konfirmasi: laporkan hasil baca dan konfirmasi gap/ambigu sebelum sinkronisasi kontrak.
+3. Sinkronkan: sinkronkan kontrak domain (terminology/matrix/mapping) dan implementasi terkait sesuai hasil konfirmasi.
+
 ## 4. Rate-Limiter Efficiency Rules
 
 - Scoped analysis only: baca file yang relevan, jangan scan seluruh project tanpa alasan.
