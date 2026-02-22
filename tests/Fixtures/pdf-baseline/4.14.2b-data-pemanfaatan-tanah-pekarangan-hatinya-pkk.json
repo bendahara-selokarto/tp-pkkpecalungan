@@ -1,14 +1,14 @@
 {
-    "fixtureVersion":  1,
-    "lampiran":  "4.14.2b",
-    "moduleSlug":  "data-pemanfaatan-tanah-pekarangan-hatinya-pkk",
-    "view":  "pdf.data_pemanfaatan_tanah_pekarangan_hatinya_pkk_report",
-    "titleToken":  "DATA PEMANFAATAN TANAH PEKARANGAN/HATINYA PKK",
-    "defaultOrientation":  "landscape",
-    "expectedHeaderOrder":  [
-                                "NO",
-                                "KATEGORI JENIS PEMANFAATAN LAHAN",
-                                "KOMODITI DIBUDIDAYAKAN",
-                                "JUMLAH KOMODITI DIBUDIDAYAKAN"
-                            ]
+    "fixtureVersion": 1,
+    "lampiran": "4.14.2b",
+    "moduleSlug": "data-pemanfaatan-tanah-pekarangan-hatinya-pkk",
+    "view": "pdf.data_pemanfaatan_tanah_pekarangan_hatinya_pkk_report",
+    "titleToken": "PEMANFAATAN TANAH PEKARANGAN/AKU HATINYA PKK",
+    "defaultOrientation": "landscape",
+    "expectedHeaderOrder": [
+        "NO",
+        "KATEGORI",
+        "KOMODITI",
+        "JUMLAH"
+    ]
 }

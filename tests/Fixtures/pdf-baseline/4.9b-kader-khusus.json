@@ -1,23 +1,24 @@
 {
-    "fixtureVersion":  1,
-    "lampiran":  "4.9b",
-    "moduleSlug":  "kader-khusus",
-    "view":  "pdf.kader_khusus_report",
-    "titleToken":  "BUKU DAFTAR KADER TIM PENGGERAK PKK",
-    "defaultOrientation":  "landscape",
-    "expectedHeaderOrder":  [
-                                "NO",
-                                "NAMA",
-                                "JENIS KELAMIN",
-                                "TEMPAT TANGGAL LAHIR",
-                                "STATUS",
-                                "ALAMAT",
-                                "PENDIDIKAN",
-                                "JENIS KADER TP PKK",
-                                "KETERANGAN",
-                                "L",
-                                "P",
-                                "NIKAH",
-                                "BLM NIKAH"
-                            ]
+    "fixtureVersion": 1,
+    "lampiran": "4.9b",
+    "moduleSlug": "kader-khusus",
+    "view": "pdf.kader_khusus_report",
+    "titleToken": "BUKU DAFTAR ANGGOTA TP PKK DAN KADER",
+    "defaultOrientation": "landscape",
+    "expectedHeaderOrder": [
+        "NO",
+        "NOMOR REGISTRASI TP PKK",
+        "NAMA",
+        "JENIS KELAMIN (L/P)",
+        "KEDUDUKAN/FUNGSI",
+        "TG/BL/TH. LAHIR/UMUR",
+        "STATUS",
+        "ALAMAT",
+        "PENDIDIKAN",
+        "PEKERJAAN",
+        "KET",
+        "DALAM KEANGGOTAAN TP PKK",
+        "KADER UMUM",
+        "KADER KHUSUS"
+    ]
 }

@@ -1,17 +1,22 @@
 {
-    "fixtureVersion":  1,
-    "lampiran":  "4.11",
-    "moduleSlug":  "buku-keuangan",
-    "view":  "pdf.buku_keuangan_report",
-    "titleToken":  "BUKU KEUANGAN",
-    "defaultOrientation":  "landscape",
-    "expectedHeaderOrder":  [
-                                "NO",
-                                "TANGGAL",
-                                "URAIAN",
-                                "SUMBER",
-                                "PEMASUKAN",
-                                "PENGELUARAN",
-                                "SALDO"
-                            ]
+    "fixtureVersion": 1,
+    "lampiran": "4.11",
+    "moduleSlug": "buku-keuangan",
+    "view": "pdf.buku_keuangan_report",
+    "titleToken": "BUKU TABUNGAN",
+    "defaultOrientation": "landscape",
+    "expectedHeaderOrder": [
+        "NO",
+        "TANGGAL,BULAN,TAHUN",
+        "SUMBER DANA",
+        "URAIAN",
+        "NOMOR BUKTI KAS",
+        "JUMLAH PENERIMAAN (RP.)",
+        "NO",
+        "TANGGAL,BULAN,TAHUN",
+        "SUMBER DANA",
+        "URAIAN",
+        "NOMOR BUKTI KAS",
+        "JUMLAH PENERIMAAN (RP.)"
+    ]
 }

@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <title>Buku Inventaris</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
+        body { font-family: DejaVu Sans, sans-serif; font-size: 9px; color: #111827; }
+        .lampiran { text-align: right; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
-        .meta { margin-bottom: 8px; font-size: 11px; }
+        .meta { margin-bottom: 8px; font-size: 10px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
-        th { background: #f3f4f6; text-align: center; font-size: 10px; }
+        th, td { border: 1px solid #111827; padding: 3px; vertical-align: top; word-break: break-word; }
+        th { text-align: center; font-size: 9px; font-weight: 700; }
+        .number-row th { font-size: 8px; font-weight: 400; }
         .center { text-align: center; }
+        .ttd { margin-top: 12px; text-align: right; font-size: 11px; font-weight: 700; }
+        .meta-print { margin-top: 8px; font-size: 9px; color: #374151; }
     </style>
 </head>
 <body>
@@ -20,24 +24,33 @@
         $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
     @endphp
 
-    <div class="title">BUKU INVENTARIS {{ $levelLabel }}</div>
+    <div class="lampiran">LAMPIRAN 4.12</div>
+    <div class="title">BUKU INVENTARIS</div>
     <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }}<br>
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
-        Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }}
     </div>
 
     <table>
         <thead>
             <tr>
-                <th style="width: 28px;">NO</th>
-                <th style="width: 100px;">NAMA BARANG</th>
-                <th style="width: 96px;">ASAL BARANG</th>
-                <th style="width: 120px;">TANGGAL PENERIMAAN/PEMBELIAN</th>
-                <th style="width: 70px;">JUMLAH</th>
-                <th style="width: 90px;">TEMPAT PENYIMPANAN</th>
-                <th style="width: 90px;">KONDISI BARANG</th>
+                <th style="width: 3%;">NO</th>
+                <th style="width: 16%;">NAMA BARANG</th>
+                <th style="width: 13%;">ASAL BARANG</th>
+                <th style="width: 12%;">TANGGAL PENERIMAAN/PEMBELIAN</th>
+                <th style="width: 10%;">JUMLAH</th>
+                <th style="width: 15%;">TEMPAT PENYIMPANAN</th>
+                <th style="width: 13%;">KONDISI BARANG</th>
                 <th>KETERANGAN</th>
+            </tr>
+            <tr class="number-row">
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
             </tr>
         </thead>
         <tbody>
@@ -61,5 +74,13 @@
             @endforelse
         </tbody>
     </table>
+
+    <div class="ttd">
+        Tempat, ........ tanggal, ..... bulan, ........ tahun
+    </div>
+
+    <div class="meta-print">
+        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+    </div>
 </body>
 </html>

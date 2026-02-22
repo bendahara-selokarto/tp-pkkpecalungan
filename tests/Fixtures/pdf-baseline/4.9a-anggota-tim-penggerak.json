@@ -1,21 +1,21 @@
 {
-    "fixtureVersion":  1,
-    "lampiran":  "4.9a",
-    "moduleSlug":  "anggota-tim-penggerak",
-    "view":  "pdf.anggota_tim_penggerak_report",
-    "titleToken":  "BUKU DAFTAR ANGGOTA TIM PENGGERAK PKK",
-    "defaultOrientation":  "landscape",
-    "expectedHeaderOrder":  [
-                                "NO",
-                                "NAMA",
-                                "JABATAN",
-                                "JENIS KELAMIN (L/P)",
-                                "TEMPAT LAHIR",
-                                "TG/BL/TH.LAHIR / UMUR",
-                                "STATUS",
-                                "ALAMAT",
-                                "PENDIDIKAN",
-                                "PEKERJAAN",
-                                "KET"
-                            ]
+    "fixtureVersion": 1,
+    "lampiran": "4.9a",
+    "moduleSlug": "anggota-tim-penggerak",
+    "view": "pdf.anggota_tim_penggerak_report",
+    "titleToken": "BUKU DAFTAR ANGGOTA TIM PENGGERAK PKK",
+    "defaultOrientation": "landscape",
+    "expectedHeaderOrder": [
+        "NO",
+        "NAMA",
+        "JABATAN",
+        "JENIS KELAMIN (L/P)",
+        "TEMPAT LAHIR",
+        "TG/BL/TH.LAHIR/UMUR",
+        "STATUS",
+        "ALAMAT",
+        "PENDIDIKAN",
+        "PEKERJAAN",
+        "KET"
+    ]
 }

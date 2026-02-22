@@ -1,17 +1,18 @@
 {
-    "fixtureVersion":  1,
-    "lampiran":  "4.13",
-    "moduleSlug":  "kegiatan",
-    "view":  "pdf.activity",
-    "titleToken":  "BUKU KEGIATAN TP PKK",
-    "defaultOrientation":  "landscape",
-    "expectedHeaderOrder":  [
-                                "NO",
-                                "NAMA",
-                                "JABATAN",
-                                "TANGGAL",
-                                "TEMPAT",
-                                "URAIAN",
-                                "TANDA TANGAN"
-                            ]
+    "fixtureVersion": 1,
+    "lampiran": "4.13",
+    "moduleSlug": "kegiatan",
+    "view": "pdf.activity",
+    "titleToken": "BUKU KEGIATAN",
+    "defaultOrientation": "landscape",
+    "expectedHeaderOrder": [
+        "NO",
+        "NAMA",
+        "JABATAN",
+        "KEGIATAN",
+        "TANDA TANGAN",
+        "TANGGAL",
+        "TEMPAT",
+        "URAIAN"
+    ]
 }

@@ -35,9 +35,9 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
     {
         $this->assertPdfReportHeadersInOrder('pdf.data_pemanfaatan_tanah_pekarangan_hatinya_pkk_report', [
             'NO',
-            'KATEGORI JENIS PEMANFAATAN LAHAN',
-            'KOMODITI DIBUDIDAYAKAN',
-            'JUMLAH KOMODITI DIBUDIDAYAKAN',
+            'KATEGORI',
+            'KOMODITI',
+            'JUMLAH',
         ]);
     }
 
