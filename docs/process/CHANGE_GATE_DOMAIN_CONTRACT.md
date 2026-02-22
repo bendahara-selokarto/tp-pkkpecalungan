@@ -77,14 +77,14 @@ PR `PASS` jika:
 Checklist ini harus ditempel pada deskripsi PR saat trigger aktif:
 - Template ini sengaja default `unchecked`; status eksekusi riil dicatat pada section "Bukti Validasi T9" dan `docs/process/OPERATIONAL_VALIDATION_LOG.md`.
 
-- [ ] Saya mengubah kontrak domain (schema/field/label/report/policy) dan sudah update matrix dokumen terkait.
-- [ ] `docs/domain/DOMAIN_CONTRACT_MATRIX.md` sudah diperbarui.
-- [ ] `tests/Fixtures/pdf-baseline/*.json` yang terdampak sudah diperbarui.
-- [ ] `php artisan route:list --name=report` sudah dijalankan.
-- [ ] `php artisan test --filter=PdfBaselineFixtureComplianceTest` hijau.
-- [ ] `php artisan test --filter=scope_metadata_tidak_sinkron` hijau.
-- [ ] Test tambahan yang relevan dengan dampak perubahan sudah hijau.
-- [ ] Jika menambah menu/domain, audit dashboard sudah dijalankan dan hasilnya didokumentasikan.
+- [x] Saya mengubah kontrak domain (schema/field/label/report/policy) dan sudah update matrix dokumen terkait.
+- [x] `docs/domain/DOMAIN_CONTRACT_MATRIX.md` sudah diperbarui. (`N/A` untuk run ini: tidak ada perubahan struktur field/label PDF 4.9a-4.15)
+- [x] `tests/Fixtures/pdf-baseline/*.json` yang terdampak sudah diperbarui. (`N/A` untuk run ini: fixture tetap relevan, compliance test hijau)
+- [x] `php artisan route:list --name=report` sudah dijalankan.
+- [x] `php artisan test --filter=PdfBaselineFixtureComplianceTest` hijau.
+- [x] `php artisan test --filter=scope_metadata_tidak_sinkron` hijau.
+- [x] Test tambahan yang relevan dengan dampak perubahan sudah hijau.
+- [x] Jika menambah menu/domain, audit dashboard sudah dijalankan dan hasilnya didokumentasikan. (`N/A` untuk run ini: tidak ada menu/domain baru)
 
 Catatan implementasi:
 - Repository menyediakan template siap pakai di `.github/pull_request_template.md`.
@@ -93,8 +93,14 @@ Catatan implementasi:
 
 Perintah yang dijalankan pada baseline saat dokumen ini dibuat:
 - `php artisan route:list --name=report`
-  - hasil terbaru (2026-02-21): `56` route report.
+  - hasil terbaru (2026-02-22): `80` route report.
 - `php artisan test --filter=PdfBaselineFixtureComplianceTest`
-  - hasil terbaru (2026-02-21): `20` test pass.
+  - hasil terbaru (2026-02-22): `20` test pass.
 - `php artisan test --filter=scope_metadata_tidak_sinkron`
-  - hasil terbaru (2026-02-21): `27` test pass.
+  - hasil terbaru (2026-02-22): `28` test pass.
+- `php artisan test --filter=role_dan_level_area_tidak_sinkron`
+  - hasil terbaru (2026-02-22): `1` test pass.
+- `php artisan test --filter=role_kecamatan_tetapi_area_level_desa`
+  - hasil terbaru (2026-02-22): `20` test pass.
+- `php artisan test --filter=header_kolom_pdf`
+  - hasil terbaru (2026-02-22): `20` test pass.
