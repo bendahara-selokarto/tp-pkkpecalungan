@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\CatatanKeluarga\Controllers;
 
 use App\Domains\Wilayah\CatatanKeluarga\Models\CatatanKeluarga;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanKeluargaUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkKecamatanUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkDesaKelurahanUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanPkkRwUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapDasaWismaUseCase;
@@ -19,6 +20,7 @@ class CatatanKeluargaPrintController extends Controller
     public function __construct(
         private readonly ListScopedCatatanKeluargaUseCase $listScopedCatatanKeluargaUseCase,
         private readonly ListScopedCatatanTpPkkDesaKelurahanUseCase $listScopedCatatanTpPkkDesaKelurahanUseCase,
+        private readonly ListScopedCatatanTpPkkKecamatanUseCase $listScopedCatatanTpPkkKecamatanUseCase,
         private readonly ListScopedRekapDasaWismaUseCase $listScopedRekapDasaWismaUseCase,
         private readonly ListScopedRekapPkkRtUseCase $listScopedRekapPkkRtUseCase,
         private readonly ListScopedCatatanPkkRwUseCase $listScopedCatatanPkkRwUseCase,
@@ -85,6 +87,16 @@ class CatatanKeluargaPrintController extends Controller
     public function printKecamatanCatatanTpPkkDesaKelurahanReport(): Response
     {
         return $this->streamCatatanTpPkkDesaKelurahanReport(ScopeLevel::KECAMATAN->value);
+    }
+
+    public function printDesaCatatanTpPkkKecamatanReport(): Response
+    {
+        return $this->streamCatatanTpPkkKecamatanReport(ScopeLevel::DESA->value);
+    }
+
+    public function printKecamatanCatatanTpPkkKecamatanReport(): Response
+    {
+        return $this->streamCatatanTpPkkKecamatanReport(ScopeLevel::KECAMATAN->value);
     }
 
     private function streamReport(string $level): Response
@@ -218,5 +230,30 @@ class CatatanKeluargaPrintController extends Controller
         ]);
 
         return $pdf->stream("catatan-data-kegiatan-warga-tp-pkk-desa-kelurahan-{$level}-report.pdf");
+    }
+
+    private function streamCatatanTpPkkKecamatanReport(string $level): Response
+    {
+        $this->authorize('viewAny', CatatanKeluarga::class);
+
+        $items = $this->listScopedCatatanTpPkkKecamatanUseCase
+            ->execute($level)
+            ->values();
+
+        $user = auth()->user()->loadMissing('area');
+        $area = $user->area;
+
+        $pdf = $this->pdfViewFactory->loadView('pdf.catatan_data_kegiatan_warga_tp_pkk_kecamatan_report', [
+            'items' => $items,
+            'level' => $level,
+            'kecamatanName' => $area?->name ?? '-',
+            'kabKotaName' => '-',
+            'provinsiName' => '-',
+            'printedBy' => $user,
+            'printedAt' => now(),
+            'tahun' => now()->format('Y'),
+        ]);
+
+        return $pdf->stream("catatan-data-kegiatan-warga-tp-pkk-kecamatan-{$level}-report.pdf");
     }
 }

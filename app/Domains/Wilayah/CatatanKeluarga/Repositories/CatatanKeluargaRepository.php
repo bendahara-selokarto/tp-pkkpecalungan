@@ -236,6 +236,60 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         return $rows;
     }
 
+    public function getCatatanTpPkkKecamatanByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $households = $this->scopedHouseholds($level, $areaId);
+        $activityFlags = $this->buildActivityFlags($level, $areaId);
+        $grouped = $households->groupBy(
+            fn (DataWarga $item): string => $this->extractDesaKelurahanName($item)
+        );
+
+        $rows = collect();
+
+        foreach ($grouped as $namaDesaKelurahan => $groupItems) {
+            $metrics = $this->sumHouseholdMetrics($groupItems, $activityFlags);
+            $keterangan = $groupItems
+                ->pluck('keterangan')
+                ->filter(fn ($value) => is_string($value) && trim($value) !== '')
+                ->unique()
+                ->implode('; ');
+
+            $rows->push(array_merge([
+                'nomor_urut' => $rows->count() + 1,
+                'nama_desa_kelurahan' => $namaDesaKelurahan,
+                'jml_dusun_lingkungan' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->extractDusunLingkunganName($item))
+                    ->filter(fn (string $value): bool => $value !== '-')
+                    ->unique()
+                    ->count(),
+                'jml_rw' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->extractRwNumber($item))
+                    ->filter(fn (string $rw): bool => $rw !== '-')
+                    ->unique()
+                    ->count(),
+                'jml_rt' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->extractRtNumber($item))
+                    ->filter(fn (string $rt): bool => $rt !== '-')
+                    ->unique()
+                    ->count(),
+                'jml_dasawisma' => $groupItems
+                    ->map(fn (DataWarga $item): string => $this->normalizeDasaWismaName($item->dasawisma))
+                    ->unique()
+                    ->count(),
+                'jml_krt' => $groupItems->count(),
+                'jml_kk' => $groupItems->count(),
+                'ket' => $keterangan !== '' ? $keterangan : null,
+            ], $metrics, [
+                'tiga_buta_l' => 0,
+                'tiga_buta_p' => 0,
+                'sungai' => 0,
+                'jumlah_sarana_mck' => (int) ($metrics['memiliki_mck_septic'] ?? 0),
+            ]));
+        }
+
+        return $rows;
+    }
+
     private function scopedHouseholds(string $level, int $areaId): Collection
     {
         return DataWarga::query()
@@ -444,6 +498,30 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         }
 
         return $this->normalizeDasaWismaName($item->dasawisma);
+    }
+
+    private function extractDesaKelurahanName(DataWarga $item): string
+    {
+        $sources = [$item->alamat, $item->dasawisma];
+
+        foreach ($sources as $source) {
+            $normalized = trim((string) $source);
+
+            if ($normalized === '') {
+                continue;
+            }
+
+            if (preg_match('/\b(DESA|KELURAHAN|KEL\.?)\s+([^,;]+?)(?=\s+DUSUN\b|\s+LINGKUNGAN\b|\s+RT\b|\s+RW\b|$)/i', $normalized, $matches) === 1) {
+                $prefix = strtoupper(str_replace('.', '', trim((string) $matches[1])));
+                $name = trim((string) $matches[2]);
+
+                if ($name !== '') {
+                    return sprintf('%s %s', $prefix, $name);
+                }
+            }
+        }
+
+        return '-';
     }
 
     private function compareRtNumbers(string $left, string $right): int
