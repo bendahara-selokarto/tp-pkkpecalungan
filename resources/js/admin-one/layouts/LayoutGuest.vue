@@ -59,7 +59,7 @@ const hideBrokenImage = (event) => {
           <div class="mx-auto w-full max-w-md">
             <h2 class="text-2xl font-semibold text-slate-900 dark:text-white">Masuk</h2>
             <p class="mt-2 text-sm text-slate-600 dark:text-slate-300">
-              Gunakan akun yang sudah didaftarkan oleh super-admin.
+              Gunakan akun yang sudah didaftarkan oleh Super Admin.
             </p>
 
             <div class="mt-8">

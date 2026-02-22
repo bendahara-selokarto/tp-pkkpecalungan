@@ -3,6 +3,7 @@ import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatAreaLabel, formatRoleList, formatScopeLabel } from '@/utils/roleLabelFormatter'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiAccountMultiple } from '@mdi/js'
 import { ref } from 'vue'
@@ -41,13 +42,6 @@ const cancelDelete = () => {
   deletingId.value = null
 }
 
-const formatArea = (area) => {
-  if (!area) {
-    return '-'
-  }
-
-  return `${area.level} - ${area.name}`
-}
 </script>
 
 <template>
@@ -85,9 +79,9 @@ const formatArea = (area) => {
             >
               <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ user.name }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ user.email }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ user.roles.join(', ') || '-' }}</td>
-              <td class="px-3 py-3 text-gray-700 capitalize dark:text-gray-300">{{ user.scope || '-' }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatArea(user.area) }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatRoleList(user.roles) }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatScopeLabel(user.scope) }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatAreaLabel(user.area) }}</td>
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
                   <Link

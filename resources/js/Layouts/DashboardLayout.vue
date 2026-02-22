@@ -2,6 +2,7 @@
 import { Link, router, usePage } from '@inertiajs/vue3'
 import { useDarkModeStore } from '@/admin-one/stores/darkMode'
 import FlashMessageBar from '@/admin-one/components/FlashMessageBar.vue'
+import { formatRoleList } from '@/utils/roleLabelFormatter'
 import { computed, ref } from 'vue'
 
 const page = usePage()
@@ -12,7 +13,7 @@ const sidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === '1')
 
 const user = computed(() => page.props.auth?.user ?? null)
 const roles = computed(() => user.value?.roles ?? [])
-const activeRoles = computed(() => roles.value.join(', ') || '-')
+const activeRoles = computed(() => formatRoleList(roles.value))
 const flash = computed(() => page.props.flash ?? {})
 const userScope = computed(() => user.value?.scope ?? null)
 const isDesaScope = computed(() => userScope.value === 'desa')

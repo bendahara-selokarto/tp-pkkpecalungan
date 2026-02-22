@@ -74,9 +74,8 @@ class SuperAdminAuthorizationTest extends TestCase
         $this->actingAs($user)
             ->get(route('super-admin.users.index'))
             ->assertOk()
-            ->assertSee('super-admin', false);
+            ->assertSee('Super Admin', false);
     }
 }
-
 
 

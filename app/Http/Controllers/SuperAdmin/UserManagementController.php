@@ -9,6 +9,7 @@ use App\Http\Requests\User\UpdateUserRequest;
 use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Services\User\UserService;
+use App\Support\RoleLabelFormatter;
 use App\UseCases\User\GetUserManagementFormOptionsUseCase;
 use App\UseCases\User\ListUsersForManagementUseCase;
 use DomainException;
@@ -45,7 +46,10 @@ class UserManagementController extends Controller
                         'level' => $user->area->level,
                     ]
                     : null,
-                'roles' => $user->roles->pluck('name')->values(),
+                'roles' => $user->roles
+                    ->pluck('name')
+                    ->map(fn (string $role): string => RoleLabelFormatter::label($role))
+                    ->values(),
             ]);
 
         return Inertia::render('SuperAdmin/Users/Index', [

@@ -2,6 +2,7 @@
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatRoleLabel, formatScopeLabel } from '@/utils/roleLabelFormatter'
 import { Link, useForm } from '@inertiajs/vue3'
 import { mdiAccountPlus } from '@mdi/js'
 import { computed, watch } from 'vue'
@@ -102,7 +103,7 @@ const submit = () => {
               class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               required
             >
-              <option v-for="role in filteredRoles" :key="role" :value="role">{{ roleLabelMap[role] ?? role }}</option>
+              <option v-for="role in filteredRoles" :key="role" :value="role">{{ formatRoleLabel(role, roleLabelMap) }}</option>
             </select>
             <p v-if="form.errors.role" class="mt-1 text-xs text-rose-600">{{ form.errors.role }}</p>
           </div>
@@ -130,7 +131,7 @@ const submit = () => {
           >
             <option value="">Pilih wilayah</option>
             <option v-for="area in filteredAreas" :key="area.id" :value="area.id">
-              {{ area.level }} - {{ area.name }}
+              {{ formatScopeLabel(area.level) }} - {{ area.name }}
             </option>
           </select>
           <p v-if="form.errors.area_id" class="mt-1 text-xs text-rose-600">{{ form.errors.area_id }}</p>
