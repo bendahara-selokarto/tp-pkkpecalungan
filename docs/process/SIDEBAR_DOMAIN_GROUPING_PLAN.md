@@ -93,6 +93,31 @@ Checklist audit sidebar berikutnya:
 - [ ] Verifikasi penempatan domain baru selalu masuk group organisasi yang benar.
 - [ ] Jika ada label baru/non-canonical, catat deviasi di `DOMAIN_DEVIATION_LOG`.
 
+## Catatan Audit Metode Collapse Sidebar (2026-02-22)
+
+Scope audit:
+- Membandingkan metode collapse di `resources/js/Layouts/DashboardLayout.vue` dengan template asli `resources/js/admin-one/layouts/LayoutAuthenticated.vue`.
+- Fokus hanya pada mekanisme collapse, breakpoint behavior, dan persistence state.
+
+Ringkasan temuan:
+- Implementasi saat ini belum 1:1 dengan metode template asli.
+- Template asli menyembunyikan aside pada desktop `xl` saat collapsed (`xl:hidden`) dan konten kembali full-width.
+- Implementasi saat ini mempertahankan rail sempit (`lg:w-20`) saat collapsed.
+- Key persistence berbeda:
+  - Template asli: `admin-one-sidebar-collapsed`
+  - Implementasi saat ini: `sidebar-collapsed`
+- Kontrol collapse saat ini ditampilkan di header desktop dan tombol floating tepi sidebar.
+
+Keputusan audit saat ini:
+- `catat-only` (tidak dieksekusi refactor metode collapse pada sesi ini).
+- Tidak ada perubahan kontrak domain/menu; concern murni pada UX dan keselarasan pattern template.
+
+Checklist tindak lanjut (opsional, jika nanti disetujui refactor):
+- [ ] Samakan state pattern menjadi `isAsideMobileExpanded`, `isAsideLgActive`, `isAsideDesktopCollapsed`.
+- [ ] Samakan behavior desktop collapse agar mengikuti pola `AsideMenu` (`lg:hidden xl:flex` + `xl:hidden`).
+- [ ] Samakan key localStorage dengan template (`admin-one-sidebar-collapsed`) atau dokumentasikan alasan deviasi.
+- [ ] Validasi manual UX di desktop (lg/xl), tablet, dan mobile setelah refactor.
+
 ## Implementasi Teknis
 
 1. Definisi struktur menu tetap di `resources/js/Layouts/DashboardLayout.vue`.

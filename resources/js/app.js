@@ -13,7 +13,7 @@ import { useDarkModeStore } from '@/admin-one/stores/darkMode';
 window.Alpine = Alpine;
 Alpine.start();
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = import.meta.env.VITE_APP_NAME || 'Akaraya PKK';
 const pinia = createPinia();
 
 createInertiaApp({

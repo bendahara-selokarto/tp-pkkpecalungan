@@ -222,7 +222,7 @@ const hideBrokenImage = (event) => {
           <Link :href="primaryHref" class="flex items-center gap-2 min-w-0">
             <img :src="pkkLogo" alt="" aria-hidden="true" class="h-6 w-6 object-contain" @error="hideBrokenImage">
             <span class="text-sm font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-100 truncate">
-              {{ page.props.appName ?? 'Laravel' }}
+              {{ page.props.appName ?? 'Akaraya PKK' }}
             </span>
           </Link>
         </div>
@@ -247,12 +247,24 @@ const hideBrokenImage = (event) => {
     </header>
 
     <aside :class="[sidebarOpen ? 'translate-x-0' : '-translate-x-full', sidebarCollapsed ? 'lg:w-20' : 'lg:w-64']" class="fixed inset-y-0 left-0 z-40 w-72 transform border-r border-slate-200 bg-white transition-all duration-200 ease-in-out dark:border-slate-700 dark:bg-slate-800 lg:translate-x-0">
+      <button
+        type="button"
+        class="absolute -right-3 top-20 z-50 hidden h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 lg:inline-flex"
+        :title="sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+        @click="toggleCollapse"
+      >
+        <span class="sr-only">{{ sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar' }}</span>
+        <svg class="h-4 w-4 transition-transform" :class="{ 'rotate-180': sidebarCollapsed }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+      </button>
+
       <div class="h-full flex flex-col">
         <div class="h-14 px-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-700">
           <Link :href="primaryHref" :class="sidebarCollapsed ? 'justify-center w-full' : ''" class="flex items-center gap-2 min-w-0">
             <img :src="pkkLogo" alt="" aria-hidden="true" class="h-7 w-7 object-contain" @error="hideBrokenImage">
             <span v-show="!sidebarCollapsed" class="text-sm font-semibold text-slate-700 dark:text-slate-100 truncate">
-              {{ page.props.appName ?? 'Laravel' }}
+              {{ page.props.appName ?? 'Akaraya PKK' }}
             </span>
           </Link>
           <button class="rounded-md p-1 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 lg:hidden" @click="sidebarOpen = false">
