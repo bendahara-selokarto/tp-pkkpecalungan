@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok PKK Desa/Kelurahan</title>
+    <title>Catatan Data dan Kegiatan Warga Kelompok PKK Dusun/Lingkungan</title>
     <style>
         @page { margin: 14px 16px; }
         body { font-family: DejaVu Sans, sans-serif; font-size: 7px; color: #111827; margin: 0; }
@@ -44,7 +44,7 @@
     @endphp
 
     <div class="lampiran">LAMPIRAN 4.16d</div>
-    <div class="title">REKAPITULASI CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK DESA/KELURAHAN</div>
+    <div class="title">CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK DUSUN/LINGKUNGAN</div>
 
     <table class="meta-wrap">
         <tr>

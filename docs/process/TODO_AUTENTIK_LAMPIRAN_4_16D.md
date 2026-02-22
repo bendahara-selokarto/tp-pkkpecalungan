@@ -21,7 +21,7 @@
 - [x] Sinkronkan status 4.16d ke terminology map dan domain contract matrix.
 - [x] Sinkronkan implementasi report 4.16d (repository/use case/controller/view/route/UI).
 - [x] Tambahkan regression test 4.16d (header + akses scope + stale metadata).
-- [ ] Konfirmasi judul canonical final 4.16d dari token identitas halaman penuh (deviasi sementara tercatat).
+- [x] Konfirmasi judul canonical final 4.16d dari token identitas halaman penuh (deviasi ditutup pada sesi validasi 2026-02-22).
 
 ## Validasi
 - [x] Peta header tabel 33 kolom tervalidasi visual.
@@ -30,12 +30,11 @@
 - [x] Test report 4.16d (feature regression) hijau.
 
 ## Risiko
-- Risiko drift label jika judul canonical belum dikunci dari token identitas penuh.
 - Risiko refactor mahal jika implementasi dilakukan sebelum kontrak 33 kolom dikunci.
 
 ## Fallback Plan
 - [x] Gunakan hasil verifikasi visual sebagai acuan kontrak header sementara.
-- [x] Implementasi tetap berjalan dengan catatan deviasi judul, dan wajib revisi label jika token identitas final berbeda.
+- [x] Setelah token identitas final tersedia, sinkronkan judul canonical ke implementasi dan dokumen kontrak.
 
 ## Catatan Keputusan Final
 - Keputusan implementasi saat ini: Lampiran 4.16d **sudah diaktifkan sebagai report PDF** (tanpa menu domain input baru) melalui flow `catatan-keluarga`.

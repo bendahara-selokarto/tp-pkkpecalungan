@@ -355,3 +355,53 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk C5-C7.
+
+## Siklus Audit Koherensi Menyeluruh: 2026-02-22
+
+Ruang lingkup:
+- Audit lintas kontrak `AGENTS.md -> dokumen domain -> implementasi route/controller/usecase/repository/view/test`.
+- Fokus validasi area autentik lampiran `4.16-4.18` dan konsistensi scope/auth.
+
+Perintah validasi:
+- `php artisan route:list --name=report`
+  - hasil: `80` route report aktif.
+- `php artisan route:list --name=catatan-keluarga.rekap-ibu-hamil`
+  - hasil: `8` route aktif (desa + kecamatan, 4 varian 4.18).
+- `php artisan test --filter=PdfBaselineFixtureComplianceTest`
+  - hasil: `20` test pass.
+- `php artisan test --filter=RekapCatatanDataKegiatanWargaReportPrintTest`
+  - hasil: `16` test pass (`430` assertions).
+- `php artisan test --filter=CatatanKeluargaPolicyTest|ScopeLevelTest`
+  - hasil: `6` test pass.
+
+Artefak sinkronisasi dari audit:
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
+- `docs/domain/DOMAIN_DEVIATION_LOG.md`
+
+Keputusan sinkronisasi:
+- Slug teknis 4.18a-4.18d dinormalkan mengikuti route aktif (`rekap-ibu-hamil-*`) untuk mengurangi ambiguitas antara dokumen dan runtime.
+- Kontrak agregasi 4.18d dikunci: kolom `3` = RT unik, kolom `4` = penjumlahan dasawisma per RT (sesuai cara pengisian).
+
+Status:
+- `PASS` untuk koherensi teknis lintas route/auth/test.
+- Ambiguitas non-matematis tersisa:
+  - sumber canonical lampiran `4.14.5` yang belum tersedia.
+
+## Update Konfirmasi Canonical 4.16d: 2026-02-22
+
+Ruang lingkup:
+- Menutup ambiguity judul canonical lampiran `4.16d` menggunakan bukti visual halaman penuh dari user.
+
+Hasil konfirmasi:
+- Judul canonical tervalidasi: `CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK DUSUN/LINGKUNGAN`.
+- Drift judul implementasi ditutup:
+  - `resources/views/pdf/rekap_catatan_data_kegiatan_warga_rw_report.blade.php`
+  - `docs/domain/LAMPIRAN_4_16D_MAPPING.md`
+  - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+  - `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
+  - `docs/domain/DOMAIN_DEVIATION_LOG.md` (`DV-006` -> `resolved`)
+  - `docs/process/TODO_AUTENTIK_LAMPIRAN_4_16D.md`
+
+Status:
+- `PASS` untuk closure ambiguity 4.16d.

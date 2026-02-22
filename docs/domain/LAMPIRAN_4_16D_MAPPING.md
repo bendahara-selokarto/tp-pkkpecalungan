@@ -7,11 +7,12 @@ Sumber autentik:
 
 Artefak verifikasi visual:
 - Screenshot header tabel Lampiran 4.16d (dari user) pada sesi validasi 2026-02-22.
+- Screenshot halaman penuh Lampiran 4.16d (dari user) pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
 - Lampiran terkonfirmasi: `4.16d`.
-- Judul implementasi report saat ini: `REKAPITULASI CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK DESA/KELURAHAN`.
-- Catatan akurasi judul: label di atas masih inferensi berbasis pola Lampiran 4.16a-4.16c karena token text-layer 4.16d belum terbaca di environment saat ini.
+- Judul canonical tervalidasi: `CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK DUSUN/LINGKUNGAN`.
+- Judul report implementasi telah disinkronkan ke judul canonical berdasarkan bukti visual halaman penuh.
 
 ## Hasil Verifikasi Visual Header Tabel
 
@@ -75,7 +76,7 @@ Grup header:
 ## Status Presisi
 
 - Status header merge: **terverifikasi visual**.
-- Status sinkronisasi kontrak domain: **implemented dengan catatan deviasi judul**.
+- Status sinkronisasi kontrak domain: **implemented dan sinkron dengan judul canonical**.
 - Status implementasi report: **implemented (report-only via catatan-keluarga)**.
 
 ## Dampak ke Kontrak Domain Saat Ini
@@ -91,4 +92,4 @@ Grup header:
   - Pengelompokan baris menggunakan ekstraksi `NOMOR RW` dari atribut rumah tangga (`alamat`/`dasawisma`).
   - `JML RT` dihitung dari jumlah unik RT terdeteksi dalam setiap grup RW.
 - Catatan deviasi:
-  - Konfirmasi judul canonical final 4.16d tetap diperlukan; lihat `docs/domain/DOMAIN_DEVIATION_LOG.md` (`DV-006`).
+  - Deviasi judul 4.16d (`DV-006`) telah ditutup (`resolved`) setelah konfirmasi halaman penuh.
