@@ -37,6 +37,7 @@ Tujuan:
 | 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | UI/PDF sudah memakai `Data Isian Posyandu oleh TP PKK` | Pertahankan | match |
 | 4.14.4f | `simulasi-penyuluhan` | Data Isian Kelompok Simulasi dan Penyuluhan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.15 | `catatan-keluarga` | Catatan Keluarga | UI/PDF sudah mengarah ke label pedoman; struktur autentik 19 kolom diproyeksikan operasional ke report 10 kolom | Pertahankan label pedoman + kunci transformasi 19->10 di dokumen mapping domain | match (with projection) |
+| 4.16a | `rekap-catatan-data-kegiatan-warga-dasawisma` (reference) | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok Dasa Wisma | Dokumen autentik sudah terverifikasi; belum ada modul/report 29 kolom di aplikasi | Kunci sebagai referensi autentik + putuskan roadmap implementasi terpisah | reference-only |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Label canonical sudah aktif pada menu/index/PDF | Pertahankan label canonical, lanjutkan pemetaan indikator detail katalog | implemented (catalog tahap awal) |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
@@ -68,5 +69,7 @@ Tujuan:
   - `resources/views/pdf/posyandu_report.blade.php`
 - Mapping Catatan Keluarga:
   - `docs/domain/CATATAN_KELUARGA_19_TO_10_MAPPING.md`
+- Mapping Rekap Dasa Wisma:
+  - `docs/domain/REKAP_DASA_WISMA_4_16A_MAPPING.md`
 - Ekstensi pedoman:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
