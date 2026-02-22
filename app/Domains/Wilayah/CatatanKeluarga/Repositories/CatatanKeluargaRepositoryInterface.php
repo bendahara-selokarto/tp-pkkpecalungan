@@ -29,4 +29,6 @@ interface CatatanKeluargaRepositoryInterface
     public function getRekapIbuHamilPkkRtByLevelAndArea(string $level, int $areaId): Collection;
 
     public function getRekapIbuHamilPkkRwByLevelAndArea(string $level, int $areaId): Collection;
+
+    public function getRekapIbuHamilPkkDusunLingkunganByLevelAndArea(string $level, int $areaId): Collection;
 }
