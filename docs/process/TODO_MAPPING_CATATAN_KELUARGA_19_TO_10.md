@@ -20,14 +20,14 @@
 - [x] Update istilah domain 4.15 pada `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`.
 - [x] Update kontrak domain 4.15 pada `docs/domain/DOMAIN_CONTRACT_MATRIX.md`.
 - [x] Tambah pattern validasi PDF merge-header pada `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`.
-- [ ] (Lanjutan) Finalkan transkripsi label detail kolom fisik 1-19 secara penuh dari lampiran autentik.
-- [ ] (Lanjutan) Putuskan apakah report aplikasi tetap 10 kolom atau ditingkatkan ke 19 kolom.
+- [x] (Lanjutan) Finalkan transkripsi label detail kolom fisik 1-19 secara penuh dari lampiran autentik.
+- [x] (Lanjutan) Putuskan apakah report aplikasi tetap 10 kolom atau ditingkatkan ke 19 kolom.
 
 ## Validasi
 - [x] Dokumen mapping baru tersedia dan terhubung dari dokumen domain utama.
 - [x] Terminology map menyebut status transformasi 4.15 secara eksplisit.
 - [x] Playbook memiliki guardrail untuk parsing PDF tabel merge.
-- [ ] (Lanjutan) Coverage test header report mencakup keputusan final 10 kolom vs 19 kolom.
+- [x] (Lanjutan) Coverage test header report mencakup keputusan final 10 kolom vs 19 kolom.
 
 ## Risiko
 - Risiko salah tafsir jika struktur autentik 19 kolom tidak dibedakan dari representasi report 10 kolom.
@@ -37,4 +37,10 @@
 ## Fallback Plan
 - [x] Gunakan dokumen autentik sebagai sumber final saat terjadi konflik hasil parsing.
 - [x] Pertahankan baseline test header report 10 kolom hingga keputusan perubahan struktur disetujui.
-- [ ] Jika diputuskan migrasi ke 19 kolom, lakukan bertahap: kontrak domain -> repository -> PDF view -> test fixture.
+- [x] Jika diputuskan migrasi ke 19 kolom, lakukan bertahap: kontrak domain -> repository -> PDF view -> test fixture.
+
+## Catatan Keputusan Final
+- Keputusan final saat ini: report aplikasi **tetap 10 kolom operasional**.
+- Struktur autentik 19 kolom dipertahankan sebagai kontrak referensi domain, bukan target implementasi langsung.
+- Coverage test header tetap mengacu pada baseline report 10 kolom (`CatatanKeluargaReportPrintTest` + fixture baseline terkait).
+- Jalur migrasi 19 kolom tetap terdokumentasi sebagai rencana teknis jika roadmap berubah; belum dieksekusi pada fase ini.

@@ -18,7 +18,8 @@ Konfirmasi layout fisik berdasarkan dokumen autentik:
 
 Catatan:
 - Dokumen ini mengunci struktur fisik kolom.
-- Label detail untuk setiap kolom fisik 1-19 yang belum tercermin di aplikasi harus ditranskripsi manual dari lampiran asli, bukan dari OCR tekstual otomatis.
+- Keputusan fase saat ini: implementasi operasional tetap 10 kolom, sehingga kontrak referensi autentik dipertahankan pada level blok transformasi 19 -> 10.
+- Jika roadmap berubah ke implementasi 19 kolom penuh, transkripsi detail per kolom dilakukan pada fase migrasi khusus (bukan OCR tekstual otomatis).
 
 ## Kontrak Transformasi ke Report Operasional
 
