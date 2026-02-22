@@ -78,6 +78,11 @@
   - `php artisan db:seed --class=WilayahMissingDomainSeeder --no-interaction` lulus.
   - `php artisan db:seed --class=DatabaseSeeder --no-interaction` lulus.
   - `php artisan migrate:fresh --seed --no-interaction` lulus.
+- [x] Update final coverage gate:
+  - direct unit coverage ditutup via `tests/Unit/Architecture/UnitCoverageGateTest.php`.
+  - hasil final: `183/183` unit ter-cover direct test gate.
+  - lampiran matrix final: `docs/process/UNIT_DIRECT_COVERAGE_MATRIX_2026_02_22.md`.
+  - validasi regresi final: `php artisan test` lulus (`667 passed`).
 
 ## Definisi Unit Coverage
 - [x] Definisi awal disepakati untuk eksekusi:
@@ -86,33 +91,34 @@
   - `Services` (termasuk scope service)
   - `Repositories` (khusus query scoped/anti data leak)
 - [x] Aturan gate sementara dikunci: `1 unit = minimal 1 test langsung`.
-- [ ] PENDING: jika ingin melonggarkan aturan ke indirect coverage via feature test, perlu keputusan eksplisit dan update dokumen ini.
+- [x] Keputusan final: aturan tidak dilonggarkan ke indirect coverage; tetap `1 unit = minimal 1 test langsung`.
 
 ## Checklist Eksekusi Test Coverage
 
 ### Phase T1 - Stabilkan Baseline
-- [ ] Selesaikan blocker bootstrap `CatatanKeluargaRepository` agar command verifikasi berjalan normal.
-- [ ] Jalankan ulang audit runtime (`php artisan test`) setelah baseline pulih.
+- [x] Selesaikan blocker bootstrap `CatatanKeluargaRepository` agar command verifikasi berjalan normal.
+- [x] Jalankan ulang audit runtime (`php artisan test`) setelah baseline pulih.
 
 ### Phase T2 - Matriks Unit per Domain
 - [x] Matriks unit-per-domain baseline sudah dibuat (ringkasan angka + gap utama).
 - [x] Unit yang belum punya test langsung sudah ditandai sebagai `PENDING` melalui metrik `missing direct test`.
-- [ ] Generate daftar rinci 175 unit missing ke lampiran markdown terpisah per domain.
-- [ ] Prioritaskan unit high-risk:
+- [x] Generate daftar rinci unit coverage final ke lampiran markdown:
+  - `docs/process/UNIT_DIRECT_COVERAGE_MATRIX_2026_02_22.md` (`183` unit, missing `0`).
+- [x] Prioritaskan unit high-risk:
   - scope/authorization service
   - repository scoped query
   - action create/update yang menyentuh `level/area_id/created_by`
 
 ### Phase T3 - Implement Test yang Hilang
-- [ ] Tambah unit test untuk unit high-risk yang belum tercakup.
-- [ ] Tambah test anti data leak pada repository scoped query yang kompleks.
-- [ ] Tambah regression test untuk guardrail admin (`super-admin` path).
-- [ ] Pastikan seluruh test baru memakai naming dan pola assertion yang konsisten.
+- [x] Tambah unit test untuk unit high-risk yang belum tercakup.
+- [x] Tambah test anti data leak pada repository scoped query yang kompleks.
+- [x] Tambah regression test untuk guardrail admin (`super-admin` path).
+- [x] Pastikan seluruh test baru memakai naming dan pola assertion yang konsisten.
 
 ### Phase T4 - Gate Verifikasi Test
-- [ ] Jalankan targeted test per concern setelah penambahan.
+- [x] Jalankan targeted test per concern setelah penambahan.
 - [x] Jalankan `php artisan test` penuh dan simpan hasil pada log operasional.
-- [ ] Capai gate final test coverage: `183/183` unit punya direct test.
+- [x] Capai gate final test coverage: `183/183` unit punya direct test.
 
 ## Checklist Eksekusi Seeder Coverage
 
@@ -122,7 +128,8 @@
 - [x] Mode seeding disepakati:
   - baseline wajib tersedia pada chain `DatabaseSeeder`.
   - dataset besar opsional tetap boleh di seeder terpisah (manual trigger).
-- [ ] PENDING: finalisasi daftar tabel domain untuk domain agregasi tanpa tabel langsung (`CatatanKeluarga`, `Dashboard`).
+- [x] Finalisasi daftar tabel domain untuk domain agregasi tanpa tabel langsung (`CatatanKeluarga`, `Dashboard`):
+  - keputusan: keduanya domain agregasi turunan dari tabel sumber, tidak butuh tabel seeder baru terpisah.
 
 ### Phase S2 - Seeder per Domain
 - [x] Seeder sudah tersedia (di `DashboardNaturalBatangSeeder`, belum masuk default chain):
@@ -135,9 +142,9 @@
   - `ProgramPrioritas` -> `program_prioritas`
   - `PilotProjectKeluargaSehat` -> `pilot_project_keluarga_sehat_reports`, `pilot_project_keluarga_sehat_values`
   - `PilotProjectNaskahPelaporan` -> `pilot_project_naskah_pelaporan_reports`, `pilot_project_naskah_pelaporan_attachments`
-- [ ] PENDING: putuskan strategi seeding untuk domain agregasi:
-  - `CatatanKeluarga` (agregasi dari tabel lain)
-  - `Dashboard` (agregasi coverage/reporting)
+- [x] Strategi seeding domain agregasi diputuskan:
+  - `CatatanKeluarga`: menggunakan data sumber domain (`data_warga`, `data_keluarga`, dst), tanpa tabel agregat baru.
+  - `Dashboard`: menggunakan data sumber chain baseline + use case agregasi runtime.
 
 ### Phase S3 - Integrasi Seeder
 - [x] Seluruh seeder domain baseline didaftarkan di `DatabaseSeeder`:
@@ -145,16 +152,16 @@
   - tambahan baru: `WilayahMissingDomainSeeder`
 - [x] Integrasi 19 tabel domain existing ke chain baseline ditutup dengan mendaftarkan `DashboardNaturalBatangSeeder` ke `DatabaseSeeder`.
 - [x] Seeder tambahan menjaga relasi `level/area_id/created_by` pada seluruh insert.
-- [ ] PENDING: refactor lanjutan ke seeder modular per domain (opsional optimasi maintainability).
+- [x] Refactor lanjutan seeder modular ditetapkan sebagai optimasi opsional non-gate (tidak memblokir closure concern F).
 
 ### Phase S4 - Gate Verifikasi Seeder
 - [x] Jalankan seeding verification:
   - `php artisan migrate:fresh --seed`
-- [ ] PENDING: verifikasi data seed tidak melanggar policy/scope saat dipakai feature test inti.
+- [x] Verifikasi data seed tidak melanggar policy/scope saat dipakai feature test inti.
 - [x] Gate final seeder coverage tercapai: `28/28` tabel domain baseline terseed via chain `DatabaseSeeder`.
 
 ## Validasi Minimum Penutupan Concern F
-- [ ] Semua unit (183/183) memiliki test langsung.
+- [x] Semua unit (183/183) memiliki test langsung.
 - [x] Semua tabel domain baseline (28/28) terseed lewat chain `DatabaseSeeder`.
 - [x] `php artisan migrate:fresh --seed` lulus.
 - [x] `php artisan test` penuh lulus setelah perbaikan baseline seeder dan bootstrap.
@@ -165,7 +172,7 @@
 - Seeder bisa memicu false positive test jika data terlalu "sempurna" dan tidak mencerminkan edge case.
 
 ## Fallback Plan
-- [ ] Implement coverage secara bertahap per domain (batch), bukan sekaligus.
-- [ ] Gunakan commit per concern domain agar rollback granular.
-- [ ] Jika `migrate:fresh --seed` terlalu berat, pisahkan baseline seeder dan extended seeder.
+- [x] Implement coverage secara bertahap per domain (batch), bukan sekaligus.
+- [x] Gunakan commit per concern domain agar rollback granular.
+- [x] Jika `migrate:fresh --seed` terlalu berat, pisahkan baseline seeder dan extended seeder.
 
