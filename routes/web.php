@@ -172,6 +172,7 @@ Route::prefix('desa')
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-rt/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapIbuHamilPkkRtReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-rt.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-rw/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapIbuHamilPkkRwReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-rw.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-dusun-lingkungan/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapIbuHamilPkkDusunLingkunganReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-dusun-lingkungan.report');
+        Route::get('catatan-keluarga/rekap-ibu-hamil-tp-pkk-kecamatan/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapIbuHamilTpPkkKecamatanReport'])->name('catatan-keluarga.rekap-ibu-hamil-tp-pkk-kecamatan.report');
         Route::get('catatan-keluarga/rekap-pkk-rt/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapPkkRtReport'])->name('catatan-keluarga.rekap-pkk-rt.report');
         Route::get('catatan-keluarga/catatan-pkk-rw/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaCatatanPkkRwReport'])->name('catatan-keluarga.catatan-pkk-rw.report');
         Route::get('catatan-keluarga/rekap-rw/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapRwReport'])->name('catatan-keluarga.rekap-rw.report');
@@ -247,6 +248,7 @@ Route::prefix('kecamatan')
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-rt/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapIbuHamilPkkRtReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-rt.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-rw/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapIbuHamilPkkRwReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-rw.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-dusun-lingkungan/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapIbuHamilPkkDusunLingkunganReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-dusun-lingkungan.report');
+        Route::get('catatan-keluarga/rekap-ibu-hamil-tp-pkk-kecamatan/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapIbuHamilTpPkkKecamatanReport'])->name('catatan-keluarga.rekap-ibu-hamil-tp-pkk-kecamatan.report');
         Route::get('catatan-keluarga/rekap-pkk-rt/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapPkkRtReport'])->name('catatan-keluarga.rekap-pkk-rt.report');
         Route::get('catatan-keluarga/catatan-pkk-rw/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanCatatanPkkRwReport'])->name('catatan-keluarga.catatan-pkk-rw.report');
         Route::get('catatan-keluarga/rekap-rw/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapRwReport'])->name('catatan-keluarga.rekap-rw.report');

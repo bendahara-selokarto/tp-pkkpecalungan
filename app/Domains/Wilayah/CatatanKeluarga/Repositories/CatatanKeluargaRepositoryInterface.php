@@ -38,4 +38,7 @@ interface CatatanKeluargaRepositoryInterface
 
     // Agregasi tingkat desa/kelurahan dibangun dari rekap 4.18d (dusun/lingkungan).
     public function getRekapIbuHamilTpPkkDesaKelurahanByLevelAndArea(string $level, int $areaId): Collection;
+
+    // Agregasi tingkat kecamatan dibangun dari rekap tingkat desa/kelurahan.
+    public function getRekapIbuHamilTpPkkKecamatanByLevelAndArea(string $level, int $areaId): Collection;
 }

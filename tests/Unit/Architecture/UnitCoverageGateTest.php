@@ -11,7 +11,7 @@ use Tests\TestCase;
 
 class UnitCoverageGateTest extends TestCase
 {
-    private const EXPECTED_UNIT_COUNT = 183;
+    private const EXPECTED_UNIT_COUNT = 184;
 
     public function test_total_unit_yang_wajib_memiliki_direct_test_sesuai_kontrak(): void
     {
