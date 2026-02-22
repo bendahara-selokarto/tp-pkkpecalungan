@@ -66,6 +66,12 @@ class UpdateUserAction
             ]);
         }
 
+        if (RoleScopeMatrix::isRestrictedForManagedAssignment($role)) {
+            throw ValidationException::withMessages([
+                'role' => 'Role super-admin tidak dapat ditetapkan melalui manajemen user.',
+            ]);
+        }
+
         if (! RoleScopeMatrix::isRoleCompatibleWithScope($role, $scopeFromArea)) {
             throw ValidationException::withMessages([
                 'role' => 'Role tidak sesuai dengan scope yang dipilih.',

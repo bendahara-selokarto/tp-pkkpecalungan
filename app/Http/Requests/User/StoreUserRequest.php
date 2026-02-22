@@ -33,6 +33,12 @@ class StoreUserRequest extends FormRequest
                 'required',
                 'exists:roles,name',
                 function (string $attribute, mixed $value, \Closure $fail): void {
+                    if (RoleScopeMatrix::isRestrictedForManagedAssignment((string) $value)) {
+                        $fail('Role super-admin tidak dapat ditetapkan melalui manajemen user.');
+
+                        return;
+                    }
+
                     if (! RoleScopeMatrix::isRoleCompatibleWithScope((string) $value, (string) $this->input('scope'))) {
                         $fail('Role tidak sesuai dengan scope yang dipilih.');
                     }

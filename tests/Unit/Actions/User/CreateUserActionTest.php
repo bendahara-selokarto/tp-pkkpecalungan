@@ -19,6 +19,7 @@ class CreateUserActionTest extends TestCase
         parent::setUp();
         Role::create(['name' => 'admin-desa']);
         Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'super-admin']);
     }
 
     public function test_membuat_pengguna_dengan_peran(): void
@@ -87,5 +88,26 @@ class CreateUserActionTest extends TestCase
         ]);
 
         $this->assertSame('desa', $user->fresh()->scope);
+    }
+
+    public function test_gagal_membuat_pengguna_dengan_role_super_admin_pada_jalur_manajemen_user(): void
+    {
+        $this->expectException(ValidationException::class);
+
+        $action = app(CreateUserAction::class);
+        $area = Area::create([
+            'name' => 'Pecalungan',
+            'level' => 'kecamatan',
+            'parent_id' => null,
+        ]);
+
+        $action->execute([
+            'name' => 'Forbidden Role User',
+            'email' => 'forbidden-role@example.com',
+            'password' => 'password123',
+            'scope' => 'kecamatan',
+            'area_id' => $area->id,
+            'role' => 'super-admin',
+        ]);
     }
 }

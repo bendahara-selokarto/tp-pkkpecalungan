@@ -37,7 +37,7 @@ const form = useForm({
 const scopeRoleMap = props.roleOptionsByScope
 const roleLabelMap = props.roleLabels
 
-const filteredRoles = computed(() => scopeRoleMap[form.scope] ?? [])
+const filteredRoles = computed(() => (scopeRoleMap[form.scope] ?? []).filter((role) => role !== 'super-admin'))
 const filteredAreas = computed(() => props.areas.filter((area) => area.level === form.scope))
 
 watch(

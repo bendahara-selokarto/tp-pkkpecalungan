@@ -114,4 +114,28 @@ class UpdateUserActionTest extends TestCase
             'role' => 'admin-desa',
         ]);
     }
+
+    public function test_gagal_assign_role_super_admin_ke_user_managed(): void
+    {
+        $this->expectException(ValidationException::class);
+
+        Role::create(['name' => 'super-admin']);
+        Role::create(['name' => 'admin-kecamatan']);
+        $kecamatanArea = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatanArea->id,
+        ]);
+        $user->assignRole('admin-kecamatan');
+
+        $action = app(UpdateUserAction::class);
+        $action->execute($user, [
+            'name' => 'Forbidden Role Update',
+            'email' => 'forbidden-update@email.com',
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatanArea->id,
+            'role' => 'super-admin',
+        ]);
+    }
 }

@@ -23,9 +23,10 @@ class GetUserManagementFormOptionsUseCaseTest extends TestCase
         $options = $useCase->roleOptionsByScope();
 
         $this->assertSame(['desa-sekretaris'], $options['desa']);
-        $this->assertSame(['kecamatan-sekretaris', 'super-admin'], $options['kecamatan']);
+        $this->assertSame(['kecamatan-sekretaris'], $options['kecamatan']);
         $this->assertNotContains('admin-desa', $options['desa']);
         $this->assertNotContains('admin-kecamatan', $options['kecamatan']);
+        $this->assertNotContains('super-admin', $options['kecamatan']);
     }
 
     public function test_label_role_dibentuk_dari_opsi_scope(): void
@@ -43,7 +44,6 @@ class GetUserManagementFormOptionsUseCaseTest extends TestCase
 
         $this->assertSame('Sekretaris (Desa)', $labels['desa-sekretaris']);
         $this->assertSame('Sekretaris (Kecamatan)', $labels['kecamatan-sekretaris']);
-        $this->assertSame('Super Admin', $labels['super-admin']);
+        $this->assertArrayNotHasKey('super-admin', $labels);
     }
 }
-

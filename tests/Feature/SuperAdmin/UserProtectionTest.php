@@ -19,6 +19,7 @@ class UserProtectionTest extends TestCase
 
         Role::create(['name' => 'super-admin']);
         Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'admin-kecamatan']);
     }
 
    #[Test]
@@ -79,5 +80,66 @@ class UserProtectionTest extends TestCase
         $this->assertTrue($target->hasRole('super-admin'));
     }
 
-}
+    #[Test]
+    public function super_admin_tidak_dapat_membuat_user_dengan_role_super_admin_dari_form_manajemen()
+    {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole('super-admin');
 
+        $kecamatan = Area::create([
+            'name' => 'Pecalungan',
+            'level' => 'kecamatan',
+        ]);
+
+        $response = $this->actingAs($superAdmin)
+            ->post(route('super-admin.users.store'), [
+                'name' => 'Tidak Boleh Assign Super Admin',
+                'email' => 'blocked-create-super-admin@example.com',
+                'password' => 'password123',
+                'scope' => 'kecamatan',
+                'area_id' => $kecamatan->id,
+                'role' => 'super-admin',
+            ]);
+
+        $response
+            ->assertSessionHasErrors(['role']);
+
+        $this->assertDatabaseMissing('users', [
+            'email' => 'blocked-create-super-admin@example.com',
+        ]);
+    }
+
+    #[Test]
+    public function super_admin_tidak_dapat_mengubah_role_user_managed_menjadi_super_admin()
+    {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole('super-admin');
+
+        $kecamatan = Area::create([
+            'name' => 'Pecalungan',
+            'level' => 'kecamatan',
+        ]);
+
+        $target = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatan->id,
+        ]);
+        $target->assignRole('admin-kecamatan');
+
+        $response = $this->actingAs($superAdmin)
+            ->put(route('super-admin.users.update', $target), [
+                'name' => 'Target User Updated',
+                'email' => 'target-user-updated@example.com',
+                'scope' => 'kecamatan',
+                'area_id' => $kecamatan->id,
+                'role' => 'super-admin',
+            ]);
+
+        $response
+            ->assertSessionHasErrors(['role']);
+
+        $target->refresh();
+        $this->assertFalse($target->hasRole('super-admin'));
+        $this->assertTrue($target->hasRole('admin-kecamatan'));
+    }
+}
