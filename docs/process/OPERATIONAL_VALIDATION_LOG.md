@@ -505,3 +505,24 @@ Keputusan:
 
 Status:
 - `PASS` untuk audit end-to-end chart dashboard.
+
+## Siklus Normalisasi Label Chart Cakupan per Buku: 2026-02-22
+
+Ruang lingkup:
+- Mengubah label item chart `Cakupan per Buku` dari slug `kebab-case` menjadi label manusia.
+
+Artefak:
+- `resources/js/Pages/Dashboard.vue`
+
+Keputusan implementasi:
+- Prioritas label chart:
+  - gunakan `coverage_per_buku.items[].label` jika tersedia (label canonical backend),
+  - fallback ke humanize slug (`kebab-case`/`snake_case` -> Title Case).
+- Nilai chart tetap mengambil total asli tanpa perubahan agregasi.
+
+Perintah validasi:
+- `npm run build`
+  - hasil: `PASS`.
+
+Status:
+- `PASS` untuk normalisasi label chart `Cakupan per Buku`.

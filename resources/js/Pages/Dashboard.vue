@@ -79,11 +79,34 @@ const documentCharts = computed(() => props.dashboardCharts.documents ?? {
   level_distribution: { labels: ['Desa', 'Kecamatan'], values: [0, 0] },
 })
 
+const humanizeLabel = (value) => String(value ?? '')
+  .replace(/[-_]+/g, ' ')
+  .trim()
+  .replace(/\b\w/g, (char) => char.toUpperCase())
+
+const coveragePerBukuItems = computed(() => {
+  const rawItems = documentCharts.value.coverage_per_buku?.items
+  if (Array.isArray(rawItems) && rawItems.length > 0) {
+    return rawItems.map((item, index) => ({
+      label: String(item?.label ?? humanizeLabel(item?.slug ?? `Buku ${index + 1}`)),
+      total: Number(item?.total ?? 0),
+    }))
+  }
+
+  const labels = documentCharts.value.coverage_per_buku?.labels ?? []
+  const values = documentCharts.value.coverage_per_buku?.values ?? []
+
+  return labels.map((label, index) => ({
+    label: humanizeLabel(label),
+    total: Number(values[index] ?? 0),
+  }))
+})
+
 const coveragePerBukuChartData = computed(() => ({
-  labels: documentCharts.value.coverage_per_buku?.labels ?? [],
+  labels: coveragePerBukuItems.value.map((item) => item.label),
   datasets: [
     {
-      data: documentCharts.value.coverage_per_buku?.values ?? [],
+      data: coveragePerBukuItems.value.map((item) => item.total),
       backgroundColor: '#10b981',
       borderRadius: 6,
     },
