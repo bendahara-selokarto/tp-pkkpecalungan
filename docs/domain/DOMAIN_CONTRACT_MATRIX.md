@@ -30,6 +30,7 @@ Aturan baca:
 | 4.14.4f | `simulasi-penyuluhan` | Data Isian Kelompok Simulasi dan Penyuluhan | `nama_kegiatan`, `jenis_simulasi_penyuluhan`, `jumlah_kelompok`, `jumlah_sosialisasi`, `jumlah_kader_l`, `jumlah_kader_p`, `keterangan` | `DATA ISIAN KELOMPOK SIMULASI DAN PENYULUHAN` | PubHTML5 101-150 (Lampiran 4.14.4f) | match |
 | 4.15 | `catatan-keluarga` | Catatan Keluarga | Read-only rekap dari `data-warga` + `data-kegiatan-warga`: `nama_kepala_rumah_tangga`, `jumlah_anggota_rumah_tangga`, `kerja_bakti`, `rukun_kematian`, `kegiatan_keagamaan`, `jimpitan`, `arisan`, `lain_lain`, `keterangan`; referensi struktur autentik fisik 19 kolom: `docs/domain/CATATAN_KELUARGA_19_TO_10_MAPPING.md` | `CATATAN KELUARGA` | Dokumen autentik `d:\\pedoman\\177.pdf` (Lampiran 4.15) | match (operasional 10 kolom sebagai proyeksi dari layout autentik 19 kolom) |
 | 4.16a | `rekap-catatan-data-kegiatan-warga-dasawisma` (reference) | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok Dasa Wisma | Struktur autentik 29 kolom (rekap lintas keluarga+kegiatan), referensi mapping: `docs/domain/REKAP_DASA_WISMA_4_16A_MAPPING.md` | belum ada view report khusus | Dokumen autentik `d:\\pedoman\\179.pdf` (Lampiran 4.16a) | reference-only (belum diimplementasikan sebagai modul/report terpisah) |
+| 4.16b | `rekap-catatan-data-kegiatan-warga-pkk-rt` (reference) | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok PKK RT | Struktur autentik 30 kolom (rekap lintas keluarga+kegiatan), referensi mapping: `docs/domain/REKAP_PKK_RT_4_16B_MAPPING.md` | belum ada view report khusus | Dokumen autentik `d:\\pedoman\\181.pdf` (Lampiran 4.16b) | reference-only (belum diimplementasikan sebagai modul/report terpisah) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana (Pokja IV) | Header laporan: `judul_laporan`, `dasar_hukum`, `pendahuluan`, `maksud_tujuan`, `pelaksanaan`, `dokumentasi`, `penutup`; nilai indikator periodik: `section`, `cluster_code`, `indicator_code`, `year`, `semester`, `value`, `evaluation_note`, `sort_order` | `LAPORAN PELAKSANAAN PILOT PROJECT GERAKAN KELUARGA SEHAT TANGGAP DAN TANGGUH BENCANA` | PubHTML5 201-241 (Halaman 202-211) | implemented (catalog tahap awal) |
 
 ## Jejak Teknis (Acuan Verifikasi)
@@ -60,6 +61,8 @@ Aturan baca:
   - `docs/domain/CATATAN_KELUARGA_19_TO_10_MAPPING.md`
 - Rekap Dasa Wisma autentik:
   - `docs/domain/REKAP_DASA_WISMA_4_16A_MAPPING.md`
+- Rekap PKK RT autentik:
+  - `docs/domain/REKAP_PKK_RT_4_16B_MAPPING.md`
 - Ekstensi pilot project source:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
 
