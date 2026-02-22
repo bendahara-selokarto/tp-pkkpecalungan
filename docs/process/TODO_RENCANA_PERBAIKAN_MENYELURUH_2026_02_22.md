@@ -27,8 +27,12 @@
 ## Keputusan Kerja Saat Ini
 - [x] Fokus prioritas pertama pada blocker bootstrap sebelum concern lain.
 - [x] Perubahan existing di luar scope user tidak disentuh selama fase scan.
-- [ ] PENDING: Konfirmasi akhir kontrak role `super-admin` pada matrix scope sebelum implementasi patch.
-- [ ] PENDING: Konfirmasi akhir strategi tanggal: pakai trait `ParsesUiDate` atau tetap explicit per request.
+- [x] Konfirmasi akhir kontrak role `super-admin` dikunci:
+  - `super-admin` tetap ada di compatibility matrix akses.
+  - `super-admin` dikeluarkan dari assignable role manajemen user.
+- [x] Konfirmasi akhir strategi tanggal dikunci:
+  - canonical request tetap explicit strict `date_format:Y-m-d`.
+  - trait `ParsesUiDate` dinyatakan deprecated (tidak dipakai request aktif).
 
 ## Tahapan Per Concern
 
@@ -53,45 +57,48 @@
   - `app/Support/RoleScopeMatrix.php`
   - `app/UseCases/User/GetUserManagementFormOptionsUseCase.php`
   - `resources/js/Pages/SuperAdmin/Users/Create.vue`
-- [ ] Putuskan aturan final:
+- [x] Putuskan aturan final:
   - opsi A: `super-admin` tetap di matrix akses, tapi dikecualikan dari assignable role.
   - opsi B: `super-admin` dikeluarkan dari matrix scoped role dan ditangani terpisah.
-- [ ] Patch backend validasi agar request create/update user menolak assign role `super-admin` pada jalur administratif biasa.
-- [ ] Patch UI agar role `super-admin` tidak muncul di dropdown create/edit user.
-- [ ] Sesuaikan test yang saat ini masih menganggap `super-admin` assignable.
-- [ ] Validasi regresi:
+- [x] Patch backend validasi agar request create/update user menolak assign role `super-admin` pada jalur administratif biasa.
+- [x] Patch UI agar role `super-admin` tidak muncul di dropdown create/edit user.
+- [x] Sesuaikan test yang saat ini masih menganggap `super-admin` assignable.
+- [x] Validasi regresi:
   - `php artisan test --filter "UserProtectionTest|GetUserManagementFormOptionsUseCaseTest|SuperAdminAuthorizationTest"`
-- [ ] PENDING blocker concern B: keputusan kontrak final role `super-admin` belum dikunci.
+- [x] Blocker concern B ditutup: kontrak final role `super-admin` sudah dikunci dan tervalidasi.
 
 ### Concern C - Konsistensi Input/Normalisasi Tanggal
 - [x] Audit menemukan trait `ParsesUiDate` sudah ada namun belum dipakai di request.
 - [x] Audit frontend menemukan pola campuran `type="date"` dan field text tanggal domain tertentu.
-- [ ] Tegaskan batasan canonical vs exception berdasarkan dokumen `TODO_STANDARDISASI_INPUT_TANGGAL.md`.
-- [ ] Terapkan salah satu strategi secara konsisten:
+- [x] Tegaskan batasan canonical vs exception berdasarkan dokumen `TODO_STANDARDISASI_INPUT_TANGGAL.md`.
+- [x] Terapkan salah satu strategi secara konsisten:
   - gunakan trait `ParsesUiDate` pada request yang menerima input UI campuran, atau
   - hapus/deprecate trait dan pertahankan validasi strict per-request.
-- [ ] Tambah test unit/feature untuk mencegah drift format tanggal.
-- [ ] Sinkronkan dokumentasi jika ada perubahan keputusan teknis.
-- [ ] PENDING blocker concern C: keputusan strategi normalisasi tanggal belum final.
+- [x] Tambah test unit/feature untuk mencegah drift format tanggal.
+- [x] Sinkronkan dokumentasi jika ada perubahan keputusan teknis.
+- [x] Blocker concern C ditutup: strategi normalisasi tanggal final dan tervalidasi.
 
 ### Concern D - Validasi Integrasi dan Quality Gate
 - [x] Targeted test awal sudah dijalankan dan lulus:
   - `DashboardDocumentCoverageTest`
   - `DesaProgramPrioritasTest`
   - `UserProtectionTest`
-- [ ] Setelah semua patch concern A-C selesai, jalankan `php artisan test` penuh.
+- [x] Setelah semua patch concern A-C selesai, jalankan `php artisan test` penuh.
 - [x] Verifikasi tambahan saat concern A sudah pulih:
   - `php artisan test` penuh lulus (`476 passed`).
-- [ ] Verifikasi tidak ada drift authorization (`role` vs `scope` vs `areas.level`).
-- [ ] Verifikasi route utama scoped `desa/kecamatan/super-admin` tetap berjalan.
+- [x] Verifikasi final setelah patch concern B/C/F:
+  - `php artisan test` penuh lulus (`667 passed`).
+- [x] Verifikasi tidak ada drift authorization (`role` vs `scope` vs `areas.level`).
+- [x] Verifikasi route utama scoped `desa/kecamatan/super-admin` tetap berjalan.
 
 ### Concern E - Dokumentasi dan Jejak Keputusan
 - [x] TODO lintas concern dibuat di `docs/process/` (dokumen ini).
-- [ ] Catat hasil implementasi per concern ke log operasional:
+- [x] Catat hasil implementasi per concern ke log operasional:
   - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
-- [ ] Jika ada perubahan pola eksekusi, update:
+- [x] Jika ada perubahan pola eksekusi, update:
   - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
-- [ ] Jika ada perubahan kontrak teknis canonical, sinkronkan ke `AGENTS.md`.
+- [x] Jika ada perubahan kontrak teknis canonical, sinkronkan ke `AGENTS.md`.
+  - Status: tidak perlu perubahan isi `AGENTS.md` karena guardrail `super-admin` sudah tercantum dan tetap konsisten.
 
 ### Concern F - Coverage Unit Test dan Seeder
 - [x] Requirement baru ditetapkan: semua unit wajib punya test, semua isian/domain wajib punya seeder.
@@ -102,19 +109,19 @@
   - unit dengan direct test: 8
   - tabel domain target seeding baseline: 28
   - tabel domain yang terseed lewat chain default `DatabaseSeeder`: 28 (setelah integrasi `DashboardNaturalBatangSeeder` + `WilayahMissingDomainSeeder`)
-- [ ] Eksekusi concern F mengikuti checklist detail pada dokumen khusus sampai seluruh gate coverage berstatus `[x]`.
+- [x] Eksekusi concern F mengikuti checklist detail pada dokumen khusus sampai seluruh gate coverage berstatus `[x]`.
 
 ## Validasi Minimum Sebelum Penutupan
 - [x] Tidak ada fatal bootstrap saat `php artisan route:list --except-vendor`.
 - [x] Tidak ada mismatch interface/implementasi pada repository utama.
-- [ ] Jalur admin tidak bisa membuat/mengubah user menjadi `super-admin` tanpa path khusus.
-- [ ] Test regresi concern A-C lulus.
-- [ ] Coverage concern F (unit test + seeder) lulus sesuai dokumen detail.
+- [x] Jalur admin tidak bisa membuat/mengubah user menjadi `super-admin` tanpa path khusus.
+- [x] Test regresi concern A-C lulus.
+- [x] Coverage concern F (unit test + seeder) lulus sesuai dokumen detail.
 - [x] `php artisan test` penuh lulus.
 
 ## Rule Penutupan Tugas
-- [ ] Tugas dinyatakan selesai hanya jika seluruh item pada "Validasi Minimum Sebelum Penutupan" berstatus `[x]`.
-- [ ] Jika ada satu saja item validasi belum terpenuhi, status laporan akhir wajib `PENDING` dan mencantumkan blocker.
+- [x] Tugas dinyatakan selesai hanya jika seluruh item pada "Validasi Minimum Sebelum Penutupan" berstatus `[x]`.
+- [x] Jika ada satu saja item validasi belum terpenuhi, status laporan akhir wajib `PENDING` dan mencantumkan blocker.
 
 ## Risiko
 - Perubahan concern A berisiko mengubah output laporan catatan keluarga bila mapping tidak presisi.
@@ -122,7 +129,7 @@
 - Perubahan concern C berisiko memicu drift format tanggal antar modul bila tidak ditutup dengan test.
 
 ## Fallback Plan
-- [ ] Terapkan patch per concern secara terpisah dan commit terisolasi.
-- [ ] Jika regresi muncul, rollback per commit concern (bukan rollback massal).
-- [ ] Prioritaskan menjaga akses backend/policy tetap aman walau fitur non-kritis harus ditunda.
+- [x] Terapkan patch per concern secara terpisah dan commit terisolasi.
+- [x] Jika regresi muncul, rollback per commit concern (bukan rollback massal).
+- [x] Prioritaskan menjaga akses backend/policy tetap aman walau fitur non-kritis harus ditunda.
 

@@ -405,3 +405,41 @@ Hasil konfirmasi:
 
 Status:
 - `PASS` untuk closure ambiguity 4.16d.
+
+## Penutupan TODO Concern B/C/F: 2026-02-22
+
+Ruang lingkup:
+- Menutup guardrail assignment `super-admin` pada jalur manajemen user (`Concern B`).
+- Menetapkan keputusan canonical tanggal: tetap strict `date_format:Y-m-d` per-request dan trait parser UI lama dinyatakan deprecated (`Concern C`).
+- Menutup gate coverage unit direct `183/183` dan lampiran matrix coverage (`Concern F`).
+
+Artefak:
+- `app/Support/RoleScopeMatrix.php`
+- `app/Http/Requests/User/StoreUserRequest.php`
+- `app/Http/Requests/User/UpdateUserRequest.php`
+- `app/Actions/User/CreateUserAction.php`
+- `app/Actions/User/UpdateUserAction.php`
+- `resources/js/Pages/SuperAdmin/Users/Create.vue`
+- `resources/js/Pages/SuperAdmin/Users/Edit.vue`
+- `tests/Feature/SuperAdmin/UserProtectionTest.php`
+- `tests/Feature/SuperAdmin/UserScopePresentationTest.php`
+- `tests/Unit/UseCases/User/GetUserManagementFormOptionsUseCaseTest.php`
+- `tests/Unit/Actions/User/CreateUserActionTest.php`
+- `tests/Unit/Actions/User/UpdateUserActionTest.php`
+- `tests/Unit/Architecture/UnitCoverageGateTest.php`
+- `tests/Unit/Http/Requests/DateInputCanonicalGuardTest.php`
+- `docs/process/UNIT_DIRECT_COVERAGE_MATRIX_2026_02_22.md`
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+
+Perintah validasi:
+- `php artisan test --filter "UserProtectionTest|GetUserManagementFormOptionsUseCaseTest|SuperAdminAuthorizationTest|UserScopePresentationTest|CreateUserActionTest|UpdateUserActionTest|DateInputCanonicalGuardTest|UnitCoverageGateTest"`
+  - hasil: `208` test pass (`644` assertions).
+- `php artisan route:list --except-vendor`
+  - hasil: `462` route aktif.
+- `php artisan migrate:fresh --seed --no-interaction`
+  - hasil: `PASS`.
+- `php artisan test`
+  - hasil: `667` test pass (`2703` assertions).
+
+Status:
+- `PASS` untuk closure concern B/C/F pada gate validasi teknis.

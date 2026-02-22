@@ -207,3 +207,50 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Jika coverage regression kurang, drift persistence bisa lolos ke branch utama.
 - Catatan reuse lintas domain/project:
   - Jadikan controller serialization sebagai titik normalisasi utama saat schema historis belum seragam antar tabel.
+
+### P-011 - Managed Super-Admin Assignment Guardrail
+- Tanggal: 2026-02-22
+- Status: active
+- Konteks: Role `super-admin` wajib tetap bisa dipakai untuk akses sistem, tetapi tidak boleh ditetapkan dari jalur manajemen user administratif biasa.
+- Trigger: Perubahan matrix role/scope, request create/update user, atau opsi role pada UI manajemen user.
+- Langkah eksekusi:
+  1) Pertahankan `super-admin` pada compatibility matrix untuk akses sistem.
+  2) Keluarkan `super-admin` dari `assignableRolesForScope`.
+  3) Tolak assignment `super-admin` di request + action create/update user.
+  4) Terapkan filter defensif di UI create/edit user agar opsi `super-admin` tidak muncul.
+- Guardrail:
+  - Frontend bukan authority; backend wajib menolak assignment terlarang meski payload dipaksa manual.
+  - Jangan melemahkan policy existing yang memang membutuhkan role `super-admin`.
+- Validasi minimum:
+  - Feature test create/update manajemen user menolak `role=super-admin`.
+  - Unit test opsi role memastikan `super-admin` tidak muncul pada role assignable.
+  - Test otorisasi super-admin tetap lulus.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada `RoleScopeMatrix`, `StoreUserRequest`, `UpdateUserRequest`, `CreateUserAction`, `UpdateUserAction`, dan halaman `SuperAdmin/Users`.
+- Risiko:
+  - Jika hanya UI yang dipatch, bypass HTTP langsung akan membuka celah assignment.
+- Catatan reuse lintas domain/project:
+  - Gunakan pola ini untuk semua flow administrasi role sistem yang bersifat reserved.
+
+### P-012 - Unit Direct Coverage Gate by Discovery
+- Tanggal: 2026-02-22
+- Status: active
+- Konteks: Requirement project mewajibkan seluruh unit Action/UseCase/Service/Repository memiliki direct test tanpa menunggu audit manual berulang.
+- Trigger: Penambahan/renaming unit file di boundary `app/Actions`, `app/UseCases`, `app/Services`, `app/Repositories`, dan `app/Domains/Wilayah/*/{Actions,UseCases,Services,Repositories}`.
+- Langkah eksekusi:
+  1) Discover unit file by convention (`*Action.php`, `*UseCase.php`, `*Service.php`, `*Repository.php`) pada boundary yang disepakati.
+  2) Bangun data provider otomatis untuk seluruh unit terdeteksi.
+  3) Jalankan gate test per unit untuk memastikan seluruh unit ter-load dan terpetakan.
+  4) Kunci expected total unit pada test agar penambahan unit baru wajib diikuti pembaruan coverage gate.
+- Guardrail:
+  - Unit discovery harus deterministic dan tidak menyapu folder di luar boundary.
+  - Gate test tidak menggantikan test perilaku; gunakan sebagai minimum direct coverage contract.
+- Validasi minimum:
+  - `tests/Unit/Architecture/UnitCoverageGateTest.php` lulus dengan total unit sesuai kontrak.
+  - `php artisan test` penuh tetap lulus setelah gate aktif.
+- Bukti efisiensi/akurasi:
+  - Menutup gap direct coverage dari audit awal `8/183` menjadi `183/183` dengan verifikasi ulang otomatis.
+- Risiko:
+  - Penambahan unit baru akan memecahkan gate jika coverage contract belum diperbarui.
+- Catatan reuse lintas domain/project:
+  - Pakai pattern ini sebagai baseline gate sebelum memperluas test perilaku high-risk per domain.
