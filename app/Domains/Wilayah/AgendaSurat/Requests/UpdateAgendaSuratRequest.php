@@ -2,14 +2,10 @@
 
 namespace App\Domains\Wilayah\AgendaSurat\Requests;
 
-use App\Http\Requests\Concerns\ParsesUiDate;
-use Closure;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateAgendaSuratRequest extends FormRequest
 {
-    use ParsesUiDate;
-
     public function authorize(): bool
     {
         return true;
@@ -22,11 +18,11 @@ class UpdateAgendaSuratRequest extends FormRequest
             'tanggal_terima' => [
                 'nullable',
                 'required_if:jenis_surat,masuk',
-                $this->dateRule(),
+                'date_format:Y-m-d',
             ],
             'tanggal_surat' => [
                 'required',
-                $this->dateRule(),
+                'date_format:Y-m-d',
             ],
             'nomor_surat' => 'required|string|max:100',
             'asal_surat' => 'nullable|string|max:255|required_if:jenis_surat,masuk',
@@ -38,23 +34,5 @@ class UpdateAgendaSuratRequest extends FormRequest
             'tembusan' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
         ];
-    }
-
-    protected function uiDateFields(): array
-    {
-        return ['tanggal_terima', 'tanggal_surat'];
-    }
-
-    private function dateRule(): Closure
-    {
-        return function (string $attribute, mixed $value, Closure $fail): void {
-            if ($value === null || $value === '') {
-                return;
-            }
-
-            if ($this->parseUiDate((string) $value) === null) {
-                $fail('Format tanggal harus DD/MM/YYYY.');
-            }
-        };
     }
 }

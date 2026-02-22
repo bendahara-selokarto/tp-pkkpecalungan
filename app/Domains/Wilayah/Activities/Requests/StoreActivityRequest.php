@@ -2,13 +2,10 @@
 
 namespace App\Domains\Wilayah\Activities\Requests;
 
-use App\Http\Requests\Concerns\ParsesUiDate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreActivityRequest extends FormRequest
 {
-    use ParsesUiDate;
-
     public function authorize(): bool
     {
         return true;
@@ -22,21 +19,9 @@ class StoreActivityRequest extends FormRequest
             'jabatan_petugas' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'uraian' => 'nullable|string',
-            'activity_date' => [
-                'required',
-                function (string $attribute, mixed $value, \Closure $fail): void {
-                    if ($this->parseUiDate((string) $value) === null) {
-                        $fail('Format tanggal harus DD/MM/YYYY.');
-                    }
-                },
-            ],
+            'activity_date' => 'required|date_format:Y-m-d',
             'tempat_kegiatan' => 'nullable|string|max:255',
             'tanda_tangan' => 'nullable|string|max:255',
         ];
-    }
-
-    protected function uiDateFields(): array
-    {
-        return ['activity_date'];
     }
 }

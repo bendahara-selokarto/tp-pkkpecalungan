@@ -2,13 +2,10 @@
 
 namespace App\Domains\Wilayah\Inventaris\Requests;
 
-use App\Http\Requests\Concerns\ParsesUiDate;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateInventarisRequest extends FormRequest
 {
-    use ParsesUiDate;
-
     public function authorize(): bool
     {
         return true;
@@ -23,25 +20,9 @@ class UpdateInventarisRequest extends FormRequest
             'keterangan' => 'nullable|string',
             'quantity' => 'required|integer|min:1',
             'unit' => 'required|string|max:50',
-            'tanggal_penerimaan' => [
-                'nullable',
-                function (string $attribute, mixed $value, \Closure $fail): void {
-                    if ($value === null || $value === '') {
-                        return;
-                    }
-
-                    if ($this->parseUiDate((string) $value) === null) {
-                        $fail('Format tanggal harus DD/MM/YYYY.');
-                    }
-                },
-            ],
+            'tanggal_penerimaan' => 'nullable|date_format:Y-m-d',
             'tempat_penyimpanan' => 'nullable|string|max:255',
             'condition' => 'required|in:baik,rusak_ringan,rusak_berat',
         ];
-    }
-
-    protected function uiDateFields(): array
-    {
-        return ['tanggal_penerimaan'];
     }
 }
