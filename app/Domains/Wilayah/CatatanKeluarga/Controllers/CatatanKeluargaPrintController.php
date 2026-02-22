@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\CatatanKeluarga\Controllers;
 
 use App\Domains\Wilayah\CatatanKeluarga\Models\CatatanKeluarga;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanKeluargaUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkDesaKelurahanUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanPkkRwUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapDasaWismaUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapPkkRtUseCase;
@@ -17,6 +18,7 @@ class CatatanKeluargaPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedCatatanKeluargaUseCase $listScopedCatatanKeluargaUseCase,
+        private readonly ListScopedCatatanTpPkkDesaKelurahanUseCase $listScopedCatatanTpPkkDesaKelurahanUseCase,
         private readonly ListScopedRekapDasaWismaUseCase $listScopedRekapDasaWismaUseCase,
         private readonly ListScopedRekapPkkRtUseCase $listScopedRekapPkkRtUseCase,
         private readonly ListScopedCatatanPkkRwUseCase $listScopedCatatanPkkRwUseCase,
@@ -73,6 +75,16 @@ class CatatanKeluargaPrintController extends Controller
     public function printKecamatanRekapRwReport(): Response
     {
         return $this->streamRekapRwReport(ScopeLevel::KECAMATAN->value);
+    }
+
+    public function printDesaCatatanTpPkkDesaKelurahanReport(): Response
+    {
+        return $this->streamCatatanTpPkkDesaKelurahanReport(ScopeLevel::DESA->value);
+    }
+
+    public function printKecamatanCatatanTpPkkDesaKelurahanReport(): Response
+    {
+        return $this->streamCatatanTpPkkDesaKelurahanReport(ScopeLevel::KECAMATAN->value);
     }
 
     private function streamReport(string $level): Response
@@ -177,5 +189,34 @@ class CatatanKeluargaPrintController extends Controller
         ]);
 
         return $pdf->stream("rekap-catatan-data-kegiatan-warga-rw-{$level}-report.pdf");
+    }
+
+    private function streamCatatanTpPkkDesaKelurahanReport(string $level): Response
+    {
+        $this->authorize('viewAny', CatatanKeluarga::class);
+
+        $items = $this->listScopedCatatanTpPkkDesaKelurahanUseCase
+            ->execute($level)
+            ->values();
+
+        $user = auth()->user()->loadMissing('area.parent');
+        $area = $user->area;
+        $kecamatanName = $area?->level === ScopeLevel::DESA->value
+            ? ($area->parent?->name ?? '-')
+            : ($area?->name ?? '-');
+
+        $pdf = $this->pdfViewFactory->loadView('pdf.catatan_data_kegiatan_warga_tp_pkk_desa_kelurahan_report', [
+            'items' => $items,
+            'level' => $level,
+            'areaName' => $area?->name ?? '-',
+            'kecamatanName' => $kecamatanName,
+            'kabKotaName' => '-',
+            'provinsiName' => '-',
+            'printedBy' => $user,
+            'printedAt' => now(),
+            'tahun' => now()->format('Y'),
+        ]);
+
+        return $pdf->stream("catatan-data-kegiatan-warga-tp-pkk-desa-kelurahan-{$level}-report.pdf");
     }
 }

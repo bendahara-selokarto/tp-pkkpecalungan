@@ -191,7 +191,49 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         ]);
     }
 
-    public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_dan_416d_desanya_sendiri(): void
+    public function test_header_kolom_pdf_catatan_tp_pkk_desa_kelurahan_tetap_sesuai_mapping_autentik_417a(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.catatan_data_kegiatan_warga_tp_pkk_desa_kelurahan_report', [
+            'NO',
+            'NAMA DUSUN/LINGKUNGAN',
+            'JML RW',
+            'JML RT',
+            'JML DASAWISMA',
+            'JML KRT',
+            'JML KK',
+            'JUMLAH ANGGOTA KELUARGA',
+            'KRITERIA RUMAH',
+            'SUMBER AIR KELUARGA',
+            'JUMLAH SARANA MCK',
+            'MAKANAN POKOK',
+            'WARGA MENGIKUTI KEGIATAN',
+            'KETERANGAN',
+            'TOTAL',
+            'BALITA',
+            'PUS',
+            'WUS',
+            'IBU HAMIL',
+            'IBU MENYUSUI',
+            'LANSIA',
+            '3 BUTA',
+            'SEHAT LAYAK HUNI',
+            'TIDAK SEHAT LAYAK HUNI',
+            'MEMILIKI TTMP. PEMB SAMPAH',
+            'MEMILIKI SPAL DAN PENYERAPAN AIR',
+            'PDAM',
+            'SUMUR',
+            'SUNGAI',
+            'DLL',
+            'BERAS',
+            'NON BERAS',
+            'UP2K',
+            'PEMANFAATAN TANAH PEKARANGAN',
+            'INDUSTRI RUMAH TANGGA',
+            'KESEHATAN LINGKUNGAN',
+        ]);
+    }
+
+    public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_dan_417a_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
         $user->assignRole('admin-desa');
@@ -213,9 +255,13 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $responseRekapRw = $this->actingAs($user)->get(route('desa.catatan-keluarga.rekap-rw.report'));
         $responseRekapRw->assertOk();
         $responseRekapRw->assertHeader('content-type', 'application/pdf');
+
+        $response417a = $this->actingAs($user)->get(route('desa.catatan-keluarga.tp-pkk-desa-kelurahan.report'));
+        $response417a->assertOk();
+        $response417a->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_admin_kecamatan_dapat_mencetak_pdf_rekap_416a_416b_416c_dan_416d_kecamatannya_sendiri(): void
+    public function test_admin_kecamatan_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_dan_417a_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
         $user->assignRole('admin-kecamatan');
@@ -237,6 +283,10 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $responseRekapRw = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.rekap-rw.report'));
         $responseRekapRw->assertOk();
         $responseRekapRw->assertHeader('content-type', 'application/pdf');
+
+        $response417a = $this->actingAs($user)->get(route('kecamatan.catatan-keluarga.tp-pkk-desa-kelurahan.report'));
+        $response417a->assertOk();
+        $response417a->assertHeader('content-type', 'application/pdf');
     }
 
     public function test_laporan_pdf_rekap_416_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
@@ -255,6 +305,9 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
 
         $responseRekapRw = $this->actingAs($user)->get(route('desa.catatan-keluarga.rekap-rw.report'));
         $responseRekapRw->assertStatus(403);
+
+        $response417a = $this->actingAs($user)->get(route('desa.catatan-keluarga.tp-pkk-desa-kelurahan.report'));
+        $response417a->assertStatus(403);
     }
 
     private function seedDataWargaDenganAnggota(User $user, string $level, int $areaId, string $dasaWisma, string $namaKepala): void
@@ -262,7 +315,7 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $dataWarga = DataWarga::create([
             'dasawisma' => $dasaWisma,
             'nama_kepala_keluarga' => $namaKepala,
-            'alamat' => 'RT 01 / RW 02',
+            'alamat' => 'Dusun Melati RT 01 / RW 02',
             'jumlah_warga_laki_laki' => 0,
             'jumlah_warga_perempuan' => 0,
             'keterangan' => null,
