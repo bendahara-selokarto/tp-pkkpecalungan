@@ -63,6 +63,26 @@ Tujuan:
 - `Pilot Project` (label tunggal tanpa konteks) -> gunakan `Laporan Pilot Project Keluarga Sehat`
 - `Laporan Pilot Project Bencana` -> gunakan `Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana`
 
+## Normalisasi Label UI Administratif (Role/Scope/Wilayah)
+
+Tujuan:
+- Mencegah slug teknis (`super-admin`, `admin-kecamatan`, `desa`) tampil mentah pada UI end-user.
+
+Aturan canonical:
+- Role `super-admin` -> tampil sebagai `Super Admin`.
+- Role slug kebijakan (`admin-desa`, `admin-kecamatan`) -> tampil title-case (`Admin Desa`, `Admin Kecamatan`).
+- Role scope baru (`desa-sekretaris`, `kecamatan-pokja-ii`, dst) -> tampil format `<Nama Role> (<Scope>)`.
+- Scope wilayah -> tampil `Desa` / `Kecamatan`.
+- Label area -> tampil format `<Scope Label> - <Nama Area>`.
+
+Implementasi canonical:
+- `app/Support/RoleLabelFormatter.php`
+- `resources/js/utils/roleLabelFormatter.js`
+- `resources/js/Pages/SuperAdmin/Users/Index.vue`
+- `resources/js/Pages/SuperAdmin/Users/Create.vue`
+- `resources/js/Pages/SuperAdmin/Users/Edit.vue`
+- `resources/js/Layouts/DashboardLayout.vue`
+
 ## Jejak Verifikasi
 
 - Sidebar/menu label:

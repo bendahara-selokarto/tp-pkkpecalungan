@@ -443,3 +443,28 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk closure concern B/C/F pada gate validasi teknis.
+
+## Normalisasi Label UI Administratif: 2026-02-22
+
+Ruang lingkup:
+- Menormalkan teks user-facing agar slug teknis role/scope tidak tampil mentah di UI.
+- Mengunci keputusan canonical normalisasi label role/scope/wilayah pada dokumen terminology map.
+
+Artefak:
+- `resources/js/utils/roleLabelFormatter.js`
+- `resources/js/Pages/SuperAdmin/Users/Index.vue`
+- `resources/js/Pages/SuperAdmin/Users/Create.vue`
+- `resources/js/Pages/SuperAdmin/Users/Edit.vue`
+- `resources/js/Layouts/DashboardLayout.vue`
+- `resources/js/admin-one/layouts/LayoutGuest.vue`
+- `app/Http/Controllers/SuperAdmin/UserManagementController.php`
+- `tests/Feature/SuperAdminAuthorizationTest.php`
+- `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+
+Perintah validasi:
+- `php artisan test --filter "SuperAdminAuthorizationTest|UserScopePresentationTest|UserProtectionTest"`
+  - hasil: `12` test pass (`72` assertions).
+
+Status:
+- `PASS` untuk normalisasi label UI administratif dan sinkronisasi canonical.

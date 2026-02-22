@@ -45,6 +45,9 @@ Gunakan status:
 | `P-008` | Pre-Release Legacy Upgrade Track | Refactor masih menyentuh legacy | Coupling legacy turun tanpa mengorbankan keamanan scope | Validasi mapping dampak + `php artisan migrate:fresh` + test relevan | `active` |
 | `P-009` | Hybrid PDF Authenticity Verification | PDF lampiran punya merge-row/merge-col kompleks | Kontrak domain tetap akurat walau parser teks terbatas | Parser text extraction + verifikasi manual terhadap dokumen autentik + dokumen mapping | `active` |
 | `P-010` | Date Output Harmonization Without Persistence Drift | Standardisasi tanggal menyentuh model + controller + test DB assertion | Output tanggal konsisten tanpa mengubah format simpan data | Targeted regression + assert DB value tetap kompatibel | `active` |
+| `P-011` | Managed Super-Admin Assignment Guardrail | Perubahan matrix role/scope, request create/update user, atau opsi role pada UI manajemen user | Role sistem tetap aman tanpa bisa di-assign dari flow administratif biasa | Regression create/update user management + unit matrix role + auth super-admin test | `active` |
+| `P-012` | Unit Direct Coverage Gate by Discovery | Penambahan/renaming unit Action/UseCase/Service/Repository | Contract `1 unit = minimal 1 direct test` tetap terjaga otomatis | `UnitCoverageGateTest` + full suite | `active` |
+| `P-013` | UI Slug Humanization for Role/Scope | UI menampilkan slug teknis role/scope/area | Label user-facing konsisten manusiawi tanpa ubah kontrak teknis backend | Regression SuperAdmin view + render role badge di layout utama | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -254,3 +257,27 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Penambahan unit baru akan memecahkan gate jika coverage contract belum diperbarui.
 - Catatan reuse lintas domain/project:
   - Pakai pattern ini sebagai baseline gate sebelum memperluas test perilaku high-risk per domain.
+
+### P-013 - UI Slug Humanization for Role/Scope
+- Tanggal: 2026-02-22
+- Status: active
+- Konteks: UI administratif bisa menerima slug teknis (`super-admin`, `admin-kecamatan`, `desa`) dari backend dan membuat teks terlihat tidak natural.
+- Trigger: Halaman menampilkan role/scope/level/area ke user akhir.
+- Langkah eksekusi:
+  1) Pertahankan slug teknis sebagai kontrak data backend.
+  2) Terapkan formatter label terpusat di frontend untuk role/scope/area.
+  3) Jika endpoint tertentu lebih stabil dengan label siap pakai, backend boleh kirim label terformat.
+  4) Gunakan formatter yang sama di halaman list + form + ringkasan layout.
+- Guardrail:
+  - Jangan ubah slug yang dipakai policy/authorization.
+  - Hindari formatter ad-hoc per halaman; wajib util terpusat.
+- Validasi minimum:
+  - Feature test super-admin tetap hijau.
+  - Role `super-admin` tampil `Super Admin`.
+  - Scope tampil `Desa`/`Kecamatan`.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada `SuperAdmin/Users` dan `DashboardLayout` melalui `resources/js/utils/roleLabelFormatter.js`.
+- Risiko:
+  - Konsistensi bisa drift jika ada endpoint baru yang bypass formatter.
+- Catatan reuse lintas domain/project:
+  - Jadikan formatter role/scope sebagai dependency default semua halaman administratif.
