@@ -2,6 +2,7 @@
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link } from '@inertiajs/vue3'
 import { mdiAccountGroup } from '@mdi/js'
 
@@ -14,6 +15,7 @@ const props = defineProps({
 
 const formatJenisKelamin = (value) => (value === 'L' ? 'Laki-laki' : 'Perempuan')
 const formatStatusPerkawinan = (value) => (value === 'kawin' ? 'Kawin' : 'Tidak Kawin')
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -48,7 +50,7 @@ const formatStatusPerkawinan = (value) => (value === 'kawin' ? 'Kawin' : 'Tidak 
         </div>
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal Lahir</p>
-          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.anggotaPokja.tanggal_lahir }}</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatDate(props.anggotaPokja.tanggal_lahir) }}</p>
         </div>
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Umur</p>

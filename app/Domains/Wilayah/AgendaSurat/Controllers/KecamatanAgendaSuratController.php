@@ -69,7 +69,7 @@ class KecamatanAgendaSuratController extends Controller
         $this->authorize('update', $agendaSurat);
 
         return Inertia::render('Kecamatan/AgendaSurat/Edit', [
-            'agendaSurat' => $this->toArray($agendaSurat, true),
+            'agendaSurat' => $this->toArray($agendaSurat),
         ]);
     }
 
@@ -91,17 +91,13 @@ class KecamatanAgendaSuratController extends Controller
         return redirect()->route('kecamatan.agenda-surat.index')->with('success', 'Agenda surat berhasil dihapus');
     }
 
-    private function toArray(AgendaSurat $item, bool $forForm = false): array
+    private function toArray(AgendaSurat $item): array
     {
         return [
             'id' => $item->id,
             'jenis_surat' => $item->jenis_surat,
-            'tanggal_terima' => $forForm && $item->tanggal_terima
-                ? Carbon::parse($item->tanggal_terima)->format('Y-m-d')
-                : $item->tanggal_terima,
-            'tanggal_surat' => $forForm
-                ? Carbon::parse($item->tanggal_surat)->format('Y-m-d')
-                : $item->tanggal_surat,
+            'tanggal_terima' => $this->formatDateForPayload($item->tanggal_terima),
+            'tanggal_surat' => $this->formatDateForPayload($item->tanggal_surat),
             'nomor_surat' => $item->nomor_surat,
             'asal_surat' => $item->asal_surat,
             'dari' => $item->dari,
@@ -112,5 +108,14 @@ class KecamatanAgendaSuratController extends Controller
             'tembusan' => $item->tembusan,
             'keterangan' => $item->keterangan,
         ];
+    }
+
+    private function formatDateForPayload(?string $value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        return Carbon::parse($value)->format('Y-m-d');
     }
 }

@@ -3,6 +3,7 @@ import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiPackageVariantClosed } from '@mdi/js'
 import { ref } from 'vue'
@@ -42,6 +43,7 @@ const cancelDelete = () => {
 }
 
 const formatCondition = (value) => value.replace('_', ' ')
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -89,7 +91,7 @@ const formatCondition = (value) => value.replace('_', ' ')
             >
               <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.name }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.asal_barang || '-' }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.tanggal_penerimaan || '-' }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.tanggal_penerimaan) }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.quantity }} {{ item.unit }}</td>
               <td class="px-3 py-3 capitalize text-gray-700 dark:text-gray-300">{{ formatCondition(item.condition) }}</td>
               <td class="px-3 py-3">

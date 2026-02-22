@@ -2,6 +2,7 @@
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link } from '@inertiajs/vue3'
 import { mdiPackageVariant } from '@mdi/js'
 
@@ -13,6 +14,7 @@ const props = defineProps({
 })
 
 const formatCondition = (value) => value.replace('_', ' ')
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -37,7 +39,7 @@ const formatCondition = (value) => value.replace('_', ' ')
         </div>
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal Penerimaan/Pembelian</p>
-          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.inventaris.tanggal_penerimaan || '-' }}</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatDate(props.inventaris.tanggal_penerimaan) }}</p>
         </div>
       </div>
 

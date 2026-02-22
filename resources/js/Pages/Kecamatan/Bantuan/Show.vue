@@ -2,6 +2,7 @@
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link } from '@inertiajs/vue3'
 import { mdiHandHeart } from '@mdi/js'
 
@@ -14,6 +15,7 @@ const props = defineProps({
 
 const formatSource = (value) => value.replace('_', ' ')
 const formatAmount = (value) => new Intl.NumberFormat('id-ID').format(Number(value))
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -44,7 +46,7 @@ const formatAmount = (value) => new Intl.NumberFormat('id-ID').format(Number(val
         </div>
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal Diterima</p>
-          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.bantuan.received_date }}</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatDate(props.bantuan.received_date) }}</p>
         </div>
       </div>
 

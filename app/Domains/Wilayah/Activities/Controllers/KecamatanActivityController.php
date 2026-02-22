@@ -43,7 +43,7 @@ class KecamatanActivityController extends Controller
                 'tempat_kegiatan' => $activity->tempat_kegiatan,
                 'uraian' => $activity->uraian ?? $activity->description,
                 'tanda_tangan' => $activity->tanda_tangan,
-                'activity_date' => $activity->activity_date,
+                'activity_date' => $this->formatDateForPayload($activity->activity_date),
                 'status' => $activity->status,
             ])->values(),
         ]);
@@ -79,7 +79,7 @@ class KecamatanActivityController extends Controller
                 'tempat_kegiatan' => $activity->tempat_kegiatan,
                 'uraian' => $activity->uraian ?? $activity->description,
                 'tanda_tangan' => $activity->tanda_tangan,
-                'activity_date' => $activity->activity_date,
+                'activity_date' => $this->formatDateForPayload($activity->activity_date),
                 'status' => $activity->status,
             ],
             'can' => [
@@ -106,7 +106,7 @@ class KecamatanActivityController extends Controller
                 'tempat_kegiatan' => $activity->tempat_kegiatan,
                 'uraian' => $activity->uraian ?? $activity->description,
                 'tanda_tangan' => $activity->tanda_tangan,
-                'activity_date' => Carbon::parse($activity->activity_date)->format('Y-m-d'),
+                'activity_date' => $this->formatDateForPayload($activity->activity_date),
                 'status' => $activity->status,
             ],
         ]);
@@ -128,5 +128,14 @@ class KecamatanActivityController extends Controller
         $this->activityRepository->delete($activity);
 
         return redirect()->route('kecamatan.activities.index')->with('success', 'Kegiatan berhasil dihapus');
+    }
+
+    private function formatDateForPayload(?string $value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        return Carbon::parse($value)->format('Y-m-d');
     }
 }

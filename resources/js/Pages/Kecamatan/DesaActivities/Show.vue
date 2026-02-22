@@ -2,6 +2,7 @@
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link } from '@inertiajs/vue3'
 import { mdiClipboardList } from '@mdi/js'
 
@@ -23,6 +24,8 @@ const props = defineProps({
     }),
   },
 })
+
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -49,7 +52,7 @@ const props = defineProps({
       <div class="grid gap-4 md:grid-cols-2">
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal</p>
-          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.activity.activity_date }}</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatDate(props.activity.activity_date) }}</p>
         </div>
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jabatan</p>

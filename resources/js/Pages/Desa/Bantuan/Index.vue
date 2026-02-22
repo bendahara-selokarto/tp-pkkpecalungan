@@ -3,6 +3,7 @@ import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiHandHeart } from '@mdi/js'
 import { ref } from 'vue'
@@ -43,6 +44,7 @@ const cancelDelete = () => {
 
 const formatSource = (value) => value.replace('_', ' ')
 const formatAmount = (value) => new Intl.NumberFormat('id-ID').format(Number(value))
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -100,7 +102,7 @@ const formatAmount = (value) => new Intl.NumberFormat('id-ID').format(Number(val
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.category }}</td>
               <td class="px-3 py-3 capitalize text-gray-700 dark:text-gray-300">{{ formatSource(item.source) }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">Rp {{ formatAmount(item.amount) }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.received_date }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.received_date) }}</td>
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
                   <Link

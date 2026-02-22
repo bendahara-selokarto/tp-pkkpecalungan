@@ -41,7 +41,7 @@ class DesaBantuanController extends Controller
                 'description' => $item->description,
                 'source' => $item->source,
                 'amount' => $item->amount,
-                'received_date' => $item->received_date,
+                'received_date' => $this->formatDateForPayload($item->received_date),
             ]),
         ]);
     }
@@ -74,7 +74,7 @@ class DesaBantuanController extends Controller
                 'description' => $bantuan->description,
                 'source' => $bantuan->source,
                 'amount' => $bantuan->amount,
-                'received_date' => $bantuan->received_date,
+                'received_date' => $this->formatDateForPayload($bantuan->received_date),
             ],
         ]);
     }
@@ -92,7 +92,7 @@ class DesaBantuanController extends Controller
                 'description' => $bantuan->description,
                 'source' => $bantuan->source,
                 'amount' => $bantuan->amount,
-                'received_date' => Carbon::parse($bantuan->received_date)->format('Y-m-d'),
+                'received_date' => $this->formatDateForPayload($bantuan->received_date),
             ],
         ]);
     }
@@ -113,5 +113,14 @@ class DesaBantuanController extends Controller
         $this->bantuanRepository->delete($bantuan);
 
         return redirect()->route('desa.bantuans.index')->with('success', 'Data bantuan berhasil dihapus');
+    }
+
+    private function formatDateForPayload(?string $value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        return Carbon::parse($value)->format('Y-m-d');
     }
 }

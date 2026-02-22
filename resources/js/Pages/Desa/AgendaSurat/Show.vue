@@ -2,6 +2,7 @@
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link } from '@inertiajs/vue3'
 import { mdiEmailOpenOutline } from '@mdi/js'
 
@@ -13,6 +14,7 @@ const props = defineProps({
 })
 
 const jenisLabel = (jenis) => (jenis === 'masuk' ? 'Surat Masuk' : 'Surat Keluar')
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -34,11 +36,11 @@ const jenisLabel = (jenis) => (jenis === 'masuk' ? 'Surat Masuk' : 'Surat Keluar
       <div class="grid gap-4 md:grid-cols-2">
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal Surat</p>
-          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.agendaSurat.tanggal_surat || '-' }}</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatDate(props.agendaSurat.tanggal_surat) }}</p>
         </div>
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal Terima</p>
-          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.agendaSurat.tanggal_terima || '-' }}</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatDate(props.agendaSurat.tanggal_terima) }}</p>
         </div>
       </div>
 

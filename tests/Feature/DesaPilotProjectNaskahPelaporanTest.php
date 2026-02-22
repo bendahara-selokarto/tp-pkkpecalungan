@@ -166,4 +166,29 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    #[Test]
+    public function surat_tanggal_harus_format_yyyy_mm_dd(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        $this->actingAs($adminDesa)->post('/desa/pilot-project-naskah-pelaporan', [
+            'judul_laporan' => 'Naskah Tanggal Invalid',
+            'surat_kepada' => 'TP PKK Kecamatan Pecalungan',
+            'surat_dari' => 'Tim Penggerak PKK Desa Gombong',
+            'surat_tanggal' => '22/02/2026',
+            'dasar_pelaksanaan' => 'Dasar pelaksanaan contoh',
+            'pendahuluan' => 'Pendahuluan contoh',
+            'pelaksanaan_1' => 'Pelaksanaan 1',
+            'pelaksanaan_2' => 'Pelaksanaan 2',
+            'pelaksanaan_3' => 'Pelaksanaan 3',
+            'pelaksanaan_4' => 'Pelaksanaan 4',
+            'pelaksanaan_5' => 'Pelaksanaan 5',
+            'penutup' => 'Penutup contoh',
+        ])->assertSessionHasErrors(['surat_tanggal']);
+    }
 }

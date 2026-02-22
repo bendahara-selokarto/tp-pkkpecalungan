@@ -228,4 +228,56 @@ class DesaDataWargaTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    #[Test]
+    public function tanggal_lahir_anggota_harus_format_yyyy_mm_dd_pada_store_dan_update(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        $this->actingAs($adminDesa)->post('/desa/data-warga', [
+            'dasawisma' => 'Melati 09',
+            'nama_kepala_keluarga' => 'Sukmawati',
+            'alamat' => 'RT 09 RW 03',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'anggota' => [
+                [
+                    'nama' => 'Ani',
+                    'tanggal_lahir' => '22/02/2026',
+                ],
+            ],
+        ])->assertSessionHasErrors(['anggota.0.tanggal_lahir']);
+
+        $dataWarga = DataWarga::create([
+            'dasawisma' => 'Melati 10',
+            'nama_kepala_keluarga' => 'Sukmawati 2',
+            'alamat' => 'RT 10 RW 03',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $this->actingAs($adminDesa)->put(route('desa.data-warga.update', $dataWarga->id), [
+            'dasawisma' => 'Melati 10',
+            'nama_kepala_keluarga' => 'Sukmawati 2',
+            'alamat' => 'RT 10 RW 03',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'anggota' => [
+                [
+                    'nama' => 'Budi',
+                    'tanggal_lahir' => '22/02/2026',
+                ],
+            ],
+        ])->assertSessionHasErrors(['anggota.0.tanggal_lahir']);
+    }
 }

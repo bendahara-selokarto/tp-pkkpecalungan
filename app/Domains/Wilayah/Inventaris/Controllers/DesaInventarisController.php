@@ -42,9 +42,7 @@ class DesaInventarisController extends Controller
                 'keterangan' => $item->keterangan ?? $item->description,
                 'quantity' => $item->quantity,
                 'unit' => $item->unit,
-                'tanggal_penerimaan' => $item->tanggal_penerimaan
-                    ? Carbon::parse($item->tanggal_penerimaan)->format('d/m/Y')
-                    : null,
+                'tanggal_penerimaan' => $this->formatDateForPayload($item->tanggal_penerimaan),
                 'tempat_penyimpanan' => $item->tempat_penyimpanan,
                 'condition' => $item->condition,
             ]),
@@ -80,9 +78,7 @@ class DesaInventarisController extends Controller
                 'keterangan' => $inventaris->keterangan ?? $inventaris->description,
                 'quantity' => $inventaris->quantity,
                 'unit' => $inventaris->unit,
-                'tanggal_penerimaan' => $inventaris->tanggal_penerimaan
-                    ? Carbon::parse($inventaris->tanggal_penerimaan)->format('d/m/Y')
-                    : null,
+                'tanggal_penerimaan' => $this->formatDateForPayload($inventaris->tanggal_penerimaan),
                 'tempat_penyimpanan' => $inventaris->tempat_penyimpanan,
                 'condition' => $inventaris->condition,
             ],
@@ -103,9 +99,7 @@ class DesaInventarisController extends Controller
                 'keterangan' => $inventaris->keterangan ?? $inventaris->description,
                 'quantity' => $inventaris->quantity,
                 'unit' => $inventaris->unit,
-                'tanggal_penerimaan' => $inventaris->tanggal_penerimaan
-                    ? Carbon::parse($inventaris->tanggal_penerimaan)->format('Y-m-d')
-                    : null,
+                'tanggal_penerimaan' => $this->formatDateForPayload($inventaris->tanggal_penerimaan),
                 'tempat_penyimpanan' => $inventaris->tempat_penyimpanan,
                 'condition' => $inventaris->condition,
             ],
@@ -128,5 +122,14 @@ class DesaInventarisController extends Controller
         $this->inventarisRepository->delete($inventaris);
 
         return redirect()->route('desa.inventaris.index')->with('success', 'Inventaris berhasil dihapus');
+    }
+
+    private function formatDateForPayload(?string $value): ?string
+    {
+        if (! $value) {
+            return null;
+        }
+
+        return Carbon::parse($value)->format('Y-m-d');
     }
 }

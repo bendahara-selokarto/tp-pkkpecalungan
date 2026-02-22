@@ -28,7 +28,7 @@ class UpdateDataWargaRequest extends FormRequest
             'anggota.*.jabatan' => 'nullable|string|max:120',
             'anggota.*.jenis_kelamin' => 'nullable|in:L,P,l,p',
             'anggota.*.tempat_lahir' => 'nullable|string|max:120',
-            'anggota.*.tanggal_lahir' => 'nullable|date',
+            'anggota.*.tanggal_lahir' => 'nullable|date_format:Y-m-d',
             'anggota.*.umur_tahun' => 'nullable|integer|min:0|max:150',
             'anggota.*.status_perkawinan' => 'nullable|string|max:100',
             'anggota.*.status_dalam_keluarga' => 'nullable|string|max:120',

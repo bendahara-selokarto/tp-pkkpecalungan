@@ -18,7 +18,7 @@ abstract class PilotProjectNaskahPelaporanUpsertRequest extends FormRequest
             'surat_kepada' => 'nullable|string|max:500',
             'surat_dari' => 'nullable|string|max:500',
             'surat_tembusan' => 'nullable|string|max:500',
-            'surat_tanggal' => 'nullable|date',
+            'surat_tanggal' => 'nullable|date_format:Y-m-d',
             'surat_nomor' => 'nullable|string|max:150',
             'surat_sifat' => 'nullable|string|max:150',
             'surat_lampiran' => 'nullable|string|max:255',

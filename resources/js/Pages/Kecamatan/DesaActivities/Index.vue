@@ -2,6 +2,7 @@
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link } from '@inertiajs/vue3'
 import { mdiClipboardList } from '@mdi/js'
 
@@ -11,6 +12,8 @@ defineProps({
     required: true,
   },
 })
+
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -47,7 +50,7 @@ defineProps({
             >
               <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.title }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.area?.name || '-' }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.activity_date }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.activity_date) }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.status }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.creator?.name || '-' }}</td>
               <td class="px-3 py-3">

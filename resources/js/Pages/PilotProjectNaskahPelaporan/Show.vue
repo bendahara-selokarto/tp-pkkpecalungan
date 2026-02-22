@@ -2,6 +2,7 @@
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link } from '@inertiajs/vue3'
 import { mdiFileDocumentOutline } from '@mdi/js'
 import { computed } from 'vue'
@@ -43,6 +44,8 @@ const groupedAttachments = computed(() => {
 
   return base
 })
+
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -70,7 +73,7 @@ const groupedAttachments = computed(() => {
           <div><dt class="text-xs text-gray-500 dark:text-gray-400">Kepada</dt><dd>{{ report.surat_kepada || '-' }}</dd></div>
           <div><dt class="text-xs text-gray-500 dark:text-gray-400">Dari</dt><dd>{{ report.surat_dari || '-' }}</dd></div>
           <div><dt class="text-xs text-gray-500 dark:text-gray-400">Tembusan</dt><dd>{{ report.surat_tembusan || '-' }}</dd></div>
-          <div><dt class="text-xs text-gray-500 dark:text-gray-400">Tanggal</dt><dd>{{ report.surat_tanggal || '-' }}</dd></div>
+          <div><dt class="text-xs text-gray-500 dark:text-gray-400">Tanggal</dt><dd>{{ formatDate(report.surat_tanggal) }}</dd></div>
           <div><dt class="text-xs text-gray-500 dark:text-gray-400">Nomor</dt><dd>{{ report.surat_nomor || '-' }}</dd></div>
           <div><dt class="text-xs text-gray-500 dark:text-gray-400">Sifat</dt><dd>{{ report.surat_sifat || '-' }}</dd></div>
           <div><dt class="text-xs text-gray-500 dark:text-gray-400">Lampiran</dt><dd>{{ report.surat_lampiran || '-' }}</dd></div>

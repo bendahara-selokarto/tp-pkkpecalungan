@@ -3,6 +3,7 @@ import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiClipboardList } from '@mdi/js'
 import { ref } from 'vue'
@@ -40,6 +41,8 @@ const cancelDelete = () => {
   isDeleteModalActive.value = false
   deletingId.value = null
 }
+
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -76,7 +79,7 @@ const cancelDelete = () => {
             >
               <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.nama_petugas || item.title }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.tempat_kegiatan || '-' }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.activity_date }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.activity_date) }}</td>
               <td class="px-3 py-3">
                 <span class="inline-flex rounded-full bg-slate-100 px-2 py-1 text-xs font-medium uppercase text-slate-700 dark:bg-slate-700 dark:text-slate-200">
                   {{ item.status }}
