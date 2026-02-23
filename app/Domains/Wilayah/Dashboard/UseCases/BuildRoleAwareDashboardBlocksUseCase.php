@@ -11,6 +11,20 @@ use Illuminate\Support\Collection;
 class BuildRoleAwareDashboardBlocksUseCase
 {
     /**
+     * @var list<string>
+     */
+    private const POKJA_GROUPS = [
+        'pokja-i',
+        'pokja-ii',
+        'pokja-iii',
+        'pokja-iv',
+    ];
+
+    private const SECTION_SEKRETARIS_1 = 'sekretaris-section-1';
+    private const SECTION_SEKRETARIS_2 = 'sekretaris-section-2';
+    private const SECTION_SEKRETARIS_3 = 'sekretaris-section-3';
+
+    /**
      * @var array<string, string>
      */
     private const GROUP_LABELS = [
@@ -31,7 +45,7 @@ class BuildRoleAwareDashboardBlocksUseCase
     /**
      * @param array<string, mixed> $activityData
      * @param array<string, mixed> $documentData
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed} $dashboardContext
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
      * @return array<int, array<string, mixed>>
      */
     public function execute(
@@ -55,6 +69,16 @@ class BuildRoleAwareDashboardBlocksUseCase
             ->filter(static fn ($item): bool => is_array($item) && is_string($item['slug'] ?? null))
             ->values();
 
+        if ($this->shouldUseSekretarisSections($groupModes)) {
+            return $this->buildSekretarisSectionBlocks(
+                $effectiveScope,
+                $groupModes,
+                $activityData,
+                $documentItems,
+                $dashboardContext
+            );
+        }
+
         $blocks = [];
 
         if (array_key_exists('sekretaris-tpk', $groupModes)) {
@@ -62,7 +86,8 @@ class BuildRoleAwareDashboardBlocksUseCase
                 $effectiveScope,
                 (string) $groupModes['sekretaris-tpk'],
                 $activityData,
-                $dashboardContext
+                $dashboardContext,
+                null
             );
         }
 
@@ -88,7 +113,9 @@ class BuildRoleAwareDashboardBlocksUseCase
                 $effectiveScope,
                 $groupDocumentItems,
                 $modules,
-                $dashboardContext
+                $dashboardContext,
+                null,
+                ''
             );
         }
 
@@ -97,16 +124,17 @@ class BuildRoleAwareDashboardBlocksUseCase
 
     /**
      * @param array<string, mixed> $activityData
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed} $dashboardContext
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
      * @return array<string, mixed>
      */
     private function buildActivityBlock(
         string $effectiveScope,
         string $mode,
         array $activityData,
-        array $dashboardContext
+        array $dashboardContext,
+        ?array $section
     ): array {
-        return [
+        $block = [
             'key' => 'activity-sekretaris-tpk',
             'kind' => 'activity',
             'group' => 'sekretaris-tpk',
@@ -128,12 +156,14 @@ class BuildRoleAwareDashboardBlocksUseCase
                 'filter_context' => $this->buildFilterContext($dashboardContext),
             ],
         ];
+
+        return $this->attachSection($block, $section);
     }
 
     /**
      * @param Collection<int, array<string, mixed>> $groupDocumentItems
      * @param list<string> $modules
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed} $dashboardContext
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
      * @return array<string, mixed>
      */
     private function buildDocumentBlock(
@@ -142,7 +172,9 @@ class BuildRoleAwareDashboardBlocksUseCase
         string $effectiveScope,
         Collection $groupDocumentItems,
         array $modules,
-        array $dashboardContext
+        array $dashboardContext,
+        ?array $section,
+        string $keySuffix
     ): array {
         $statsAccumulator = $groupDocumentItems->reduce(
             function (array $carry, array $item) use ($dashboardContext): array {
@@ -166,8 +198,13 @@ class BuildRoleAwareDashboardBlocksUseCase
             })
             ->values();
 
-        return [
-            'key' => sprintf('documents-%s', $groupKey),
+        $resolvedKeySuffix = trim($keySuffix);
+        $blockKey = $resolvedKeySuffix === ''
+            ? sprintf('documents-%s', $groupKey)
+            : sprintf('documents-%s-%s', $groupKey, $resolvedKeySuffix);
+
+        $block = [
+            'key' => $blockKey,
             'kind' => 'documents',
             'group' => $groupKey,
             'group_label' => self::GROUP_LABELS[$groupKey] ?? $groupKey,
@@ -206,11 +243,13 @@ class BuildRoleAwareDashboardBlocksUseCase
                 'filter_context' => $this->buildFilterContext($dashboardContext),
             ],
         ];
+
+        return $this->attachSection($block, $section);
     }
 
     /**
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed} $dashboardContext
-     * @return array{mode: string, level: string, sub_level: string}
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @return array{mode: string, level: string, sub_level: string, section2_group: string, section3_group: string}
      */
     private function buildFilterContext(array $dashboardContext): array
     {
@@ -218,6 +257,8 @@ class BuildRoleAwareDashboardBlocksUseCase
             'mode' => $this->normalizeContextToken($dashboardContext['mode'] ?? null, 'all'),
             'level' => $this->normalizeContextToken($dashboardContext['level'] ?? null, 'all'),
             'sub_level' => $this->normalizeContextToken($dashboardContext['sub_level'] ?? null, 'all'),
+            'section2_group' => $this->normalizeContextToken($dashboardContext['section2_group'] ?? null, 'all'),
+            'section3_group' => $this->normalizeContextToken($dashboardContext['section3_group'] ?? null, 'all'),
         ];
     }
 
@@ -230,7 +271,7 @@ class BuildRoleAwareDashboardBlocksUseCase
 
     /**
      * @param array<string, mixed> $item
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed} $dashboardContext
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
      */
     private function resolveItemTotalByContext(array $item, array $dashboardContext): int
     {
@@ -257,5 +298,206 @@ class BuildRoleAwareDashboardBlocksUseCase
         $token = strtolower(trim((string) $value));
 
         return $token === '' ? $fallback : $token;
+    }
+
+    /**
+     * @param array<string, string> $groupModes
+     */
+    private function shouldUseSekretarisSections(array $groupModes): bool
+    {
+        if (! array_key_exists('sekretaris-tpk', $groupModes)) {
+            return false;
+        }
+
+        foreach (self::POKJA_GROUPS as $group) {
+            if (array_key_exists($group, $groupModes)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array<string, string> $groupModes
+     * @param array<string, mixed> $activityData
+     * @param Collection<int, array<string, mixed>> $documentItems
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @return array<int, array<string, mixed>>
+     */
+    private function buildSekretarisSectionBlocks(
+        string $effectiveScope,
+        array $groupModes,
+        array $activityData,
+        Collection $documentItems,
+        array $dashboardContext
+    ): array {
+        $blocks = [];
+        $pokjaGroups = array_values(
+            array_filter(
+                self::POKJA_GROUPS,
+                static fn (string $group): bool => array_key_exists($group, $groupModes)
+            )
+        );
+
+        $sekretarisMode = (string) ($groupModes['sekretaris-tpk'] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
+        $blocks[] = $this->buildActivityBlock(
+            $effectiveScope,
+            $sekretarisMode,
+            $activityData,
+            [
+                'mode' => 'by-level',
+                'level' => $effectiveScope,
+                'sub_level' => 'all',
+                'section2_group' => $dashboardContext['section2_group'] ?? 'all',
+                'section3_group' => $dashboardContext['section3_group'] ?? 'all',
+            ],
+            $this->buildSectionMeta(self::SECTION_SEKRETARIS_1, $effectiveScope)
+        );
+
+        $sameLevelContext = [
+            'mode' => 'by-level',
+            'level' => $effectiveScope,
+            'sub_level' => 'all',
+            'section2_group' => $dashboardContext['section2_group'] ?? 'all',
+            'section3_group' => $dashboardContext['section3_group'] ?? 'all',
+        ];
+
+        foreach ($pokjaGroups as $groupKey) {
+            $modules = $this->roleMenuVisibilityService->modulesForGroup($groupKey);
+            if ($modules === []) {
+                continue;
+            }
+
+            $groupDocumentItems = $documentItems
+                ->filter(
+                    static fn (array $item): bool => in_array((string) $item['slug'], $modules, true)
+                )
+                ->values();
+
+            if ($groupDocumentItems->isEmpty()) {
+                continue;
+            }
+
+            $mode = (string) ($groupModes[$groupKey] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
+            $blocks[] = $this->buildDocumentBlock(
+                $groupKey,
+                $mode,
+                $effectiveScope,
+                $groupDocumentItems,
+                $modules,
+                $sameLevelContext,
+                $this->buildSectionMeta(self::SECTION_SEKRETARIS_2, $effectiveScope),
+                'same-level'
+            );
+        }
+
+        if ($effectiveScope !== ScopeLevel::KECAMATAN->value) {
+            return $blocks;
+        }
+
+        $lowerLevelContext = [
+            'mode' => 'by-level',
+            'level' => ScopeLevel::DESA->value,
+            'sub_level' => 'all',
+            'section2_group' => $dashboardContext['section2_group'] ?? 'all',
+            'section3_group' => $dashboardContext['section3_group'] ?? 'all',
+        ];
+
+        foreach ($pokjaGroups as $groupKey) {
+            $modules = $this->roleMenuVisibilityService->modulesForGroup($groupKey);
+            if ($modules === []) {
+                continue;
+            }
+
+            $groupDocumentItems = $documentItems
+                ->filter(
+                    static fn (array $item): bool => in_array((string) $item['slug'], $modules, true)
+                )
+                ->values();
+
+            if ($groupDocumentItems->isEmpty()) {
+                continue;
+            }
+
+            $mode = (string) ($groupModes[$groupKey] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
+            $blocks[] = $this->buildDocumentBlock(
+                $groupKey,
+                $mode,
+                $effectiveScope,
+                $groupDocumentItems,
+                $modules,
+                $lowerLevelContext,
+                $this->buildSectionMeta(self::SECTION_SEKRETARIS_3, $effectiveScope),
+                'lower-level'
+            );
+        }
+
+        return $blocks;
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function buildSectionMeta(string $sectionKey, string $effectiveScope): array
+    {
+        $groupOptions = [
+            ['value' => 'all', 'label' => 'All'],
+            ['value' => 'pokja-i', 'label' => 'Pokja I'],
+            ['value' => 'pokja-ii', 'label' => 'Pokja II'],
+            ['value' => 'pokja-iii', 'label' => 'Pokja III'],
+            ['value' => 'pokja-iv', 'label' => 'Pokja IV'],
+        ];
+
+        return match ($sectionKey) {
+            self::SECTION_SEKRETARIS_1 => [
+                'key' => self::SECTION_SEKRETARIS_1,
+                'label' => 'Section 1 - Domain Sekretaris',
+                'filter' => null,
+                'source_level' => $effectiveScope,
+            ],
+            self::SECTION_SEKRETARIS_2 => [
+                'key' => self::SECTION_SEKRETARIS_2,
+                'label' => 'Section 2 - Pokja Level Aktif',
+                'filter' => [
+                    'query_key' => 'section2_group',
+                    'default' => 'all',
+                    'options' => $groupOptions,
+                ],
+                'source_level' => $effectiveScope,
+            ],
+            self::SECTION_SEKRETARIS_3 => [
+                'key' => self::SECTION_SEKRETARIS_3,
+                'label' => 'Section 3 - Pokja Level Bawah',
+                'filter' => [
+                    'query_key' => 'section3_group',
+                    'default' => 'all',
+                    'options' => $groupOptions,
+                ],
+                'source_level' => ScopeLevel::DESA->value,
+            ],
+            default => [
+                'key' => $sectionKey,
+                'label' => $sectionKey,
+                'filter' => null,
+                'source_level' => $effectiveScope,
+            ],
+        };
+    }
+
+    /**
+     * @param array<string, mixed> $block
+     * @param array<string, mixed>|null $section
+     * @return array<string, mixed>
+     */
+    private function attachSection(array $block, ?array $section): array
+    {
+        if (! is_array($section)) {
+            return $block;
+        }
+
+        $block['section'] = $section;
+
+        return $block;
     }
 }

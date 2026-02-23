@@ -30,6 +30,8 @@ class DashboardController extends Controller
             'mode' => $request->query('mode', 'all'),
             'level' => $request->query('level', 'all'),
             'sub_level' => $request->query('sub_level', 'all'),
+            'section2_group' => $request->query('section2_group', 'all'),
+            'section3_group' => $request->query('section3_group', 'all'),
             'block' => 'documents',
         ];
         $documentData = $this->buildDashboardDocumentCoverageUseCase->execute(

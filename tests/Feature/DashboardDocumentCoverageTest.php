@@ -22,6 +22,8 @@ class DashboardDocumentCoverageTest extends TestCase
 
         Role::create(['name' => 'admin-desa']);
         Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_dashboard_coverage_dokumen_pengguna_desa_hanya_menghitung_data_desanya_sendiri(): void
@@ -166,6 +168,84 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardBlocks', [])
                 ->where('dashboardCharts.documents.level_distribution.values', [0, 0])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 0, 0, 0, 0, 0, 0]);
+        });
+    }
+
+    public function test_dashboard_desa_sekretaris_menghasilkan_section_1_dan_section_2_tanpa_section_3(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $user->assignRole('desa-sekretaris');
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    $section1 = $collected
+                        ->where('section.key', 'sekretaris-section-1')
+                        ->first();
+                    $section2 = $collected
+                        ->where('section.key', 'sekretaris-section-2')
+                        ->first();
+                    $section3 = $collected
+                        ->where('section.key', 'sekretaris-section-3')
+                        ->first();
+
+                    return is_array($section1)
+                        && is_array($section2)
+                        && $section3 === null
+                        && ($section2['sources']['filter_context']['level'] ?? null) === 'desa'
+                        && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'all';
+                });
+        });
+    }
+
+    public function test_dashboard_kecamatan_sekretaris_menghasilkan_section_2_dan_section_3_dengan_konteks_group(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatan->id,
+        ]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->createActivity($user, 'kecamatan', $kecamatan->id, 'Aktivitas Kecamatan');
+        $this->createActivity($user, 'desa', $desa->id, 'Aktivitas Desa');
+
+        $response = $this->actingAs($user)->get(route('dashboard', [
+            'section2_group' => 'pokja-i',
+            'section3_group' => 'pokja-ii',
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    $section2 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-2');
+                    $section3 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-3');
+
+                    return is_array($section2)
+                        && is_array($section3)
+                        && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
+                        && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'pokja-i'
+                        && ($section3['sources']['filter_context']['level'] ?? null) === 'desa'
+                        && ($section3['sources']['filter_context']['section3_group'] ?? null) === 'pokja-ii';
+                });
         });
     }
 
