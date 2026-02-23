@@ -66,3 +66,43 @@ Perintah audit yang dijalankan:
 
 - Tambahkan test guard untuk print endpoint yang otorisasinya delegated (anggota+kader, keuangan).
 - Tambahkan checklist static audit: method publik controller modul domain harus punya `authorize` langsung atau delegasi helper yang tervalidasi.
+
+## Addendum Audit Role-Policy: 2026-02-23
+
+Ruang lingkup audit:
+- Konsistensi `Policy -> Scope Service -> Middleware scope.role`.
+- Koherensi `role` vs `scope` vs `areas.level`.
+- Guardrail mutasi user administratif untuk role `super-admin`.
+
+Metode audit:
+- Pembacaan source pada komponen inti:
+  - `app/Support/RoleScopeMatrix.php`
+  - `app/Http/Middleware/EnsureScopeRole.php`
+  - `app/Domains/Wilayah/Services/UserAreaContextService.php`
+  - `app/Policies/*Policy.php`
+  - `routes/web.php`
+  - `app/Actions/User/*`
+- Verifikasi eksekusi test terfokus policy dan super-admin flow.
+
+Hasil ringkas:
+- Status audit: `PASS`.
+- Tidak ditemukan temuan `critical/high/medium`.
+- Tidak ada perubahan kode pada siklus audit ini (audit-only).
+
+Temuan:
+1. `LOW` - `Gate::before` memberikan bypass penuh untuk `super-admin`.
+   - Lokasi: `app/Providers/AppServiceProvider.php`.
+   - Detail: untuk role `super-admin`, policy detail tidak lagi menjadi guard utama karena seluruh ability diizinkan.
+   - Keputusan: diterima sebagai desain saat ini, dengan catatan tetap dipantau agar tidak terjadi privilege drift yang tidak disengaja.
+2. `LOW` - `CatatanKeluargaPrintController` tidak memasang middleware scope di constructor.
+   - Lokasi: `app/Domains/Wilayah/CatatanKeluarga/Controllers/CatatanKeluargaPrintController.php`.
+   - Detail: saat ini aman karena route ada di group `scope.role:{desa|kecamatan}` pada `routes/web.php`.
+   - Keputusan: diterima, namun rawan regresi jika route dipindah ke luar group tanpa guard setara.
+
+Bukti validasi:
+- `php artisan test tests/Unit/Policies`
+  - hasil: `55` test pass (`88` assertions).
+- `php artisan test tests/Feature/SuperAdmin/UserProtectionTest.php tests/Feature/SuperAdmin/UserScopePresentationTest.php`
+  - hasil: `8` test pass (`65` assertions).
+- `php artisan test tests/Feature/KecamatanReportReverseAreaMismatchTest.php tests/Feature/DesaActivityTest.php`
+  - hasil: `26` test pass (`32` assertions).
