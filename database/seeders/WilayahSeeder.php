@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Desa;
-use App\Models\Kecamatan;
 use App\Domains\Wilayah\Models\Area;
 use Illuminate\Database\Seeder;
 
@@ -40,16 +38,6 @@ class WilayahSeeder extends Seeder
                 'name' => $namaDesa,
                 'level' => 'desa',
                 'parent_id' => $kecamatanArea->id,
-            ]);
-        }
-
-        // Tetap seed tabel legacy agar modul lama tetap konsisten.
-        $legacyKecamatan = Kecamatan::firstOrCreate(['nama' => $kecamatanName]);
-
-        foreach ($desaList as $namaDesa) {
-            Desa::firstOrCreate([
-                'kecamatan_id' => $legacyKecamatan->id,
-                'nama' => $namaDesa,
             ]);
         }
     }

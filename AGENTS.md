@@ -32,10 +32,9 @@ Authorization:
 Domain canonical:
 - `areas` adalah single source of truth wilayah.
 
-Legacy tables (compatibility only):
-- `kecamatans`
-- `desas`
-- `user_assignments`
+Legacy artifacts (historical; non-canonical):
+- `kecamatans`, `desas`, `user_assignments` tidak lagi menjadi jalur write/read aktif.
+- Dilarang menambah coupling baru ke artefak legacy tersebut.
 
 ## 2. Hard Invariants
 
