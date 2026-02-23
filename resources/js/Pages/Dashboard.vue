@@ -151,13 +151,18 @@ const sekretarisSection2Blocks = computed(() =>
 const sekretarisSection3Blocks = computed(() =>
   dynamicBlocks.value.filter((block) => block?.section?.key === 'sekretaris-section-3'),
 )
+const sekretarisSection4Blocks = computed(() =>
+  dynamicBlocks.value.filter((block) => block?.section?.key === 'sekretaris-section-4'),
+)
 const hasSekretarisLowerSection = computed(() => sekretarisSection3Blocks.value.length > 0)
+const hasSekretarisFourthSection = computed(() => sekretarisSection4Blocks.value.length > 0)
 const hasSekretarisSections = computed(() =>
   isSekretarisUser.value
   && (
     sekretarisSection1Blocks.value.length > 0
     || sekretarisSection2Blocks.value.length > 0
     || sekretarisSection3Blocks.value.length > 0
+    || sekretarisSection4Blocks.value.length > 0
   ),
 )
 const shouldShowGlobalDashboardFilters = computed(() =>
@@ -184,6 +189,18 @@ const resolveSectionLabel = (blocks, fallback) => {
   const label = firstBlock?.section?.label
 
   return typeof label === 'string' && label.trim() !== '' ? label : fallback
+}
+
+const resolveSectionDescription = (sectionKey) => {
+  if (sectionKey === 'sekretaris-section-1') {
+    return 'Domain sekretaris tampil tanpa filter pokja.'
+  }
+
+  if (sectionKey === 'sekretaris-section-4') {
+    return 'Rincian sumber data Pokja I per desa turunan mengikuti pilihan filter section 3.'
+  }
+
+  return 'Gunakan filter pokja untuk fokus pada Pokja I-IV atau tampilkan seluruh pokja.'
 }
 
 const resolveSectionFilter = (blocks, fallbackQueryKey) => {
@@ -240,6 +257,15 @@ const dashboardSections = computed(() => {
       label: resolveSectionLabel(sekretarisSection3Blocks.value, 'Section 3 - Pokja Level Bawah'),
       filter: resolveSectionFilter(sekretarisSection3Blocks.value, 'section3_group'),
       blocks: filteredSekretarisSection3Blocks.value,
+    })
+  }
+
+  if (hasSekretarisFourthSection.value) {
+    sections.push({
+      key: 'sekretaris-section-4',
+      label: resolveSectionLabel(sekretarisSection4Blocks.value, 'Section 4 - Rincian Pokja I per Desa'),
+      filter: null,
+      blocks: sekretarisSection4Blocks.value,
     })
   }
 
@@ -509,6 +535,28 @@ const resolveDocumentCoverageItems = (block) => {
   }))
 }
 
+const resolveCoverageDimension = (block) =>
+  normalizeToken(block?.charts?.coverage_per_module?.dimension, 'module')
+
+const resolveCoverageChartHeading = (block) =>
+  (resolveCoverageDimension(block) === 'desa' ? 'Cakupan Per Desa' : 'Cakupan Per Modul')
+
+const resolveCoverageListHeading = (block) =>
+  (resolveCoverageDimension(block) === 'desa' ? 'Nilai Per Desa' : 'Nilai Per Modul')
+
+const resolveCoverageItemDetail = (item) => {
+  const perModule = item?.per_module
+  if (!perModule || typeof perModule !== 'object') {
+    return ''
+  }
+
+  const entries = Object.entries(perModule)
+    .filter(([, count]) => toNumber(count) > 0)
+    .map(([slug, count]) => `${humanizeLabel(slug)}: ${toNumber(count)}`)
+
+  return entries.join(' | ')
+}
+
 const buildDocumentCoverageChartData = (block) => {
   const items = resolveDocumentCoverageItems(block)
 
@@ -715,9 +763,7 @@ const hasLegacyLevelDistributionData = computed(() =>
               <div>
                 <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ section.label }}</h3>
                 <p class="mt-1 text-xs text-slate-500 dark:text-slate-300">
-                  {{ section.key === 'sekretaris-section-1'
-                    ? 'Domain sekretaris tampil tanpa filter pokja.'
-                    : 'Gunakan filter pokja untuk fokus pada Pokja I-IV atau tampilkan seluruh pokja.' }}
+                  {{ resolveSectionDescription(section.key) }}
                 </p>
               </div>
               <div v-if="section.filter" class="lg:ml-auto lg:w-64">
@@ -791,7 +837,7 @@ const hasLegacyLevelDistributionData = computed(() =>
               <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Cakupan Per Modul
+                    {{ resolveCoverageChartHeading(block) }}
                   </h4>
                   <div class="h-80">
                     <BarChart :data="buildDocumentCoverageChartData(block)" horizontal />
@@ -803,16 +849,21 @@ const hasLegacyLevelDistributionData = computed(() =>
 
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Nilai Per Modul
+                    {{ resolveCoverageListHeading(block) }}
                   </h4>
                   <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     <div
                       v-for="item in resolveDocumentCoverageItems(block)"
                       :key="`${block.key}-${item.label}`"
-                      class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
+                      class="rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
                     >
-                      <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
-                      <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
+                      <div class="flex items-center justify-between gap-2">
+                        <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
+                        <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
+                      </div>
+                      <p v-if="resolveCoverageItemDetail(item)" class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                        {{ resolveCoverageItemDetail(item) }}
+                      </p>
                     </div>
                   </div>
                 </div>

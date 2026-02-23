@@ -5,6 +5,8 @@ namespace App\Domains\Wilayah\Dashboard\Repositories;
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
+use App\Domains\Wilayah\Bkl\Models\Bkl;
+use App\Domains\Wilayah\Bkr\Models\Bkr;
 use App\Domains\Wilayah\BukuKeuangan\Models\BukuKeuangan;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
@@ -141,6 +143,77 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
     {
         return collect($this->moduleDefinitions())
             ->map(static fn (array $module): string => (string) $module['slug'])
+            ->values()
+            ->all();
+    }
+
+    public function buildGroupBreakdownByDesa(User $user, array $moduleSlugs): array
+    {
+        if (! is_numeric($user->area_id)) {
+            return [];
+        }
+
+        $areaId = (int) $user->area_id;
+        $scope = $this->resolveEffectiveScope($user, $areaId);
+        if ($scope !== ScopeLevel::KECAMATAN->value) {
+            return [];
+        }
+
+        $desaAreas = $this->areaRepository->getDesaByKecamatan($areaId)
+            ->map(static fn ($area): array => [
+                'id' => (int) $area->id,
+                'name' => (string) $area->name,
+            ])
+            ->values();
+        if ($desaAreas->isEmpty()) {
+            return [];
+        }
+
+        $modelBySlug = $this->breakdownModelMap();
+        $requestedSlugs = collect($moduleSlugs)
+            ->filter(static fn ($slug): bool => is_string($slug) && trim($slug) !== '')
+            ->map(static fn (string $slug): string => strtolower(trim($slug)))
+            ->filter(static fn (string $slug): bool => array_key_exists($slug, $modelBySlug))
+            ->unique()
+            ->values();
+        if ($requestedSlugs->isEmpty()) {
+            return [];
+        }
+
+        $desaIds = $desaAreas->pluck('id')->map(static fn ($id): int => (int) $id)->values();
+        $countsBySlug = [];
+
+        foreach ($requestedSlugs as $slug) {
+            /** @var class-string<Model> $modelClass */
+            $modelClass = $modelBySlug[$slug];
+            $countsBySlug[$slug] = $modelClass::query()
+                ->where('level', ScopeLevel::DESA->value)
+                ->whereIn('area_id', $desaIds->all())
+                ->selectRaw('area_id, COUNT(*) as total')
+                ->groupBy('area_id')
+                ->pluck('total', 'area_id')
+                ->map(static fn ($total): int => (int) $total)
+                ->all();
+        }
+
+        return $desaAreas
+            ->map(function (array $desa) use ($requestedSlugs, $countsBySlug): array {
+                $perModule = [];
+                $total = 0;
+
+                foreach ($requestedSlugs as $slug) {
+                    $count = (int) ($countsBySlug[$slug][(int) $desa['id']] ?? 0);
+                    $perModule[$slug] = $count;
+                    $total += $count;
+                }
+
+                return [
+                    'desa_id' => (int) $desa['id'],
+                    'desa_name' => (string) $desa['name'],
+                    'total' => $total,
+                    'per_module' => $perModule,
+                ];
+            })
             ->values()
             ->all();
     }
@@ -480,5 +553,24 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
                 ],
             ],
         ];
+    }
+
+    /**
+     * @return array<string, class-string<Model>>
+     */
+    private function breakdownModelMap(): array
+    {
+        $map = collect($this->moduleDefinitions())
+            ->mapWithKeys(
+                static fn (array $module): array => [
+                    (string) $module['slug'] => $module['model'],
+                ]
+            )
+            ->all();
+
+        $map['bkl'] = Bkl::class;
+        $map['bkr'] = Bkr::class;
+
+        return $map;
     }
 }

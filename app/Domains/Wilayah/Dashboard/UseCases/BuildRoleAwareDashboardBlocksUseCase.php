@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\Dashboard\UseCases;
 
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
@@ -23,6 +24,7 @@ class BuildRoleAwareDashboardBlocksUseCase
     private const SECTION_SEKRETARIS_1 = 'sekretaris-section-1';
     private const SECTION_SEKRETARIS_2 = 'sekretaris-section-2';
     private const SECTION_SEKRETARIS_3 = 'sekretaris-section-3';
+    private const SECTION_SEKRETARIS_4 = 'sekretaris-section-4';
 
     /**
      * @var array<string, string>
@@ -38,7 +40,8 @@ class BuildRoleAwareDashboardBlocksUseCase
 
     public function __construct(
         private readonly RoleMenuVisibilityService $roleMenuVisibilityService,
-        private readonly UserAreaContextService $userAreaContextService
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository
     ) {
     }
 
@@ -71,6 +74,7 @@ class BuildRoleAwareDashboardBlocksUseCase
 
         if ($this->shouldUseSekretarisSections($groupModes)) {
             return $this->buildSekretarisSectionBlocks(
+                $user,
                 $effectiveScope,
                 $groupModes,
                 $activityData,
@@ -326,6 +330,7 @@ class BuildRoleAwareDashboardBlocksUseCase
      * @return array<int, array<string, mixed>>
      */
     private function buildSekretarisSectionBlocks(
+        User $user,
         string $effectiveScope,
         array $groupModes,
         array $activityData,
@@ -433,7 +438,126 @@ class BuildRoleAwareDashboardBlocksUseCase
             );
         }
 
+        if ($this->shouldRenderSekretarisSection4($effectiveScope, $pokjaGroups, $dashboardContext)) {
+            $section4Block = $this->buildSekretarisSection4Block(
+                $user,
+                $effectiveScope,
+                (string) ($groupModes['pokja-i'] ?? RoleMenuVisibilityService::MODE_READ_ONLY),
+                $dashboardContext
+            );
+
+            if (is_array($section4Block)) {
+                $blocks[] = $section4Block;
+            }
+        }
+
         return $blocks;
+    }
+
+    /**
+     * @param list<string> $pokjaGroups
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     */
+    private function shouldRenderSekretarisSection4(
+        string $effectiveScope,
+        array $pokjaGroups,
+        array $dashboardContext
+    ): bool {
+        if ($effectiveScope !== ScopeLevel::KECAMATAN->value) {
+            return false;
+        }
+
+        if (! in_array('pokja-i', $pokjaGroups, true)) {
+            return false;
+        }
+
+        $selectedSection3Group = $this->normalizeContextToken($dashboardContext['section3_group'] ?? null, 'all');
+
+        return $selectedSection3Group === 'pokja-i';
+    }
+
+    /**
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @return array<string, mixed>|null
+     */
+    private function buildSekretarisSection4Block(
+        User $user,
+        string $effectiveScope,
+        string $mode,
+        array $dashboardContext
+    ): ?array {
+        $sourceModules = [
+            'data-warga',
+            'data-kegiatan-warga',
+            'bkl',
+            'bkr',
+        ];
+
+        $desaBreakdown = collect(
+            $this->dashboardDocumentCoverageRepository->buildGroupBreakdownByDesa($user, $sourceModules)
+        )->values();
+
+        $coverageItems = $desaBreakdown
+            ->map(static function (array $item): array {
+                $desaId = (int) ($item['desa_id'] ?? 0);
+                $desaName = (string) ($item['desa_name'] ?? '-');
+                $total = (int) ($item['total'] ?? 0);
+
+                return [
+                    'slug' => sprintf('desa-%d', $desaId),
+                    'label' => $desaName,
+                    'total' => $total,
+                    'resolved_total' => $total,
+                    'per_module' => is_array($item['per_module'] ?? null) ? $item['per_module'] : [],
+                ];
+            })
+            ->values();
+
+        $totalDesa = $coverageItems->count();
+        $desaTerisi = $coverageItems->filter(static fn (array $item): bool => (int) ($item['total'] ?? 0) > 0)->count();
+        $totalEntries = $coverageItems->sum(static fn (array $item): int => (int) ($item['total'] ?? 0));
+
+        return $this->attachSection([
+            'key' => 'documents-pokja-i-desa-breakdown',
+            'kind' => 'documents',
+            'group' => 'pokja-i',
+            'group_label' => self::GROUP_LABELS['pokja-i'],
+            'mode' => $mode,
+            'title' => sprintf(
+                'Dashboard %s - %s (Rincian Per Desa)',
+                self::GROUP_LABELS['pokja-i'],
+                strtoupper($effectiveScope)
+            ),
+            'stats' => [
+                'total_buku_tracked' => $totalDesa,
+                'buku_terisi' => $desaTerisi,
+                'buku_belum_terisi' => $totalDesa - $desaTerisi,
+                'total_entri_buku' => $totalEntries,
+            ],
+            'charts' => [
+                'coverage_per_module' => [
+                    'labels' => $coverageItems->pluck('label')->all(),
+                    'values' => $coverageItems->pluck('total')->all(),
+                    'items' => $coverageItems->all(),
+                    'dimension' => 'desa',
+                ],
+            ],
+            'sources' => [
+                'source_group' => 'pokja-i',
+                'source_scope' => $effectiveScope,
+                'source_area_type' => 'desa-turunan',
+                'source_modules' => $sourceModules,
+                'tracked_modules' => $sourceModules,
+                'source_note' => 'Rincian sumber data Pokja I per desa turunan pada kecamatan aktif.',
+                'filter_context' => $this->buildFilterContext([
+                    'mode' => 'by-level',
+                    'level' => ScopeLevel::DESA->value,
+                    'sub_level' => 'all',
+                    'section2_group' => $dashboardContext['section2_group'] ?? 'all',
+                    'section3_group' => $dashboardContext['section3_group'] ?? 'all',
+                ]),
+            ],
+        ], $this->buildSectionMeta(self::SECTION_SEKRETARIS_4, $effectiveScope));
     }
 
     /**
@@ -474,6 +598,13 @@ class BuildRoleAwareDashboardBlocksUseCase
                     'default' => 'all',
                     'options' => $groupOptions,
                 ],
+                'source_level' => ScopeLevel::DESA->value,
+            ],
+            self::SECTION_SEKRETARIS_4 => [
+                'key' => self::SECTION_SEKRETARIS_4,
+                'label' => 'Section 4 - Rincian Pokja I per Desa',
+                'filter' => null,
+                'depends_on' => 'section3_group:pokja-i',
                 'source_level' => ScopeLevel::DESA->value,
             ],
             default => [

@@ -12,4 +12,15 @@ interface DashboardDocumentCoverageRepositoryInterface
      * @return list<string>
      */
     public function trackedModuleSlugs(): array;
+
+    /**
+     * @param list<string> $moduleSlugs
+     * @return list<array{
+     *     desa_id: int,
+     *     desa_name: string,
+     *     total: int,
+     *     per_module: array<string, int>
+     * }>
+     */
+    public function buildGroupBreakdownByDesa(User $user, array $moduleSlugs): array;
 }
