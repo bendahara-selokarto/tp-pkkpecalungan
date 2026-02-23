@@ -88,6 +88,7 @@ use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNas
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNaskahPelaporanRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepository;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
+use App\Domains\Wilayah\Dashboard\Observers\InvalidateDashboardDocumentCacheObserver;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
 use App\Policies\ProgramPrioritasPolicy;
@@ -338,5 +339,41 @@ class AppServiceProvider extends ServiceProvider
                 'path' => $event->request->path(),
             ]);
         });
+
+        $this->registerDashboardDocumentCacheInvalidationObserver();
+    }
+
+    private function registerDashboardDocumentCacheInvalidationObserver(): void
+    {
+        foreach ($this->dashboardDocumentCacheInvalidationModels() as $modelClass) {
+            $modelClass::observe(InvalidateDashboardDocumentCacheObserver::class);
+        }
+    }
+
+    /**
+     * @return list<class-string>
+     */
+    private function dashboardDocumentCacheInvalidationModels(): array
+    {
+        return [
+            Activity::class,
+            AgendaSurat::class,
+            AnggotaTimPenggerak::class,
+            BukuKeuangan::class,
+            DataIndustriRumahTangga::class,
+            DataKegiatanWarga::class,
+            DataKeluarga::class,
+            DataPelatihanKader::class,
+            DataPemanfaatanTanahPekaranganHatinyaPkk::class,
+            DataWarga::class,
+            Inventaris::class,
+            KaderKhusus::class,
+            KejarPaket::class,
+            Koperasi::class,
+            Posyandu::class,
+            SimulasiPenyuluhan::class,
+            TamanBacaan::class,
+            WarungPkk::class,
+        ];
     }
 }

@@ -53,6 +53,19 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardStats.documents.buku_terisi', 4)
                 ->where('dashboardStats.documents.buku_belum_terisi', 15)
                 ->where('dashboardStats.documents.total_entri_buku', 4)
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    if ($collected->isEmpty()) {
+                        return false;
+                    }
+
+                    return $collected->contains(function ($block): bool {
+                        return is_array($block)
+                            && is_array($block['sources'] ?? null)
+                            && ($block['sources']['source_scope'] ?? null) === 'desa'
+                            && is_array($block['sources']['source_modules'] ?? null);
+                    });
+                })
                 ->where('dashboardCharts.documents.level_distribution.values', [4, 0])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 1, 1, 1])
                 ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
@@ -97,6 +110,19 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardStats.documents.buku_terisi', 2)
                 ->where('dashboardStats.documents.buku_belum_terisi', 17)
                 ->where('dashboardStats.documents.total_entri_buku', 3)
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    if ($collected->isEmpty()) {
+                        return false;
+                    }
+
+                    return $collected->contains(function ($block): bool {
+                        return is_array($block)
+                            && is_array($block['sources'] ?? null)
+                            && ($block['sources']['source_scope'] ?? null) === 'kecamatan'
+                            && ($block['sources']['source_area_type'] ?? null) === 'area-sendiri+desa-turunan';
+                    });
+                })
                 ->where('dashboardCharts.documents.level_distribution.values', [1, 2])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 2, 0, 0])
                 ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
@@ -137,6 +163,7 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardStats.documents.buku_terisi', 0)
                 ->where('dashboardStats.documents.buku_belum_terisi', 19)
                 ->where('dashboardStats.documents.total_entri_buku', 0)
+                ->where('dashboardBlocks', [])
                 ->where('dashboardCharts.documents.level_distribution.values', [0, 0])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 0, 0, 0, 0, 0, 0]);
         });

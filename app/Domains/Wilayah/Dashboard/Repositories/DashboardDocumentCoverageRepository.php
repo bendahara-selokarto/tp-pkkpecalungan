@@ -137,6 +137,14 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
         ];
     }
 
+    public function trackedModuleSlugs(): array
+    {
+        return collect($this->moduleDefinitions())
+            ->map(static fn (array $module): string => (string) $module['slug'])
+            ->values()
+            ->all();
+    }
+
     /**
      * @param array<int, array<string, mixed>> $moduleItems
      * @return array<int, array{lampiran_group: string, total: int}>

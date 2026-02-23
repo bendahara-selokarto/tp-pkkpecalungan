@@ -171,6 +171,14 @@ class RoleMenuVisibilityService
     }
 
     /**
+     * @return list<string>
+     */
+    public function modulesForGroup(string $group): array
+    {
+        return self::GROUP_MODULES[$group] ?? [];
+    }
+
+    /**
      * @return array<string, string>
      */
     private function resolveGroupModesForScope(User $user, string $scope): array

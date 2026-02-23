@@ -23,6 +23,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
 
         Cache::flush();
         Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
     }
 
     public function test_use_case_menghitung_agregasi_per_modul_dan_per_lampiran(): void
@@ -93,7 +94,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
         $this->assertSame(1, $items->get('catatan-keluarga')['total']);
     }
 
-    public function test_use_case_menggunakan_cache_scope_area_dengan_ttl_pendek(): void
+    public function test_use_case_cache_dashboard_terinvalidasi_otomatis_saat_data_berubah(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -127,13 +128,75 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
             'status' => 'published',
         ]);
 
+        $freshAfterMutationPayload = $useCase->execute($user);
+        $this->assertSame(2, $freshAfterMutationPayload['stats']['total_entri_buku']);
+
         $cachedPayload = $useCase->execute($user);
-        $this->assertSame(1, $cachedPayload['stats']['total_entri_buku']);
+        $this->assertSame(2, $cachedPayload['stats']['total_entri_buku']);
+    }
 
-        Cache::flush();
+    public function test_use_case_cache_key_memisahkan_role_signature_dan_filter_signature(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
-        $freshPayload = $useCase->execute($user);
-        $this->assertSame(2, $freshPayload['stats']['total_entri_buku']);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $user->assignRole('admin-desa');
+
+        Activity::create([
+            'title' => 'Aktivitas A',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        $useCase = app(BuildDashboardDocumentCoverageUseCase::class);
+        $defaultContext = [
+            'mode' => 'all',
+            'level' => 'all',
+            'sub_level' => 'all',
+            'block' => 'documents',
+        ];
+
+        $firstPayload = $useCase->execute($user, $defaultContext);
+        $this->assertSame(1, $firstPayload['stats']['total_entri_buku']);
+
+        Activity::create([
+            'title' => 'Aktivitas B',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        $recalculatedByInvalidationPayload = $useCase->execute($user, $defaultContext);
+        $this->assertSame(2, $recalculatedByInvalidationPayload['stats']['total_entri_buku']);
+
+        $user->assignRole('desa-sekretaris');
+        $recalculatedByRolePayload = $useCase->execute($user, $defaultContext);
+        $this->assertSame(2, $recalculatedByRolePayload['stats']['total_entri_buku']);
+
+        Activity::create([
+            'title' => 'Aktivitas C',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        $recalculatedByFilterPayload = $useCase->execute($user, [
+            'mode' => 'by-level',
+            'level' => 'desa',
+            'sub_level' => 'all',
+            'block' => 'documents',
+        ]);
+        $this->assertSame(3, $recalculatedByFilterPayload['stats']['total_entri_buku']);
     }
 }
-
