@@ -9,17 +9,17 @@ import { mdiHandHeart } from '@mdi/js'
 import { ref } from 'vue'
 
 defineProps({
-  bantuans: {
+  entries: {
     type: Array,
     required: true,
   },
 })
 
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data bantuan ini?'
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus transaksi buku keuangan ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 
-const hapusBantuan = (id) => {
+const hapusEntry = (id) => {
   deletingId.value = id
   isDeleteModalActive.value = true
 }
@@ -29,7 +29,7 @@ const confirmDelete = () => {
     return
   }
 
-  router.delete(`/desa/bantuans/${deletingId.value}`, {
+  router.delete(`/desa/buku-keuangan/${deletingId.value}`, {
     onFinish: () => {
       isDeleteModalActive.value = false
       deletingId.value = null
@@ -43,20 +43,24 @@ const cancelDelete = () => {
 }
 
 const formatSource = (value) => value.replace('_', ' ')
+const formatEntryType = (value) => value === 'pengeluaran' ? 'Pengeluaran' : 'Pemasukan'
+const entryTypeClass = (value) => value === 'pengeluaran'
+  ? 'border-rose-200 text-rose-700 dark:border-rose-900/50 dark:text-rose-300'
+  : 'border-emerald-200 text-emerald-700 dark:border-emerald-900/50 dark:text-emerald-300'
 const formatAmount = (value) => new Intl.NumberFormat('id-ID').format(Number(value))
 const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiHandHeart" title="Bantuan Desa" main />
+    <SectionTitleLineWithButton :icon="mdiHandHeart" title="Buku Keuangan Desa" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Bantuan</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Transaksi Keuangan</h3>
         <div class="flex items-center gap-2">
           <a
-            href="/desa/bantuans/report/pdf"
+            href="/desa/buku-keuangan/report/pdf"
             target="_blank"
             rel="noopener"
             class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
@@ -64,47 +68,53 @@ const formatDate = (value) => formatDateForDisplay(value)
             Cetak PDF
           </a>
           <Link
-            href="/desa/bantuans/create"
+            href="/desa/buku-keuangan/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Bantuan
+            + Tambah Transaksi
           </Link>
         </div>
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full min-w-[900px] text-sm">
+        <table class="w-full min-w-[1080px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
-              <th class="px-3 py-3 font-semibold">Nama</th>
-              <th class="px-3 py-3 font-semibold">Jenis</th>
-              <th class="px-3 py-3 font-semibold">Sumber</th>
-              <th class="px-3 py-3 font-semibold">Nominal</th>
               <th class="px-3 py-3 font-semibold">Tanggal</th>
+              <th class="px-3 py-3 font-semibold">Sumber</th>
+              <th class="px-3 py-3 font-semibold">Uraian</th>
+              <th class="px-3 py-3 font-semibold">No Bukti</th>
+              <th class="px-3 py-3 font-semibold">Jenis</th>
+              <th class="px-3 py-3 font-semibold">Nominal</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="item in bantuans"
+              v-for="item in entries"
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
-              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.name }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.category }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.transaction_date) }}</td>
               <td class="px-3 py-3 capitalize text-gray-700 dark:text-gray-300">{{ formatSource(item.source) }}</td>
+              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.description }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.reference_number || '-' }}</td>
+              <td class="px-3 py-3">
+                <span class="inline-flex rounded-md border px-2 py-1 text-xs font-semibold" :class="entryTypeClass(item.entry_type)">
+                  {{ formatEntryType(item.entry_type) }}
+                </span>
+              </td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">Rp {{ formatAmount(item.amount) }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.received_date) }}</td>
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
                   <Link
-                    :href="`/desa/bantuans/${item.id}`"
+                    :href="`/desa/buku-keuangan/${item.id}`"
                     class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
                   >
                     Lihat
                   </Link>
                   <Link
-                    :href="`/desa/bantuans/${item.id}/edit`"
+                    :href="`/desa/buku-keuangan/${item.id}/edit`"
                     class="inline-flex rounded-md border border-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
                   >
                     Edit
@@ -112,16 +122,16 @@ const formatDate = (value) => formatDateForDisplay(value)
                   <button
                     type="button"
                     class="inline-flex rounded-md border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
-                    @click="hapusBantuan(item.id)"
+                    @click="hapusEntry(item.id)"
                   >
                     Hapus
                   </button>
                 </div>
               </td>
             </tr>
-            <tr v-if="bantuans.length === 0">
-              <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data bantuan belum tersedia.
+            <tr v-if="entries.length === 0">
+              <td colspan="7" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                Data buku keuangan belum tersedia.
               </td>
             </tr>
           </tbody>

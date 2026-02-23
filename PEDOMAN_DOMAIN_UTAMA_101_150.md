@@ -27,7 +27,7 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - [x] 4.9a Buku Daftar Anggota Tim Penggerak PKK -> `anggota-tim-penggerak`.
 - [x] 4.9b Buku Daftar Kader Tim Penggerak PKK -> `kader-khusus` (domain teknis dipertahankan, label/PDF sudah identik pedoman).
 - [x] 4.10 Buku Agenda Surat -> `agenda-surat`.
-- [x] 4.11 Buku Keuangan -> `bantuans` (report arus masuk/keluar + saldo sudah dinormalisasi).
+- [x] 4.11 Buku Keuangan -> `buku-keuangan` (domain transaksi keuangan berdiri mandiri; route alias lama `bantuans.keuangan` dipertahankan untuk kompatibilitas).
 - [x] 4.12 Buku Inventaris -> `inventaris`.
 - [x] 4.13 Buku Kegiatan -> domain `kegiatan` (route teknis: `activities`).
 - [x] 4.14.4a Data Aset (Sarana) Desa/Kelurahan -> `warung-pkk` (domain teknis dipertahankan, label/PDF sudah identik pedoman).

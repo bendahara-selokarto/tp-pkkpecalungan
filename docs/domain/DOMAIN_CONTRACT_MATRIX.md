@@ -13,7 +13,7 @@ Aturan baca:
 | 4.9a | `anggota-tim-penggerak` | Buku Daftar Anggota Tim Penggerak PKK | `nama`, `jabatan`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `status_perkawinan`, `alamat`, `pendidikan`, `pekerjaan`, `keterangan` | `BUKU DAFTAR ANGGOTA TIM PENGGERAK PKK` | PubHTML5 101-150 (Lampiran 4.9a) | match (header nomor kolom 1-11 sinkron autentik) |
 | 4.9b | `kader-khusus` | Buku Daftar Anggota TP PKK dan Kader | Field inti existing: `nama`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `status_perkawinan`, `alamat`, `pendidikan`, `jenis_kader_khusus`, `keterangan`; kolom autentik kompatibilitas report: `nomor_registrasi_tp_pkk`, `kedudukan_keanggotaan_tp_pkk`, `kader_umum`, `pekerjaan` | `BUKU DAFTAR ANGGOTA TP PKK DAN KADER` | PubHTML5 101-150 (Lampiran 4.9b) | partial match (layout autentik sinkron, sebagian kolom masih mode kompatibilitas) |
 | 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | `jenis_surat`, `tanggal_terima`, `tanggal_surat`, `nomor_surat`, `asal_surat`, `dari`, `kepada`, `perihal`, `lampiran`, `diteruskan_kepada`, `tembusan`, `keterangan` | `BUKU AGENDA SURAT MASUK/KELUAR` | PubHTML5 101-150 (Lampiran 4.10) | match (merge header + nomor kolom 1-15 sinkron autentik) |
-| 4.11 | `bantuans` (keuangan report) | Buku Tabungan | `name`, `category`, `description`, `source`, `amount`, `received_date` (diproyeksikan ke blok penerimaan/pengeluaran) | `BUKU TABUNGAN` | PubHTML5 101-150 (Lampiran 4.11) | partial match (layout autentik 12 kolom sinkron, nomor bukti kas masih generated compatibility) |
+| 4.11 | `buku-keuangan` | Buku Tabungan | `transaction_date`, `source`, `description`, `reference_number`, `entry_type`, `amount` | `BUKU TABUNGAN` | PubHTML5 101-150 (Lampiran 4.11) | implemented (layout autentik 12 kolom sinkron; domain transaksi keuangan terpisah dari bantuan) |
 | 4.12 | `inventaris` | Buku Inventaris | `name`, `asal_barang`, `tanggal_penerimaan`, `quantity`, `unit`, `tempat_penyimpanan`, `condition`, `description`, `keterangan` | `BUKU INVENTARIS` | PubHTML5 101-150 (Lampiran 4.12) | match (header + nomor kolom 1-8 sinkron autentik) |
 | 4.13 | `activities` | Buku Kegiatan | `title`, `nama_petugas`, `jabatan_petugas`, `activity_date`, `tempat_kegiatan`, `description`, `uraian`, `status`, `tanda_tangan` | `BUKU KEGIATAN` | PubHTML5 101-150 (Lampiran 4.13) | match (group header `KEGIATAN` + nomor kolom 1-7 sinkron autentik) |
 | 4.14.1a | `data-warga` | Daftar Warga TP PKK | Header rumah tangga: `dasawisma`, `nama_kepala_keluarga`; detail anggota autentik 1-20: `nomor_registrasi`, `nomor_ktp_kk`, `nama`, `jabatan`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `umur_tahun`, `status_perkawinan`, `status_dalam_keluarga`, `agama`, `alamat`, `desa_kel_sejenis`, `pendidikan`, `pekerjaan`, `akseptor_kb`, `aktif_posyandu`, `ikut_bkb`, `memiliki_tabungan`, `ikut_kelompok_belajar`, `jenis_kelompok_belajar`, `ikut_paud`, `ikut_koperasi`; field agregat legacy transisi: `jumlah_warga_laki_laki`, `jumlah_warga_perempuan`, `keterangan` | `DAFTAR WARGA TP PKK` | Dokumen autentik `d:\\pedoman\\153.pdf` (Lampiran 4.14.1a) | implemented (struktur detail + PDF portrait autentik, kompatibilitas summary tetap aktif) |
@@ -56,6 +56,7 @@ Aturan baca:
   - `database/migrations/2026_02_20_210000_create_kader_khusus_table.php`
   - `database/migrations/2026_02_21_050000_create_agenda_surats_table.php`
   - `database/migrations/2026_02_16_180000_create_bantuans_table.php`
+  - `database/migrations/2026_02_23_070000_create_buku_keuangans_table.php`
   - `database/migrations/2026_02_16_170000_create_inventaris_table.php`
   - `database/migrations/2026_02_11_211614_create_activities_table.php`
   - `database/migrations/2026_02_21_030000_extend_inventaris_and_activities_for_secretary_books.php`
@@ -135,7 +136,7 @@ Mapping grup sidebar:
 
 | Grup Sidebar | Slug Modul |
 | --- | --- |
-| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `bantuans`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba` |
+| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-keuangan`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba` |
 | Pokja I | `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr` |
 | Pokja II | `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
 | Pokja III | `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |

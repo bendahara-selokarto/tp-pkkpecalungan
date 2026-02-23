@@ -47,6 +47,7 @@ class KecamatanReportReverseAreaMismatchTest extends TestCase
             ['kecamatan.kader-khusus.report'],
             ['kecamatan.agenda-surat.report'],
             ['kecamatan.agenda-surat.ekspedisi.report'],
+            ['kecamatan.buku-keuangan.report'],
             ['kecamatan.bantuans.keuangan.report'],
             ['kecamatan.inventaris.report'],
             ['kecamatan.data-warga.report'],

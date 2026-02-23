@@ -12,7 +12,7 @@
 ## Keputusan
 - [x] Sinkronisasi prioritas dilakukan pada layer report PDF + fixture + test (E2E output contract).
 - [x] `4.14.2a` dipertahankan sebagai mode summary operasional sesuai kontrak data existing saat ini; migrasi penuh form autentik ditunda sebagai refactor terpisah.
-- [x] `4.11` memakai layout autentik dua blok (penerimaan/pengeluaran) dengan sumber data tetap dari domain `bantuans`.
+- [x] `4.11` memakai layout autentik dua blok (penerimaan/pengeluaran); sumber data telah dipisah ke domain `buku-keuangan` (alias route legacy tetap tersedia).
 - [x] `4.9b` dan `4.11` memakai mode kompatibilitas untuk kolom yang belum tersedia penuh di domain (placeholder/generate token terkontrol di report).
 
 ## Langkah Eksekusi

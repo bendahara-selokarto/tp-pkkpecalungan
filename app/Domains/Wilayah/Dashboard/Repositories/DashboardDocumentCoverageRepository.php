@@ -5,7 +5,7 @@ namespace App\Domains\Wilayah\Dashboard\Repositories;
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
-use App\Domains\Wilayah\Bantuan\Models\Bantuan;
+use App\Domains\Wilayah\BukuKeuangan\Models\BukuKeuangan;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\DataKeluarga\Models\DataKeluarga;
@@ -297,9 +297,9 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
             [
                 'lampiran' => '4.11',
                 'lampiran_group' => '4.11',
-                'slug' => 'bantuans',
+                'slug' => 'buku-keuangan',
                 'label' => 'Buku Keuangan',
-                'model' => Bantuan::class,
+                'model' => BukuKeuangan::class,
                 'include_descendant_for_kecamatan' => false,
             ],
             [

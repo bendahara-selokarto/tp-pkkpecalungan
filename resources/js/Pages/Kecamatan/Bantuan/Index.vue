@@ -56,14 +56,6 @@ const formatDate = (value) => formatDateForDisplay(value)
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Bantuan</h3>
         <div class="flex items-center gap-2">
           <a
-            href="/kecamatan/bantuans/keuangan/report/pdf"
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center rounded-md border border-indigo-300 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-50 dark:border-indigo-900/50 dark:text-indigo-300 dark:hover:bg-indigo-900/20"
-          >
-            Buku Keuangan
-          </a>
-          <a
             href="/kecamatan/bantuans/report/pdf"
             target="_blank"
             rel="noopener"

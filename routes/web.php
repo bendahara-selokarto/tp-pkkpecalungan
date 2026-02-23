@@ -17,6 +17,9 @@ use App\Domains\Wilayah\Inventaris\Controllers\InventarisReportPrintController;
 use App\Domains\Wilayah\Bantuan\Controllers\DesaBantuanController;
 use App\Domains\Wilayah\Bantuan\Controllers\KecamatanBantuanController;
 use App\Domains\Wilayah\Bantuan\Controllers\BantuanReportPrintController;
+use App\Domains\Wilayah\BukuKeuangan\Controllers\DesaBukuKeuanganController;
+use App\Domains\Wilayah\BukuKeuangan\Controllers\KecamatanBukuKeuanganController;
+use App\Domains\Wilayah\BukuKeuangan\Controllers\BukuKeuanganReportPrintController;
 use App\Domains\Wilayah\AnggotaPokja\Controllers\DesaAnggotaPokjaController;
 use App\Domains\Wilayah\AnggotaPokja\Controllers\KecamatanAnggotaPokjaController;
 use App\Domains\Wilayah\AnggotaPokja\Controllers\AnggotaPokjaReportPrintController;
@@ -123,6 +126,7 @@ Route::prefix('desa')
         Route::resource('agenda-surat', DesaAgendaSuratController::class);
         Route::resource('inventaris', DesaInventarisController::class);
         Route::resource('bantuans', DesaBantuanController::class);
+        Route::resource('buku-keuangan', DesaBukuKeuanganController::class);
         Route::resource('anggota-pokja', DesaAnggotaPokjaController::class);
         Route::resource('anggota-tim-penggerak', DesaAnggotaTimPenggerakController::class);
         Route::resource('kader-khusus', DesaKaderKhususController::class);
@@ -152,7 +156,8 @@ Route::prefix('desa')
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printDesaReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printDesaReport'])->name('bantuans.report');
-        Route::get('bantuans/keuangan/report/pdf', [BantuanReportPrintController::class, 'printDesaKeuanganReport'])->name('bantuans.keuangan.report');
+        Route::get('buku-keuangan/report/pdf', [BukuKeuanganReportPrintController::class, 'printDesaReport'])->name('buku-keuangan.report');
+        Route::get('bantuans/keuangan/report/pdf', [BukuKeuanganReportPrintController::class, 'printDesaReport'])->name('bantuans.keuangan.report');
         Route::get('anggota-pokja/report/pdf', [AnggotaPokjaReportPrintController::class, 'printDesaReport'])->name('anggota-pokja.report');
         Route::get('anggota-tim-penggerak/report/pdf', [AnggotaTimPenggerakReportPrintController::class, 'printDesaReport'])->name('anggota-tim-penggerak.report');
         Route::get('anggota-tim-penggerak-kader/report/pdf', [AnggotaTimPenggerakReportPrintController::class, 'printDesaAnggotaDanKaderReport'])->name('anggota-tim-penggerak-kader.report');
@@ -204,6 +209,7 @@ Route::prefix('kecamatan')
         Route::resource('agenda-surat', KecamatanAgendaSuratController::class);
         Route::resource('inventaris', KecamatanInventarisController::class);
         Route::resource('bantuans', KecamatanBantuanController::class);
+        Route::resource('buku-keuangan', KecamatanBukuKeuanganController::class);
         Route::resource('anggota-pokja', KecamatanAnggotaPokjaController::class);
         Route::resource('anggota-tim-penggerak', KecamatanAnggotaTimPenggerakController::class);
         Route::resource('kader-khusus', KecamatanKaderKhususController::class);
@@ -233,7 +239,8 @@ Route::prefix('kecamatan')
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printKecamatanReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printKecamatanReport'])->name('bantuans.report');
-        Route::get('bantuans/keuangan/report/pdf', [BantuanReportPrintController::class, 'printKecamatanKeuanganReport'])->name('bantuans.keuangan.report');
+        Route::get('buku-keuangan/report/pdf', [BukuKeuanganReportPrintController::class, 'printKecamatanReport'])->name('buku-keuangan.report');
+        Route::get('bantuans/keuangan/report/pdf', [BukuKeuanganReportPrintController::class, 'printKecamatanReport'])->name('bantuans.keuangan.report');
         Route::get('anggota-pokja/report/pdf', [AnggotaPokjaReportPrintController::class, 'printKecamatanReport'])->name('anggota-pokja.report');
         Route::get('anggota-tim-penggerak/report/pdf', [AnggotaTimPenggerakReportPrintController::class, 'printKecamatanReport'])->name('anggota-tim-penggerak.report');
         Route::get('anggota-tim-penggerak-kader/report/pdf', [AnggotaTimPenggerakReportPrintController::class, 'printKecamatanAnggotaDanKaderReport'])->name('anggota-tim-penggerak-kader.report');

@@ -37,7 +37,7 @@ Sumber acuan:
 | Sekretaris TPK | Buku Daftar Anggota Tim Penggerak PKK | `/{scope}/anggota-tim-penggerak` |
 | Sekretaris TPK | Buku Daftar Kader Tim Penggerak PKK | `/{scope}/kader-khusus` |
 | Sekretaris TPK | Buku Agenda Surat Masuk/Keluar | `/{scope}/agenda-surat` |
-| Sekretaris TPK | Buku Keuangan | `/{scope}/bantuans` |
+| Sekretaris TPK | Buku Keuangan | `/{scope}/buku-keuangan` |
 | Sekretaris TPK | Buku Inventaris | `/{scope}/inventaris` |
 | Sekretaris TPK | Buku Kegiatan | `/{scope}/activities` |
 | Sekretaris TPK | Anggota Pokja | `/{scope}/anggota-pokja` |

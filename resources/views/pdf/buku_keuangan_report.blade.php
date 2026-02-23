@@ -49,7 +49,7 @@
                 <th style="width: 8%;">SUMBER DANA</th>
                 <th style="width: 8%;">URAIAN</th>
                 <th style="width: 8%;">NOMOR BUKTI KAS</th>
-                <th style="width: 13%;">JUMLAH PENERIMAAN (Rp.)</th>
+                <th style="width: 13%;">JUMLAH PENGELUARAN (Rp.)</th>
                 <th style="width: 3%;">NO</th>
                 <th style="width: 8%;">TANGGAL,<br>BULAN,<br>TAHUN</th>
                 <th style="width: 8%;">SUMBER DANA</th>

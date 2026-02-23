@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Domains\Wilayah\Bantuan\Models\Bantuan;
+use App\Domains\Wilayah\BukuKeuangan\Models\BukuKeuangan;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,47 +29,47 @@ class BukuKeuanganReportPrintTest extends TestCase
         $this->desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $this->kecamatanA->id]);
     }
 
-    public function test_admin_desa_dapat_mencetak_buku_keuangan_dari_data_bantuan_desanya_sendiri(): void
+    public function test_admin_desa_dapat_mencetak_buku_keuangan_dari_data_transaksi_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
         $user->assignRole('admin-desa');
 
-        Bantuan::create([
-            'name' => 'Bantuan Operasional',
-            'category' => 'Keuangan',
-            'description' => 'Tahap 1',
+        BukuKeuangan::create([
+            'transaction_date' => now()->toDateString(),
             'source' => 'pusat',
+            'description' => 'Setoran iuran rutin',
+            'reference_number' => 'BK-001',
+            'entry_type' => 'pemasukan',
             'amount' => 1000000,
-            'received_date' => now()->toDateString(),
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->get(route('desa.bantuans.keuangan.report'));
+        $response = $this->actingAs($user)->get(route('desa.buku-keuangan.report'));
 
         $response->assertOk();
         $response->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_admin_kecamatan_dapat_mencetak_buku_keuangan_dari_data_bantuan_kecamatannya_sendiri(): void
+    public function test_admin_kecamatan_dapat_mencetak_buku_keuangan_dari_data_transaksi_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
         $user->assignRole('admin-kecamatan');
 
-        Bantuan::create([
-            'name' => 'Bantuan Program',
-            'category' => 'Uang',
-            'description' => 'Tahap 2',
+        BukuKeuangan::create([
+            'transaction_date' => now()->toDateString(),
             'source' => 'kabupaten',
+            'description' => 'Belanja ATK sekretariat',
+            'reference_number' => 'BK-002',
+            'entry_type' => 'pengeluaran',
             'amount' => 1500000,
-            'received_date' => now()->toDateString(),
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->get(route('kecamatan.bantuans.keuangan.report'));
+        $response = $this->actingAs($user)->get(route('kecamatan.buku-keuangan.report'));
 
         $response->assertOk();
         $response->assertHeader('content-type', 'application/pdf');
@@ -80,7 +80,7 @@ class BukuKeuanganReportPrintTest extends TestCase
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
         $user->assignRole('admin-kecamatan');
 
-        $response = $this->actingAs($user)->get(route('desa.bantuans.keuangan.report'));
+        $response = $this->actingAs($user)->get(route('desa.buku-keuangan.report'));
 
         $response->assertStatus(403);
     }
@@ -90,8 +90,31 @@ class BukuKeuanganReportPrintTest extends TestCase
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
         $user->assignRole('admin-desa');
 
-        $response = $this->actingAs($user)->get(route('desa.bantuans.keuangan.report'));
+        $response = $this->actingAs($user)->get(route('desa.buku-keuangan.report'));
 
         $response->assertStatus(403);
+    }
+
+    public function test_route_alias_lama_tetap_mengarahkan_ke_report_buku_keuangan_baru(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user->assignRole('admin-desa');
+
+        BukuKeuangan::create([
+            'transaction_date' => now()->toDateString(),
+            'source' => 'kas_tunai',
+            'description' => 'Kas awal bulan',
+            'reference_number' => 'BK-003',
+            'entry_type' => 'pemasukan',
+            'amount' => 200000,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('desa.bantuans.keuangan.report'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
     }
 }

@@ -44,7 +44,7 @@ Siklus validasi terbaru:
 | 4.9a | `anggota-tim-penggerak` | `resources/views/pdf/anggota_tim_penggerak_report.blade.php` | Header autentik 11 kolom + baris nomor kolom (`1-11`) | Tanggal lahir/umur valid; field kosong jadi `-` | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.9b | `kader-khusus` | `resources/views/pdf/kader_khusus_report.blade.php` | Header autentik 13 kolom dengan group `KEDUDUKAN/FUNGSI` + baris nomor (`1-13`) | Kolom yang belum tersedia di domain tampil mode kompatibilitas (`-`) | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.10 | `agenda-surat` | `resources/views/pdf/agenda_surat_report.blade.php` | Group `SURAT MASUK` (8 kolom) + `SURAT KELUAR` (7 kolom), subheader `TANGGAL`, baris nomor (`1-15`) | Tanggal surat/terima konsisten; nomor surat tampil | `landscape` | area + printedBy + printedAt | `pass` |
-| 4.11 | `bantuans` (keuangan) | `resources/views/pdf/buku_keuangan_report.blade.php` | Layout autentik dua blok 12 kolom (`1-12`) model buku tabungan | Nominal masuk/keluar dan total konsisten terhadap sumber `entries` | `landscape` | area + printedBy + printedAt | `pass` |
+| 4.11 | `buku-keuangan` | `resources/views/pdf/buku_keuangan_report.blade.php` | Layout autentik dua blok 12 kolom (`1-12`) model buku tabungan | Nominal masuk/keluar dan total konsisten terhadap sumber `entries` | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.12 | `inventaris` | `resources/views/pdf/inventaris_report.blade.php` | Header autentik 8 kolom + baris nomor (`1-8`) | Angka jumlah valid; kondisi sesuai enum | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.13 | `activities` | `resources/views/pdf/activity.blade.php` | Group header `KEGIATAN` (Tanggal/Tempat/Uraian) + baris nomor (`1-7`) | Tanggal kegiatan valid; uraian/tanda tangan tidak kosong | `landscape` | area + printedBy + printedAt | `pass` |
 | 4.14.1a | `data-warga` | `resources/views/pdf/data_warga_report.blade.php` | Judul autentik `DAFTAR WARGA TP PKK`; header rumah tangga `Dasa Wisma` + `Nama Kepala Rumah Tangga`; kolom detail anggota 1-20 (`No. Registrasi` s.d. `Ikut dalam Kegiatan Koperasi`) | Validasi detail identitas anggota, status partisipasi, dan konsistensi umur/tanggal | `portrait` (eksplisit untuk lampiran autentik 4.14.1a) | area + printedBy + printedAt | `pass` |
@@ -106,7 +106,8 @@ Catatan penting:
 | Anggota Pokja | `pdf.anggota_pokja_report` | `anggota_pokjas` |
 | Anggota Tim Penggerak | `pdf.anggota_tim_penggerak_report` | `anggota_tim_penggeraks` |
 | Anggota + Kader gabungan | `pdf.anggota_dan_kader_report` | `anggota_tim_penggeraks`, `kader_khusus` |
-| Bantuan + Buku Keuangan | `pdf.bantuan_report`, `pdf.buku_keuangan_report` | `bantuans` |
+| Bantuan | `pdf.bantuan_report` | `bantuans` |
+| Buku Keuangan | `pdf.buku_keuangan_report` | `buku_keuangans` |
 | BKL | `pdf.bkl_report` | `bkls` |
 | BKR | `pdf.bkr_report` | `bkrs` |
 | Inventaris | `pdf.inventaris_report` | `inventaris` |

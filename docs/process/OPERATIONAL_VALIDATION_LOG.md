@@ -23,7 +23,7 @@ Ringkasan ketersediaan route `desa` dan `kecamatan` per modul:
 | 4.9a | anggota-tim-penggerak | anggota-tim-penggerak | 2 | 2 |
 | 4.9b | kader-khusus | kader-khusus | 1 | 1 |
 | 4.10 | agenda-surat | agenda-surat | 2 | 2 |
-| 4.11 | buku-keuangan | bantuans.keuangan | 1 | 1 |
+| 4.11 | buku-keuangan | buku-keuangan | 1 | 1 |
 | 4.12 | inventaris | inventaris | 1 | 1 |
 | 4.13 | kegiatan | activities | 1 | 2 |
 | 4.14.1a | data-warga | data-warga | 1 | 1 |

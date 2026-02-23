@@ -2,7 +2,7 @@
 
 Ruang lingkup audit:
 - Modul buku sekretaris dan turunan lampiran 4.9a-4.15:
-  - `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `bantuans`, `inventaris`, `activities`
+  - `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-keuangan`, `bantuans`, `inventaris`, `activities`
   - `data-warga`, `data-kegiatan-warga`, `data-keluarga`
   - `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `data-industri-rumah-tangga`, `data-pelatihan-kader`
   - `warung-pkk`, `taman-bacaan`, `koperasi`, `kejar-paket`, `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`
@@ -25,7 +25,7 @@ Metode audit:
 1. `LOW` - Delegated authorize pada sebagian print endpoint.
 - Lokasi:
   - `app/Domains/Wilayah/AnggotaTimPenggerak/Controllers/AnggotaTimPenggerakReportPrintController.php`
-  - `app/Domains/Wilayah/Bantuan/Controllers/BantuanReportPrintController.php`
+  - `app/Domains/Wilayah/BukuKeuangan/Controllers/BukuKeuanganReportPrintController.php`
 - Detail:
   - Method publik `print*` mendelegasikan ke method private (`stream*`) yang memanggil `authorize(...)`.
   - Aman saat ini, tetapi rawan regresi jika helper private diubah tanpa test.
@@ -66,4 +66,3 @@ Perintah audit yang dijalankan:
 
 - Tambahkan test guard untuk print endpoint yang otorisasinya delegated (anggota+kader, keuangan).
 - Tambahkan checklist static audit: method publik controller modul domain harus punya `authorize` langsung atau delegasi helper yang tervalidasi.
-

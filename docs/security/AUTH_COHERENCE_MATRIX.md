@@ -50,7 +50,7 @@ Catatan penting:
 | 4.9a | `anggota-tim-penggerak` | `Route::resource` + report pdf | `AnggotaTimPenggerakPolicy` | `V/C/U/D/P` | Level + area harus sama user |
 | 4.9b | `kader-khusus` | `Route::resource` + report pdf | `KaderKhususPolicy` | `V/C/U/D/P` | Level + area harus sama user |
 | 4.10 | `agenda-surat` | `Route::resource` + report + ekspedisi report | `AgendaSuratPolicy` | `V/C/U/D/P` | Level + area harus sama user |
-| 4.11 | `bantuans` | `Route::resource` + report + keuangan report | `BantuanPolicy` | `V/C/U/D/P` | Level + area harus sama user |
+| 4.11 | `buku-keuangan` | `Route::resource` + report (+ alias `bantuans.keuangan.report`) | `BukuKeuanganPolicy` | `V/C/U/D/P` | Level + area harus sama user |
 | 4.12 | `inventaris` | `Route::resource` + report pdf | `InventarisPolicy` | `V/C/U/D/P` | Level + area harus sama user |
 | 4.13 | `activities` | `Route::resource` + print per item | `ActivityPolicy` | `V/C/U/D/P` | Desa: same area. Kecamatan: same area untuk data kecamatan, plus boleh view/print data desa dalam kecamatannya (monitoring) |
 | 4.14.1a | `data-warga` | `Route::resource` + report pdf | `DataWargaPolicy` | `V/C/U/D/P` | Level + area harus sama user |
@@ -84,7 +84,8 @@ Ringkasan hasil route (name-based count):
 - `anggota-tim-penggerak`: desa=9, kecamatan=9
 - `kader-khusus`: desa=8, kecamatan=8
 - `agenda-surat`: desa=9, kecamatan=9
-- `bantuans`: desa=9, kecamatan=9
+- `buku-keuangan`: desa=8, kecamatan=8
+- `bantuans`: desa=9, kecamatan=9 (termasuk alias report keuangan legacy)
 - `inventaris`: desa=8, kecamatan=8
 - `activities`: desa=8, kecamatan=8, `kecamatan_desa_monitoring`=3
 - `data-warga`: desa=8, kecamatan=8
@@ -100,4 +101,3 @@ Ringkasan hasil route (name-based count):
 - `posyandu`: desa=8, kecamatan=8
 - `simulasi-penyuluhan`: desa=8, kecamatan=8
 - `catatan-keluarga`: desa=2, kecamatan=2
-
