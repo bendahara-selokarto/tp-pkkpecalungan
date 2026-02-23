@@ -105,6 +105,13 @@ const LEVEL_OPTIONS = [
   { value: 'kecamatan', label: 'Kecamatan' },
 ]
 
+const USER_SECTION_LABELS = {
+  'sekretaris-section-1': 'Ringkasan Tugas Sekretaris',
+  'sekretaris-section-2': 'Ringkasan Pokja di Level Anda',
+  'sekretaris-section-3': 'Ringkasan Pokja per Desa',
+  'sekretaris-section-4': 'Rincian Pokja I per Desa',
+}
+
 const normalizeToken = (value, fallback = 'all') => {
   if (typeof value !== 'string') {
     return fallback
@@ -184,7 +191,11 @@ const filteredSekretarisSection3Blocks = computed(() =>
   filterBlocksByGroup(sekretarisSection3Blocks.value, selectedSection3Group.value),
 )
 
-const resolveSectionLabel = (blocks, fallback) => {
+const resolveSectionLabel = (sectionKey, blocks, fallback) => {
+  if (typeof USER_SECTION_LABELS[sectionKey] === 'string') {
+    return USER_SECTION_LABELS[sectionKey]
+  }
+
   const firstBlock = blocks[0]
   const label = firstBlock?.section?.label
 
@@ -237,14 +248,14 @@ const dashboardSections = computed(() => {
 
   const section1 = {
     key: 'sekretaris-section-1',
-    label: resolveSectionLabel(sekretarisSection1Blocks.value, 'Section 1 - Domain Sekretaris'),
+    label: resolveSectionLabel('sekretaris-section-1', sekretarisSection1Blocks.value, 'Ringkasan Tugas Sekretaris'),
     filter: null,
     blocks: sekretarisSection1Blocks.value,
   }
 
   const section2 = {
     key: 'sekretaris-section-2',
-    label: resolveSectionLabel(sekretarisSection2Blocks.value, 'Section 2 - Pokja Level Aktif'),
+    label: resolveSectionLabel('sekretaris-section-2', sekretarisSection2Blocks.value, 'Ringkasan Pokja di Level Anda'),
     filter: resolveSectionFilter(sekretarisSection2Blocks.value, 'section2_group'),
     blocks: filteredSekretarisSection2Blocks.value,
   }
@@ -254,7 +265,7 @@ const dashboardSections = computed(() => {
   if (hasSekretarisLowerSection.value) {
     sections.push({
       key: 'sekretaris-section-3',
-      label: resolveSectionLabel(sekretarisSection3Blocks.value, 'Section 3 - Pokja Level Bawah'),
+      label: resolveSectionLabel('sekretaris-section-3', sekretarisSection3Blocks.value, 'Ringkasan Pokja per Desa'),
       filter: resolveSectionFilter(sekretarisSection3Blocks.value, 'section3_group'),
       blocks: filteredSekretarisSection3Blocks.value,
     })
@@ -263,7 +274,7 @@ const dashboardSections = computed(() => {
   if (hasSekretarisFourthSection.value) {
     sections.push({
       key: 'sekretaris-section-4',
-      label: resolveSectionLabel(sekretarisSection4Blocks.value, 'Section 4 - Rincian Pokja I per Desa'),
+      label: resolveSectionLabel('sekretaris-section-4', sekretarisSection4Blocks.value, 'Rincian Pokja I per Desa'),
       filter: null,
       blocks: sekretarisSection4Blocks.value,
     })
@@ -441,8 +452,11 @@ const sourceModulesLabel = (block) => {
 
 const filterContextLabel = (block) => {
   const context = block?.sources?.filter_context ?? {}
+  const preferredGroup = context.section3_group && context.section3_group !== 'all'
+    ? context.section3_group
+    : context.section2_group
 
-  return `Mode: ${humanizeLabel(context.mode ?? 'all')} | Level: ${humanizeLabel(context.level ?? 'all')} | Sub-Level: ${humanizeLabel(context.sub_level ?? 'all')} | Section 2: ${humanizeLabel(context.section2_group ?? 'all')} | Section 3: ${humanizeLabel(context.section3_group ?? 'all')}`
+  return `Tampilan: ${humanizeLabel(context.mode ?? 'all')} | Cakupan: ${humanizeLabel(context.level ?? 'all')} | Fokus Wilayah: ${humanizeLabel(context.sub_level ?? 'all')} | Pokja: ${humanizeLabel(preferredGroup ?? 'all')}`
 }
 
 const buildBlockStats = (block) => {
@@ -696,7 +710,7 @@ const hasLegacyLevelDistributionData = computed(() =>
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
         <div>
           <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-            Mode
+            Cara Tampil
           </label>
           <select
             v-model="selectedMode"
@@ -711,7 +725,7 @@ const hasLegacyLevelDistributionData = computed(() =>
 
         <div>
           <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-            Level
+            Cakupan Wilayah
           </label>
           <select
             v-model="selectedLevel"
@@ -727,14 +741,14 @@ const hasLegacyLevelDistributionData = computed(() =>
 
         <div>
           <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-            Sub-Level
+            Wilayah Turunan
           </label>
           <input
             v-model="selectedSubLevel"
             :disabled="!isBySubLevelMode"
             type="text"
             class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-            placeholder="all atau kode sub-level"
+            placeholder="all atau kode wilayah"
             @keyup.enter="onSubLevelApply"
             @blur="onSubLevelApply"
           >
@@ -746,12 +760,12 @@ const hasLegacyLevelDistributionData = computed(() =>
             class="w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
             @click="applyFilters"
           >
-            Terapkan Filter
+            Tampilkan Data
           </button>
         </div>
       </div>
       <p class="mt-3 text-xs text-slate-500 dark:text-slate-300">
-        Filter tersimpan di URL agar tampilan dashboard mudah dibagikan dan direproduksi.
+        Pilihan ini tersimpan di URL agar tampilan mudah dibuka ulang atau dibagikan.
       </p>
     </CardBox>
 
@@ -768,7 +782,7 @@ const hasLegacyLevelDistributionData = computed(() =>
               </div>
               <div v-if="section.filter" class="lg:ml-auto lg:w-64">
                 <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                  Filter By Pokja
+                  Pilih Pokja
                 </label>
 
                 <select
@@ -843,7 +857,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                     <BarChart :data="buildDocumentCoverageChartData(block)" horizontal />
                   </div>
                   <p v-if="!hasDocumentCoverageData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-                    Belum ada data untuk filter dan hak akses aktif.
+                    Belum ada data untuk pilihan ini. Coba pilih pokja lain atau tampilkan semua pokja.
                   </p>
                 </div>
 
@@ -910,7 +924,7 @@ const hasLegacyLevelDistributionData = computed(() =>
             class="border border-dashed border-slate-300 dark:border-slate-600"
           >
             <p class="text-xs text-slate-500 dark:text-slate-300">
-              Tidak ada blok dashboard untuk filter pokja yang dipilih.
+              Belum ada data untuk pokja yang dipilih.
             </p>
           </CardBox>
         </div>

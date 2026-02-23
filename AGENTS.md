@@ -57,6 +57,7 @@ Legacy tables (compatibility only):
 3. Patch minimal: perubahan sekecil mungkin, hindari rewrite luas.
 4. Validate: jalankan test/cek dampak, pastikan tidak ada behavior drift.
 5. Doc-hardening pass (triggered): jika ada pemicu dokumentasi canonical, wajib jalankan hardening dokumen sebelum final report.
+6. Copywriting pass (triggered): jika ada pemicu copy UI, wajib lakukan hardening teks user-facing sebelum final report.
 
 Trigger doc-hardening pass:
 - Perubahan kontrak canonical (`role/scope/area`, query filter, representasi dashboard, metadata sumber).
@@ -69,6 +70,18 @@ Langkah minimal doc-hardening pass:
 2. Normalisasi istilah canonical lintas TODO/process/domain matrix/playbook.
 3. Sinkronkan checklist status/keputusan agar sesuai implementasi aktual.
 4. Laporkan hasil hardening: file terdampak, keputusan yang dikunci, dan validasi yang dijalankan.
+
+Trigger copywriting pass:
+- Ditemukan label UI teknis/internal yang tampil ke user akhir (contoh: token query key, istilah section teknis, slug mentah).
+- Ada empty-state/error/help text yang ambigu atau tidak memberi arahan tindakan.
+- Ada perubahan UI lintas section/halaman yang menambah teks user-facing baru.
+- Ada mismatch nada bahasa antar komponen pada concern yang sama (campuran istilah teknis dan bahasa natural user).
+
+Langkah minimal copywriting pass:
+1. Audit teks user-facing pada file UI concern aktif (judul, label filter, CTA, helper text, empty-state, error text).
+2. Ubah ke kalimat natural user tanpa mengubah kontrak backend/query.
+3. Jaga konsistensi istilah lintas section pada halaman yang sama.
+4. Validasi cepat: smoke test UI + test feature relevan yang terdampak tetap hijau.
 
 Flow pembacaan dokumen (wajib, terutama header tabel):
 1. Baca:
@@ -183,3 +196,4 @@ Aturan markdown operasional:
 - Setiap update dokumen harus ringkas, diff-first, dan hindari pengulangan konteks yang sama.
 - Perubahan dengan sinyal canonical wajib mengupdate minimal satu markdown arsitektur (`AGENTS.md` / playbook / terminology map) dan diverifikasi oleh CI gate.
 - Jika trigger doc-hardening pass aktif, pembaruan dokumen wajib mencakup sinkronisasi lintas dokumen terkait concern yang sama (bukan hanya satu file terisolasi).
+- Jika trigger copywriting pass aktif, teks user-facing wajib distandardkan ke bahasa natural user dan menghindari istilah teknis internal.
