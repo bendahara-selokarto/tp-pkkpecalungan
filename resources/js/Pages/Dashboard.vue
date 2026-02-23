@@ -65,6 +65,20 @@ const props = defineProps({
 })
 
 const page = usePage()
+const authUser = computed(() => page.props?.auth?.user ?? null)
+const authRoles = computed(() => {
+  const roles = authUser.value?.roles
+  if (!Array.isArray(roles)) {
+    return []
+  }
+
+  return roles.map((role) => String(role).toLowerCase())
+})
+const isDesaPokjaUser = computed(() =>
+  authUser.value?.scope === 'desa'
+  && authRoles.value.some((role) => role.startsWith('desa-pokja-')),
+)
+const shouldShowDashboardFilters = computed(() => !isDesaPokjaUser.value)
 
 const MODE_OPTIONS = [
   { value: 'all', label: 'All' },
@@ -151,6 +165,29 @@ const onSubLevelApply = () => {
   selectedSubLevel.value = normalizeToken(selectedSubLevel.value, 'all')
   applyFilters()
 }
+
+watch(
+  shouldShowDashboardFilters,
+  (showFilters) => {
+    if (showFilters) {
+      return
+    }
+
+    if (
+      selectedMode.value === 'all'
+      && selectedLevel.value === 'all'
+      && selectedSubLevel.value === 'all'
+    ) {
+      return
+    }
+
+    selectedMode.value = 'all'
+    selectedLevel.value = 'all'
+    selectedSubLevel.value = 'all'
+    applyFilters()
+  },
+  { immediate: true },
+)
 
 const dynamicBlocks = computed(() =>
   Array.isArray(props.dashboardBlocks)
@@ -424,7 +461,7 @@ const hasLegacyLevelDistributionData = computed(() =>
   <SectionMain>
     <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Dashboard" main />
 
-    <CardBox class="mb-6">
+    <CardBox v-if="shouldShowDashboardFilters" class="mb-6">
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
         <div>
           <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
