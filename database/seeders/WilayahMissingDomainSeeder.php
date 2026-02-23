@@ -122,7 +122,7 @@ class WilayahMissingDomainSeeder extends Seeder
             ->replaceMatches('/[^a-z0-9]+/', '-')
             ->trim('-')
             ->value();
-        $email = sprintf('admin-%s+%s@gmail.com', $level, $wilayahSlug !== '' ? $wilayahSlug : $areaId);
+        $email = sprintf('seeder-%s+%s@gmail.com', $level, $wilayahSlug !== '' ? $wilayahSlug : $areaId);
 
         $user = User::query()->updateOrCreate(
             ['email' => $email],
@@ -136,7 +136,7 @@ class WilayahMissingDomainSeeder extends Seeder
             ]
         );
 
-        $roleName = $level === 'desa' ? 'admin-desa' : 'admin-kecamatan';
+        $roleName = $level === 'desa' ? 'desa-sekretaris' : 'kecamatan-sekretaris';
         Role::firstOrCreate(['name' => $roleName]);
         $user->syncRoles([$roleName]);
 
