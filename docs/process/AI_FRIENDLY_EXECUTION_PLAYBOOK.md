@@ -51,6 +51,7 @@ Gunakan status:
 | `P-014` | Responsibility Visibility with Backend Read-Only Enforcement | Kebutuhan menu per penanggung jawab + mode akses read-only | UI hanya menampilkan tanggung jawab role, backend menolak bypass URL mutasi pada area read-only | Unit matrix + feature payload Inertia + feature anti bypass + full suite | `active` |
 | `P-015` | Section-Scoped Query Key Contract for Role-Aware Dashboard | Dashboard memiliki section filter lebih dari satu dalam satu halaman | State filter tidak saling bertabrakan dan kontrak URL stabil lintas backend/frontend/docs | Feature test filter context + audit kontrak query key di docs | `active` |
 | `P-016` | Triggered Doc-Hardening Pass | Ada sinyal canonical drift pada dokumentasi concern aktif | Kontrak dokumen lintas file tetap koheren dan tidak mismatch dengan implementasi | Scoped drift audit + sinkronisasi TODO/process/domain + ringkasan validasi | `active` |
+| `P-017` | Zero-Ambiguity Single Path Routing | User meminta kepastian jalur tunggal AI atau task lintas concern berisiko multi-interpretasi | Task routing deterministik (concern -> file target -> validation ladder) dan output konsisten lintas sesi | Sinkronisasi `AGENTS.md` + dokumen single-path + log hardening concern | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -363,3 +364,31 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Over-documentation jika trigger diterapkan terlalu longgar.
 - Catatan reuse lintas domain/project:
   - Terapkan sebagai opsi default saat terdeteksi sinyal drift canonical antar dokumen.
+
+### P-017 - Zero-Ambiguity Single Path Routing
+- Tanggal: 2026-02-23
+- Status: active
+- Konteks: Task lintas concern sering memicu multi-interpretasi ketika routing kerja AI hanya tersirat di beberapa dokumen.
+- Trigger:
+  - User meminta jalur tunggal AI.
+  - Concern menyentuh lebih dari satu domain (akses, dashboard, seeder, dokumentasi) dan butuh urutan eksekusi deterministik.
+- Langkah eksekusi:
+  1) Klasifikasikan task ke concern utama.
+  2) Kunci kontrak concern + file target + acceptance criteria.
+  3) Eksekusi patch minimal sesuai boundary arsitektur.
+  4) Jalankan validation ladder (L1-L3) sesuai tingkat dampak.
+  5) Tutup dengan doc-hardening sinkron lintas dokumen concern.
+- Guardrail:
+  - Prioritas kebenaran tetap mengikuti `AGENTS.md`.
+  - Tidak boleh bypass quality gate authorization/repository boundary.
+  - Tidak boleh mengklaim selesai jika dokumen canonical masih drift.
+- Validasi minimum:
+  - `AGENTS.md` menunjuk ke dokumen single-path aktif.
+  - Dokumen single-path memuat routing concern -> file -> validasi.
+  - Ada jejak hardening di log operasional concern.
+- Bukti efisiensi/akurasi:
+  - Diterapkan untuk membangun `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` sebagai rute operasional tunggal.
+- Risiko:
+  - Over-constraint jika deviasi edge-case tidak dicatat.
+- Catatan reuse lintas domain/project:
+  - Pattern ini cocok sebagai baseline di project yang punya guardrail domain/policy ketat dan kebutuhan konsistensi lintas sesi AI.

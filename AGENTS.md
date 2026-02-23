@@ -3,13 +3,15 @@
 Dokumen ini adalah source of truth AI untuk repository ini.
 Dokumen manusia ada di `README.md`.
 Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_101_150.md` (sumber: https://pubhtml5.com/zsnqq/vjcf/basic/101-150).
+Dokumen jalur tunggal eksekusi AI ada di `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`.
 
 ## 0. Priority
 
 Jika konflik dokumen:
 1. `AGENTS.md` (aturan teknis, arsitektur, eksekusi agent)
-2. `PEDOMAN_DOMAIN_UTAMA_101_150.md` (terminologi/kontrak domain lampiran 4.9-4.15)
-3. `README.md`
+2. `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` (routing operasional AI deterministik)
+3. `PEDOMAN_DOMAIN_UTAMA_101_150.md` (terminologi/kontrak domain lampiran 4.9-4.15)
+4. `README.md`
 
 Aturan koherensi domain:
 - Jika ada perbedaan istilah, label, atau kontrak domain antara dokumen internal dan pedoman utama, utamakan `PEDOMAN_DOMAIN_UTAMA_101_150.md`.
@@ -57,6 +59,9 @@ Legacy artifacts (historical; non-canonical):
 4. Validate: jalankan test/cek dampak, pastikan tidak ada behavior drift.
 5. Doc-hardening pass (triggered): jika ada pemicu dokumentasi canonical, wajib jalankan hardening dokumen sebelum final report.
 6. Copywriting pass (triggered): jika ada pemicu copy UI, wajib lakukan hardening teks user-facing sebelum final report.
+
+Rute operasional detail wajib mengikuti:
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
 
 Trigger doc-hardening pass:
 - Perubahan kontrak canonical (`role/scope/area`, query filter, representasi dashboard, metadata sumber).
