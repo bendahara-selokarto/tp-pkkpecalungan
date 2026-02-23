@@ -78,7 +78,20 @@ const isDesaPokjaUser = computed(() =>
   authUser.value?.scope === 'desa'
   && authRoles.value.some((role) => role.startsWith('desa-pokja-')),
 )
-const shouldShowDashboardFilters = computed(() => !isDesaPokjaUser.value)
+const isSekretarisUser = computed(() =>
+  authRoles.value.includes('desa-sekretaris')
+  || authRoles.value.includes('kecamatan-sekretaris')
+  || authRoles.value.includes('admin-desa')
+  || authRoles.value.includes('admin-kecamatan'),
+)
+
+const SECTION_GROUP_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: 'pokja-i', label: 'Pokja I' },
+  { value: 'pokja-ii', label: 'Pokja II' },
+  { value: 'pokja-iii', label: 'Pokja III' },
+  { value: 'pokja-iv', label: 'Pokja IV' },
+]
 
 const MODE_OPTIONS = [
   { value: 'all', label: 'All' },
@@ -119,6 +132,123 @@ const currentQuery = parseQuery(page.url)
 const selectedMode = ref(resolveOptionValue(currentQuery.get('mode'), MODE_OPTIONS, 'all'))
 const selectedLevel = ref(resolveOptionValue(currentQuery.get('level'), LEVEL_OPTIONS, 'all'))
 const selectedSubLevel = ref(normalizeToken(currentQuery.get('sub_level'), 'all'))
+const selectedSection2Group = ref(resolveOptionValue(currentQuery.get('section2_group'), SECTION_GROUP_OPTIONS, 'all'))
+const selectedSection3Group = ref(resolveOptionValue(currentQuery.get('section3_group'), SECTION_GROUP_OPTIONS, 'all'))
+
+const dynamicBlocks = computed(() =>
+  Array.isArray(props.dashboardBlocks)
+    ? props.dashboardBlocks.filter((block) => block && typeof block === 'object')
+    : [],
+)
+
+const hasDynamicBlocks = computed(() => dynamicBlocks.value.length > 0)
+const sekretarisSection1Blocks = computed(() =>
+  dynamicBlocks.value.filter((block) => block?.section?.key === 'sekretaris-section-1'),
+)
+const sekretarisSection2Blocks = computed(() =>
+  dynamicBlocks.value.filter((block) => block?.section?.key === 'sekretaris-section-2'),
+)
+const sekretarisSection3Blocks = computed(() =>
+  dynamicBlocks.value.filter((block) => block?.section?.key === 'sekretaris-section-3'),
+)
+const hasSekretarisLowerSection = computed(() => sekretarisSection3Blocks.value.length > 0)
+const hasSekretarisSections = computed(() =>
+  isSekretarisUser.value
+  && (
+    sekretarisSection1Blocks.value.length > 0
+    || sekretarisSection2Blocks.value.length > 0
+    || sekretarisSection3Blocks.value.length > 0
+  ),
+)
+const shouldShowGlobalDashboardFilters = computed(() =>
+  !isDesaPokjaUser.value && !hasSekretarisSections.value,
+)
+
+const filterBlocksByGroup = (blocks, selectedGroup) => {
+  if (selectedGroup === 'all') {
+    return blocks
+  }
+
+  return blocks.filter((block) => normalizeToken(block?.group, 'all') === selectedGroup)
+}
+
+const filteredSekretarisSection2Blocks = computed(() =>
+  filterBlocksByGroup(sekretarisSection2Blocks.value, selectedSection2Group.value),
+)
+const filteredSekretarisSection3Blocks = computed(() =>
+  filterBlocksByGroup(sekretarisSection3Blocks.value, selectedSection3Group.value),
+)
+
+const resolveSectionLabel = (blocks, fallback) => {
+  const firstBlock = blocks[0]
+  const label = firstBlock?.section?.label
+
+  return typeof label === 'string' && label.trim() !== '' ? label : fallback
+}
+
+const resolveSectionFilter = (blocks, fallbackQueryKey) => {
+  const firstBlock = blocks[0]
+  const filter = firstBlock?.section?.filter
+
+  if (!filter || typeof filter !== 'object') {
+    return null
+  }
+
+  const options = Array.isArray(filter.options) && filter.options.length > 0
+    ? filter.options
+    : SECTION_GROUP_OPTIONS
+
+  const queryKey = typeof filter.query_key === 'string' && filter.query_key.trim() !== ''
+    ? filter.query_key
+    : fallbackQueryKey
+
+  return {
+    queryKey,
+    options,
+  }
+}
+
+const dashboardSections = computed(() => {
+  if (!hasSekretarisSections.value) {
+    return [{
+      key: 'default',
+      label: 'Dashboard',
+      filter: null,
+      blocks: dynamicBlocks.value,
+    }]
+  }
+
+  const section1 = {
+    key: 'sekretaris-section-1',
+    label: resolveSectionLabel(sekretarisSection1Blocks.value, 'Section 1 - Domain Sekretaris'),
+    filter: null,
+    blocks: sekretarisSection1Blocks.value,
+  }
+
+  const section2 = {
+    key: 'sekretaris-section-2',
+    label: resolveSectionLabel(sekretarisSection2Blocks.value, 'Section 2 - Pokja Level Aktif'),
+    filter: resolveSectionFilter(sekretarisSection2Blocks.value, 'section2_group'),
+    blocks: filteredSekretarisSection2Blocks.value,
+  }
+
+  const sections = [section1, section2]
+
+  if (hasSekretarisLowerSection.value) {
+    sections.push({
+      key: 'sekretaris-section-3',
+      label: resolveSectionLabel(sekretarisSection3Blocks.value, 'Section 3 - Pokja Level Bawah'),
+      filter: resolveSectionFilter(sekretarisSection3Blocks.value, 'section3_group'),
+      blocks: filteredSekretarisSection3Blocks.value,
+    })
+  }
+
+  return sections
+})
+
+const sekretarisDefaultLevel = computed(() =>
+  authUser.value?.scope === 'kecamatan' ? 'kecamatan' : 'desa',
+)
 
 watch(
   () => page.url,
@@ -127,6 +257,8 @@ watch(
     selectedMode.value = resolveOptionValue(params.get('mode'), MODE_OPTIONS, 'all')
     selectedLevel.value = resolveOptionValue(params.get('level'), LEVEL_OPTIONS, 'all')
     selectedSubLevel.value = normalizeToken(params.get('sub_level'), 'all')
+    selectedSection2Group.value = resolveOptionValue(params.get('section2_group'), SECTION_GROUP_OPTIONS, 'all')
+    selectedSection3Group.value = resolveOptionValue(params.get('section3_group'), SECTION_GROUP_OPTIONS, 'all')
   },
 )
 
@@ -166,10 +298,34 @@ const onSubLevelApply = () => {
   applyFilters()
 }
 
+const applySekretarisSectionFilters = () => {
+  router.get('/dashboard', {
+    mode: 'by-level',
+    level: sekretarisDefaultLevel.value,
+    sub_level: 'all',
+    section2_group: selectedSection2Group.value,
+    section3_group: hasSekretarisLowerSection.value ? selectedSection3Group.value : 'all',
+  }, {
+    preserveState: true,
+    preserveScroll: true,
+    replace: true,
+  })
+}
+
+const onSection2GroupChange = () => {
+  selectedSection2Group.value = resolveOptionValue(selectedSection2Group.value, SECTION_GROUP_OPTIONS, 'all')
+  applySekretarisSectionFilters()
+}
+
+const onSection3GroupChange = () => {
+  selectedSection3Group.value = resolveOptionValue(selectedSection3Group.value, SECTION_GROUP_OPTIONS, 'all')
+  applySekretarisSectionFilters()
+}
+
 watch(
-  shouldShowDashboardFilters,
-  (showFilters) => {
-    if (showFilters) {
+  isDesaPokjaUser,
+  (isPokjaDesa) => {
+    if (!isPokjaDesa) {
       return
     }
 
@@ -189,13 +345,40 @@ watch(
   { immediate: true },
 )
 
-const dynamicBlocks = computed(() =>
-  Array.isArray(props.dashboardBlocks)
-    ? props.dashboardBlocks.filter((block) => block && typeof block === 'object')
-    : [],
-)
+watch(
+  [hasSekretarisSections, () => page.url],
+  ([hasSectionModel, url]) => {
+    if (!hasSectionModel) {
+      return
+    }
 
-const hasDynamicBlocks = computed(() => dynamicBlocks.value.length > 0)
+    const params = parseQuery(url)
+    const expectedQuery = {
+      mode: 'by-level',
+      level: sekretarisDefaultLevel.value,
+      sub_level: 'all',
+      section2_group: selectedSection2Group.value,
+      section3_group: hasSekretarisLowerSection.value ? selectedSection3Group.value : 'all',
+    }
+
+    const isSynced = normalizeToken(params.get('mode'), 'all') === expectedQuery.mode
+      && normalizeToken(params.get('level'), 'all') === expectedQuery.level
+      && normalizeToken(params.get('sub_level'), 'all') === expectedQuery.sub_level
+      && normalizeToken(params.get('section2_group'), 'all') === expectedQuery.section2_group
+      && normalizeToken(params.get('section3_group'), 'all') === expectedQuery.section3_group
+
+    if (isSynced) {
+      return
+    }
+
+    router.get('/dashboard', expectedQuery, {
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+    })
+  },
+  { immediate: true },
+)
 
 const humanizeLabel = (value) => String(value ?? '')
   .replace(/[-_]+/g, ' ')
@@ -233,7 +416,7 @@ const sourceModulesLabel = (block) => {
 const filterContextLabel = (block) => {
   const context = block?.sources?.filter_context ?? {}
 
-  return `Mode: ${humanizeLabel(context.mode ?? 'all')} | Level: ${humanizeLabel(context.level ?? 'all')} | Sub-Level: ${humanizeLabel(context.sub_level ?? 'all')}`
+  return `Mode: ${humanizeLabel(context.mode ?? 'all')} | Level: ${humanizeLabel(context.level ?? 'all')} | Sub-Level: ${humanizeLabel(context.sub_level ?? 'all')} | Section 2: ${humanizeLabel(context.section2_group ?? 'all')} | Section 3: ${humanizeLabel(context.section3_group ?? 'all')}`
 }
 
 const buildBlockStats = (block) => {
@@ -461,7 +644,7 @@ const hasLegacyLevelDistributionData = computed(() =>
   <SectionMain>
     <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Dashboard" main />
 
-    <CardBox v-if="shouldShowDashboardFilters" class="mb-6">
+    <CardBox v-if="shouldShowGlobalDashboardFilters" class="mb-6">
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
         <div>
           <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
@@ -525,102 +708,161 @@ const hasLegacyLevelDistributionData = computed(() =>
     </CardBox>
 
     <template v-if="hasDynamicBlocks">
-      <div class="space-y-6">
-        <CardBox v-for="block in dynamicBlocks" :key="block.key">
-          <div class="flex flex-wrap items-center justify-between gap-3">
-            <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
-            <span
-              class="inline-flex items-center rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
-              :class="resolveBlockModeClass(block.mode)"
-            >
-              {{ resolveBlockModeLabel(block.mode) }}
-            </span>
-          </div>
-
-          <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-            Sumber: {{ sourceModulesLabel(block) }}
-          </p>
-          <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-            Cakupan: {{ block.sources?.source_area_type ?? '-' }} | {{ filterContextLabel(block) }}
-          </p>
-
-          <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            <CardBoxWidget
-              v-for="statItem in buildBlockStats(block)"
-              :key="`${block.key}-${statItem.key}`"
-              :icon="statItem.icon"
-              :number="statItem.number"
-              :label="statItem.label"
-              :color="statItem.color"
-            />
-          </div>
-
-          <template v-if="block.kind === 'documents'">
-            <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+      <div class="space-y-8">
+        <div v-for="section in dashboardSections" :key="section.key" class="space-y-4">
+          <CardBox v-if="hasSekretarisSections">
+            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div>
-                <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                  Cakupan Per Modul
-                </h4>
-                <div class="h-80">
-                  <BarChart :data="buildDocumentCoverageChartData(block)" horizontal />
-                </div>
-                <p v-if="!hasDocumentCoverageData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-                  Belum ada data untuk filter dan hak akses aktif.
+                <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ section.label }}</h3>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-300">
+                  {{ section.key === 'sekretaris-section-1'
+                    ? 'Domain sekretaris tampil tanpa filter pokja.'
+                    : 'Gunakan filter pokja untuk fokus pada Pokja I-IV atau tampilkan seluruh pokja.' }}
                 </p>
               </div>
+              <div v-if="section.filter" class="lg:ml-auto lg:w-64">
+                <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                  Filter By Pokja
+                </label>
 
-              <div>
-                <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                  Nilai Per Modul
-                </h4>
-                <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                  <div
-                    v-for="item in resolveDocumentCoverageItems(block)"
-                    :key="`${block.key}-${item.label}`"
-                    class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
+                <select
+                  v-if="section.filter.queryKey === 'section2_group'"
+                  v-model="selectedSection2Group"
+                  class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
+                  @change="onSection2GroupChange"
+                >
+                  <option
+                    v-for="option in section.filter.options"
+                    :key="`${section.key}-${option.value}`"
+                    :value="option.value"
                   >
-                    <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
-                    <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
+                    {{ option.label }}
+                  </option>
+                </select>
+
+                <select
+                  v-else-if="section.filter.queryKey === 'section3_group'"
+                  v-model="selectedSection3Group"
+                  class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
+                  @change="onSection3GroupChange"
+                >
+                  <option
+                    v-for="option in section.filter.options"
+                    :key="`${section.key}-${option.value}`"
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+            </div>
+          </CardBox>
+
+          <CardBox v-for="block in section.blocks" :key="block.key">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
+              <span
+                class="inline-flex items-center rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
+                :class="resolveBlockModeClass(block.mode)"
+              >
+                {{ resolveBlockModeLabel(block.mode) }}
+              </span>
+            </div>
+
+            <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+              Sumber: {{ sourceModulesLabel(block) }}
+            </p>
+            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              Cakupan: {{ block.sources?.source_area_type ?? '-' }} | {{ filterContextLabel(block) }}
+            </p>
+
+            <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+              <CardBoxWidget
+                v-for="statItem in buildBlockStats(block)"
+                :key="`${block.key}-${statItem.key}`"
+                :icon="statItem.icon"
+                :number="statItem.number"
+                :label="statItem.label"
+                :color="statItem.color"
+              />
+            </div>
+
+            <template v-if="block.kind === 'documents'">
+              <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+                <div>
+                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                    Cakupan Per Modul
+                  </h4>
+                  <div class="h-80">
+                    <BarChart :data="buildDocumentCoverageChartData(block)" horizontal />
+                  </div>
+                  <p v-if="!hasDocumentCoverageData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
+                    Belum ada data untuk filter dan hak akses aktif.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                    Nilai Per Modul
+                  </h4>
+                  <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                    <div
+                      v-for="item in resolveDocumentCoverageItems(block)"
+                      :key="`${block.key}-${item.label}`"
+                      class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
+                    >
+                      <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
+                      <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </template>
+            </template>
 
-          <template v-else>
-            <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
-              <div>
-                <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                  Aktivitas Bulanan
-                </h4>
-                <div class="h-72">
-                  <BarChart :data="buildActivityMonthlyChartData(block)" />
+            <template v-else>
+              <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
+                <div>
+                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                    Aktivitas Bulanan
+                  </h4>
+                  <div class="h-72">
+                    <BarChart :data="buildActivityMonthlyChartData(block)" />
+                  </div>
+                  <p v-if="!hasAnyChartData(buildActivityMonthlyChartData(block))" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
+                    Belum ada aktivitas terhitung untuk periode ini.
+                  </p>
                 </div>
-                <p v-if="!hasAnyChartData(buildActivityMonthlyChartData(block))" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-                  Belum ada aktivitas terhitung untuk periode ini.
-                </p>
-              </div>
 
-              <div>
-                <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                  Status Aktivitas
-                </h4>
-                <div class="h-72">
-                  <BarChart :data="buildActivityStatusChartData(block)" />
+                <div>
+                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                    Status Aktivitas
+                  </h4>
+                  <div class="h-72">
+                    <BarChart :data="buildActivityStatusChartData(block)" />
+                  </div>
                 </div>
-              </div>
 
-              <div>
-                <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                  Distribusi Level
-                </h4>
-                <div class="h-72">
-                  <BarChart :data="buildActivityLevelChartData(block)" />
+                <div>
+                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                    Distribusi Level
+                  </h4>
+                  <div class="h-72">
+                    <BarChart :data="buildActivityLevelChartData(block)" />
+                  </div>
                 </div>
               </div>
-            </div>
-          </template>
-        </CardBox>
+            </template>
+          </CardBox>
+
+          <CardBox
+            v-if="hasSekretarisSections && section.blocks.length === 0"
+            class="border border-dashed border-slate-300 dark:border-slate-600"
+          >
+            <p class="text-xs text-slate-500 dark:text-slate-300">
+              Tidak ada blok dashboard untuk filter pokja yang dipilih.
+            </p>
+          </CardBox>
+        </div>
       </div>
     </template>
 

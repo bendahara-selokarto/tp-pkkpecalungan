@@ -33,6 +33,12 @@ Tujuan monitor data dikunci sebagai kontrak implementasi:
 
 ## Kontrak Dashboard Akses (Role -> Blok Dashboard)
 
+### Struktur Section Dashboard Sekretaris (Terkunci)
+
+- Section 1: `Domain Sekretaris` (`sekretaris-tpk`) tanpa filter pokja.
+- Section 2: `Pokja Level Aktif` (agregat semua pokja pada level user) dengan filter `by_group`: `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
+- Section 3: khusus scope `kecamatan`, `Pokja Level Bawah` (agregat pokja pada desa turunan) dengan filter `by_group`: `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
+
 ### Blok Dashboard Canonical
 
 - `sekretaris-tpk`: ringkasan domain sekretaris (`anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-keuangan`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba`).
@@ -80,11 +86,16 @@ Aturan label UI:
   - minimal `DashboardGroupRepositoryInterface` + implementasi agregasi per group.
   - kecamatan pokja wajib punya query breakdown `by desa` anti data leak.
 - [x] `D5` Refactor `DashboardController` agar hanya orchestration use case + mapping response Inertia.
-- [ ] `D6` Refactor `resources/js/Pages/Dashboard.vue`:
+- [x] `D6` Refactor `resources/js/Pages/Dashboard.vue`:
   - render dinamis per `dashboardBlocks`.
   - tampilkan subtitle sumber data konsisten di setiap blok.
   - fallback empty-state per blok jika user sah tetapi belum ada data.
   - sediakan kontrol tampilan data untuk role bertingkat: `all` (semua cakupan), `by level`, `by sub-level`.
+  - pengecualian `desa-sekretaris`: default `level=desa`, tanpa `sub-level`, filter tampilan memakai `by_group` (`all` + `pokja-i..iv`).
+  - struktur section sekretaris:
+    - section 1: domain sekretaris.
+    - section 2: semua pokja level aktif + filter `by_group`.
+    - section 3 (khusus kecamatan): semua pokja level bawah (desa turunan) + filter `by_group`.
   - desain kontrol wajib mengutamakan keterbacaan (label eksplisit, tanpa istilah ambigu).
   - rincian rencana UI: `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`.
 - [x] `D7` Hardening cache dashboard:
@@ -127,6 +138,8 @@ Aturan label UI:
 - [x] Label dashboard wajib menjelaskan sumber modul dan cakupan area.
 - [x] Prioritas desain dashboard: keterbacaan informasi di atas aspek tampilan visual.
 - [x] Untuk role bertingkat, filter dashboard bersifat dinamis: `all`, filter level, dan filter sub-level.
+- [x] Pengecualian role `desa-sekretaris`: filter disederhanakan menjadi `by_group` (`all` + `pokja-i..iv`) dengan level default tetap `desa`.
+- [x] Struktur dashboard sekretaris dikunci menjadi section 1 (domain sekretaris), section 2 (pokja level aktif), dan section 3 khusus kecamatan (pokja level bawah), dengan filter `by_group` pada section 2/3.
 
 ## Keputusan Lanjutan yang Perlu Konfirmasi Sebelum Implementasi
 
