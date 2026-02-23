@@ -48,6 +48,10 @@ Gunakan status:
 | `P-011` | Managed Super-Admin Assignment Guardrail | Perubahan matrix role/scope, request create/update user, atau opsi role pada UI manajemen user | Role sistem tetap aman tanpa bisa di-assign dari flow administratif biasa | Regression create/update user management + unit matrix role + auth super-admin test | `active` |
 | `P-012` | Unit Direct Coverage Gate by Discovery | Penambahan/renaming unit Action/UseCase/Service/Repository | Contract `1 unit = minimal 1 direct test` tetap terjaga otomatis | `UnitCoverageGateTest` + full suite | `active` |
 | `P-013` | UI Slug Humanization for Role/Scope | UI menampilkan slug teknis role/scope/area | Label user-facing konsisten manusiawi tanpa ubah kontrak teknis backend | Regression SuperAdmin view + render role badge di layout utama | `active` |
+| `P-014` | Responsibility Visibility with Backend Read-Only Enforcement | Kebutuhan menu per penanggung jawab + mode akses read-only | UI hanya menampilkan tanggung jawab role, backend menolak bypass URL mutasi pada area read-only | Unit matrix + feature payload Inertia + feature anti bypass + full suite | `active` |
+| `P-015` | Section-Scoped Query Key Contract for Role-Aware Dashboard | Dashboard memiliki section filter lebih dari satu dalam satu halaman | State filter tidak saling bertabrakan dan kontrak URL stabil lintas backend/frontend/docs | Feature test filter context + audit kontrak query key di docs | `active` |
+| `P-016` | Triggered Doc-Hardening Pass | Ada sinyal canonical drift pada dokumentasi concern aktif | Kontrak dokumen lintas file tetap koheren dan tidak mismatch dengan implementasi | Scoped drift audit + sinkronisasi TODO/process/domain + ringkasan validasi | `active` |
+| `P-017` | Zero-Ambiguity Single Path Routing | User meminta kepastian jalur tunggal AI atau task lintas concern berisiko multi-interpretasi | Task routing deterministik (concern -> file target -> validation ladder) dan output konsisten lintas sesi | Sinkronisasi `AGENTS.md` + dokumen single-path + log hardening concern | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -281,3 +285,110 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Konsistensi bisa drift jika ada endpoint baru yang bypass formatter.
 - Catatan reuse lintas domain/project:
   - Jadikan formatter role/scope sebagai dependency default semua halaman administratif.
+
+### P-014 - Responsibility Visibility with Backend Read-Only Enforcement
+- Tanggal: 2026-02-23
+- Status: active
+- Konteks: UI perlu menampilkan menu domain hanya sesuai penanggung jawab role, dengan mode `read-only` yang tidak boleh bisa dibypass via URL langsung.
+- Trigger: Perubahan model akses role/menu atau kebutuhan segmentasi menu per peran operasional.
+- Langkah eksekusi:
+  1) Definisikan matrix tunggal role -> group menu -> mode akses di backend service.
+  2) Resolve mode per group + per module dan share ke Inertia sebagai source of truth UI.
+  3) Terapkan middleware akses modul yang memblokir modul di luar tanggung jawab dan menolak write intent saat mode `read-only`.
+  4) Jadikan UI hanya consume payload backend; untuk mode `read-only`, sembunyikan tombol mutasi (`create/update/delete`) pada level layout.
+- Guardrail:
+  - Frontend bukan authority akses; backend wajib menolak bypass URL.
+  - Matrix role harus sinkron dengan scope-area valid dari `UserAreaContextService`.
+  - Read-only harus menolak `POST/PUT/PATCH/DELETE` dan endpoint `create/edit`.
+- Validasi minimum:
+  - Unit test matrix role-menu-mode.
+  - Feature test payload Inertia untuk sekretaris/pokja/multi-role.
+  - Feature test anti bypass URL untuk lintas modul dan read-only mutation.
+  - Full suite `php artisan test`.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada `RoleMenuVisibilityService`, middleware `EnsureModuleVisibility`, share Inertia `HandleInertiaRequests`, dan `DashboardLayout`.
+- Risiko:
+  - Modul dengan slug route alias khusus (contoh route report gabungan) wajib ikut dipetakan agar tidak false-deny.
+- Catatan reuse lintas domain/project:
+  - Pattern ini direkomendasikan sebagai default untuk kebutuhan segmentasi menu lintas role dengan hardening backend.
+
+### P-015 - Section-Scoped Query Key Contract for Role-Aware Dashboard
+- Tanggal: 2026-02-23
+- Status: active
+- Konteks: Dashboard sekretaris memakai beberapa section dengan filter group berbeda sehingga token query generik (`by_group`) mudah menimbulkan drift state dan ambigu sumber filter.
+- Trigger: Halaman dashboard atau report multi-section memerlukan filter paralel dalam satu URL.
+- Langkah eksekusi:
+  1) Tetapkan query key unik per section (contoh: `section2_group`, `section3_group`).
+  2) Pastikan backend normalisasi token query mengikuti key per section, bukan key generik tunggal.
+  3) Pastikan frontend memetakan kontrol filter ke query key section yang tepat dan menjaga state independen antarseksi.
+  4) Kunci kontrak key yang sama di dokumen rencana dan dokumen arsitektur untuk mencegah drift terminologi.
+- Guardrail:
+  - Hindari query key generik untuk beberapa section berbeda.
+  - Jangan izinkan perubahan filter section A mengubah payload section B tanpa kontrak eksplisit.
+  - Frontend tetap consumer; validasi akhir dan enforcement filter context berada di backend.
+- Validasi minimum:
+  - Feature test filter context payload per section (`section2_group` dan `section3_group`).
+  - Audit dokumen rencana dashboard memastikan tidak ada istilah kontrak lama (`by_group`) yang bertentangan.
+  - Regression `DashboardDocumentCoverageTest` tetap hijau.
+- Bukti efisiensi/akurasi:
+  - Dipakai pada refactor dashboard role-aware 2026-02-23 untuk menjaga stabilitas state section 2/3 dan skenario section 4 berbasis `section3_group=pokja-i`.
+- Risiko:
+  - Query URL bertambah panjang pada mode kombinasi filter.
+- Catatan reuse lintas domain/project:
+  - Terapkan pada semua halaman analitik bertingkat yang memiliki lebih dari satu panel filter independen.
+
+### P-016 - Triggered Doc-Hardening Pass
+- Tanggal: 2026-02-23
+- Status: active
+- Konteks: Perubahan concern besar sering menyentuh beberapa dokumen sekaligus dan memicu drift istilah, status checklist, atau kontrak query/akses.
+- Trigger:
+  - Ada perubahan kontrak canonical (akses, scope, query key, dashboard representation, metadata sumber).
+  - Ada perubahan lintas beberapa dokumen untuk concern yang sama.
+  - Ada mismatch status dokumen vs implementasi aktual.
+- Langkah eksekusi:
+  1) Lakukan audit drift terbatas pada dokumen concern aktif (grep istilah kunci + diff).
+  2) Normalisasi kontrak istilah canonical lintas TODO/process/domain/playbook.
+  3) Sinkronkan status checklist dan keputusan terkunci dengan implementasi terbaru.
+  4) Laporkan jejak hardening: file terdampak + validasi yang dijalankan.
+- Guardrail:
+  - Tetap scoped; hindari menyapu seluruh dokumen proyek tanpa trigger.
+  - Jangan mengubah dokumen non-concern.
+  - Hardening dokumen tidak boleh mengganti authority akses backend.
+- Validasi minimum:
+  - Tidak ada istilah kontrak lama yang konflik pada dokumen concern aktif.
+  - Referensi antar dokumen concern tetap valid.
+  - Status checklist utama sesuai kondisi implementasi saat itu.
+- Bukti efisiensi/akurasi:
+  - Dipakai pada hardening dashboard role-aware 2026-02-23 untuk menyinkronkan TODO refactor, TODO UI, skenario khusus, domain matrix, dan alignment plan.
+- Risiko:
+  - Over-documentation jika trigger diterapkan terlalu longgar.
+- Catatan reuse lintas domain/project:
+  - Terapkan sebagai opsi default saat terdeteksi sinyal drift canonical antar dokumen.
+
+### P-017 - Zero-Ambiguity Single Path Routing
+- Tanggal: 2026-02-23
+- Status: active
+- Konteks: Task lintas concern sering memicu multi-interpretasi ketika routing kerja AI hanya tersirat di beberapa dokumen.
+- Trigger:
+  - User meminta jalur tunggal AI.
+  - Concern menyentuh lebih dari satu domain (akses, dashboard, seeder, dokumentasi) dan butuh urutan eksekusi deterministik.
+- Langkah eksekusi:
+  1) Klasifikasikan task ke concern utama.
+  2) Kunci kontrak concern + file target + acceptance criteria.
+  3) Eksekusi patch minimal sesuai boundary arsitektur.
+  4) Jalankan validation ladder (L1-L3) sesuai tingkat dampak.
+  5) Tutup dengan doc-hardening sinkron lintas dokumen concern.
+- Guardrail:
+  - Prioritas kebenaran tetap mengikuti `AGENTS.md`.
+  - Tidak boleh bypass quality gate authorization/repository boundary.
+  - Tidak boleh mengklaim selesai jika dokumen canonical masih drift.
+- Validasi minimum:
+  - `AGENTS.md` menunjuk ke dokumen single-path aktif.
+  - Dokumen single-path memuat routing concern -> file -> validasi.
+  - Ada jejak hardening di log operasional concern.
+- Bukti efisiensi/akurasi:
+  - Diterapkan untuk membangun `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` sebagai rute operasional tunggal.
+- Risiko:
+  - Over-constraint jika deviasi edge-case tidak dicatat.
+- Catatan reuse lintas domain/project:
+  - Pattern ini cocok sebagai baseline di project yang punya guardrail domain/policy ketat dan kebutuhan konsistensi lintas sesi AI.

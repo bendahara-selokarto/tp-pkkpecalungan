@@ -22,7 +22,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
-report.xml
-extract-failure.php
 .tmp/
 docs/referensi/
+/reports/*
+!/reports/.gitkeep

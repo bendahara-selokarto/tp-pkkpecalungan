@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -9,7 +10,8 @@ use Inertia\Middleware;
 class HandleInertiaRequests extends Middleware
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly RoleMenuVisibilityService $roleMenuVisibilityService
     ) {
     }
 
@@ -45,12 +47,19 @@ class HandleInertiaRequests extends Middleware
                         return null;
                     }
 
+                    $scope = $this->userAreaContextService->resolveEffectiveScope($user);
+                    $visibility = is_string($scope)
+                        ? $this->roleMenuVisibilityService->resolveForScope($user, $scope)
+                        : ['groups' => [], 'modules' => []];
+
                     return [
                         'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
-                        'scope' => $this->userAreaContextService->resolveEffectiveScope($user),
+                        'scope' => $scope,
                         'roles' => $user->getRoleNames()->values(),
+                        'menuGroupModes' => $visibility['groups'],
+                        'moduleModes' => $visibility['modules'],
                     ];
                 },
             ],

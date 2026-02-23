@@ -99,7 +99,7 @@ class DashboardNaturalBatangSeeder extends Seeder
             ->replaceMatches('/[^a-z0-9]+/', '-')
             ->trim('-')
             ->value();
-        $email = sprintf('admin-%s+%s@gmail.com', $level, $wilayahSlug !== '' ? $wilayahSlug : $areaId);
+        $email = sprintf('seeder-%s+%s@gmail.com', $level, $wilayahSlug !== '' ? $wilayahSlug : $areaId);
         $name = sprintf('Seeder %s %s', ucfirst($level), $areaName);
 
         $user = User::query()->updateOrCreate(
@@ -114,7 +114,7 @@ class DashboardNaturalBatangSeeder extends Seeder
             ]
         );
 
-        $user->syncRoles([$level === 'desa' ? 'admin-desa' : 'admin-kecamatan']);
+        $user->syncRoles([$level === 'desa' ? 'desa-sekretaris' : 'kecamatan-sekretaris']);
 
         return (int) $user->id;
     }

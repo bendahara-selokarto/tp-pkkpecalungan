@@ -3,13 +3,15 @@
 Dokumen ini adalah source of truth AI untuk repository ini.
 Dokumen manusia ada di `README.md`.
 Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_101_150.md` (sumber: https://pubhtml5.com/zsnqq/vjcf/basic/101-150).
+Dokumen jalur tunggal eksekusi AI ada di `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`.
 
 ## 0. Priority
 
 Jika konflik dokumen:
 1. `AGENTS.md` (aturan teknis, arsitektur, eksekusi agent)
-2. `PEDOMAN_DOMAIN_UTAMA_101_150.md` (terminologi/kontrak domain lampiran 4.9-4.15)
-3. `README.md`
+2. `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` (routing operasional AI deterministik)
+3. `PEDOMAN_DOMAIN_UTAMA_101_150.md` (terminologi/kontrak domain lampiran 4.9-4.15)
+4. `README.md`
 
 Aturan koherensi domain:
 - Jika ada perbedaan istilah, label, atau kontrak domain antara dokumen internal dan pedoman utama, utamakan `PEDOMAN_DOMAIN_UTAMA_101_150.md`.
@@ -32,10 +34,9 @@ Authorization:
 Domain canonical:
 - `areas` adalah single source of truth wilayah.
 
-Legacy tables (compatibility only):
-- `kecamatans`
-- `desas`
-- `user_assignments`
+Legacy artifacts (historical; non-canonical):
+- `kecamatans`, `desas`, `user_assignments` tidak lagi menjadi jalur write/read aktif.
+- Dilarang menambah coupling baru ke artefak legacy tersebut.
 
 ## 2. Hard Invariants
 
@@ -56,6 +57,35 @@ Legacy tables (compatibility only):
 2. Clarify: jika ambigu, tanya singkat dan spesifik.
 3. Patch minimal: perubahan sekecil mungkin, hindari rewrite luas.
 4. Validate: jalankan test/cek dampak, pastikan tidak ada behavior drift.
+5. Doc-hardening pass (triggered): jika ada pemicu dokumentasi canonical, wajib jalankan hardening dokumen sebelum final report.
+6. Copywriting pass (triggered): jika ada pemicu copy UI, wajib lakukan hardening teks user-facing sebelum final report.
+
+Rute operasional detail wajib mengikuti:
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+
+Trigger doc-hardening pass:
+- Perubahan kontrak canonical (`role/scope/area`, query filter, representasi dashboard, metadata sumber).
+- Perubahan lintas lebih dari satu dokumen rencana/proses untuk fitur yang sama.
+- Ditemukan istilah ambigu atau istilah lama yang berpotensi drift kontrak (contoh: token query generik pada multi-section).
+- Ada selisih status implementasi vs status dokumen (`planned/in-progress/done`) pada concern yang sama.
+
+Langkah minimal doc-hardening pass:
+1. Audit drift istilah/kontrak pada dokumen yang terdampak (scoped grep + diff).
+2. Normalisasi istilah canonical lintas TODO/process/domain matrix/playbook.
+3. Sinkronkan checklist status/keputusan agar sesuai implementasi aktual.
+4. Laporkan hasil hardening: file terdampak, keputusan yang dikunci, dan validasi yang dijalankan.
+
+Trigger copywriting pass:
+- Ditemukan label UI teknis/internal yang tampil ke user akhir (contoh: token query key, istilah section teknis, slug mentah).
+- Ada empty-state/error/help text yang ambigu atau tidak memberi arahan tindakan.
+- Ada perubahan UI lintas section/halaman yang menambah teks user-facing baru.
+- Ada mismatch nada bahasa antar komponen pada concern yang sama (campuran istilah teknis dan bahasa natural user).
+
+Langkah minimal copywriting pass:
+1. Audit teks user-facing pada file UI concern aktif (judul, label filter, CTA, helper text, empty-state, error text).
+2. Ubah ke kalimat natural user tanpa mengubah kontrak backend/query.
+3. Jaga konsistensi istilah lintas section pada halaman yang sama.
+4. Validasi cepat: smoke test UI + test feature relevan yang terdampak tetap hijau.
 
 Flow pembacaan dokumen (wajib, terutama header tabel):
 1. Baca:
@@ -169,3 +199,5 @@ Aturan markdown operasional:
 - Setiap TODO wajib memuat: konteks, target hasil, langkah eksekusi, validasi, risiko, keputusan.
 - Setiap update dokumen harus ringkas, diff-first, dan hindari pengulangan konteks yang sama.
 - Perubahan dengan sinyal canonical wajib mengupdate minimal satu markdown arsitektur (`AGENTS.md` / playbook / terminology map) dan diverifikasi oleh CI gate.
+- Jika trigger doc-hardening pass aktif, pembaruan dokumen wajib mencakup sinkronisasi lintas dokumen terkait concern yang sama (bukan hanya satu file terisolasi).
+- Jika trigger copywriting pass aktif, teks user-facing wajib distandardkan ke bahasa natural user dan menghindari istilah teknis internal.

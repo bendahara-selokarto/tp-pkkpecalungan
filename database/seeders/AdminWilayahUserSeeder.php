@@ -26,24 +26,24 @@ class AdminWilayahUserSeeder extends Seeder
             ->get();
 
         $this->upsertUserWithRole(
-            name: 'Admin Kecamatan',
-            email: 'admin.kecamatan@example.com',
+            name: 'Sekretaris Kecamatan',
+            email: 'sekretaris.kecamatan@gmail.com',
             plainPassword: 'password123',
             scope: 'kecamatan',
             areaId: $kecamatanArea->id,
-            role: 'admin-kecamatan',
+            role: 'kecamatan-sekretaris',
         );
 
         foreach ($desaAreas as $desaArea) {
             $desaSlug = str($desaArea->name)->lower()->replace(' ', '.')->value();
 
             $this->upsertUserWithRole(
-                name: 'Admin Desa '.$desaArea->name,
-                email: 'admin.desa.'.$desaSlug.'@example.com',
+                name: 'Sekretaris Desa '.$desaArea->name,
+                email: 'sekretaris.desa.'.$desaSlug.'@gmail.com',
                 plainPassword: 'password123',
                 scope: 'desa',
                 areaId: $desaArea->id,
-                role: 'admin-desa',
+                role: 'desa-sekretaris',
             );
         }
     }

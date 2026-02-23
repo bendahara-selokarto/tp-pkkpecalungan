@@ -30,7 +30,6 @@ class RoleScopeMatrix
         return [
             ScopeLevel::DESA->value => [
                 'desa-sekretaris',
-                'desa-bendahara',
                 'desa-pokja-i',
                 'desa-pokja-ii',
                 'desa-pokja-iii',
@@ -40,7 +39,6 @@ class RoleScopeMatrix
             ],
             ScopeLevel::KECAMATAN->value => [
                 'kecamatan-sekretaris',
-                'kecamatan-bendahara',
                 'kecamatan-pokja-i',
                 'kecamatan-pokja-ii',
                 'kecamatan-pokja-iii',

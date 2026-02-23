@@ -22,6 +22,8 @@ class DashboardDocumentCoverageTest extends TestCase
 
         Role::create(['name' => 'admin-desa']);
         Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_dashboard_coverage_dokumen_pengguna_desa_hanya_menghitung_data_desanya_sendiri(): void
@@ -53,6 +55,19 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardStats.documents.buku_terisi', 4)
                 ->where('dashboardStats.documents.buku_belum_terisi', 15)
                 ->where('dashboardStats.documents.total_entri_buku', 4)
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    if ($collected->isEmpty()) {
+                        return false;
+                    }
+
+                    return $collected->contains(function ($block): bool {
+                        return is_array($block)
+                            && is_array($block['sources'] ?? null)
+                            && ($block['sources']['source_scope'] ?? null) === 'desa'
+                            && is_array($block['sources']['source_modules'] ?? null);
+                    });
+                })
                 ->where('dashboardCharts.documents.level_distribution.values', [4, 0])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 1, 1, 1])
                 ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
@@ -97,6 +112,19 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardStats.documents.buku_terisi', 2)
                 ->where('dashboardStats.documents.buku_belum_terisi', 17)
                 ->where('dashboardStats.documents.total_entri_buku', 3)
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    if ($collected->isEmpty()) {
+                        return false;
+                    }
+
+                    return $collected->contains(function ($block): bool {
+                        return is_array($block)
+                            && is_array($block['sources'] ?? null)
+                            && ($block['sources']['source_scope'] ?? null) === 'kecamatan'
+                            && ($block['sources']['source_area_type'] ?? null) === 'area-sendiri+desa-turunan';
+                    });
+                })
                 ->where('dashboardCharts.documents.level_distribution.values', [1, 2])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 2, 0, 0])
                 ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
@@ -137,8 +165,147 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardStats.documents.buku_terisi', 0)
                 ->where('dashboardStats.documents.buku_belum_terisi', 19)
                 ->where('dashboardStats.documents.total_entri_buku', 0)
+                ->where('dashboardBlocks', [])
                 ->where('dashboardCharts.documents.level_distribution.values', [0, 0])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 0, 0, 0, 0, 0, 0]);
+        });
+    }
+
+    public function test_dashboard_desa_sekretaris_menghasilkan_section_1_dan_section_2_tanpa_section_3(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $user->assignRole('desa-sekretaris');
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    $section1 = $collected
+                        ->where('section.key', 'sekretaris-section-1')
+                        ->first();
+                    $section2 = $collected
+                        ->where('section.key', 'sekretaris-section-2')
+                        ->first();
+                    $section3 = $collected
+                        ->where('section.key', 'sekretaris-section-3')
+                        ->first();
+
+                    return is_array($section1)
+                        && is_array($section2)
+                        && $section3 === null
+                        && ($section2['sources']['filter_context']['level'] ?? null) === 'desa'
+                        && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'all';
+                });
+        });
+    }
+
+    public function test_dashboard_kecamatan_sekretaris_menghasilkan_section_2_dan_section_3_dengan_konteks_group(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatan->id,
+        ]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->createActivity($user, 'kecamatan', $kecamatan->id, 'Aktivitas Kecamatan');
+        $this->createActivity($user, 'desa', $desa->id, 'Aktivitas Desa');
+
+        $response = $this->actingAs($user)->get(route('dashboard', [
+            'section2_group' => 'pokja-i',
+            'section3_group' => 'pokja-ii',
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    $section2 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-2');
+                    $section3 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-3');
+                    $section4 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
+
+                    return is_array($section2)
+                        && is_array($section3)
+                        && $section4 === null
+                        && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
+                        && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'pokja-i'
+                        && ($section3['sources']['filter_context']['level'] ?? null) === 'desa'
+                        && ($section3['sources']['filter_context']['section3_group'] ?? null) === 'pokja-ii';
+                });
+        });
+    }
+
+    public function test_dashboard_kecamatan_sekretaris_section_4_muncul_saat_filter_section_3_pokja_i_dan_anti_data_leak(): void
+    {
+        $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
+        $desaA1 = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatanA->id]);
+        $desaA2 = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatanA->id]);
+        $desaB1 = Area::create(['name' => 'Sidomukti', 'level' => 'desa', 'parent_id' => $kecamatanB->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatanA->id,
+        ]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->createDataWarga($user, 'desa', $desaA1->id, 'Kepala A1');
+        $this->createDataWarga($user, 'desa', $desaA2->id, 'Kepala A2');
+        $this->createDataWarga($user, 'desa', $desaB1->id, 'Kepala B1');
+
+        $response = $this->actingAs($user)->get(route('dashboard', [
+            'section2_group' => 'all',
+            'section3_group' => 'pokja-i',
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    $section4 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
+
+                    if (! is_array($section4)) {
+                        return false;
+                    }
+
+                    $items = collect($section4['charts']['coverage_per_module']['items'] ?? []);
+                    $labels = $items->pluck('label')->all();
+                    $totalsByLabel = $items->mapWithKeys(
+                        static fn (array $item): array => [(string) ($item['label'] ?? '-') => (int) ($item['total'] ?? 0)]
+                    );
+
+                    return ($section4['group'] ?? null) === 'pokja-i'
+                        && ($section4['section']['depends_on'] ?? null) === 'section3_group:pokja-i'
+                        && ($section4['sources']['source_scope'] ?? null) === 'kecamatan'
+                        && ($section4['sources']['source_area_type'] ?? null) === 'desa-turunan'
+                        && ($section4['sources']['source_modules'] ?? null) === ['data-warga', 'data-kegiatan-warga', 'bkl', 'bkr']
+                        && ($section4['sources']['filter_context']['section3_group'] ?? null) === 'pokja-i'
+                        && in_array('Gombong', $labels, true)
+                        && in_array('Bandung', $labels, true)
+                        && ! in_array('Sidomukti', $labels, true)
+                        && ($totalsByLabel['Gombong'] ?? null) === 1
+                        && ($totalsByLabel['Bandung'] ?? null) === 1;
+                });
         });
     }
 

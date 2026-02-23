@@ -526,3 +526,60 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk normalisasi label chart `Cakupan per Buku`.
+
+## Migrasi Role Legacy ke Sekretaris: 2026-02-23
+
+Ruang lingkup:
+- Menutup concern `R6` pada visibility role-aware dengan migrasi assignment role legacy user aktif.
+- Menjaga kompatibilitas role lama di matrix akses, tetapi menghentikan assignment aktif `admin-*`/`*bendahara`.
+
+Artefak:
+- `database/seeders/MigrateLegacyRoleAssignmentsSeeder.php`
+- `database/seeders/DatabaseSeeder.php`
+- `docs/process/TODO_UI_VISIBILITY_BY_PENANGGUNGJAWAB.md`
+
+Aturan migrasi:
+- `admin-desa` dan `desa-bendahara` -> `desa-sekretaris`.
+- `admin-kecamatan` dan `kecamatan-bendahara` -> `kecamatan-sekretaris`.
+- Jika `scope` user valid, target role mengikuti `scope` agar tidak drift dengan level area.
+
+Perintah validasi:
+- `php artisan db:seed --class=MigrateLegacyRoleAssignmentsSeeder --no-interaction`
+  - hasil: `PASS`.
+- `php artisan db:seed --class=DatabaseSeeder --no-interaction`
+  - hasil: `PASS` (chain default memanggil seeder migrasi baru).
+- `php -r "..."` (bootstrap Laravel + hitung user dengan role legacy)
+  - hasil: `0` user dengan role `admin-desa/admin-kecamatan/desa-bendahara/kecamatan-bendahara`.
+- `php artisan test`
+  - hasil: `724` test pass (`3221` assertions).
+
+Status:
+- `PASS` untuk migrasi role legacy jalur seeder.
+
+## Hardening Arsitektur Jalur Tunggal AI: 2026-02-23
+
+Ruang lingkup:
+- Menetapkan arsitektur `zero ambiguity` untuk routing kerja AI lintas concern.
+- Mengunci satu jalur operasional deterministik untuk sesi AI berikutnya.
+
+Artefak:
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+- `docs/process/TODO_ZERO_AMBIGUITY_AI_SINGLE_PATH_2026_02_23.md`
+- `AGENTS.md`
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+
+Perintah audit/validasi:
+- `rg -n "AI_SINGLE_PATH_ARCHITECTURE" AGENTS.md docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md docs/process/TODO_ZERO_AMBIGUITY_AI_SINGLE_PATH_2026_02_23.md`
+  - hasil: referensi silang terdeteksi dan konsisten.
+- `git status --short`
+  - hasil: perubahan hanya pada dokumen arsitektur/proses concern ini.
+- `php artisan test --filter=ExampleTest`
+  - hasil: `PASS` (`2` test, `3` assertions).
+
+Keputusan:
+- Dokumen `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` dikunci sebagai rute operasional default AI.
+- `AGENTS.md` diperbarui agar prioritas dokumen memasukkan single-path architecture.
+- Playbook menambahkan pattern `P-017` untuk memastikan mekanisme ini reusable lintas sesi.
+
+Status:
+- `PASS` untuk doc-hardening concern zero-ambiguity single path.
