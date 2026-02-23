@@ -526,3 +526,32 @@ Perintah validasi:
 
 Status:
 - `PASS` untuk normalisasi label chart `Cakupan per Buku`.
+
+## Migrasi Role Legacy ke Sekretaris: 2026-02-23
+
+Ruang lingkup:
+- Menutup concern `R6` pada visibility role-aware dengan migrasi assignment role legacy user aktif.
+- Menjaga kompatibilitas role lama di matrix akses, tetapi menghentikan assignment aktif `admin-*`/`*bendahara`.
+
+Artefak:
+- `database/seeders/MigrateLegacyRoleAssignmentsSeeder.php`
+- `database/seeders/DatabaseSeeder.php`
+- `docs/process/TODO_UI_VISIBILITY_BY_PENANGGUNGJAWAB.md`
+
+Aturan migrasi:
+- `admin-desa` dan `desa-bendahara` -> `desa-sekretaris`.
+- `admin-kecamatan` dan `kecamatan-bendahara` -> `kecamatan-sekretaris`.
+- Jika `scope` user valid, target role mengikuti `scope` agar tidak drift dengan level area.
+
+Perintah validasi:
+- `php artisan db:seed --class=MigrateLegacyRoleAssignmentsSeeder --no-interaction`
+  - hasil: `PASS`.
+- `php artisan db:seed --class=DatabaseSeeder --no-interaction`
+  - hasil: `PASS` (chain default memanggil seeder migrasi baru).
+- `php -r "..."` (bootstrap Laravel + hitung user dengan role legacy)
+  - hasil: `0` user dengan role `admin-desa/admin-kecamatan/desa-bendahara/kecamatan-bendahara`.
+- `php artisan test`
+  - hasil: `724` test pass (`3221` assertions).
+
+Status:
+- `PASS` untuk migrasi role legacy jalur seeder.

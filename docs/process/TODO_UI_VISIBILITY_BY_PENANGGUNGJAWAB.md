@@ -74,7 +74,7 @@ Catatan kompatibilitas (rencana):
   - kemampuan minimum:
     - `read-only`: hanya `index/show/report/print`,
     - `read/write`: tambah `create/store/edit/update/destroy` sesuai policy domain.
-- [ ] `R6` Migrasi role legacy:
+- [x] `R6` Migrasi role legacy:
   - bersihkan role `admin-desa/admin-kecamatan` dari user aktif.
   - bersihkan role `desa-bendahara/kecamatan-bendahara` dari user aktif.
   - map ke role sekretaris/pokja yang sesuai area dan fungsi.
@@ -103,8 +103,8 @@ Catatan kompatibilitas (rencana):
 ## Risiko
 
 - [ ] Risiko UX: user multi-role bisa bingung jika group bertambah sesuai union role.
-- [ ] Risiko migrasi: user legacy `admin-*` gagal dipetakan jika data area/role historis tidak bersih.
-- [ ] Risiko migrasi: user legacy `bendahara` gagal dipetakan ke sekretaris jika data area/role historis tidak bersih.
+- [x] Risiko migrasi: user legacy `admin-*` gagal dipetakan jika data area/role historis tidak bersih.
+- [x] Risiko migrasi: user legacy `bendahara` gagal dipetakan ke sekretaris jika data area/role historis tidak bersih.
 - [ ] Risiko keamanan: jika berhenti di UI-only, URL langsung masih bisa diakses (wajib hardening backend).
 - [ ] Risiko drift dokumen: mapping role-menu tidak sinkron dengan domain matrix/sidebar plan.
 
@@ -130,7 +130,11 @@ Catatan kompatibilitas (rencana):
   - diterapkan pada route group `desa` dan `kecamatan` di `routes/web.php`.
 - Payload visibility backend di-share ke Inertia melalui `app/Http/Middleware/HandleInertiaRequests.php`.
 - Konsumsi payload + indikator `RO` + hide aksi mutasi UI read-only di `resources/js/Layouts/DashboardLayout.vue`.
-- Migrasi data role legacy (`R6`) belum dijalankan pada sesi ini; kompatibilitas legacy tetap aktif sambil menunggu eksekusi migrasi terkontrol.
+- Migrasi data role legacy (`R6`) dijalankan melalui `database/seeders/MigrateLegacyRoleAssignmentsSeeder.php` dan dipanggil dari `database/seeders/DatabaseSeeder.php`.
+- Aturan migrasi:
+  - `admin-desa`/`desa-bendahara` -> `desa-sekretaris`.
+  - `admin-kecamatan`/`kecamatan-bendahara` -> `kecamatan-sekretaris`.
+  - Jika `scope` user valid (`desa`/`kecamatan`), target role diprioritaskan mengikuti `scope` untuk mencegah drift.
 
 ## Output yang Diharapkan Setelah Implementasi Nanti
 
