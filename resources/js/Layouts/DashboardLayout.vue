@@ -3,7 +3,7 @@ import { Link, router, usePage } from '@inertiajs/vue3'
 import { useDarkModeStore } from '@/admin-one/stores/darkMode'
 import FlashMessageBar from '@/admin-one/components/FlashMessageBar.vue'
 import { formatRoleList } from '@/utils/roleLabelFormatter'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const page = usePage()
 const darkModeStore = useDarkModeStore()
@@ -13,11 +13,20 @@ const sidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === '1')
 
 const user = computed(() => page.props.auth?.user ?? null)
 const roles = computed(() => user.value?.roles ?? [])
+const menuGroupModes = computed(() => user.value?.menuGroupModes ?? {})
+const moduleModes = computed(() => user.value?.moduleModes ?? {})
 const activeRoles = computed(() => formatRoleList(roles.value))
 const flash = computed(() => page.props.flash ?? {})
 const userScope = computed(() => user.value?.scope ?? null)
 const isDesaScope = computed(() => userScope.value === 'desa')
 const isKecamatanScope = computed(() => userScope.value === 'kecamatan')
+const normalizedPath = computed(() => page.url.split('?')[0])
+const pathSegments = computed(() => normalizedPath.value.split('/').filter(Boolean))
+const currentModuleSlug = computed(() => pathSegments.value[1] ?? null)
+const currentModuleMode = computed(() =>
+  currentModuleSlug.value ? (moduleModes.value[currentModuleSlug.value] ?? null) : null,
+)
+const isCurrentModuleReadOnly = computed(() => currentModuleMode.value === 'read-only')
 
 const hasRole = (role) => roles.value.includes(role)
 
@@ -130,8 +139,41 @@ const buildGroupState = (groups) => groups.reduce((state, group) => {
   return state
 }, {})
 
-const desaGroupOpen = ref(buildGroupState(desaMenuGroups))
-const kecamatanGroupOpen = ref(buildGroupState(kecamatanMenuGroups))
+const withMode = (groups) =>
+  groups
+    .filter((group) => !!menuGroupModes.value[group.key])
+    .map((group) => ({ ...group, mode: menuGroupModes.value[group.key] }))
+
+const desaVisibleMenuGroups = computed(() => withMode(desaMenuGroups))
+const kecamatanVisibleMenuGroups = computed(() => withMode(kecamatanMenuGroups))
+
+const syncGroupState = (current, groups) => {
+  const next = {}
+  groups.forEach((group) => {
+    next[group.key] = current[group.key] ?? group.items.some((item) => isItemActive(item))
+  })
+
+  return next
+}
+
+const desaGroupOpen = ref({})
+const kecamatanGroupOpen = ref({})
+
+watch(
+  desaVisibleMenuGroups,
+  (groups) => {
+    desaGroupOpen.value = syncGroupState(desaGroupOpen.value, groups)
+  },
+  { immediate: true },
+)
+
+watch(
+  kecamatanVisibleMenuGroups,
+  (groups) => {
+    kecamatanGroupOpen.value = syncGroupState(kecamatanGroupOpen.value, groups)
+  },
+  { immediate: true },
+)
 
 const isGroupActive = (group) => group.items.some((item) => isItemActive(item))
 
@@ -311,7 +353,7 @@ const hideBrokenImage = (event) => {
             <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Menu Domain</p>
 
             <template v-if="isDesaScope">
-              <div v-for="group in desaMenuGroups" :key="`desa-${group.key}`" class="space-y-1">
+              <div v-for="group in desaVisibleMenuGroups" :key="`desa-${group.key}`" class="space-y-1">
                 <button
                   type="button"
                   :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isGroupActive(group) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
@@ -321,6 +363,12 @@ const hideBrokenImage = (event) => {
                   <span class="flex items-center gap-3">
                     <span v-show="!sidebarCollapsed">{{ group.label }}</span>
                     <span v-show="sidebarCollapsed">{{ group.code }}</span>
+                    <span
+                      v-if="!sidebarCollapsed && group.mode === 'read-only'"
+                      class="inline-flex items-center rounded border border-amber-300 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:border-amber-800 dark:text-amber-300"
+                    >
+                      RO
+                    </span>
                   </span>
                   <svg v-show="!sidebarCollapsed" class="h-4 w-4 transition-transform" :class="{ 'rotate-180': isGroupOpen('desa', group.key) }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -344,7 +392,7 @@ const hideBrokenImage = (event) => {
             </template>
 
             <template v-if="isKecamatanScope">
-              <div v-for="group in kecamatanMenuGroups" :key="`kecamatan-${group.key}`" class="space-y-1">
+              <div v-for="group in kecamatanVisibleMenuGroups" :key="`kecamatan-${group.key}`" class="space-y-1">
                 <button
                   type="button"
                   :class="[sidebarCollapsed ? 'justify-center' : 'justify-between', isGroupActive(group) ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
@@ -354,6 +402,12 @@ const hideBrokenImage = (event) => {
                   <span class="flex items-center gap-3">
                     <span v-show="!sidebarCollapsed">{{ group.label }}</span>
                     <span v-show="sidebarCollapsed">{{ group.code }}</span>
+                    <span
+                      v-if="!sidebarCollapsed && group.mode === 'read-only'"
+                      class="inline-flex items-center rounded border border-amber-300 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:border-amber-800 dark:text-amber-300"
+                    >
+                      RO
+                    </span>
                   </span>
                   <svg v-show="!sidebarCollapsed" class="h-4 w-4 transition-transform" :class="{ 'rotate-180': isGroupOpen('kecamatan', group.key) }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
@@ -404,10 +458,19 @@ const hideBrokenImage = (event) => {
     </aside>
 
     <div :class="sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'" class="pt-14 transition-all duration-200">
-      <main class="px-4 sm:px-6 lg:px-8 py-6">
+      <main :class="[{ 'module-read-only': isCurrentModuleReadOnly }, 'px-4 sm:px-6 lg:px-8 py-6']">
         <FlashMessageBar :flash="flash" />
         <slot />
       </main>
     </div>
   </div>
 </template>
+
+<style scoped>
+.module-read-only :deep(a[href$='/create']),
+.module-read-only :deep(a[href*='/edit']),
+.module-read-only :deep(button.border-rose-200),
+.module-read-only :deep(button.border-rose-300) {
+  display: none !important;
+}
+</style>

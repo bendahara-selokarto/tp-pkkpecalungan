@@ -1,7 +1,7 @@
-# TODO UI Visibility by Penanggung Jawab (Plan Only)
+# TODO UI Visibility by Penanggung Jawab
 
 Tanggal: 2026-02-23  
-Status: `planning-only` (belum implementasi)
+Status: `implemented` (backend + UI + test)
 
 ## Konteks
 
@@ -53,23 +53,23 @@ Catatan kompatibilitas (rencana):
 - Jika masih ada data user legacy dengan role `admin-*`, wajib migrasi role sebelum enforcement final visibility.
 - Role `desa-bendahara`/`kecamatan-bendahara` dihapus dari model role aktif dan dimigrasikan ke role sekretaris sesuai scope-area.
 
-## Langkah Eksekusi (Belum Dijalankan)
+## Langkah Eksekusi (Status)
 
-- [ ] `R1` Kunci kontrak role->menu di dokumen domain:
+- [x] `R1` Kunci kontrak role->menu di dokumen domain:
   - tambah tabel `Role Responsibility Matrix + Access Mode` pada dokumen canonical arsitektur/domain.
   - tetapkan aturan user multi-role (rekomendasi: union dari seluruh role aktif).
-- [ ] `R2` Tambah matrix teknis backend:
+- [x] `R2` Tambah matrix teknis backend:
   - buat komponen matrix tunggal (mis. `RoleMenuVisibilityMatrix`) untuk mapping role ke group key + mode (`read-only` / `read/write`).
   - pastikan selaras dengan `RoleScopeMatrix`.
-- [ ] `R3` Tambah resolver visibility backend:
+- [x] `R3` Tambah resolver visibility backend:
   - backend menghasilkan payload menu-domain terfilter per user (scope + role + valid area).
   - injeksikan ke Inertia shared props (single source untuk UI), termasuk metadata mode akses per item.
-- [ ] `R4` Ubah UI consume payload backend:
+- [x] `R4` Ubah UI consume payload backend:
   - `DashboardLayout.vue` tidak lagi menampilkan seluruh group by scope.
   - render hanya group/item yang diizinkan payload backend.
   - tandai menu `read-only` secara eksplisit pada UI (badge/indikator).
   - implementasi `read-only` untuk sekretaris pada group `Pokja I-IV` dilakukan dengan menyembunyikan tombol aksi mutasi (`create`, `update`, `delete`) pada halaman index/detail/form terkait.
-- [ ] `R5` Hardening backend (wajib setelah UI visibility):
+- [x] `R5` Hardening backend (wajib setelah UI visibility):
   - tambah guard akses modul berbasis responsibility + mode agar direct URL tidak bypass.
   - kemampuan minimum:
     - `read-only`: hanya `index/show/report/print`,
@@ -78,27 +78,27 @@ Catatan kompatibilitas (rencana):
   - bersihkan role `admin-desa/admin-kecamatan` dari user aktif.
   - bersihkan role `desa-bendahara/kecamatan-bendahara` dari user aktif.
   - map ke role sekretaris/pokja yang sesuai area dan fungsi.
-- [ ] `R7` Dokumentasi & changelog:
+- [x] `R7` Dokumentasi & changelog:
   - update `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md` jika pattern baru dipakai lintas modul.
   - update laporan security/audit policy setelah rollout.
 
 ## Validasi yang Wajib Saat Implementasi
 
-- [ ] Unit test matrix role->menu + access mode (semua role target + super-admin).
-- [ ] Feature test payload menu Inertia:
+- [x] Unit test matrix role->menu + access mode (semua role target + super-admin).
+- [x] Feature test payload menu Inertia:
   - role sekretaris lihat `Sekretaris TPK` (`read/write`) + `Pokja I-IV` (`read-only`).
   - role pokja hanya lihat group pokja terkait (`read/write`).
   - role kecamatan yang berhak monitoring melihat `Monitoring Kecamatan` (`read-only`).
   - multi-role menerima union group.
-- [ ] Feature test anti-bypass URL:
+- [x] Feature test anti-bypass URL:
   - role pokja tidak bisa akses route modul di luar tanggung jawab.
   - role dengan mode `read-only` ditolak pada endpoint mutasi (`store/update/destroy`).
   - mismatch role-area-level tetap 403.
-- [ ] Feature/UI test visibilitas aksi:
+- [x] Feature/UI test visibilitas aksi:
   - pada sekretaris di modul `Pokja I-IV`, tombol `Tambah/Ubah/Hapus` tidak muncul.
   - pada sekretaris di modul `Sekretaris TPK`, tombol aksi mutasi tetap muncul sesuai policy.
-- [ ] Regression test super-admin flow (`users` management) tetap aman.
-- [ ] Jalankan `php artisan test` full sebelum final merge.
+- [x] Regression test super-admin flow (`users` management) tetap aman.
+- [x] Jalankan `php artisan test` full sebelum final merge.
 
 ## Risiko
 
@@ -116,10 +116,21 @@ Catatan kompatibilitas (rencana):
 - [x] `K4` `Monitoring Kecamatan` bersifat `read-only`.
 - [x] `K5` Tidak ada role `bendahara`; administrasi keuangan dibebankan ke `sekretaris`.
 - [x] `K6` Untuk mode `read-only` sekretaris (akses Pokja I-IV), UI diimplementasikan dengan menyembunyikan tombol `create/update/delete`.
-- [ ] `K7` Penegasan akhir aktor monitoring:
+- [x] `K7` Penegasan akhir aktor monitoring:
   - opsi A: hanya `kecamatan-sekretaris`,
   - opsi B: seluruh role kecamatan,
   - opsi C: subset role kecamatan tertentu.
+
+## Catatan Implementasi
+
+- Matrix role->group->mode diimplementasikan pada `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`.
+- Guard anti bypass URL diimplementasikan pada middleware `module.visibility`:
+  - `app/Http/Middleware/EnsureModuleVisibility.php`
+  - registrasi alias di `bootstrap/app.php`
+  - diterapkan pada route group `desa` dan `kecamatan` di `routes/web.php`.
+- Payload visibility backend di-share ke Inertia melalui `app/Http/Middleware/HandleInertiaRequests.php`.
+- Konsumsi payload + indikator `RO` + hide aksi mutasi UI read-only di `resources/js/Layouts/DashboardLayout.vue`.
+- Migrasi data role legacy (`R6`) belum dijalankan pada sesi ini; kompatibilitas legacy tetap aktif sambil menunggu eksekusi migrasi terkontrol.
 
 ## Output yang Diharapkan Setelah Implementasi Nanti
 

@@ -119,7 +119,7 @@ Route::middleware(['auth', 'role:super-admin'])
 
 Route::prefix('desa')
     ->name('desa.')
-    ->middleware(['auth', 'scope.role:desa'])
+    ->middleware(['auth', 'scope.role:desa', 'module.visibility'])
     ->group(function () {
 
         Route::resource('activities', DesaActivityController::class);
@@ -202,7 +202,7 @@ Route::prefix('desa')
 
 Route::prefix('kecamatan')
     ->name('kecamatan.')
-    ->middleware(['auth', 'scope.role:kecamatan'])
+    ->middleware(['auth', 'scope.role:kecamatan', 'module.visibility'])
     ->group(function () {
 
         Route::resource('activities', KecamatanActivityController::class);

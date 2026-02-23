@@ -106,3 +106,36 @@ Bukti validasi:
   - hasil: `8` test pass (`65` assertions).
 - `php artisan test tests/Feature/KecamatanReportReverseAreaMismatchTest.php tests/Feature/DesaActivityTest.php`
   - hasil: `26` test pass (`32` assertions).
+
+## Addendum Audit Visibility by Responsibility: 2026-02-23
+
+Ruang lingkup audit:
+- Verifikasi hardening akses modul berbasis role tanggung jawab + mode akses (`read-only` / `read-write`).
+- Verifikasi payload visibility backend sebagai source of truth UI.
+- Verifikasi anti bypass URL untuk route `desa/*` dan `kecamatan/*`.
+
+Artefak audit:
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `app/Http/Middleware/EnsureModuleVisibility.php`
+- `app/Http/Middleware/HandleInertiaRequests.php`
+- `routes/web.php`
+- `resources/js/Layouts/DashboardLayout.vue`
+
+Hasil ringkas:
+- Status audit: `PASS`.
+- Guard `module.visibility` aktif pada route group `desa` dan `kecamatan`.
+- Endpoint mutasi pada modul `read-only` ditolak `403`.
+- Akses lintas tanggung jawab (modul di luar role) ditolak `403`.
+
+Validasi pengujian:
+- `php artisan test tests/Feature/ModuleVisibilityMiddlewareTest.php`
+  - hasil: `4` test pass (`8` assertions).
+- `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
+  - hasil: `3` test pass (`51` assertions).
+- `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+  - hasil: `3` test pass (`20` assertions).
+- `php artisan test`
+  - hasil: `715` test pass (`3163` assertions).
+
+Catatan residual risk:
+- Migrasi user role legacy (`admin-*` dan role historis non-operasional) belum dieksekusi pada sesi ini; kompatibilitas sementara masih dipertahankan sampai migrasi dijalankan terkontrol.

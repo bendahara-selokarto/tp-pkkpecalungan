@@ -144,3 +144,26 @@ Mapping grup sidebar:
 
 Implementasi aktif:
 - `resources/js/Layouts/DashboardLayout.vue`
+
+## Role Responsibility Matrix + Access Mode
+
+Kontrak mode:
+- `read-write`: dapat baca + mutasi (`create/store/edit/update/destroy`).
+- `read-only`: hanya baca (`index/show/report/print`), mutasi ditolak backend.
+
+| Role | Scope | Sekretaris TPK | Pokja I | Pokja II | Pokja III | Pokja IV | Monitoring Kecamatan | Referensi |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `desa-sekretaris` | `desa` | `read-write` | `read-only` | `read-only` | `read-only` | `read-only` | `-` | `read-only` |
+| `kecamatan-sekretaris` | `kecamatan` | `read-write` | `read-only` | `read-only` | `read-only` | `read-only` | `read-only` | `read-only` |
+| `desa-pokja-i` | `desa` | `-` | `read-write` | `-` | `-` | `-` | `-` | `read-only` |
+| `desa-pokja-ii` | `desa` | `-` | `-` | `read-write` | `-` | `-` | `-` | `read-only` |
+| `desa-pokja-iii` | `desa` | `-` | `-` | `-` | `read-write` | `-` | `-` | `read-only` |
+| `desa-pokja-iv` | `desa` | `-` | `-` | `-` | `-` | `read-write` | `-` | `read-only` |
+| `kecamatan-pokja-i` | `kecamatan` | `-` | `read-write` | `-` | `-` | `-` | `-` | `read-only` |
+| `kecamatan-pokja-ii` | `kecamatan` | `-` | `-` | `read-write` | `-` | `-` | `-` | `read-only` |
+| `kecamatan-pokja-iii` | `kecamatan` | `-` | `-` | `-` | `read-write` | `-` | `-` | `read-only` |
+| `kecamatan-pokja-iv` | `kecamatan` | `-` | `-` | `-` | `-` | `read-write` | `-` | `read-only` |
+
+Catatan:
+- `super-admin` bypass policy dan tidak dibatasi matrix ini.
+- Role legacy (`admin-*`) dipertahankan sementara untuk kompatibilitas sampai migrasi role legacy selesai.

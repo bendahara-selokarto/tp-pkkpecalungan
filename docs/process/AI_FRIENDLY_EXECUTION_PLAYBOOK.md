@@ -48,6 +48,7 @@ Gunakan status:
 | `P-011` | Managed Super-Admin Assignment Guardrail | Perubahan matrix role/scope, request create/update user, atau opsi role pada UI manajemen user | Role sistem tetap aman tanpa bisa di-assign dari flow administratif biasa | Regression create/update user management + unit matrix role + auth super-admin test | `active` |
 | `P-012` | Unit Direct Coverage Gate by Discovery | Penambahan/renaming unit Action/UseCase/Service/Repository | Contract `1 unit = minimal 1 direct test` tetap terjaga otomatis | `UnitCoverageGateTest` + full suite | `active` |
 | `P-013` | UI Slug Humanization for Role/Scope | UI menampilkan slug teknis role/scope/area | Label user-facing konsisten manusiawi tanpa ubah kontrak teknis backend | Regression SuperAdmin view + render role badge di layout utama | `active` |
+| `P-014` | Responsibility Visibility with Backend Read-Only Enforcement | Kebutuhan menu per penanggung jawab + mode akses read-only | UI hanya menampilkan tanggung jawab role, backend menolak bypass URL mutasi pada area read-only | Unit matrix + feature payload Inertia + feature anti bypass + full suite | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -281,3 +282,29 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Konsistensi bisa drift jika ada endpoint baru yang bypass formatter.
 - Catatan reuse lintas domain/project:
   - Jadikan formatter role/scope sebagai dependency default semua halaman administratif.
+
+### P-014 - Responsibility Visibility with Backend Read-Only Enforcement
+- Tanggal: 2026-02-23
+- Status: active
+- Konteks: UI perlu menampilkan menu domain hanya sesuai penanggung jawab role, dengan mode `read-only` yang tidak boleh bisa dibypass via URL langsung.
+- Trigger: Perubahan model akses role/menu atau kebutuhan segmentasi menu per peran operasional.
+- Langkah eksekusi:
+  1) Definisikan matrix tunggal role -> group menu -> mode akses di backend service.
+  2) Resolve mode per group + per module dan share ke Inertia sebagai source of truth UI.
+  3) Terapkan middleware akses modul yang memblokir modul di luar tanggung jawab dan menolak write intent saat mode `read-only`.
+  4) Jadikan UI hanya consume payload backend; untuk mode `read-only`, sembunyikan tombol mutasi (`create/update/delete`) pada level layout.
+- Guardrail:
+  - Frontend bukan authority akses; backend wajib menolak bypass URL.
+  - Matrix role harus sinkron dengan scope-area valid dari `UserAreaContextService`.
+  - Read-only harus menolak `POST/PUT/PATCH/DELETE` dan endpoint `create/edit`.
+- Validasi minimum:
+  - Unit test matrix role-menu-mode.
+  - Feature test payload Inertia untuk sekretaris/pokja/multi-role.
+  - Feature test anti bypass URL untuk lintas modul dan read-only mutation.
+  - Full suite `php artisan test`.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada `RoleMenuVisibilityService`, middleware `EnsureModuleVisibility`, share Inertia `HandleInertiaRequests`, dan `DashboardLayout`.
+- Risiko:
+  - Modul dengan slug route alias khusus (contoh route report gabungan) wajib ikut dipetakan agar tidak false-deny.
+- Catatan reuse lintas domain/project:
+  - Pattern ini direkomendasikan sebagai default untuk kebutuhan segmentasi menu lintas role dengan hardening backend.
