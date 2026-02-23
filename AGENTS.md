@@ -56,6 +56,19 @@ Legacy tables (compatibility only):
 2. Clarify: jika ambigu, tanya singkat dan spesifik.
 3. Patch minimal: perubahan sekecil mungkin, hindari rewrite luas.
 4. Validate: jalankan test/cek dampak, pastikan tidak ada behavior drift.
+5. Doc-hardening pass (triggered): jika ada pemicu dokumentasi canonical, wajib jalankan hardening dokumen sebelum final report.
+
+Trigger doc-hardening pass:
+- Perubahan kontrak canonical (`role/scope/area`, query filter, representasi dashboard, metadata sumber).
+- Perubahan lintas lebih dari satu dokumen rencana/proses untuk fitur yang sama.
+- Ditemukan istilah ambigu atau istilah lama yang berpotensi drift kontrak (contoh: token query generik pada multi-section).
+- Ada selisih status implementasi vs status dokumen (`planned/in-progress/done`) pada concern yang sama.
+
+Langkah minimal doc-hardening pass:
+1. Audit drift istilah/kontrak pada dokumen yang terdampak (scoped grep + diff).
+2. Normalisasi istilah canonical lintas TODO/process/domain matrix/playbook.
+3. Sinkronkan checklist status/keputusan agar sesuai implementasi aktual.
+4. Laporkan hasil hardening: file terdampak, keputusan yang dikunci, dan validasi yang dijalankan.
 
 Flow pembacaan dokumen (wajib, terutama header tabel):
 1. Baca:
@@ -169,3 +182,4 @@ Aturan markdown operasional:
 - Setiap TODO wajib memuat: konteks, target hasil, langkah eksekusi, validasi, risiko, keputusan.
 - Setiap update dokumen harus ringkas, diff-first, dan hindari pengulangan konteks yang sama.
 - Perubahan dengan sinyal canonical wajib mengupdate minimal satu markdown arsitektur (`AGENTS.md` / playbook / terminology map) dan diverifikasi oleh CI gate.
+- Jika trigger doc-hardening pass aktif, pembaruan dokumen wajib mencakup sinkronisasi lintas dokumen terkait concern yang sama (bukan hanya satu file terisolasi).

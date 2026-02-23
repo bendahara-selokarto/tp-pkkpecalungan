@@ -1,7 +1,7 @@
 # TODO Refactor Dashboard Akses 2026-02-23
 
 Tanggal: 2026-02-23  
-Status: `planned`
+Status: `in-progress`
 
 ## Konteks
 
@@ -36,8 +36,9 @@ Tujuan monitor data dikunci sebagai kontrak implementasi:
 ### Struktur Section Dashboard Sekretaris (Terkunci)
 
 - Section 1: `Domain Sekretaris` (`sekretaris-tpk`) tanpa filter pokja.
-- Section 2: `Pokja Level Aktif` (agregat semua pokja pada level user) dengan filter `by_group`: `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
-- Section 3: khusus scope `kecamatan`, `Pokja Level Bawah` (agregat pokja pada desa turunan) dengan filter `by_group`: `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
+- Section 2: `Pokja Level Aktif` (agregat semua pokja pada level user) dengan filter group `all|pokja-i|pokja-ii|pokja-iii|pokja-iv` (query: `section2_group`).
+- Section 3: khusus scope `kecamatan`, `Pokja Level Bawah` (agregat pokja pada desa turunan) dengan filter group `all|pokja-i|pokja-ii|pokja-iii|pokja-iv` (query: `section3_group`).
+- Scenario khusus kecamatan: ketika `section 3` memilih `pokja-i`, tambahkan `section 4` berisi rincian sumber data per desa (`docs/process/TODO_SCENARIO_KECAMATAN_SECTION4_POKJA_I_2026_02_23.md`).
 
 ### Blok Dashboard Canonical
 
@@ -91,17 +92,17 @@ Aturan label UI:
   - tampilkan subtitle sumber data konsisten di setiap blok.
   - fallback empty-state per blok jika user sah tetapi belum ada data.
   - sediakan kontrol tampilan data untuk role bertingkat: `all` (semua cakupan), `by level`, `by sub-level`.
-  - pengecualian `desa-sekretaris`: default `level=desa`, tanpa `sub-level`, filter tampilan memakai `by_group` (`all` + `pokja-i..iv`).
+  - pengecualian `desa-sekretaris`: default `level=desa`, tanpa `sub-level`, filter tampilan memakai `section2_group` (`all` + `pokja-i..iv`).
   - struktur section sekretaris:
     - section 1: domain sekretaris.
-    - section 2: semua pokja level aktif + filter `by_group`.
-    - section 3 (khusus kecamatan): semua pokja level bawah (desa turunan) + filter `by_group`.
+    - section 2: semua pokja level aktif + filter `section2_group`.
+    - section 3 (khusus kecamatan): semua pokja level bawah (desa turunan) + filter `section3_group`.
   - desain kontrol wajib mengutamakan keterbacaan (label eksplisit, tanpa istilah ambigu).
   - rincian rencana UI: `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`.
 - [x] `D7` Hardening cache dashboard:
   - cache key minimal: `scope + area_id + role signature + block signature`.
   - invalidasi event-based + TTL pendek diterapkan untuk menjaga freshness.
-- [ ] `D8` Dokumentasi kontrak:
+- [x] `D8` Dokumentasi kontrak:
   - update `docs/domain/DOMAIN_CONTRACT_MATRIX.md` bagian dashboard representation.
   - update `docs/process/DASHBOARD_CHART_ALIGNMENT_PLAN.md` dengan status baru role-aware.
 
@@ -138,8 +139,9 @@ Aturan label UI:
 - [x] Label dashboard wajib menjelaskan sumber modul dan cakupan area.
 - [x] Prioritas desain dashboard: keterbacaan informasi di atas aspek tampilan visual.
 - [x] Untuk role bertingkat, filter dashboard bersifat dinamis: `all`, filter level, dan filter sub-level.
-- [x] Pengecualian role `desa-sekretaris`: filter disederhanakan menjadi `by_group` (`all` + `pokja-i..iv`) dengan level default tetap `desa`.
-- [x] Struktur dashboard sekretaris dikunci menjadi section 1 (domain sekretaris), section 2 (pokja level aktif), dan section 3 khusus kecamatan (pokja level bawah), dengan filter `by_group` pada section 2/3.
+- [x] Pengecualian role `desa-sekretaris`: filter disederhanakan menjadi `section2_group` (`all` + `pokja-i..iv`) dengan level default tetap `desa`.
+- [x] Struktur dashboard sekretaris dikunci menjadi section 1 (domain sekretaris), section 2 (pokja level aktif), dan section 3 khusus kecamatan (pokja level bawah), dengan filter `section2_group`/`section3_group` pada section 2/3.
+- [x] Kontrak query filter section dikunci: `section2_group` (section 2) dan `section3_group` (section 3).
 
 ## Keputusan Lanjutan yang Perlu Konfirmasi Sebelum Implementasi
 

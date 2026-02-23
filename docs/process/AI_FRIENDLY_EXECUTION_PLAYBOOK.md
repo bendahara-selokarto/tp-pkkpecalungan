@@ -49,6 +49,8 @@ Gunakan status:
 | `P-012` | Unit Direct Coverage Gate by Discovery | Penambahan/renaming unit Action/UseCase/Service/Repository | Contract `1 unit = minimal 1 direct test` tetap terjaga otomatis | `UnitCoverageGateTest` + full suite | `active` |
 | `P-013` | UI Slug Humanization for Role/Scope | UI menampilkan slug teknis role/scope/area | Label user-facing konsisten manusiawi tanpa ubah kontrak teknis backend | Regression SuperAdmin view + render role badge di layout utama | `active` |
 | `P-014` | Responsibility Visibility with Backend Read-Only Enforcement | Kebutuhan menu per penanggung jawab + mode akses read-only | UI hanya menampilkan tanggung jawab role, backend menolak bypass URL mutasi pada area read-only | Unit matrix + feature payload Inertia + feature anti bypass + full suite | `active` |
+| `P-015` | Section-Scoped Query Key Contract for Role-Aware Dashboard | Dashboard memiliki section filter lebih dari satu dalam satu halaman | State filter tidak saling bertabrakan dan kontrak URL stabil lintas backend/frontend/docs | Feature test filter context + audit kontrak query key di docs | `active` |
+| `P-016` | Triggered Doc-Hardening Pass | Ada sinyal canonical drift pada dokumentasi concern aktif | Kontrak dokumen lintas file tetap koheren dan tidak mismatch dengan implementasi | Scoped drift audit + sinkronisasi TODO/process/domain + ringkasan validasi | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -308,3 +310,56 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Modul dengan slug route alias khusus (contoh route report gabungan) wajib ikut dipetakan agar tidak false-deny.
 - Catatan reuse lintas domain/project:
   - Pattern ini direkomendasikan sebagai default untuk kebutuhan segmentasi menu lintas role dengan hardening backend.
+
+### P-015 - Section-Scoped Query Key Contract for Role-Aware Dashboard
+- Tanggal: 2026-02-23
+- Status: active
+- Konteks: Dashboard sekretaris memakai beberapa section dengan filter group berbeda sehingga token query generik (`by_group`) mudah menimbulkan drift state dan ambigu sumber filter.
+- Trigger: Halaman dashboard atau report multi-section memerlukan filter paralel dalam satu URL.
+- Langkah eksekusi:
+  1) Tetapkan query key unik per section (contoh: `section2_group`, `section3_group`).
+  2) Pastikan backend normalisasi token query mengikuti key per section, bukan key generik tunggal.
+  3) Pastikan frontend memetakan kontrol filter ke query key section yang tepat dan menjaga state independen antarseksi.
+  4) Kunci kontrak key yang sama di dokumen rencana dan dokumen arsitektur untuk mencegah drift terminologi.
+- Guardrail:
+  - Hindari query key generik untuk beberapa section berbeda.
+  - Jangan izinkan perubahan filter section A mengubah payload section B tanpa kontrak eksplisit.
+  - Frontend tetap consumer; validasi akhir dan enforcement filter context berada di backend.
+- Validasi minimum:
+  - Feature test filter context payload per section (`section2_group` dan `section3_group`).
+  - Audit dokumen rencana dashboard memastikan tidak ada istilah kontrak lama (`by_group`) yang bertentangan.
+  - Regression `DashboardDocumentCoverageTest` tetap hijau.
+- Bukti efisiensi/akurasi:
+  - Dipakai pada refactor dashboard role-aware 2026-02-23 untuk menjaga stabilitas state section 2/3 dan skenario section 4 berbasis `section3_group=pokja-i`.
+- Risiko:
+  - Query URL bertambah panjang pada mode kombinasi filter.
+- Catatan reuse lintas domain/project:
+  - Terapkan pada semua halaman analitik bertingkat yang memiliki lebih dari satu panel filter independen.
+
+### P-016 - Triggered Doc-Hardening Pass
+- Tanggal: 2026-02-23
+- Status: active
+- Konteks: Perubahan concern besar sering menyentuh beberapa dokumen sekaligus dan memicu drift istilah, status checklist, atau kontrak query/akses.
+- Trigger:
+  - Ada perubahan kontrak canonical (akses, scope, query key, dashboard representation, metadata sumber).
+  - Ada perubahan lintas beberapa dokumen untuk concern yang sama.
+  - Ada mismatch status dokumen vs implementasi aktual.
+- Langkah eksekusi:
+  1) Lakukan audit drift terbatas pada dokumen concern aktif (grep istilah kunci + diff).
+  2) Normalisasi kontrak istilah canonical lintas TODO/process/domain/playbook.
+  3) Sinkronkan status checklist dan keputusan terkunci dengan implementasi terbaru.
+  4) Laporkan jejak hardening: file terdampak + validasi yang dijalankan.
+- Guardrail:
+  - Tetap scoped; hindari menyapu seluruh dokumen proyek tanpa trigger.
+  - Jangan mengubah dokumen non-concern.
+  - Hardening dokumen tidak boleh mengganti authority akses backend.
+- Validasi minimum:
+  - Tidak ada istilah kontrak lama yang konflik pada dokumen concern aktif.
+  - Referensi antar dokumen concern tetap valid.
+  - Status checklist utama sesuai kondisi implementasi saat itu.
+- Bukti efisiensi/akurasi:
+  - Dipakai pada hardening dashboard role-aware 2026-02-23 untuk menyinkronkan TODO refactor, TODO UI, skenario khusus, domain matrix, dan alignment plan.
+- Risiko:
+  - Over-documentation jika trigger diterapkan terlalu longgar.
+- Catatan reuse lintas domain/project:
+  - Terapkan sebagai opsi default saat terdeteksi sinyal drift canonical antar dokumen.

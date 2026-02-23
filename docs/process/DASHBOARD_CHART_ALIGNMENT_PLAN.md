@@ -158,3 +158,27 @@ Checklist audit UI chart berikutnya:
 - [x] Verifikasi state semua nilai `0` menampilkan pesan yang jelas.
 - [ ] Tambahkan feature test frontend (jika test harness UI tersedia) untuk guard tampilan list item chart.
 - [ ] Monitor feedback user 1 siklus operasional untuk keterbacaan chart pada data rendah.
+
+## 8) Hardening Role-Aware Dashboard (2026-02-23)
+
+Status:
+- `in-progress` (kontrak docs sinkron dengan implementasi backend/frontend saat ini).
+
+Kontrak tambahan:
+- Dashboard utama kini memakai payload `dashboardBlocks[]` sebagai jalur utama (payload legacy tetap fallback transisi).
+- Struktur sekretaris dikunci:
+  - section 1: domain sekretaris.
+  - section 2: pokja level aktif (query key `section2_group`).
+  - section 3: khusus kecamatan, pokja level bawah/desa turunan (query key `section3_group`).
+- Skenario khusus kecamatan:
+  - jika `section3_group=pokja-i`, tampilkan section 4 rincian sumber data per desa.
+  - referensi: `docs/process/TODO_SCENARIO_KECAMATAN_SECTION4_POKJA_I_2026_02_23.md`.
+
+Guardrail hardening:
+- Hindari istilah query generik `by_group`; wajib pakai query key per section.
+- Metadata sumber (`source_group`, `source_scope`, `source_area_type`, `source_modules`) tetap wajib tampil agar label tidak ambigu.
+- Kontrol akses tetap backend-first (`policy/scope/use case`), UI hanya consume payload.
+
+Validasi minimum tambahan:
+- `DashboardDocumentCoverageTest` memverifikasi `section2_group`/`section3_group` masuk ke `sources.filter_context`.
+- Audit dokumen dashboard memastikan kontrak query key konsisten lintas rencana UI, rencana refactor, dan skenario khusus.

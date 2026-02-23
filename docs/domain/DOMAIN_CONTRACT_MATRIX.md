@@ -167,3 +167,29 @@ Kontrak mode:
 Catatan:
 - `super-admin` bypass policy dan tidak dibatasi matrix ini.
 - Role legacy (`admin-*`) dipertahankan sementara untuk kompatibilitas sampai migrasi role legacy selesai.
+
+## Dashboard Representation Contract (Role-Aware)
+
+Status kontrak:
+- Aktif per 2026-02-23 untuk dashboard berbasis hak akses backend.
+
+Payload utama:
+- `dashboardBlocks[]` menjadi source utama representasi dashboard.
+- Payload legacy (`dashboardStats`/`dashboardCharts`) hanya fallback transisi.
+
+Struktur section sekretaris:
+- Section 1: domain sekretaris (tanpa filter pokja).
+- Section 2: pokja level aktif, filter query `section2_group` dengan opsi `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
+- Section 3: khusus scope kecamatan, pokja level bawah (desa turunan), filter query `section3_group` dengan opsi `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
+- Section 4 (skenario khusus): hanya untuk kecamatan saat `section3_group=pokja-i`, menampilkan rincian sumber data pokja I per desa.
+
+Aturan role khusus:
+- `desa-sekretaris`: default `level=desa`, tanpa kontrol `sub_level`, filter yang tampil hanya `section2_group`.
+- `kecamatan-sekretaris`: tetap dapat mode bertingkat (`all|by-level|by-sub-level`) dengan filter section 2 dan section 3 yang independen.
+
+Kontrak metadata sumber (anti label ambigu):
+- `source_group`: `sekretaris-tpk|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
+- `source_scope`: `desa|kecamatan`.
+- `source_area_type`: `area-sendiri|desa-turunan`.
+- `source_modules`: daftar slug modul penyusun metrik.
+- `filter_context`: wajib memuat token query aktif termasuk `section2_group` dan/atau `section3_group` sesuai section.
