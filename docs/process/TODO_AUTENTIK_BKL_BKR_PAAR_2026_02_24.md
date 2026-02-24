@@ -84,6 +84,22 @@
 - [ ] Audit output PDF agar format tanda tangan, judul, dan metadata area sesuai format autentik.
 - [ ] Siapkan test matrix minimum (feature + policy/scope + scoped data leak check).
 
+## Progress Implementasi (2026-02-24)
+- [x] Copy UI halaman daftar BKL/BKR dinormalisasi ke istilah autentik:
+  - `Rekapitulasi Data Kelompok BKL`
+  - `Rekapitulasi Data Kelompok BKR`
+- [x] Judul PDF BKL/BKR diselaraskan ke format autentik:
+  - `REKAPITULASI DATA KELOMPOK BKL`
+  - `REKAPITULASI DATA KELOMPOK BKR`
+- [x] Validasi regresi terarah lulus:
+  - `tests/Feature/DesaBklTest.php`
+  - `tests/Feature/KecamatanBklTest.php`
+  - `tests/Feature/DesaBkrTest.php`
+  - `tests/Feature/KecamatanBkrTest.php`
+  - `tests/Feature/BklReportPrintTest.php`
+  - `tests/Feature/BkrReportPrintTest.php`
+- [ ] Audit final tanda tangan + metadata area untuk PDF autentik tetap pending sampai konfirmasi sumber workbook/sheet selesai.
+
 ## Risiko
 - Tanpa konfirmasi file sumber, risiko drift nomenklatur sheet antar dokumen referensi masih ada.
 - PAAR punya 2 varian metadata atas tabel; perlu diputuskan apakah beda scope (desa vs kecamatan) atau hanya variasi template.

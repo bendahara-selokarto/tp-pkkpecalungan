@@ -15,7 +15,7 @@ defineProps({
 })
 
 
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data BKR ini?'
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data kelompok BKR ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 
@@ -45,11 +45,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="BKR Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Rekapitulasi Data Kelompok BKR" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar BKR</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Data Kelompok BKR</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/bkr/report/pdf"
@@ -119,7 +119,7 @@ const cancelDelete = () => {
             </tr>
             <tr v-if="bkrItems.length === 0">
               <td colspan="7" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data BKR belum tersedia.
+                Data kelompok BKR belum tersedia.
               </td>
             </tr>
           </tbody>
