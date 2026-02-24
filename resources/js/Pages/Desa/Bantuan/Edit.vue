@@ -13,12 +13,12 @@ const props = defineProps({
 })
 
 const form = useForm({
-  name: props.bantuan.name ?? '',
-  category: props.bantuan.category ?? '',
-  description: props.bantuan.description ?? '',
-  source: props.bantuan.source ?? 'pusat',
-  amount: props.bantuan.amount ?? 0,
-  received_date: props.bantuan.received_date ?? '',
+  lokasi_penerima: props.bantuan.lokasi_penerima ?? '',
+  jenis_bantuan: props.bantuan.jenis_bantuan ?? 'uang',
+  keterangan: props.bantuan.keterangan ?? '',
+  asal_bantuan: props.bantuan.asal_bantuan ?? 'pusat',
+  jumlah: props.bantuan.jumlah ?? 0,
+  tanggal: props.bantuan.tanggal ?? '',
 })
 
 const submit = () => {
@@ -33,46 +33,51 @@ const submit = () => {
     <CardBox class="max-w-3xl">
       <form class="space-y-5" @submit.prevent="submit">
         <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Bantuan</label>
-          <input v-model="form.name" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
-          <p v-if="form.errors.name" class="mt-1 text-xs text-rose-600">{{ form.errors.name }}</p>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Bantuan</label>
-          <input v-model="form.category" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
-          <p v-if="form.errors.category" class="mt-1 text-xs text-rose-600">{{ form.errors.category }}</p>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Deskripsi</label>
-          <textarea v-model="form.description" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
-          <p v-if="form.errors.description" class="mt-1 text-xs text-rose-600">{{ form.errors.description }}</p>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Lokasi Penerima (Sasaran)</label>
+          <input v-model="form.lokasi_penerima" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+          <p v-if="form.errors.lokasi_penerima" class="mt-1 text-xs text-rose-600">{{ form.errors.lokasi_penerima }}</p>
         </div>
 
         <div class="grid gap-5 md:grid-cols-3">
           <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Sumber</label>
-            <select v-model="form.source" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal</label>
+            <input v-model="form.tanggal" type="date" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <p v-if="form.errors.tanggal" class="mt-1 text-xs text-rose-600">{{ form.errors.tanggal }}</p>
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Asal Bantuan</label>
+            <select v-model="form.asal_bantuan" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
               <option value="pusat">Pusat</option>
               <option value="provinsi">Provinsi</option>
               <option value="kabupaten">Kabupaten</option>
               <option value="pihak_ketiga">Pihak Ketiga</option>
               <option value="lainnya">Lainnya</option>
             </select>
-            <p v-if="form.errors.source" class="mt-1 text-xs text-rose-600">{{ form.errors.source }}</p>
+            <p v-if="form.errors.asal_bantuan" class="mt-1 text-xs text-rose-600">{{ form.errors.asal_bantuan }}</p>
           </div>
 
           <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Nominal</label>
-            <input v-model="form.amount" type="number" min="0" step="0.01" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
-            <p v-if="form.errors.amount" class="mt-1 text-xs text-rose-600">{{ form.errors.amount }}</p>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Bantuan</label>
+            <select v-model="form.jenis_bantuan" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+              <option value="uang">Uang</option>
+              <option value="barang">Barang</option>
+            </select>
+            <p v-if="form.errors.jenis_bantuan" class="mt-1 text-xs text-rose-600">{{ form.errors.jenis_bantuan }}</p>
+          </div>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jumlah</label>
+            <input v-model="form.jumlah" type="number" min="0" step="0.01" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <p v-if="form.errors.jumlah" class="mt-1 text-xs text-rose-600">{{ form.errors.jumlah }}</p>
           </div>
 
           <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Diterima</label>
-            <input v-model="form.received_date" type="date" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
-            <p v-if="form.errors.received_date" class="mt-1 text-xs text-rose-600">{{ form.errors.received_date }}</p>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Keterangan</label>
+            <textarea v-model="form.keterangan" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
+            <p v-if="form.errors.keterangan" class="mt-1 text-xs text-rose-600">{{ form.errors.keterangan }}</p>
           </div>
         </div>
 

@@ -14,7 +14,7 @@
     </style>
 </head>
 <body>
-    <div class="title">Laporan Bantuan {{ strtoupper($level) }}</div>
+    <div class="title">BUKU BANTUAN {{ strtoupper($level) }}</div>
     <div class="meta">
         Wilayah: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
@@ -40,13 +40,20 @@
         <tbody>
             @forelse ($items as $index => $item)
                 @php
-                    $isUang = str_contains(strtolower((string) $item->category), 'uang')
-                        || str_contains(strtolower((string) $item->category), 'keuangan');
+                    $jenisBantuan = strtolower(trim((string) $item->category));
+                    $isUang = in_array($jenisBantuan, ['uang', 'keuangan', 'dana'], true);
+                    $asalBantuan = match ((string) $item->source) {
+                        'pusat' => 'PUSAT',
+                        'provinsi' => 'PROVINSI',
+                        'kabupaten' => 'KABUPATEN',
+                        'pihak_ketiga' => 'PIHAK KETIGA',
+                        default => strtoupper(str_replace('_', ' ', (string) $item->source)),
+                    };
                 @endphp
                 <tr>
                     <td class="center">{{ $index + 1 }}</td>
                     <td class="center">{{ \Carbon\Carbon::parse($item->received_date)->format('d/m/Y') }}</td>
-                    <td>{{ strtoupper(str_replace('_', ' ', (string) $item->source)) }}</td>
+                    <td>{{ $asalBantuan }}</td>
                     <td class="center">{{ $isUang ? 'v' : '-' }}</td>
                     <td class="center">{{ $isUang ? '-' : 'v' }}</td>
                     <td class="center">{{ number_format((float) $item->amount, 0, ',', '.') }}</td>

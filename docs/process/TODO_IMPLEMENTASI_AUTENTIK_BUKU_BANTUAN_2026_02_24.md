@@ -3,7 +3,7 @@
 ## Konteks
 - Sumber autentik: `docs/referensi/excel/BUKU BANTU.xlsx`, sheet `Buku Bantuan`.
 - Hasil baca text-layer XML sudah tersedia (header dan merge awal terdeteksi).
-- Status saat ini: `siap sinkronisasi kontrak header` untuk sheet `Buku Bantuan`; implementasi masih ditahan sampai matrix mapping field selesai.
+- Status saat ini: `implementasi concern selesai` untuk sinkronisasi field autentik `Buku Bantuan` (request, repository mapping, inertia payload, UI, PDF, test).
 
 ## Target Hasil
 - Kontrak header final sheet `Buku Bantuan` tervalidasi sampai merge cell.
@@ -20,14 +20,29 @@
   - `JUMLAH`
   - `LOKASI PENERIMA (SASARAN)`
   - `KETERANGAN`
-- [ ] Susun matrix mapping `kolom autentik -> field input/storage/report`.
-- [ ] Audit dampak implementasi ke layer:
+- [x] Susun matrix mapping `kolom autentik -> field input/storage/report`.
+- [x] Audit dampak implementasi ke layer:
   - route/request
   - use case/repository
   - policy/scope service
   - inertia page mapping
-- [ ] Definisikan test matrix minimum untuk akses dan scoped data integrity.
-- [ ] Lakukan doc-hardening jika ditemukan drift istilah/kontrak.
+- [x] Definisikan test matrix minimum untuk akses dan scoped data integrity.
+- [x] Lakukan doc-hardening jika ditemukan drift istilah/kontrak.
+
+## Matrix Mapping (Final)
+- `TANGGAL` -> payload/request: `tanggal` -> storage: `received_date` -> report: `received_date`.
+- `ASAL BANTUAN` -> payload/request: `asal_bantuan` -> storage: `source` -> report: `source`.
+- `JENIS BANTUAN` (`UANG/BARANG`) -> payload/request: `jenis_bantuan` (`uang|barang`) -> storage: `category` -> report: marker kolom `UANG/BARANG`.
+- `JUMLAH` -> payload/request: `jumlah` -> storage: `amount` -> report: `amount`.
+- `LOKASI PENERIMA (SASARAN)` -> payload/request: `lokasi_penerima` -> storage: `name` -> report: `name`.
+- `KETERANGAN` -> payload/request: `keterangan` -> storage: `description` -> report: `description`.
+
+## Dampak Implementasi
+- Request normalization menerima field autentik sebagai jalur utama, tetap kompatibel dengan key legacy (`name/category/source/amount/received_date/description`).
+- Repository menjaga normalisasi database tanpa migrasi schema tambahan (`payload autentik -> kolom eksisting`).
+- Inertia payload untuk desa/kecamatan dipaksa canonical (`lokasi_penerima`, `jenis_bantuan`, `keterangan`, `asal_bantuan`, `jumlah`, `tanggal`).
+- UI Desa/Kecamatan Bantuan (`Create/Edit/Index/Show`) sinkron ke istilah autentik.
+- Seeder dashboard diperbarui agar data Bantuan lebih representatif (`jenis_bantuan` acak `uang|barang`, target lokasi penerima).
 
 ## Bukti Visual dan Peta Header Terkunci
 - Bukti visual: screenshot user pada sesi 2026-02-24 untuk sheet `Buku Bantuan` (header utuh, garis sel terlihat, nomor kolom 1-8 terlihat, teks header terbaca).
@@ -50,8 +65,13 @@
 ## Validasi
 - [x] Bukti visual header valid tersedia.
 - [x] Peta merge header final tidak ambigu.
-- [ ] Mapping field disetujui untuk implementasi.
-- [ ] Rencana test terdefinisi dan dapat dijalankan.
+- [x] Mapping field disetujui untuk implementasi.
+- [x] Rencana test terdefinisi dan dapat dijalankan.
+- [x] `php artisan test --filter=DesaBantuanTest`.
+- [x] `php artisan test --filter=KecamatanBantuanTest`.
+- [x] `php artisan test --filter=BantuanPolicyTest`.
+- [x] `php artisan test --filter=StructuredDomainReportPrintTest`.
+- [x] `npm run build`.
 
 ## Risiko
 - `JENIS BANTUAN` ber-subkolom berpotensi salah map jika tidak dikunci visual.
@@ -61,3 +81,4 @@
 - [x] Sheet `Buku Bantuan` dipilih sebagai prioritas fase 1B.
 - [x] Peta header visual `Buku Bantuan` tervalidasi dan dikunci sebagai kontrak.
 - [x] Implementasi ditahan sampai matrix mapping field dan rencana test selesai.
+- [x] Kontrak field autentik dikunci dengan strategi normalisasi kompatibel (tanpa drift schema, tanpa coupling baru).

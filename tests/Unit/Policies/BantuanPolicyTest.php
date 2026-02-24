@@ -29,7 +29,7 @@ class BantuanPolicyTest extends TestCase
 
         $milikSendiri = Bantuan::create([
             'name' => 'Bantuan Pusat',
-            'category' => 'Keuangan',
+            'category' => 'uang',
             'description' => null,
             'source' => 'pusat',
             'amount' => 2000000,
@@ -41,7 +41,7 @@ class BantuanPolicyTest extends TestCase
 
         $milikDesaLain = Bantuan::create([
             'name' => 'Bantuan Provinsi',
-            'category' => 'Barang',
+            'category' => 'barang',
             'description' => null,
             'source' => 'provinsi',
             'amount' => 3000000,
@@ -70,7 +70,7 @@ class BantuanPolicyTest extends TestCase
 
         $bantuanLuar = Bantuan::create([
             'name' => 'Bantuan Luar',
-            'category' => 'Keuangan',
+            'category' => 'uang',
             'description' => null,
             'source' => 'kabupaten',
             'amount' => 5000000,
@@ -85,4 +85,3 @@ class BantuanPolicyTest extends TestCase
         $this->assertFalse($policy->update($user, $bantuanLuar));
     }
 }
-

@@ -37,8 +37,8 @@ class StructuredDomainReportPrintTest extends TestCase
         $user->assignRole('admin-desa');
 
         Bantuan::create([
-            'name' => 'Bantuan Operasional',
-            'category' => 'Keuangan',
+            'name' => 'Dusun Krajan',
+            'category' => 'uang',
             'description' => 'Tahap 1',
             'source' => 'pusat',
             'amount' => 1000000,

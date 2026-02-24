@@ -45,8 +45,8 @@ class KecamatanBantuanTest extends TestCase
         $adminKecamatan->assignRole('admin-kecamatan');
 
         Bantuan::create([
-            'name' => 'Bantuan Kabupaten Tahap 1',
-            'category' => 'Keuangan',
+            'name' => 'Desa Gombong',
+            'category' => 'uang',
             'description' => 'Untuk kecamatan A',
             'source' => 'kabupaten',
             'amount' => 45000000,
@@ -57,8 +57,8 @@ class KecamatanBantuanTest extends TestCase
         ]);
 
         Bantuan::create([
-            'name' => 'Bantuan Kecamatan B',
-            'category' => 'Barang',
+            'name' => 'Desa Sidomulyo',
+            'category' => 'barang',
             'description' => 'Untuk kecamatan B',
             'source' => 'pihak_ketiga',
             'amount' => 15000000,
@@ -71,8 +71,8 @@ class KecamatanBantuanTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/bantuans');
 
         $response->assertOk();
-        $response->assertSee('Bantuan Kabupaten Tahap 1');
-        $response->assertDontSee('Bantuan Kecamatan B');
+        $response->assertSee('Desa Gombong');
+        $response->assertDontSee('Desa Sidomulyo');
     }
 
     #[Test]
@@ -85,8 +85,8 @@ class KecamatanBantuanTest extends TestCase
         $adminKecamatan->assignRole('admin-kecamatan');
 
         $bantuanLuar = Bantuan::create([
-            'name' => 'Bantuan Luar Area',
-            'category' => 'Keuangan',
+            'name' => 'Desa Limpung',
+            'category' => 'uang',
             'description' => 'Luar wilayah',
             'source' => 'pusat',
             'amount' => 12000000,
@@ -111,26 +111,26 @@ class KecamatanBantuanTest extends TestCase
         $adminKecamatan->assignRole('admin-kecamatan');
 
         $this->actingAs($adminKecamatan)->post('/kecamatan/bantuans', [
-            'name' => 'Bantuan Operasional Kecamatan',
-            'category' => 'Keuangan',
-            'description' => 'Tahap awal',
-            'source' => 'kabupaten',
-            'amount' => 5000000,
-            'received_date' => '2026-02-12',
+            'lokasi_penerima' => 'Desa Randu',
+            'jenis_bantuan' => 'uang',
+            'keterangan' => 'Tahap awal',
+            'asal_bantuan' => 'kabupaten',
+            'jumlah' => 5000000,
+            'tanggal' => '2026-02-12',
         ])->assertStatus(302);
 
         $bantuan = Bantuan::query()
             ->where('area_id', $this->kecamatanA->id)
-            ->where('name', 'Bantuan Operasional Kecamatan')
+            ->where('name', 'Desa Randu')
             ->firstOrFail();
 
         $this->actingAs($adminKecamatan)->put(route('kecamatan.bantuans.update', $bantuan->id), [
-            'name' => 'Bantuan Operasional Kecamatan',
-            'category' => 'Keuangan',
-            'description' => 'Tahap revisi',
-            'source' => 'lainnya',
-            'amount' => 7000000,
-            'received_date' => '2026-02-20',
+            'lokasi_penerima' => 'Desa Randu',
+            'jenis_bantuan' => 'uang',
+            'keterangan' => 'Tahap revisi',
+            'asal_bantuan' => 'lainnya',
+            'jumlah' => 7000000,
+            'tanggal' => '2026-02-20',
         ])->assertStatus(302);
 
         $this->assertDatabaseHas('bantuans', [

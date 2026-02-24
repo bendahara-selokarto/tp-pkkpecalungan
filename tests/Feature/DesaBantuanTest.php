@@ -53,8 +53,8 @@ class DesaBantuanTest extends TestCase
         $adminDesa->assignRole('admin-desa');
 
         Bantuan::create([
-            'name' => 'Bantuan Dana Operasional',
-            'category' => 'Keuangan',
+            'name' => 'Dusun Krajan',
+            'category' => 'uang',
             'description' => 'Dana dari pusat',
             'source' => 'pusat',
             'amount' => 10000000,
@@ -65,8 +65,8 @@ class DesaBantuanTest extends TestCase
         ]);
 
         Bantuan::create([
-            'name' => 'Bantuan Desa Lain',
-            'category' => 'Barang',
+            'name' => 'Dusun Bandung',
+            'category' => 'barang',
             'description' => 'Untuk desa lain',
             'source' => 'provinsi',
             'amount' => 5000000,
@@ -79,8 +79,8 @@ class DesaBantuanTest extends TestCase
         $response = $this->actingAs($adminDesa)->get('/desa/bantuans');
 
         $response->assertOk();
-        $response->assertSee('Bantuan Dana Operasional');
-        $response->assertDontSee('Bantuan Desa Lain');
+        $response->assertSee('Dusun Krajan');
+        $response->assertDontSee('Dusun Bandung');
     }
 
     #[Test]
@@ -93,23 +93,23 @@ class DesaBantuanTest extends TestCase
         $adminDesa->assignRole('admin-desa');
 
         $this->actingAs($adminDesa)->post('/desa/bantuans', [
-            'name' => 'Bantuan Provinsi',
-            'category' => 'Keuangan',
-            'description' => 'Tahap awal',
-            'source' => 'provinsi',
-            'amount' => 25000000,
-            'received_date' => '2026-02-10',
+            'lokasi_penerima' => 'Dusun Jatirejo',
+            'jenis_bantuan' => 'uang',
+            'keterangan' => 'Tahap awal',
+            'asal_bantuan' => 'provinsi',
+            'jumlah' => 25000000,
+            'tanggal' => '2026-02-10',
         ])->assertStatus(302);
 
-        $bantuan = Bantuan::where('name', 'Bantuan Provinsi')->firstOrFail();
+        $bantuan = Bantuan::where('name', 'Dusun Jatirejo')->firstOrFail();
 
         $this->actingAs($adminDesa)->put(route('desa.bantuans.update', $bantuan->id), [
-            'name' => 'Bantuan Provinsi',
-            'category' => 'Keuangan',
-            'description' => 'Tahap final',
-            'source' => 'provinsi',
-            'amount' => 30000000,
-            'received_date' => '2026-02-12',
+            'lokasi_penerima' => 'Dusun Jatirejo',
+            'jenis_bantuan' => 'uang',
+            'keterangan' => 'Tahap final',
+            'asal_bantuan' => 'provinsi',
+            'jumlah' => 30000000,
+            'tanggal' => '2026-02-12',
         ])->assertStatus(302);
 
         $this->assertDatabaseHas('bantuans', [

@@ -42,7 +42,7 @@ const cancelDelete = () => {
   deletingId.value = null
 }
 
-const formatSource = (value) => value.replace('_', ' ')
+const formatSource = (value = '') => value.replace(/_/g, ' ')
 const formatAmount = (value) => new Intl.NumberFormat('id-ID').format(Number(value))
 const formatDate = (value) => formatDateForDisplay(value)
 </script>
@@ -76,11 +76,12 @@ const formatDate = (value) => formatDateForDisplay(value)
         <table class="w-full min-w-[900px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
-              <th class="px-3 py-3 font-semibold">Nama</th>
-              <th class="px-3 py-3 font-semibold">Jenis</th>
-              <th class="px-3 py-3 font-semibold">Sumber</th>
-              <th class="px-3 py-3 font-semibold">Nominal</th>
+              <th class="px-3 py-3 font-semibold">Lokasi Penerima</th>
+              <th class="px-3 py-3 font-semibold">Jenis Bantuan</th>
+              <th class="px-3 py-3 font-semibold">Asal Bantuan</th>
+              <th class="px-3 py-3 font-semibold">Jumlah</th>
               <th class="px-3 py-3 font-semibold">Tanggal</th>
+              <th class="px-3 py-3 font-semibold">Keterangan</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>
             </tr>
           </thead>
@@ -90,11 +91,12 @@ const formatDate = (value) => formatDateForDisplay(value)
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
-              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.name }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.category }}</td>
-              <td class="px-3 py-3 capitalize text-gray-700 dark:text-gray-300">{{ formatSource(item.source) }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">Rp {{ formatAmount(item.amount) }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.received_date) }}</td>
+              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.lokasi_penerima }}</td>
+              <td class="px-3 py-3 capitalize text-gray-700 dark:text-gray-300">{{ item.jenis_bantuan }}</td>
+              <td class="px-3 py-3 capitalize text-gray-700 dark:text-gray-300">{{ formatSource(item.asal_bantuan) }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatAmount(item.jumlah) }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.tanggal) }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.keterangan || '-' }}</td>
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
                   <Link
@@ -120,7 +122,7 @@ const formatDate = (value) => formatDateForDisplay(value)
               </td>
             </tr>
             <tr v-if="bantuans.length === 0">
-              <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <td colspan="7" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Data bantuan belum tersedia.
               </td>
             </tr>

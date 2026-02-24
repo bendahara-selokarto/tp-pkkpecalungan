@@ -13,7 +13,7 @@ const props = defineProps({
   },
 })
 
-const formatSource = (value) => value.replace('_', ' ')
+const formatSource = (value = '') => value.replace(/_/g, ' ')
 const formatAmount = (value) => new Intl.NumberFormat('id-ID').format(Number(value))
 const formatDate = (value) => formatDateForDisplay(value)
 </script>
@@ -24,35 +24,35 @@ const formatDate = (value) => formatDateForDisplay(value)
 
     <CardBox class="max-w-3xl space-y-4">
       <div>
-        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Nama Bantuan</p>
-        <p class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ props.bantuan.name }}</p>
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Lokasi Penerima (Sasaran)</p>
+        <p class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ props.bantuan.lokasi_penerima }}</p>
       </div>
 
       <div class="grid gap-4 md:grid-cols-2">
         <div>
-          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jenis</p>
-          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.bantuan.category }}</p>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jenis Bantuan</p>
+          <p class="text-sm capitalize text-gray-700 dark:text-gray-300">{{ props.bantuan.jenis_bantuan }}</p>
         </div>
         <div>
-          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Sumber</p>
-          <p class="text-sm capitalize text-gray-700 dark:text-gray-300">{{ formatSource(props.bantuan.source) }}</p>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Asal Bantuan</p>
+          <p class="text-sm capitalize text-gray-700 dark:text-gray-300">{{ formatSource(props.bantuan.asal_bantuan) }}</p>
         </div>
       </div>
 
       <div class="grid gap-4 md:grid-cols-2">
         <div>
-          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Nominal</p>
-          <p class="text-sm text-gray-700 dark:text-gray-300">Rp {{ formatAmount(props.bantuan.amount) }}</p>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jumlah</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatAmount(props.bantuan.jumlah) }}</p>
         </div>
         <div>
-          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal Diterima</p>
-          <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatDate(props.bantuan.received_date) }}</p>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Tanggal</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatDate(props.bantuan.tanggal) }}</p>
         </div>
       </div>
 
       <div>
-        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Deskripsi</p>
-        <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.bantuan.description || '-' }}</p>
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Keterangan</p>
+        <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.bantuan.keterangan || '-' }}</p>
       </div>
 
       <div class="flex items-center justify-end gap-2">

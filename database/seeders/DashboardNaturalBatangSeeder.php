@@ -278,12 +278,23 @@ class DashboardNaturalBatangSeeder extends Seeder
     {
         $count = $this->countFor($context['level'], 5, 12, 8, 18);
         $rows = [];
-        $categories = ['Operasional', 'Kegiatan Pokja', 'ATK', 'Peningkatan Kapasitas', 'Sarana'];
+        $categories = ['uang', 'barang'];
         $sources = ['pusat', 'provinsi', 'kabupaten', 'pihak_ketiga', 'lainnya'];
+        $targetLocations = [
+            'Dusun Krajan',
+            'Dusun Sidomulyo',
+            'Dusun Karanganyar',
+            'RW 01',
+            'RW 02',
+            'RT 01/RW 03',
+            'Posyandu Melati',
+            'Kelompok Dasawisma Mawar',
+            'Kelompok BKL',
+        ];
 
         for ($i = 1; $i <= $count; $i++) {
             $rows[] = [
-                'name' => 'Bantuan '.$faker->randomElement(['Kas', 'Barang', 'Program']).' '.$i,
+                'name' => $faker->randomElement($targetLocations),
                 'category' => $faker->randomElement($categories),
                 'description' => $faker->boolean(65) ? null : 'Dukungan kegiatan pemberdayaan keluarga',
                 'source' => $faker->randomElement($sources),

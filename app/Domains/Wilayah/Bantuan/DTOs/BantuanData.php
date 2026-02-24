@@ -5,12 +5,12 @@ namespace App\Domains\Wilayah\Bantuan\DTOs;
 class BantuanData
 {
     public function __construct(
-        public string $name,
-        public string $category,
-        public ?string $description,
-        public string $source,
-        public string $amount,
-        public string $received_date,
+        public string $lokasi_penerima,
+        public string $jenis_bantuan,
+        public ?string $keterangan,
+        public string $asal_bantuan,
+        public string $jumlah,
+        public string $tanggal,
         public string $level,
         public int $area_id,
         public int $created_by,
@@ -20,12 +20,12 @@ class BantuanData
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['name'],
-            $data['category'],
-            $data['description'] ?? null,
-            $data['source'],
-            (string) $data['amount'],
-            $data['received_date'],
+            $data['lokasi_penerima'],
+            $data['jenis_bantuan'],
+            $data['keterangan'] ?? null,
+            $data['asal_bantuan'],
+            (string) $data['jumlah'],
+            $data['tanggal'],
             $data['level'],
             $data['area_id'],
             $data['created_by'],

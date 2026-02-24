@@ -34,15 +34,7 @@ class DesaBantuanController extends Controller
         $bantuans = $this->listScopedBantuanUseCase->execute('desa');
 
         return Inertia::render('Desa/Bantuan/Index', [
-            'bantuans' => $bantuans->values()->map(fn (Bantuan $item) => [
-                'id' => $item->id,
-                'name' => $item->name,
-                'category' => $item->category,
-                'description' => $item->description,
-                'source' => $item->source,
-                'amount' => $item->amount,
-                'received_date' => $this->formatDateForPayload($item->received_date),
-            ]),
+            'bantuans' => $bantuans->values()->map(fn (Bantuan $item) => $this->serializeBantuan($item)),
         ]);
     }
 
@@ -67,15 +59,7 @@ class DesaBantuanController extends Controller
         $this->authorize('view', $bantuan);
 
         return Inertia::render('Desa/Bantuan/Show', [
-            'bantuan' => [
-                'id' => $bantuan->id,
-                'name' => $bantuan->name,
-                'category' => $bantuan->category,
-                'description' => $bantuan->description,
-                'source' => $bantuan->source,
-                'amount' => $bantuan->amount,
-                'received_date' => $this->formatDateForPayload($bantuan->received_date),
-            ],
+            'bantuan' => $this->serializeBantuan($bantuan),
         ]);
     }
 
@@ -85,15 +69,7 @@ class DesaBantuanController extends Controller
         $this->authorize('update', $bantuan);
 
         return Inertia::render('Desa/Bantuan/Edit', [
-            'bantuan' => [
-                'id' => $bantuan->id,
-                'name' => $bantuan->name,
-                'category' => $bantuan->category,
-                'description' => $bantuan->description,
-                'source' => $bantuan->source,
-                'amount' => $bantuan->amount,
-                'received_date' => $this->formatDateForPayload($bantuan->received_date),
-            ],
+            'bantuan' => $this->serializeBantuan($bantuan),
         ]);
     }
 
@@ -122,5 +98,21 @@ class DesaBantuanController extends Controller
         }
 
         return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function serializeBantuan(Bantuan $item): array
+    {
+        return [
+            'id' => $item->id,
+            'lokasi_penerima' => $item->name,
+            'jenis_bantuan' => $item->category,
+            'keterangan' => $item->description,
+            'asal_bantuan' => $item->source,
+            'jumlah' => $item->amount,
+            'tanggal' => $this->formatDateForPayload($item->received_date),
+        ];
     }
 }

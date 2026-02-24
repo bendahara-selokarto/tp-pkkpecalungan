@@ -16,12 +16,7 @@ class UpdateBantuanAction
     public function execute(Bantuan $bantuan, array $payload): Bantuan
     {
         $data = BantuanData::fromArray([
-            'name' => $payload['name'],
-            'category' => $payload['category'],
-            'description' => $payload['description'] ?? null,
-            'source' => $payload['source'],
-            'amount' => $payload['amount'],
-            'received_date' => $payload['received_date'],
+            ...$payload,
             'level' => $bantuan->level,
             'area_id' => $bantuan->area_id,
             'created_by' => $bantuan->created_by,
@@ -30,4 +25,3 @@ class UpdateBantuanAction
         return $this->bantuanRepository->update($bantuan, $data);
     }
 }
-
