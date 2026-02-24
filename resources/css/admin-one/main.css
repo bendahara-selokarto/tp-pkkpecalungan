@@ -7,6 +7,31 @@
 
 @theme {
   --transition-position: right, left, top, bottom, margin, padding;
+
+  /* Primary app theme: #00CED1 */
+  --color-emerald-50: #ecfeff;
+  --color-emerald-100: #cffafe;
+  --color-emerald-200: #a5f3fc;
+  --color-emerald-300: #67e8f9;
+  --color-emerald-400: #22d3ee;
+  --color-emerald-500: #00ced1;
+  --color-emerald-600: #00b8bb;
+  --color-emerald-700: #00979a;
+  --color-emerald-800: #0b6c6e;
+  --color-emerald-900: #134e4f;
+  --color-emerald-950: #042f30;
+
+  --color-blue-50: #ecfeff;
+  --color-blue-100: #cffafe;
+  --color-blue-200: #a5f3fc;
+  --color-blue-300: #67e8f9;
+  --color-blue-400: #22d3ee;
+  --color-blue-500: #00ced1;
+  --color-blue-600: #00b8bb;
+  --color-blue-700: #00979a;
+  --color-blue-800: #0b6c6e;
+  --color-blue-900: #134e4f;
+  --color-blue-950: #042f30;
 }
 
 @import './_checkbox-radio-switch.css';
