@@ -35,7 +35,7 @@ Tujuan:
 | 4.14.4c | `koperasi` | Data Isian Koperasi | UI/PDF sudah memakai `Data Isian Koperasi` | Pertahankan | match |
 | 4.14.4d | `kejar-paket` | Data Isian Kejar Paket/KF/PAUD | UI/PDF sudah memakai `Data Isian Kejar Paket/KF/PAUD` | Pertahankan | match |
 | 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | UI/PDF sudah memakai `Data Isian Posyandu oleh TP PKK` | Pertahankan | match |
-| 4.14.4f | `simulasi-penyuluhan` | Data Isian Kelompok Simulasi dan Penyuluhan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
+| 4.14.4f | `simulasi-penyuluhan` | Kelompok Simulasi dan Penyuluhan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.15 | `catatan-keluarga` | Catatan Keluarga | UI/PDF sudah mengarah ke label pedoman; struktur autentik 19 kolom diproyeksikan operasional ke report 10 kolom | Pertahankan label pedoman + kunci transformasi 19->10 di dokumen mapping domain | match (with projection) |
 | 4.16a | `rekap-catatan-data-kegiatan-warga-dasawisma` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok Dasa Wisma | Report PDF 29 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + kunci flow baca header tabel kompleks sebagai guardrail implementasi | implemented (report-only) |
 | 4.16b | `rekap-catatan-data-kegiatan-warga-pkk-rt` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok PKK RT | Report PDF 30 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + kunci flow baca header tabel kompleks sebagai guardrail implementasi | implemented (report-only) |

@@ -11,7 +11,7 @@
 - Status saat ini:
   - `Buku Kader Khusus`: implemented (PDF + copy UI + kontrak dokumen sinkron).
   - `Buku Prestasi`: implemented (copy UI + label PDF sinkron).
-  - `Buku Inventaris`, `Buku Anggota Pokja`, `BukuKelompok Simulasi`: siap sinkronisasi mapping.
+  - `Buku Inventaris`, `Buku Anggota Pokja`, `BukuKelompok Simulasi`: implemented (copy UI + label menu + label PDF sinkron).
 
 ## Target Hasil
 - Kontrak header final 5 sheet tervalidasi hingga level merge cell (`rowspan`/`colspan`).
@@ -22,10 +22,10 @@
 - [x] Ambil bukti visual valid untuk 5 sheet (header utuh, garis sel terlihat, nomor kolom terlihat, teks terbaca).
 - [x] Finalisasi peta header per sheet sampai level merge (`rowspan`/`colspan`).
 - [x] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet untuk `Buku Kader Khusus` dan `Buku Prestasi`.
-- [ ] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet untuk `Buku Inventaris`, `Buku Anggota Pokja`, dan `BukuKelompok Simulasi`.
-- [ ] Audit dampak implementasi ke route/request/use case/repository/policy/inertia.
-- [ ] Definisikan test matrix minimum untuk akses scoped dan integritas data.
-- [ ] Jalankan doc-hardening jika muncul drift istilah/kontrak saat sinkronisasi mapping.
+- [x] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet untuk `Buku Inventaris`, `Buku Anggota Pokja`, dan `BukuKelompok Simulasi`.
+- [x] Audit dampak implementasi ke route/request/use case/repository/policy/inertia.
+- [x] Definisikan test matrix minimum untuk akses scoped dan integritas data.
+- [x] Jalankan doc-hardening jika muncul drift istilah/kontrak saat sinkronisasi mapping.
 
 ## Progress Implementasi (Parsial)
 - [x] `Buku Kader Khusus`
@@ -47,6 +47,44 @@
   - Implementasi:
     - Label UI desa/kecamatan dinormalisasi ke istilah `Buku Prestasi`.
     - Judul PDF dinormalisasi ke `BUKU PRESTASI`.
+- [x] `Buku Inventaris`
+  - Mapping terkunci:
+    - `NAMA BARANG` -> `name`
+    - `ASAL BARANG` -> `asal_barang`
+    - `TANGGAL PENERIMAAN/PEMBELIAN` -> `tanggal_penerimaan`
+    - `JUMLAH` -> `quantity` + `unit`
+    - `TEMPAT PENYIMPANAN` -> `tempat_penyimpanan`
+    - `KONDISI BARANG` -> `condition`
+    - `KETERANGAN` -> `keterangan` (fallback kompatibilitas `description`)
+  - Implementasi:
+    - Judul UI dinormalisasi ke istilah `Buku Inventaris` (desa/kecamatan, index/create/edit/show).
+    - Header tabel daftar dinormalisasi ke `Daftar Buku Inventaris`.
+- [x] `Buku Anggota Pokja`
+  - Mapping terkunci:
+    - `NAMA` -> `nama`
+    - `JABATAN` -> `jabatan`
+    - `JENIS KELAMIN (L/P)` -> `jenis_kelamin` (proyeksi report)
+    - `TEMP, TGL/BLN/LAHIR (UMUR)` -> `tempat_lahir` + `tanggal_lahir` (+ `umur` turunan)
+    - `STATUS (KAWIN/TIDAK KAWIN)` -> `status_perkawinan` (proyeksi report)
+    - `ALAMAT` -> `alamat`
+    - `PENDIDIKAN` -> `pendidikan`
+    - `PEKERJAAN` -> `pekerjaan`
+    - `KET` -> `keterangan`
+  - Implementasi:
+    - Judul UI dinormalisasi ke istilah `Buku Anggota Pokja` (desa/kecamatan, index/create/edit/show).
+    - Judul PDF dinormalisasi ke `DAFTAR ANGGOTA POKJA I`.
+- [x] `BukuKelompok Simulasi`
+  - Mapping terkunci:
+    - `NAMA KEGIATAN` -> `nama_kegiatan`
+    - `JENIS SIMULASI/PENYULUHAN` -> `jenis_simulasi_penyuluhan`
+    - `JUMLAH - KELOMPOK` -> `jumlah_kelompok`
+    - `JUMLAH - SOSIALISASI` -> `jumlah_sosialisasi`
+    - `JUMLAH KADER - L` -> `jumlah_kader_l`
+    - `JUMLAH KADER - P` -> `jumlah_kader_p`
+    - `KETERANGAN` -> `keterangan`
+  - Implementasi:
+    - Judul UI/menu dinormalisasi ke istilah `Kelompok Simulasi dan Penyuluhan`.
+    - Judul PDF dinormalisasi ke `KELOMPOK SIMULASI DAN PENYULUHAN`.
 
 ## Bukti Visual dan Peta Header Terkunci
 
@@ -142,8 +180,21 @@
 - [x] Bukti visual 5 sheet valid dan terbaca.
 - [x] Peta header final per sheet tidak ambigu untuk level merge/subkolom.
 - [x] Mapping field disetujui untuk implementasi (`Buku Kader Khusus`, `Buku Prestasi`).
-- [ ] Mapping field untuk 3 sheet tersisa disetujui untuk implementasi.
-- [ ] Rencana test untuk 3 sheet tersisa terdefinisi dan dapat dijalankan.
+- [x] Mapping field untuk 3 sheet tersisa disetujui untuk implementasi.
+- [x] Rencana test untuk 3 sheet tersisa terdefinisi dan dapat dijalankan.
+
+## Test Matrix Concern
+- [x] Feature akses scoped:
+  - `DesaInventarisTest`, `KecamatanInventarisTest`
+  - `DesaAnggotaPokjaTest`, `KecamatanAnggotaPokjaTest`
+  - `DesaSimulasiPenyuluhanTest`, `KecamatanSimulasiPenyuluhanTest`
+- [x] Feature report print scoped:
+  - `SimulasiPenyuluhanReportPrintTest`
+  - `StructuredDomainReportPrintTest`
+- [x] Kontrak baseline PDF:
+  - `PdfBaselineFixtureComplianceTest`
+- [x] Sinkronisasi coverage dashboard-menu:
+  - `DashboardCoverageMenuSyncTest`
 
 ## Risiko
 - Istilah lokal seperti `KET`, `BLM NIKAH`, dan `TEMP, TGL/BLN/LAHIR (UMUR)` berpotensi drift saat dijadikan label UI/query.
@@ -152,4 +203,4 @@
 ## Keputusan
 - [x] Lima screenshot user pada sesi 2026-02-24 dikunci sebagai bukti kontrak visual header resmi.
 - [x] Implementasi dilepas bertahap per concern; `Kader Khusus` dan `Prestasi` sudah sinkron.
-- [ ] Implementasi 3 sheet tersisa ditahan sampai matrix mapping per sheet selesai.
+- [x] Implementasi 3 sheet tersisa diselesaikan setelah matrix mapping dikunci.

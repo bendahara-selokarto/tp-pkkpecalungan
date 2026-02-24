@@ -40,7 +40,7 @@ Sumber acuan:
 | Sekretaris TPK | Buku Keuangan | `/{scope}/buku-keuangan` |
 | Sekretaris TPK | Buku Inventaris | `/{scope}/inventaris` |
 | Sekretaris TPK | Buku Kegiatan | `/{scope}/activities` |
-| Sekretaris TPK | Anggota Pokja | `/{scope}/anggota-pokja` |
+| Sekretaris TPK | Buku Anggota Pokja | `/{scope}/anggota-pokja` |
 | Sekretaris TPK | Prestasi Lomba | `/{scope}/prestasi-lomba` |
 | Pokja I | Buku Kegiatan | `/{scope}/activities` |
 | Pokja I | Daftar Warga TP PKK | `/{scope}/data-warga` |
@@ -59,7 +59,7 @@ Sumber acuan:
 | Pokja III | Data Aset (Sarana) Desa/Kelurahan | `/{scope}/warung-pkk` |
 | Pokja IV | Buku Kegiatan | `/{scope}/activities` |
 | Pokja IV | Data Isian Posyandu oleh TP PKK | `/{scope}/posyandu` |
-| Pokja IV | Data Isian Kelompok Simulasi dan Penyuluhan | `/{scope}/simulasi-penyuluhan` |
+| Pokja IV | Kelompok Simulasi dan Penyuluhan | `/{scope}/simulasi-penyuluhan` |
 | Pokja IV | Catatan Keluarga | `/{scope}/catatan-keluarga` |
 | Pokja IV | Program Prioritas | `/{scope}/program-prioritas` |
 | Pokja IV | Naskah Pelaporan Pilot Project | `/{scope}/pilot-project-naskah-pelaporan` |
@@ -72,7 +72,7 @@ Sumber acuan:
 | L2 | L3 | Scope |
 | --- | --- | --- |
 | Akun | Profil | semua role |
-| Akun | Keluar (Log Out) | semua role |
+| Akun | Keluar | semua role |
 
 ## Catatan Audit Teks Sidebar (2026-02-22)
 
@@ -89,7 +89,7 @@ Temuan yang perlu dijaga:
 - Label administratif non-domain tetap konsisten bahasa:
   - `Manajemen User`
   - `Profil`
-  - `Keluar (Log Out)`
+  - `Keluar`
 
 Checklist audit sidebar berikutnya:
 - [ ] Verifikasi `L1/L2/L3` terhadap `TERMINOLOGY_NORMALIZATION_MAP`.
