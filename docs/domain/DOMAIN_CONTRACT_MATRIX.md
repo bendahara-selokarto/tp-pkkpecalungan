@@ -16,6 +16,7 @@ Aturan baca:
 | 4.11 | `buku-keuangan` | Buku Tabungan | `transaction_date`, `source`, `description`, `reference_number`, `entry_type`, `amount` | `BUKU TABUNGAN` | Rakernas X (Lampiran 4.11) | implemented (layout autentik 12 kolom sinkron; domain transaksi keuangan terpisah dari bantuan) |
 | Ekstensi Lokal 2026 | `bantuan` | Buku Bantuan | Kontrak input/report autentik: `tanggal`, `asal_bantuan`, `jenis_bantuan`, `jumlah`, `lokasi_penerima`, `keterangan`; storage kompatibilitas: `received_date`, `source`, `category`, `amount`, `name`, `description` | `BUKU BANTUAN {LEVEL}` | Dokumen autentik `docs/referensi/excel/BUKU BANTU.xlsx` (sheet `Buku Bantuan`) | implemented (header merge sinkron autentik + normalisasi request/repository tanpa drift schema) |
 | Ekstensi Lokal 2026 | `prestasi-lomba` | Buku Prestasi | `tahun`, `jenis_lomba`, `lokasi`, `prestasi_kecamatan`, `prestasi_kabupaten`, `prestasi_provinsi`, `prestasi_nasional`, `keterangan` | `BUKU PRESTASI {LEVEL}` | Dokumen autentik `docs/referensi/excel/BUKU BANTU.xlsx` (sheet `Buku Prestasi`) | implemented (header grup prestasi 4 tingkat sinkron autentik; field boolean capaian tetap normal) |
+| Ekstensi Lokal 2026 | `paar` | Data Pola Asuh Anak dan Remaja (PAAR) | `indikator`, `jumlah`, `keterangan` | `DATA POLA ASUH ANAK DAN REMAJA (PAAR)` | Dokumen autentik `docs/referensi/excel/BUKU BANTU.xlsx` + screenshot PAAR sesi 2026-02-24 (referensi terakhir) | implemented (indikator fixed list 6 item, metadata DESA/KEC pada PDF, scope `desa|kecamatan`) |
 | 4.12 | `inventaris` | Buku Inventaris | `name`, `asal_barang`, `tanggal_penerimaan`, `quantity`, `unit`, `tempat_penyimpanan`, `condition`, `description`, `keterangan` | `BUKU INVENTARIS` | Rakernas X (Lampiran 4.12) | match (header + nomor kolom 1-8 sinkron autentik) |
 | 4.13 | `activities` | Buku Kegiatan | `title`, `nama_petugas`, `jabatan_petugas`, `activity_date`, `tempat_kegiatan`, `description`, `uraian`, `status`, `tanda_tangan` | `BUKU KEGIATAN` | Rakernas X (Lampiran 4.13) | match (group header `KEGIATAN` + nomor kolom 1-7 sinkron autentik) |
 | 4.14.1a | `data-warga` | Daftar Warga TP PKK | Header rumah tangga: `dasawisma`, `nama_kepala_keluarga`; detail anggota autentik 1-20: `nomor_registrasi`, `nomor_ktp_kk`, `nama`, `jabatan`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `umur_tahun`, `status_perkawinan`, `status_dalam_keluarga`, `agama`, `alamat`, `desa_kel_sejenis`, `pendidikan`, `pekerjaan`, `akseptor_kb`, `aktif_posyandu`, `ikut_bkb`, `memiliki_tabungan`, `ikut_kelompok_belajar`, `jenis_kelompok_belajar`, `ikut_paud`, `ikut_koperasi`; field agregat legacy transisi: `jumlah_warga_laki_laki`, `jumlah_warga_perempuan`, `keterangan` | `DAFTAR WARGA TP PKK` | Dokumen autentik `d:\\pedoman\\153.pdf` (Lampiran 4.14.1a) | implemented (struktur detail + PDF portrait autentik, kompatibilitas summary tetap aktif) |
@@ -75,6 +76,7 @@ Aturan baca:
   - `database/migrations/2026_02_21_024000_create_kejar_pakets_table.php`
   - `database/migrations/2026_02_21_025000_create_posyandus_table.php`
   - `database/migrations/2026_02_20_230000_create_simulasi_penyuluhans_table.php`
+  - `database/migrations/2026_02_24_230000_create_paars_table.php`
   - `database/migrations/2026_02_20_200000_create_program_prioritas_table.php`
   - `database/migrations/2026_02_24_180000_add_jadwal_bulanan_columns_to_program_prioritas_table.php`
 - Catatan keluarga rekap source:
@@ -144,7 +146,7 @@ Mapping grup sidebar:
 | Grup Sidebar | Slug Modul |
 | --- | --- |
 | Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-keuangan`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
-| Pokja I | `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr` |
+| Pokja I | `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`, `paar` |
 | Pokja II | `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
 | Pokja III | `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |
 | Pokja IV | `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`, `program-prioritas`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` |

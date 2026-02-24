@@ -39,6 +39,9 @@ use App\Domains\Wilayah\Bkl\Repositories\BklRepositoryInterface;
 use App\Domains\Wilayah\Bkr\Models\Bkr;
 use App\Domains\Wilayah\Bkr\Repositories\BkrRepository;
 use App\Domains\Wilayah\Bkr\Repositories\BkrRepositoryInterface;
+use App\Domains\Wilayah\Paar\Models\Paar;
+use App\Domains\Wilayah\Paar\Repositories\PaarRepository;
+use App\Domains\Wilayah\Paar\Repositories\PaarRepositoryInterface;
 use App\Domains\Wilayah\Koperasi\Models\Koperasi;
 use App\Domains\Wilayah\Koperasi\Repositories\KoperasiRepository;
 use App\Domains\Wilayah\Koperasi\Repositories\KoperasiRepositoryInterface;
@@ -105,6 +108,7 @@ use App\Policies\KaderKhususPolicy;
 use App\Policies\PrestasiLombaPolicy;
 use App\Policies\BklPolicy;
 use App\Policies\BkrPolicy;
+use App\Policies\PaarPolicy;
 use App\Policies\KoperasiPolicy;
 use App\Policies\WarungPkkPolicy;
 use App\Policies\DataWargaPolicy;
@@ -203,6 +207,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             BkrRepositoryInterface::class,
             BkrRepository::class
+        );
+
+        $this->app->bind(
+            PaarRepositoryInterface::class,
+            PaarRepository::class
         );
 
         $this->app->bind(
@@ -319,6 +328,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(PrestasiLomba::class, PrestasiLombaPolicy::class);
         Gate::policy(Bkl::class, BklPolicy::class);
         Gate::policy(Bkr::class, BkrPolicy::class);
+        Gate::policy(Paar::class, PaarPolicy::class);
         Gate::policy(Koperasi::class, KoperasiPolicy::class);
         Gate::policy(WarungPkk::class, WarungPkkPolicy::class);
         Gate::policy(DataWarga::class, DataWargaPolicy::class);

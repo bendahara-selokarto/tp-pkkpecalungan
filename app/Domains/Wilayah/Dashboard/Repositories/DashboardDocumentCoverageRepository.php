@@ -7,6 +7,7 @@ use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
 use App\Domains\Wilayah\Bkl\Models\Bkl;
 use App\Domains\Wilayah\Bkr\Models\Bkr;
+use App\Domains\Wilayah\Paar\Models\Paar;
 use App\Domains\Wilayah\BukuKeuangan\Models\BukuKeuangan;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
@@ -581,6 +582,7 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
 
         $map['bkl'] = Bkl::class;
         $map['bkr'] = Bkr::class;
+        $map['paar'] = Paar::class;
 
         return $map;
     }

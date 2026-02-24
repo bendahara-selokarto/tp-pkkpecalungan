@@ -306,7 +306,7 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ($section4['section']['depends_on'] ?? null) === 'section3_group:pokja-i'
                         && ($section4['sources']['source_scope'] ?? null) === 'kecamatan'
                         && ($section4['sources']['source_area_type'] ?? null) === 'desa-turunan'
-                        && ($section4['sources']['source_modules'] ?? null) === ['data-warga', 'data-kegiatan-warga', 'bkl', 'bkr']
+                        && ($section4['sources']['source_modules'] ?? null) === ['data-warga', 'data-kegiatan-warga', 'bkl', 'bkr', 'paar']
                         && ($section4['sources']['filter_context']['section3_group'] ?? null) === 'pokja-i'
                         && in_array('Gombong', $labels, true)
                         && in_array('Bandung', $labels, true)

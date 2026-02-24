@@ -24,6 +24,7 @@ class DashboardCoverageMenuSyncTest extends TestCase
         'laporan-tahunan-pkk',
         'pilot-project-keluarga-sehat',
         'pilot-project-naskah-pelaporan',
+        'paar',
         'prestasi-lomba',
         'program-prioritas',
     ];

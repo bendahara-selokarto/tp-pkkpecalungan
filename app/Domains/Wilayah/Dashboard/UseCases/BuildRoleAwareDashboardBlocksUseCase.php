@@ -495,6 +495,7 @@ class BuildRoleAwareDashboardBlocksUseCase
             'data-kegiatan-warga',
             'bkl',
             'bkr',
+            'paar',
         ];
 
         $desaBreakdown = collect(

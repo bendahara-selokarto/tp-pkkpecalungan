@@ -6,7 +6,9 @@
   - `REKAPITULASI DATA KELOMPOK BKR`
   - `DATA POLA ASUH ANAK DAN REMAJA (PAAR)` (2 varian layout, struktur kolom sama)
 - Dokumen ini mengunci kontrak header tabel berdasarkan verifikasi visual screenshot.
-- Identitas file sumber (path workbook autentik) untuk concern ini belum dikonfirmasi di sesi yang sama, sehingga sinkronisasi implementasi tetap ditahan.
+- Referensi terakhir user untuk concern ini dikunci sebagai acuan final:
+  - Workbook: `docs/referensi/excel/BUKU BANTU.xlsx`
+  - Untuk referensi ganda, berlaku aturan `referensi terakhir menjadi acuan final`.
 
 ## Target Hasil
 - Peta header final per format tervalidasi sampai level merge/subkolom.
@@ -16,9 +18,9 @@
 ## Status Umum
 - [x] Verifikasi visual header tabel selesai untuk BKL, BKR, dan PAAR.
 - [x] Peta header final tidak ambigu untuk ketiga format.
-- [ ] Konfirmasi file sumber autentik (workbook/sheet) selesai.
-- [ ] Matrix mapping field per format selesai.
-- [ ] Audit dampak route/request/use case/repository/policy/inertia/report selesai.
+- [x] Konfirmasi file sumber autentik (workbook/sheet) selesai.
+- [x] Matrix mapping field per format selesai.
+- [x] Audit dampak route/request/use case/repository/policy/inertia/report selesai.
 
 ## Peta Header Final
 
@@ -57,6 +59,7 @@
 - Varian metadata atas tabel:
   - Varian A: tanpa baris `DESA/KEC` (hanya tabel utama).
   - Varian B: ada baris `DESA :` dan `KEC :`.
+  - Keputusan final: gunakan **Varian B** mengikuti referensi terakhir user.
 - Header tabel: 1 baris, tanpa subkolom.
 - Jumlah kolom: 4.
 - Urutan kolom:
@@ -74,15 +77,15 @@
 
 ## Catatan Sinkronisasi dengan Implementasi Saat Ini
 - BKL/BKR pada implementasi existing sudah memakai struktur kolom yang sama dengan header autentik utama (7 kolom).
-- PAAR belum ditemukan modul/domain aktif pada codebase saat audit cepat concern ini.
+- PAAR sudah diimplementasikan sebagai modul domain aktif (scope `desa` dan `kecamatan`) dengan kontrak tabel `paars`.
 
 ## Langkah Lanjut (Minimal)
-- [ ] Konfirmasi sumber file autentik concern ini (nama workbook + nama sheet).
-- [ ] Bentuk matrix mapping kolom ke field domain:
-  - BKL/BKR: validasi apakah perlu field tambahan metadata untuk kebutuhan tanda tangan/catatan cetak autentik.
-  - PAAR: tetapkan kontrak penyimpanan indikator (fixed list vs master dinamis).
-- [ ] Audit output PDF agar format tanda tangan, judul, dan metadata area sesuai format autentik.
-- [ ] Siapkan test matrix minimum (feature + policy/scope + scoped data leak check).
+- [x] Konfirmasi sumber file autentik concern ini (nama workbook + nama sheet).
+- [x] Bentuk matrix mapping kolom ke field domain:
+  - BKL/BKR: validasi field report + metadata cetak.
+  - PAAR: kontrak indikator ditetapkan sebagai fixed list (6 indikator autentik).
+- [x] Audit output PDF agar format tanda tangan, judul, dan metadata area sesuai format autentik.
+- [x] Siapkan test matrix minimum (feature + policy/scope + scoped data leak check).
 
 ## Progress Implementasi (2026-02-24)
 - [x] Copy UI halaman daftar BKL/BKR dinormalisasi ke istilah autentik:
@@ -104,13 +107,21 @@
   - `tests/Feature/KecamatanBkrTest.php`
   - `tests/Feature/BklReportPrintTest.php`
   - `tests/Feature/BkrReportPrintTest.php`
-- [ ] Audit final tanda tangan + metadata area untuk PDF autentik tetap pending sampai konfirmasi sumber workbook/sheet selesai (untuk validasi final redaksi titik/placeholder per sheet).
+- [x] Modul PAAR terimplementasi end-to-end:
+  - backend: route, request, use case/action, repository, policy/scope, migration `paars`.
+  - frontend: halaman desa/kecamatan (`index/create/edit/show`) + menu Pokja I.
+  - report: PDF `DATA POLA ASUH ANAK DAN REMAJA (PAAR)` dengan metadata `DESA/KEC`.
+- [x] Validasi regresi terarah PAAR lulus:
+  - `tests/Feature/DesaPaarTest.php`
+  - `tests/Feature/KecamatanPaarTest.php`
+  - `tests/Feature/PaarReportPrintTest.php`
+  - `tests/Unit/Policies/PaarPolicyTest.php`
 
 ## Risiko
-- Tanpa konfirmasi file sumber, risiko drift nomenklatur sheet antar dokumen referensi masih ada.
-- PAAR punya 2 varian metadata atas tabel; perlu diputuskan apakah beda scope (desa vs kecamatan) atau hanya variasi template.
+- PAAR punya 2 varian metadata atas tabel; risiko drift ditutup dengan keputusan referensi terakhir (Varian B).
+- Risiko tersisa: perubahan template autentik di luar referensi sesi ini perlu audit ulang kontrak header.
 
 ## Keputusan
 - [x] Screenshot user sesi 2026-02-24 dikunci sebagai bukti visual resmi untuk kontrak header concern ini.
 - [x] Concern dinyatakan `siap sinkronisasi kontrak header`.
-- [x] Concern tetap `belum siap implementasi` sampai mapping field dan konfirmasi sumber file selesai.
+- [x] Concern dinyatakan `siap implementasi` setelah mapping field + konfirmasi sumber + validasi test terarah selesai.

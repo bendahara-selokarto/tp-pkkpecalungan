@@ -38,6 +38,9 @@ use App\Domains\Wilayah\Bkl\Controllers\BklPrintController;
 use App\Domains\Wilayah\Bkr\Controllers\DesaBkrController;
 use App\Domains\Wilayah\Bkr\Controllers\KecamatanBkrController;
 use App\Domains\Wilayah\Bkr\Controllers\BkrPrintController;
+use App\Domains\Wilayah\Paar\Controllers\DesaPaarController;
+use App\Domains\Wilayah\Paar\Controllers\KecamatanPaarController;
+use App\Domains\Wilayah\Paar\Controllers\PaarPrintController;
 use App\Domains\Wilayah\Koperasi\Controllers\DesaKoperasiController;
 use App\Domains\Wilayah\Koperasi\Controllers\KecamatanKoperasiController;
 use App\Domains\Wilayah\Koperasi\Controllers\KoperasiPrintController;
@@ -136,6 +139,7 @@ Route::prefix('desa')
         Route::resource('prestasi-lomba', DesaPrestasiLombaController::class);
         Route::resource('bkl', DesaBklController::class);
         Route::resource('bkr', DesaBkrController::class);
+        Route::resource('paar', DesaPaarController::class);
         Route::resource('koperasi', DesaKoperasiController::class);
         Route::resource('data-warga', DesaDataWargaController::class);
         Route::resource('data-kegiatan-warga', DesaDataKegiatanWargaController::class);
@@ -169,6 +173,7 @@ Route::prefix('desa')
         Route::get('prestasi-lomba/report/pdf', [PrestasiLombaPrintController::class, 'printDesaReport'])->name('prestasi-lomba.report');
         Route::get('bkl/report/pdf', [BklPrintController::class, 'printDesaReport'])->name('bkl.report');
         Route::get('bkr/report/pdf', [BkrPrintController::class, 'printDesaReport'])->name('bkr.report');
+        Route::get('paar/report/pdf', [PaarPrintController::class, 'printDesaReport'])->name('paar.report');
         Route::get('koperasi/report/pdf', [KoperasiPrintController::class, 'printDesaReport'])->name('koperasi.report');
         Route::get('data-warga/report/pdf', [DataWargaPrintController::class, 'printDesaReport'])->name('data-warga.report');
         Route::get('data-kegiatan-warga/report/pdf', [DataKegiatanWargaPrintController::class, 'printDesaReport'])->name('data-kegiatan-warga.report');
@@ -221,6 +226,7 @@ Route::prefix('kecamatan')
         Route::resource('prestasi-lomba', KecamatanPrestasiLombaController::class);
         Route::resource('bkl', KecamatanBklController::class);
         Route::resource('bkr', KecamatanBkrController::class);
+        Route::resource('paar', KecamatanPaarController::class);
         Route::resource('koperasi', KecamatanKoperasiController::class);
         Route::resource('data-warga', KecamatanDataWargaController::class);
         Route::resource('data-kegiatan-warga', KecamatanDataKegiatanWargaController::class);
@@ -254,6 +260,7 @@ Route::prefix('kecamatan')
         Route::get('prestasi-lomba/report/pdf', [PrestasiLombaPrintController::class, 'printKecamatanReport'])->name('prestasi-lomba.report');
         Route::get('bkl/report/pdf', [BklPrintController::class, 'printKecamatanReport'])->name('bkl.report');
         Route::get('bkr/report/pdf', [BkrPrintController::class, 'printKecamatanReport'])->name('bkr.report');
+        Route::get('paar/report/pdf', [PaarPrintController::class, 'printKecamatanReport'])->name('paar.report');
         Route::get('koperasi/report/pdf', [KoperasiPrintController::class, 'printKecamatanReport'])->name('koperasi.report');
         Route::get('data-warga/report/pdf', [DataWargaPrintController::class, 'printKecamatanReport'])->name('data-warga.report');
         Route::get('data-kegiatan-warga/report/pdf', [DataKegiatanWargaPrintController::class, 'printKecamatanReport'])->name('data-kegiatan-warga.report');

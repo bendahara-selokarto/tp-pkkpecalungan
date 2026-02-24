@@ -85,6 +85,7 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/data-kegiatan-warga`, label: 'Data Kegiatan Warga' },
       { href: `/${scope}/bkl`, label: 'BKL' },
       { href: `/${scope}/bkr`, label: 'BKR' },
+      { href: `/${scope}/paar`, label: 'Data Pola Asuh Anak dan Remaja (PAAR)' },
     ],
   },
   {

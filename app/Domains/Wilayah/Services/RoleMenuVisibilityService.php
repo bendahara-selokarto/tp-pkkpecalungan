@@ -33,6 +33,7 @@ class RoleMenuVisibilityService
             'data-kegiatan-warga',
             'bkl',
             'bkr',
+            'paar',
         ],
         'pokja-ii' => [
             'activities',
