@@ -1,6 +1,6 @@
 export const chartColors = {
   default: {
-    primary: '#00D1B2',
+    primary: '#67E8F9',
     info: '#209CEE',
     danger: '#FF3860',
   },
