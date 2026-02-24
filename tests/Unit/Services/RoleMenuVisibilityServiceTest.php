@@ -41,10 +41,11 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['sekretaris-tpk'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['pokja-i'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['pokja-iv'] ?? null);
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['referensi'] ?? null);
         $this->assertArrayNotHasKey('monitoring', $visibility['groups']);
+        $this->assertArrayNotHasKey('referensi', $visibility['groups']);
 
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['buku-keuangan'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['activities'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['anggota-tim-penggerak-kader'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['laporan-tahunan-pkk'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['data-warga'] ?? null);
@@ -59,12 +60,13 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $visibility = $this->service->resolveForScope($user, 'kecamatan');
 
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['pokja-iii'] ?? null);
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['referensi'] ?? null);
+        $this->assertArrayNotHasKey('referensi', $visibility['groups']);
         $this->assertArrayNotHasKey('pokja-i', $visibility['groups']);
         $this->assertArrayNotHasKey('sekretaris-tpk', $visibility['groups']);
         $this->assertArrayNotHasKey('monitoring', $visibility['groups']);
 
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['data-keluarga'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['activities'] ?? null);
         $this->assertArrayNotHasKey('data-warga', $visibility['modules']);
     }
 

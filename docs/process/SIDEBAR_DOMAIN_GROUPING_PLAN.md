@@ -7,7 +7,7 @@ Tujuan:
 
 Sumber acuan:
 - `AGENTS.md`
-- `PEDOMAN_DOMAIN_UTAMA_101_150.md`
+- `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 - `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
 
@@ -42,26 +42,29 @@ Sumber acuan:
 | Sekretaris TPK | Buku Kegiatan | `/{scope}/activities` |
 | Sekretaris TPK | Anggota Pokja | `/{scope}/anggota-pokja` |
 | Sekretaris TPK | Prestasi Lomba | `/{scope}/prestasi-lomba` |
+| Pokja I | Buku Kegiatan | `/{scope}/activities` |
 | Pokja I | Daftar Warga TP PKK | `/{scope}/data-warga` |
 | Pokja I | Data Kegiatan Warga | `/{scope}/data-kegiatan-warga` |
 | Pokja I | BKL | `/{scope}/bkl` |
 | Pokja I | BKR | `/{scope}/bkr` |
+| Pokja II | Buku Kegiatan | `/{scope}/activities` |
 | Pokja II | Data Pelatihan Kader | `/{scope}/data-pelatihan-kader` |
 | Pokja II | Data Isian Taman Bacaan/Perpustakaan | `/{scope}/taman-bacaan` |
 | Pokja II | Data Isian Koperasi | `/{scope}/koperasi` |
 | Pokja II | Data Isian Kejar Paket/KF/PAUD | `/{scope}/kejar-paket` |
+| Pokja III | Buku Kegiatan | `/{scope}/activities` |
 | Pokja III | Data Keluarga | `/{scope}/data-keluarga` |
 | Pokja III | Data Industri Rumah Tangga | `/{scope}/data-industri-rumah-tangga` |
 | Pokja III | Data Pemanfaatan Tanah Pekarangan/HATINYA PKK | `/{scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk` |
 | Pokja III | Data Aset (Sarana) Desa/Kelurahan | `/{scope}/warung-pkk` |
+| Pokja IV | Buku Kegiatan | `/{scope}/activities` |
 | Pokja IV | Data Isian Posyandu oleh TP PKK | `/{scope}/posyandu` |
 | Pokja IV | Data Isian Kelompok Simulasi dan Penyuluhan | `/{scope}/simulasi-penyuluhan` |
 | Pokja IV | Catatan Keluarga | `/{scope}/catatan-keluarga` |
 | Pokja IV | Program Prioritas | `/{scope}/program-prioritas` |
 | Pokja IV | Naskah Pelaporan Pilot Project | `/{scope}/pilot-project-naskah-pelaporan` |
 | Pokja IV | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | `/{scope}/pilot-project-keluarga-sehat` |
-| Referensi | Pedoman Domain Utama 101-150 | eksternal |
-| Referensi | Pedoman Lanjutan 201-241 | eksternal |
+| Referensi | Pedoman Domain Rakernas X | eksternal/lokal |
 | Monitoring Kecamatan | Kegiatan Desa | `/kecamatan/desa-activities` |
 
 ### L1: Account
@@ -79,6 +82,7 @@ Status audit:
 
 Temuan yang perlu dijaga:
 - Label sidebar harus sinkron dengan terminology map saat ada perubahan domain baru.
+- `Buku Kegiatan` adalah modul lintas role dan dapat muncul pada lebih dari satu group organisasi; render UI harus mencegah duplikasi item pada role gabungan.
 - Penamaan item Pokja IV pilot project harus jelas membedakan:
   - `Naskah Pelaporan Pilot Project` (modul naskah)
   - `Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana` (modul indikator laporan)

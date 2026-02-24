@@ -56,7 +56,7 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-only')
                 ->where('auth.user.menuGroupModes.pokja-iv', 'read-only')
-                ->where('auth.user.menuGroupModes.referensi', 'read-only')
+                ->missing('auth.user.menuGroupModes.referensi')
                 ->where('auth.user.moduleModes.buku-keuangan', 'read-write')
                 ->where('auth.user.moduleModes.data-warga', 'read-only')
             );
@@ -74,9 +74,10 @@ class MenuVisibilityPayloadTest extends TestCase
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.pokja-ii', 'read-write')
-                ->where('auth.user.menuGroupModes.referensi', 'read-only')
+                ->missing('auth.user.menuGroupModes.referensi')
                 ->missing('auth.user.menuGroupModes.sekretaris-tpk')
                 ->missing('auth.user.menuGroupModes.monitoring')
+                ->where('auth.user.moduleModes.activities', 'read-write')
                 ->where('auth.user.moduleModes.data-pelatihan-kader', 'read-write')
                 ->missing('auth.user.moduleModes.data-warga')
             );

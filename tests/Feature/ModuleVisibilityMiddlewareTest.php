@@ -69,6 +69,31 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->get('/desa/data-keluarga')->assertForbidden();
     }
 
+    public function test_desa_pokja_i_dapat_akses_dan_menulis_buku_kegiatan_scope_sendiri(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desa->id,
+        ]);
+        $user->assignRole('desa-pokja-i');
+
+        $this->actingAs($user);
+
+        $this->get('/desa/activities')->assertOk();
+        $this->get('/desa/activities/create')->assertOk();
+        $this->post('/desa/activities', [
+            'title' => 'Kegiatan Pokja I Desa',
+            'activity_date' => '2026-02-24',
+        ])->assertRedirect('/desa/activities');
+
+        $this->assertDatabaseHas('activities', [
+            'title' => 'Kegiatan Pokja I Desa',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $user->id,
+        ]);
+    }
+
     public function test_kecamatan_sekretaris_dapat_monitoring_dan_pokja_read_only(): void
     {
         $user = User::factory()->create([
@@ -96,5 +121,29 @@ class ModuleVisibilityMiddlewareTest extends TestCase
 
         $this->get('/kecamatan/desa-activities')->assertForbidden();
     }
-}
 
+    public function test_kecamatan_pokja_i_dapat_akses_dan_menulis_buku_kegiatan_scope_sendiri(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $user->assignRole('kecamatan-pokja-i');
+
+        $this->actingAs($user);
+
+        $this->get('/kecamatan/activities')->assertOk();
+        $this->get('/kecamatan/activities/create')->assertOk();
+        $this->post('/kecamatan/activities', [
+            'title' => 'Kegiatan Pokja I Kecamatan',
+            'activity_date' => '2026-02-24',
+        ])->assertRedirect('/kecamatan/activities');
+
+        $this->assertDatabaseHas('activities', [
+            'title' => 'Kegiatan Pokja I Kecamatan',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+            'created_by' => $user->id,
+        ]);
+    }
+}

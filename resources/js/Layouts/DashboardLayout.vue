@@ -10,6 +10,7 @@ const darkModeStore = useDarkModeStore()
 
 const sidebarOpen = ref(false)
 const sidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === '1')
+const themeMenuOpen = ref(false)
 
 const user = computed(() => page.props.auth?.user ?? null)
 const roles = computed(() => user.value?.roles ?? [])
@@ -21,6 +22,7 @@ const userScope = computed(() => user.value?.scope ?? null)
 const isDesaScope = computed(() => userScope.value === 'desa')
 const isKecamatanScope = computed(() => userScope.value === 'kecamatan')
 const normalizedPath = computed(() => page.url.split('?')[0])
+const isProfilePage = computed(() => normalizedPath.value === '/profile')
 const pathSegments = computed(() => normalizedPath.value.split('/').filter(Boolean))
 const currentModuleSlug = computed(() => pathSegments.value[1] ?? null)
 const currentModuleMode = computed(() =>
@@ -36,19 +38,6 @@ const isItemActive = (item) => !isExternalItem(item) && isActive(item.href)
 const openExternal = (href) => {
   window.open(href, '_blank', 'noopener,noreferrer')
 }
-
-const officialReferenceItems = [
-  {
-    href: 'https://pubhtml5.com/zsnqq/vjcf/basic/101-150',
-    label: 'Pedoman Domain Utama 101-150',
-    external: true,
-  },
-  {
-    href: 'https://pubhtml5.com/zsnqq/vjcf/basic/201-241',
-    label: 'Pedoman Lanjutan 201-241',
-    external: true,
-  },
-]
 
 const buildScopedMenuGroups = (scope) => [
   {
@@ -72,6 +61,7 @@ const buildScopedMenuGroups = (scope) => [
     label: 'Pokja I',
     code: 'P1',
     items: [
+      { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/data-warga`, label: 'Daftar Warga TP PKK' },
       { href: `/${scope}/data-kegiatan-warga`, label: 'Data Kegiatan Warga' },
       { href: `/${scope}/bkl`, label: 'BKL' },
@@ -83,6 +73,7 @@ const buildScopedMenuGroups = (scope) => [
     label: 'Pokja II',
     code: 'P2',
     items: [
+      { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/data-pelatihan-kader`, label: 'Data Pelatihan Kader' },
       { href: `/${scope}/taman-bacaan`, label: 'Data Isian Taman Bacaan/Perpustakaan' },
       { href: `/${scope}/koperasi`, label: 'Data Isian Koperasi' },
@@ -94,6 +85,7 @@ const buildScopedMenuGroups = (scope) => [
     label: 'Pokja III',
     code: 'P3',
     items: [
+      { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/data-keluarga`, label: 'Data Keluarga' },
       { href: `/${scope}/data-industri-rumah-tangga`, label: 'Data Industri Rumah Tangga' },
       { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK' },
@@ -105,6 +97,7 @@ const buildScopedMenuGroups = (scope) => [
     label: 'Pokja IV',
     code: 'P4',
     items: [
+      { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
       { href: `/${scope}/simulasi-penyuluhan`, label: 'Data Isian Kelompok Simulasi dan Penyuluhan' },
       { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga' },
@@ -112,12 +105,6 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },
       { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
     ],
-  },
-  {
-    key: 'referensi',
-    label: 'Referensi',
-    code: 'REF',
-    items: officialReferenceItems,
   },
 ]
 
@@ -140,18 +127,40 @@ const buildGroupState = (groups) => groups.reduce((state, group) => {
   return state
 }, {})
 
-const withMode = (groups) =>
-  groups
+const withMode = (groups) => {
+  const seenInternalHrefs = new Set()
+
+  return groups
     .filter((group) => !!menuGroupModes.value[group.key])
-    .map((group) => ({ ...group, mode: menuGroupModes.value[group.key] }))
+    .map((group) => ({
+      ...group,
+      mode: menuGroupModes.value[group.key],
+      items: group.items.filter((item) => {
+        if (isExternalItem(item)) {
+          return true
+        }
+
+        if (seenInternalHrefs.has(item.href)) {
+          return false
+        }
+
+        seenInternalHrefs.add(item.href)
+        return true
+      }),
+    }))
+    .filter((group) => group.items.length > 0)
+}
 
 const desaVisibleMenuGroups = computed(() => withMode(desaMenuGroups))
 const kecamatanVisibleMenuGroups = computed(() => withMode(kecamatanMenuGroups))
 
+const shouldOpenGroupByDefault = (group) =>
+  isGroupActive(group) || group.mode === 'read-write'
+
 const syncGroupState = (current, groups) => {
   const next = {}
   groups.forEach((group) => {
-    next[group.key] = current[group.key] ?? group.items.some((item) => isItemActive(item))
+    next[group.key] = current[group.key] ?? shouldOpenGroupByDefault(group)
   })
 
   return next
@@ -227,8 +236,9 @@ const logout = () => {
   router.post('/logout')
 }
 
-const toggleTheme = () => {
-  darkModeStore.set(null, true)
+const setTheme = (isDarkMode) => {
+  darkModeStore.set(isDarkMode, true)
+  themeMenuOpen.value = false
 }
 
 const pkkLogo = '/images/pkk-logo.png'
@@ -271,16 +281,36 @@ const hideBrokenImage = (event) => {
         </div>
 
         <div class="flex items-center gap-3">
-          <span class="hidden sm:inline text-xs text-slate-500 dark:text-slate-300">{{ activeRoles }}</span>
-          <button
-            type="button"
-            :class="{ 'transition-colors': !darkModeStore.isInProgress }"
-            class="inline-flex items-center rounded-md border border-slate-300 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
-            @click="toggleTheme"
-          >
-            {{ darkModeStore.isEnabled ? 'Light mode' : 'Dark mode' }}
-          </button>
-          <span class="text-sm text-slate-700 dark:text-slate-200">{{ user?.name }}</span>
+          <div class="relative">
+            <button
+              type="button"
+              class="inline-flex items-center rounded-md border border-slate-300 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+              @click="themeMenuOpen = !themeMenuOpen"
+            >
+              Mode
+            </button>
+            <div
+              v-show="themeMenuOpen"
+              class="absolute right-0 z-50 mt-2 w-40 rounded-md border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800"
+            >
+              <button
+                type="button"
+                :class="darkModeStore.isEnabled ? 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700' : 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200'"
+                class="block w-full rounded px-2 py-1.5 text-left text-sm"
+                @click="setTheme(false)"
+              >
+                Mode Siang
+              </button>
+              <button
+                type="button"
+                :class="darkModeStore.isEnabled ? 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
+                class="mt-1 block w-full rounded px-2 py-1.5 text-left text-sm"
+                @click="setTheme(true)"
+              >
+                Mode Malam
+              </button>
+            </div>
+          </div>
           <a href="/profile" class="text-sm text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Profil</a>
           <button type="button" class="text-sm text-rose-600 hover:text-rose-700 dark:text-rose-400" @click="logout">
             Keluar (Log Out)
@@ -321,7 +351,6 @@ const hideBrokenImage = (event) => {
         <div v-show="!sidebarCollapsed" class="mx-4 mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900/60">
           <p class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">User</p>
           <p class="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">{{ user?.name }}</p>
-          <p class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ user?.email }}</p>
           <p class="mt-2 text-xs text-emerald-700 dark:text-emerald-400">{{ activeRoles }}</p>
         </div>
 
@@ -350,7 +379,7 @@ const hideBrokenImage = (event) => {
             </Link>
           </div>
 
-          <div class="space-y-1">
+          <div v-if="!isProfilePage" class="space-y-1">
             <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Menu Domain</p>
 
             <template v-if="isDesaScope">
@@ -432,29 +461,8 @@ const hideBrokenImage = (event) => {
             </template>
           </div>
 
-          <div class="space-y-1">
-            <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Akun</p>
-            <a
-              href="/profile"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/profile') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Profil</span>
-              <span v-show="sidebarCollapsed">P</span>
-            </a>
-          </div>
         </nav>
 
-        <div class="p-4 border-t border-slate-200 dark:border-slate-700">
-          <button
-            type="button"
-            class="w-full rounded-md border border-rose-200 px-3 py-2 text-sm font-medium text-rose-600 hover:bg-rose-50 dark:border-rose-900/60 dark:text-rose-400 dark:hover:bg-rose-900/20"
-            @click="logout"
-          >
-            <span v-show="!sidebarCollapsed">Keluar (Log Out)</span>
-            <span v-show="sidebarCollapsed">LO</span>
-          </button>
-        </div>
       </div>
     </aside>
 

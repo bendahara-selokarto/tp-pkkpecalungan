@@ -28,24 +28,28 @@ class RoleMenuVisibilityService
             'laporan-tahunan-pkk',
         ],
         'pokja-i' => [
+            'activities',
             'data-warga',
             'data-kegiatan-warga',
             'bkl',
             'bkr',
         ],
         'pokja-ii' => [
+            'activities',
             'data-pelatihan-kader',
             'taman-bacaan',
             'koperasi',
             'kejar-paket',
         ],
         'pokja-iii' => [
+            'activities',
             'data-keluarga',
             'data-industri-rumah-tangga',
             'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
             'warung-pkk',
         ],
         'pokja-iv' => [
+            'activities',
             'posyandu',
             'simulasi-penyuluhan',
             'catatan-keluarga',
@@ -68,7 +72,6 @@ class RoleMenuVisibilityService
             'pokja-ii',
             'pokja-iii',
             'pokja-iv',
-            'referensi',
         ],
         'kecamatan' => [
             'sekretaris-tpk',
@@ -77,7 +80,6 @@ class RoleMenuVisibilityService
             'pokja-iii',
             'pokja-iv',
             'monitoring',
-            'referensi',
         ],
     ];
 
@@ -200,8 +202,6 @@ class RoleMenuVisibilityService
                 $this->assignMode($groupModes, $group, $mode);
             }
         }
-
-        $this->assignMode($groupModes, 'referensi', self::MODE_READ_ONLY);
 
         return $groupModes;
     }
