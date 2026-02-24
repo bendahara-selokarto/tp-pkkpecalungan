@@ -86,6 +86,9 @@ use App\Domains\Wilayah\PilotProjectKeluargaSehat\Repositories\PilotProjectKelua
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanReport;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNaskahPelaporanRepository;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNaskahPelaporanRepositoryInterface;
+use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
+use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepository;
+use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepository;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Observers\InvalidateDashboardDocumentCacheObserver;
@@ -117,6 +120,7 @@ use App\Policies\PosyanduPolicy;
 use App\Policies\SimulasiPenyuluhanPolicy;
 use App\Policies\PilotProjectKeluargaSehatPolicy;
 use App\Policies\PilotProjectNaskahPelaporanPolicy;
+use App\Policies\LaporanTahunanPkkPolicy;
 use App\Policies\UserPolicy;
 use App\Repositories\SuperAdmin\UserManagementRepository;
 use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
@@ -282,6 +286,11 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            LaporanTahunanPkkRepositoryInterface::class,
+            LaporanTahunanPkkRepository::class
+        );
+
+        $this->app->bind(
             UserManagementRepositoryInterface::class,
             UserManagementRepository::class
         );
@@ -325,6 +334,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(SimulasiPenyuluhan::class, SimulasiPenyuluhanPolicy::class);
         Gate::policy(PilotProjectKeluargaSehatReport::class, PilotProjectKeluargaSehatPolicy::class);
         Gate::policy(PilotProjectNaskahPelaporanReport::class, PilotProjectNaskahPelaporanPolicy::class);
+        Gate::policy(LaporanTahunanPkkReport::class, LaporanTahunanPkkPolicy::class);
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin') ? true : null;

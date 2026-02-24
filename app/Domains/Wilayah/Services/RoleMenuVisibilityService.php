@@ -25,6 +25,7 @@ class RoleMenuVisibilityService
             'activities',
             'anggota-pokja',
             'prestasi-lomba',
+            'laporan-tahunan-pkk',
         ],
         'pokja-i' => [
             'data-warga',

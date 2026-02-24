@@ -21,6 +21,7 @@ class DashboardCoverageMenuSyncTest extends TestCase
         'bkl',
         'bkr',
         'desa-activities',
+        'laporan-tahunan-pkk',
         'pilot-project-keluarga-sehat',
         'pilot-project-naskah-pelaporan',
         'prestasi-lomba',

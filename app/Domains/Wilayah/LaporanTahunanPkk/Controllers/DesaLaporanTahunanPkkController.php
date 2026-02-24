@@ -1,0 +1,172 @@
+<?php
+
+namespace App\Domains\Wilayah\LaporanTahunanPkk\Controllers;
+
+use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\LaporanTahunanPkk\Actions\CreateLaporanTahunanPkkAction;
+use App\Domains\Wilayah\LaporanTahunanPkk\Actions\DeleteLaporanTahunanPkkAction;
+use App\Domains\Wilayah\LaporanTahunanPkk\Actions\UpdateLaporanTahunanPkkAction;
+use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
+use App\Domains\Wilayah\LaporanTahunanPkk\Requests\StoreLaporanTahunanPkkRequest;
+use App\Domains\Wilayah\LaporanTahunanPkk\Requests\UpdateLaporanTahunanPkkRequest;
+use App\Domains\Wilayah\LaporanTahunanPkk\UseCases\BuildLaporanTahunanPkkDocumentUseCase;
+use App\Domains\Wilayah\LaporanTahunanPkk\UseCases\GetScopedLaporanTahunanPkkUseCase;
+use App\Domains\Wilayah\LaporanTahunanPkk\UseCases\ListScopedLaporanTahunanPkkUseCase;
+use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class DesaLaporanTahunanPkkController extends Controller
+{
+    public function __construct(
+        private readonly ListScopedLaporanTahunanPkkUseCase $listUseCase,
+        private readonly GetScopedLaporanTahunanPkkUseCase $getUseCase,
+        private readonly BuildLaporanTahunanPkkDocumentUseCase $buildDocumentUseCase,
+        private readonly CreateLaporanTahunanPkkAction $createAction,
+        private readonly UpdateLaporanTahunanPkkAction $updateAction,
+        private readonly DeleteLaporanTahunanPkkAction $deleteAction
+    ) {
+        $this->middleware('scope.role:desa');
+    }
+
+    public function index(): Response
+    {
+        $this->authorize('viewAny', LaporanTahunanPkkReport::class);
+
+        $reports = $this->listUseCase->execute(ScopeLevel::DESA->value)
+            ->map(fn (LaporanTahunanPkkReport $report) => [
+                'id' => $report->id,
+                'judul_laporan' => $report->judul_laporan,
+                'tahun_laporan' => $report->tahun_laporan,
+                'entries_count' => $report->entries_count ?? 0,
+                'updated_at' => $report->updated_at?->toDateTimeString(),
+            ])
+            ->values();
+
+        return Inertia::render('LaporanTahunanPkk/Index', [
+            'scopeLabel' => 'Desa',
+            'scopePrefix' => '/desa/laporan-tahunan-pkk',
+            'reports' => $reports,
+        ]);
+    }
+
+    public function create(): Response
+    {
+        $this->authorize('create', LaporanTahunanPkkReport::class);
+
+        return Inertia::render('LaporanTahunanPkk/Create', [
+            'scopeLabel' => 'Desa',
+            'scopePrefix' => '/desa/laporan-tahunan-pkk',
+            'defaultTitle' => config('laporan_tahunan_pkk.module.label'),
+            'defaultYear' => now()->year,
+            'defaultCompiledBy' => $this->defaultCompiledBy('Desa'),
+            'defaultSignerRole' => $this->defaultSignerRole('Desa'),
+            'bidangOptions' => config('laporan_tahunan_pkk.bidang_options', []),
+            'bidangLabels' => config('laporan_tahunan_pkk.bidang_labels', []),
+        ]);
+    }
+
+    public function store(StoreLaporanTahunanPkkRequest $request): RedirectResponse
+    {
+        $this->authorize('create', LaporanTahunanPkkReport::class);
+        $this->createAction->execute($request->validated(), ScopeLevel::DESA->value);
+
+        return redirect()
+            ->route('desa.laporan-tahunan-pkk.index')
+            ->with('success', 'Laporan tahunan TP PKK berhasil dibuat.');
+    }
+
+    public function show(int $id): Response
+    {
+        $report = $this->getUseCase->execute($id, ScopeLevel::DESA->value);
+        $this->authorize('view', $report);
+
+        $documentData = $this->buildDocumentUseCase->execute($report);
+
+        return Inertia::render('LaporanTahunanPkk/Show', [
+            'scopeLabel' => 'Desa',
+            'scopePrefix' => '/desa/laporan-tahunan-pkk',
+            'bidangLabels' => $documentData['bidang_labels'],
+            'groupedEntries' => $documentData['grouped_entries'],
+            'report' => $this->serializeReport($report),
+        ]);
+    }
+
+    public function edit(int $id): Response
+    {
+        $report = $this->getUseCase->execute($id, ScopeLevel::DESA->value);
+        $this->authorize('update', $report);
+
+        return Inertia::render('LaporanTahunanPkk/Edit', [
+            'scopeLabel' => 'Desa',
+            'scopePrefix' => '/desa/laporan-tahunan-pkk',
+            'defaultCompiledBy' => $this->defaultCompiledBy('Desa'),
+            'defaultSignerRole' => $this->defaultSignerRole('Desa'),
+            'bidangOptions' => config('laporan_tahunan_pkk.bidang_options', []),
+            'bidangLabels' => config('laporan_tahunan_pkk.bidang_labels', []),
+            'report' => $this->serializeReport($report),
+        ]);
+    }
+
+    public function update(UpdateLaporanTahunanPkkRequest $request, int $id): RedirectResponse
+    {
+        $report = $this->getUseCase->execute($id, ScopeLevel::DESA->value);
+        $this->authorize('update', $report);
+        $this->updateAction->execute($report, $request->validated());
+
+        return redirect()
+            ->route('desa.laporan-tahunan-pkk.index')
+            ->with('success', 'Laporan tahunan TP PKK berhasil diperbarui.');
+    }
+
+    public function destroy(int $id): RedirectResponse
+    {
+        $report = $this->getUseCase->execute($id, ScopeLevel::DESA->value);
+        $this->authorize('delete', $report);
+        $this->deleteAction->execute($report);
+
+        return redirect()
+            ->route('desa.laporan-tahunan-pkk.index')
+            ->with('success', 'Laporan tahunan TP PKK berhasil dihapus.');
+    }
+
+    private function serializeReport(LaporanTahunanPkkReport $report): array
+    {
+        return [
+            'id' => $report->id,
+            'judul_laporan' => $report->judul_laporan,
+            'tahun_laporan' => $report->tahun_laporan,
+            'pendahuluan' => $report->pendahuluan,
+            'keberhasilan' => $report->keberhasilan,
+            'hambatan' => $report->hambatan,
+            'kesimpulan' => $report->kesimpulan,
+            'penutup' => $report->penutup,
+            'disusun_oleh' => $report->disusun_oleh,
+            'jabatan_penanda_tangan' => $report->jabatan_penanda_tangan,
+            'nama_penanda_tangan' => $report->nama_penanda_tangan,
+            'manual_entries' => $report->entries
+                ->map(fn ($entry) => [
+                    'id' => $entry->id,
+                    'bidang' => $entry->bidang,
+                    'activity_date' => $entry->activity_date?->toDateString(),
+                    'description' => $entry->description,
+                ])
+                ->values(),
+        ];
+    }
+
+    private function defaultCompiledBy(string $scopeTitle): string
+    {
+        $user = auth()->user()?->loadMissing('area');
+        $areaName = trim((string) ($user?->area?->name ?? ''));
+
+        return trim(sprintf('Tim Penggerak PKK %s %s', $scopeTitle, $areaName));
+    }
+
+    private function defaultSignerRole(string $scopeTitle): string
+    {
+        return sprintf('Ketua TP. PKK %s', strtoupper($scopeTitle));
+    }
+}
+

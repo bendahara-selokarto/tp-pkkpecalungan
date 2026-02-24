@@ -1,4 +1,4 @@
-# Domain Contract Matrix (Lampiran 4.9-4.24 + Ekstensi 202-211)
+# Domain Contract Matrix (Lampiran 4.9-4.24 + Ekstensi 202-211 + Ekstensi Lokal)
 
 Sumber canonical domain:
 - https://pubhtml5.com/zsnqq/vjcf/basic/101-150
@@ -47,6 +47,7 @@ Aturan baca:
 | 4.23 | `data-kegiatan-pkk-pokja-iii` | Data Kegiatan PKK (Pokja III) | Report 20 kolom dengan merge-header autentik; agregasi operasional lintas modul (`anggota_pokjas`, `data_pemanfaatan_tanah_pekarangan_hatinya_pkks`, `data_industri_rumah_tanggas`, `data_wargas`, `data_warga_anggotas`); referensi mapping: `docs/domain/DATA_KEGIATAN_PKK_POKJA_III_4_23_MAPPING.md` | `DATA KEGIATAN PKK` | Dokumen autentik `docs/referensi/229-230.pdf` + screenshot Lampiran 4.23 (sesi validasi 2026-02-23) | implemented (report-only via `catatan-keluarga`) |
 | 4.24 | `data-kegiatan-pkk-pokja-iv` | Data Kegiatan PKK (Pokja IV) | Report 27 kolom dengan merge-header autentik; agregasi operasional lintas modul (`kader_khusus`, `posyandus`, `data_kegiatan_wargas`, `data_wargas`, `data_warga_anggotas`, `program_prioritas`); referensi mapping: `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md` | `DATA KEGIATAN PKK` | Dokumen autentik `docs/referensi/232.pdf` + screenshot Lampiran 4.24 (sesi validasi 2026-02-23) | implemented (report-only via `catatan-keluarga`) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana (Pokja IV) | Header laporan: `judul_laporan`, `dasar_hukum`, `pendahuluan`, `maksud_tujuan`, `pelaksanaan`, `dokumentasi`, `penutup`; nilai indikator periodik: `section`, `cluster_code`, `indicator_code`, `year`, `semester`, `value`, `evaluation_note`, `sort_order` | `LAPORAN PELAKSANAAN PILOT PROJECT GERAKAN KELUARGA SEHAT TANGGAP DAN TANGGUH BENCANA` | PubHTML5 201-241 (Halaman 202-211) | implemented (catalog tahap awal) |
+| Ekstensi Lokal 2025 | `laporan-tahunan-pkk` | Laporan Tahunan Tim Penggerak PKK Kecamatan | Kontrak data baseline terdiri dari metadata laporan tahunan, item kegiatan per bidang (`sekretariat`, `pokja-i` s.d `pokja-iv`), dan narasi evaluasi/penutup; struktur visual diambil dari template dokumen contoh, sedangkan isi runtime wajib diambil dari database aplikasi dan boleh agregasi lintas tabel dalam boundary repository scoped; bila data tidak ditemukan, sistem memakai form isian pelengkap terpersistensi dengan guardrail scope; kontrak output wajib `single-file .docx` dengan urutan konten identik dokumen contoh; tabel OOXML diperlakukan sebagai layout naskah tanpa border; referensi mapping: `docs/domain/LAPORAN_TAHUNAN_PKK_2025_MAPPING.md` | `LAPORAN TAHUNAN TIM PENGGERAK PKK` | Dokumen contoh lokal `docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx` | implemented (menu sekretaris + CRUD + docx generator; dashboard coverage dikecualikan eksplisit karena ekstensi lokal) |
 
 ## Jejak Teknis (Acuan Verifikasi)
 
@@ -124,6 +125,8 @@ Aturan baca:
 - Data Kegiatan PKK Pokja IV autentik:
   - `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md`
   - `resources/views/pdf/data_kegiatan_pkk_pokja_iv_report.blade.php`
+- Laporan Tahunan PKK (ekstensi lokal):
+  - `docs/domain/LAPORAN_TAHUNAN_PKK_2025_MAPPING.md`
 - Ekstensi pilot project source:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
 
@@ -136,7 +139,7 @@ Mapping grup sidebar:
 
 | Grup Sidebar | Slug Modul |
 | --- | --- |
-| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-keuangan`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba` |
+| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-keuangan`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
 | Pokja I | `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr` |
 | Pokja II | `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
 | Pokja III | `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |

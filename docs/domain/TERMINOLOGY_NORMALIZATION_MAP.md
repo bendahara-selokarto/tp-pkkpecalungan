@@ -1,4 +1,4 @@
-# Terminology Normalization Map (Lampiran 4.9-4.24 + Ekstensi 202-211)
+# Terminology Normalization Map (Lampiran 4.9-4.24 + Ekstensi 202-211 + Ekstensi Lokal)
 
 Sumber canonical:
 - https://pubhtml5.com/zsnqq/vjcf/basic/101-150
@@ -55,6 +55,7 @@ Tujuan:
 | 4.23 | `data-kegiatan-pkk-pokja-iii` | Data Kegiatan PKK (Pokja III) | Report PDF 20 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-20 untuk mencegah drift | implemented (report-only) |
 | 4.24 | `data-kegiatan-pkk-pokja-iv` | Data Kegiatan PKK (Pokja IV) | Report PDF 27 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-27 untuk mencegah drift | implemented (report-only) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Menu/index masih memakai label ringkas (`Laporan Manual Pilot Project`, `Laporan Pilot Project Keluarga Sehat`); PDF sudah memuat judul canonical panjang | Sinkronkan label sidebar/index ke judul canonical agar konsisten lintas UI-PDF | partial |
+| Ekstensi Lokal 2025 | `laporan-tahunan-pkk` | Laporan Tahunan Tim Penggerak PKK Kecamatan | Menu/index sudah aktif pada grup `Sekretaris TPK`, output dokumen memakai judul naskah `LAPORAN TAHUNAN` + identitas tim/area/tahun dalam format `.docx` | Pertahankan label canonical concern `Laporan Tahunan Tim Penggerak PKK Kecamatan`, format output `.docx` naskah, dan label fallback `Isian Pelengkap Kegiatan` pada form | implemented |
 
 ## Daftar Alias Terlarang (Konteks Menu/Index/PDF)
 
@@ -72,6 +73,7 @@ Tujuan:
 - `Laporan Manual Pilot Project` -> gunakan `Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana`
 - `Naskah Pelaporan Pilot Project` (tanpa konteks) -> gunakan `Naskah Pelaporan Pilot Project Pokja IV`
 - `Laporan Pilot Project Bencana` -> gunakan `Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana`
+- `Laporan Tahunan PKK` (tanpa konteks area) -> gunakan `Laporan Tahunan Tim Penggerak PKK Kecamatan`
 
 ## Normalisasi Label UI Administratif (Role/Scope/Wilayah)
 
