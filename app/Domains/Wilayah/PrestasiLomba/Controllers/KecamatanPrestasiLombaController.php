@@ -60,7 +60,7 @@ class KecamatanPrestasiLombaController extends Controller
         $this->authorize('create', PrestasiLomba::class);
         $this->createScopedPrestasiLombaAction->execute($request->validated(), ScopeLevel::KECAMATAN->value);
 
-        return redirect()->route('kecamatan.prestasi-lomba.index')->with('success', 'Data prestasi lomba berhasil dibuat');
+        return redirect()->route('kecamatan.prestasi-lomba.index')->with('success', 'Data buku prestasi berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -109,7 +109,7 @@ class KecamatanPrestasiLombaController extends Controller
         $this->authorize('update', $prestasiLomba);
         $this->updatePrestasiLombaAction->execute($prestasiLomba, $request->validated());
 
-        return redirect()->route('kecamatan.prestasi-lomba.index')->with('success', 'Data prestasi lomba berhasil diupdate');
+        return redirect()->route('kecamatan.prestasi-lomba.index')->with('success', 'Data buku prestasi berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -118,6 +118,6 @@ class KecamatanPrestasiLombaController extends Controller
         $this->authorize('delete', $prestasiLomba);
         $this->prestasiLombaRepository->delete($prestasiLomba);
 
-        return redirect()->route('kecamatan.prestasi-lomba.index')->with('success', 'Data prestasi lomba berhasil dihapus');
+        return redirect()->route('kecamatan.prestasi-lomba.index')->with('success', 'Data buku prestasi berhasil dihapus');
     }
 }

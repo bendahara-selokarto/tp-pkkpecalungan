@@ -45,6 +45,6 @@ class PrestasiLombaPrintController extends Controller
             'printedAt' => now(),
         ]);
 
-        return $pdf->stream("prestasi-lomba-{$level}-report.pdf");
+        return $pdf->stream("buku-prestasi-{$level}-report.pdf");
     }
 }

@@ -18,7 +18,7 @@ defineProps({
 const formatJenisKelamin = (value) => (value === 'L' ? 'Laki-laki' : 'Perempuan')
 const formatStatusPerkawinan = (value) => (value === 'kawin' ? 'Nikah' : 'Belum Nikah')
 
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data kader TP PKK ini?'
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data kader khusus ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 
@@ -48,11 +48,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Buku Daftar Kader Tim Penggerak PKK Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Buku Kader Khusus Kecamatan" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Kader Tim Penggerak PKK</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Kader Khusus</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/kader-khusus/report/pdf"
@@ -66,7 +66,7 @@ const cancelDelete = () => {
             href="/kecamatan/kader-khusus/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Kader TP PKK
+            + Tambah Kader Khusus
           </Link>
         </div>
       </div>
@@ -79,7 +79,7 @@ const cancelDelete = () => {
               <th class="px-3 py-3 font-semibold">Jenis Kelamin</th>
               <th class="px-3 py-3 font-semibold">Umur</th>
               <th class="px-3 py-3 font-semibold">Status</th>
-              <th class="px-3 py-3 font-semibold">Jenis Kader TP PKK</th>
+              <th class="px-3 py-3 font-semibold">Jenis Kader Khusus</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>
             </tr>
           </thead>
@@ -120,7 +120,7 @@ const cancelDelete = () => {
             </tr>
             <tr v-if="kaderKhususItems.length === 0">
               <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data kader TP PKK belum tersedia.
+                Data kader khusus belum tersedia.
               </td>
             </tr>
           </tbody>
@@ -138,6 +138,7 @@ const cancelDelete = () => {
     />
   </SectionMain>
 </template>
+
 
 
 

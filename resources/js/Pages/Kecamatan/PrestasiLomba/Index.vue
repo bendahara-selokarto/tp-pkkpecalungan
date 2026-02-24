@@ -24,7 +24,7 @@ const formatCapaian = (item) => {
   return capaian.join(', ') || '-'
 }
 
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data prestasi lomba ini?'
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data buku prestasi ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 
@@ -54,11 +54,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiTrophy" title="Prestasi Lomba Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiTrophy" title="Buku Prestasi Kecamatan" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Prestasi Lomba</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Buku Prestasi</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/prestasi-lomba/report/pdf"
@@ -124,7 +124,7 @@ const cancelDelete = () => {
             </tr>
             <tr v-if="prestasiLombaItems.length === 0">
               <td colspan="5" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data prestasi lomba belum tersedia.
+                Data buku prestasi belum tersedia.
               </td>
             </tr>
           </tbody>
@@ -142,4 +142,5 @@ const cancelDelete = () => {
     />
   </SectionMain>
 </template>
+
 

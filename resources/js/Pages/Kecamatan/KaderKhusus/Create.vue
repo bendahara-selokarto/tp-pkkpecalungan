@@ -24,7 +24,7 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountPlus" title="Tambah Buku Daftar Kader Tim Penggerak PKK Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountPlus" title="Tambah Buku Kader Khusus Kecamatan" main />
 
     <CardBox class="max-w-4xl">
       <form class="space-y-5" @submit.prevent="submit">
@@ -36,7 +36,7 @@ const submit = () => {
           </div>
 
           <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Kader TP PKK</label>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Kader Khusus</label>
             <input v-model="form.jenis_kader_khusus" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
             <p v-if="form.errors.jenis_kader_khusus" class="mt-1 text-xs text-rose-600">{{ form.errors.jenis_kader_khusus }}</p>
           </div>
@@ -106,6 +106,7 @@ const submit = () => {
     </CardBox>
   </SectionMain>
 </template>
+
 
 
 

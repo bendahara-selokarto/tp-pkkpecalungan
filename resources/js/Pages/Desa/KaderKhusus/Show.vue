@@ -20,7 +20,7 @@ const formatDate = (value) => formatDateForDisplay(value)
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Buku Daftar Kader Tim Penggerak PKK Desa" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Buku Daftar Kader Khusus Desa" main />
 
     <CardBox class="max-w-4xl space-y-4">
       <div>
@@ -38,7 +38,7 @@ const formatDate = (value) => formatDateForDisplay(value)
           <p class="text-sm text-gray-700 dark:text-gray-300">{{ formatStatusPerkawinan(props.kaderKhusus.status_perkawinan) }}</p>
         </div>
         <div>
-          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jenis Kader TP PKK</p>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jenis Kader Khusus</p>
           <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.kaderKhusus.jenis_kader_khusus }}</p>
         </div>
       </div>
@@ -84,4 +84,5 @@ const formatDate = (value) => formatDateForDisplay(value)
     </CardBox>
   </SectionMain>
 </template>
+
 

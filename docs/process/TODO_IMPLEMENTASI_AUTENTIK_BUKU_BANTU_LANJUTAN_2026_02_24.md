@@ -8,7 +8,10 @@
   - `Buku Inventaris`
   - `Buku Anggota Pokja`
   - `BukuKelompok Simulasi`
-- Status saat ini: `siap sinkronisasi kontrak header` untuk 5 sheet di atas; implementasi tetap ditahan sampai matrix mapping field selesai.
+- Status saat ini:
+  - `Buku Kader Khusus`: implemented (PDF + copy UI + kontrak dokumen sinkron).
+  - `Buku Prestasi`: implemented (copy UI + label PDF sinkron).
+  - `Buku Inventaris`, `Buku Anggota Pokja`, `BukuKelompok Simulasi`: siap sinkronisasi mapping.
 
 ## Target Hasil
 - Kontrak header final 5 sheet tervalidasi hingga level merge cell (`rowspan`/`colspan`).
@@ -18,10 +21,32 @@
 ## Langkah Eksekusi
 - [x] Ambil bukti visual valid untuk 5 sheet (header utuh, garis sel terlihat, nomor kolom terlihat, teks terbaca).
 - [x] Finalisasi peta header per sheet sampai level merge (`rowspan`/`colspan`).
-- [ ] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet.
+- [x] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet untuk `Buku Kader Khusus` dan `Buku Prestasi`.
+- [ ] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet untuk `Buku Inventaris`, `Buku Anggota Pokja`, dan `BukuKelompok Simulasi`.
 - [ ] Audit dampak implementasi ke route/request/use case/repository/policy/inertia.
 - [ ] Definisikan test matrix minimum untuk akses scoped dan integritas data.
 - [ ] Jalankan doc-hardening jika muncul drift istilah/kontrak saat sinkronisasi mapping.
+
+## Progress Implementasi (Parsial)
+- [x] `Buku Kader Khusus`
+  - Mapping terkunci:
+    - `NAMA` -> `nama`
+    - `JENIS KELAMIN (L/P)` -> `jenis_kelamin` (proyeksi report)
+    - `TEMPAT TANGGAL LAHIR` -> `tempat_lahir` + `tanggal_lahir`
+    - `STATUS (NIKAH/BLM NIKAH)` -> `status_perkawinan` (proyeksi report)
+    - `ALAMAT` -> `alamat`
+    - `PENDIDIKAN` -> `pendidikan`
+    - `JENIS KADER KHUSUS` -> `jenis_kader_khusus`
+    - `KETERANGAN` -> `keterangan`
+  - Implementasi:
+    - PDF `pdf.kader_khusus_report` disesuaikan ke header autentik 11 kolom.
+    - UI label desa/kecamatan dinormalisasi ke istilah `Buku Kader Khusus`.
+- [x] `Buku Prestasi`
+  - Mapping tetap:
+    - `TAHUN`, `JENIS LOMBA`, `LOKASI`, `PRESTASI (KEC/KAB/PROV/NAS)`, `KETERANGAN`.
+  - Implementasi:
+    - Label UI desa/kecamatan dinormalisasi ke istilah `Buku Prestasi`.
+    - Judul PDF dinormalisasi ke `BUKU PRESTASI`.
 
 ## Bukti Visual dan Peta Header Terkunci
 
@@ -116,8 +141,9 @@
 ## Validasi
 - [x] Bukti visual 5 sheet valid dan terbaca.
 - [x] Peta header final per sheet tidak ambigu untuk level merge/subkolom.
-- [ ] Mapping field disetujui untuk implementasi.
-- [ ] Rencana test terdefinisi dan dapat dijalankan.
+- [x] Mapping field disetujui untuk implementasi (`Buku Kader Khusus`, `Buku Prestasi`).
+- [ ] Mapping field untuk 3 sheet tersisa disetujui untuk implementasi.
+- [ ] Rencana test untuk 3 sheet tersisa terdefinisi dan dapat dijalankan.
 
 ## Risiko
 - Istilah lokal seperti `KET`, `BLM NIKAH`, dan `TEMP, TGL/BLN/LAHIR (UMUR)` berpotensi drift saat dijadikan label UI/query.
@@ -125,4 +151,5 @@
 
 ## Keputusan
 - [x] Lima screenshot user pada sesi 2026-02-24 dikunci sebagai bukti kontrak visual header resmi.
-- [x] Implementasi tetap ditahan sampai matrix mapping field per sheet selesai.
+- [x] Implementasi dilepas bertahap per concern; `Kader Khusus` dan `Prestasi` sudah sinkron.
+- [ ] Implementasi 3 sheet tersisa ditahan sampai matrix mapping per sheet selesai.

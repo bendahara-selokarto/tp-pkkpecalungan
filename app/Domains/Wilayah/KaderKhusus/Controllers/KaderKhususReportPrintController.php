@@ -45,7 +45,7 @@ class KaderKhususReportPrintController extends Controller
             'printedAt' => now(),
         ]);
 
-        return $pdf->stream("buku-daftar-kader-tp-pkk-{$level}-report.pdf");
+        return $pdf->stream("buku-kader-khusus-{$level}-report.pdf");
     }
 }
 
