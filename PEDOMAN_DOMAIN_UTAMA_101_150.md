@@ -1,10 +1,13 @@
-# Pedoman Domain Utama 101-150 (Roadmap Implementasi)
+# Pedoman Domain Utama 101-150 (Historis / Deprecated)
 
-Sumber utama domain:
+> Status: Dokumen ini tidak lagi menjadi acuan baku domain.
+> Acuan canonical aktif: `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` dengan sumber `docs/referensi/Rakernas X.pdf`.
+
+Sumber historis (non-canonical):
 - https://pubhtml5.com/zsnqq/vjcf/basic/101-150
 
 Aturan koherensi:
-- Jika ada ketidaksesuaian istilah/label domain dengan dokumen lain, dokumen ini menjadi acuan domain utama.
+- Jika ada ketidaksesuaian istilah/label domain dengan dokumen lain, dokumen ini tidak dipakai sebagai penentu canonical.
 - Aspek teknis implementasi (arsitektur, boundary repository, policy/scope, quality gate) tetap mengikuti `AGENTS.md`.
 
 Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampai yang lebih asumtif.
@@ -20,7 +23,7 @@ Urutan prioritas disusun dari paling mudah (kontrak jelas, konflik rendah) sampa
 - [x] Tahap 8 - Implementasi modul 4.14.2a `data-keluarga` (desa + kecamatan + report + policy + test matrix).
 
 ## Ringkasan Sinkronisasi Pedoman
-- [x] Sumber canonical dipakai: https://pubhtml5.com/zsnqq/vjcf/basic/101-150
+- [x] Sumber historis terdokumentasi: https://pubhtml5.com/zsnqq/vjcf/basic/101-150 (sudah digantikan Rakernas X).
 - [x] Fokus lampiran: 4.9a, 4.9b, 4.10, 4.11, 4.12, 4.13, 4.14.1a-4.14.4f, 4.15.
 
 ### Sudah Identik (Aplikasi vs Pedoman)

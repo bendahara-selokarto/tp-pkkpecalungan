@@ -1,7 +1,7 @@
 # Terminology Normalization Map (Lampiran 4.9-4.24 + Ekstensi 202-211 + Ekstensi Lokal)
 
 Sumber canonical:
-- https://pubhtml5.com/zsnqq/vjcf/basic/101-150
+- `docs/referensi/Rakernas X.pdf`
 
 Tujuan:
 - Mengunci istilah canonical domain agar output UI/PDF koheren terhadap pedoman.

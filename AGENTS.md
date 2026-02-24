@@ -2,7 +2,7 @@
 
 Dokumen ini adalah source of truth AI untuk repository ini.
 Dokumen manusia ada di `README.md`.
-Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_101_150.md` (sumber: https://pubhtml5.com/zsnqq/vjcf/basic/101-150).
+Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` (sumber: `docs/referensi/Rakernas X.pdf`).
 Dokumen jalur tunggal eksekusi AI ada di `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`.
 
 ## 0. Priority
@@ -10,11 +10,11 @@ Dokumen jalur tunggal eksekusi AI ada di `docs/process/AI_SINGLE_PATH_ARCHITECTU
 Jika konflik dokumen:
 1. `AGENTS.md` (aturan teknis, arsitektur, eksekusi agent)
 2. `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` (routing operasional AI deterministik)
-3. `PEDOMAN_DOMAIN_UTAMA_101_150.md` (terminologi/kontrak domain lampiran 4.9-4.15)
+3. `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` (terminologi/kontrak domain canonical aktif)
 4. `README.md`
 
 Aturan koherensi domain:
-- Jika ada perbedaan istilah, label, atau kontrak domain antara dokumen internal dan pedoman utama, utamakan `PEDOMAN_DOMAIN_UTAMA_101_150.md`.
+- Jika ada perbedaan istilah, label, atau kontrak domain antara dokumen internal dan pedoman utama, utamakan `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`.
 - Aspek teknis implementasi (arsitektur, policy/scope, quality gate, test matrix) tetap mengikuti `AGENTS.md`.
 
 ## 1. Fast Context

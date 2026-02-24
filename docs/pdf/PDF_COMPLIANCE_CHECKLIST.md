@@ -5,7 +5,7 @@ Tujuan:
 - Menjadi baseline regression untuk perubahan header, urutan kolom, format nilai, orientasi, dan metadata cetak.
 
 Sumber acuan:
-- Pedoman domain utama: https://pubhtml5.com/zsnqq/vjcf/basic/101-150
+- Pedoman domain utama: `docs/referensi/Rakernas X.pdf`
 - Validasi awal format: `docs/pdf/VALIDASI_FORMAT_BUKU_SEKRETARIS_PDF.md`
 - Kontrak domain: `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 

@@ -5,7 +5,7 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
 ## Root (Dokumen Inti)
 - `AGENTS.md`: kontrak eksekusi AI dan aturan teknis utama.
 - `README.md`: panduan manusia untuk penggunaan dan pengembangan.
-- `PEDOMAN_DOMAIN_UTAMA_101_150.md`: ringkasan sinkronisasi pedoman domain utama (canonical lokal).
+- `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`: ringkasan sinkronisasi pedoman domain utama (canonical lokal aktif).
 
 ## docs/domain
 - Kontrak domain, deviasi, normalisasi istilah, dan pedoman domain ekstensi.

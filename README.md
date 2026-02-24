@@ -5,8 +5,8 @@ Dokumen AI dan optimasi rate limiter ada di `AGENTS.md`.
 
 ## 0. Referensi Domain Utama
 
-- Pedoman domain utama: https://pubhtml5.com/zsnqq/vjcf/basic/101-150
-- Ringkasan sinkronisasi lokal: `PEDOMAN_DOMAIN_UTAMA_101_150.md`
+- Pedoman domain utama (canonical aktif): `docs/referensi/Rakernas X.pdf`
+- Ringkasan sinkronisasi lokal: `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
 - Jika ada ketidakkoherenan istilah/label domain, utamakan pedoman domain utama di atas.
 - Aturan teknis implementasi tetap mengacu ke `AGENTS.md`.
 

@@ -17,7 +17,7 @@ Status: `implemented` (backend + UI + test)
 
 - User hanya melihat menu domain yang menjadi tanggung jawab role-nya.
 - Visibilitas UI tetap ditentukan backend (frontend bukan authority).
-- Tidak terjadi drift dengan kontrak domain canonical (`PEDOMAN_DOMAIN_UTAMA_101_150.md` dan `DOMAIN_CONTRACT_MATRIX`).
+- Tidak terjadi drift dengan kontrak domain canonical (`PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` dan `DOMAIN_CONTRACT_MATRIX`).
 - Sekretaris PKK mendapat akses:
   - penuh (`read/write`) pada group `Sekretaris TPK`,
   - baca saja (`read-only`) pada group `Pokja I-IV`.
