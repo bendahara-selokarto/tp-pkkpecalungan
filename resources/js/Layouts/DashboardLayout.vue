@@ -303,8 +303,8 @@ onBeforeUnmount(() => {
     />
 
     <header class="fixed inset-x-0 top-0 z-40 h-14 border-b border-slate-200 bg-white/95 backdrop-blur dark:border-slate-700 dark:bg-slate-800/95">
-      <div class="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-        <div class="flex items-center gap-3 min-w-0">
+      <div class="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between lg:justify-end">
+        <div class="flex items-center gap-3 min-w-0 lg:hidden">
           <button class="inline-flex items-center justify-center rounded-md p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 lg:hidden" @click="sidebarOpen = !sidebarOpen">
             <span class="sr-only">Toggle sidebar</span>
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
