@@ -11,19 +11,15 @@
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
+        .signature { margin-top: 20px; border-collapse: collapse; width: 100%; table-layout: fixed; }
+        .signature td { border: none; padding: 0; vertical-align: top; font-size: 12px; }
+        .signature .placeholder { margin-top: 52px; }
     </style>
 </head>
 <body>
-    @php
-        $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
-        $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
-    @endphp
-
     <div class="title">REKAPITULASI DATA KELOMPOK BKR</div>
     <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }}<br>
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
-        Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+        KEC {{ $areaName }}
     </div>
 
     <table>
@@ -55,6 +51,21 @@
                 </tr>
             @endforelse
         </tbody>
+    </table>
+
+    <table class="signature">
+        <tr>
+            <td style="width: 50%;">
+                Mengetahui :<br>
+                KETUA TP. PKK ................
+                <div class="placeholder">( ................................ )</div>
+            </td>
+            <td style="width: 50%; text-align: left;">
+                Batang ............<br>
+                KETUA POKJA I ................
+                <div class="placeholder">( ................................ )</div>
+            </td>
+        </tr>
     </table>
 </body>
 </html>

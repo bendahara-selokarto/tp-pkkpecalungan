@@ -91,6 +91,10 @@
 - [x] Judul PDF BKL/BKR diselaraskan ke format autentik:
   - `REKAPITULASI DATA KELOMPOK BKL`
   - `REKAPITULASI DATA KELOMPOK BKR`
+- [x] Metadata cetak PDF BKL/BKR diselaraskan ke format visual autentik:
+  - Baris metadata atas tabel menggunakan pola `KEC ...`.
+  - Blok tanda tangan bawah tabel disamakan (`Mengetahui`, `Batang`, `KETUA TP. PKK`, `KETUA POKJA I`).
+  - Catatan footer BKL `Keterangan : Diisi oleh TP. PKK Kecamatan` ditambahkan.
 - [x] Validasi regresi terarah lulus:
   - `tests/Feature/DesaBklTest.php`
   - `tests/Feature/KecamatanBklTest.php`
@@ -98,7 +102,7 @@
   - `tests/Feature/KecamatanBkrTest.php`
   - `tests/Feature/BklReportPrintTest.php`
   - `tests/Feature/BkrReportPrintTest.php`
-- [ ] Audit final tanda tangan + metadata area untuk PDF autentik tetap pending sampai konfirmasi sumber workbook/sheet selesai.
+- [ ] Audit final tanda tangan + metadata area untuk PDF autentik tetap pending sampai konfirmasi sumber workbook/sheet selesai (untuk validasi final redaksi titik/placeholder per sheet).
 
 ## Risiko
 - Tanpa konfirmasi file sumber, risiko drift nomenklatur sheet antar dokumen referensi masih ada.
