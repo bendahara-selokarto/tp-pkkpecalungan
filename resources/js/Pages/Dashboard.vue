@@ -78,6 +78,10 @@ const isSekretarisUser = computed(() =>
   || authRoles.value.includes('admin-desa')
   || authRoles.value.includes('admin-kecamatan'),
 )
+const isKecamatanSekretarisUser = computed(() =>
+  authUser.value?.scope === 'kecamatan'
+  && authRoles.value.includes('kecamatan-sekretaris'),
+)
 
 const SECTION_GROUP_OPTIONS = [
   { value: 'all', label: 'All' },
@@ -294,6 +298,21 @@ const dashboardSections = computed(() => {
   return sections
 })
 
+const visibleDashboardSections = computed(() => {
+  if (!isKecamatanSekretarisUser.value) {
+    return dashboardSections.value
+  }
+
+  return dashboardSections.value
+    .map((section) => ({
+      ...section,
+      blocks: section.blocks.filter((block) =>
+        normalizeToken(block?.section?.key, '') === 'sekretaris-section-1'
+        && normalizeToken(block?.group, '') === 'sekretaris-tpk'),
+    }))
+    .filter((section) => section.blocks.length > 0)
+})
+
 const sekretarisDefaultLevel = computed(() =>
   authUser.value?.scope === 'kecamatan' ? 'kecamatan' : 'desa',
 )
@@ -495,23 +514,47 @@ const buildBlockStats = (block) => {
 
   if (block?.kind === 'activity') {
     const stats = block?.stats ?? {}
-
-    return [
+    const activityStats = [
       {
         key: 'activity-total',
         icon: mdiClipboardList,
-        label: `Total Aktivitas ${groupLabel}`,
+        label: 'Total Kegiatan',
         number: toNumber(stats.total),
         color: 'text-blue-500',
       },
       {
         key: 'activity-this-month',
         icon: mdiChartTimelineVariant,
-        label: `Aktivitas Bulan Ini ${groupLabel}`,
+        label: 'Kegiatan Bulan Ini',
         number: toNumber(stats.this_month),
         color: 'text-indigo-500',
       },
     ]
+
+    if (shouldShowActivityByDesaChart(block)) {
+      const { syncedTotalBookValues, syncedFilledBookValues } = resolveActivityByDesaMetrics(block)
+      const totalBooks = syncedTotalBookValues.reduce((total, value) => total + toNumber(value), 0)
+      const filledBooks = syncedFilledBookValues.reduce((total, value) => total + toNumber(value), 0)
+
+      activityStats.push(
+        {
+          key: 'activity-total-book',
+          icon: mdiBookOpenVariant,
+          label: 'Jumlah Buku',
+          number: totalBooks,
+          color: 'text-cyan-500',
+        },
+        {
+          key: 'activity-filled-book',
+          icon: mdiFileDocumentCheck,
+          label: 'Buku Terisi',
+          number: filledBooks,
+          color: 'text-emerald-500',
+        },
+      )
+    }
+
+    return activityStats
   }
 
   const stats = block?.stats ?? {}
@@ -611,7 +654,7 @@ const buildActivityMonthlyMultiAxisSeries = (block) => {
 
   return [
     {
-      name: 'Jumlah Aktivitas',
+      name: 'Jumlah Kegiatan',
       type: 'bar',
       data: values,
     },
@@ -676,7 +719,7 @@ const buildActivityMonthlyMultiAxisOptions = (block) => {
     yaxis: [
       {
         title: {
-          text: 'Jumlah Aktivitas',
+          text: 'Jumlah Kegiatan',
         },
         labels: {
           style: {
@@ -955,7 +998,7 @@ const hasLegacyLevelDistributionData = computed(() =>
 </script>
 
 <template>
-  <SectionMain>
+  <SectionMain class="!pt-2">
     <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Dashboard" main />
 
     <CardBox v-if="shouldShowGlobalDashboardFilters" class="mb-6">
@@ -1023,8 +1066,8 @@ const hasLegacyLevelDistributionData = computed(() =>
 
     <template v-if="hasDynamicBlocks">
       <div class="space-y-8">
-        <div v-for="section in dashboardSections" :key="section.key" class="space-y-4">
-          <CardBox v-if="hasSekretarisSections">
+        <div v-for="section in visibleDashboardSections" :key="section.key" class="space-y-4">
+          <CardBox v-if="hasSekretarisSections && !isKecamatanSekretarisUser">
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div>
                 <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ section.label }}</h3>
@@ -1071,24 +1114,29 @@ const hasLegacyLevelDistributionData = computed(() =>
           </CardBox>
 
           <CardBox v-for="block in section.blocks" :key="block.key">
-            <div class="flex flex-wrap items-center justify-between gap-3">
-              <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
-              <span
-                class="inline-flex items-center rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
-                :class="resolveBlockModeClass(block.mode)"
-              >
-                {{ resolveBlockModeLabel(block.mode) }}
-              </span>
-            </div>
+            <template v-if="!isKecamatanSekretarisUser">
+              <div class="flex flex-wrap items-center justify-between gap-3">
+                <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
+                <span
+                  class="inline-flex items-center rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
+                  :class="resolveBlockModeClass(block.mode)"
+                >
+                  {{ resolveBlockModeLabel(block.mode) }}
+                </span>
+              </div>
 
-            <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-              Sumber: {{ sourceModulesLabel(block) }}
-            </p>
-            <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              Cakupan: {{ block.sources?.source_area_type ?? '-' }} | {{ filterContextLabel(block) }}
-            </p>
+              <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+                Sumber: {{ sourceModulesLabel(block) }}
+              </p>
+              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                Cakupan: {{ block.sources?.source_area_type ?? '-' }} | {{ filterContextLabel(block) }}
+              </p>
+            </template>
 
-            <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div
+              class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
+              :class="isKecamatanSekretarisUser ? 'mt-0' : 'mt-4'"
+            >
               <CardBoxWidget
                 v-for="statItem in buildBlockStats(block)"
                 :key="`${block.key}-${statItem.key}`"
@@ -1211,7 +1259,7 @@ const hasLegacyLevelDistributionData = computed(() =>
               <div v-else class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Aktivitas Bulanan
+                    Kegiatan Bulanan
                   </h4>
                   <div class="h-72">
                     <apexchart
@@ -1223,7 +1271,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                     />
                   </div>
                   <p v-if="!hasActivityMonthlyData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-                    Belum ada aktivitas terhitung untuk periode ini.
+                    Belum ada kegiatan terhitung untuk periode ini.
                   </p>
                 </div>
 
@@ -1253,8 +1301,8 @@ const hasLegacyLevelDistributionData = computed(() =>
 
     <template v-else>
       <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <CardBoxWidget :icon="mdiClipboardList" :number="activityStats.total" label="Total Aktivitas" color="text-blue-500" />
-        <CardBoxWidget :icon="mdiChartTimelineVariant" :number="activityStats.this_month" label="Bulan Ini" color="text-indigo-500" />
+        <CardBoxWidget :icon="mdiClipboardList" :number="activityStats.total" label="Total Kegiatan" color="text-blue-500" />
+        <CardBoxWidget :icon="mdiChartTimelineVariant" :number="activityStats.this_month" label="Kegiatan Bulan Ini" color="text-indigo-500" />
       </div>
 
       <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
@@ -1315,10 +1363,5 @@ const hasLegacyLevelDistributionData = computed(() =>
       </div>
     </template>
 
-    <CardBox>
-      <p class="text-sm text-gray-600 dark:text-gray-300">
-        Aplikasi Sistem Administrasi Tim Penggerak PKK masih dalam mode pengembangan, kritik dan saran masih sangat diperlukan.
-      </p>
-    </CardBox>
   </SectionMain>
 </template>

@@ -133,7 +133,7 @@ const kecamatanMenuGroups = [
   ...buildScopedMenuGroups('kecamatan'),
   {
     key: 'monitoring',
-    label: 'Monitoring Kecamatan',
+    label: 'Monitoring ke Desa',
     code: 'MON',
     items: [
       { href: '/kecamatan/desa-activities', label: 'Kegiatan Desa' },
@@ -327,6 +327,14 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="flex items-center gap-3">
+          <Link
+            v-if="!hasRole('super-admin')"
+            href="/dashboard"
+            :class="isActive('/dashboard') ? 'text-cyan-700 dark:text-cyan-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'"
+            class="text-sm font-medium"
+          >
+            Dashboard
+          </Link>
           <div class="relative">
             <button
               type="button"
@@ -359,7 +367,7 @@ onBeforeUnmount(() => {
           </div>
           <a href="/profile" class="text-sm text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Profil</a>
           <button type="button" class="text-sm text-rose-600 hover:text-rose-700 dark:text-rose-400" @click="logout">
-            Keluar (Log Out)
+            Keluar
           </button>
         </div>
       </div>
@@ -394,25 +402,15 @@ onBeforeUnmount(() => {
           </button>
         </div>
 
-        <div v-show="!sidebarCollapsed" class="mx-4 mt-4 rounded-lg border border-slate-200 bg-slate-50 p-3 dark:border-slate-700 dark:bg-slate-900/60">
-          <p class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">User</p>
+        <div v-show="!sidebarCollapsed" class="mx-4 mt-4 rounded-lg border border-cyan-200 bg-cyan-50/70 p-3 dark:border-cyan-700 dark:bg-cyan-900/20">
+          <p class="text-xs font-medium uppercase tracking-wide text-cyan-700 dark:text-cyan-300">User</p>
           <p class="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">{{ user?.name }}</p>
-          <p class="mt-2 text-xs text-emerald-700 dark:text-emerald-400">{{ activeRoles }}</p>
+          <p class="mt-2 text-xs text-cyan-700 dark:text-cyan-300">{{ activeRoles }}</p>
         </div>
 
         <nav class="flex-1 overflow-y-auto p-4 space-y-5">
-          <div class="space-y-1">
+          <div v-if="hasRole('super-admin')" class="space-y-1">
             <p v-show="!sidebarCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Main</p>
-
-            <Link
-              v-if="!hasRole('super-admin')"
-              href="/dashboard"
-              :class="[sidebarCollapsed ? 'justify-center' : '', isActive('/dashboard') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!sidebarCollapsed">Dashboard</span>
-              <span v-show="sidebarCollapsed">D</span>
-            </Link>
 
             <Link
               v-if="hasRole('super-admin')"

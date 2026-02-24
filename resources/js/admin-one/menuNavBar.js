@@ -14,7 +14,7 @@ export default [
       },
       {
         icon: mdiLogout,
-        label: 'Keluar (Log Out)',
+        label: 'Keluar',
         isLogout: true,
       },
     ],
@@ -27,7 +27,7 @@ export default [
   },
   {
     icon: mdiLogout,
-    label: 'Keluar (Log Out)',
+    label: 'Keluar',
     isDesktopNoLabel: true,
     isLogout: true,
   },
