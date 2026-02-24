@@ -6,6 +6,8 @@ use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkEntry;
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
+use DateTimeInterface;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -103,7 +105,7 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
                         $item->description,
                     ]))
                 ),
-                'activity_date' => $item->activity_date?->format('Y-m-d'),
+                'activity_date' => $this->normalizeDateValue($item->activity_date),
                 'description' => trim((string) ($item->uraian ?: $item->description ?: $item->title)),
                 'source_table' => 'activities',
                 'source_id' => (int) $item->id,
@@ -121,7 +123,7 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
                         $item->keterangan,
                     ]))
                 ),
-                'activity_date' => $item->tanggal_surat?->format('Y-m-d'),
+                'activity_date' => $this->normalizeDateValue($item->tanggal_surat),
                 'description' => trim(sprintf(
                     'Agenda Surat %s: %s%s',
                     strtoupper((string) $item->jenis_surat),
@@ -172,5 +174,26 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
 
         return 'sekretariat';
     }
-}
 
+    private function normalizeDateValue(mixed $value): ?string
+    {
+        if ($value instanceof DateTimeInterface) {
+            return $value->format('Y-m-d');
+        }
+
+        if (! is_string($value)) {
+            return null;
+        }
+
+        $raw = trim($value);
+        if ($raw === '') {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($raw)->toDateString();
+        } catch (\Throwable) {
+            return null;
+        }
+    }
+}

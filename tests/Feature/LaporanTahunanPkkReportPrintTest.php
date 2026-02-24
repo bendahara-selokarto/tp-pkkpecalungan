@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
@@ -36,6 +37,16 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
         $user->assignRole('admin-desa');
 
+        Activity::create([
+            'title' => 'Rapat Koordinasi Desa',
+            'description' => 'Sinkronisasi program kerja tahunan',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+            'activity_date' => '2025-01-12',
+            'status' => 'published',
+        ]);
+
         $report = LaporanTahunanPkkReport::create([
             'judul_laporan' => 'Laporan Tahunan Desa',
             'tahun_laporan' => 2025,
@@ -49,7 +60,10 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
         $response->assertOk();
         $response->assertHeader('content-type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
         $response->assertHeader('content-disposition');
-        $this->assertValidDocxPayload((string) $response->getContent());
+        $this->assertValidDocxPayload(
+            (string) $response->getContent(),
+            ['Sinkronisasi program kerja tahunan']
+        );
     }
 
     public function test_admin_kecamatan_dapat_mencetak_docx_laporan_tahunannya_sendiri(): void
@@ -91,7 +105,10 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
         $response->assertStatus(403);
     }
 
-    private function assertValidDocxPayload(string $binary): void
+    /**
+     * @param list<string> $expectedSnippets
+     */
+    private function assertValidDocxPayload(string $binary, array $expectedSnippets = []): void
     {
         $this->assertStringStartsWith('PK', $binary);
 
@@ -110,5 +127,9 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
 
         $this->assertIsString($documentXml);
         $this->assertStringContainsString('LAPORAN TAHUNAN', $documentXml);
+
+        foreach ($expectedSnippets as $snippet) {
+            $this->assertStringContainsString($snippet, $documentXml);
+        }
     }
 }
