@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Data Isian Kelompok Simulasi dan Penyuluhan</title>
+    <title>Kelompok Simulasi dan Penyuluhan</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
@@ -16,11 +16,10 @@
 <body>
     @php
         $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
-        $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $level);
         $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
     @endphp
 
-    <div class="title">DATA ISIAN KELOMPOK SIMULASI DAN PENYULUHAN {{ $levelLabel }}</div>
+    <div class="title">KELOMPOK SIMULASI DAN PENYULUHAN</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
@@ -65,7 +64,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="center">Data isian kelompok simulasi dan penyuluhan belum tersedia.</td>
+                    <td colspan="7" class="center">Data kelompok simulasi dan penyuluhan belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>
