@@ -104,7 +104,7 @@ Catatan lanjutan visual minimalis:
 
 ## Validasi Wajib
 
-- [ ] Feature test Inertia:
+- [x] Feature test Inertia:
   - `dashboardBlocks` muncul untuk role valid.
   - metadata sumber (`sources`) ikut terkirim konsisten pada blok.
 - [ ] Feature test query filter:
@@ -122,7 +122,7 @@ Catatan lanjutan visual minimalis:
   - role pokja hanya melihat blok pokja terkait.
   - sekretaris melihat blok sekretaris + blok pokja.
   - kecamatan bertingkat dapat ganti `all/by level/by sub-level`.
-- [ ] Jalankan regression:
+- [x] Jalankan regression:
   - `php artisan test --filter=DashboardDocumentCoverageTest`
   - `php artisan test --filter=DashboardActivityChartTest`
 

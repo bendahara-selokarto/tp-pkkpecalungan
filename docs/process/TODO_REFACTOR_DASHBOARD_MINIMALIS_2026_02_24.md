@@ -57,7 +57,7 @@ Status: `planned`
 - [ ] `M7` Hardening behavior:
   - pastikan perubahan minimalis tidak memecah filter URL (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`),
   - pastikan tidak ada behavior drift pada role sekretaris/pokja.
-- [ ] `M8` Doc-hardening pass:
+- [x] `M8` Doc-hardening pass:
   - sinkronkan status di TODO dashboard lama + matrix domain bila ada kontrak tampilan yang berubah.
 
 ## File Target (Rencana)

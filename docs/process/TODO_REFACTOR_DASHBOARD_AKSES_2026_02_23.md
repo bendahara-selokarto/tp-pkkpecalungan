@@ -51,7 +51,7 @@ Tujuan monitor data dikunci sebagai kontrak implementasi:
 ### Blok Dashboard Canonical
 
 - `sekretaris-tpk`: ringkasan domain sekretaris (`anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-keuangan`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba`).
-- `pokja-i`: ringkasan domain pokja I (`data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`).
+- `pokja-i`: ringkasan domain pokja I (`data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`, `paar`).
 - `pokja-ii`: ringkasan domain pokja II (`data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket`).
 - `pokja-iii`: ringkasan domain pokja III (`data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk`).
 - `pokja-iv`: ringkasan domain pokja IV (`posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`, `program-prioritas`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat`).
@@ -120,11 +120,11 @@ Aturan label UI:
   - pokja desa hanya melihat blok pokja sendiri.
   - sekretaris desa melihat blok sekretaris + semua pokja.
   - pokja kecamatan melihat blok pokja sendiri dengan breakdown desa.
-- [ ] Feature test role invalid dan scope mismatch (stale metadata) menghasilkan nol data/forbidden sesuai kontrak existing.
-- [ ] Unit test service visibilitas dashboard role-scope.
+- [x] Feature test role invalid dan scope mismatch (stale metadata) menghasilkan nol data/forbidden sesuai kontrak existing.
+- [x] Unit test service visibilitas dashboard role-scope.
 - [ ] Unit test use case/repository untuk anti data leak lintas kecamatan/desa.
-- [ ] Snapshot/assertion label sumber di response Inertia agar UI tidak kembali ke label ambigu.
-- [ ] Jalankan `php artisan test` penuh sebelum merge implementasi.
+- [x] Snapshot/assertion label sumber di response Inertia agar UI tidak kembali ke label ambigu.
+- [x] Jalankan `php artisan test` penuh sebelum merge implementasi.
 
 ## Risiko
 

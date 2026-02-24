@@ -66,7 +66,7 @@ Status: `planned`
 - [ ] `R7` Hardening akses:
   - validasi role hanya melihat blok yang diizinkan,
   - pastikan filter URL tidak membuka data lintas scope.
-- [ ] `R8` Doc-hardening:
+- [x] `R8` Doc-hardening:
   - sinkronkan status dengan:
     - `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
     - `docs/process/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
@@ -78,7 +78,7 @@ Status: `planned`
 - [ ] `C2`: standardisasi layout dan spacing dashboard lintas role.
 - [ ] `C3`: refactor komponen frontend dashboard (tanpa ubah kontrak backend).
 - [ ] `C4`: hardening fallback + regression test dashboard.
-- [ ] `C5`: doc-hardening lintas TODO dashboard.
+- [x] `C5`: doc-hardening lintas TODO dashboard.
 
 ## File Target (Rencana)
 

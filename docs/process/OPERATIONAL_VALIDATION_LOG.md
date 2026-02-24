@@ -702,3 +702,31 @@ Keputusan:
 
 Status:
 - `PASS` untuk penyusunan dokumen dengan satu gambar.
+
+## Doc-Hardening Pending TODO Dashboard: 2026-02-24
+
+Ruang lingkup:
+- Menutup item `pending` yang sudah stale pada TODO dashboard.
+- Menyinkronkan status implementasi `section 4` skenario kecamatan Pokja I dengan implementasi aktual.
+- Menormalkan kontrak daftar modul Pokja I agar sinkron dengan implementasi terbaru (`paar`).
+
+Artefak:
+- `docs/process/TODO_SCENARIO_KECAMATAN_SECTION4_POKJA_I_2026_02_23.md`
+- `docs/process/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
+- `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
+- `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
+- `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
+
+Perintah validasi:
+- `php artisan test tests/Feature/DesaPaarTest.php tests/Feature/KecamatanPaarTest.php tests/Feature/PaarReportPrintTest.php tests/Unit/Policies/PaarPolicyTest.php tests/Feature/DashboardDocumentCoverageTest.php tests/Unit/Dashboard/DashboardCoverageMenuSyncTest.php tests/Unit/Architecture/UnitCoverageGateTest.php`
+  - hasil: `PASS` (`230` tests).
+- `php artisan test`
+  - hasil: `PASS` (`765` tests).
+
+Keputusan:
+- Item stale untuk implementasi `section 4` Pokja I ditutup.
+- Checklist validasi dashboard yang sudah terverifikasi oleh test ditandai selesai.
+- Sinkronisasi lintas TODO dashboard (`Akses`, `UI Dinamis`, `Minimalis`, `Lintas Role`) dikunci sebagai hasil doc-hardening concern ini.
+
+Status:
+- `PASS` untuk doc-hardening pending TODO dashboard.

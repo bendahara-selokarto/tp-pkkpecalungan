@@ -78,7 +78,7 @@ Status: `done`
 ## Mitigasi
 
 - [ ] Gunakan agregasi repository + cache key kontekstual (scope, area, section3_group).
-- [ ] Tampilkan section 4 hanya saat trigger terpenuhi (`pokja-i`), bukan default.
+- [x] Tampilkan section 4 hanya saat trigger terpenuhi (`pokja-i`), bukan default.
 - [ ] Gunakan tampilan ringkas default (top-level total per desa) dengan detail modul on-demand.
 
 ## Keputusan
