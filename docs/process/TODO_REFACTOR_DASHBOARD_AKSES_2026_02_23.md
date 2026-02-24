@@ -116,9 +116,11 @@ Aturan label UI:
 
 ## Validasi Wajib
 
-- [ ] Feature test role valid:
-  - pokja desa hanya melihat blok pokja sendiri.
+- [x] Feature test role valid (jalur sekretaris):
   - sekretaris desa melihat blok sekretaris + semua pokja.
+  - sekretaris kecamatan memuat section bertingkat sesuai kontrak.
+- [ ] Feature test role valid (jalur pokja):
+  - pokja desa hanya melihat blok pokja sendiri.
   - pokja kecamatan melihat blok pokja sendiri dengan breakdown desa.
 - [x] Feature test role invalid dan scope mismatch (stale metadata) menghasilkan nol data/forbidden sesuai kontrak existing.
 - [x] Unit test service visibilitas dashboard role-scope.

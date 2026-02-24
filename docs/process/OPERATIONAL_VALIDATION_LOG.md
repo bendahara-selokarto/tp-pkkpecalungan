@@ -748,3 +748,20 @@ Keputusan:
 
 Status:
 - `PASS` untuk sinkronisasi status dan penutupan stale pending pass-2.
+
+## Doc-Hardening Pending TODO Dashboard (Pass-3): 2026-02-24
+
+Ruang lingkup:
+- Menormalkan checklist validasi yang masih terlalu agregat pada TODO dashboard akses.
+- Memisahkan status validasi `sekretaris` (sudah teruji) dan `pokja` (masih pending) agar tidak mencampur progress.
+
+Artefak:
+- `docs/process/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
+
+Keputusan:
+- Item `Feature test role valid` dipecah menjadi dua checklist:
+  - jalur sekretaris ditandai selesai,
+  - jalur pokja tetap pending sampai test khusus tersedia.
+
+Status:
+- `PASS` untuk hardening granular checklist validasi dashboard akses.
