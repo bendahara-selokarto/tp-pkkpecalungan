@@ -168,6 +168,7 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Jangan tetapkan kontrak tabel kompleks hanya dari OCR/parser teks.
   - Jangan tetapkan kontrak header tabel hanya dari text-layer jika hasil baca parsial.
   - Saat hasil parser dan dokumen autentik konflik, dokumen autentik adalah sumber final.
+  - Jika ada referensi ganda untuk concern yang sama (mis. revisi screenshot header), referensi terakhir dari user menjadi acuan final dan referensi sebelumnya ditandai `superseded`.
   - Screenshot header tabel yang memenuhi kriteria validasi adalah bukti kontrak resmi untuk merge cell (`rowspan`/`colspan`).
   - Dokumentasikan gap parsing secara eksplisit agar tidak dianggap bug data aplikasi.
   - Dilarang melanjutkan implementasi bila peta header belum lengkap sampai tingkat penggabungan sel (`rowspan`/`colspan`).
