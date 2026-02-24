@@ -52,6 +52,7 @@ Gunakan status:
 | `P-015` | Section-Scoped Query Key Contract for Role-Aware Dashboard | Dashboard memiliki section filter lebih dari satu dalam satu halaman | State filter tidak saling bertabrakan dan kontrak URL stabil lintas backend/frontend/docs | Feature test filter context + audit kontrak query key di docs | `active` |
 | `P-016` | Triggered Doc-Hardening Pass | Ada sinyal canonical drift pada dokumentasi concern aktif | Kontrak dokumen lintas file tetap koheren dan tidak mismatch dengan implementasi | Scoped drift audit + sinkronisasi TODO/process/domain + ringkasan validasi | `active` |
 | `P-017` | Zero-Ambiguity Single Path Routing | User meminta kepastian jalur tunggal AI atau task lintas concern berisiko multi-interpretasi | Task routing deterministik (concern -> file target -> validation ladder) dan output konsisten lintas sesi | Sinkronisasi `AGENTS.md` + dokumen single-path + log hardening concern | `active` |
+| `P-018` | UI Runtime Safety Guardrail | Perubahan UI kritikal berbasis JavaScript (layout, dropdown, theme, dynamic state) | Behavior UI tetap terkontrol saat terjadi runtime error JavaScript | Guard global JS + fallback UI + build frontend | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -393,3 +394,30 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Over-constraint jika deviasi edge-case tidak dicatat.
 - Catatan reuse lintas domain/project:
   - Pattern ini cocok sebagai baseline di project yang punya guardrail domain/policy ketat dan kebutuhan konsistensi lintas sesi AI.
+
+### P-018 - UI Runtime Safety Guardrail
+- Tanggal: 2026-02-24
+- Status: active
+- Konteks: Interaksi UI yang ditenagai JavaScript (dropdown, theme switch, state sidebar, event-driven update) dapat memicu behavior tidak diinginkan saat error runtime tidak ditangani.
+- Trigger:
+  - Perubahan pada layout utama atau komponen navigasi global.
+  - Penambahan interaksi UI yang bergantung pada event JavaScript global.
+- Langkah eksekusi:
+  1) Pasang guard global untuk `window.error`, `window.unhandledrejection`, dan `app.config.errorHandler`.
+  2) Emit event internal runtime error agar layer layout bisa menampilkan fallback terkontrol.
+  3) Tampilkan fallback banner non-blocking + aksi pemulihan (`Muat Ulang`).
+  4) Lindungi akses storage browser dengan wrapper aman (`try/catch`) untuk mencegah crash awal render.
+- Guardrail:
+  - Jangan biarkan error runtime diam tanpa sinyal ke UI.
+  - Jangan menggantungkan state kritikal pada `localStorage` tanpa fallback in-memory.
+  - Fallback tidak boleh membuka bypass otorisasi atau mengubah kontrak akses backend.
+- Validasi minimum:
+  - `npm run build` sukses.
+  - Test backend terkait visibilitas/akses menu tetap hijau.
+  - Fallback banner muncul saat event internal `ui-runtime-error` ditembak.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada bootstrap `resources/js/app.js` dan layout global `resources/js/Layouts/DashboardLayout.vue`.
+- Risiko:
+  - Tanpa deduplikasi error, banner bisa muncul berulang untuk root cause yang sama.
+- Catatan reuse lintas domain/project:
+  - Terapkan pada aplikasi SPA/Inertia yang mengandalkan layout global untuk interaksi kritikal.

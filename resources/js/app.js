@@ -16,6 +16,44 @@ Alpine.start();
 
 const appName = import.meta.env.VITE_APP_NAME || 'Akaraya PKK';
 const pinia = createPinia();
+const runtimeErrorEventName = 'ui-runtime-error';
+
+const emitUiRuntimeError = (error, source = 'runtime') => {
+    const message = error instanceof Error ? error.message : String(error ?? 'Unknown runtime error');
+
+    console.error(`[${source}]`, error);
+
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent(runtimeErrorEventName, {
+            detail: {
+                message,
+                source,
+            },
+        }));
+    }
+};
+
+const installGlobalRuntimeGuards = () => {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    if (window.__uiRuntimeGuardsInstalled === true) {
+        return;
+    }
+
+    window.__uiRuntimeGuardsInstalled = true;
+
+    window.addEventListener('error', (event) => {
+        emitUiRuntimeError(event?.error ?? event?.message, 'window.error');
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+        emitUiRuntimeError(event?.reason, 'window.unhandledrejection');
+    });
+};
+
+installGlobalRuntimeGuards();
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -31,7 +69,13 @@ createInertiaApp({
         return page;
     },
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) });
+
+        app.config.errorHandler = (error, _instance, info) => {
+            emitUiRuntimeError(error, `vue.error:${info}`);
+        };
+
+        app
             .use(plugin)
             .use(pinia)
             .use(VueApexCharts)

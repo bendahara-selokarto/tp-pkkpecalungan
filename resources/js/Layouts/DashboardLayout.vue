@@ -3,14 +3,33 @@ import { Link, router, usePage } from '@inertiajs/vue3'
 import { useDarkModeStore } from '@/admin-one/stores/darkMode'
 import FlashMessageBar from '@/admin-one/components/FlashMessageBar.vue'
 import { formatRoleList } from '@/utils/roleLabelFormatter'
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 
 const page = usePage()
 const darkModeStore = useDarkModeStore()
+const sidebarCollapsedKey = 'sidebar-collapsed'
+const runtimeErrorEventName = 'ui-runtime-error'
+
+const readSidebarCollapsedPreference = () => {
+  try {
+    return localStorage.getItem(sidebarCollapsedKey) === '1'
+  } catch (_error) {
+    return false
+  }
+}
+
+const persistSidebarCollapsedPreference = (collapsed) => {
+  try {
+    localStorage.setItem(sidebarCollapsedKey, collapsed ? '1' : '0')
+  } catch (_error) {
+    // Ignore storage failures so UI state still works in-memory.
+  }
+}
 
 const sidebarOpen = ref(false)
-const sidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === '1')
+const sidebarCollapsed = ref(readSidebarCollapsedPreference())
 const themeMenuOpen = ref(false)
+const runtimeErrorVisible = ref(false)
 
 const user = computed(() => page.props.auth?.user ?? null)
 const roles = computed(() => user.value?.roles ?? [])
@@ -229,7 +248,7 @@ const primaryHref = computed(() =>
 
 const toggleCollapse = () => {
   sidebarCollapsed.value = !sidebarCollapsed.value
-  localStorage.setItem('sidebar-collapsed', sidebarCollapsed.value ? '1' : '0')
+  persistSidebarCollapsedPreference(sidebarCollapsed.value)
 }
 
 const logout = () => {
@@ -246,6 +265,33 @@ const pkkLogo = '/images/pkk-logo.png'
 const hideBrokenImage = (event) => {
   event.target.style.display = 'none'
 }
+
+const showRuntimeErrorFallback = () => {
+  runtimeErrorVisible.value = true
+  themeMenuOpen.value = false
+}
+
+const reloadPage = () => {
+  if (typeof window !== 'undefined') {
+    window.location.reload()
+  }
+}
+
+const dismissRuntimeError = () => {
+  runtimeErrorVisible.value = false
+}
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener(runtimeErrorEventName, showRuntimeErrorFallback)
+  }
+})
+
+onBeforeUnmount(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener(runtimeErrorEventName, showRuntimeErrorFallback)
+  }
+})
 </script>
 
 <template>
@@ -469,6 +515,30 @@ const hideBrokenImage = (event) => {
     <div :class="sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'" class="pt-14 transition-all duration-200">
       <main :class="[{ 'module-read-only': isCurrentModuleReadOnly }, 'px-4 sm:px-6 lg:px-8 py-6']">
         <FlashMessageBar :flash="flash" />
+        <div
+          v-if="runtimeErrorVisible"
+          class="mb-4 flex items-start justify-between gap-3 rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-amber-900 dark:border-amber-700 dark:bg-amber-950/30 dark:text-amber-200"
+        >
+          <p class="text-sm">
+            Terjadi gangguan antarmuka karena error JavaScript. Muat ulang halaman untuk memulihkan tampilan.
+          </p>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="rounded border border-amber-500 px-2 py-1 text-xs font-medium hover:bg-amber-100 dark:hover:bg-amber-900/40"
+              @click="reloadPage"
+            >
+              Muat Ulang
+            </button>
+            <button
+              type="button"
+              class="rounded px-2 py-1 text-xs font-medium hover:bg-amber-100 dark:hover:bg-amber-900/40"
+              @click="dismissRuntimeError"
+            >
+              Tutup
+            </button>
+          </div>
+        </div>
         <slot />
       </main>
     </div>
