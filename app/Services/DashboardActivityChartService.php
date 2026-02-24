@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryInterface;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
@@ -15,7 +16,8 @@ class DashboardActivityChartService
     public function __construct(
         private readonly ActivityRepositoryInterface $activityRepository,
         private readonly AreaRepositoryInterface $areaRepository,
-        private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository
+        private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository,
+        private readonly DashboardGroupCoverageRepositoryInterface $dashboardGroupCoverageRepository
     ) {
     }
 
@@ -160,7 +162,7 @@ class DashboardActivityChartService
         $moduleSlugs = $this->dashboardDocumentCoverageRepository->trackedModuleSlugs();
         $bookTotalPerDesa = count($moduleSlugs);
         $rawBooksByDesa = collect(
-            $this->dashboardDocumentCoverageRepository->buildGroupBreakdownByDesa($user, $moduleSlugs, $section1Month)
+            $this->dashboardGroupCoverageRepository->buildBreakdownByDesaForModules($user, $moduleSlugs, $section1Month)
         )
             ->mapWithKeys(
                 static fn (array $item): array => [(int) ($item['desa_id'] ?? 0) => $item]

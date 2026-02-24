@@ -164,6 +164,9 @@ const dynamicBlocks = computed(() =>
 )
 
 const hasDynamicBlocks = computed(() => dynamicBlocks.value.length > 0)
+const showLegacyFallback = computed(() =>
+  !hasDynamicBlocks.value && Boolean(import.meta.env.DEV),
+)
 const sekretarisSection1Blocks = computed(() =>
   dynamicBlocks.value.filter((block) => block?.section?.key === 'sekretaris-section-1'),
 )
@@ -190,6 +193,40 @@ const hasSekretarisSections = computed(() =>
 const shouldShowGlobalDashboardFilters = computed(() =>
   !isDesaPokjaUser.value && !hasSekretarisSections.value,
 )
+
+const expandedBlockKeys = ref({})
+
+const syncExpandedBlocks = (sections) => {
+  const next = {}
+
+  sections.forEach((section) => {
+    const blocks = Array.isArray(section?.blocks) ? section.blocks : []
+    blocks.forEach((block, index) => {
+      const key = String(block?.key ?? '')
+      if (key === '') {
+        return
+      }
+
+      next[key] = expandedBlockKeys.value[key] ?? index === 0
+    })
+  })
+
+  expandedBlockKeys.value = next
+}
+
+const isBlockExpanded = (blockKey) => expandedBlockKeys.value[String(blockKey)] !== false
+
+const toggleBlockExpanded = (blockKey) => {
+  const key = String(blockKey ?? '')
+  if (key === '') {
+    return
+  }
+
+  expandedBlockKeys.value = {
+    ...expandedBlockKeys.value,
+    [key]: !isBlockExpanded(key),
+  }
+}
 
 const filterBlocksByGroup = (blocks, selectedGroup) => {
   if (selectedGroup === 'all') {
@@ -312,6 +349,14 @@ const visibleDashboardSections = computed(() => {
     }))
     .filter((section) => section.blocks.length > 0)
 })
+
+watch(
+  visibleDashboardSections,
+  (sections) => {
+    syncExpandedBlocks(sections)
+  },
+  { immediate: true },
+)
 
 const sekretarisDefaultLevel = computed(() =>
   authUser.value?.scope === 'kecamatan' ? 'kecamatan' : 'desa',
@@ -460,6 +505,48 @@ const humanizeLabel = (value) => String(value ?? '')
   .replace(/[-_]+/g, ' ')
   .trim()
   .replace(/\b\w/g, (char) => char.toUpperCase())
+
+const toSlugToken = (value) => String(value ?? '')
+  .toLowerCase()
+  .trim()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '')
+
+const availableSubLevelOptions = computed(() => {
+  const collectedNames = new Set()
+
+  dynamicBlocks.value.forEach((block) => {
+    const coverage = block?.charts?.coverage_per_module
+    if (normalizeToken(coverage?.dimension, '') === 'desa') {
+      const items = Array.isArray(coverage?.items) ? coverage.items : []
+      items.forEach((item) => {
+        const rawLabel = String(item?.label ?? '').trim()
+        if (rawLabel !== '') {
+          collectedNames.add(rawLabel)
+        }
+      })
+    }
+
+    const byDesaLabels = Array.isArray(block?.charts?.by_desa?.labels)
+      ? block.charts.by_desa.labels
+      : []
+    byDesaLabels.forEach((label) => {
+      const rawLabel = String(label ?? '').trim()
+      if (rawLabel !== '') {
+        collectedNames.add(rawLabel)
+      }
+    })
+  })
+
+  const options = Array.from(collectedNames)
+    .sort((a, b) => a.localeCompare(b, 'id'))
+    .map((name) => ({
+      value: `desa-${toSlugToken(name)}`,
+      label: `Desa ${name}`,
+    }))
+
+  return [{ value: 'all', label: 'All Wilayah' }, ...options]
+})
 
 const toNumber = (value) => Number(value ?? 0)
 const formatPieAbsoluteValue = (_value, options) => {
@@ -1038,15 +1125,34 @@ const hasLegacyLevelDistributionData = computed(() =>
           <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
             Wilayah Turunan
           </label>
+          <select
+            v-if="availableSubLevelOptions.length > 1"
+            v-model="selectedSubLevel"
+            :disabled="!isBySubLevelMode"
+            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+            @change="onSubLevelApply"
+          >
+            <option
+              v-for="subLevelOption in availableSubLevelOptions"
+              :key="`sub-level-${subLevelOption.value}`"
+              :value="subLevelOption.value"
+            >
+              {{ subLevelOption.label }}
+            </option>
+          </select>
           <input
+            v-else
             v-model="selectedSubLevel"
             :disabled="!isBySubLevelMode"
             type="text"
             class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-            placeholder="all atau kode wilayah"
+            placeholder="contoh: desa-gombong"
             @keyup.enter="onSubLevelApply"
             @blur="onSubLevelApply"
           >
+          <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+            Pilih nama desa agar fokus wilayah lebih jelas.
+          </p>
         </div>
 
         <div class="flex items-end">
@@ -1114,24 +1220,35 @@ const hasLegacyLevelDistributionData = computed(() =>
           </CardBox>
 
           <CardBox v-for="block in section.blocks" :key="block.key">
-            <template v-if="!isKecamatanSekretarisUser">
-              <div class="flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="min-w-0">
                 <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
+                <template v-if="!isKecamatanSekretarisUser">
+                  <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+                    Sumber: {{ sourceModulesLabel(block) }}
+                  </p>
+                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                    Cakupan: {{ block.sources?.source_area_type ?? '-' }} | {{ filterContextLabel(block) }}
+                  </p>
+                </template>
+              </div>
+              <div class="ml-auto flex items-center gap-2">
                 <span
+                  v-if="!isKecamatanSekretarisUser"
                   class="inline-flex items-center rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
                   :class="resolveBlockModeClass(block.mode)"
                 >
                   {{ resolveBlockModeLabel(block.mode) }}
                 </span>
+                <button
+                  type="button"
+                  class="rounded-md border border-slate-300 px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                  @click="toggleBlockExpanded(block.key)"
+                >
+                  {{ isBlockExpanded(block.key) ? 'Sembunyikan Grafik' : 'Tampilkan Grafik' }}
+                </button>
               </div>
-
-              <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                Sumber: {{ sourceModulesLabel(block) }}
-              </p>
-              <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                Cakupan: {{ block.sources?.source_area_type ?? '-' }} | {{ filterContextLabel(block) }}
-              </p>
-            </template>
+            </div>
 
             <div
               class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
@@ -1147,7 +1264,7 @@ const hasLegacyLevelDistributionData = computed(() =>
               />
             </div>
 
-            <template v-if="block.kind === 'documents'">
+            <template v-if="isBlockExpanded(block.key) && block.kind === 'documents'">
               <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
@@ -1184,7 +1301,7 @@ const hasLegacyLevelDistributionData = computed(() =>
               </div>
             </template>
 
-            <template v-else>
+            <template v-else-if="isBlockExpanded(block.key)">
               <template v-if="shouldShowActivityByDesaChart(block)">
                 <div class="mt-6">
                   <div class="mb-2 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:items-end">
@@ -1299,7 +1416,7 @@ const hasLegacyLevelDistributionData = computed(() =>
       </div>
     </template>
 
-    <template v-else>
+    <template v-else-if="showLegacyFallback">
       <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
         <CardBoxWidget :icon="mdiClipboardList" :number="activityStats.total" label="Total Kegiatan" color="text-blue-500" />
         <CardBoxWidget :icon="mdiChartTimelineVariant" :number="activityStats.this_month" label="Kegiatan Bulan Ini" color="text-indigo-500" />
@@ -1362,6 +1479,12 @@ const hasLegacyLevelDistributionData = computed(() =>
         </CardBox>
       </div>
     </template>
+
+    <CardBox v-else class="border border-dashed border-slate-300 dark:border-slate-600">
+      <p class="text-sm text-slate-600 dark:text-slate-300">
+        Belum ada blok dashboard yang bisa ditampilkan untuk akses akun ini.
+      </p>
+    </CardBox>
 
   </SectionMain>
 </template>

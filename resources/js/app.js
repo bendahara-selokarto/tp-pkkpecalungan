@@ -17,11 +17,36 @@ Alpine.start();
 const appName = import.meta.env.VITE_APP_NAME || 'Akaraya PKK';
 const pinia = createPinia();
 const runtimeErrorEventName = 'ui-runtime-error';
+let runtimeErrorReportCount = 0;
+const runtimeErrorReportLimit = 5;
+
+const reportUiRuntimeError = (message, source) => {
+    if (typeof window === 'undefined') {
+        return;
+    }
+
+    if (runtimeErrorReportCount >= runtimeErrorReportLimit) {
+        return;
+    }
+
+    runtimeErrorReportCount += 1;
+
+    const payload = {
+        message: String(message ?? 'Unknown runtime error').slice(0, 500),
+        source: String(source ?? 'runtime').slice(0, 120),
+        url: String(window.location?.href ?? '').slice(0, 500),
+    };
+
+    window.axios?.post('/ui/runtime-errors', payload).catch(() => {
+        // Ignore telemetry failures so runtime fallback remains non-blocking.
+    });
+};
 
 const emitUiRuntimeError = (error, source = 'runtime') => {
     const message = error instanceof Error ? error.message : String(error ?? 'Unknown runtime error');
 
     console.error(`[${source}]`, error);
+    reportUiRuntimeError(message, source);
 
     if (typeof window !== 'undefined') {
         window.dispatchEvent(new CustomEvent(runtimeErrorEventName, {

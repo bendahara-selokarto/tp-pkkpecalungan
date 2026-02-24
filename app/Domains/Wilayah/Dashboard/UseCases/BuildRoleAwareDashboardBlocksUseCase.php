@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Dashboard\UseCases;
 
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryInterface;
 use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
@@ -41,7 +42,8 @@ class BuildRoleAwareDashboardBlocksUseCase
     public function __construct(
         private readonly RoleMenuVisibilityService $roleMenuVisibilityService,
         private readonly UserAreaContextService $userAreaContextService,
-        private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository
+        private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository,
+        private readonly DashboardGroupCoverageRepositoryInterface $dashboardGroupCoverageRepository
     ) {
     }
 
@@ -99,6 +101,25 @@ class BuildRoleAwareDashboardBlocksUseCase
             $modules = $this->roleMenuVisibilityService->modulesForGroup((string) $groupKey);
             if ($modules === []) {
                 continue;
+            }
+
+            if (
+                $effectiveScope === ScopeLevel::KECAMATAN->value
+                && in_array((string) $groupKey, self::POKJA_GROUPS, true)
+            ) {
+                $kecamatanByDesaBlock = $this->buildKecamatanPokjaByDesaBlock(
+                    $user,
+                    (string) $groupKey,
+                    (string) $mode,
+                    $effectiveScope,
+                    $modules,
+                    $dashboardContext
+                );
+
+                if (is_array($kecamatanByDesaBlock)) {
+                    $blocks[] = $kecamatanByDesaBlock;
+                    continue;
+                }
             }
 
             $groupDocumentItems = $documentItems
@@ -162,6 +183,84 @@ class BuildRoleAwareDashboardBlocksUseCase
         ];
 
         return $this->attachSection($block, $section);
+    }
+
+    /**
+     * @param list<string> $modules
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @return array<string, mixed>|null
+     */
+    private function buildKecamatanPokjaByDesaBlock(
+        User $user,
+        string $groupKey,
+        string $mode,
+        string $effectiveScope,
+        array $modules,
+        array $dashboardContext
+    ): ?array {
+        $desaBreakdown = collect(
+            $this->dashboardGroupCoverageRepository->buildBreakdownByDesaForGroup($user, $groupKey)
+        )->values();
+
+        if ($desaBreakdown->isEmpty()) {
+            return null;
+        }
+
+        $coverageItems = $desaBreakdown
+            ->map(static function (array $item): array {
+                $desaId = (int) ($item['desa_id'] ?? 0);
+                $desaName = (string) ($item['desa_name'] ?? '-');
+                $total = (int) ($item['total'] ?? 0);
+
+                return [
+                    'slug' => sprintf('desa-%d', $desaId),
+                    'label' => $desaName,
+                    'total' => $total,
+                    'resolved_total' => $total,
+                    'per_module' => is_array($item['per_module'] ?? null) ? $item['per_module'] : [],
+                ];
+            })
+            ->values();
+
+        $totalDesa = $coverageItems->count();
+        $desaTerisi = $coverageItems->filter(static fn (array $item): bool => (int) ($item['total'] ?? 0) > 0)->count();
+        $totalEntries = $coverageItems->sum(static fn (array $item): int => (int) ($item['total'] ?? 0));
+
+        return [
+            'key' => sprintf('documents-%s-kecamatan-desa-breakdown', $groupKey),
+            'kind' => 'documents',
+            'group' => $groupKey,
+            'group_label' => self::GROUP_LABELS[$groupKey] ?? $groupKey,
+            'mode' => $mode,
+            'title' => sprintf(
+                'Dashboard %s - %s (Per Desa)',
+                self::GROUP_LABELS[$groupKey] ?? $groupKey,
+                strtoupper($effectiveScope)
+            ),
+            'stats' => [
+                'total_buku_tracked' => $totalDesa,
+                'buku_terisi' => $desaTerisi,
+                'buku_belum_terisi' => $totalDesa - $desaTerisi,
+                'total_entri_buku' => $totalEntries,
+            ],
+            'charts' => [
+                'coverage_per_module' => [
+                    'labels' => $coverageItems->pluck('label')->all(),
+                    'values' => $coverageItems->pluck('total')->all(),
+                    'items' => $coverageItems->all(),
+                    'dimension' => 'desa',
+                ],
+            ],
+            'sources' => [
+                'source_group' => $groupKey,
+                'source_scope' => $effectiveScope,
+                'source_area_type' => 'desa-turunan',
+                'source_modules' => $modules,
+                'tracked_modules' => $modules,
+                'source_note' => 'Agregasi pokja tingkat kecamatan dirinci per desa turunan sesuai group aktif.',
+                'filter_context' => $this->buildFilterContext($dashboardContext),
+            ],
+        ];
     }
 
     /**
@@ -499,7 +598,7 @@ class BuildRoleAwareDashboardBlocksUseCase
         ];
 
         $desaBreakdown = collect(
-            $this->dashboardDocumentCoverageRepository->buildGroupBreakdownByDesa($user, $sourceModules)
+            $this->dashboardGroupCoverageRepository->buildBreakdownByDesaForModules($user, $sourceModules)
         )->values();
 
         $coverageItems = $desaBreakdown

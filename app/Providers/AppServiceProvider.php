@@ -94,6 +94,8 @@ use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkReposito
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepository;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepository;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Observers\InvalidateDashboardDocumentCacheObserver;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
@@ -307,6 +309,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             DashboardDocumentCoverageRepositoryInterface::class,
             DashboardDocumentCoverageRepository::class
+        );
+
+        $this->app->bind(
+            DashboardGroupCoverageRepositoryInterface::class,
+            DashboardGroupCoverageRepository::class
         );
     }
 

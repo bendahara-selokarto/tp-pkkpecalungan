@@ -24,6 +24,8 @@ class DashboardDocumentCoverageTest extends TestCase
         Role::create(['name' => 'admin-kecamatan']);
         Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
     }
 
     public function test_dashboard_coverage_dokumen_pengguna_desa_hanya_menghitung_data_desanya_sendiri(): void
@@ -313,6 +315,145 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ! in_array('Sidomukti', $labels, true)
                         && ($totalsByLabel['Gombong'] ?? null) === 1
                         && ($totalsByLabel['Bandung'] ?? null) === 1;
+                });
+        });
+    }
+
+    public function test_dashboard_role_desa_pokja_hanya_melihat_blok_pokja_sendiri(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $user->assignRole('desa-pokja-i');
+
+        $this->createActivity($user, 'desa', $desa->id, 'Aktivitas Pokja I');
+        $this->createDataWarga($user, 'desa', $desa->id, 'Kepala Pokja I');
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    $groups = $collected
+                        ->map(static fn (array $block): string => (string) ($block['group'] ?? ''))
+                        ->unique()
+                        ->values()
+                        ->all();
+                    $block = $collected->first();
+
+                    return count($groups) === 1
+                        && $groups === ['pokja-i']
+                        && is_array($block)
+                        && ($block['section'] ?? null) === null
+                        && ($block['sources']['source_scope'] ?? null) === 'desa';
+                });
+        });
+    }
+
+    public function test_dashboard_role_kecamatan_pokja_menggunakan_breakdown_per_desa_dan_anti_data_leak(): void
+    {
+        $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
+        $desaA1 = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatanA->id]);
+        $desaA2 = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatanA->id]);
+        $desaB1 = Area::create(['name' => 'Sidomukti', 'level' => 'desa', 'parent_id' => $kecamatanB->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatanA->id,
+        ]);
+        $user->assignRole('kecamatan-pokja-i');
+
+        $this->createDataWarga($user, 'desa', $desaA1->id, 'Kepala A1');
+        $this->createDataWarga($user, 'desa', $desaA2->id, 'Kepala A2');
+        $this->createDataWarga($user, 'desa', $desaA2->id, 'Kepala A2-2');
+        $this->createDataWarga($user, 'desa', $desaB1->id, 'Kepala B1');
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $collected = collect($blocks);
+                    $block = $collected->first();
+
+                    if (! is_array($block)) {
+                        return false;
+                    }
+
+                    $items = collect($block['charts']['coverage_per_module']['items'] ?? []);
+                    $labels = $items->pluck('label')->all();
+                    $totalsByLabel = $items->mapWithKeys(
+                        static fn (array $item): array => [(string) ($item['label'] ?? '-') => (int) ($item['total'] ?? 0)]
+                    );
+
+                    return $collected->count() === 1
+                        && ($block['group'] ?? null) === 'pokja-i'
+                        && ($block['charts']['coverage_per_module']['dimension'] ?? null) === 'desa'
+                        && ($block['sources']['source_area_type'] ?? null) === 'desa-turunan'
+                        && in_array('Gombong', $labels, true)
+                        && in_array('Bandung', $labels, true)
+                        && ! in_array('Sidomukti', $labels, true)
+                        && ($totalsByLabel['Gombong'] ?? null) === 1
+                        && ($totalsByLabel['Bandung'] ?? null) === 2;
+                });
+        });
+    }
+
+    public function test_dashboard_query_filter_mengubah_filter_context_dan_mode_sub_level_tetap_stabil(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatan->id,
+        ]);
+        $user->assignRole('kecamatan-pokja-i');
+
+        $levelResponse = $this->actingAs($user)->get(route('dashboard', [
+            'mode' => 'by-level',
+            'level' => 'desa',
+        ]));
+
+        $levelResponse->assertOk();
+        $levelResponse->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $first = collect($blocks)->first();
+
+                    return is_array($first)
+                        && ($first['sources']['filter_context']['mode'] ?? null) === 'by-level'
+                        && ($first['sources']['filter_context']['level'] ?? null) === 'desa'
+                        && ($first['sources']['filter_context']['sub_level'] ?? null) === 'all';
+                });
+        });
+
+        $subLevelResponse = $this->actingAs($user)->get(route('dashboard', [
+            'mode' => 'by-sub-level',
+            'sub_level' => 'desa-gombong',
+        ]));
+
+        $subLevelResponse->assertOk();
+        $subLevelResponse->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $first = collect($blocks)->first();
+
+                    return is_array($first)
+                        && ($first['sources']['filter_context']['mode'] ?? null) === 'by-sub-level'
+                        && ($first['sources']['filter_context']['sub_level'] ?? null) === 'desa-gombong';
                 });
         });
     }

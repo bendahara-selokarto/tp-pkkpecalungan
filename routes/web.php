@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UiRuntimeErrorLogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
 use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
@@ -114,6 +115,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::post('/ui/runtime-errors', UiRuntimeErrorLogController::class)
+        ->middleware('throttle:20,1')
+        ->name('ui.runtime-errors.store');
 });
 
 Route::middleware(['auth', 'role:super-admin'])
