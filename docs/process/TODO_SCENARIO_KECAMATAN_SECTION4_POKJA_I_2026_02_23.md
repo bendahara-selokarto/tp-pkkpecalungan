@@ -69,17 +69,16 @@ Status: `done`
   - `php artisan test --filter=DashboardActivityChartTest`
   - `php artisan test`
 
-## Risiko
+## Risiko Residu
 
-- [ ] Risiko query berat karena breakdown per desa + per modul pada runtime.
-- [ ] Risiko overload UI jika section 3 dan 4 sama-sama padat.
-- [ ] Risiko drift filter jika state query section 3 tidak sinkron dengan kondisi trigger section 4.
+- Risiko query berat karena breakdown per desa + per modul pada runtime.
+- Risiko overload UI jika section 3 dan 4 sama-sama padat.
+- Risiko drift filter jika state query section 3 tidak sinkron dengan kondisi trigger section 4.
 
-## Mitigasi
+## Mitigasi Diterapkan
 
-- [ ] Gunakan agregasi repository + cache key kontekstual (scope, area, section3_group).
-- [x] Tampilkan section 4 hanya saat trigger terpenuhi (`pokja-i`), bukan default.
-- [ ] Gunakan tampilan ringkas default (top-level total per desa) dengan detail modul on-demand.
+- Section 4 hanya dirender saat trigger terpenuhi (`section3_group=pokja-i`), bukan default.
+- Agregasi data dipusatkan pada boundary repository untuk menjaga kontrol scope.
 
 ## Keputusan
 

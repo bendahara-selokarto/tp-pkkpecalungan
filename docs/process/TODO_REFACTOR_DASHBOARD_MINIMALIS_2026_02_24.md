@@ -1,7 +1,7 @@
 # TODO Refactor Dashboard Minimalis 2026-02-24
 
 Tanggal: 2026-02-24  
-Status: `planned`
+Status: `in-progress`
 
 ## Konteks
 

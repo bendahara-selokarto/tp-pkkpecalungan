@@ -730,3 +730,21 @@ Keputusan:
 
 Status:
 - `PASS` untuk doc-hardening pending TODO dashboard.
+
+## Doc-Hardening Pending TODO Dashboard (Pass-2): 2026-02-24
+
+Ruang lingkup:
+- Menyelesaikan sinkronisasi status TODO dashboard yang masih `planned` padahal sebagian langkah sudah dieksekusi.
+- Menormalkan checklist residual pada concern yang sudah `done` agar tidak tercatat sebagai pending stale.
+
+Artefak:
+- `docs/process/TODO_SCENARIO_KECAMATAN_SECTION4_POKJA_I_2026_02_23.md`
+- `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
+- `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
+
+Keputusan:
+- TODO `section 4` tetap `done`; item risiko/mitigasi residual diubah menjadi catatan non-checklist agar tidak menjadi false pending.
+- TODO `refactor dashboard minimalis` dan `refactor dashboard lintas role` dinaikkan status ke `in-progress` karena sebagian task hardening sudah selesai.
+
+Status:
+- `PASS` untuk sinkronisasi status dan penutupan stale pending pass-2.
