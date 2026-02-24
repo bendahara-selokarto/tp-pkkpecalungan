@@ -33,7 +33,7 @@
   - status: verifikasi visual header selesai, lanjut matrix mapping field.
 - [ ] Fase 2: `Buku Rencana Program`, `Buku Kader Khusus`, `Buku Prestasi`.
   - `docs/process/TODO_IMPLEMENTASI_AUTENTIK_BUKU_PROGRAM_KERJA_2026_02_24.md`
-  - status: verifikasi visual header selesai untuk `Buku Rencana Program`, `Buku Kader Khusus`, dan `Buku Prestasi`; lanjut matrix mapping field.
+  - status: implementasi `Buku Rencana Program` selesai (jadwal bulanan 12 kolom + PDF autentik), `Buku Kader Khusus` dan `Buku Prestasi` lanjut matrix mapping field.
 - [ ] Fase 3: `Buku Inventaris`, `Buku Anggota Pokja`, `BukuKelompok Simulasi`.
   - `docs/process/TODO_IMPLEMENTASI_AUTENTIK_BUKU_BANTU_LANJUTAN_2026_02_24.md`
   - status: verifikasi visual header selesai untuk 5 sheet lanjutan BUKU BANTU; lanjut matrix mapping field.

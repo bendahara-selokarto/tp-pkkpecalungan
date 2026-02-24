@@ -40,23 +40,23 @@
 ## Langkah Eksekusi
 - [x] Verifikasi visual header `Buku Program Kerja` selesai.
 - [x] Peta header final terkunci sampai grup subkolom.
-- [ ] Tetapkan matrix mapping kolom autentik -> field canonical:
-  - jadwal bulan 1..12 ke field storage baru/canonical.
-  - normalisasi label `APB/SWL/Ban` terhadap kontrak field backend.
-- [ ] Susun rencana migrasi skema minimal:
-  - opsi A: tambah 12 kolom boolean bulanan.
-  - opsi B: normalisasi jadwal ke tabel detail relasional.
-- [ ] Audit dampak lintas layer:
+- [x] Tetapkan matrix mapping kolom autentik -> field canonical:
+  - jadwal bulan 1..12 -> `jadwal_bulan_1` s.d. `jadwal_bulan_12`.
+  - label autentik `APB/SWL/Ban` dipetakan ke field canonical backend `sumber_dana_apbd/sumber_dana_swd/sumber_dana_bant`.
+- [x] Susun rencana migrasi skema minimal:
+  - opsi A dipilih: tambah 12 kolom boolean bulanan pada tabel `program_prioritas`.
+  - opsi B (normalisasi tabel detail jadwal) ditunda untuk fase lanjutan.
+- [x] Audit dampak lintas layer:
   - request + DTO + action + repository.
   - UI form/list/show + PDF report.
   - seeder/factory + test feature/policy/scope.
-- [ ] Definisikan fallback plan teknis untuk kompatibilitas data lama (`jadwal_i..iv`).
+- [x] Definisikan fallback plan teknis untuk kompatibilitas data lama (`jadwal_i..iv`).
 
 ## Validasi
 - [x] Bukti visual header valid tersedia.
 - [x] Tidak ada ambigu jumlah kolom pada header autentik (22 kolom).
-- [ ] Keputusan model data jadwal bulanan disetujui.
-- [ ] Rencana test executable sebelum patch implementasi.
+- [x] Keputusan model data jadwal bulanan disetujui.
+- [x] Rencana test executable sebelum patch implementasi.
 
 ## Risiko
 - Migrasi jadwal 4 -> 12 kolom berisiko memengaruhi data existing dan report PDF.
@@ -65,4 +65,4 @@
 ## Keputusan
 - [x] Screenshot user sesi 2026-02-24 dikunci sebagai bukti resmi kontrak header `Buku Program Kerja`.
 - [x] Concern dinyatakan `siap sinkronisasi kontrak header`.
-- [x] Implementasi ditahan sampai keputusan mapping jadwal bulanan disepakati.
+- [x] Implementasi jadwal bulanan 12 kolom dieksekusi dengan kompatibilitas data lama (`jadwal_i..iv`) tetap aktif.

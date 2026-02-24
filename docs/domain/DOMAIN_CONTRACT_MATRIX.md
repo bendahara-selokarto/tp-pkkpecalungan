@@ -73,6 +73,8 @@ Aturan baca:
   - `database/migrations/2026_02_21_024000_create_kejar_pakets_table.php`
   - `database/migrations/2026_02_21_025000_create_posyandus_table.php`
   - `database/migrations/2026_02_20_230000_create_simulasi_penyuluhans_table.php`
+  - `database/migrations/2026_02_20_200000_create_program_prioritas_table.php`
+  - `database/migrations/2026_02_24_180000_add_jadwal_bulanan_columns_to_program_prioritas_table.php`
 - Catatan keluarga rekap source:
   - `app/Domains/Wilayah/CatatanKeluarga/Repositories/CatatanKeluargaRepository.php`
   - `docs/domain/CATATAN_KELUARGA_19_TO_10_MAPPING.md`
