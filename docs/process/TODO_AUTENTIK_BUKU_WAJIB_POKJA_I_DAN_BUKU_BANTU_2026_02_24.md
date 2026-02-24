@@ -30,11 +30,14 @@
   - `docs/process/TODO_IMPLEMENTASI_AUTENTIK_BUKU_KEGIATAN_2026_02_24.md`
 - [ ] Fase 1B: `BUKU BANTU - Buku Bantuan`:
   - `docs/process/TODO_IMPLEMENTASI_AUTENTIK_BUKU_BANTUAN_2026_02_24.md`
+  - status: verifikasi visual header selesai, lanjut matrix mapping field.
 - [ ] Fase 2: `Buku Rencana Program`, `Buku Kader Khusus`, `Buku Prestasi`.
 - [ ] Fase 3: `Buku Inventaris`, `Buku Anggota Pokja`, `BukuKelompok Simulasi`.
 
 ## Langkah Eksekusi
 - [x] Inventarisasi struktur workbook (sheet list + merge ranges) untuk kedua file autentik.
+- [x] Verifikasi visual header tabel untuk `BUKU BANTU.xlsx` sheet `Buku Bantuan`.
+- [x] Tetapkan peta header final sheet `Buku Bantuan` (termasuk merge `JENIS BANTUAN -> UANG/BARANG`).
 - [ ] Verifikasi visual header tabel untuk setiap sheet prioritas (wajib bukti screenshot header utuh).
 - [ ] Tetapkan peta header final per sheet: urutan kolom, merge horizontal/vertikal, label header final.
 - [ ] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet.
@@ -44,6 +47,7 @@
 
 ## Validasi
 - [x] Pembacaan text-layer Excel (via XML workbook) berhasil untuk dua file autentik.
+- [x] Bukti visual + peta merge header tervalidasi untuk sheet `Buku Bantuan`.
 - [ ] Bukti visual header tabel tersedia dan memenuhi kriteria validasi (header utuh, garis sel terlihat, label terbaca).
 - [ ] Tidak ada ambigu mapping untuk kolom yang akan dipakai implementasi.
 - [ ] Rencana patch per concern terdokumentasi dengan fallback plan teknis.
