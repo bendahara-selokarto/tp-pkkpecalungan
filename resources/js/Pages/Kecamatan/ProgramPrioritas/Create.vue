@@ -5,15 +5,17 @@ import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineW
 import { Link, useForm } from '@inertiajs/vue3'
 import { mdiClipboardList } from '@mdi/js'
 
+const JADWAL_BULAN_OPTIONS = Array.from({ length: 12 }, (_, index) => {
+  const month = index + 1
+  return { key: `jadwal_bulan_${month}`, label: String(month) }
+})
+
 const form = useForm({
   program: '',
   prioritas_program: '',
   kegiatan: '',
   sasaran_target: '',
-  jadwal_i: false,
-  jadwal_ii: false,
-  jadwal_iii: false,
-  jadwal_iv: false,
+  ...Object.fromEntries(JADWAL_BULAN_OPTIONS.map(({ key }) => [key, false])),
   sumber_dana_pusat: false,
   sumber_dana_apbd: false,
   sumber_dana_swd: false,
@@ -60,22 +62,26 @@ const submit = () => {
         <div class="grid gap-5 md:grid-cols-2">
           <div>
             <p class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Jadwal Waktu</p>
-            <div class="grid grid-cols-2 gap-2 rounded-md border border-gray-200 p-3 dark:border-slate-700">
-              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.jadwal_i" type="checkbox"> I</label>
-              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.jadwal_ii" type="checkbox"> II</label>
-              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.jadwal_iii" type="checkbox"> III</label>
-              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.jadwal_iv" type="checkbox"> IV</label>
+            <div class="grid grid-cols-4 gap-2 rounded-md border border-gray-200 p-3 dark:border-slate-700">
+              <label
+                v-for="option in JADWAL_BULAN_OPTIONS"
+                :key="option.key"
+                class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"
+              >
+                <input v-model="form[option.key]" type="checkbox">
+                {{ option.label }}
+              </label>
             </div>
-            <p v-if="form.errors.jadwal_i" class="mt-1 text-xs text-rose-600">{{ form.errors.jadwal_i }}</p>
+            <p v-if="form.errors.jadwal_bulan_1" class="mt-1 text-xs text-rose-600">{{ form.errors.jadwal_bulan_1 }}</p>
           </div>
 
           <div>
             <p class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">Sumber Dana</p>
             <div class="grid grid-cols-2 gap-2 rounded-md border border-gray-200 p-3 dark:border-slate-700">
               <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.sumber_dana_pusat" type="checkbox"> Pusat</label>
-              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.sumber_dana_apbd" type="checkbox"> APBD</label>
-              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.sumber_dana_swd" type="checkbox"> SWD</label>
-              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.sumber_dana_bant" type="checkbox"> Bant</label>
+              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.sumber_dana_apbd" type="checkbox"> APB</label>
+              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.sumber_dana_swd" type="checkbox"> SWL</label>
+              <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300"><input v-model="form.sumber_dana_bant" type="checkbox"> Ban</label>
             </div>
             <p v-if="form.errors.sumber_dana_pusat" class="mt-1 text-xs text-rose-600">{{ form.errors.sumber_dana_pusat }}</p>
           </div>

@@ -301,12 +301,11 @@ class WilayahMissingDomainSeeder extends Seeder
         ];
 
         for ($i = 1; $i <= $count; $i++) {
-            $jadwalFlags = $this->atLeastOneTrue([
-                'jadwal_i',
-                'jadwal_ii',
-                'jadwal_iii',
-                'jadwal_iv',
-            ]);
+            $monthlyJadwalFlags = $this->atLeastOneTrue(array_map(
+                static fn (int $month): string => "jadwal_bulan_{$month}",
+                range(1, 12)
+            ));
+            $quarterJadwalFlags = $this->deriveQuarterFlagsFromMonthly($monthlyJadwalFlags);
             $sumberDanaFlags = $this->atLeastOneTrue([
                 'sumber_dana_pusat',
                 'sumber_dana_apbd',
@@ -319,10 +318,22 @@ class WilayahMissingDomainSeeder extends Seeder
                 'prioritas_program' => $faker->randomElement($prioritasList),
                 'kegiatan' => $faker->sentence(14),
                 'sasaran_target' => $faker->sentence(10),
-                'jadwal_i' => $jadwalFlags['jadwal_i'],
-                'jadwal_ii' => $jadwalFlags['jadwal_ii'],
-                'jadwal_iii' => $jadwalFlags['jadwal_iii'],
-                'jadwal_iv' => $jadwalFlags['jadwal_iv'],
+                'jadwal_bulan_1' => $monthlyJadwalFlags['jadwal_bulan_1'],
+                'jadwal_bulan_2' => $monthlyJadwalFlags['jadwal_bulan_2'],
+                'jadwal_bulan_3' => $monthlyJadwalFlags['jadwal_bulan_3'],
+                'jadwal_bulan_4' => $monthlyJadwalFlags['jadwal_bulan_4'],
+                'jadwal_bulan_5' => $monthlyJadwalFlags['jadwal_bulan_5'],
+                'jadwal_bulan_6' => $monthlyJadwalFlags['jadwal_bulan_6'],
+                'jadwal_bulan_7' => $monthlyJadwalFlags['jadwal_bulan_7'],
+                'jadwal_bulan_8' => $monthlyJadwalFlags['jadwal_bulan_8'],
+                'jadwal_bulan_9' => $monthlyJadwalFlags['jadwal_bulan_9'],
+                'jadwal_bulan_10' => $monthlyJadwalFlags['jadwal_bulan_10'],
+                'jadwal_bulan_11' => $monthlyJadwalFlags['jadwal_bulan_11'],
+                'jadwal_bulan_12' => $monthlyJadwalFlags['jadwal_bulan_12'],
+                'jadwal_i' => $quarterJadwalFlags['jadwal_i'],
+                'jadwal_ii' => $quarterJadwalFlags['jadwal_ii'],
+                'jadwal_iii' => $quarterJadwalFlags['jadwal_iii'],
+                'jadwal_iv' => $quarterJadwalFlags['jadwal_iv'],
                 'sumber_dana_pusat' => $sumberDanaFlags['sumber_dana_pusat'],
                 'sumber_dana_apbd' => $sumberDanaFlags['sumber_dana_apbd'],
                 'sumber_dana_swd' => $sumberDanaFlags['sumber_dana_swd'],
@@ -337,6 +348,28 @@ class WilayahMissingDomainSeeder extends Seeder
         }
 
         DB::table('program_prioritas')->insert($rows);
+    }
+
+    /**
+     * @param  array<string, bool>  $monthlyFlags
+     * @return array{jadwal_i: bool, jadwal_ii: bool, jadwal_iii: bool, jadwal_iv: bool}
+     */
+    private function deriveQuarterFlagsFromMonthly(array $monthlyFlags): array
+    {
+        return [
+            'jadwal_i' => ($monthlyFlags['jadwal_bulan_1'] ?? false)
+                || ($monthlyFlags['jadwal_bulan_2'] ?? false)
+                || ($monthlyFlags['jadwal_bulan_3'] ?? false),
+            'jadwal_ii' => ($monthlyFlags['jadwal_bulan_4'] ?? false)
+                || ($monthlyFlags['jadwal_bulan_5'] ?? false)
+                || ($monthlyFlags['jadwal_bulan_6'] ?? false),
+            'jadwal_iii' => ($monthlyFlags['jadwal_bulan_7'] ?? false)
+                || ($monthlyFlags['jadwal_bulan_8'] ?? false)
+                || ($monthlyFlags['jadwal_bulan_9'] ?? false),
+            'jadwal_iv' => ($monthlyFlags['jadwal_bulan_10'] ?? false)
+                || ($monthlyFlags['jadwal_bulan_11'] ?? false)
+                || ($monthlyFlags['jadwal_bulan_12'] ?? false),
+        ];
     }
 
     private function seedPilotProjectKeluargaSehat(\Faker\Generator $faker, array $context): void

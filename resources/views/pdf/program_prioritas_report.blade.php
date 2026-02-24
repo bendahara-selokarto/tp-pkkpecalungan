@@ -52,7 +52,7 @@
         $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
     @endphp
 
-    <div class="title">Laporan Program Prioritas {{ $levelLabel }}</div>
+    <div class="title">BUKU PROGRAM KERJA {{ $levelLabel }}</div>
 
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
@@ -64,23 +64,31 @@
         <thead>
             <tr>
                 <th rowspan="2" style="width: 28px;">NO</th>
-                <th rowspan="2" style="width: 80px;">PROGRAM</th>
-                <th rowspan="2" style="width: 92px;">PRIORITAS PROGRAM</th>
-                <th rowspan="2" style="width: 88px;">KEGIATAN</th>
-                <th rowspan="2" style="width: 88px;">SASARAN TARGET</th>
-                <th colspan="4" style="width: 120px;">JADWAL WAKTU</th>
-                <th colspan="4" style="width: 120px;">SUMBER DANA</th>
-                <th rowspan="2" style="width: 64px;">KET</th>
+                <th rowspan="2" style="width: 72px;">PROGRAM</th>
+                <th rowspan="2" style="width: 80px;">PRIORITAS PROGRAM</th>
+                <th rowspan="2" style="width: 76px;">KEGIATAN</th>
+                <th rowspan="2" style="width: 70px;">SASARAN TARGET</th>
+                <th colspan="12" style="width: 204px;">JADWAL WAKTU</th>
+                <th colspan="4" style="width: 72px;">SUMBER DANA</th>
+                <th rowspan="2" style="width: 48px;">KET</th>
             </tr>
             <tr>
-                <th style="width: 30px;">I</th>
-                <th style="width: 30px;">II</th>
-                <th style="width: 30px;">III</th>
-                <th style="width: 30px;">IV</th>
-                <th style="width: 30px;">Pusat</th>
-                <th style="width: 30px;">APBD</th>
-                <th style="width: 30px;">SWD</th>
-                <th style="width: 30px;">Bant</th>
+                <th style="width: 17px;">1</th>
+                <th style="width: 17px;">2</th>
+                <th style="width: 17px;">3</th>
+                <th style="width: 17px;">4</th>
+                <th style="width: 17px;">5</th>
+                <th style="width: 17px;">6</th>
+                <th style="width: 17px;">7</th>
+                <th style="width: 17px;">8</th>
+                <th style="width: 17px;">9</th>
+                <th style="width: 17px;">10</th>
+                <th style="width: 17px;">11</th>
+                <th style="width: 17px;">12</th>
+                <th style="width: 18px;">Pus</th>
+                <th style="width: 18px;">APB</th>
+                <th style="width: 18px;">SWL</th>
+                <th style="width: 18px;">Ban</th>
             </tr>
         </thead>
         <tbody>
@@ -91,10 +99,18 @@
                     <td>{{ $item->prioritas_program }}</td>
                     <td>{{ $item->kegiatan }}</td>
                     <td>{{ $item->sasaran_target }}</td>
-                    <td class="center">{{ $item->jadwal_i ? 'v' : '-' }}</td>
-                    <td class="center">{{ $item->jadwal_ii ? 'v' : '-' }}</td>
-                    <td class="center">{{ $item->jadwal_iii ? 'v' : '-' }}</td>
-                    <td class="center">{{ $item->jadwal_iv ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_1 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_2 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_3 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_4 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_5 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_6 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_7 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_8 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_9 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_10 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_11 ? 'v' : '-' }}</td>
+                    <td class="center">{{ $item->jadwal_bulan_12 ? 'v' : '-' }}</td>
                     <td class="center">{{ $item->sumber_dana_pusat ? 'v' : '-' }}</td>
                     <td class="center">{{ $item->sumber_dana_apbd ? 'v' : '-' }}</td>
                     <td class="center">{{ $item->sumber_dana_swd ? 'v' : '-' }}</td>
@@ -103,7 +119,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="14" class="center">Data belum tersedia.</td>
+                    <td colspan="22" class="center">Data belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>

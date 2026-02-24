@@ -14,6 +14,11 @@ defineProps({
   },
 })
 
+const JADWAL_BULAN_OPTIONS = Array.from({ length: 12 }, (_, index) => {
+  const month = index + 1
+  return { key: `jadwal_bulan_${month}`, label: String(month) }
+})
+
 
 const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data program prioritas ini?'
 const isDeleteModalActive = ref(false)
@@ -43,20 +48,26 @@ const cancelDelete = () => {
 }
 
 const formatJadwal = (item) => {
-  const jadwal = []
-  if (item.jadwal_i) jadwal.push('I')
-  if (item.jadwal_ii) jadwal.push('II')
-  if (item.jadwal_iii) jadwal.push('III')
-  if (item.jadwal_iv) jadwal.push('IV')
+  const jadwal = JADWAL_BULAN_OPTIONS
+    .filter(({ key }) => item[key])
+    .map(({ label }) => label)
+
+  if (jadwal.length === 0) {
+    if (item.jadwal_i) jadwal.push('1', '2', '3')
+    if (item.jadwal_ii) jadwal.push('4', '5', '6')
+    if (item.jadwal_iii) jadwal.push('7', '8', '9')
+    if (item.jadwal_iv) jadwal.push('10', '11', '12')
+  }
+
   return jadwal.join(', ') || '-'
 }
 
 const formatDana = (item) => {
   const dana = []
   if (item.sumber_dana_pusat) dana.push('Pusat')
-  if (item.sumber_dana_apbd) dana.push('APBD')
-  if (item.sumber_dana_swd) dana.push('SWD')
-  if (item.sumber_dana_bant) dana.push('Bant')
+  if (item.sumber_dana_apbd) dana.push('APB')
+  if (item.sumber_dana_swd) dana.push('SWL')
+  if (item.sumber_dana_bant) dana.push('Ban')
   return dana.join(', ') || '-'
 }
 </script>
@@ -94,7 +105,7 @@ const formatDana = (item) => {
               <th class="px-3 py-3 font-semibold">Prioritas</th>
               <th class="px-3 py-3 font-semibold">Kegiatan</th>
               <th class="px-3 py-3 font-semibold">Sasaran</th>
-              <th class="px-3 py-3 font-semibold">Jadwal</th>
+              <th class="px-3 py-3 font-semibold">Jadwal Bulan</th>
               <th class="px-3 py-3 font-semibold">Sumber Dana</th>
               <th class="px-3 py-3 font-semibold">Keterangan</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>

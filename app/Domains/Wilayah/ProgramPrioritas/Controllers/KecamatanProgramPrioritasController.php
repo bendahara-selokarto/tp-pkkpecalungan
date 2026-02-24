@@ -34,22 +34,7 @@ class KecamatanProgramPrioritasController extends Controller
         $items = $this->listScopedProgramPrioritasUseCase->execute(ScopeLevel::KECAMATAN->value);
 
         return Inertia::render('Kecamatan/ProgramPrioritas/Index', [
-            'programPrioritas' => $items->values()->map(fn (ProgramPrioritas $item) => [
-                'id' => $item->id,
-                'program' => $item->program,
-                'prioritas_program' => $item->prioritas_program,
-                'kegiatan' => $item->kegiatan,
-                'sasaran_target' => $item->sasaran_target,
-                'jadwal_i' => (bool) $item->jadwal_i,
-                'jadwal_ii' => (bool) $item->jadwal_ii,
-                'jadwal_iii' => (bool) $item->jadwal_iii,
-                'jadwal_iv' => (bool) $item->jadwal_iv,
-                'sumber_dana_pusat' => (bool) $item->sumber_dana_pusat,
-                'sumber_dana_apbd' => (bool) $item->sumber_dana_apbd,
-                'sumber_dana_swd' => (bool) $item->sumber_dana_swd,
-                'sumber_dana_bant' => (bool) $item->sumber_dana_bant,
-                'keterangan' => $item->keterangan,
-            ]),
+            'programPrioritas' => $items->values()->map(fn (ProgramPrioritas $item) => $this->serializeProgramPrioritas($item)),
         ]);
     }
 
@@ -74,22 +59,7 @@ class KecamatanProgramPrioritasController extends Controller
         $this->authorize('view', $programPrioritas);
 
         return Inertia::render('Kecamatan/ProgramPrioritas/Show', [
-            'programPrioritas' => [
-                'id' => $programPrioritas->id,
-                'program' => $programPrioritas->program,
-                'prioritas_program' => $programPrioritas->prioritas_program,
-                'kegiatan' => $programPrioritas->kegiatan,
-                'sasaran_target' => $programPrioritas->sasaran_target,
-                'jadwal_i' => (bool) $programPrioritas->jadwal_i,
-                'jadwal_ii' => (bool) $programPrioritas->jadwal_ii,
-                'jadwal_iii' => (bool) $programPrioritas->jadwal_iii,
-                'jadwal_iv' => (bool) $programPrioritas->jadwal_iv,
-                'sumber_dana_pusat' => (bool) $programPrioritas->sumber_dana_pusat,
-                'sumber_dana_apbd' => (bool) $programPrioritas->sumber_dana_apbd,
-                'sumber_dana_swd' => (bool) $programPrioritas->sumber_dana_swd,
-                'sumber_dana_bant' => (bool) $programPrioritas->sumber_dana_bant,
-                'keterangan' => $programPrioritas->keterangan,
-            ],
+            'programPrioritas' => $this->serializeProgramPrioritas($programPrioritas),
         ]);
     }
 
@@ -99,22 +69,7 @@ class KecamatanProgramPrioritasController extends Controller
         $this->authorize('update', $programPrioritas);
 
         return Inertia::render('Kecamatan/ProgramPrioritas/Edit', [
-            'programPrioritas' => [
-                'id' => $programPrioritas->id,
-                'program' => $programPrioritas->program,
-                'prioritas_program' => $programPrioritas->prioritas_program,
-                'kegiatan' => $programPrioritas->kegiatan,
-                'sasaran_target' => $programPrioritas->sasaran_target,
-                'jadwal_i' => (bool) $programPrioritas->jadwal_i,
-                'jadwal_ii' => (bool) $programPrioritas->jadwal_ii,
-                'jadwal_iii' => (bool) $programPrioritas->jadwal_iii,
-                'jadwal_iv' => (bool) $programPrioritas->jadwal_iv,
-                'sumber_dana_pusat' => (bool) $programPrioritas->sumber_dana_pusat,
-                'sumber_dana_apbd' => (bool) $programPrioritas->sumber_dana_apbd,
-                'sumber_dana_swd' => (bool) $programPrioritas->sumber_dana_swd,
-                'sumber_dana_bant' => (bool) $programPrioritas->sumber_dana_bant,
-                'keterangan' => $programPrioritas->keterangan,
-            ],
+            'programPrioritas' => $this->serializeProgramPrioritas($programPrioritas),
         ]);
     }
 
@@ -134,5 +89,40 @@ class KecamatanProgramPrioritasController extends Controller
         $this->programPrioritasRepository->delete($programPrioritas);
 
         return redirect()->route('kecamatan.program-prioritas.index')->with('success', 'Data program prioritas berhasil dihapus');
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function serializeProgramPrioritas(ProgramPrioritas $item): array
+    {
+        return [
+            'id' => $item->id,
+            'program' => $item->program,
+            'prioritas_program' => $item->prioritas_program,
+            'kegiatan' => $item->kegiatan,
+            'sasaran_target' => $item->sasaran_target,
+            'jadwal_bulan_1' => (bool) $item->jadwal_bulan_1,
+            'jadwal_bulan_2' => (bool) $item->jadwal_bulan_2,
+            'jadwal_bulan_3' => (bool) $item->jadwal_bulan_3,
+            'jadwal_bulan_4' => (bool) $item->jadwal_bulan_4,
+            'jadwal_bulan_5' => (bool) $item->jadwal_bulan_5,
+            'jadwal_bulan_6' => (bool) $item->jadwal_bulan_6,
+            'jadwal_bulan_7' => (bool) $item->jadwal_bulan_7,
+            'jadwal_bulan_8' => (bool) $item->jadwal_bulan_8,
+            'jadwal_bulan_9' => (bool) $item->jadwal_bulan_9,
+            'jadwal_bulan_10' => (bool) $item->jadwal_bulan_10,
+            'jadwal_bulan_11' => (bool) $item->jadwal_bulan_11,
+            'jadwal_bulan_12' => (bool) $item->jadwal_bulan_12,
+            'jadwal_i' => (bool) $item->jadwal_i,
+            'jadwal_ii' => (bool) $item->jadwal_ii,
+            'jadwal_iii' => (bool) $item->jadwal_iii,
+            'jadwal_iv' => (bool) $item->jadwal_iv,
+            'sumber_dana_pusat' => (bool) $item->sumber_dana_pusat,
+            'sumber_dana_apbd' => (bool) $item->sumber_dana_apbd,
+            'sumber_dana_swd' => (bool) $item->sumber_dana_swd,
+            'sumber_dana_bant' => (bool) $item->sumber_dana_bant,
+            'keterangan' => $item->keterangan,
+        ];
     }
 }
