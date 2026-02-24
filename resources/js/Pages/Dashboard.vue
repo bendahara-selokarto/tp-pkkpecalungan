@@ -443,6 +443,12 @@ const humanizeLabel = (value) => String(value ?? '')
   .replace(/\b\w/g, (char) => char.toUpperCase())
 
 const toNumber = (value) => Number(value ?? 0)
+const formatPieAbsoluteValue = (_value, options) => {
+  const seriesIndex = toNumber(options?.seriesIndex)
+  const seriesValue = toNumber(options?.w?.config?.series?.[seriesIndex] ?? 0)
+
+  return seriesValue.toLocaleString('id-ID')
+}
 
 const buildSingleDataset = (labels, values, backgroundColor) => ({
   labels,
@@ -708,7 +714,7 @@ const isKecamatanSekretarisSection1Block = (block) =>
 const shouldShowActivityByDesaChart = (block) =>
   isKecamatanSekretarisSection1Block(block)
 
-const buildActivityByDesaMultiAxisSeries = (block) => {
+const resolveActivityByDesaMetrics = (block) => {
   const labels = block?.charts?.by_desa?.labels ?? []
   const activityValues = (block?.charts?.by_desa?.values ?? []).map((value) => toNumber(value))
   const totalBookValues = (block?.charts?.by_desa?.books_total ?? []).map((value) => toNumber(value))
@@ -717,30 +723,70 @@ const buildActivityByDesaMultiAxisSeries = (block) => {
   const syncedTotalBookValues = labels.map((_, index) => toNumber(totalBookValues[index] ?? 0))
   const syncedFilledBookValues = labels.map((_, index) => toNumber(filledBookValues[index] ?? 0))
 
-  return [
-    {
-      name: 'Kegiatan',
-      type: 'bar',
-      yAxisIndex: 0,
-      data: syncedActivityValues,
+  return {
+    labels,
+    syncedActivityValues,
+    syncedTotalBookValues,
+    syncedFilledBookValues,
+  }
+}
+
+const buildActivityByDesaKegiatanSeries = (block) => {
+  const { syncedActivityValues } = resolveActivityByDesaMetrics(block)
+
+  return syncedActivityValues
+}
+
+const buildActivityByDesaKegiatanOptions = (block) => {
+  const { labels } = resolveActivityByDesaMetrics(block)
+
+  return {
+    chart: {
+      type: 'pie',
+      toolbar: {
+        show: false,
+      },
+      animations: {
+        enabled: true,
+      },
     },
+    labels,
+    colors: ['#06b6d4', '#f97316', '#ef4444', '#22c55e', '#a855f7', '#eab308', '#0f766e', '#db2777', '#1d4ed8', '#65a30d'],
+    dataLabels: {
+      enabled: true,
+      formatter: formatPieAbsoluteValue,
+    },
+    legend: {
+      show: true,
+      position: 'bottom',
+    },
+    noData: {
+      text: 'Belum ada data',
+      align: 'center',
+      verticalAlign: 'middle',
+    },
+  }
+}
+
+const buildActivityByDesaBookCoverageSeries = (block) => {
+  const { syncedTotalBookValues, syncedFilledBookValues } = resolveActivityByDesaMetrics(block)
+
+  return [
     {
       name: 'Jumlah Buku',
       type: 'bar',
-      yAxisIndex: 1,
       data: syncedTotalBookValues,
     },
     {
       name: 'Buku Terisi',
       type: 'bar',
-      yAxisIndex: 1,
       data: syncedFilledBookValues,
     },
   ]
 }
 
-const buildActivityByDesaMultiAxisOptions = (block) => {
-  const labels = block?.charts?.by_desa?.labels ?? []
+const buildActivityByDesaBookCoverageOptions = (block) => {
+  const { labels } = resolveActivityByDesaMetrics(block)
   const axisLabelStyles = {
     colors: labels.map(() => '#64748b'),
     fontSize: '11px',
@@ -756,9 +802,6 @@ const buildActivityByDesaMultiAxisOptions = (block) => {
         enabled: true,
       },
     },
-    stroke: {
-      width: [0, 0, 0],
-    },
     plotOptions: {
       bar: {
         horizontal: false,
@@ -766,13 +809,9 @@ const buildActivityByDesaMultiAxisOptions = (block) => {
         borderRadius: 4,
       },
     },
-    colors: ['#0ea5e9', '#6366f1', '#10b981'],
+    colors: ['#7e22ce', '#16a34a'],
     dataLabels: {
       enabled: false,
-    },
-    grid: {
-      borderColor: '#e2e8f0',
-      strokeDashArray: 4,
     },
     legend: {
       show: true,
@@ -791,29 +830,16 @@ const buildActivityByDesaMultiAxisOptions = (block) => {
         show: false,
       },
     },
-    yaxis: [
-      {
-        title: {
-          text: 'Jumlah Kegiatan',
-        },
-        labels: {
-          style: {
-            colors: ['#0ea5e9'],
-          },
+    yaxis: {
+      title: {
+        text: 'Jumlah Buku',
+      },
+      labels: {
+        style: {
+          colors: ['#7e22ce'],
         },
       },
-      {
-        opposite: true,
-        title: {
-          text: 'Jumlah Buku',
-        },
-        labels: {
-          style: {
-            colors: ['#6366f1'],
-          },
-        },
-      },
-    ],
+    },
     noData: {
       text: 'Belum ada data',
       align: 'center',
@@ -822,8 +848,11 @@ const buildActivityByDesaMultiAxisOptions = (block) => {
   }
 }
 
-const hasActivityByDesaData = (block) =>
-  ['values', 'books_total', 'books_filled'].some((metricKey) =>
+const hasActivityByDesaActivityData = (block) =>
+  (block?.charts?.by_desa?.values ?? []).some((value) => toNumber(value) > 0)
+
+const hasActivityByDesaBookCoverageData = (block) =>
+  ['books_total', 'books_filled'].some((metricKey) =>
     (block?.charts?.by_desa?.[metricKey] ?? []).some((value) => toNumber(value) > 0))
 
 const buildActivityLevelChartData = (block) => {
@@ -1133,21 +1162,49 @@ const hasLegacyLevelDistributionData = computed(() =>
                       </select>
                     </div>
                   </div>
-                  <div class="h-72">
-                    <apexchart
-                      type="bar"
-                      width="100%"
-                      height="100%"
-                      :options="buildActivityByDesaMultiAxisOptions(block)"
-                      :series="buildActivityByDesaMultiAxisSeries(block)"
-                    />
+                  <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                    <div>
+                      <h5 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                        Jumlah Kegiatan per Desa
+                      </h5>
+                      <div class="h-72">
+                        <apexchart
+                          type="pie"
+                          width="100%"
+                          height="100%"
+                          :options="buildActivityByDesaKegiatanOptions(block)"
+                          :series="buildActivityByDesaKegiatanSeries(block)"
+                        />
+                      </div>
+                      <p
+                        v-if="!hasActivityByDesaActivityData(block)"
+                        class="mt-3 text-xs text-amber-700 dark:text-amber-300"
+                      >
+                        Belum ada kegiatan desa pada bulan yang dipilih.
+                      </p>
+                    </div>
+
+                    <div>
+                      <h5 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                        Jumlah Buku vs Buku Terisi
+                      </h5>
+                      <div class="h-72">
+                        <apexchart
+                          type="bar"
+                          width="100%"
+                          height="100%"
+                          :options="buildActivityByDesaBookCoverageOptions(block)"
+                          :series="buildActivityByDesaBookCoverageSeries(block)"
+                        />
+                      </div>
+                      <p
+                        v-if="!hasActivityByDesaBookCoverageData(block)"
+                        class="mt-3 text-xs text-amber-700 dark:text-amber-300"
+                      >
+                        Belum ada buku terisi pada bulan yang dipilih.
+                      </p>
+                    </div>
                   </div>
-                  <p
-                    v-if="!hasActivityByDesaData(block)"
-                    class="mt-3 text-xs text-amber-700 dark:text-amber-300"
-                  >
-                    Belum ada aktivitas desa terhitung untuk kecamatan ini.
-                  </p>
                 </div>
               </template>
 

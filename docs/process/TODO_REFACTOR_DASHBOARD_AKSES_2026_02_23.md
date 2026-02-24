@@ -36,7 +36,9 @@ Tujuan monitor data dikunci sebagai kontrak implementasi:
 ### Struktur Section Dashboard Sekretaris (Terkunci)
 
 - Section 1: `Domain Sekretaris` (`sekretaris-tpk`) tanpa filter pokja.
-  - Pada scope `kecamatan`, section 1 menampilkan chart activity `kegiatan per desa` yang disandingkan dengan `jumlah buku` dan `buku terisi` pada tipe multi-axis, dengan ketiga indikator berupa balok.
+  - Pada scope `kecamatan`, section 1 menampilkan dua chart activity:
+    - `jumlah kegiatan per desa` tipe `pie` (filter bulan),
+    - `jumlah buku` terhadap `buku terisi` tipe `bar` (filter bulan).
   - Filter bulan khusus section 1 dikunci menggunakan query `section1_month` dengan opsi `all|1..12`.
 - Section 2: `Pokja Level Aktif` (agregat semua pokja pada level user) dengan filter group `all|pokja-i|pokja-ii|pokja-iii|pokja-iv` (query: `section2_group`).
 - Section 3: khusus scope `kecamatan`, `Pokja Level Bawah` (agregat pokja pada desa turunan) dengan filter group `all|pokja-i|pokja-ii|pokja-iii|pokja-iv` (query: `section3_group`).
@@ -144,7 +146,7 @@ Aturan label UI:
 - [x] Pengecualian role `desa-sekretaris`: filter disederhanakan menjadi `section2_group` (`all` + `pokja-i..iv`) dengan level default tetap `desa`.
 - [x] Struktur dashboard sekretaris dikunci menjadi section 1 (domain sekretaris), section 2 (pokja level aktif), dan section 3 khusus kecamatan (pokja level bawah), dengan filter `section2_group`/`section3_group` pada section 2/3.
 - [x] Kontrak query filter section dikunci: `section2_group` (section 2) dan `section3_group` (section 3).
-- [x] Untuk scope kecamatan, section 1 menampilkan chart `kegiatan by desa` yang disandingkan dengan `jumlah buku` dan `buku terisi` dalam format multi-axis, dengan ketiga indikator berupa balok.
+- [x] Untuk scope kecamatan, section 1 menampilkan dua chart terpisah: `jumlah kegiatan per desa` tipe `pie` dan `jumlah buku vs buku terisi` tipe `bar`, keduanya mengikuti filter bulan `section1_month`.
 
 ## Keputusan Lanjutan yang Perlu Konfirmasi Sebelum Implementasi
 

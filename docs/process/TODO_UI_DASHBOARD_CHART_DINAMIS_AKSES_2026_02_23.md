@@ -16,7 +16,9 @@ Status: `in-progress`
 - Setiap blok menampilkan sumber data secara eksplisit (`Sumber`, `Cakupan`, `Filter aktif`) untuk mencegah label ambigu.
 - Filter dinamis (`mode`, `level`, `sub_level`) tersinkron dengan URL query agar reproducible dan shareable.
 - Representasi activity dashboard tidak menampilkan metrik/visual berbasis status publikasi (`published`/`draft`).
-- Khusus `section 1` pada scope `kecamatan`, chart activity sementara menampilkan `kegiatan per desa` yang disandingkan dengan `jumlah buku` dan `buku terisi` dalam format multi-axis, dengan ketiga indikator ditampilkan sebagai balok.
+- Khusus `section 1` pada scope `kecamatan`, chart activity ditampilkan dalam dua chart:
+  - chart 1: `jumlah kegiatan per desa` tipe `pie` (filter bulan).
+  - chart 2: `jumlah buku` terhadap `buku terisi` tipe `bar` (filter bulan).
   - Tambahan filter bulan: dropdown `section1_month` dengan opsi `all` + `1..12` untuk memfilter chart sesuai bulan terpilih.
 - Khusus `desa-sekretaris`: level default dikunci ke `desa`, tanpa kontrol `sub_level`, dan filter utama berbasis group (`all`, `pokja-i`, `pokja-ii`, `pokja-iii`, `pokja-iv`) dengan query key `section2_group`.
 - Khusus dashboard sekretaris:
@@ -142,7 +144,7 @@ Status: `in-progress`
 - [x] Struktur section sekretaris dikunci: section 1 domain sekretaris, section 2 pokja level aktif, section 3 khusus kecamatan untuk level bawah; filter memakai query `section2_group`/`section3_group`.
 - [x] Kontrak query filter section dikunci: `section2_group` (section 2) dan `section3_group` (section 3).
 - [x] KPI/chart status aktivitas (`published`/`draft`) tidak ditampilkan pada dashboard; fokus ringkasan activity: total + bulan ini + distribusi level.
-- [x] Pada section 1 level kecamatan, chart activity menampilkan data kegiatan by desa yang disandingkan dengan jumlah buku dan buku terisi dalam tipe multi-axis, dengan ketiga indikator berupa balok.
+- [x] Pada section 1 level kecamatan, chart activity dipecah menjadi dua chart: `jumlah kegiatan per desa` tipe `pie` dan `jumlah buku vs buku terisi` tipe `bar`, keduanya mengikuti filter bulan.
 
 ## Referensi Implementasi
 
