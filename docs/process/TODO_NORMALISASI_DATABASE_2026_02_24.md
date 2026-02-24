@@ -21,39 +21,42 @@
 - Dokumentasi kontrak dan fallback plan saat migrasi perubahan struktur.
 
 ## Langkah Eksekusi
-- [ ] Audit cepat skema aktif:
+- [x] Audit cepat skema aktif:
   - cek tabel dengan potensi duplikasi atribut wilayah (nama desa/kecamatan tersimpan bersamaan dengan `area_id`).
   - cek kolom wajib domain wilayah (`level`, `area_id`, `created_by`) dan kesesuaiannya terhadap `areas.level`.
-- [ ] Identifikasi pelanggaran normalisasi per tabel:
+- [x] Identifikasi pelanggaran normalisasi per tabel:
   - atribut turunan/transitif yang seharusnya diturunkan dari relasi.
   - atribut multi-nilai dalam satu kolom.
   - dependensi parsial/inkonsisten pada kunci data.
-- [ ] Definisikan kontrak normalisasi target per concern:
+- [x] Definisikan kontrak normalisasi target per concern:
   - field yang dipertahankan.
   - field yang dipindah ke relasi.
   - field legacy yang ditandai deprecated.
-- [ ] Susun patch migrasi minimal:
+- [x] Susun patch migrasi minimal:
   - tambah/ketatkan foreign key dan index.
   - tambah constraint unik yang relevan.
   - siapkan skrip backfill untuk data eksisting.
-- [ ] Audit dampak implementasi:
+- [x] Audit dampak implementasi:
   - request/use case/repository/policy.
   - seeder/factory.
   - report/PDF dan payload Inertia yang membaca field terdampak.
-- [ ] Definisikan fallback plan:
+- [x] Definisikan fallback plan:
   - rollback migration.
   - fallback query sementara jika backfill belum lengkap.
   - langkah recovery saat ditemukan data anomali.
-- [ ] Validasi akhir:
+- [x] Validasi akhir:
   - jalankan `php artisan test`.
   - jika perubahan skema signifikan, jalankan `php artisan migrate:fresh --seed` pada environment development.
 
 ## Validasi
-- [ ] Tidak ada tabel domain wilayah aktif yang menyimpan duplikasi atribut wilayah tanpa alasan bisnis eksplisit.
-- [ ] Semua record domain wilayah lulus konsistensi `level` vs `areas.level`.
-- [ ] Tidak ada query lintas scope yang leak data karena relasi/constraint longgar.
-- [ ] Test feature + policy/scope service untuk concern terdampak tetap hijau.
-- [ ] Dokumen proses/kontrak yang terdampak sudah sinkron (tanpa drift istilah canonical).
+- [x] Tidak ada tabel domain wilayah aktif yang menyimpan duplikasi atribut wilayah tanpa alasan bisnis eksplisit.
+- [x] Semua record domain wilayah lulus konsistensi `level` vs `areas.level`.
+- [x] Tidak ada query lintas scope yang leak data karena relasi/constraint longgar.
+- [x] Test feature + policy/scope service untuk concern terdampak tetap hijau.
+- [x] Dokumen proses/kontrak yang terdampak sudah sinkron (tanpa drift istilah canonical).
+
+## Artefak Audit
+- `docs/process/NORMALISASI_DATABASE_AUDIT_2026_02_24.md`
 
 ## Risiko
 - Pengetatan constraint dapat menggagalkan migrasi jika data historis belum bersih.

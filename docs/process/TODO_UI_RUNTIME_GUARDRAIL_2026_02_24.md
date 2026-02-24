@@ -16,7 +16,7 @@
 - [x] Tambahkan fallback banner di layout utama saat runtime error terdeteksi.
 - [x] Tambahkan aksi pemulihan cepat (`Muat Ulang`) pada fallback banner.
 - [x] Tambahkan fallback aman akses `localStorage` pada preferensi sidebar collapse.
-- [ ] Tambahkan observability lanjutan (opsional): kirim error JS ke backend logging endpoint terproteksi.
+- [x] Tambahkan observability lanjutan: kirim error JS ke backend logging endpoint terproteksi.
 
 ## Validasi
 - [x] Build frontend berhasil (`npm run build`).

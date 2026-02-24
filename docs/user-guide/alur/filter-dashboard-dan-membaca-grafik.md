@@ -3,11 +3,12 @@
 ## Tujuan
 - Membantu Anda membaca kondisi data dengan cepat melalui dashboard.
 
-## Langkah Umum
+## Langkah Praktis
 1. Buka halaman Dashboard.
-2. Pilih filter yang tersedia sesuai peran Anda.
-3. Baca ringkasan angka terlebih dahulu.
-4. Lanjutkan ke grafik untuk melihat pola data.
+2. Pilih filter yang tersedia untuk akun Anda.
+3. Baca kartu ringkasan angka terlebih dahulu.
+4. Buka grafik dan lihat perubahan per bulan/per desa/per level.
+5. Jika blok banyak, gunakan tombol `Tampilkan Grafik` atau `Sembunyikan Grafik` agar fokus.
 
 ## Hasil yang Diharapkan
 - Anda memahami kondisi data terbaru tanpa membuka satu per satu modul.
@@ -16,7 +17,4 @@
 ## Jika Terkendala
 - Grafik kosong: cek apakah data pada modul sumber sudah terisi.
 - Filter tidak muncul: cek hak akses akun Anda.
-
-## Status Konten
-- Draft skeleton. Penjelasan tiap section dashboard akan diisi pada fase konten.
-
+- Nilai terlihat tidak sesuai: cek bulan aktif dan filter wilayah di URL dashboard.

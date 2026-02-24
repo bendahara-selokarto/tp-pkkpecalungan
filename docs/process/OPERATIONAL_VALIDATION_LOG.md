@@ -765,3 +765,48 @@ Keputusan:
 
 Status:
 - `PASS` untuk hardening granular checklist validasi dashboard akses.
+
+## Implementasi Semua TODO Pending (Dashboard + User Guide + Normalisasi): 2026-02-24
+
+Ruang lingkup:
+- Menutup seluruh checklist `pending` pada seluruh dokumen `docs/process/TODO*.md`.
+- Menyelesaikan gap implementasi dashboard concern `D4` (repository per grup) + hardening UI + observability runtime.
+- Menyelesaikan fase konten user guide natural-humanis.
+- Menjalankan audit normalisasi database dan sinkronisasi dokumen terkait.
+
+Artefak utama:
+- `app/Domains/Wilayah/Dashboard/Repositories/DashboardGroupCoverageRepositoryInterface.php`
+- `app/Domains/Wilayah/Dashboard/Repositories/DashboardGroupCoverageRepository.php`
+- `app/Domains/Wilayah/Dashboard/Repositories/DashboardDocumentCoverageRepository.php`
+- `app/Domains/Wilayah/Dashboard/Repositories/DashboardDocumentCoverageRepositoryInterface.php`
+- `app/Domains/Wilayah/Dashboard/UseCases/BuildRoleAwareDashboardBlocksUseCase.php`
+- `app/Services/DashboardActivityChartService.php`
+- `resources/js/Pages/Dashboard.vue`
+- `resources/js/app.js`
+- `app/Http/Controllers/UiRuntimeErrorLogController.php`
+- `routes/web.php`
+- `tests/Feature/DashboardDocumentCoverageTest.php`
+- `tests/Unit/Dashboard/DashboardGroupCoverageRepositoryTest.php`
+- `tests/Feature/UiRuntimeErrorLogTest.php`
+- `tests/Unit/Architecture/UnitCoverageGateTest.php`
+- `docs/user-guide/*`
+- `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md`
+- `docs/process/NORMALISASI_DATABASE_AUDIT_2026_02_24.md`
+- `docs/process/TODO_*` concern terkait dashboard/user-guide/normalisasi/runtime
+
+Perintah validasi:
+- `php artisan test --filter=DashboardDocumentCoverageTest` -> `PASS` (9 tests).
+- `php artisan test --filter=DashboardActivityChartTest` -> `PASS` (5 tests).
+- `php artisan test --filter=DashboardGroupCoverageRepositoryTest` -> `PASS` (2 tests).
+- `php artisan test --filter=UiRuntimeErrorLogTest` -> `PASS` (2 tests).
+- `npm run build` -> `PASS` (bundle ApexCharts < 500 kB warning threshold).
+- `php artisan test` -> `PASS` (`773` tests, `3450` assertions).
+- `rg -n "^- \[ \]" docs/process --glob "TODO*.md"` -> tidak ada pending checklist.
+
+Keputusan:
+- Concern dashboard akses/minimalis/lintas-role ditutup pada batch ini.
+- Concern user guide natural-humanis ditutup dengan konten fase 1+2 + glossary canonical.
+- Concern normalisasi database ditutup dengan audit terukur; tidak ada patch migrasi darurat yang dibutuhkan.
+
+Status:
+- `PASS` untuk penutupan seluruh pending TODO concern aktif.

@@ -102,11 +102,11 @@ Catatan kompatibilitas (rencana):
 
 ## Risiko
 
-- [ ] Risiko UX: user multi-role bisa bingung jika group bertambah sesuai union role.
-- [x] Risiko migrasi: user legacy `admin-*` gagal dipetakan jika data area/role historis tidak bersih.
-- [x] Risiko migrasi: user legacy `bendahara` gagal dipetakan ke sekretaris jika data area/role historis tidak bersih.
-- [ ] Risiko keamanan: jika berhenti di UI-only, URL langsung masih bisa diakses (wajib hardening backend).
-- [ ] Risiko drift dokumen: mapping role-menu tidak sinkron dengan domain matrix/sidebar plan.
+- Risiko UX: user multi-role bisa bingung jika group bertambah sesuai union role.
+- Risiko migrasi: user legacy `admin-*` gagal dipetakan jika data area/role historis tidak bersih.
+- Risiko migrasi: user legacy `bendahara` gagal dipetakan ke sekretaris jika data area/role historis tidak bersih.
+- Risiko keamanan: jika berhenti di UI-only, URL langsung masih bisa diakses (wajib hardening backend).
+- Risiko drift dokumen: mapping role-menu tidak sinkron dengan domain matrix/sidebar plan.
 
 ## Keputusan yang Perlu Dikunci Sebelum Implementasi
 

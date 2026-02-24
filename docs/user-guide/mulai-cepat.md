@@ -1,27 +1,38 @@
 # Mulai Cepat
 
-## Untuk Siapa
-- Pengguna baru yang ingin langsung memakai sistem.
-
 ## Tujuan
-- Anda bisa login, mengenali menu utama, dan mulai bekerja sesuai peran.
+- Anda bisa masuk ke sistem.
+- Anda tahu posisi menu utama.
+- Anda bisa menjalankan 3 tugas inti pertama.
 
-## Langkah Singkat
+## Sebelum Mulai
+- Pastikan Anda sudah punya email dan kata sandi akun.
+- Gunakan browser terbaru agar tampilan stabil.
+
+## Langkah 1: Masuk ke Sistem
 1. Buka halaman login sistem.
 2. Masukkan email dan kata sandi akun Anda.
-3. Setelah masuk, lihat menu yang muncul di sisi kiri.
-4. Pilih menu sesuai tugas Anda hari ini.
+3. Tekan tombol masuk.
+4. Jika berhasil, Anda akan masuk ke halaman dashboard.
 
-## Yang Akan Anda Lihat
-- Dashboard ringkas.
-- Menu domain sesuai peran akun Anda.
-- Tanda `RO` pada menu yang hanya bisa dibaca.
+## Langkah 2: Kenali Area Kerja
+1. Di bagian atas, Anda melihat `Dashboard`, `Mode`, `Profil`, dan `Keluar`.
+2. Di sisi kiri, Anda melihat menu domain sesuai peran Anda.
+3. Jika ada label `RO`, menu itu hanya bisa dibaca.
 
-## Jika Terkendala
-- Jika gagal login: pastikan email dan kata sandi benar.
-- Jika menu tidak muncul: hubungi admin untuk cek akses akun.
-- Jika halaman menolak simpan data: kemungkinan modul Anda hanya mode baca.
+## Langkah 3: Jalankan 3 Tugas Inti
+1. Buka satu menu domain yang menjadi tanggung jawab Anda.
+2. Tambah atau ubah satu data.
+3. Kembali ke dashboard untuk memastikan ringkasan data ikut berubah.
 
-## Status Konten
-- Draft skeleton. Detail langkah akan diisi pada fase penulisan konten.
+## Jika Ada Kendala
+- Tidak bisa login: cek ulang email dan kata sandi.
+- Menu Anda berbeda dengan rekan kerja: akun Anda memang berbeda peran.
+- Tombol simpan tidak ada: modul Anda sedang mode baca (`RO`).
 
+## Lanjutkan Ke
+- Sekretaris Desa: [peran/sekretaris-desa.md](./peran/sekretaris-desa.md)
+- Sekretaris Kecamatan: [peran/sekretaris-kecamatan.md](./peran/sekretaris-kecamatan.md)
+- Pokja Desa: [peran/pokja-desa.md](./peran/pokja-desa.md)
+- Pokja Kecamatan: [peran/pokja-kecamatan.md](./peran/pokja-kecamatan.md)
+- Super Admin: [peran/super-admin.md](./peran/super-admin.md)

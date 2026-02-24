@@ -1,23 +1,27 @@
 # Panduan Peran: Pokja Kecamatan
 
-## Fokus Peran Anda
-- Mengelola data pokja pada level kecamatan sesuai bidang Anda.
+## Tujuan Halaman Ini
+- Anda dapat memantau dan mengelola data pokja kecamatan berbasis desa turunan.
 
-## Yang Bisa Anda Kerjakan
-- Menambah dan memperbarui data pada modul pokja Anda.
-- Melihat rekap data kecamatan sesuai cakupan bidang.
-- Mencetak laporan modul pokja.
+## Tugas Utama Anda
+- Mengelola input pokja kecamatan.
+- Membaca breakdown data per desa pada dashboard pokja Anda.
+- Menyiapkan laporan untuk koordinasi kecamatan.
 
-## Alur Kerja Harian
+## Langkah Kerja Harian
 1. Masuk ke modul pokja sesuai bidang akun Anda.
 2. Lakukan input atau pembaruan data.
-3. Cek konsistensi data sebelum final.
+3. Buka dashboard untuk melihat rincian nilai per desa.
 4. Cetak laporan jika diperlukan untuk rapat atau evaluasi.
 
-## Batasan yang Perlu Diketahui
-- Akses hanya berlaku untuk bidang pokja yang sesuai dengan role akun Anda.
-- Modul di luar bidang tidak dapat dibuka.
+## Hasil yang Harus Terlihat
+- Hanya blok pokja Anda yang muncul di dashboard.
+- Chart dokumen menampilkan dimensi `per desa`.
+- Data desa di luar kecamatan Anda tidak ikut terhitung.
 
-## Status Konten
-- Draft skeleton. Detail contoh data dan checklist mutu input akan diisi pada fase konten.
+## Skenario Sukses
+- Akun `kecamatan-pokja-i` melihat rincian Pokja I per desa, dan desa dari kecamatan lain tidak tampil.
 
+## Jika Terkendala
+- Daftar desa tidak muncul: pastikan kecamatan Anda sudah memiliki data desa turunan.
+- Nilai per desa terlihat nol semua: periksa apakah data modul pokja sudah diinput pada desa terkait.

@@ -1,31 +1,37 @@
 # User Guide Sistem TP PKK Pecalungan
 
-Panduan ini ditulis untuk membantu Anda memakai sistem dengan langkah yang jelas, bahasa sederhana, dan sesuai peran Anda.
+Panduan ini membantu Anda bekerja lebih cepat dengan bahasa sederhana dan langkah yang langsung bisa dipraktikkan.
+
+Tujuan utama panduan:
+- Anda paham menu kerja sesuai peran.
+- Anda bisa input data dengan benar.
+- Anda bisa membaca dashboard dan mencetak laporan tanpa pendamping.
 
 ## Mulai dari Sini
-- `mulai-cepat.md`
+- [Mulai Cepat](./mulai-cepat.md)
 
 ## Panduan Berdasarkan Peran
-- `peran/sekretaris-desa.md`
-- `peran/sekretaris-kecamatan.md`
-- `peran/pokja-desa.md`
-- `peran/pokja-kecamatan.md`
-- `peran/super-admin.md`
+- [Sekretaris Desa](./peran/sekretaris-desa.md)
+- [Sekretaris Kecamatan](./peran/sekretaris-kecamatan.md)
+- [Pokja Desa](./peran/pokja-desa.md)
+- [Pokja Kecamatan](./peran/pokja-kecamatan.md)
+- [Super Admin](./peran/super-admin.md)
 
 ## Panduan Berdasarkan Alur Tugas
-- `alur/kelola-data-harian.md`
-- `alur/filter-dashboard-dan-membaca-grafik.md`
-- `alur/cetak-dan-ekspor-laporan.md`
+- [Kelola Data Harian](./alur/kelola-data-harian.md)
+- [Filter Dashboard dan Membaca Grafik](./alur/filter-dashboard-dan-membaca-grafik.md)
+- [Cetak dan Ekspor Laporan](./alur/cetak-dan-ekspor-laporan.md)
 
 ## Bantuan Cepat
-- `faq.md`
+- [FAQ](./faq.md)
 
 ## Versi Siap Cetak
-- `print/README.md`
+- [Petunjuk Cetak](./print/README.md)
 - `print/00-user-guide-lengkap-siap-cetak.html`
 - `print/01-login-siap-cetak.html`
-- Catatan: dokumen gabungan disusun dengan 1 gambar (login) sebagai referensi visual.
 
-## Catatan
-- Jika istilah yang dipakai belum familiar, cek bagian FAQ.
-- Jika menu yang Anda cari tidak muncul, kemungkinan akses akun Anda memang tidak mencakup menu tersebut.
+## Urutan Pakai yang Disarankan
+1. Baca [Mulai Cepat](./mulai-cepat.md).
+2. Buka panduan peran Anda.
+3. Gunakan panduan alur saat bekerja harian.
+4. Pakai FAQ jika menemui kendala.

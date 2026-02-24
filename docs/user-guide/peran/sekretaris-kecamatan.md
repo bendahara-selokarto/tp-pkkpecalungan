@@ -1,26 +1,29 @@
 # Panduan Peran: Sekretaris Kecamatan
 
-## Fokus Peran Anda
-- Mengelola modul sekretaris di level kecamatan.
-- Memantau data Pokja I-IV dalam mode baca.
-- Memantau kegiatan desa pada menu monitoring kecamatan.
+## Tujuan Halaman Ini
+- Anda dapat memonitor kegiatan desa dan menjaga kelengkapan buku administrasi kecamatan.
 
-## Yang Bisa Anda Kerjakan
-- Menambah, mengubah, dan mencetak data pada modul sekretaris kecamatan.
-- Melihat data pokja tanpa mengubah data.
-- Melihat detail kegiatan desa untuk monitoring.
+## Tugas Utama Anda
+- Mengelola modul sekretaris kecamatan.
+- Melihat progres data pokja dari desa turunan.
+- Melihat menu monitoring kegiatan desa.
 
-## Alur Kerja Harian
+## Langkah Kerja Harian
 1. Buka dashboard untuk melihat ringkasan wilayah kecamatan.
 2. Perbarui data pada modul sekretaris yang menjadi tanggung jawab Anda.
-3. Cek modul pokja sebagai bahan pemantauan.
-4. Gunakan menu monitoring untuk melihat kegiatan desa.
-5. Cetak laporan bila diperlukan.
+3. Gunakan filter bulan pada chart kegiatan per desa saat butuh fokus periode tertentu.
+4. Cek modul pokja sebagai bahan pemantauan.
+5. Gunakan menu monitoring ke desa untuk meninjau detail kegiatan.
+6. Cetak laporan bila diperlukan.
 
-## Batasan yang Perlu Diketahui
-- Modul pokja dan monitoring bersifat baca untuk peran sekretaris.
-- Aksi ubah data ditolak jika menu sedang mode `RO`.
+## Hasil yang Harus Terlihat
+- Ringkasan kegiatan per desa tampil sesuai bulan yang dipilih.
+- Buku terisi dan jumlah buku tampil sejajar di dashboard.
+- Data monitoring desa bisa dibuka tanpa akses ubah.
 
-## Status Konten
-- Draft skeleton. Detail skenario monitoring akan diisi pada fase konten.
+## Skenario Sukses
+- Anda memilih bulan `Februari`, chart `Kegiatan per Desa` dan chart `Jumlah Buku vs Buku Terisi` langsung berubah sesuai bulan aktif.
 
+## Jika Terkendala
+- Dashboard kosong: pastikan desa turunan sudah memiliki data.
+- Angka tidak berubah saat ganti bulan: klik ulang filter dan pastikan URL memuat parameter bulan.

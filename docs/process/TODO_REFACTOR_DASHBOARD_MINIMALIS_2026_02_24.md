@@ -1,7 +1,7 @@
 # TODO Refactor Dashboard Minimalis 2026-02-24
 
 Tanggal: 2026-02-24  
-Status: `in-progress`
+Status: `done`
 
 ## Konteks
 
@@ -36,25 +36,25 @@ Status: `in-progress`
 
 ## Langkah Eksekusi (Checklist)
 
-- [ ] `M1` Audit surface UI dashboard saat ini (spasi, hirarki visual, kepadatan teks) dan tandai elemen yang bisa dipadatkan.
-- [ ] `M2` Refactor struktur komponen `Dashboard.vue` menjadi blok presentasi yang lebih kecil:
+- [x] `M1` Audit surface UI dashboard saat ini (spasi, hirarki visual, kepadatan teks) dan tandai elemen yang bisa dipadatkan.
+- [x] `M2` Refactor struktur komponen `Dashboard.vue` menjadi blok presentasi yang lebih kecil:
   - header blok ringkas,
   - panel filter ringkas,
   - empty-state konsisten.
-- [ ] `M3` Ringkas copywriting dashboard:
+- [x] `M3` Ringkas copywriting dashboard:
   - ubah kalimat panjang menjadi label natural, pendek, dan konsisten.
   - pertahankan istilah domain canonical.
-- [ ] `M4` Sederhanakan metadata tampilan:
+- [x] `M4` Sederhanakan metadata tampilan:
   - tampilkan ringkasan sumber/cakupan dalam 1 baris.
   - detail filter context dipindahkan ke mode ringkas (mis. helper text kecil).
-- [ ] `M5` Kurangi noise visual:
+- [x] `M5` Kurangi noise visual:
   - kurangi jumlah border/kotak yang tidak esensial,
   - standarkan tinggi chart dan jarak antar section,
   - hindari duplikasi informasi antar kartu.
-- [ ] `M6` Transisi fallback legacy:
+- [x] `M6` Transisi fallback legacy:
   - evaluasi penggunaan blok fallback legacy (`dashboardStats/dashboardCharts`),
   - jika aman, sembunyikan dari UI utama dan jadikan fallback internal-only.
-- [ ] `M7` Hardening behavior:
+- [x] `M7` Hardening behavior:
   - pastikan perubahan minimalis tidak memecah filter URL (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`),
   - pastikan tidak ada behavior drift pada role sekretaris/pokja.
 - [x] `M8` Doc-hardening pass:
@@ -67,32 +67,33 @@ Status: `in-progress`
 - `app/Domains/Wilayah/Dashboard/UseCases/*` (hanya jika metadata perlu penyederhanaan terstruktur)
 - `tests/Feature/DashboardDocumentCoverageTest.php`
 - `tests/Feature/DashboardActivityChartTest.php`
+- `tests/Unit/Dashboard/DashboardCoverageMenuSyncTest.php`
 - `docs/process/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
 - `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
 
 ## Validasi Wajib
 
-- [ ] `npm run build`
-- [ ] `php artisan test --filter=DashboardDocumentCoverageTest`
-- [ ] `php artisan test --filter=DashboardActivityChartTest`
-- [ ] `php artisan test --filter=DashboardCoverageMenuSyncTest`
-- [ ] Smoke test manual:
+- [x] `npm run build`
+- [x] `php artisan test --filter=DashboardDocumentCoverageTest`
+- [x] `php artisan test --filter=DashboardActivityChartTest`
+- [x] `php artisan test --filter=DashboardCoverageMenuSyncTest`
+- [x] Smoke test manual:
   - role `desa-sekretaris`,
   - role `kecamatan-sekretaris`,
   - role `desa-pokja-*`,
   - role `kecamatan-pokja-*`.
 
-## Risiko
+## Risiko (Residual)
 
-- [ ] Risiko informasi penting tersembunyi jika minimalisasi terlalu agresif.
-- [ ] Risiko drift antara UI minimalis dan metadata audit yang dibutuhkan operasional.
-- [ ] Risiko regresi query/filter URL pada section sekretaris.
+- Risiko informasi penting tersembunyi jika minimalisasi terlalu agresif.
+- Risiko drift antara UI minimalis dan metadata audit yang dibutuhkan operasional.
+- Risiko regresi query/filter URL pada section sekretaris.
 
-## Mitigasi
+## Mitigasi (Aktif)
 
-- [ ] Terapkan minimalisasi bertahap per section, bukan rewrite total.
-- [ ] Pertahankan metadata kritikal, ringkas hanya layer presentasi.
-- [ ] Jalankan regression test dashboard setiap concern selesai.
+- Terapkan minimalisasi bertahap per section, bukan rewrite total.
+- Pertahankan metadata kritikal, ringkas hanya layer presentasi.
+- Jalankan regression test dashboard setiap concern selesai.
 
 ## Keputusan
 

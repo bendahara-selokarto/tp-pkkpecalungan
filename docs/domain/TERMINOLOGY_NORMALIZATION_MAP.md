@@ -14,6 +14,18 @@ Tujuan:
 3. Konteks `aksi CRUD` (Tambah/Edit/Detail) boleh memakai label singkat entitas selama tidak mengubah label canonical pada menu dan PDF.
 4. Jika ada konflik istilah, pedoman domain utama menjadi referensi final.
 
+## Glossary User-Facing (Terkunci untuk User Guide)
+
+| Istilah yang dipakai ke user | Makna ringkas | Hindari istilah ini |
+| --- | --- | --- |
+| `Kegiatan` | Catatan aktivitas kerja organisasi yang diinput di buku kegiatan | `Aktivitas` (untuk label dashboard user-facing) |
+| `Monitoring ke Desa` | Pantauan data/kegiatan desa turunan pada akun kecamatan | `Monitoring Kecamatan` |
+| `Mode Siang` / `Mode Malam` | Pilihan tampilan terang atau gelap | `Dark mode` sebagai label utama |
+| `Keluar` | Aksi log out akun | `Keluar (Log Out)` |
+| `Buku Terisi` | Buku/domain yang sudah memiliki data | `Published/Draft` pada ringkasan dashboard |
+| `Cakupan Wilayah` | Fokus level data yang sedang ditampilkan | `Scope token` |
+| `Wilayah Turunan` | Fokus desa di bawah kecamatan aktif | `sub_level` |
+
 ## Map Istilah Teknis vs Label Canonical
 
 | Lampiran | Istilah teknis | Label canonical pedoman | Label saat ini (terdeteksi) | Normalisasi target | Status |

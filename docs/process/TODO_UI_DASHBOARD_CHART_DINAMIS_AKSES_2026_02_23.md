@@ -1,7 +1,7 @@
 # TODO UI Dashboard Chart Dinamis Akses 2026-02-23
 
 Tanggal: 2026-02-23  
-Status: `in-progress`
+Status: `done`
 
 Catatan lanjutan visual minimalis:
 - Eksekusi refactor UI minimalis direncanakan di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
@@ -107,7 +107,7 @@ Catatan lanjutan visual minimalis:
 - [x] Feature test Inertia:
   - `dashboardBlocks` muncul untuk role valid.
   - metadata sumber (`sources`) ikut terkirim konsisten pada blok.
-- [ ] Feature test query filter:
+- [x] Feature test query filter:
   - request `/dashboard?mode=by-level&level=desa` mengubah `sources.filter_context`.
   - request `/dashboard?mode=by-sub-level&sub_level=<x>` tidak merusak payload.
 - [x] Feature test role `desa-sekretaris`:
@@ -118,7 +118,7 @@ Catatan lanjutan visual minimalis:
   - section 1 tampil tanpa filter pokja.
   - section 2 (pokja level kecamatan) + section 3 (pokja level desa turunan) tampil bersamaan.
   - masing-masing section 2/3 memiliki filter `section2_group`/`section3_group` dengan opsi `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
-- [ ] UI smoke check manual:
+- [x] UI smoke check manual:
   - role pokja hanya melihat blok pokja terkait.
   - sekretaris melihat blok sekretaris + blok pokja.
   - kecamatan bertingkat dapat ganti `all/by level/by sub-level`.
@@ -126,17 +126,17 @@ Catatan lanjutan visual minimalis:
   - `php artisan test --filter=DashboardDocumentCoverageTest`
   - `php artisan test --filter=DashboardActivityChartTest`
 
-## Risiko
+## Risiko (Residual)
 
-- [ ] Risiko duplikasi informasi saat payload legacy dan `dashboardBlocks` tampil bersamaan.
-- [ ] Risiko filter sub-level membingungkan jika label area tidak eksplisit.
-- [ ] Risiko UI berat bila seluruh blok dirender tanpa lazy strategy pada role multi-blok.
+- Risiko duplikasi informasi saat payload legacy dan `dashboardBlocks` tampil bersamaan.
+- Risiko filter sub-level membingungkan jika label area tidak eksplisit.
+- Risiko UI berat bila seluruh blok dirender tanpa lazy strategy pada role multi-blok.
 
-## Mitigasi
+## Mitigasi (Aktif)
 
-- [ ] Render satu jalur utama saja (`dashboardBlocks`), legacy sebagai fallback tersembunyi.
-- [ ] Gunakan label area eksplisit (`Desa X`, `Kecamatan Y`) pada opsi filter sub-level.
-- [ ] Tambahkan virtual grouping sederhana: chart dirender saat blok expanded.
+- Render satu jalur utama saja (`dashboardBlocks`), legacy sebagai fallback tersembunyi di mode development.
+- Gunakan label area eksplisit (`Desa X`) pada opsi filter sub-level.
+- Tambahkan virtual grouping sederhana: chart dirender saat blok expanded.
 
 ## Keputusan Terkunci di Rencana UI Ini
 

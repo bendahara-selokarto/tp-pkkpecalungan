@@ -1,23 +1,28 @@
 # Panduan Peran: Super Admin
 
-## Fokus Peran Anda
-- Mengelola akun pengguna dan menjaga keteraturan akses sistem.
+## Tujuan Halaman Ini
+- Anda dapat mengelola akun pengguna tanpa menimbulkan salah akses role/scope/wilayah.
 
-## Yang Bisa Anda Kerjakan
-- Membuat akun pengguna baru.
-- Memperbarui data akun pengguna.
-- Menghapus akun pengguna yang tidak dipakai.
+## Tugas Utama Anda
+- Membuat akun baru.
+- Memperbarui akun aktif.
+- Menonaktifkan akun yang tidak dipakai.
 
-## Alur Kerja Harian
+## Langkah Kerja Harian
 1. Buka menu Manajemen User.
 2. Periksa data user yang aktif.
 3. Tambah atau ubah akun sesuai kebutuhan organisasi.
 4. Pastikan role, scope, dan wilayah user sudah tepat.
+5. Simpan perubahan dan lakukan verifikasi cepat login akun bila dibutuhkan.
 
-## Batasan yang Perlu Diketahui
-- Gunakan perubahan role dengan hati-hati agar akses tidak salah sasaran.
-- Ikuti aturan internal saat mengubah akun dengan hak tinggi.
+## Hasil yang Harus Terlihat
+- Akun baru muncul di daftar user.
+- Label role tampil jelas dan tidak ambigu.
+- User hanya melihat menu sesuai role/scope yang diset.
 
-## Status Konten
-- Draft skeleton. Detail SOP manajemen user akan diisi pada fase konten.
+## Skenario Sukses
+- Anda membuat akun `desa-pokja-ii`, set scope `desa`, pilih wilayah desa yang benar, dan akun langsung hanya menampilkan menu Pokja II.
 
+## Jika Terkendala
+- Pilihan role tidak sesuai scope: ubah scope dulu, lalu pilih role yang muncul.
+- User melapor menu kurang/lebih: cek ulang kombinasi role, scope, dan area pada profil user.

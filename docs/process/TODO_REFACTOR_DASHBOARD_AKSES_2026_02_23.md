@@ -1,7 +1,7 @@
 # TODO Refactor Dashboard Akses 2026-02-23
 
 Tanggal: 2026-02-23  
-Status: `in-progress`
+Status: `done`
 
 Catatan lanjutan visual minimalis:
 - Rencana fase lanjutan UI ada di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
@@ -91,7 +91,7 @@ Aturan label UI:
   - resolve effective scope via `UserAreaContextService`.
   - resolve blok visible via service visibilitas.
   - delegasi query ke repository boundary.
-- [ ] `D4` Pecah repository dashboard per grup agar query tidak fat:
+- [x] `D4` Pecah repository dashboard per grup agar query tidak fat:
   - minimal `DashboardGroupRepositoryInterface` + implementasi agregasi per group.
   - kecamatan pokja wajib punya query breakdown `by desa` anti data leak.
 - [x] `D5` Refactor `DashboardController` agar hanya orchestration use case + mapping response Inertia.
@@ -119,26 +119,26 @@ Aturan label UI:
 - [x] Feature test role valid (jalur sekretaris):
   - sekretaris desa melihat blok sekretaris + semua pokja.
   - sekretaris kecamatan memuat section bertingkat sesuai kontrak.
-- [ ] Feature test role valid (jalur pokja):
+- [x] Feature test role valid (jalur pokja):
   - pokja desa hanya melihat blok pokja sendiri.
   - pokja kecamatan melihat blok pokja sendiri dengan breakdown desa.
 - [x] Feature test role invalid dan scope mismatch (stale metadata) menghasilkan nol data/forbidden sesuai kontrak existing.
 - [x] Unit test service visibilitas dashboard role-scope.
-- [ ] Unit test use case/repository untuk anti data leak lintas kecamatan/desa.
+- [x] Unit test use case/repository untuk anti data leak lintas kecamatan/desa.
 - [x] Snapshot/assertion label sumber di response Inertia agar UI tidak kembali ke label ambigu.
 - [x] Jalankan `php artisan test` penuh sebelum merge implementasi.
 
-## Risiko
+## Risiko (Residual)
 
-- [ ] Risiko query berat karena blok dashboard bertambah per role.
-- [ ] Risiko drift antara matrix menu dan matrix dashboard jika dikelola terpisah.
-- [ ] Risiko noise UI jika label sumber terlalu panjang.
+- Risiko query berat karena blok dashboard bertambah per role.
+- Risiko drift antara matrix menu dan matrix dashboard jika dikelola terpisah.
+- Risiko noise UI jika label sumber terlalu panjang.
 
-## Mitigasi
+## Mitigasi (Aktif)
 
-- [ ] Reuse matrix role-group existing sebagai single source untuk menu dan dashboard.
-- [ ] Gunakan cache pendek + grouping query per blok.
-- [ ] Terapkan pola label dua tingkat (judul ringkas + subjudul sumber).
+- Reuse matrix role-group existing sebagai single source untuk menu dan dashboard.
+- Gunakan cache pendek + grouping query per blok.
+- Terapkan pola label dua tingkat (judul ringkas + subjudul sumber).
 
 ## Keputusan yang Dikunci pada Rencana Ini
 
@@ -158,4 +158,4 @@ Aturan label UI:
 
 - [x] `kecamatan-sekretaris` dan role bertingkat lain memakai mode dinamis: dapat lihat `all`, filter `by level`, atau `by sub-level`.
 - [x] Aturan multi-role dashboard mengikuti visibilitas bertingkat yang dapat difilter dinamis (`all/level/sub-level`).
-- [ ] Apakah blok `monitoring` tetap dipisah atau digabung ke blok `sekretaris-tpk` pada scope kecamatan.
+- [x] Blok `monitoring` tetap dipisah dari blok `sekretaris-tpk` pada scope kecamatan agar konteks monitor lintas desa tetap tegas.
