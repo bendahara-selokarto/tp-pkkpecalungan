@@ -583,3 +583,122 @@ Keputusan:
 
 Status:
 - `PASS` untuk doc-hardening concern zero-ambiguity single path.
+
+## Eksekusi User Guide U2 dan U4: 2026-02-24
+
+Ruang lingkup:
+- Menjalankan audit role-flow (`U2`) untuk memastikan topik user guide sinkron dengan perilaku route dan visibilitas backend.
+- Membuat skeleton dokumen user guide (`U4`) dengan copywriting natural-humanis sebagai fondasi konten.
+
+Artefak:
+- `docs/process/TODO_USER_GUIDE_NATURAL_HUMANIS_2026_02_24.md`
+- `docs/process/USER_GUIDE_ROLE_FLOW_AUDIT_2026_02_24.md`
+- `docs/user-guide/README.md`
+- `docs/user-guide/mulai-cepat.md`
+- `docs/user-guide/peran/sekretaris-desa.md`
+- `docs/user-guide/peran/sekretaris-kecamatan.md`
+- `docs/user-guide/peran/pokja-desa.md`
+- `docs/user-guide/peran/pokja-kecamatan.md`
+- `docs/user-guide/peran/super-admin.md`
+- `docs/user-guide/alur/kelola-data-harian.md`
+- `docs/user-guide/alur/filter-dashboard-dan-membaca-grafik.md`
+- `docs/user-guide/alur/cetak-dan-ekspor-laporan.md`
+- `docs/user-guide/faq.md`
+- `docs/README.md`
+
+Perintah audit/validasi:
+- `rg -n "scope.role|module.visibility|Route::prefix\\('desa'\\)|Route::prefix\\('kecamatan'\\)" routes/web.php`
+  - hasil: rute scope desa/kecamatan dan middleware visibilitas terdeteksi.
+- `php artisan test --filter=ExampleTest`
+  - hasil: `PASS` (`2` test, `3` assertions).
+
+Keputusan:
+- Struktur user guide per peran dan per alur dinyatakan valid untuk fase penulisan konten berikutnya.
+- Bahasa skeleton menggunakan gaya natural-humanis dan menghindari istilah teknis internal sebagai label utama.
+
+Status:
+- `PASS` untuk eksekusi `U2` dan `U4`.
+
+## User Guide Cetak Pilot (Login): 2026-02-24
+
+Ruang lingkup:
+- Menyiapkan dokumen user guide versi siap cetak untuk langkah login dengan screenshot aktual.
+- Merapikan lokasi screenshot agar konsisten (`screenshots`).
+
+Artefak:
+- `docs/user-guide/screenshots/01-login.png`
+- `docs/user-guide/print/README.md`
+- `docs/user-guide/print/01-login-siap-cetak.html`
+- `docs/user-guide/README.md`
+- `docs/README.md`
+- `docs/process/TODO_USER_GUIDE_NATURAL_HUMANIS_2026_02_24.md`
+
+Perintah audit/validasi:
+- `Get-ChildItem docs/user-guide -Recurse -File`
+  - hasil: file screenshot dan dokumen print terdeteksi pada lokasi target.
+- `php artisan test --filter=ExampleTest`
+  - hasil: `PASS` (`2` test, `3` assertions).
+
+Keputusan:
+- Format HTML A4 dipakai sebagai baseline dokumen siap cetak.
+- Penamaan aset screenshot distandardkan ke pola `NN-nama.png`.
+
+Status:
+- `PASS` untuk pilot dokumen cetak login.
+
+## User Guide Cetak Lengkap Berurutan (Tanpa Screenshot): 2026-02-24
+
+Ruang lingkup:
+- Menyediakan satu dokumen cetak gabungan berurutan untuk seluruh konten user guide.
+- Tidak menyertakan screenshot agar dokumen fokus ke instruksi teks.
+
+Artefak:
+- `docs/user-guide/print/00-user-guide-lengkap-siap-cetak.html`
+- `docs/user-guide/print/README.md`
+- `docs/user-guide/README.md`
+- `docs/process/TODO_USER_GUIDE_NATURAL_HUMANIS_2026_02_24.md`
+
+Perintah audit/validasi:
+- `Get-ChildItem docs/user-guide/print -File`
+  - hasil: dokumen cetak gabungan terdeteksi.
+- `php artisan test --filter=ExampleTest`
+  - hasil: `PASS` (`2` test, `3` assertions).
+
+Keputusan:
+- Dokumen `00-user-guide-lengkap-siap-cetak.html` ditetapkan sebagai file utama untuk cetak cepat seluruh panduan.
+
+Status:
+- `PASS` untuk dokumen cetak gabungan tanpa screenshot.
+
+## Penegasan Retensi Screenshot Login: 2026-02-24
+
+Ruang lingkup:
+- Menjaga agar dokumen login bergambar tetap tersedia saat dokumen cetak gabungan dipakai sebagai dokumen utama.
+
+Artefak:
+- `docs/user-guide/print/README.md`
+- `docs/user-guide/print/00-user-guide-lengkap-siap-cetak.html`
+- `docs/user-guide/README.md`
+
+Keputusan:
+- `01-login-siap-cetak.html` dan `screenshots/01-login.png` tetap dipertahankan sebagai referensi visual.
+
+Status:
+- `PASS` untuk retensi screenshot login.
+
+## Penyesuaian Dokumen Cetak Menjadi 1 Gambar: 2026-02-24
+
+Ruang lingkup:
+- Menyusun dokumen cetak gabungan agar hanya memuat satu gambar referensi visual (halaman login).
+
+Artefak:
+- `docs/user-guide/print/00-user-guide-lengkap-siap-cetak.html`
+- `docs/user-guide/print/README.md`
+- `docs/user-guide/README.md`
+- `docs/process/TODO_USER_GUIDE_NATURAL_HUMANIS_2026_02_24.md`
+
+Keputusan:
+- Dokumen gabungan cetak ditetapkan memuat tepat 1 gambar (`screenshots/01-login.png`).
+
+Status:
+- `PASS` untuk penyusunan dokumen dengan satu gambar.

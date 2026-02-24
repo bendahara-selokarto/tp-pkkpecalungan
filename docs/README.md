@@ -30,6 +30,16 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
   - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
   - `docs/process/RELEASE_CHECKLIST_PDF.md`
 
+## docs/user-guide
+- Panduan penggunaan sistem untuk pengguna akhir per peran dan per alur kerja.
+- File utama:
+  - `docs/user-guide/README.md`
+  - `docs/user-guide/mulai-cepat.md`
+  - `docs/user-guide/peran/*.md`
+  - `docs/user-guide/alur/*.md`
+  - `docs/user-guide/faq.md`
+  - `docs/user-guide/print/*.html` (versi siap cetak)
+
 ## docs/security
 - Audit policy/scope dan checklist regresi akses.
 

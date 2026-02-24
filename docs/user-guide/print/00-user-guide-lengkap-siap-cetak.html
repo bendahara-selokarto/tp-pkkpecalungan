@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>User Guide Lengkap - Siap Cetak</title>
+  <style>
+    @page {
+      size: A4 portrait;
+      margin: 12mm;
+    }
+
+    :root {
+      --text: #1f2937;
+      --muted: #4b5563;
+      --line: #d1d5db;
+      --accent: #0f766e;
+      --bg: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Calibri, Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.45;
+      font-size: 11pt;
+    }
+
+    .sheet {
+      width: 100%;
+      max-width: 186mm;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin: 0 0 2mm;
+      font-size: 20pt;
+      color: var(--accent);
+    }
+
+    .meta {
+      margin: 0 0 6mm;
+      color: var(--muted);
+      font-size: 10pt;
+    }
+
+    .toc,
+    .block {
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 4mm;
+      margin-bottom: 4mm;
+      break-inside: avoid;
+    }
+
+    h2 {
+      margin: 0 0 2mm;
+      font-size: 14pt;
+      color: #111827;
+    }
+
+    h3 {
+      margin: 0 0 1.6mm;
+      font-size: 12pt;
+      color: #111827;
+    }
+
+    p,
+    li {
+      margin: 0 0 1.7mm;
+    }
+
+    ul,
+    ol {
+      margin: 0 0 0 5mm;
+      padding: 0;
+    }
+
+    .section {
+      break-before: page;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 10pt;
+    }
+
+    figure {
+      margin: 0;
+      break-inside: avoid;
+    }
+
+    img {
+      width: 100%;
+      height: auto;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      display: block;
+    }
+
+    figcaption {
+      margin-top: 2mm;
+      font-size: 9.5pt;
+      color: var(--muted);
+    }
+
+    @media print {
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <h1>User Guide Lengkap</h1>
+    <p class="meta">Sistem Administrasi TP PKK Pecalungan | Versi cetak | Pembaruan: 24 Februari 2026</p>
+
+    <section class="toc">
+      <h2>Daftar Isi</h2>
+      <ol>
+        <li>Mulai Cepat</li>
+        <li>Panduan Peran: Sekretaris Desa</li>
+        <li>Panduan Peran: Sekretaris Kecamatan</li>
+        <li>Panduan Peran: Pokja Desa</li>
+        <li>Panduan Peran: Pokja Kecamatan</li>
+        <li>Panduan Peran: Super Admin</li>
+        <li>Alur: Kelola Data Harian</li>
+        <li>Alur: Filter Dashboard dan Membaca Grafik</li>
+        <li>Alur: Cetak dan Ekspor Laporan</li>
+        <li>FAQ (Pertanyaan yang Sering Muncul)</li>
+      </ol>
+      <p class="note">Catatan: Versi login dengan screenshot tetap tersedia pada file <code>01-login-siap-cetak.html</code>.</p>
+    </section>
+
+    <section class="block">
+      <h2>Referensi Visual (1 Gambar)</h2>
+      <figure>
+        <img src="../screenshots/01-login.png" alt="Tampilan halaman login aplikasi TP PKK Pecalungan">
+        <figcaption>Gambar 1. Halaman login aplikasi (satu-satunya gambar pada dokumen ini).</figcaption>
+      </figure>
+    </section>
+
+    <section class="section block">
+      <h2>1. Mulai Cepat</h2>
+      <h3>Untuk Siapa</h3>
+      <p>Pengguna baru yang ingin langsung memakai sistem.</p>
+      <h3>Tujuan</h3>
+      <p>Anda bisa login, mengenali menu utama, dan mulai bekerja sesuai peran.</p>
+      <h3>Langkah Singkat</h3>
+      <ol>
+        <li>Buka halaman login sistem.</li>
+        <li>Masukkan email dan kata sandi akun Anda.</li>
+        <li>Setelah masuk, lihat menu yang muncul di sisi kiri.</li>
+        <li>Pilih menu sesuai tugas Anda hari ini.</li>
+      </ol>
+      <h3>Yang Akan Anda Lihat</h3>
+      <ul>
+        <li>Dashboard ringkas.</li>
+        <li>Menu domain sesuai peran akun Anda.</li>
+        <li>Tanda <strong>RO</strong> pada menu yang hanya bisa dibaca.</li>
+      </ul>
+      <h3>Jika Terkendala</h3>
+      <ul>
+        <li>Jika gagal login: pastikan email dan kata sandi benar.</li>
+        <li>Jika menu tidak muncul: hubungi admin untuk cek akses akun.</li>
+        <li>Jika halaman menolak simpan data: kemungkinan modul Anda hanya mode baca.</li>
+      </ul>
+    </section>
+
+    <section class="section block">
+      <h2>2. Panduan Peran: Sekretaris Desa</h2>
+      <h3>Fokus Peran Anda</h3>
+      <ul>
+        <li>Mengelola modul sekretaris di level desa.</li>
+        <li>Memantau data Pokja I-IV dalam mode baca.</li>
+      </ul>
+      <h3>Yang Bisa Anda Kerjakan</h3>
+      <ul>
+        <li>Menambah, mengubah, dan mencetak data pada modul sekretaris.</li>
+        <li>Melihat data pada modul pokja untuk kebutuhan pemantauan.</li>
+      </ul>
+      <h3>Alur Kerja Harian</h3>
+      <ol>
+        <li>Cek dashboard untuk ringkasan kondisi data.</li>
+        <li>Selesaikan input atau pembaruan data di modul sekretaris.</li>
+        <li>Tinjau modul pokja untuk memastikan data sudah terisi.</li>
+        <li>Cetak laporan bila dibutuhkan.</li>
+      </ol>
+      <h3>Batasan yang Perlu Diketahui</h3>
+      <ul>
+        <li>Pada modul pokja, Anda bisa melihat data tetapi tidak bisa mengubah.</li>
+        <li>Jika muncul label <strong>RO</strong>, artinya menu tersebut hanya untuk baca.</li>
+      </ul>
+    </section>
+
+    <section class="section block">
+      <h2>3. Panduan Peran: Sekretaris Kecamatan</h2>
+      <h3>Fokus Peran Anda</h3>
+      <ul>
+        <li>Mengelola modul sekretaris di level kecamatan.</li>
+        <li>Memantau data Pokja I-IV dalam mode baca.</li>
+        <li>Memantau kegiatan desa pada menu monitoring kecamatan.</li>
+      </ul>
+      <h3>Yang Bisa Anda Kerjakan</h3>
+      <ul>
+        <li>Menambah, mengubah, dan mencetak data pada modul sekretaris kecamatan.</li>
+        <li>Melihat data pokja tanpa mengubah data.</li>
+        <li>Melihat detail kegiatan desa untuk monitoring.</li>
+      </ul>
+      <h3>Alur Kerja Harian</h3>
+      <ol>
+        <li>Buka dashboard untuk melihat ringkasan wilayah kecamatan.</li>
+        <li>Perbarui data pada modul sekretaris yang menjadi tanggung jawab Anda.</li>
+        <li>Cek modul pokja sebagai bahan pemantauan.</li>
+        <li>Gunakan menu monitoring untuk melihat kegiatan desa.</li>
+        <li>Cetak laporan bila diperlukan.</li>
+      </ol>
+      <h3>Batasan yang Perlu Diketahui</h3>
+      <ul>
+        <li>Modul pokja dan monitoring bersifat baca untuk peran sekretaris.</li>
+        <li>Aksi ubah data ditolak jika menu sedang mode <strong>RO</strong>.</li>
+      </ul>
+    </section>
+
+    <section class="section block">
+      <h2>4. Panduan Peran: Pokja Desa</h2>
+      <h3>Fokus Peran Anda</h3>
+      <p>Mengelola data pada bidang pokja sesuai tugas Anda.</p>
+      <h3>Yang Bisa Anda Kerjakan</h3>
+      <ul>
+        <li>Menambah data baru.</li>
+        <li>Mengubah data yang sudah ada.</li>
+        <li>Mencetak laporan dari modul pokja Anda.</li>
+      </ul>
+      <h3>Alur Kerja Harian</h3>
+      <ol>
+        <li>Buka menu pokja sesuai bidang Anda.</li>
+        <li>Isi data baru atau perbarui data yang berubah.</li>
+        <li>Periksa kembali data sebelum disimpan.</li>
+        <li>Cetak laporan untuk rekap berkala.</li>
+      </ol>
+      <h3>Batasan yang Perlu Diketahui</h3>
+      <ul>
+        <li>Anda hanya bisa mengakses menu pokja yang sesuai dengan akun Anda.</li>
+        <li>Menu di luar pokja Anda tidak akan muncul.</li>
+      </ul>
+    </section>
+
+    <section class="section block">
+      <h2>5. Panduan Peran: Pokja Kecamatan</h2>
+      <h3>Fokus Peran Anda</h3>
+      <p>Mengelola data pokja pada level kecamatan sesuai bidang Anda.</p>
+      <h3>Yang Bisa Anda Kerjakan</h3>
+      <ul>
+        <li>Menambah dan memperbarui data pada modul pokja Anda.</li>
+        <li>Melihat rekap data kecamatan sesuai cakupan bidang.</li>
+        <li>Mencetak laporan modul pokja.</li>
+      </ul>
+      <h3>Alur Kerja Harian</h3>
+      <ol>
+        <li>Masuk ke modul pokja sesuai bidang akun Anda.</li>
+        <li>Lakukan input atau pembaruan data.</li>
+        <li>Cek konsistensi data sebelum final.</li>
+        <li>Cetak laporan jika diperlukan untuk rapat atau evaluasi.</li>
+      </ol>
+      <h3>Batasan yang Perlu Diketahui</h3>
+      <ul>
+        <li>Akses hanya berlaku untuk bidang pokja yang sesuai dengan role akun Anda.</li>
+        <li>Modul di luar bidang tidak dapat dibuka.</li>
+      </ul>
+    </section>
+
+    <section class="section block">
+      <h2>6. Panduan Peran: Super Admin</h2>
+      <h3>Fokus Peran Anda</h3>
+      <p>Mengelola akun pengguna dan menjaga keteraturan akses sistem.</p>
+      <h3>Yang Bisa Anda Kerjakan</h3>
+      <ul>
+        <li>Membuat akun pengguna baru.</li>
+        <li>Memperbarui data akun pengguna.</li>
+        <li>Menghapus akun pengguna yang tidak dipakai.</li>
+      </ul>
+      <h3>Alur Kerja Harian</h3>
+      <ol>
+        <li>Buka menu Manajemen User.</li>
+        <li>Periksa data user yang aktif.</li>
+        <li>Tambah atau ubah akun sesuai kebutuhan organisasi.</li>
+        <li>Pastikan role, scope, dan wilayah user sudah tepat.</li>
+      </ol>
+      <h3>Batasan yang Perlu Diketahui</h3>
+      <ul>
+        <li>Gunakan perubahan role dengan hati-hati agar akses tidak salah sasaran.</li>
+        <li>Ikuti aturan internal saat mengubah akun dengan hak tinggi.</li>
+      </ul>
+    </section>
+
+    <section class="section block">
+      <h2>7. Alur: Kelola Data Harian</h2>
+      <h3>Tujuan</h3>
+      <p>Membantu Anda mengelola data rutin dengan alur yang rapi dan konsisten.</p>
+      <h3>Langkah Umum</h3>
+      <ol>
+        <li>Pilih menu kerja sesuai peran Anda.</li>
+        <li>Tambah data baru atau ubah data yang perlu diperbarui.</li>
+        <li>Periksa kembali isian penting sebelum simpan.</li>
+        <li>Simpan dan pastikan data muncul di daftar.</li>
+      </ol>
+      <h3>Hasil yang Diharapkan</h3>
+      <ul>
+        <li>Data harian tercatat tepat waktu.</li>
+        <li>Data siap dipakai untuk dashboard dan laporan.</li>
+      </ul>
+      <h3>Jika Terkendala</h3>
+      <ul>
+        <li>Tidak bisa simpan: cek apakah menu Anda mode baca (<strong>RO</strong>).</li>
+        <li>Data tidak muncul: cek filter halaman dan rentang tanggal.</li>
+      </ul>
+    </section>
+
+    <section class="section block">
+      <h2>8. Alur: Filter Dashboard dan Membaca Grafik</h2>
+      <h3>Tujuan</h3>
+      <p>Membantu Anda membaca kondisi data dengan cepat melalui dashboard.</p>
+      <h3>Langkah Umum</h3>
+      <ol>
+        <li>Buka halaman Dashboard.</li>
+        <li>Pilih filter yang tersedia sesuai peran Anda.</li>
+        <li>Baca ringkasan angka terlebih dahulu.</li>
+        <li>Lanjutkan ke grafik untuk melihat pola data.</li>
+      </ol>
+      <h3>Hasil yang Diharapkan</h3>
+      <ul>
+        <li>Anda memahami kondisi data terbaru tanpa membuka satu per satu modul.</li>
+        <li>Anda bisa menentukan area yang perlu ditindaklanjuti.</li>
+      </ul>
+      <h3>Jika Terkendala</h3>
+      <ul>
+        <li>Grafik kosong: cek apakah data pada modul sumber sudah terisi.</li>
+        <li>Filter tidak muncul: cek hak akses akun Anda.</li>
+      </ul>
+    </section>
+
+    <section class="section block">
+      <h2>9. Alur: Cetak dan Ekspor Laporan</h2>
+      <h3>Tujuan</h3>
+      <p>Membantu Anda menyiapkan laporan yang siap dibagikan untuk rapat dan evaluasi.</p>
+      <h3>Langkah Umum</h3>
+      <ol>
+        <li>Masuk ke modul data yang ingin dilaporkan.</li>
+        <li>Pastikan data yang akan dicetak sudah benar.</li>
+        <li>Pilih menu cetak laporan pada modul tersebut.</li>
+        <li>Simpan atau bagikan hasil laporan sesuai kebutuhan.</li>
+      </ol>
+      <h3>Hasil yang Diharapkan</h3>
+      <ul>
+        <li>Laporan sesuai data terbaru.</li>
+        <li>Format laporan siap pakai untuk kebutuhan administrasi.</li>
+      </ul>
+      <h3>Jika Terkendala</h3>
+      <ul>
+        <li>Laporan tidak muncul: pastikan data dan filter sudah benar.</li>
+        <li>Hasil kurang sesuai: cek kembali data sumber sebelum cetak ulang.</li>
+      </ul>
+    </section>
+
+    <section class="section block">
+      <h2>10. FAQ (Pertanyaan yang Sering Muncul)</h2>
+      <h3>Kenapa menu saya berbeda dengan rekan saya?</h3>
+      <p>Akses menu mengikuti peran akun Anda. Jika perlu akses tambahan, hubungi admin.</p>
+      <h3>Kenapa ada label <strong>RO</strong> di beberapa menu?</h3>
+      <p><strong>RO</strong> artinya menu hanya bisa dibaca. Anda tetap bisa melihat data, tetapi tidak bisa mengubah.</p>
+      <h3>Kenapa saya tidak bisa menyimpan data?</h3>
+      <p>Kemungkinan:</p>
+      <ul>
+        <li>akun Anda memang tidak punya izin ubah pada modul itu,</li>
+        <li>data wajib belum lengkap,</li>
+        <li>format isian belum sesuai.</li>
+      </ul>
+      <h3>Kenapa dashboard saya masih kosong?</h3>
+      <p>Dashboard mengambil data dari modul sumber. Jika belum ada input, ringkasan akan terlihat kosong.</p>
+      <h3>Bagaimana cara meminta perubahan akses?</h3>
+      <p>Sampaikan kebutuhan akses ke admin dengan menyebut nama, peran yang dibutuhkan, dan wilayah kerja.</p>
+    </section>
+
+    <p class="note">Catatan: Dokumen ini disusun untuk cetak cepat. Pembaruan konten mengikuti revisi panduan pada folder <code>docs/user-guide/</code>.</p>
+  </main>
+</body>
+</html>
