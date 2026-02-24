@@ -15,7 +15,7 @@ defineProps({
   },
 })
 
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus kegiatan ini?'
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data buku kegiatan ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 
@@ -47,11 +47,11 @@ const formatDate = (value) => formatDateForDisplay(value)
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiClipboardList" title="Kegiatan Desa" main />
+    <SectionTitleLineWithButton :icon="mdiClipboardList" title="Buku Kegiatan Desa" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Kegiatan</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Buku Kegiatan</h3>
         <div class="flex items-center gap-2">
           <a
             href="/desa/activities/report/pdf"
@@ -65,7 +65,7 @@ const formatDate = (value) => formatDateForDisplay(value)
             href="/desa/activities/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Kegiatan
+            + Tambah Buku Kegiatan
           </Link>
         </div>
       </div>
@@ -121,7 +121,7 @@ const formatDate = (value) => formatDateForDisplay(value)
             </tr>
             <tr v-if="activities.length === 0">
               <td colspan="5" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data kegiatan belum tersedia.
+                Data buku kegiatan belum tersedia.
               </td>
             </tr>
           </tbody>

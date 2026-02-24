@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Buku Kegiatan TP PKK</title>
+    <title>Buku Kegiatan</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 9px; color: #111827; }
         .lampiran { text-align: right; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
