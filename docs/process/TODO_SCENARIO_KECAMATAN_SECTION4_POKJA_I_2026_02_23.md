@@ -1,7 +1,7 @@
 # TODO Skenario Kecamatan Section 4 Pokja I 2026-02-23
 
 Tanggal: 2026-02-23  
-Status: `planned`
+Status: `done`
 
 ## Konteks
 
@@ -21,7 +21,7 @@ Status: `planned`
 - `Section 4` menampilkan rincian per desa:
   - nama desa,
   - total entri pokja I,
-  - rincian sumber modul pokja I (minimal: `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`).
+  - rincian sumber modul pokja I (minimal: `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`, `paar`).
 - Saat filter `section3_group` selain `pokja-i`, `section 4` tidak dirender.
 
 ## Kontrak Data Section 4
@@ -37,34 +37,34 @@ Status: `planned`
 
 ## Langkah Eksekusi (Checklist)
 
-- [ ] `S4-1` Backend contract:
+- [x] `S4-1` Backend contract:
   - tambahkan rule trigger `section 4` di use case dashboard role-aware.
   - aktif hanya untuk `kecamatan` + `section3_group=pokja-i`.
-- [ ] `S4-2` Repository boundary:
+- [x] `S4-2` Repository boundary:
   - tambah query agregasi pokja I per desa turunan kecamatan.
   - hasil minimal: `desa_id`, `desa_name`, `total`, `per_module`.
-- [ ] `S4-3` UI rendering:
+- [x] `S4-3` UI rendering:
   - render section 4 setelah section 3.
   - tampilkan chart/table per desa dan daftar sumber modul.
   - tambah empty-state khusus saat tidak ada data pokja I.
-- [ ] `S4-4` Query sync:
+- [x] `S4-4` Query sync:
   - pastikan state URL section 3 tidak conflict dengan section 4.
   - section 4 tidak memiliki filter baru (mengikuti section 3).
-- [ ] `S4-5` Label clarity:
+- [x] `S4-5` Label clarity:
   - judul section + subjudul sumber menyebut eksplisit "Pokja I per Desa".
   - hindari label generik tanpa konteks asal data.
 
 ## Validasi Wajib
 
-- [ ] Feature test:
+- [x] Feature test:
   - `kecamatan-sekretaris` + `section3_group=pokja-i` -> section 4 muncul.
   - `kecamatan-sekretaris` + `section3_group!=pokja-i` -> section 4 tidak muncul.
   - `desa-sekretaris` -> section 4 tidak muncul.
-- [ ] Feature test anti data leak:
+- [x] Feature test anti data leak:
   - section 4 hanya memuat desa turunan dari kecamatan user aktif.
-- [ ] Assertion metadata sumber:
+- [x] Assertion metadata sumber:
   - `source_group`, `source_scope`, `source_area_type` konsisten.
-- [ ] Regression:
+- [x] Regression:
   - `php artisan test --filter=DashboardDocumentCoverageTest`
   - `php artisan test --filter=DashboardActivityChartTest`
   - `php artisan test`
