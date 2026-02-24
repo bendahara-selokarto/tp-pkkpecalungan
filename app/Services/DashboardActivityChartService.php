@@ -3,6 +3,9 @@
 namespace App\Services;
 
 use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
+use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,7 +13,9 @@ use Illuminate\Database\Eloquent\Builder;
 class DashboardActivityChartService
 {
     public function __construct(
-        private readonly ActivityRepositoryInterface $activityRepository
+        private readonly ActivityRepositoryInterface $activityRepository,
+        private readonly AreaRepositoryInterface $areaRepository,
+        private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository
     ) {
     }
 
@@ -21,6 +26,7 @@ class DashboardActivityChartService
         $monthly = $this->buildMonthlyChart((clone $baseQuery));
         $status = $this->buildStatusChart((clone $baseQuery));
         $level = $this->buildLevelChart((clone $baseQuery));
+        $byDesa = $this->buildByDesaChart($user, (clone $baseQuery));
 
         return [
             'stats' => [
@@ -43,6 +49,12 @@ class DashboardActivityChartService
                 'level' => [
                     'labels' => ['Desa', 'Kecamatan'],
                     'values' => [$level['desa'], $level['kecamatan']],
+                ],
+                'by_desa' => [
+                    'labels' => $byDesa['labels'],
+                    'values' => $byDesa['values'],
+                    'books_total' => $byDesa['books_total'],
+                    'books_filled' => $byDesa['books_filled'],
                 ],
             ],
         ];
@@ -107,5 +119,98 @@ class DashboardActivityChartService
             'desa' => (int) ($rawLevel['desa'] ?? 0),
             'kecamatan' => (int) ($rawLevel['kecamatan'] ?? 0),
         ];
+    }
+
+    private function buildByDesaChart(User $user, Builder $query): array
+    {
+        if (! $this->isValidKecamatanScopeUser($user)) {
+            return [
+                'labels' => [],
+                'values' => [],
+                'books_total' => [],
+                'books_filled' => [],
+            ];
+        }
+
+        $kecamatanAreaId = (int) $user->area_id;
+        $desaAreas = $this->areaRepository
+            ->getDesaByKecamatan($kecamatanAreaId)
+            ->sortBy('name')
+            ->values();
+
+        if ($desaAreas->isEmpty()) {
+            return [
+                'labels' => [],
+                'values' => [],
+                'books_total' => [],
+                'books_filled' => [],
+            ];
+        }
+
+        $rawByDesa = $query
+            ->where('level', ScopeLevel::DESA->value)
+            ->selectRaw('area_id, COUNT(*) as total')
+            ->groupBy('area_id')
+            ->pluck('total', 'area_id');
+
+        $moduleSlugs = $this->dashboardDocumentCoverageRepository->trackedModuleSlugs();
+        $bookTotalPerDesa = count($moduleSlugs);
+        $rawBooksByDesa = collect(
+            $this->dashboardDocumentCoverageRepository->buildGroupBreakdownByDesa($user, $moduleSlugs)
+        )
+            ->mapWithKeys(
+                static fn (array $item): array => [(int) ($item['desa_id'] ?? 0) => $item]
+            )
+            ->all();
+
+        return [
+            'labels' => $desaAreas->map(
+                static fn ($desa): string => (string) ($desa->name ?? '-')
+            )->all(),
+            'values' => $desaAreas->map(
+                static function ($desa) use ($rawByDesa): int {
+                    $areaId = (int) ($desa->id ?? 0);
+
+                    return (int) ($rawByDesa[$areaId] ?? 0);
+                }
+            )->all(),
+            'books_total' => $desaAreas->map(
+                static fn (): int => $bookTotalPerDesa
+            )->all(),
+            'books_filled' => $desaAreas->map(
+                static function ($desa) use ($rawBooksByDesa): int {
+                    $areaId = (int) ($desa->id ?? 0);
+                    $perModule = $rawBooksByDesa[$areaId]['per_module'] ?? null;
+
+                    if (! is_array($perModule)) {
+                        return 0;
+                    }
+
+                    return array_reduce(
+                        $perModule,
+                        static fn (int $filled, mixed $total): int => $filled + ((int) $total > 0 ? 1 : 0),
+                        0
+                    );
+                }
+            )->all(),
+        ];
+    }
+
+    private function isValidKecamatanScopeUser(User $user): bool
+    {
+        if (! $user->hasRoleForScope(ScopeLevel::KECAMATAN->value)) {
+            return false;
+        }
+
+        if (! is_numeric($user->area_id)) {
+            return false;
+        }
+
+        $areaId = (int) $user->area_id;
+        $areaLevel = $user->relationLoaded('area')
+            ? $user->area?->level
+            : $this->areaRepository->getLevelById($areaId);
+
+        return $areaLevel === ScopeLevel::KECAMATAN->value;
     }
 }

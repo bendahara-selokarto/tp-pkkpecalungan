@@ -10,11 +10,9 @@ import {
   mdiBookOpenVariant,
   mdiChartBar,
   mdiChartTimelineVariant,
-  mdiCheckCircle,
   mdiClipboardList,
   mdiFileDocumentCheck,
   mdiFileDocumentMinus,
-  mdiPencilCircle,
 } from '@mdi/js'
 
 const props = defineProps({
@@ -27,13 +25,9 @@ const props = defineProps({
     default: () => ({
       total: 0,
       this_month: 0,
-      published: 0,
-      draft: 0,
       activity: {
         total: 0,
         this_month: 0,
-        published: 0,
-        draft: 0,
       },
       documents: {
         total_buku_tracked: 0,
@@ -480,20 +474,6 @@ const buildBlockStats = (block) => {
         number: toNumber(stats.this_month),
         color: 'text-indigo-500',
       },
-      {
-        key: 'activity-published',
-        icon: mdiCheckCircle,
-        label: `Aktivitas Terpublikasi ${groupLabel}`,
-        number: toNumber(stats.published),
-        color: 'text-emerald-500',
-      },
-      {
-        key: 'activity-draft',
-        icon: mdiPencilCircle,
-        label: `Aktivitas Draft ${groupLabel}`,
-        number: toNumber(stats.draft),
-        color: 'text-amber-500',
-      },
     ]
   }
 
@@ -584,19 +564,234 @@ const buildDocumentCoverageChartData = (block) => {
 const hasDocumentCoverageData = (block) =>
   resolveDocumentCoverageItems(block).some((item) => item.total > 0)
 
-const buildActivityMonthlyChartData = (block) => {
-  const labels = block?.charts?.monthly?.labels ?? []
+const buildActivityMonthlyMultiAxisSeries = (block) => {
   const values = (block?.charts?.monthly?.values ?? []).map((value) => toNumber(value))
+  const cumulativeValues = values.reduce((result, value, index) => {
+    const previous = index > 0 ? result[index - 1] : 0
+    result.push(previous + value)
+    return result
+  }, [])
 
-  return buildSingleDataset(labels, values, '#0ea5e9')
+  return [
+    {
+      name: 'Jumlah Aktivitas',
+      type: 'bar',
+      data: values,
+    },
+    {
+      name: 'Akumulasi 6 Bulan',
+      type: 'bar',
+      data: cumulativeValues,
+    },
+  ]
 }
 
-const buildActivityStatusChartData = (block) => {
-  const labels = block?.charts?.status?.labels ?? ['Draft', 'Published']
-  const values = (block?.charts?.status?.values ?? [0, 0]).map((value) => toNumber(value))
+const buildActivityMonthlyMultiAxisOptions = (block) => {
+  const labels = block?.charts?.monthly?.labels ?? []
+  const axisLabelStyles = {
+    colors: labels.map(() => '#64748b'),
+    fontSize: '11px',
+  }
 
-  return buildSingleDataset(labels, values, ['#f59e0b', '#10b981'])
+  return {
+    chart: {
+      type: 'bar',
+      toolbar: {
+        show: false,
+      },
+      animations: {
+        enabled: true,
+      },
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        distributed: false,
+        columnWidth: '55%',
+        borderRadius: 4,
+      },
+    },
+    colors: ['#0ea5e9', '#6366f1'],
+    dataLabels: {
+      enabled: false,
+    },
+    grid: {
+      borderColor: '#e2e8f0',
+      strokeDashArray: 4,
+    },
+    legend: {
+      show: true,
+      position: 'top',
+      horizontalAlign: 'left',
+    },
+    xaxis: {
+      categories: labels,
+      labels: {
+        style: axisLabelStyles,
+      },
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: [
+      {
+        title: {
+          text: 'Jumlah Aktivitas',
+        },
+        labels: {
+          style: {
+            colors: ['#0ea5e9'],
+          },
+        },
+      },
+      {
+        opposite: true,
+        title: {
+          text: 'Akumulasi',
+        },
+        labels: {
+          style: {
+            colors: ['#6366f1'],
+          },
+        },
+      },
+    ],
+    noData: {
+      text: 'Belum ada data',
+      align: 'center',
+      verticalAlign: 'middle',
+    },
+  }
 }
+
+const hasActivityMonthlyData = (block) =>
+  (block?.charts?.monthly?.values ?? []).some((value) => toNumber(value) > 0)
+
+const isKecamatanSekretarisSection1Block = (block) =>
+  normalizeToken(block?.section?.key, '') === 'sekretaris-section-1'
+  && normalizeToken(block?.section?.source_level, '') === 'kecamatan'
+
+const shouldShowActivityByDesaChart = (block) =>
+  isKecamatanSekretarisSection1Block(block)
+
+const buildActivityByDesaMultiAxisSeries = (block) => {
+  const labels = block?.charts?.by_desa?.labels ?? []
+  const activityValues = (block?.charts?.by_desa?.values ?? []).map((value) => toNumber(value))
+  const totalBookValues = (block?.charts?.by_desa?.books_total ?? []).map((value) => toNumber(value))
+  const filledBookValues = (block?.charts?.by_desa?.books_filled ?? []).map((value) => toNumber(value))
+  const syncedActivityValues = labels.map((_, index) => toNumber(activityValues[index] ?? 0))
+  const syncedTotalBookValues = labels.map((_, index) => toNumber(totalBookValues[index] ?? 0))
+  const syncedFilledBookValues = labels.map((_, index) => toNumber(filledBookValues[index] ?? 0))
+
+  return [
+    {
+      name: 'Kegiatan',
+      type: 'bar',
+      data: syncedActivityValues,
+    },
+    {
+      name: 'Jumlah Buku',
+      type: 'line',
+      data: syncedTotalBookValues,
+    },
+    {
+      name: 'Buku Terisi',
+      type: 'line',
+      data: syncedFilledBookValues,
+    },
+  ]
+}
+
+const buildActivityByDesaMultiAxisOptions = (block) => {
+  const labels = block?.charts?.by_desa?.labels ?? []
+  const axisLabelStyles = {
+    colors: labels.map(() => '#64748b'),
+    fontSize: '11px',
+  }
+
+  return {
+    chart: {
+      type: 'line',
+      toolbar: {
+        show: false,
+      },
+      animations: {
+        enabled: true,
+      },
+    },
+    stroke: {
+      width: [0, 3, 3],
+      curve: 'smooth',
+    },
+    plotOptions: {
+      bar: {
+        horizontal: false,
+        columnWidth: '55%',
+        borderRadius: 4,
+      },
+    },
+    colors: ['#0ea5e9', '#6366f1', '#10b981'],
+    dataLabels: {
+      enabled: false,
+    },
+    grid: {
+      borderColor: '#e2e8f0',
+      strokeDashArray: 4,
+    },
+    legend: {
+      show: true,
+      position: 'top',
+      horizontalAlign: 'left',
+    },
+    xaxis: {
+      categories: labels,
+      labels: {
+        style: axisLabelStyles,
+      },
+      axisBorder: {
+        show: false,
+      },
+      axisTicks: {
+        show: false,
+      },
+    },
+    yaxis: [
+      {
+        title: {
+          text: 'Jumlah Kegiatan',
+        },
+        labels: {
+          style: {
+            colors: ['#0ea5e9'],
+          },
+        },
+      },
+      {
+        opposite: true,
+        title: {
+          text: 'Jumlah Buku',
+        },
+        labels: {
+          style: {
+            colors: ['#6366f1'],
+          },
+        },
+      },
+    ],
+    noData: {
+      text: 'Belum ada data',
+      align: 'center',
+      verticalAlign: 'middle',
+    },
+  }
+}
+
+const hasActivityByDesaData = (block) =>
+  ['values', 'books_total', 'books_filled'].some((metricKey) =>
+    (block?.charts?.by_desa?.[metricKey] ?? []).some((value) => toNumber(value) > 0))
 
 const buildActivityLevelChartData = (block) => {
   const labels = block?.charts?.level?.labels ?? ['Desa', 'Kecamatan']
@@ -605,15 +800,10 @@ const buildActivityLevelChartData = (block) => {
   return buildSingleDataset(labels, values, ['#06b6d4', '#6366f1'])
 }
 
-const hasAnyChartData = (chartData) =>
-  (chartData?.datasets?.[0]?.data ?? []).some((value) => toNumber(value) > 0)
-
 // Legacy fallback while dynamic blocks are still rolling out.
 const activityStats = computed(() => props.dashboardStats.activity ?? {
   total: props.dashboardStats.total ?? 0,
   this_month: props.dashboardStats.this_month ?? 0,
-  published: props.dashboardStats.published ?? 0,
-  draft: props.dashboardStats.draft ?? 0,
 })
 
 const documentStats = computed(() => props.dashboardStats.documents ?? {
@@ -885,26 +1075,46 @@ const hasLegacyLevelDistributionData = computed(() =>
             </template>
 
             <template v-else>
-              <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
+              <template v-if="shouldShowActivityByDesaChart(block)">
+                <div class="mt-6">
+                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                    Kegiatan per Desa
+                  </h4>
+                  <div class="h-72">
+                    <apexchart
+                      type="line"
+                      width="100%"
+                      height="100%"
+                      :options="buildActivityByDesaMultiAxisOptions(block)"
+                      :series="buildActivityByDesaMultiAxisSeries(block)"
+                    />
+                  </div>
+                  <p
+                    v-if="!hasActivityByDesaData(block)"
+                    class="mt-3 text-xs text-amber-700 dark:text-amber-300"
+                  >
+                    Belum ada aktivitas desa terhitung untuk kecamatan ini.
+                  </p>
+                </div>
+              </template>
+
+              <div v-else class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                     Aktivitas Bulanan
                   </h4>
                   <div class="h-72">
-                    <BarChart :data="buildActivityMonthlyChartData(block)" />
+                    <apexchart
+                      type="bar"
+                      width="100%"
+                      height="100%"
+                      :options="buildActivityMonthlyMultiAxisOptions(block)"
+                      :series="buildActivityMonthlyMultiAxisSeries(block)"
+                    />
                   </div>
-                  <p v-if="!hasAnyChartData(buildActivityMonthlyChartData(block))" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
+                  <p v-if="!hasActivityMonthlyData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
                     Belum ada aktivitas terhitung untuk periode ini.
                   </p>
-                </div>
-
-                <div>
-                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Status Aktivitas
-                  </h4>
-                  <div class="h-72">
-                    <BarChart :data="buildActivityStatusChartData(block)" />
-                  </div>
                 </div>
 
                 <div>
@@ -935,8 +1145,6 @@ const hasLegacyLevelDistributionData = computed(() =>
       <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
         <CardBoxWidget :icon="mdiClipboardList" :number="activityStats.total" label="Total Aktivitas" color="text-blue-500" />
         <CardBoxWidget :icon="mdiChartTimelineVariant" :number="activityStats.this_month" label="Bulan Ini" color="text-indigo-500" />
-        <CardBoxWidget :icon="mdiCheckCircle" :number="activityStats.published" label="Terpublikasi" color="text-emerald-500" />
-        <CardBoxWidget :icon="mdiPencilCircle" :number="activityStats.draft" label="Draft" color="text-amber-500" />
       </div>
 
       <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">

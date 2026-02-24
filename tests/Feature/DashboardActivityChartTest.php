@@ -143,7 +143,11 @@ class DashboardActivityChartTest extends TestCase
                 ->where('dashboardStats.this_month', 1)
                 ->where('dashboardStats.published', 1)
                 ->where('dashboardStats.draft', 1)
-                ->where('dashboardCharts.level.values', [1, 1]);
+                ->where('dashboardCharts.level.values', [1, 1])
+                ->where('dashboardCharts.by_desa.labels', ['Gombong'])
+                ->where('dashboardCharts.by_desa.values', [1])
+                ->where('dashboardCharts.by_desa.books_total', [19])
+                ->where('dashboardCharts.by_desa.books_filled', [1]);
         });
     }
 

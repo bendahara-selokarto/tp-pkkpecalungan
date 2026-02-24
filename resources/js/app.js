@@ -6,6 +6,7 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createPinia } from 'pinia';
 import { createApp, h } from 'vue';
+import VueApexCharts from 'vue3-apexcharts';
 import DashboardLayout from '@/Layouts/DashboardLayout.vue';
 import LayoutGuest from '@/admin-one/layouts/LayoutGuest.vue';
 import { useDarkModeStore } from '@/admin-one/stores/darkMode';
@@ -33,6 +34,7 @@ createInertiaApp({
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(pinia)
+            .use(VueApexCharts)
             .mount(el);
     },
     progress: {

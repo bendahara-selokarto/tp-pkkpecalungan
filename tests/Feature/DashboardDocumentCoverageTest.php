@@ -234,6 +234,8 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->component('Dashboard')
                 ->where('dashboardBlocks', function ($blocks): bool {
                     $collected = collect($blocks);
+                    $section1 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-1');
                     $section2 = $collected
                         ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-2');
                     $section3 = $collected
@@ -241,9 +243,15 @@ class DashboardDocumentCoverageTest extends TestCase
                     $section4 = $collected
                         ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
 
-                    return is_array($section2)
+                    return is_array($section1)
+                        && is_array($section2)
                         && is_array($section3)
                         && $section4 === null
+                        && ($section1['section']['source_level'] ?? null) === 'kecamatan'
+                        && ($section1['charts']['by_desa']['labels'] ?? null) === ['Gombong']
+                        && ($section1['charts']['by_desa']['values'] ?? null) === [1]
+                        && ($section1['charts']['by_desa']['books_total'] ?? null) === [19]
+                        && ($section1['charts']['by_desa']['books_filled'] ?? null) === [1]
                         && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
                         && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'pokja-i'
                         && ($section3['sources']['filter_context']['level'] ?? null) === 'desa'
