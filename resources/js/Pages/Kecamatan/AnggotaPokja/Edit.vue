@@ -33,7 +33,7 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountPlus" title="Edit Anggota Pokja Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountPlus" title="Edit Buku Anggota Pokja Kecamatan" main />
 
     <CardBox class="max-w-4xl">
       <form class="space-y-5" @submit.prevent="submit">

@@ -26,7 +26,7 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountPlus" title="Tambah Anggota Pokja Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountPlus" title="Tambah Buku Anggota Pokja Kecamatan" main />
 
     <CardBox class="max-w-4xl">
       <form class="space-y-5" @submit.prevent="submit">

@@ -22,7 +22,7 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Tambah Data Isian Kelompok Simulasi dan Penyuluhan (Kecamatan)" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Tambah Kelompok Simulasi dan Penyuluhan (Kecamatan)" main />
 
     <CardBox class="max-w-4xl">
       <form class="space-y-5" @submit.prevent="submit">

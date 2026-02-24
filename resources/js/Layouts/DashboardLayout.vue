@@ -70,7 +70,7 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/buku-keuangan`, label: 'Buku Keuangan' },
       { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-      { href: `/${scope}/anggota-pokja`, label: 'Anggota Pokja' },
+      { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja' },
       { href: `/${scope}/prestasi-lomba`, label: 'Prestasi Lomba' },
       { href: `/${scope}/laporan-tahunan-pkk`, label: 'Laporan Tahunan Tim Penggerak PKK' },
     ],
@@ -118,7 +118,7 @@ const buildScopedMenuGroups = (scope) => [
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
-      { href: `/${scope}/simulasi-penyuluhan`, label: 'Data Isian Kelompok Simulasi dan Penyuluhan' },
+      { href: `/${scope}/simulasi-penyuluhan`, label: 'Kelompok Simulasi dan Penyuluhan' },
       { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga' },
       { href: `/${scope}/program-prioritas`, label: 'Program Prioritas' },
       { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },

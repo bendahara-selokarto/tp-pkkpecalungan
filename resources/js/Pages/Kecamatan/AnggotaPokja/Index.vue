@@ -15,7 +15,7 @@ defineProps({
 })
 
 
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data anggota pokja ini?'
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data buku anggota pokja ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 
@@ -45,11 +45,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Anggota Pokja Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Buku Anggota Pokja Kecamatan" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Anggota Pokja</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Buku Anggota Pokja</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/anggota-pokja/report/pdf"
@@ -63,7 +63,7 @@ const cancelDelete = () => {
             href="/kecamatan/anggota-pokja/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Anggota Pokja
+            + Tambah Buku Anggota Pokja
           </Link>
         </div>
       </div>
@@ -117,7 +117,7 @@ const cancelDelete = () => {
             </tr>
             <tr v-if="anggotaPokjas.length === 0">
               <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data anggota pokja belum tersedia.
+                Data buku anggota pokja belum tersedia.
               </td>
             </tr>
           </tbody>

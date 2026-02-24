@@ -17,7 +17,7 @@ const totalKader = (item) => Number(item.jumlah_kader_l || 0) + Number(item.juml
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Data Isian Kelompok Simulasi dan Penyuluhan (Desa)" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Kelompok Simulasi dan Penyuluhan (Desa)" main />
 
     <CardBox class="max-w-4xl space-y-4">
       <div>

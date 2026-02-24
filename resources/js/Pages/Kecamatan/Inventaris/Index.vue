@@ -15,7 +15,7 @@ defineProps({
   },
 })
 
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus inventaris ini?'
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data buku inventaris ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 
@@ -48,11 +48,11 @@ const formatDate = (value) => formatDateForDisplay(value)
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiPackageVariantClosed" title="Inventaris Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiPackageVariantClosed" title="Buku Inventaris Kecamatan" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Inventaris</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Buku Inventaris</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/inventaris/report/pdf"
@@ -66,7 +66,7 @@ const formatDate = (value) => formatDateForDisplay(value)
             href="/kecamatan/inventaris/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Inventaris
+            + Tambah Buku Inventaris
           </Link>
         </div>
       </div>
@@ -120,7 +120,7 @@ const formatDate = (value) => formatDateForDisplay(value)
             </tr>
             <tr v-if="inventaris.length === 0">
               <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data inventaris belum tersedia.
+                Data buku inventaris belum tersedia.
               </td>
             </tr>
           </tbody>

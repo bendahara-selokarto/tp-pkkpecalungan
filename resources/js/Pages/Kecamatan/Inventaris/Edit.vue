@@ -35,7 +35,7 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiPackageVariantClosed" title="Edit Inventaris Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiPackageVariantClosed" title="Edit Buku Inventaris Kecamatan" main />
 
     <CardBox class="max-w-3xl">
       <form class="space-y-5" @submit.prevent="submit">

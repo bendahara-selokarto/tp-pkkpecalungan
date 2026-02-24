@@ -17,7 +17,7 @@ defineProps({
 
 const totalKader = (item) => Number(item.jumlah_kader_l || 0) + Number(item.jumlah_kader_p || 0)
 
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data isian kelompok simulasi dan penyuluhan ini?'
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data kelompok simulasi dan penyuluhan ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 
@@ -47,11 +47,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Data Isian Kelompok Simulasi dan Penyuluhan (Desa)" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Kelompok Simulasi dan Penyuluhan (Desa)" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Isian Kelompok Simulasi dan Penyuluhan</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Kelompok Simulasi dan Penyuluhan</h3>
         <div class="flex items-center gap-2">
           <a
             href="/desa/simulasi-penyuluhan/report/pdf"
@@ -65,7 +65,7 @@ const cancelDelete = () => {
             href="/desa/simulasi-penyuluhan/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Data
+            + Tambah Kelompok
           </Link>
         </div>
       </div>
@@ -123,7 +123,7 @@ const cancelDelete = () => {
             </tr>
             <tr v-if="simulasiPenyuluhanItems.length === 0">
               <td colspan="8" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data isian kelompok simulasi dan penyuluhan belum tersedia.
+                Data kelompok simulasi dan penyuluhan belum tersedia.
               </td>
             </tr>
           </tbody>

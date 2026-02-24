@@ -19,7 +19,7 @@ const formatDate = (value) => formatDateForDisplay(value)
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiPackageVariant" title="Detail Inventaris Desa" main />
+    <SectionTitleLineWithButton :icon="mdiPackageVariant" title="Detail Buku Inventaris Desa" main />
 
     <CardBox class="max-w-3xl space-y-4">
       <div>
