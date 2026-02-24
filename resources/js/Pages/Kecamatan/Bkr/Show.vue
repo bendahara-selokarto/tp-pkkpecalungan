@@ -15,7 +15,7 @@ const props = defineProps({
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail BKR Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Data Kelompok BKR" main />
 
     <CardBox class="max-w-4xl space-y-4">
       <div class="grid gap-4 md:grid-cols-2">

@@ -58,7 +58,7 @@ class DesaBkrController extends Controller
         $this->authorize('create', Bkr::class);
         $this->createScopedBkrAction->execute($request->validated(), ScopeLevel::DESA->value);
 
-        return redirect()->route('desa.bkr.index')->with('success', 'Data BKR berhasil dibuat');
+        return redirect()->route('desa.bkr.index')->with('success', 'Data kelompok BKR berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -103,7 +103,7 @@ class DesaBkrController extends Controller
         $this->authorize('update', $bkr);
         $this->updateBkrAction->execute($bkr, $request->validated());
 
-        return redirect()->route('desa.bkr.index')->with('success', 'Data BKR berhasil diupdate');
+        return redirect()->route('desa.bkr.index')->with('success', 'Data kelompok BKR berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -112,7 +112,7 @@ class DesaBkrController extends Controller
         $this->authorize('delete', $bkr);
         $this->bkrRepository->delete($bkr);
 
-        return redirect()->route('desa.bkr.index')->with('success', 'Data BKR berhasil dihapus');
+        return redirect()->route('desa.bkr.index')->with('success', 'Data kelompok BKR berhasil dihapus');
     }
 }
 

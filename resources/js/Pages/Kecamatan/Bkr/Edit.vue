@@ -28,7 +28,7 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Edit BKR Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Edit Data Kelompok BKR" main />
 
     <CardBox class="max-w-4xl">
       <form class="space-y-5" @submit.prevent="submit">

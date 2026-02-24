@@ -88,6 +88,8 @@
 - [x] Copy UI halaman daftar BKL/BKR dinormalisasi ke istilah autentik:
   - `Rekapitulasi Data Kelompok BKL`
   - `Rekapitulasi Data Kelompok BKR`
+- [x] Copy UI halaman tambah/edit/detail BKL/BKR dinormalisasi ke istilah `Data Kelompok`.
+- [x] Flash message aksi create/update/delete BKL/BKR dinormalisasi agar konsisten dengan copy UI.
 - [x] Judul PDF BKL/BKR diselaraskan ke format autentik:
   - `REKAPITULASI DATA KELOMPOK BKL`
   - `REKAPITULASI DATA KELOMPOK BKR`
