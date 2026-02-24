@@ -26,8 +26,9 @@
   - `BukuKelompok Simulasi`
 
 ## Rencana Eksekusi Bertahap
-- [ ] Fase 1A: `Buku Wajib Pokja I - Buku Kegiatan`:
+- [x] Fase 1A: `Buku Wajib Pokja I - Buku Kegiatan`:
   - `docs/process/TODO_IMPLEMENTASI_AUTENTIK_BUKU_KEGIATAN_2026_02_24.md`
+  - status: implementasi selesai (header autentik tervalidasi, mapping field terkunci, copy UI/report sinkron).
 - [x] Fase 1B: `BUKU BANTU - Buku Bantuan`:
   - `docs/process/TODO_IMPLEMENTASI_AUTENTIK_BUKU_BANTUAN_2026_02_24.md`
   - status: implementasi concern selesai (mapping field autentik, UI desa/kecamatan, normalisasi request/repository, PDF, test).
@@ -46,21 +47,21 @@
 - [x] Tetapkan peta header final untuk 5 sheet lanjutan `BUKU BANTU.xlsx` (termasuk grup subkolom pada `JENIS KELAMIN`, `STATUS`, `PRESTASI/KEBERHASILAN`, `JUMLAH`, `JUMLAH KADER`).
 - [x] Verifikasi visual header tabel untuk `Buku Wajib Pokja I.xlsx` sheet `Buku Rencana Program` (`BUKU PROGRAM KERJA`).
 - [x] Tetapkan peta header final `Buku Rencana Program` (22 kolom; `JADWAL WAKTU` 12 subkolom + `SUMBER DANA` 4 subkolom).
-- [ ] Verifikasi visual header tabel untuk setiap sheet prioritas (wajib bukti screenshot header utuh).
-- [ ] Tetapkan peta header final per sheet: urutan kolom, merge horizontal/vertikal, label header final.
-- [ ] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet.
-- [ ] Audit dampak ke layer arsitektur: route/request/use case/repository/policy/inertia.
-- [ ] Tentukan urutan patch minimal per concern (mulai dari sheet dengan dampak user terbesar).
-- [ ] Sinkronkan dokumen canonical yang terdampak (TODO/process/domain matrix/deviasi bila ada).
+- [x] Verifikasi visual header tabel untuk setiap sheet prioritas (wajib bukti screenshot header utuh).
+- [x] Tetapkan peta header final per sheet: urutan kolom, merge horizontal/vertikal, label header final.
+- [x] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet.
+- [x] Audit dampak ke layer arsitektur: route/request/use case/repository/policy/inertia.
+- [x] Tentukan urutan patch minimal per concern (mulai dari sheet dengan dampak user terbesar).
+- [x] Sinkronkan dokumen canonical yang terdampak (TODO/process/domain matrix/deviasi bila ada).
 
 ## Validasi
 - [x] Pembacaan text-layer Excel (via XML workbook) berhasil untuk dua file autentik.
 - [x] Bukti visual + peta merge header tervalidasi untuk sheet `Buku Bantuan`.
 - [x] Bukti visual + peta merge header tervalidasi untuk 5 sheet lanjutan `BUKU BANTU.xlsx`.
 - [x] Bukti visual + peta merge header tervalidasi untuk sheet `Buku Rencana Program`.
-- [ ] Bukti visual header tabel tersedia dan memenuhi kriteria validasi (header utuh, garis sel terlihat, label terbaca).
-- [ ] Tidak ada ambigu mapping untuk kolom yang akan dipakai implementasi.
-- [ ] Rencana patch per concern terdokumentasi dengan fallback plan teknis.
+- [x] Bukti visual header tabel tersedia dan memenuhi kriteria validasi (header utuh, garis sel terlihat, label terbaca).
+- [x] Tidak ada ambigu mapping untuk kolom yang akan dipakai implementasi.
+- [x] Rencana patch per concern terdokumentasi dengan fallback plan teknis.
 
 ## Risiko
 - Header multi-baris dengan merge kompleks berisiko salah tafsir jika tanpa verifikasi visual.
@@ -69,5 +70,5 @@
 
 ## Keputusan
 - [x] Dua file Excel di atas dikunci sebagai referensi autentik untuk concern ini.
-- [x] Tahap saat ini fokus perencanaan + validasi struktur, belum sinkronisasi implementasi.
-- [x] Implementasi hanya boleh dimulai setelah peta header visual tervalidasi untuk sheet target.
+- [x] Seluruh concern prioritas (fase 1A, 1B, 2, dan 3) diselesaikan bertahap per concern dengan commit terpisah.
+- [x] Implementasi hanya dilakukan setelah peta header visual tervalidasi untuk sheet target.
