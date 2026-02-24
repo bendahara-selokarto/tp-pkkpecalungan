@@ -3,6 +3,10 @@
 Tanggal: 2026-02-23  
 Status: `in-progress`
 
+Catatan lanjutan visual minimalis:
+- Eksekusi refactor UI minimalis direncanakan di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
+- Acuan baseline visual: dashboard role `kecamatan-sekretaris` yang sudah diperbaiki pada sesi aktif.
+
 ## Konteks
 
 - Backend dan UI dashboard sudah memakai payload role-aware `dashboardBlocks[]` sebagai jalur utama, dengan payload legacy (`dashboardStats/dashboardCharts`) masih dipertahankan sebagai fallback transisi.

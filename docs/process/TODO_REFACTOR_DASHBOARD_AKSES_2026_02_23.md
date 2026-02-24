@@ -3,6 +3,10 @@
 Tanggal: 2026-02-23  
 Status: `in-progress`
 
+Catatan lanjutan visual minimalis:
+- Rencana fase lanjutan UI ada di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
+- Baseline visual untuk fase minimalis mengacu ke dashboard role `kecamatan-sekretaris` versi aktif saat ini.
+
 ## Konteks
 
 - Dashboard saat ini masih menyajikan blok statistik generik (`activity` + `documents`) tanpa pemisahan tegas per penanggung jawab organisasi (`Sekretaris TPK`, `Pokja I-IV`).
