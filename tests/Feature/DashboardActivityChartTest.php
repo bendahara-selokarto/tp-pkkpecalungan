@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Carbon\Carbon;
@@ -238,6 +239,76 @@ class DashboardActivityChartTest extends TestCase
                 ->where('dashboardStats.published', 0)
                 ->where('dashboardStats.draft', 0)
                 ->where('dashboardCharts.level.values', [0, 0]);
+        });
+    }
+
+    public function test_grafik_kegiatan_per_desa_dapat_difilter_berdasarkan_bulan(): void
+    {
+        Carbon::setTestNow('2026-02-14');
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create();
+        $user->forceFill(['scope' => 'kecamatan', 'area_id' => $kecamatan->id])->save();
+        $user->assignRole('admin-kecamatan');
+
+        Activity::create([
+            'title' => 'Aktivitas Januari',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => '2026-01-10',
+            'status' => 'published',
+        ]);
+
+        Activity::create([
+            'title' => 'Aktivitas Februari',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => '2026-02-10',
+            'status' => 'published',
+        ]);
+
+        AgendaSurat::create([
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2026-02-11',
+            'tanggal_surat' => '2026-02-11',
+            'nomor_surat' => 'A-001',
+            'asal_surat' => 'Asal',
+            'dari' => 'Dari',
+            'kepada' => 'Kepada',
+            'perihal' => 'Perihal',
+            'lampiran' => null,
+            'diteruskan_kepada' => null,
+            'tembusan' => null,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+        ]);
+
+        $januaryResponse = $this->actingAs($user)->get(route('dashboard', ['section1_month' => '1']));
+        $januaryResponse->assertOk();
+        $januaryResponse->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardCharts.by_desa.labels', ['Gombong'])
+                ->where('dashboardCharts.by_desa.values', [1])
+                ->where('dashboardCharts.by_desa.books_total', [19])
+                ->where('dashboardCharts.by_desa.books_filled', [1]);
+        });
+
+        $februaryResponse = $this->actingAs($user)->get(route('dashboard', ['section1_month' => '2']));
+        $februaryResponse->assertOk();
+        $februaryResponse->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardCharts.by_desa.labels', ['Gombong'])
+                ->where('dashboardCharts.by_desa.values', [1])
+                ->where('dashboardCharts.by_desa.books_total', [19])
+                ->where('dashboardCharts.by_desa.books_filled', [2]);
         });
     }
 }

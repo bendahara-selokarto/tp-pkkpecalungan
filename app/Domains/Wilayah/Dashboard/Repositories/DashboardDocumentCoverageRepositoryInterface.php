@@ -22,5 +22,5 @@ interface DashboardDocumentCoverageRepositoryInterface
      *     per_module: array<string, int>
      * }>
      */
-    public function buildGroupBreakdownByDesa(User $user, array $moduleSlugs): array;
+    public function buildGroupBreakdownByDesa(User $user, array $moduleSlugs, ?int $month = null): array;
 }

@@ -19,14 +19,14 @@ class DashboardActivityChartService
     ) {
     }
 
-    public function buildForUser(User $user): array
+    public function buildForUser(User $user, ?int $section1Month = null): array
     {
         $baseQuery = $this->buildScopedQuery($user);
 
         $monthly = $this->buildMonthlyChart((clone $baseQuery));
         $status = $this->buildStatusChart((clone $baseQuery));
         $level = $this->buildLevelChart((clone $baseQuery));
-        $byDesa = $this->buildByDesaChart($user, (clone $baseQuery));
+        $byDesa = $this->buildByDesaChart($user, (clone $baseQuery), $section1Month);
 
         return [
             'stats' => [
@@ -121,7 +121,7 @@ class DashboardActivityChartService
         ];
     }
 
-    private function buildByDesaChart(User $user, Builder $query): array
+    private function buildByDesaChart(User $user, Builder $query, ?int $section1Month = null): array
     {
         if (! $this->isValidKecamatanScopeUser($user)) {
             return [
@@ -149,6 +149,10 @@ class DashboardActivityChartService
 
         $rawByDesa = $query
             ->where('level', ScopeLevel::DESA->value)
+            ->when(
+                $section1Month !== null,
+                static fn (Builder $builder): Builder => $builder->whereMonth('activity_date', $section1Month)
+            )
             ->selectRaw('area_id, COUNT(*) as total')
             ->groupBy('area_id')
             ->pluck('total', 'area_id');
@@ -156,7 +160,7 @@ class DashboardActivityChartService
         $moduleSlugs = $this->dashboardDocumentCoverageRepository->trackedModuleSlugs();
         $bookTotalPerDesa = count($moduleSlugs);
         $rawBooksByDesa = collect(
-            $this->dashboardDocumentCoverageRepository->buildGroupBreakdownByDesa($user, $moduleSlugs)
+            $this->dashboardDocumentCoverageRepository->buildGroupBreakdownByDesa($user, $moduleSlugs, $section1Month)
         )
             ->mapWithKeys(
                 static fn (array $item): array => [(int) ($item['desa_id'] ?? 0) => $item]

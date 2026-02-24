@@ -25,13 +25,15 @@ class DashboardController extends Controller
             return redirect()->route('super-admin.users.index');
         }
 
-        $activityData = $this->dashboardActivityChartService->buildForUser(auth()->user());
+        $section1Month = $this->resolveSection1Month($request->query('section1_month', 'all'));
+        $activityData = $this->dashboardActivityChartService->buildForUser(auth()->user(), $section1Month);
         $dashboardContext = [
             'mode' => $request->query('mode', 'all'),
             'level' => $request->query('level', 'all'),
             'sub_level' => $request->query('sub_level', 'all'),
             'section2_group' => $request->query('section2_group', 'all'),
             'section3_group' => $request->query('section3_group', 'all'),
+            'section1_month' => $section1Month === null ? 'all' : (string) $section1Month,
             'block' => 'documents',
         ];
         $documentData = $this->buildDashboardDocumentCoverageUseCase->execute(
@@ -66,5 +68,25 @@ class DashboardController extends Controller
             'dashboardCharts' => $charts,
             'dashboardBlocks' => $dashboardBlocks,
         ]);
+    }
+
+    private function resolveSection1Month(mixed $rawMonth): ?int
+    {
+        if (! is_scalar($rawMonth)) {
+            return null;
+        }
+
+        $normalized = strtolower(trim((string) $rawMonth));
+        if ($normalized === '' || $normalized === 'all') {
+            return null;
+        }
+
+        if (! ctype_digit($normalized)) {
+            return null;
+        }
+
+        $month = (int) $normalized;
+
+        return $month >= 1 && $month <= 12 ? $month : null;
     }
 }

@@ -28,6 +28,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRepositoryInterface
 {
@@ -147,7 +148,7 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
             ->all();
     }
 
-    public function buildGroupBreakdownByDesa(User $user, array $moduleSlugs): array
+    public function buildGroupBreakdownByDesa(User $user, array $moduleSlugs, ?int $month = null): array
     {
         if (! is_numeric($user->area_id)) {
             return [];
@@ -186,9 +187,19 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
         foreach ($requestedSlugs as $slug) {
             /** @var class-string<Model> $modelClass */
             $modelClass = $modelBySlug[$slug];
-            $countsBySlug[$slug] = $modelClass::query()
+            $modelQuery = $modelClass::query()
                 ->where('level', ScopeLevel::DESA->value)
-                ->whereIn('area_id', $desaIds->all())
+                ->whereIn('area_id', $desaIds->all());
+
+            if ($month !== null) {
+                if ($modelClass === Activity::class) {
+                    $modelQuery->whereMonth('activity_date', $month);
+                } elseif ($this->supportsMonthFilterByCreatedAt($modelClass)) {
+                    $modelQuery->whereMonth('created_at', $month);
+                }
+            }
+
+            $countsBySlug[$slug] = $modelQuery
                 ->selectRaw('area_id, COUNT(*) as total')
                 ->groupBy('area_id')
                 ->pluck('total', 'area_id')
@@ -572,5 +583,20 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
         $map['bkr'] = Bkr::class;
 
         return $map;
+    }
+
+    /**
+     * @param class-string<Model> $modelClass
+     */
+    private function supportsMonthFilterByCreatedAt(string $modelClass): bool
+    {
+        /** @var Model $model */
+        $model = new $modelClass();
+
+        if (! $model->usesTimestamps()) {
+            return false;
+        }
+
+        return Schema::hasColumn($model->getTable(), 'created_at');
     }
 }

@@ -99,6 +99,22 @@ const LEVEL_OPTIONS = [
   { value: 'kecamatan', label: 'Kecamatan' },
 ]
 
+const SECTION1_MONTH_OPTIONS = [
+  { value: 'all', label: 'All' },
+  { value: '1', label: 'Januari' },
+  { value: '2', label: 'Februari' },
+  { value: '3', label: 'Maret' },
+  { value: '4', label: 'April' },
+  { value: '5', label: 'Mei' },
+  { value: '6', label: 'Juni' },
+  { value: '7', label: 'Juli' },
+  { value: '8', label: 'Agustus' },
+  { value: '9', label: 'September' },
+  { value: '10', label: 'Oktober' },
+  { value: '11', label: 'November' },
+  { value: '12', label: 'Desember' },
+]
+
 const USER_SECTION_LABELS = {
   'sekretaris-section-1': 'Ringkasan Tugas Sekretaris',
   'sekretaris-section-2': 'Ringkasan Pokja di Level Anda',
@@ -133,6 +149,7 @@ const currentQuery = parseQuery(page.url)
 const selectedMode = ref(resolveOptionValue(currentQuery.get('mode'), MODE_OPTIONS, 'all'))
 const selectedLevel = ref(resolveOptionValue(currentQuery.get('level'), LEVEL_OPTIONS, 'all'))
 const selectedSubLevel = ref(normalizeToken(currentQuery.get('sub_level'), 'all'))
+const selectedSection1Month = ref(resolveOptionValue(currentQuery.get('section1_month'), SECTION1_MONTH_OPTIONS, 'all'))
 const selectedSection2Group = ref(resolveOptionValue(currentQuery.get('section2_group'), SECTION_GROUP_OPTIONS, 'all'))
 const selectedSection3Group = ref(resolveOptionValue(currentQuery.get('section3_group'), SECTION_GROUP_OPTIONS, 'all'))
 
@@ -288,6 +305,7 @@ watch(
     selectedMode.value = resolveOptionValue(params.get('mode'), MODE_OPTIONS, 'all')
     selectedLevel.value = resolveOptionValue(params.get('level'), LEVEL_OPTIONS, 'all')
     selectedSubLevel.value = normalizeToken(params.get('sub_level'), 'all')
+    selectedSection1Month.value = resolveOptionValue(params.get('section1_month'), SECTION1_MONTH_OPTIONS, 'all')
     selectedSection2Group.value = resolveOptionValue(params.get('section2_group'), SECTION_GROUP_OPTIONS, 'all')
     selectedSection3Group.value = resolveOptionValue(params.get('section3_group'), SECTION_GROUP_OPTIONS, 'all')
   },
@@ -334,6 +352,7 @@ const applySekretarisSectionFilters = () => {
     mode: 'by-level',
     level: sekretarisDefaultLevel.value,
     sub_level: 'all',
+    section1_month: selectedSection1Month.value,
     section2_group: selectedSection2Group.value,
     section3_group: hasSekretarisLowerSection.value ? selectedSection3Group.value : 'all',
   }, {
@@ -345,6 +364,11 @@ const applySekretarisSectionFilters = () => {
 
 const onSection2GroupChange = () => {
   selectedSection2Group.value = resolveOptionValue(selectedSection2Group.value, SECTION_GROUP_OPTIONS, 'all')
+  applySekretarisSectionFilters()
+}
+
+const onSection1MonthChange = () => {
+  selectedSection1Month.value = resolveOptionValue(selectedSection1Month.value, SECTION1_MONTH_OPTIONS, 'all')
   applySekretarisSectionFilters()
 }
 
@@ -388,6 +412,7 @@ watch(
       mode: 'by-level',
       level: sekretarisDefaultLevel.value,
       sub_level: 'all',
+      section1_month: selectedSection1Month.value,
       section2_group: selectedSection2Group.value,
       section3_group: hasSekretarisLowerSection.value ? selectedSection3Group.value : 'all',
     }
@@ -395,6 +420,7 @@ watch(
     const isSynced = normalizeToken(params.get('mode'), 'all') === expectedQuery.mode
       && normalizeToken(params.get('level'), 'all') === expectedQuery.level
       && normalizeToken(params.get('sub_level'), 'all') === expectedQuery.sub_level
+      && normalizeToken(params.get('section1_month'), 'all') === expectedQuery.section1_month
       && normalizeToken(params.get('section2_group'), 'all') === expectedQuery.section2_group
       && normalizeToken(params.get('section3_group'), 'all') === expectedQuery.section3_group
 
@@ -450,7 +476,12 @@ const filterContextLabel = (block) => {
     ? context.section3_group
     : context.section2_group
 
-  return `Tampilan: ${humanizeLabel(context.mode ?? 'all')} | Cakupan: ${humanizeLabel(context.level ?? 'all')} | Fokus Wilayah: ${humanizeLabel(context.sub_level ?? 'all')} | Pokja: ${humanizeLabel(preferredGroup ?? 'all')}`
+  const monthOption = SECTION1_MONTH_OPTIONS.find((option) =>
+    option.value === normalizeToken(context.section1_month, 'all'),
+  )
+  const monthLabel = monthOption?.label ?? 'All'
+
+  return `Tampilan: ${humanizeLabel(context.mode ?? 'all')} | Cakupan: ${humanizeLabel(context.level ?? 'all')} | Fokus Wilayah: ${humanizeLabel(context.sub_level ?? 'all')} | Bulan: ${monthLabel} | Pokja: ${humanizeLabel(preferredGroup ?? 'all')}`
 }
 
 const buildBlockStats = (block) => {
@@ -690,16 +721,19 @@ const buildActivityByDesaMultiAxisSeries = (block) => {
     {
       name: 'Kegiatan',
       type: 'bar',
+      yAxisIndex: 0,
       data: syncedActivityValues,
     },
     {
       name: 'Jumlah Buku',
-      type: 'line',
+      type: 'bar',
+      yAxisIndex: 1,
       data: syncedTotalBookValues,
     },
     {
       name: 'Buku Terisi',
-      type: 'line',
+      type: 'bar',
+      yAxisIndex: 1,
       data: syncedFilledBookValues,
     },
   ]
@@ -714,7 +748,7 @@ const buildActivityByDesaMultiAxisOptions = (block) => {
 
   return {
     chart: {
-      type: 'line',
+      type: 'bar',
       toolbar: {
         show: false,
       },
@@ -723,13 +757,12 @@ const buildActivityByDesaMultiAxisOptions = (block) => {
       },
     },
     stroke: {
-      width: [0, 3, 3],
-      curve: 'smooth',
+      width: [0, 0, 0],
     },
     plotOptions: {
       bar: {
         horizontal: false,
-        columnWidth: '55%',
+        columnWidth: '45%',
         borderRadius: 4,
       },
     },
@@ -1077,12 +1110,32 @@ const hasLegacyLevelDistributionData = computed(() =>
             <template v-else>
               <template v-if="shouldShowActivityByDesaChart(block)">
                 <div class="mt-6">
-                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Kegiatan per Desa
-                  </h4>
+                  <div class="mb-2 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:items-end">
+                    <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                      Kegiatan per Desa
+                    </h4>
+                    <div class="lg:ml-auto lg:w-56">
+                      <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                        Bulan
+                      </label>
+                      <select
+                        v-model="selectedSection1Month"
+                        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
+                        @change="onSection1MonthChange"
+                      >
+                        <option
+                          v-for="monthOption in SECTION1_MONTH_OPTIONS"
+                          :key="`section1-month-${monthOption.value}`"
+                          :value="monthOption.value"
+                        >
+                          {{ monthOption.label }}
+                        </option>
+                      </select>
+                    </div>
+                  </div>
                   <div class="h-72">
                     <apexchart
-                      type="line"
+                      type="bar"
                       width="100%"
                       height="100%"
                       :options="buildActivityByDesaMultiAxisOptions(block)"
