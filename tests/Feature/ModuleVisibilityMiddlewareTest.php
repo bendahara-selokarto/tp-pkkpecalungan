@@ -122,7 +122,7 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->get('/kecamatan/desa-activities')->assertForbidden();
     }
 
-    public function test_kecamatan_pokja_i_dapat_akses_dan_menulis_buku_kegiatan_scope_sendiri(): void
+    public function test_kecamatan_pokja_i_tidak_memiliki_akses_buku_kegiatan_scope_kecamatan(): void
     {
         $user = User::factory()->create([
             'scope' => 'kecamatan',
@@ -132,22 +132,15 @@ class ModuleVisibilityMiddlewareTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get('/kecamatan/activities')->assertOk();
-        $this->get('/kecamatan/activities/create')->assertOk();
+        $this->get('/kecamatan/activities')->assertForbidden();
+        $this->get('/kecamatan/activities/create')->assertForbidden();
         $this->post('/kecamatan/activities', [
             'title' => 'Kegiatan Pokja I Kecamatan',
             'activity_date' => '2026-02-24',
-        ])->assertRedirect('/kecamatan/activities');
-
-        $this->assertDatabaseHas('activities', [
-            'title' => 'Kegiatan Pokja I Kecamatan',
-            'level' => 'kecamatan',
-            'area_id' => $this->kecamatan->id,
-            'created_by' => $user->id,
-        ]);
+        ])->assertForbidden();
     }
 
-    public function test_kecamatan_pokja_i_hanya_baca_pada_modul_desa_only(): void
+    public function test_kecamatan_pokja_i_tidak_memiliki_akses_modul_desa_only(): void
     {
         $user = User::factory()->create([
             'scope' => 'kecamatan',
@@ -157,8 +150,22 @@ class ModuleVisibilityMiddlewareTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get('/kecamatan/data-warga')->assertOk();
+        $this->get('/kecamatan/data-warga')->assertForbidden();
         $this->get('/kecamatan/data-warga/create')->assertForbidden();
         $this->post('/kecamatan/data-warga', [])->assertForbidden();
+    }
+
+    public function test_kecamatan_pokja_i_tetap_memiliki_modul_anggota_dan_prestasi_rw(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $user->assignRole('kecamatan-pokja-i');
+
+        $this->actingAs($user);
+
+        $this->get('/kecamatan/anggota-pokja')->assertOk();
+        $this->get('/kecamatan/prestasi-lomba')->assertOk();
     }
 }

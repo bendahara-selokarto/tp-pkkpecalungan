@@ -77,8 +77,10 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->missing('auth.user.menuGroupModes.referensi')
                 ->missing('auth.user.menuGroupModes.sekretaris-tpk')
                 ->missing('auth.user.menuGroupModes.monitoring')
-                ->where('auth.user.moduleModes.activities', 'read-write')
-                ->where('auth.user.moduleModes.data-pelatihan-kader', 'read-write')
+                ->where('auth.user.moduleModes.anggota-pokja', 'read-write')
+                ->where('auth.user.moduleModes.prestasi-lomba', 'read-write')
+                ->missing('auth.user.moduleModes.activities')
+                ->missing('auth.user.moduleModes.data-pelatihan-kader')
                 ->missing('auth.user.moduleModes.data-warga')
             );
     }
