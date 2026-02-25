@@ -1,11 +1,25 @@
-# TODO UI Dashboard Chart Dinamis Akses 2026-02-23
+# TODO DUC23R1 UI Dashboard Chart Dinamis Akses 2026-02-23
 
 Tanggal: 2026-02-23  
 Status: `done`
 
+## Force Latest Marker
+
+- Todo Code: `DUC23R1`
+- Marker: `DASH-CHART-HIST-2026-02-23-R2`
+- Dokumen ini adalah catatan implementasi historis.
+- Untuk concern koherensi dashboard eksperimen UI terbaru, acuan wajib:
+  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+- Jika ada analisa yang memakai dokumen ini sebagai acuan final concern aktif, analisa tersebut dianggap usang dan wajib mengikuti dokumen acuan terbaru di atas.
+
 Catatan lanjutan visual minimalis:
 - Eksekusi refactor UI minimalis direncanakan di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
 - Acuan baseline visual: dashboard role `kecamatan-sekretaris` yang sudah diperbaiki pada sesi aktif.
+- Harmonisasi koherensi UI terbaru mengikuti:
+  - `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
+  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+- Ketentuan detail metadata panjang (`Filter aktif`) dan badge mode (`RW/RO`) pada dokumen ini diperlakukan sebagai historis; baseline aktif adalah metadata ringkas non-dominan.
 
 ## Konteks
 
@@ -17,7 +31,7 @@ Catatan lanjutan visual minimalis:
 
 - `Dashboard.vue` merender chart berdasarkan `dashboardBlocks[]` (per blok hak akses), bukan asumsi tunggal activity/documents.
 - Pengguna melihat hanya blok chart yang diizinkan role-nya.
-- Setiap blok menampilkan sumber data secara eksplisit (`Sumber`, `Cakupan`, `Filter aktif`) untuk mencegah label ambigu.
+- Setiap blok menampilkan sumber data secara ringkas (`Sumber`, `Cakupan`) agar konteks tetap jelas tanpa menambah kepadatan berlebih.
 - Filter dinamis (`mode`, `level`, `sub_level`) tersinkron dengan URL query agar reproducible dan shareable.
 - Representasi activity dashboard tidak menampilkan metrik/visual berbasis status publikasi (`published`/`draft`).
 - Khusus `section 1` pada scope `kecamatan`, chart activity ditampilkan dalam dua chart:
@@ -67,7 +81,7 @@ Catatan lanjutan visual minimalis:
 - Header blok wajib:
   - Judul: `title` backend.
   - Subjudul: `Sumber: <source_modules>` + `Cakupan: <source_area_type>`.
-  - Badge mode: `RW` atau `RO`.
+  - Indikator mode akses bersifat opsional sesuai baseline minimalis aktif.
 - Label KPI tidak boleh generik (`Total` saja). Wajib menyebut konteks blok.
 - Empty state per blok wajib menyebut alasan konteks (`Belum ada data untuk filter aktif`).
 

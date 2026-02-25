@@ -1,10 +1,11 @@
-# TODO Koherensi Kritis Dashboard Baseline Sekretaris Kecamatan 2026-02-25
+# TODO DKB25R1 Koherensi Kritis Dashboard Baseline Sekretaris Kecamatan 2026-02-25
 
 Tanggal: 2026-02-25  
 Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Force Latest Marker
 
+- Todo Code: `DKB25R1`
 - Marker: `DASH-COHERENCE-EXP-2026-02-25-R1`
 - Jika ada analisa yang memakai versi TODO ini sebelum marker ini ditambahkan, analisa tersebut dianggap usang.
 - Wajib gunakan isi terbaru dokumen ini sebagai acuan concern koherensi UI dashboard eksperimen.
@@ -31,16 +32,16 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Definisi Koherensi Kritis (Locked)
 
-- [x] Struktur utama konsisten:
+- [ ] Struktur utama konsisten:
   - header dashboard,
   - panel filter,
   - kartu KPI,
   - area chart,
   - empty-state.
-- [x] Visibilitas metadata konsisten lintas role (aturan tampil/sembunyi sama untuk concern yang setara).
-- [x] Tidak ada branch UI khusus role yang mengubah model section tanpa justifikasi kontrak backend.
-- [x] Istilah user-facing natural, konsisten, dan tanpa token teknis internal.
-- [x] URL filter tetap stabil (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`).
+- [ ] Visibilitas metadata konsisten lintas role (aturan tampil/sembunyi sama untuk concern yang setara).
+- [ ] Tidak ada branch UI khusus role yang mengubah model section tanpa justifikasi kontrak backend.
+- [ ] Istilah user-facing natural, konsisten, dan tanpa token teknis internal.
+- [ ] URL filter tetap stabil (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`).
 
 ## Scope Role
 
@@ -63,22 +64,22 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Langkah Eksekusi (Checklist)
 
-- [x] `K1` Contract lock baseline UI:
+- [ ] `K1` Contract lock baseline UI:
   - tetapkan elemen wajib/opsional dashboard yang harus identik lintas role,
   - tetapkan deviasi yang diizinkan beserta justifikasi.
-- [x] `K2` Refactor koherensi renderer dashboard:
+- [ ] `K2` Refactor koherensi renderer dashboard:
   - audit dan eliminasi branch frontend yang membuat perilaku role-specific tidak setara,
   - ubah ke aturan berbasis kontrak section/block yang datang dari backend.
-- [x] `K3` Standardisasi presentasi metadata:
+- [ ] `K3` Standardisasi presentasi metadata:
   - definisikan mode tampilan metadata (ringkas/default),
   - terapkan rule tunggal lintas role untuk `Sumber`, `Cakupan`, dan status mode akses.
-- [x] `K4` Copywriting hardening dashboard:
+- [ ] `K4` Copywriting hardening dashboard:
   - normalisasi label filter, helper, empty-state, dan deskripsi section ke bahasa natural user,
   - hilangkan istilah teknis internal pada teks UI.
-- [x] `K5` Validasi regresi UI dashboard:
+- [ ] `K5` Validasi regresi UI dashboard:
   - verifikasi parity tampilan lintas role pada data yang sama (tanpa ubah kontrak backend),
   - verifikasi interaksi filter URL tetap stabil pada UI concern aktif.
-- [x] `K6` Doc-hardening lintas concern dashboard:
+- [ ] `K6` Doc-hardening lintas concern dashboard:
   - sinkronkan status dan keputusan pada TODO dashboard yang berelasi,
   - tandai dokumen lama sebagai `superseded` bila ada keputusan yang diganti.
 
@@ -92,9 +93,9 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Validasi Wajib
 
-- [x] `npm run build`
-- [x] Smoke test manual desktop + mobile untuk seluruh matrix role scope.
-- [x] Smoke test manual filter URL (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`) pada role concern aktif.
+- [ ] `npm run build`
+- [ ] Smoke test manual desktop + mobile untuk seluruh matrix role scope.
+- [ ] Smoke test manual filter URL (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`) pada role concern aktif.
 
 ## Risiko
 
@@ -110,6 +111,6 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Keputusan (To Lock)
 
-- [x] Baseline visual sementara tetap `kecamatan-sekretaris` versi aktif.
-- [x] Keputusan pada fase ini bersifat eksperimental UI dan dapat berubah pada iterasi berikutnya.
-- [x] Perubahan backend/E2E baru boleh dibuka jika ada concern terpisah setelah eksperimen UI stabil.
+- [ ] Baseline visual sementara tetap `kecamatan-sekretaris` versi aktif.
+- [ ] Keputusan pada fase ini bersifat eksperimental UI dan dapat berubah pada iterasi berikutnya.
+- [ ] Perubahan backend/E2E baru boleh dibuka jika ada concern terpisah setelah eksperimen UI stabil.

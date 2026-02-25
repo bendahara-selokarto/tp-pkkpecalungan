@@ -330,24 +330,24 @@ onBeforeUnmount(() => {
       <div class="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between lg:justify-end">
         <div class="flex items-center gap-3 min-w-0 lg:hidden">
           <button class="inline-flex items-center justify-center rounded-md p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 lg:hidden" @click="isAsideMobileExpanded = !isAsideMobileExpanded">
-            <span class="sr-only">Toggle sidebar</span>
+            <span class="sr-only">Buka atau tutup sidebar</span>
             <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
           <button class="hidden lg:inline-flex xl:hidden items-center gap-2 rounded-md px-2.5 py-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700" @click="isAsideLgActive = !isAsideLgActive">
-            <span class="sr-only">Toggle sidebar</span>
+            <span class="sr-only">Buka atau tutup sidebar</span>
             <svg class="h-5 w-5 transition-transform" :class="{ 'rotate-180': isAsideLgActive }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            <span class="text-xs font-medium">{{ isAsideLgActive ? 'Hide' : 'Menu' }}</span>
+            <span class="text-xs font-medium">{{ isAsideLgActive ? 'Tutup' : 'Menu' }}</span>
           </button>
           <button class="hidden xl:inline-flex items-center gap-2 rounded-md px-2.5 py-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700" @click="toggleCollapse">
-            <span class="sr-only">Collapse sidebar</span>
+            <span class="sr-only">Ringkas sidebar</span>
             <svg class="h-5 w-5 transition-transform" :class="{ 'rotate-180': isAsideDesktopCollapsed }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            <span class="text-xs font-medium">{{ isAsideDesktopCollapsed ? 'Expand' : 'Collapse' }}</span>
+            <span class="text-xs font-medium">{{ isAsideDesktopCollapsed ? 'Lebarkan' : 'Ringkas' }}</span>
           </button>
           <Link :href="primaryHref" class="flex items-center gap-2 min-w-0">
             <img :src="pkkLogo" alt="" aria-hidden="true" class="h-6 w-6 object-contain" @error="hideBrokenImage">
@@ -413,10 +413,10 @@ onBeforeUnmount(() => {
       <button
         type="button"
         class="absolute -right-3 top-20 z-50 hidden h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 lg:hidden xl:inline-flex"
-        :title="isAsideDesktopCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+        :title="isAsideDesktopCollapsed ? 'Lebarkan sidebar' : 'Ringkas sidebar'"
         @click="toggleCollapse"
       >
-        <span class="sr-only">{{ isAsideDesktopCollapsed ? 'Expand sidebar' : 'Collapse sidebar' }}</span>
+        <span class="sr-only">{{ isAsideDesktopCollapsed ? 'Lebarkan sidebar' : 'Ringkas sidebar' }}</span>
         <svg class="h-4 w-4 transition-transform" :class="{ 'rotate-180': isAsideDesktopCollapsed }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
@@ -431,7 +431,7 @@ onBeforeUnmount(() => {
             </span>
           </Link>
           <button class="rounded-md p-1 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700 lg:hidden" @click="isAsideMobileExpanded = false">
-            <span class="sr-only">Close sidebar</span>
+            <span class="sr-only">Tutup sidebar</span>
             <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
@@ -439,14 +439,14 @@ onBeforeUnmount(() => {
         </div>
 
         <div v-show="!isAsideDesktopCollapsed" class="mx-4 mt-4 rounded-lg border border-cyan-200 bg-cyan-50/70 p-3 dark:border-cyan-700 dark:bg-cyan-900/20">
-          <p class="text-xs font-medium uppercase tracking-wide text-cyan-700 dark:text-cyan-300">User</p>
+          <p class="text-xs font-medium uppercase tracking-wide text-cyan-700 dark:text-cyan-300">Pengguna</p>
           <p class="mt-1 text-sm font-semibold text-slate-800 dark:text-slate-100">{{ user?.name }}</p>
           <p class="mt-2 text-xs text-cyan-700 dark:text-cyan-300">{{ activeRoles }}</p>
         </div>
 
         <nav class="flex-1 overflow-y-auto p-4 space-y-5">
           <div v-if="hasRole('super-admin')" class="space-y-1">
-            <p v-show="!isAsideDesktopCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Main</p>
+            <p v-show="!isAsideDesktopCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Utama</p>
 
             <Link
               v-if="hasRole('super-admin')"
@@ -477,7 +477,7 @@ onBeforeUnmount(() => {
                       v-if="!isAsideDesktopCollapsed && group.mode === 'read-only'"
                       class="inline-flex items-center rounded border border-amber-300 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:border-amber-800 dark:text-amber-300"
                     >
-                      RO
+                      Baca
                     </span>
                   </span>
                   <svg v-show="!isAsideDesktopCollapsed" class="h-4 w-4 transition-transform" :class="{ 'rotate-180': isGroupOpen('desa', group.key) }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -516,7 +516,7 @@ onBeforeUnmount(() => {
                       v-if="!isAsideDesktopCollapsed && group.mode === 'read-only'"
                       class="inline-flex items-center rounded border border-amber-300 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-700 dark:border-amber-800 dark:text-amber-300"
                     >
-                      RO
+                      Baca
                     </span>
                   </span>
                   <svg v-show="!isAsideDesktopCollapsed" class="h-4 w-4 transition-transform" :class="{ 'rotate-180': isGroupOpen('kecamatan', group.key) }" fill="none" stroke="currentColor" viewBox="0 0 24 24">

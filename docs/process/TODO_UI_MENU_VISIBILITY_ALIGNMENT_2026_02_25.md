@@ -1,10 +1,11 @@
-# TODO UI Menu Visibility Alignment 2026-02-25
+# TODO UVM25R1 UI Menu Visibility Alignment 2026-02-25
 
 Tanggal: 2026-02-25  
 Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Force Latest Marker
 
+- Todo Code: `UVM25R1`
 - Marker: `VIS-UI-EXP-2026-02-25-R1`
 - Jika ada analisa yang memakai versi TODO ini sebelum marker ini ditambahkan, analisa tersebut dianggap usang.
 - Wajib gunakan isi terbaru dokumen ini sebagai acuan kerja concern visibility UI eksperimen.
@@ -37,20 +38,20 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Langkah Eksekusi
 
-- [x] Audit kondisi render sidebar saat ini per role utama (`desa`, `kecamatan`, `super-admin`).
-- [x] Petakan item menu yang berpotensi duplikat atau ambigu label.
-- [x] Refactor komposisi grouping + sorting item pada layer UI.
-- [x] Normalisasi copywriting label menu agar natural user dan konsisten.
-- [x] Tambahkan guard UI agar group kosong tidak tampil membingungkan.
-- [x] Sinkronkan dokumentasi terkait jika ada perubahan istilah canonical di UI.
+- [ ] Audit kondisi render sidebar saat ini per role utama (`desa`, `kecamatan`, `super-admin`).
+- [ ] Petakan item menu yang berpotensi duplikat atau ambigu label.
+- [ ] Refactor komposisi grouping + sorting item pada layer UI.
+- [ ] Normalisasi copywriting label menu agar natural user dan konsisten.
+- [ ] Tambahkan guard UI agar group kosong tidak tampil membingungkan.
+- [ ] Sinkronkan dokumentasi terkait jika ada perubahan istilah canonical di UI.
 
 ## Validasi (UI Only)
 
-- [x] Smoke test manual desktop (`lg/xl`): group menu tampil sesuai role.
-- [x] Smoke test manual tablet/mobile: collapse/expand tetap konsisten.
-- [x] Verifikasi tidak ada menu duplikat pada role gabungan.
-- [x] Verifikasi label menu konsisten antar halaman concern yang sama.
-- [x] `npm run build`.
+- [ ] Smoke test manual desktop (`lg/xl`): group menu tampil sesuai role.
+- [ ] Smoke test manual tablet/mobile: collapse/expand tetap konsisten.
+- [ ] Verifikasi tidak ada menu duplikat pada role gabungan.
+- [ ] Verifikasi label menu konsisten antar halaman concern yang sama.
+- [ ] `npm run build`.
 
 ## Risiko
 
@@ -66,6 +67,6 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Keputusan
 
-- [x] Concern ini bersifat UI-only eksperimental (tanpa E2E/backend change).
-- [x] Keputusan pada TODO ini bersifat sementara dan dapat direvisi cepat selama fase eksperimen.
-- [x] Otorisasi akses tetap backend-first; UI hanya representasi visibility.
+- [ ] Concern ini bersifat UI-only eksperimental (tanpa E2E/backend change).
+- [ ] Keputusan pada TODO ini bersifat sementara dan dapat direvisi cepat selama fase eksperimen.
+- [ ] Otorisasi akses tetap backend-first; UI hanya representasi visibility.

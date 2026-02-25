@@ -1,7 +1,16 @@
-# TODO Refactor Dashboard Minimalis 2026-02-24
+# TODO DRM24R1 Refactor Dashboard Minimalis 2026-02-24
 
 Tanggal: 2026-02-24  
-Status: `done`
+Status: `done` (`historical`, referensi aktif koherensi ada di `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`)
+
+## Force Latest Marker
+
+- Todo Code: `DRM24R1`
+- Marker: `DASH-MIN-HIST-2026-02-24-R2`
+- Dokumen ini adalah catatan hasil fase minimalis.
+- Untuk perubahan eksperimen UI yang masih berjalan, acuan wajib:
+  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 
 ## Konteks
 

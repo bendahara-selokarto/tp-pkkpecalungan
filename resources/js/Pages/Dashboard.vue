@@ -99,7 +99,7 @@ const LEVEL_OPTIONS = [
 ]
 
 const SECTION1_MONTH_OPTIONS = [
-  { value: 'all', label: 'All' },
+  { value: 'all', label: 'Semua Bulan' },
   { value: '1', label: 'Januari' },
   { value: '2', label: 'Februari' },
   { value: '3', label: 'Maret' },
@@ -527,7 +527,7 @@ const availableSubLevelOptions = computed(() => {
       label: `Desa ${name}`,
     }))
 
-  return [{ value: 'all', label: 'All Wilayah' }, ...options]
+  return [{ value: 'all', label: 'Semua Wilayah' }, ...options]
 })
 
 const toNumber = (value) => Number(value ?? 0)
@@ -548,12 +548,6 @@ const buildSingleDataset = (labels, values, backgroundColor) => ({
     },
   ],
 })
-
-const resolveBlockModeLabel = (mode) => (mode === 'read-only' ? 'RO' : 'RW')
-
-const resolveBlockModeClass = (mode) => (mode === 'read-only'
-  ? 'border-amber-300 bg-amber-50 text-amber-700 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
-  : 'border-emerald-300 bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300')
 
 const sourceModulesLabel = (block) => {
   const modules = block?.sources?.source_modules
@@ -582,19 +576,7 @@ const sourceAreaTypeLabel = (block) => {
   return humanizeLabel(sourceAreaType)
 }
 
-const filterContextLabel = (block) => {
-  const context = block?.sources?.filter_context ?? {}
-  const preferredGroup = context.section3_group && context.section3_group !== 'all'
-    ? context.section3_group
-    : context.section2_group
-
-  const monthOption = SECTION1_MONTH_OPTIONS.find((option) =>
-    option.value === normalizeToken(context.section1_month, 'all'),
-  )
-  const monthLabel = monthOption?.label ?? 'Semua Bulan'
-
-  return `Tampilan ${humanizeLabel(context.mode ?? 'all')} | Level ${humanizeLabel(context.level ?? 'all')} | Wilayah ${humanizeLabel(context.sub_level ?? 'all')} | Bulan ${monthLabel} | Pokja ${humanizeLabel(preferredGroup ?? 'all')}`
-}
+const blockSummaryLabel = (block) => `Data dari ${sourceModulesLabel(block)} | Cakupan ${sourceAreaTypeLabel(block)}`
 
 const buildBlockStats = (block) => {
   const groupLabel = String(block?.group_label ?? 'Dashboard').trim()
@@ -1224,19 +1206,10 @@ const hasLegacyLevelDistributionData = computed(() =>
               <div class="min-w-0">
                 <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
                 <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                  Sumber data: {{ sourceModulesLabel(block) }}
-                </p>
-                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                  Cakupan: {{ sourceAreaTypeLabel(block) }} | {{ filterContextLabel(block) }}
+                  {{ blockSummaryLabel(block) }}
                 </p>
               </div>
               <div class="ml-auto flex items-center gap-2">
-                <span
-                  class="inline-flex items-center rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
-                  :class="resolveBlockModeClass(block.mode)"
-                >
-                  {{ resolveBlockModeLabel(block.mode) }}
-                </span>
                 <button
                   type="button"
                   class="rounded-md border border-slate-300 px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"

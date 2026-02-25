@@ -671,7 +671,7 @@ class BuildRoleAwareDashboardBlocksUseCase
     private function buildSectionMeta(string $sectionKey, string $effectiveScope): array
     {
         $groupOptions = [
-            ['value' => 'all', 'label' => 'All'],
+            ['value' => 'all', 'label' => 'Semua Pokja'],
             ['value' => 'pokja-i', 'label' => 'Pokja I'],
             ['value' => 'pokja-ii', 'label' => 'Pokja II'],
             ['value' => 'pokja-iii', 'label' => 'Pokja III'],

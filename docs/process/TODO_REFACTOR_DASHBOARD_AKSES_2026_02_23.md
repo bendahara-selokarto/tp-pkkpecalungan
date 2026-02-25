@@ -1,7 +1,16 @@
-# TODO Refactor Dashboard Akses 2026-02-23
+# TODO DRA23R1 Refactor Dashboard Akses 2026-02-23
 
 Tanggal: 2026-02-23  
-Status: `done`
+Status: `done` (`historical`, diikuti fase minimalis dan koherensi kritis)
+
+## Force Latest Marker
+
+- Todo Code: `DRA23R1`
+- Marker: `DASH-AKSES-HIST-2026-02-23-R2`
+- Dokumen ini adalah kontrak implementasi awal dashboard role-aware.
+- Untuk concern eksperimen UI terkini, acuan wajib:
+  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 
 Catatan lanjutan visual minimalis:
 - Rencana fase lanjutan UI ada di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.

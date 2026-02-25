@@ -1,7 +1,16 @@
-# TODO Refactor Dashboard Lintas Role 2026-02-24
+# TODO DRL24R1 Refactor Dashboard Lintas Role 2026-02-24
 
 Tanggal: 2026-02-24  
 Status: `done` (`superseded` untuk koherensi kritis oleh `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`)
+
+## Force Latest Marker
+
+- Todo Code: `DRL24R1`
+- Marker: `DASH-LINTAS-HIST-2026-02-24-R2`
+- Dokumen ini historis (`superseded`) dan tidak menjadi acuan final untuk concern eksperimen UI yang masih berjalan.
+- Acuan aktif wajib:
+  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 
 ## Konteks
 
