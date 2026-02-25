@@ -1,14 +1,26 @@
 # TODO UVM25R1 UI Menu Visibility Alignment 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `done` (`experimental-ui-only`, non-final, rolling)
+Status: `active` (`experimental-ui-only`, non-final, rolling)
 
 ## Force Latest Marker
 
 - Todo Code: `UVM25R1`
-- Marker: `VIS-UI-EXP-2026-02-25-R1`
+- Marker: `VIS-UI-EXP-2026-02-25-R2`
 - Jika ada analisa yang memakai versi TODO ini sebelum marker ini ditambahkan, analisa tersebut dianggap usang.
 - Wajib gunakan isi terbaru dokumen ini sebagai acuan kerja concern visibility UI eksperimen.
+
+## Update Konfirmasi Tabel 2026-02-25 (R2)
+
+- Konfirmasi ini diperlakukan sebagai baseline penempatan modul pada UI eksperimen (bukan kontrak akses backend final).
+- Konfirmasi yang dikunci:
+  - `Daftar Anggota Pokja` dan `Buku Prestasi/Lomba`: tetap mengikuti interpretasi R1 (dinyatakan benar).
+  - `Data Warga` dan `Data Kegiatan Warga`: untuk track eksperimen UI ditempatkan sebagai concern `sekretaris` (`sekretaris-only` pada layer UI).
+  - `Kelompok Simulasi dan Penyuluhan`: untuk track eksperimen UI diposisikan ke `Pokja I Desa`.
+  - Baris modul `27-31`: diperlakukan `tidak digunakan` pada eksperimen penempatan saat ini.
+- Batas eksekusi:
+  - hanya penataan render/grouping/label pada UI,
+  - tidak mengubah `RoleMenuVisibilityService`, middleware `module.visibility`, policy, route, repository, atau test E2E.
 
 ## Single Source Concern Sidebar
 
@@ -78,5 +90,4 @@ Status: `done` (`experimental-ui-only`, non-final, rolling)
 - [x] Concern ini bersifat UI-only eksperimental (tanpa E2E/backend change).
 - [x] Keputusan pada TODO ini bersifat sementara dan dapat direvisi cepat selama fase eksperimen.
 - [x] Otorisasi akses tetap backend-first; UI hanya representasi visibility.
-
 

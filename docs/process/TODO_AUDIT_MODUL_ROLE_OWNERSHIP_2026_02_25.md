@@ -59,6 +59,17 @@ Validasi runtime batch-2:
 - `tests/Unit/Services/RoleMenuVisibilityServiceTest.php` lulus.
 - `tests/Feature/ModuleVisibilityMiddlewareTest.php` lulus (termasuk guard RO untuk `kecamatan-pokja-i` pada `data-warga`).
 
+## Update 2026-02-25 (Konfirmasi Tabel untuk UI Eksperimental)
+
+- Konfirmasi tabel terbaru yang diterima:
+  - `Data Warga` dan `Data Kegiatan Warga`: `hanya sekretaris`.
+  - `Kelompok Simulasi dan Penyuluhan`: `role pokja 1 desa`.
+  - Baris `27-31`: `tidak digunakan`.
+- Dampak pada concern ini:
+  - Belum dieksekusi sebagai perubahan ownership runtime/E2E.
+  - Diperlakukan sebagai input untuk concern `C-SIDEBAR-UI` (penempatan modul eksperimen UI-only).
+  - Authority akses final tetap mengikuti backend (`RoleMenuVisibilityService` + middleware), sampai ada keputusan runtime terpisah.
+
 ## Definisi Kolom
 
 - `Desa RW`: role yang saat ini punya hak tulis di scope desa.
