@@ -6,6 +6,7 @@ use App\Domains\Wilayah\AnggotaPokja\Actions\CreateScopedAnggotaPokjaAction;
 use App\Domains\Wilayah\AnggotaPokja\Actions\UpdateAnggotaPokjaAction;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
 use App\Domains\Wilayah\AnggotaPokja\Repositories\AnggotaPokjaRepositoryInterface;
+use App\Domains\Wilayah\AnggotaPokja\Requests\ListAnggotaPokjaRequest;
 use App\Domains\Wilayah\AnggotaPokja\Requests\StoreAnggotaPokjaRequest;
 use App\Domains\Wilayah\AnggotaPokja\Requests\UpdateAnggotaPokjaRequest;
 use App\Domains\Wilayah\AnggotaPokja\UseCases\GetScopedAnggotaPokjaUseCase;
@@ -27,20 +28,28 @@ class DesaAnggotaPokjaController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListAnggotaPokjaRequest $request): Response
     {
         $this->authorize('viewAny', AnggotaPokja::class);
-        $anggotaPokjas = $this->listScopedAnggotaPokjaUseCase->execute('desa');
-
-        return Inertia::render('Desa/AnggotaPokja/Index', [
-            'anggotaPokjas' => $anggotaPokjas->values()->map(fn (AnggotaPokja $item) => [
+        $anggotaPokjas = $this->listScopedAnggotaPokjaUseCase
+            ->execute('desa', $request->perPage())
+            ->through(fn (AnggotaPokja $item) => [
                 'id' => $item->id,
                 'nama' => $item->nama,
                 'jabatan' => $item->jabatan,
                 'pokja' => $item->pokja,
                 'jenis_kelamin' => $item->jenis_kelamin,
                 'umur' => $item->umur,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/AnggotaPokja/Index', [
+            'anggotaPokjas' => $anggotaPokjas,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

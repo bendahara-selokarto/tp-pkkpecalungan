@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\AnggotaPokja\Repositories;
 
 use App\Domains\Wilayah\AnggotaPokja\DTOs\AnggotaPokjaData;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class AnggotaPokjaRepository implements AnggotaPokjaRepositoryInterface
@@ -26,6 +27,16 @@ class AnggotaPokjaRepository implements AnggotaPokjaRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return AnggotaPokja::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection
@@ -66,4 +77,3 @@ class AnggotaPokjaRepository implements AnggotaPokjaRepositoryInterface
         $anggotaPokja->delete();
     }
 }
-

@@ -32,7 +32,7 @@ class AnggotaPokjaReportPrintController extends Controller
         $this->authorize('viewAny', AnggotaPokja::class);
 
         $items = $this->listScopedAnggotaPokjaUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
