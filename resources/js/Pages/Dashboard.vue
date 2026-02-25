@@ -113,6 +113,8 @@ const SECTION1_MONTH_OPTIONS = [
   { value: '11', label: 'November' },
   { value: '12', label: 'Desember' },
 ]
+const BY_DESA_PIE_MAX_ITEMS = 8
+const CHART_EMPTY_STATE_TEXT = 'Belum ada data untuk filter yang dipilih.'
 
 const USER_SECTION_LABELS = {
   'sekretaris-section-1': 'Ringkasan Tugas Sekretaris',
@@ -331,6 +333,22 @@ const dashboardSections = computed(() => {
 })
 
 const visibleDashboardSections = computed(() => dashboardSections.value)
+const visibleDashboardBlocks = computed(() =>
+  visibleDashboardSections.value.flatMap((section) =>
+    Array.isArray(section?.blocks) ? section.blocks : []),
+)
+const blockSupportsMonthFilter = (block) =>
+  block?.kind === 'activity'
+  && ['labels', 'values', 'books_total', 'books_filled'].some((metricKey) => {
+    const values = block?.charts?.by_desa?.[metricKey]
+    return Array.isArray(values) && values.length > 0
+  })
+const hasMonthFilterAwareBlocks = computed(() =>
+  visibleDashboardBlocks.value.some((block) => blockSupportsMonthFilter(block)),
+)
+const normalizedSection1Month = computed(() =>
+  hasMonthFilterAwareBlocks.value ? selectedSection1Month.value : 'all',
+)
 
 watch(
   visibleDashboardSections,
@@ -365,7 +383,7 @@ const applyFilters = () => {
     mode: selectedMode.value,
     level: isByLevelMode.value ? selectedLevel.value : 'all',
     sub_level: isBySubLevelMode.value ? selectedSubLevel.value : 'all',
-    section1_month: selectedSection1Month.value,
+    section1_month: normalizedSection1Month.value,
   }, {
     preserveState: true,
     preserveScroll: true,
@@ -399,7 +417,7 @@ const applySekretarisSectionFilters = () => {
     mode: 'by-level',
     level: sekretarisDefaultLevel.value,
     sub_level: 'all',
-    section1_month: selectedSection1Month.value,
+    section1_month: normalizedSection1Month.value,
     section2_group: selectedSection2Group.value,
     section3_group: hasSekretarisLowerSection.value ? selectedSection3Group.value : 'all',
   }, {
@@ -416,6 +434,10 @@ const onSection2GroupChange = () => {
 
 const onSection1MonthChange = () => {
   selectedSection1Month.value = resolveOptionValue(selectedSection1Month.value, SECTION1_MONTH_OPTIONS, 'all')
+  if (!hasMonthFilterAwareBlocks.value) {
+    selectedSection1Month.value = 'all'
+  }
+
   if (hasSekretarisSections.value) {
     applySekretarisSectionFilters()
     return
@@ -464,7 +486,7 @@ watch(
       mode: 'by-level',
       level: sekretarisDefaultLevel.value,
       sub_level: 'all',
-      section1_month: selectedSection1Month.value,
+      section1_month: normalizedSection1Month.value,
       section2_group: selectedSection2Group.value,
       section3_group: hasSekretarisLowerSection.value ? selectedSection3Group.value : 'all',
     }
@@ -485,6 +507,18 @@ watch(
       preserveScroll: true,
       replace: true,
     })
+  },
+  { immediate: true },
+)
+
+watch(
+  hasMonthFilterAwareBlocks,
+  (isMonthFilterRelevant) => {
+    if (isMonthFilterRelevant || selectedSection1Month.value === 'all') {
+      return
+    }
+
+    selectedSection1Month.value = 'all'
   },
   { immediate: true },
 )
@@ -829,7 +863,7 @@ const buildActivityMonthlyMultiAxisOptions = (block) => {
       },
     ],
     noData: {
-      text: 'Belum ada data',
+      text: CHART_EMPTY_STATE_TEXT,
       align: 'center',
       verticalAlign: 'middle',
     },
@@ -853,6 +887,14 @@ const hasByDesaActivityMetrics = (block) => {
 
 const shouldShowActivityByDesaChart = (block) =>
   hasByDesaActivityMetrics(block)
+const shouldUsePieForActivityByDesa = (block) => {
+  const { labels } = resolveActivityByDesaMetrics(block)
+  return labels.length > 0 && labels.length <= BY_DESA_PIE_MAX_ITEMS
+}
+const activityByDesaChartModeLabel = (block) =>
+  (shouldUsePieForActivityByDesa(block)
+    ? 'Grafik pai dipakai saat jumlah desa ringkas agar komposisi cepat terbaca.'
+    : 'Grafik batang dipakai saat jumlah desa lebih banyak agar label tetap terbaca.')
 
 const resolveActivityByDesaMetrics = (block) => {
   const labels = block?.charts?.by_desa?.labels ?? []
@@ -901,11 +943,16 @@ const buildActivityByDesaKegiatanOptions = (block) => {
       position: 'bottom',
     },
     noData: {
-      text: 'Belum ada data',
+      text: CHART_EMPTY_STATE_TEXT,
       align: 'center',
       verticalAlign: 'middle',
     },
   }
+}
+const buildActivityByDesaKegiatanBarData = (block) => {
+  const { labels, syncedActivityValues } = resolveActivityByDesaMetrics(block)
+
+  return buildSingleDataset(labels, syncedActivityValues, '#06b6d4')
 }
 
 const buildActivityByDesaBookCoverageSeries = (block) => {
@@ -981,7 +1028,7 @@ const buildActivityByDesaBookCoverageOptions = (block) => {
       },
     },
     noData: {
-      text: 'Belum ada data',
+      text: CHART_EMPTY_STATE_TEXT,
       align: 'center',
       verticalAlign: 'middle',
     },
@@ -1272,7 +1319,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                     <BarChart :data="buildDocumentCoverageChartData(block)" horizontal />
                   </div>
                   <p v-if="!hasDocumentCoverageData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-                    Belum ada data untuk pilihan ini. Coba pilih pokja lain atau tampilkan semua pokja.
+                    Belum ada data untuk filter yang dipilih.
                   </p>
                 </div>
 
@@ -1306,7 +1353,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                     <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                       Kegiatan per Desa
                     </h4>
-                    <div class="lg:ml-auto lg:w-56">
+                    <div v-if="blockSupportsMonthFilter(block)" class="lg:ml-auto lg:w-56">
                       <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                         Bulan
                       </label>
@@ -1325,6 +1372,9 @@ const hasLegacyLevelDistributionData = computed(() =>
                       </select>
                     </div>
                   </div>
+                  <p class="mb-2 text-[11px] text-slate-500 dark:text-slate-400">
+                    {{ activityByDesaChartModeLabel(block) }}
+                  </p>
                   <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
                     <div>
                       <h5 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
@@ -1332,18 +1382,24 @@ const hasLegacyLevelDistributionData = computed(() =>
                       </h5>
                       <div class="h-72">
                         <apexchart
+                          v-if="shouldUsePieForActivityByDesa(block)"
                           type="pie"
                           width="100%"
                           height="100%"
                           :options="buildActivityByDesaKegiatanOptions(block)"
                           :series="buildActivityByDesaKegiatanSeries(block)"
                         />
+                        <BarChart
+                          v-else
+                          :data="buildActivityByDesaKegiatanBarData(block)"
+                          horizontal
+                        />
                       </div>
                       <p
                         v-if="!hasActivityByDesaActivityData(block)"
                         class="mt-3 text-xs text-amber-700 dark:text-amber-300"
                       >
-                        Belum ada kegiatan desa pada bulan yang dipilih.
+                        Belum ada data untuk filter yang dipilih.
                       </p>
                     </div>
 
@@ -1364,7 +1420,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                         v-if="!hasActivityByDesaBookCoverageData(block)"
                         class="mt-3 text-xs text-amber-700 dark:text-amber-300"
                       >
-                        Belum ada buku terisi pada bulan yang dipilih.
+                        Belum ada data untuk filter yang dipilih.
                       </p>
                     </div>
                   </div>
@@ -1386,7 +1442,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                     />
                   </div>
                   <p v-if="!hasActivityMonthlyData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-                    Belum ada kegiatan terhitung untuk periode ini.
+                    Belum ada data untuk filter yang dipilih.
                   </p>
                 </div>
 

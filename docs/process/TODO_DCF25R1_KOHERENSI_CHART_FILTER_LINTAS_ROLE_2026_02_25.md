@@ -1,7 +1,7 @@
 # TODO DCF25R1 Koherensi Chart dan Filter Lintas Role Pasca Apex 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
+Status: `done` (`experimental-ui-only`, non-final, rolling)
 
 ## Force Latest Marker
 
@@ -45,26 +45,26 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Langkah Eksekusi (Checklist)
 
-- [ ] `C1` Lock rule pemilihan tipe chart by-desa:
+- [x] `C1` Lock rule pemilihan tipe chart by-desa:
   - tetapkan threshold kapan `pie` dipakai dan kapan fallback ke `bar`.
-- [ ] `C2` Lock rule filter bulan:
+- [x] `C2` Lock rule filter bulan:
   - tetapkan visibilitas filter bulan berbasis blok data (bukan nama role),
   - tetapkan perilaku query saat blok tidak memakai month filter.
-- [ ] `C3` Hardening query synchronization:
+- [x] `C3` Hardening query synchronization:
   - normalisasi query tak relevan agar tidak memunculkan state ambigu.
-- [ ] `C4` Standardisasi copy chart-state:
+- [x] `C4` Standardisasi copy chart-state:
   - samakan style helper/empty-state untuk semua varian chart.
-- [ ] `C5` Validasi regresi lintas role:
+- [x] `C5` Validasi regresi lintas role:
   - `DashboardDocumentCoverageTest`,
   - `DashboardActivityChartTest`,
   - build frontend.
 
 ## Validasi Wajib
 
-- [ ] `npm run build`
-- [ ] `php artisan test --filter=DashboardDocumentCoverageTest`
-- [ ] `php artisan test --filter=DashboardActivityChartTest`
-- [ ] Smoke check query URL:
+- [x] `npm run build`
+- [x] `php artisan test --filter=DashboardDocumentCoverageTest`
+- [x] `php artisan test --filter=DashboardActivityChartTest`
+- [x] Smoke check query URL:
   - `mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`
 
 ## Risiko
@@ -81,6 +81,6 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Keputusan (To Lock)
 
-- [ ] Concern chart/filter lintas role memakai dokumen ini sebagai acuan tunggal.
-- [ ] Perubahan fase ini tetap UI-only eksperimen.
-- [ ] Perubahan backend/E2E dibuka hanya jika rule UI sudah stabil dan ada concern terpisah.
+- [x] Concern chart/filter lintas role memakai dokumen ini sebagai acuan tunggal.
+- [x] Perubahan fase ini tetap UI-only eksperimen.
+- [x] Perubahan backend/E2E dibuka hanya jika rule UI sudah stabil dan ada concern terpisah.
