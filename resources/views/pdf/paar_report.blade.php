@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>DATA POLA ASUH ANAK DAN REMAJA (PAAR)</title>
+    <title>BUKU PAAR</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
@@ -17,7 +17,7 @@
     </style>
 </head>
 <body>
-    <div class="title">DATA POLA ASUH ANAK DAN REMAJA (PAAR)</div>
+    <div class="title">BUKU PAAR</div>
     <div class="meta">
         DESA : {{ $level === 'desa' ? $areaName : '-' }}<br>
         KEC : {{ $level === 'kecamatan' ? $areaName : '-' }}

@@ -57,7 +57,7 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
         $this->authorize('create', DataIndustriRumahTangga::class);
         $this->createScopedDataIndustriRumahTanggaAction->execute($request->validated(), ScopeLevel::KECAMATAN->value);
 
-        return redirect()->route('kecamatan.data-industri-rumah-tangga.index')->with('success', 'Data Industri Rumah Tangga berhasil dibuat');
+        return redirect()->route('kecamatan.data-industri-rumah-tangga.index')->with('success', 'Buku Industri Rumah Tangga berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -97,7 +97,7 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
         $this->authorize('update', $dataIndustriRumahTangga);
         $this->updateDataIndustriRumahTanggaAction->execute($dataIndustriRumahTangga, $request->validated());
 
-        return redirect()->route('kecamatan.data-industri-rumah-tangga.index')->with('success', 'Data Industri Rumah Tangga berhasil diperbarui');
+        return redirect()->route('kecamatan.data-industri-rumah-tangga.index')->with('success', 'Buku Industri Rumah Tangga berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -106,7 +106,8 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
         $this->authorize('delete', $dataIndustriRumahTangga);
         $this->dataIndustriRumahTanggaRepository->delete($dataIndustriRumahTangga);
 
-        return redirect()->route('kecamatan.data-industri-rumah-tangga.index')->with('success', 'Data Industri Rumah Tangga berhasil dihapus');
+        return redirect()->route('kecamatan.data-industri-rumah-tangga.index')->with('success', 'Buku Industri Rumah Tangga berhasil dihapus');
     }
 }
+
 

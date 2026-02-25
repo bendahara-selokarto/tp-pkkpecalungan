@@ -1,7 +1,7 @@
 # TODO Audit Kepemilikan Modul dan Penempatan Role 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `planned`
+Status: `in-progress`
 
 ## Konteks
 
@@ -18,6 +18,34 @@ Status: `planned`
 - Setiap modul punya kolom aksi perbaikan role yang bisa diisi saat temuan audit muncul.
 - Audit bisa dijalankan berulang tanpa ambigu (format tetap, kolom tetap).
 
+## Update 2026-02-25 (Hasil Koreksi Domain)
+
+Sumber:
+- `docs/referensi/Pemetaan Modul.xlsx`
+
+Validasi struktur header tabel:
+- Sheet: `Daftar Modul`.
+- Dimensi data: `A1:W34`.
+- Merge header tervalidasi: `A1:A3`, `B1:B3`, `C1:C3`, `D1:M1` (Kecamatan), `N1:W1` (Desa), pasangan role baris 2 (`D2:E2` s.d. `V2:W2`).
+- Header operasional yang dipakai: `Kecamatan/Desa -> Sekretaris/Pokja I-IV -> RW/RO`.
+
+Koreksi nama modul (kolom `Nama Modul yang benar`) yang dikunci:
+- `Buku Anggota Tim Penggerak` -> `Buku Daftar Anggota Tim Penggerak PKK`
+- `Buku Anggota Tim Penggerak Kader` -> `Buku Daftar Anggota TP PKK dan Kader`
+- `Buku Agenda Surat` -> `Buku Agenda Surat Masuk/Keluar`
+- `Data PAAR` -> `Buku PAAR`
+- `Data Industri Rumah Tangga` -> `Buku Industri Rumah Tangga`
+- `Data HATINYA PKK` -> `Buku HATINYA PKK`
+
+Temuan delta ownership terhadap implementasi saat ini:
+- Koreksi domain menandai banyak modul Pokja sebagai `RW Desa` saja (tanpa `RW Kecamatan`), sedangkan implementasi backend saat ini masih memberi `RW` untuk desa + kecamatan pada grup Pokja.
+- `data-pelatihan-kader` ditandai `tidak usah`.
+- `catatan-keluarga`, `program-prioritas`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat`, `desa-activities` tidak ditandai owner `RW/RO` pada hasil koreksi.
+
+Keputusan sesi ini:
+- Sinkronisasi label modul untuk dokumen audit/generator sudah diterapkan pada script ekspor.
+- Perubahan otorisasi runtime belum diterapkan karena membutuhkan keputusan eksplisit pada boundary `RoleMenuVisibilityService` + test matrix.
+
 ## Definisi Kolom
 
 - `Desa RW`: role yang saat ini punya hak tulis di scope desa.
@@ -29,8 +57,9 @@ Status: `planned`
 
 ## Checklist Global Audit
 
-- [ ] Validasi modul pada matrix sesuai modul route aktif di `routes/web.php`.
-- [ ] Validasi mode akses tiap modul terhadap kontrak `RoleMenuVisibilityService`.
+- [x] Validasi modul pada matrix sesuai modul route aktif di `routes/web.php`.
+- [x] Validasi mode akses tiap modul terhadap kontrak `RoleMenuVisibilityService`.
+- [x] Sinkronisasi hasil koreksi nama modul ke generator dokumen audit.
 - [ ] Tandai modul yang salah penempatan role pada kolom `Checklist Perbaikan Role`.
 - [ ] Isi `Catatan Audit` dengan usulan koreksi role yang eksplisit.
 - [ ] Buat concern implementasi terpisah untuk setiap perubahan role yang disetujui.

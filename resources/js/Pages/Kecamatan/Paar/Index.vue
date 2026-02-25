@@ -14,7 +14,7 @@ defineProps({
   },
 })
 
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data PAAR ini?'
+const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus buku PAAR ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 
@@ -44,11 +44,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Data Pola Asuh Anak dan Remaja (PAAR)" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Buku PAAR" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Data PAAR</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Buku PAAR</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/paar/report/pdf"
@@ -114,7 +114,7 @@ const cancelDelete = () => {
             </tr>
             <tr v-if="paarItems.length === 0">
               <td colspan="5" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data PAAR belum tersedia.
+                Buku PAAR belum tersedia.
               </td>
             </tr>
           </tbody>

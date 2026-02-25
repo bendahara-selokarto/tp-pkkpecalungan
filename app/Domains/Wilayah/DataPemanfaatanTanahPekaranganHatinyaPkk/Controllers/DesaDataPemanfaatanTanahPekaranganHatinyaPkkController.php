@@ -57,7 +57,7 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkController extends Controller
         $this->authorize('create', DataPemanfaatanTanahPekaranganHatinyaPkk::class);
         $this->createScopedDataPemanfaatanTanahPekaranganHatinyaPkkAction->execute($request->validated(), ScopeLevel::DESA->value);
 
-        return redirect()->route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK berhasil dibuat');
+        return redirect()->route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -97,7 +97,7 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkController extends Controller
         $this->authorize('update', $dataPemanfaatanTanahPekaranganHatinyaPkk);
         $this->updateDataPemanfaatanTanahPekaranganHatinyaPkkAction->execute($dataPemanfaatanTanahPekaranganHatinyaPkk, $request->validated());
 
-        return redirect()->route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK berhasil diperbarui');
+        return redirect()->route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -106,6 +106,7 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkController extends Controller
         $this->authorize('delete', $dataPemanfaatanTanahPekaranganHatinyaPkk);
         $this->dataPemanfaatanTanahPekaranganHatinyaPkkRepository->delete($dataPemanfaatanTanahPekaranganHatinyaPkk);
 
-        return redirect()->route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK berhasil dihapus');
+        return redirect()->route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil dihapus');
     }
 }
+

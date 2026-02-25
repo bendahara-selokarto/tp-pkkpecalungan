@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Pemanfaatan Tanah Pekarangan/AKU HATINYA PKK</title>
+    <title>Buku HATINYA PKK</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #111827; }
         .lampiran { text-align: right; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
@@ -25,7 +25,7 @@
     @endphp
 
     <div class="lampiran">LAMPIRAN 4.14.2b</div>
-    <div class="title">PEMANFAATAN TANAH PEKARANGAN/AKU HATINYA PKK</div>
+    <div class="title">BUKU HATINYA PKK</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }}
     </div>
@@ -55,7 +55,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="4" class="center">Data Pemanfaatan Tanah Pekarangan/HATINYA PKK belum tersedia.</td>
+                    <td colspan="4" class="center">Buku HATINYA PKK belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>
@@ -70,5 +70,6 @@
     </div>
 </body>
 </html>
+
 
 

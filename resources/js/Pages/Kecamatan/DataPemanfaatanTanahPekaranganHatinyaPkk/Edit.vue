@@ -29,7 +29,7 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Edit Data Pemanfaatan Tanah Pekarangan/HATINYA PKK Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Edit Buku HATINYA PKK Kecamatan" main />
 
     <CardBox class="max-w-4xl">
       <form class="space-y-5" @submit.prevent="submit">
@@ -65,5 +65,6 @@ const submit = () => {
     </CardBox>
   </SectionMain>
 </template>
+
 
 

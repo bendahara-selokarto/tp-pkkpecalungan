@@ -20,7 +20,7 @@ const formatDate = (value) => formatDateForDisplay(value)
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Anggota Tim Penggerak Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Anggota Tim Penggerak PKK Kecamatan" main />
 
     <CardBox class="max-w-4xl space-y-4">
       <div>
@@ -90,4 +90,5 @@ const formatDate = (value) => formatDateForDisplay(value)
     </CardBox>
   </SectionMain>
 </template>
+
 

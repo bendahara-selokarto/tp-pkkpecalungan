@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
@@ -45,11 +45,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Data Industri Rumah Tangga Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Buku Industri Rumah Tangga Kecamatan" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Industri Rumah Tangga</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Buku Industri Rumah Tangga</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/data-industri-rumah-tangga/report/pdf"
@@ -113,7 +113,7 @@ const cancelDelete = () => {
             </tr>
             <tr v-if="props.dataIndustriRumahTanggaItems.length === 0">
               <td colspan="4" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data Industri Rumah Tangga belum tersedia.
+                Buku Industri Rumah Tangga belum tersedia.
               </td>
             </tr>
           </tbody>
@@ -131,5 +131,6 @@ const cancelDelete = () => {
     />
   </SectionMain>
 </template>
+
 
 

@@ -47,6 +47,7 @@ Sumber acuan:
 | Pokja I | Data Kegiatan Warga | `/{scope}/data-kegiatan-warga` |
 | Pokja I | BKL | `/{scope}/bkl` |
 | Pokja I | BKR | `/{scope}/bkr` |
+| Pokja I | Buku PAAR | `/{scope}/paar` |
 | Pokja II | Buku Kegiatan | `/{scope}/activities` |
 | Pokja II | Data Pelatihan Kader | `/{scope}/data-pelatihan-kader` |
 | Pokja II | Data Isian Taman Bacaan/Perpustakaan | `/{scope}/taman-bacaan` |
@@ -54,8 +55,8 @@ Sumber acuan:
 | Pokja II | Data Isian Kejar Paket/KF/PAUD | `/{scope}/kejar-paket` |
 | Pokja III | Buku Kegiatan | `/{scope}/activities` |
 | Pokja III | Data Keluarga | `/{scope}/data-keluarga` |
-| Pokja III | Data Industri Rumah Tangga | `/{scope}/data-industri-rumah-tangga` |
-| Pokja III | Data Pemanfaatan Tanah Pekarangan/HATINYA PKK | `/{scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk` |
+| Pokja III | Buku Industri Rumah Tangga | `/{scope}/data-industri-rumah-tangga` |
+| Pokja III | Buku HATINYA PKK | `/{scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk` |
 | Pokja III | Data Aset (Sarana) Desa/Kelurahan | `/{scope}/warung-pkk` |
 | Pokja IV | Buku Kegiatan | `/{scope}/activities` |
 | Pokja IV | Data Isian Posyandu oleh TP PKK | `/{scope}/posyandu` |

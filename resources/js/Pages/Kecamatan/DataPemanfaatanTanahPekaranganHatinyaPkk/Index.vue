@@ -45,11 +45,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Data Pemanfaatan Tanah Pekarangan/HATINYA PKK Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Buku HATINYA PKK Kecamatan" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Pemanfaatan Tanah Pekarangan/HATINYA PKK</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Buku HATINYA PKK</h3>
         <div class="flex items-center gap-2">
           <a
             href="/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf"
@@ -113,7 +113,7 @@ const cancelDelete = () => {
             </tr>
             <tr v-if="props.dataPemanfaatanTanahPekaranganHatinyaPkkItems.length === 0">
               <td colspan="4" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data Pemanfaatan Tanah Pekarangan/HATINYA PKK belum tersedia.
+                Buku HATINYA PKK belum tersedia.
               </td>
             </tr>
           </tbody>
@@ -131,3 +131,4 @@ const cancelDelete = () => {
     />
   </SectionMain>
 </template>
+

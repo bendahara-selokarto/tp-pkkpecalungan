@@ -55,7 +55,7 @@ class DesaAnggotaTimPenggerakController extends Controller
         $this->authorize('create', AnggotaTimPenggerak::class);
         $this->createScopedAnggotaTimPenggerakAction->execute($request->validated(), 'desa');
 
-        return redirect()->route('desa.anggota-tim-penggerak.index')->with('success', 'Data anggota tim penggerak berhasil dibuat');
+        return redirect()->route('desa.anggota-tim-penggerak.index')->with('success', 'Buku Daftar Anggota Tim Penggerak PKK berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -109,7 +109,7 @@ class DesaAnggotaTimPenggerakController extends Controller
         $this->authorize('update', $anggotaTimPenggerak);
         $this->updateAnggotaTimPenggerakAction->execute($anggotaTimPenggerak, $request->validated());
 
-        return redirect()->route('desa.anggota-tim-penggerak.index')->with('success', 'Data anggota tim penggerak berhasil diupdate');
+        return redirect()->route('desa.anggota-tim-penggerak.index')->with('success', 'Buku Daftar Anggota Tim Penggerak PKK berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -118,8 +118,9 @@ class DesaAnggotaTimPenggerakController extends Controller
         $this->authorize('delete', $anggotaTimPenggerak);
         $this->anggotaTimPenggerakRepository->delete($anggotaTimPenggerak);
 
-        return redirect()->route('desa.anggota-tim-penggerak.index')->with('success', 'Data anggota tim penggerak berhasil dihapus');
+        return redirect()->route('desa.anggota-tim-penggerak.index')->with('success', 'Buku Daftar Anggota Tim Penggerak PKK berhasil dihapus');
     }
 }
+
 
 

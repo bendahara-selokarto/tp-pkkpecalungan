@@ -57,7 +57,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
         $this->authorize('create', DataPemanfaatanTanahPekaranganHatinyaPkk::class);
         $this->createScopedDataPemanfaatanTanahPekaranganHatinyaPkkAction->execute($request->validated(), ScopeLevel::KECAMATAN->value);
 
-        return redirect()->route('kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK berhasil dibuat');
+        return redirect()->route('kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil dibuat');
     }
 
     public function show(int $id): Response
@@ -97,7 +97,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
         $this->authorize('update', $dataPemanfaatanTanahPekaranganHatinyaPkk);
         $this->updateDataPemanfaatanTanahPekaranganHatinyaPkkAction->execute($dataPemanfaatanTanahPekaranganHatinyaPkk, $request->validated());
 
-        return redirect()->route('kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK berhasil diperbarui');
+        return redirect()->route('kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -106,6 +106,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
         $this->authorize('delete', $dataPemanfaatanTanahPekaranganHatinyaPkk);
         $this->dataPemanfaatanTanahPekaranganHatinyaPkkRepository->delete($dataPemanfaatanTanahPekaranganHatinyaPkk);
 
-        return redirect()->route('kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK berhasil dihapus');
+        return redirect()->route('kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil dihapus');
     }
 }
+

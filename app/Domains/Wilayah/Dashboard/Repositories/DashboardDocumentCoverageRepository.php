@@ -353,7 +353,7 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
                 'lampiran' => '4.14.2b',
                 'lampiran_group' => '4.14',
                 'slug' => 'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
-                'label' => 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK',
+                'label' => 'Buku HATINYA PKK',
                 'model' => DataPemanfaatanTanahPekaranganHatinyaPkk::class,
                 'include_descendant_for_kecamatan' => false,
             ],
@@ -361,7 +361,7 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
                 'lampiran' => '4.14.2c',
                 'lampiran_group' => '4.14',
                 'slug' => 'data-industri-rumah-tangga',
-                'label' => 'Data Industri Rumah Tangga',
+                'label' => 'Buku Industri Rumah Tangga',
                 'model' => DataIndustriRumahTangga::class,
                 'include_descendant_for_kecamatan' => false,
             ],
@@ -482,3 +482,4 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
     }
 
 }
+

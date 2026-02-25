@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
@@ -15,7 +15,7 @@ const props = defineProps({
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Data Industri Rumah Tangga Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Buku Industri Rumah Tangga Kecamatan" main />
 
     <CardBox class="max-w-4xl space-y-4">
       <div>
@@ -44,6 +44,7 @@ const props = defineProps({
     </CardBox>
   </SectionMain>
 </template>
+
 
 
 

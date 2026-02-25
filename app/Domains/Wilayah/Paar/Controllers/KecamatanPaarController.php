@@ -51,7 +51,7 @@ class KecamatanPaarController extends Controller
         $this->authorize('create', Paar::class);
         $this->createScopedPaarAction->execute($request->validated(), ScopeLevel::KECAMATAN->value);
 
-        return redirect()->route('kecamatan.paar.index')->with('success', 'Data PAAR berhasil disimpan');
+        return redirect()->route('kecamatan.paar.index')->with('success', 'Buku PAAR berhasil disimpan');
     }
 
     public function show(int $id): Response
@@ -81,7 +81,7 @@ class KecamatanPaarController extends Controller
         $this->authorize('update', $paar);
         $this->updatePaarAction->execute($paar, $request->validated());
 
-        return redirect()->route('kecamatan.paar.index')->with('success', 'Data PAAR berhasil diperbarui');
+        return redirect()->route('kecamatan.paar.index')->with('success', 'Buku PAAR berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -90,7 +90,7 @@ class KecamatanPaarController extends Controller
         $this->authorize('delete', $paar);
         $this->paarRepository->delete($paar);
 
-        return redirect()->route('kecamatan.paar.index')->with('success', 'Data PAAR berhasil dihapus');
+        return redirect()->route('kecamatan.paar.index')->with('success', 'Buku PAAR berhasil dihapus');
     }
 
     /**

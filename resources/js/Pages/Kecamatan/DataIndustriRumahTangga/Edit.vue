@@ -1,4 +1,4 @@
-﻿<script setup>
+<script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
@@ -29,7 +29,7 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Edit Data Industri Rumah Tangga Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Edit Buku Industri Rumah Tangga Kecamatan" main />
 
     <CardBox class="max-w-4xl">
       <form class="space-y-5" @submit.prevent="submit">
@@ -65,6 +65,7 @@ const submit = () => {
     </CardBox>
   </SectionMain>
 </template>
+
 
 
 

@@ -85,7 +85,7 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/data-kegiatan-warga`, label: 'Data Kegiatan Warga' },
       { href: `/${scope}/bkl`, label: 'BKL' },
       { href: `/${scope}/bkr`, label: 'BKR' },
-      { href: `/${scope}/paar`, label: 'Data Pola Asuh Anak dan Remaja (PAAR)' },
+      { href: `/${scope}/paar`, label: 'Buku PAAR' },
     ],
   },
   {
@@ -107,8 +107,8 @@ const buildScopedMenuGroups = (scope) => [
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/data-keluarga`, label: 'Data Keluarga' },
-      { href: `/${scope}/data-industri-rumah-tangga`, label: 'Data Industri Rumah Tangga' },
-      { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Data Pemanfaatan Tanah Pekarangan/HATINYA PKK' },
+      { href: `/${scope}/data-industri-rumah-tangga`, label: 'Buku Industri Rumah Tangga' },
+      { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku HATINYA PKK' },
       { href: `/${scope}/warung-pkk`, label: 'Data Aset (Sarana) Desa/Kelurahan' },
     ],
   },
@@ -552,3 +552,4 @@ onBeforeUnmount(() => {
   display: none !important;
 }
 </style>
+

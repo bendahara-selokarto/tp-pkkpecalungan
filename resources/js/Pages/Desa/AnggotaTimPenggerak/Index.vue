@@ -45,11 +45,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Anggota Tim Penggerak Desa" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Anggota Tim Penggerak PKK Desa" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Anggota Tim Penggerak</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Anggota Tim Penggerak PKK</h3>
         <div class="flex items-center gap-2">
           <a
             href="/desa/anggota-tim-penggerak-kader/report/pdf"
@@ -71,7 +71,7 @@ const cancelDelete = () => {
             href="/desa/anggota-tim-penggerak/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Anggota Tim Penggerak
+            + Tambah Anggota Tim Penggerak PKK
           </Link>
         </div>
       </div>
@@ -141,4 +141,5 @@ const cancelDelete = () => {
     />
   </SectionMain>
 </template>
+
 
