@@ -1,7 +1,7 @@
 # TODO Koherensi Kritis Dashboard Baseline Sekretaris Kecamatan 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `planned`
+Status: `done`
 
 ## Konteks
 
@@ -24,16 +24,16 @@ Status: `planned`
 
 ## Definisi Koherensi Kritis (Locked)
 
-- [ ] Struktur utama konsisten:
+- [x] Struktur utama konsisten:
   - header dashboard,
   - panel filter,
   - kartu KPI,
   - area chart,
   - empty-state.
-- [ ] Visibilitas metadata konsisten lintas role (aturan tampil/sembunyi sama untuk concern yang setara).
-- [ ] Tidak ada branch UI khusus role yang mengubah model section tanpa justifikasi kontrak backend.
-- [ ] Istilah user-facing natural, konsisten, dan tanpa token teknis internal.
-- [ ] URL filter tetap stabil (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`).
+- [x] Visibilitas metadata konsisten lintas role (aturan tampil/sembunyi sama untuk concern yang setara).
+- [x] Tidak ada branch UI khusus role yang mengubah model section tanpa justifikasi kontrak backend.
+- [x] Istilah user-facing natural, konsisten, dan tanpa token teknis internal.
+- [x] URL filter tetap stabil (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`).
 
 ## Scope Role
 
@@ -46,22 +46,22 @@ Status: `planned`
 
 ## Langkah Eksekusi (Checklist)
 
-- [ ] `K1` Contract lock baseline UI:
+- [x] `K1` Contract lock baseline UI:
   - tetapkan elemen wajib/opsional dashboard yang harus identik lintas role,
   - tetapkan deviasi yang diizinkan beserta justifikasi.
-- [ ] `K2` Refactor koherensi renderer dashboard:
+- [x] `K2` Refactor koherensi renderer dashboard:
   - audit dan eliminasi branch frontend yang membuat perilaku role-specific tidak setara,
   - ubah ke aturan berbasis kontrak section/block yang datang dari backend.
-- [ ] `K3` Standardisasi presentasi metadata:
+- [x] `K3` Standardisasi presentasi metadata:
   - definisikan mode tampilan metadata (ringkas/default),
   - terapkan rule tunggal lintas role untuk `Sumber`, `Cakupan`, dan status mode akses.
-- [ ] `K4` Copywriting hardening dashboard:
+- [x] `K4` Copywriting hardening dashboard:
   - normalisasi label filter, helper, empty-state, dan deskripsi section ke bahasa natural user,
   - hilangkan istilah teknis internal pada teks UI.
-- [ ] `K5` Hardening test matrix dashboard:
+- [x] `K5` Hardening test matrix dashboard:
   - tambah/rapikan test untuk memastikan parity perilaku lintas role pada payload yang dirender,
   - jaga regression anti data leak dan stabilitas query filter.
-- [ ] `K6` Doc-hardening lintas concern dashboard:
+- [x] `K6` Doc-hardening lintas concern dashboard:
   - sinkronkan status dan keputusan pada TODO dashboard yang berelasi,
   - tandai dokumen lama sebagai `superseded` bila ada keputusan yang diganti.
 
@@ -79,12 +79,12 @@ Status: `planned`
 
 ## Validasi Wajib
 
-- [ ] `npm run build`
-- [ ] `php artisan test --filter=DashboardDocumentCoverageTest`
-- [ ] `php artisan test --filter=DashboardActivityChartTest`
-- [ ] `php artisan test --filter=DashboardCoverageMenuSyncTest`
-- [ ] `php artisan test` (full suite sebelum final close concern)
-- [ ] Smoke test manual desktop + mobile untuk seluruh matrix role scope.
+- [x] `npm run build`
+- [x] `php artisan test --filter=DashboardDocumentCoverageTest`
+- [x] `php artisan test --filter=DashboardActivityChartTest`
+- [x] `php artisan test --filter=DashboardCoverageMenuSyncTest`
+- [x] `php artisan test` (full suite sebelum final close concern)
+- [x] Smoke test manual desktop + mobile untuk seluruh matrix role scope.
 
 ## Risiko
 
@@ -100,7 +100,6 @@ Status: `planned`
 
 ## Keputusan (To Lock)
 
-- [ ] Baseline visual final tetap `kecamatan-sekretaris` versi aktif.
-- [ ] Cabang render role-specific di frontend hanya boleh ada jika dibuktikan oleh kontrak backend.
-- [ ] Parity koherensi lintas role menjadi gate wajib sebelum concern dashboard ditutup.
-
+- [x] Baseline visual final tetap `kecamatan-sekretaris` versi aktif.
+- [x] Cabang render role-specific di frontend hanya boleh ada jika dibuktikan oleh kontrak backend.
+- [x] Parity koherensi lintas role menjadi gate wajib sebelum concern dashboard ditutup.

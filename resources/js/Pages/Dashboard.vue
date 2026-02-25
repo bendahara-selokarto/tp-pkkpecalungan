@@ -78,13 +78,8 @@ const isSekretarisUser = computed(() =>
   || authRoles.value.includes('admin-desa')
   || authRoles.value.includes('admin-kecamatan'),
 )
-const isKecamatanSekretarisUser = computed(() =>
-  authUser.value?.scope === 'kecamatan'
-  && authRoles.value.includes('kecamatan-sekretaris'),
-)
-
 const SECTION_GROUP_OPTIONS = [
-  { value: 'all', label: 'All' },
+  { value: 'all', label: 'Semua Pokja' },
   { value: 'pokja-i', label: 'Pokja I' },
   { value: 'pokja-ii', label: 'Pokja II' },
   { value: 'pokja-iii', label: 'Pokja III' },
@@ -92,13 +87,13 @@ const SECTION_GROUP_OPTIONS = [
 ]
 
 const MODE_OPTIONS = [
-  { value: 'all', label: 'All' },
-  { value: 'by-level', label: 'By Level' },
-  { value: 'by-sub-level', label: 'By Sub-Level' },
+  { value: 'all', label: 'Semua Level' },
+  { value: 'by-level', label: 'Per Level' },
+  { value: 'by-sub-level', label: 'Per Wilayah Turunan' },
 ]
 
 const LEVEL_OPTIONS = [
-  { value: 'all', label: 'All Level' },
+  { value: 'all', label: 'Semua Level' },
   { value: 'desa', label: 'Desa' },
   { value: 'kecamatan', label: 'Kecamatan' },
 ]
@@ -256,14 +251,14 @@ const resolveSectionLabel = (sectionKey, blocks, fallback) => {
 
 const resolveSectionDescription = (sectionKey) => {
   if (sectionKey === 'sekretaris-section-1') {
-    return 'Domain sekretaris tampil tanpa filter pokja.'
+    return 'Ringkasan sekretaris ditampilkan tanpa filter pokja.'
   }
 
   if (sectionKey === 'sekretaris-section-4') {
-    return 'Rincian sumber data Pokja I per desa turunan mengikuti pilihan filter section 3.'
+    return 'Rincian Pokja I per desa mengikuti pilihan filter pokja pada ringkasan desa.'
   }
 
-  return 'Gunakan filter pokja untuk fokus pada Pokja I-IV atau tampilkan seluruh pokja.'
+  return 'Gunakan filter pokja untuk fokus ke Pokja I-IV atau tampilkan semua pokja.'
 }
 
 const resolveSectionFilter = (blocks, fallbackQueryKey) => {
@@ -335,20 +330,7 @@ const dashboardSections = computed(() => {
   return sections
 })
 
-const visibleDashboardSections = computed(() => {
-  if (!isKecamatanSekretarisUser.value) {
-    return dashboardSections.value
-  }
-
-  return dashboardSections.value
-    .map((section) => ({
-      ...section,
-      blocks: section.blocks.filter((block) =>
-        normalizeToken(block?.section?.key, '') === 'sekretaris-section-1'
-        && normalizeToken(block?.group, '') === 'sekretaris-tpk'),
-    }))
-    .filter((section) => section.blocks.length > 0)
-})
+const visibleDashboardSections = computed(() => dashboardSections.value)
 
 watch(
   visibleDashboardSections,
@@ -582,6 +564,24 @@ const sourceModulesLabel = (block) => {
   return modules.map((moduleSlug) => humanizeLabel(moduleSlug)).join(', ')
 }
 
+const sourceAreaTypeLabel = (block) => {
+  const sourceAreaType = normalizeToken(block?.sources?.source_area_type, '-')
+
+  if (sourceAreaType === 'area-sendiri+desa-turunan') {
+    return 'Area sendiri dan desa turunan'
+  }
+
+  if (sourceAreaType === 'area-sendiri') {
+    return 'Area sendiri'
+  }
+
+  if (sourceAreaType === 'desa-turunan') {
+    return 'Desa turunan'
+  }
+
+  return humanizeLabel(sourceAreaType)
+}
+
 const filterContextLabel = (block) => {
   const context = block?.sources?.filter_context ?? {}
   const preferredGroup = context.section3_group && context.section3_group !== 'all'
@@ -591,9 +591,9 @@ const filterContextLabel = (block) => {
   const monthOption = SECTION1_MONTH_OPTIONS.find((option) =>
     option.value === normalizeToken(context.section1_month, 'all'),
   )
-  const monthLabel = monthOption?.label ?? 'All'
+  const monthLabel = monthOption?.label ?? 'Semua Bulan'
 
-  return `Tampilan: ${humanizeLabel(context.mode ?? 'all')} | Cakupan: ${humanizeLabel(context.level ?? 'all')} | Fokus Wilayah: ${humanizeLabel(context.sub_level ?? 'all')} | Bulan: ${monthLabel} | Pokja: ${humanizeLabel(preferredGroup ?? 'all')}`
+  return `Tampilan ${humanizeLabel(context.mode ?? 'all')} | Level ${humanizeLabel(context.level ?? 'all')} | Wilayah ${humanizeLabel(context.sub_level ?? 'all')} | Bulan ${monthLabel} | Pokja ${humanizeLabel(preferredGroup ?? 'all')}`
 }
 
 const buildBlockStats = (block) => {
@@ -1173,7 +1173,7 @@ const hasLegacyLevelDistributionData = computed(() =>
     <template v-if="hasDynamicBlocks">
       <div class="space-y-8">
         <div v-for="section in visibleDashboardSections" :key="section.key" class="space-y-4">
-          <CardBox v-if="hasSekretarisSections && !isKecamatanSekretarisUser">
+          <CardBox v-if="hasSekretarisSections">
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
               <div>
                 <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ section.label }}</h3>
@@ -1223,18 +1223,15 @@ const hasLegacyLevelDistributionData = computed(() =>
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div class="min-w-0">
                 <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
-                <template v-if="!isKecamatanSekretarisUser">
-                  <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                    Sumber: {{ sourceModulesLabel(block) }}
-                  </p>
-                  <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
-                    Cakupan: {{ block.sources?.source_area_type ?? '-' }} | {{ filterContextLabel(block) }}
-                  </p>
-                </template>
+                <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+                  Sumber data: {{ sourceModulesLabel(block) }}
+                </p>
+                <p class="mt-1 text-xs text-slate-500 dark:text-slate-400">
+                  Cakupan: {{ sourceAreaTypeLabel(block) }} | {{ filterContextLabel(block) }}
+                </p>
               </div>
               <div class="ml-auto flex items-center gap-2">
                 <span
-                  v-if="!isKecamatanSekretarisUser"
                   class="inline-flex items-center rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide"
                   :class="resolveBlockModeClass(block.mode)"
                 >
@@ -1250,10 +1247,7 @@ const hasLegacyLevelDistributionData = computed(() =>
               </div>
             </div>
 
-            <div
-              class="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
-              :class="isKecamatanSekretarisUser ? 'mt-0' : 'mt-4'"
-            >
+            <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
               <CardBoxWidget
                 v-for="statItem in buildBlockStats(block)"
                 :key="`${block.key}-${statItem.key}`"

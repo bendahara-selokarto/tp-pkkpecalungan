@@ -681,13 +681,13 @@ class BuildRoleAwareDashboardBlocksUseCase
         return match ($sectionKey) {
             self::SECTION_SEKRETARIS_1 => [
                 'key' => self::SECTION_SEKRETARIS_1,
-                'label' => 'Section 1 - Domain Sekretaris',
+                'label' => 'Ringkasan Tugas Sekretaris',
                 'filter' => null,
                 'source_level' => $effectiveScope,
             ],
             self::SECTION_SEKRETARIS_2 => [
                 'key' => self::SECTION_SEKRETARIS_2,
-                'label' => 'Section 2 - Pokja Level Aktif',
+                'label' => 'Ringkasan Pokja di Level Anda',
                 'filter' => [
                     'query_key' => 'section2_group',
                     'default' => 'all',
@@ -697,7 +697,7 @@ class BuildRoleAwareDashboardBlocksUseCase
             ],
             self::SECTION_SEKRETARIS_3 => [
                 'key' => self::SECTION_SEKRETARIS_3,
-                'label' => 'Section 3 - Pokja Level Bawah',
+                'label' => 'Ringkasan Pokja per Desa',
                 'filter' => [
                     'query_key' => 'section3_group',
                     'default' => 'all',
@@ -707,7 +707,7 @@ class BuildRoleAwareDashboardBlocksUseCase
             ],
             self::SECTION_SEKRETARIS_4 => [
                 'key' => self::SECTION_SEKRETARIS_4,
-                'label' => 'Section 4 - Rincian Pokja I per Desa',
+                'label' => 'Rincian Pokja I per Desa',
                 'filter' => null,
                 'depends_on' => 'section3_group:pokja-i',
                 'source_level' => ScopeLevel::DESA->value,
