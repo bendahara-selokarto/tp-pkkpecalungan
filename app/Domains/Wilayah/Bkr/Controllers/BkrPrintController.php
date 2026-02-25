@@ -32,7 +32,7 @@ class BkrPrintController extends Controller
         $this->authorize('viewAny', Bkr::class);
 
         $items = $this->listScopedBkrUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
@@ -48,4 +48,3 @@ class BkrPrintController extends Controller
         return $pdf->stream("bkr-{$level}-report.pdf");
     }
 }
-

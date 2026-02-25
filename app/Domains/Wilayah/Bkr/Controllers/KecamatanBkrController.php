@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Bkr\Actions\CreateScopedBkrAction;
 use App\Domains\Wilayah\Bkr\Actions\UpdateBkrAction;
 use App\Domains\Wilayah\Bkr\Models\Bkr;
 use App\Domains\Wilayah\Bkr\Repositories\BkrRepositoryInterface;
+use App\Domains\Wilayah\Bkr\Requests\ListBkrRequest;
 use App\Domains\Wilayah\Bkr\Requests\StoreBkrRequest;
 use App\Domains\Wilayah\Bkr\Requests\UpdateBkrRequest;
 use App\Domains\Wilayah\Bkr\UseCases\GetScopedBkrUseCase;
@@ -28,13 +29,12 @@ class KecamatanBkrController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListBkrRequest $request): Response
     {
         $this->authorize('viewAny', Bkr::class);
-        $items = $this->listScopedBkrUseCase->execute(ScopeLevel::KECAMATAN->value);
-
-        return Inertia::render('Kecamatan/Bkr/Index', [
-            'bkrItems' => $items->values()->map(fn (Bkr $item) => [
+        $items = $this->listScopedBkrUseCase
+            ->execute(ScopeLevel::KECAMATAN->value, $request->perPage())
+            ->through(fn (Bkr $item) => [
                 'id' => $item->id,
                 'desa' => $item->desa,
                 'nama_bkr' => $item->nama_bkr,
@@ -42,7 +42,16 @@ class KecamatanBkrController extends Controller
                 'nama_ketua_kelompok' => $item->nama_ketua_kelompok,
                 'jumlah_anggota' => $item->jumlah_anggota,
                 'kegiatan' => $item->kegiatan,
-            ]),
+            ]);
+
+        return Inertia::render('Kecamatan/Bkr/Index', [
+            'bkrItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -115,4 +124,3 @@ class KecamatanBkrController extends Controller
         return redirect()->route('kecamatan.bkr.index')->with('success', 'Data kelompok BKR berhasil dihapus');
     }
 }
-
