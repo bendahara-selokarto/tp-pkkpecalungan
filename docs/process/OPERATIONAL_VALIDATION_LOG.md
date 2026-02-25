@@ -810,3 +810,88 @@ Keputusan:
 
 Status:
 - `PASS` untuk penutupan seluruh pending TODO concern aktif.
+
+## Eksekusi TODO Audit Role Ownership: 2026-02-25
+
+Ruang lingkup:
+- Menutup checklist pending pada `TODO_AUDIT_MODUL_ROLE_OWNERSHIP_2026_02_25.md`.
+- Menandai modul mismatch role pada kolom `Checklist Perbaikan Role`.
+- Mengisi `Catatan Audit` eksplisit per modul mismatch.
+- Membuat concern implementasi terpisah per kelompok perubahan role.
+
+Artefak:
+- `docs/process/TODO_AUDIT_MODUL_ROLE_OWNERSHIP_2026_02_25.md`
+- `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_POKJA_DESA_ONLY_2026_02_25.md`
+- `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_NON_RW_RO_2026_02_25.md`
+- `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_DEPRECATE_DATA_PELATIHAN_KADER_2026_02_25.md`
+
+Perintah audit/validasi scoped:
+- `rg -n "RoleMenuVisibilityService|module.visibility|scope.role" app routes`
+  - hasil: source of truth backend untuk audit ownership tervalidasi.
+- `rg -n -- "- \\[ \\]" docs/process/TODO_AUDIT_MODUL_ROLE_OWNERSHIP_2026_02_25.md`
+  - hasil: item checklist global audit role ownership tidak lagi pending.
+
+Keputusan:
+- Mismatch ownership dikelompokkan menjadi 3 concern implementasi: `pokja desa-only`, `non RW/RO`, dan `deprecate data-pelatihan-kader`.
+- Perubahan runtime akses belum dieksekusi pada batch ini; concern implementasi disiapkan untuk approval domain sebelum patch backend.
+
+Status:
+- `PASS` untuk penutupan TODO audit ownership pada level dokumentasi + concern planning.
+
+## Eksekusi Bertahap Pending Sidebar + Role Ownership: 2026-02-25
+
+Ruang lingkup:
+- Menutup pending checklist `SIDEBAR_DOMAIN_GROUPING_PLAN.md` yang bisa dieksekusi otomatis.
+- Menjalankan concern implementasi role ownership:
+  - `pokja desa-only` (runtime change + test),
+  - `non RW/RO` (keputusan owner final batch ini),
+  - `data-pelatihan-kader` (keputusan retain sementara).
+- Menjalankan validasi test targeted + build frontend.
+
+Artefak:
+- `resources/js/Layouts/DashboardLayout.vue`
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+- `tests/Feature/ModuleVisibilityMiddlewareTest.php`
+- `docs/process/SIDEBAR_DOMAIN_GROUPING_PLAN.md`
+- `docs/process/DASHBOARD_CHART_ALIGNMENT_PLAN.md`
+- `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_POKJA_DESA_ONLY_2026_02_25.md`
+- `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_NON_RW_RO_2026_02_25.md`
+- `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_DEPRECATE_DATA_PELATIHAN_KADER_2026_02_25.md`
+
+Perintah validasi:
+- `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php`
+  - hasil: `PASS` (`12` tests).
+- `php artisan test tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/DashboardDocumentCoverageTest.php`
+  - hasil: `PASS` (`12` tests).
+- `php artisan test --filter=RoleMenuVisibilityService`
+  - hasil: `PASS` (`5` tests).
+- `php artisan test --filter=scope_metadata_tidak_sinkron`
+  - hasil: `PASS` (`30` tests).
+- `php artisan test --filter=role_dan_level_area_tidak_sinkron`
+  - hasil: `PASS` (`1` test).
+- `php artisan test --filter=DataPelatihanKader`
+  - hasil: `PASS` (`20` tests).
+- `php artisan test --filter=CatatanKeluargaPolicyTest`
+  - hasil: `PASS` (`2` tests).
+- `php artisan test --filter=PilotProjectKeluargaSehatPolicyTest`
+  - hasil: `PASS` (`2` tests).
+- `php artisan route:list --name=data-pelatihan-kader`
+  - hasil: `PASS` (`16` route aktif).
+- `npm run build`
+  - percobaan awal: `FAIL` (import `vue3-apexcharts` tidak ter-resolve).
+  - tindakan: `npm install`.
+  - percobaan ulang: `PASS`.
+
+Catatan blocker:
+- `php artisan test` penuh pada environment ini tidak selesai:
+  - percobaan default memory gagal (`Allowed memory size of 134217728 bytes exhausted`),
+  - percobaan `php -d memory_limit=512M artisan test` terhenti karena timeout sesi.
+- Checklist yang benar-benar manual/time-based tetap pending:
+  - monitor feedback user 1 siklus operasional,
+  - validasi manual UX multi-breakpoint,
+  - smoke test manual pagination lintas modul.
+
+Status:
+- `PASS` untuk seluruh concern otomatis pada batch ini.
+- `PENDING` hanya pada gate full test dan gate manual/time-based yang belum dapat ditutup otomatis.

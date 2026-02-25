@@ -156,7 +156,7 @@ Checklist audit UI chart berikutnya:
 - [x] Verifikasi payload backend `documents.coverage_per_lampiran` dan `documents.level_distribution`.
 - [x] Verifikasi chart merender data + label item secara eksplisit pada dashboard.
 - [x] Verifikasi state semua nilai `0` menampilkan pesan yang jelas.
-- [ ] Tambahkan feature test frontend (jika test harness UI tersedia) untuk guard tampilan list item chart.
+- [x] Tambahkan feature test frontend (jika test harness UI tersedia) untuk guard tampilan list item chart. (N/A: test harness frontend belum tersedia di project; guard dialihkan ke feature test payload backend + `npm run build`.)
 - [ ] Monitor feedback user 1 siklus operasional untuk keterbacaan chart pada data rendah.
 
 ## 8) Hardening Role-Aware Dashboard (2026-02-23)

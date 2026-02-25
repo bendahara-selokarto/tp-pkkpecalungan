@@ -1,7 +1,7 @@
 # TODO Audit Kepemilikan Modul dan Penempatan Role 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `in-progress`
+Status: `done`
 
 ## Konteks
 
@@ -46,6 +46,19 @@ Keputusan sesi ini:
 - Sinkronisasi label modul untuk dokumen audit/generator sudah diterapkan pada script ekspor.
 - Perubahan otorisasi runtime belum diterapkan karena membutuhkan keputusan eksplisit pada boundary `RoleMenuVisibilityService` + test matrix.
 
+## Update 2026-02-25 (Eksekusi Runtime Batch-2)
+
+Perubahan runtime yang dieksekusi:
+- `RoleMenuVisibilityService` menambahkan override modul per-role (`ROLE_MODULE_MODE_OVERRIDES`) untuk menurunkan akses `kecamatan-pokja-*` dari `read-write` ke `read-only` pada modul pokja desa-only:
+  - `kecamatan-pokja-i`: `bkl`, `bkr`, `paar`, `data-warga`, `data-kegiatan-warga`
+  - `kecamatan-pokja-ii`: `taman-bacaan`, `koperasi`, `kejar-paket`
+  - `kecamatan-pokja-iii`: `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk`
+  - `kecamatan-pokja-iv`: `posyandu`, `simulasi-penyuluhan`
+
+Validasi runtime batch-2:
+- `tests/Unit/Services/RoleMenuVisibilityServiceTest.php` lulus.
+- `tests/Feature/ModuleVisibilityMiddlewareTest.php` lulus (termasuk guard RO untuk `kecamatan-pokja-i` pada `data-warga`).
+
 ## Definisi Kolom
 
 - `Desa RW`: role yang saat ini punya hak tulis di scope desa.
@@ -60,9 +73,9 @@ Keputusan sesi ini:
 - [x] Validasi modul pada matrix sesuai modul route aktif di `routes/web.php`.
 - [x] Validasi mode akses tiap modul terhadap kontrak `RoleMenuVisibilityService`.
 - [x] Sinkronisasi hasil koreksi nama modul ke generator dokumen audit.
-- [ ] Tandai modul yang salah penempatan role pada kolom `Checklist Perbaikan Role`.
-- [ ] Isi `Catatan Audit` dengan usulan koreksi role yang eksplisit.
-- [ ] Buat concern implementasi terpisah untuk setiap perubahan role yang disetujui.
+- [x] Tandai modul yang salah penempatan role pada kolom `Checklist Perbaikan Role`.
+- [x] Isi `Catatan Audit` dengan usulan koreksi role yang eksplisit.
+- [x] Buat concern implementasi terpisah untuk setiap perubahan role yang disetujui.
 
 ## Matrix Modul x Role Saat Ini
 
@@ -74,31 +87,37 @@ Keputusan sesi ini:
 | `anggota-tim-penggerak` | sekretaris-tpk | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | [ ] Perlu koreksi | - |
 | `anggota-tim-penggerak-kader` | sekretaris-tpk | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | [ ] Perlu koreksi | - |
 | `bantuans` | sekretaris-tpk | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | [ ] Perlu koreksi | - |
-| `bkl` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `bkr` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
+| `bkl` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-i` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `bkr` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-i` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
 | `buku-keuangan` | sekretaris-tpk | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | [ ] Perlu koreksi | - |
-| `catatan-keluarga` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `data-industri-rumah-tangga` | pokja-iii | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `data-kegiatan-warga` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `data-keluarga` | pokja-iii | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `data-pelatihan-kader` | pokja-ii | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `data-pemanfaatan-tanah-pekarangan-hatinya-pkk` | pokja-iii | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `data-warga` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `desa-activities` | monitoring | - | - | super-admin | admin-kecamatan, kecamatan-sekretaris | [ ] Perlu koreksi | - |
+| `catatan-keluarga` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Hapus owner `RW/RO` pokja untuk modul ini sesuai koreksi domain; tetapkan akses via sekretaris/monitoring sesuai keputusan produk. |
+| `data-industri-rumah-tangga` | pokja-iii | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-iii` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `data-kegiatan-warga` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-i` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `data-keluarga` | pokja-iii | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-iii` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `data-pelatihan-kader` | pokja-ii | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Modul ditandai `tidak usah` pada koreksi domain; rekomendasi: keluarkan dari matrix visibilitas aktif setelah konfirmasi bisnis. |
+| `data-pemanfaatan-tanah-pekarangan-hatinya-pkk` | pokja-iii | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-iii` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `data-warga` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-i` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `desa-activities` | monitoring | - | - | super-admin | admin-kecamatan, kecamatan-sekretaris | [x] Perlu koreksi | Koreksi domain tidak menandai owner `RW/RO`; validasi ulang apakah modul tetap monitoring-only atau dipindah keluar matrix ownership. |
 | `inventaris` | sekretaris-tpk | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | [ ] Perlu koreksi | - |
 | `kader-khusus` | sekretaris-tpk | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | [ ] Perlu koreksi | - |
-| `kejar-paket` | pokja-ii | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `koperasi` | pokja-ii | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
+| `kejar-paket` | pokja-ii | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-ii` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `koperasi` | pokja-ii | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-ii` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
 | `laporan-tahunan-pkk` | sekretaris-tpk | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | [ ] Perlu koreksi | - |
-| `paar` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `pilot-project-keluarga-sehat` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `pilot-project-naskah-pelaporan` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `posyandu` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
+| `paar` | pokja-i | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-i, kecamatan-pokja-i, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-i` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `pilot-project-keluarga-sehat` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Hapus owner `RW/RO` pokja untuk modul ini sesuai koreksi domain; akses ditetapkan ulang via keputusan lintas peran. |
+| `pilot-project-naskah-pelaporan` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Hapus owner `RW/RO` pokja untuk modul ini sesuai koreksi domain; akses ditetapkan ulang via keputusan lintas peran. |
+| `posyandu` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-iv` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
 | `prestasi-lomba` | sekretaris-tpk | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | admin-desa, admin-kecamatan, desa-sekretaris, kecamatan-sekretaris, super-admin | - | [ ] Perlu koreksi | - |
-| `program-prioritas` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `simulasi-penyuluhan` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `taman-bacaan` | pokja-ii | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
-| `warung-pkk` | pokja-iii | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | [ ] Perlu koreksi | - |
+| `program-prioritas` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Hapus owner `RW/RO` pokja untuk modul ini sesuai koreksi domain; akses ditetapkan ulang via keputusan lintas peran. |
+| `simulasi-penyuluhan` | pokja-iv | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iv, kecamatan-pokja-iv, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-iv` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `taman-bacaan` | pokja-ii | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-ii, kecamatan-pokja-ii, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-ii` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+| `warung-pkk` | pokja-iii | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | admin-desa, admin-kecamatan, desa-pokja-iii, kecamatan-pokja-iii, super-admin | desa-sekretaris, kecamatan-sekretaris | [x] Perlu koreksi | Cabut `kecamatan-pokja-iii` dari RW untuk modul pokja desa-only sesuai koreksi domain (`RW Desa` saja). |
+
+## Concern Implementasi Turunan (Disetujui untuk Ditindaklanjuti)
+
+- [x] Concern A (pokja desa-only): `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_POKJA_DESA_ONLY_2026_02_25.md`.
+- [x] Concern B (modul non-ownership RW/RO): `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_NON_RW_RO_2026_02_25.md`.
+- [x] Concern C (deprecate modul `data-pelatihan-kader`): `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_DEPRECATE_DATA_PELATIHAN_KADER_2026_02_25.md`.
 
 ## Modul Global (Non Scope Prefix `desa|kecamatan`)
 
