@@ -1,19 +1,42 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
+import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { formatDateForDisplay } from '@/utils/dateFormatter'
-import { Link } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
 import { mdiClipboardList } from '@mdi/js'
+import { computed } from 'vue'
 
-defineProps({
+const props = defineProps({
   activities: {
-    type: Array,
+    type: Object,
     required: true,
+  },
+  filters: {
+    type: Object,
+    default: () => ({}),
+  },
+  pagination: {
+    type: Object,
+    default: () => ({
+      perPageOptions: [10, 25, 50],
+    }),
   },
 })
 
 const formatDate = (value) => formatDateForDisplay(value)
+const perPage = computed(() => props.filters.per_page ?? 10)
+
+const updatePerPage = (event) => {
+  const selectedPerPage = Number(event.target.value)
+
+  router.get('/kecamatan/desa-activities', { per_page: selectedPerPage }, {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
 </script>
 
 <template>
@@ -22,12 +45,27 @@ const formatDate = (value) => formatDateForDisplay(value)
 
     <CardBox>
       <div class="mb-4">
-        <Link
-          href="/kecamatan/activities"
-          class="text-sm font-medium text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
-        >
-          Lihat Kegiatan Kecamatan
-        </Link>
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <Link
+            href="/kecamatan/activities"
+            class="text-sm font-medium text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
+          >
+            Lihat Kegiatan Kecamatan
+          </Link>
+
+          <label class="text-xs text-gray-600 dark:text-gray-300">
+            Per halaman
+            <select
+              :value="perPage"
+              class="ml-2 rounded-md border border-gray-300 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              @change="updatePerPage"
+            >
+              <option v-for="option in pagination.perPageOptions" :key="`per-page-${option}`" :value="option">
+                {{ option }}
+              </option>
+            </select>
+          </label>
+        </div>
       </div>
 
       <div class="overflow-x-auto">
@@ -44,7 +82,7 @@ const formatDate = (value) => formatDateForDisplay(value)
           </thead>
           <tbody>
             <tr
-              v-for="item in activities"
+              v-for="item in activities.data"
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
@@ -62,7 +100,7 @@ const formatDate = (value) => formatDateForDisplay(value)
                 </Link>
               </td>
             </tr>
-            <tr v-if="activities.length === 0">
+            <tr v-if="activities.data.length === 0">
               <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Belum ada kegiatan desa pada kecamatan ini.
               </td>
@@ -70,6 +108,13 @@ const formatDate = (value) => formatDateForDisplay(value)
           </tbody>
         </table>
       </div>
+
+      <PaginationBar
+        :links="activities.links"
+        :from="activities.from"
+        :to="activities.to"
+        :total="activities.total"
+      />
     </CardBox>
   </SectionMain>
 </template>
