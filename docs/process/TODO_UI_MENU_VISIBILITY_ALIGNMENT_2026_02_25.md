@@ -1,7 +1,7 @@
 # TODO UI Menu Visibility Alignment 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `done` (`experimental-ui-only`, non-final)
+Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Force Latest Marker
 
