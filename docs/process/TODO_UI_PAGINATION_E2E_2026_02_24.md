@@ -40,7 +40,7 @@ Status: `in-progress`
 - [ ] `Buku Prestasi/Lomba` (`PrestasiLomba`) (Desa + Kecamatan)
 - [ ] `Laporan Tahunan PKK` (`LaporanTahunanPkk`) (Shared page lintas scope)
 - [ ] `Data Warga` (`DataWarga`) (Desa + Kecamatan)
-- [ ] `Data Kegiatan Warga` (`DataKegiatanWarga`) (Desa + Kecamatan)
+- [x] `Data Kegiatan Warga` (`DataKegiatanWarga`) (Desa + Kecamatan)
 - [x] `Rekap Kelompok BKL` (`Bkl`) (Desa + Kecamatan)
 - [x] `Rekap Kelompok BKR` (`Bkr`) (Desa + Kecamatan)
 - [ ] `Data PAAR` (`Paar`) (Desa + Kecamatan)

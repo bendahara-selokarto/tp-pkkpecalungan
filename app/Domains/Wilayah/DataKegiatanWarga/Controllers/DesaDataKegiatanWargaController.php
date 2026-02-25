@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataKegiatanWarga\Actions\CreateScopedDataKegiatanWargaA
 use App\Domains\Wilayah\DataKegiatanWarga\Actions\UpdateDataKegiatanWargaAction;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\DataKegiatanWarga\Repositories\DataKegiatanWargaRepositoryInterface;
+use App\Domains\Wilayah\DataKegiatanWarga\Requests\ListDataKegiatanWargaRequest;
 use App\Domains\Wilayah\DataKegiatanWarga\Requests\StoreDataKegiatanWargaRequest;
 use App\Domains\Wilayah\DataKegiatanWarga\Requests\UpdateDataKegiatanWargaRequest;
 use App\Domains\Wilayah\DataKegiatanWarga\UseCases\GetScopedDataKegiatanWargaUseCase;
@@ -28,19 +29,27 @@ class DesaDataKegiatanWargaController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListDataKegiatanWargaRequest $request): Response
     {
         $this->authorize('viewAny', DataKegiatanWarga::class);
-        $items = $this->listScopedDataKegiatanWargaUseCase->execute(ScopeLevel::DESA->value);
-
-        return Inertia::render('Desa/DataKegiatanWarga/Index', [
-            'dataKegiatanWargaItems' => $items->values()->map(fn (DataKegiatanWarga $item) => [
+        $items = $this->listScopedDataKegiatanWargaUseCase
+            ->execute(ScopeLevel::DESA->value, $request->perPage())
+            ->through(fn (DataKegiatanWarga $item) => [
                 'id' => $item->id,
                 'kegiatan' => $item->kegiatan,
                 'aktivitas' => $item->aktivitas,
                 'aktivitas_label' => $item->aktivitas ? 'Ya' : 'Tidak',
                 'keterangan' => $item->keterangan,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/DataKegiatanWarga/Index', [
+            'dataKegiatanWargaItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

@@ -32,7 +32,7 @@ class DataKegiatanWargaPrintController extends Controller
         $this->authorize('viewAny', DataKegiatanWarga::class);
 
         $items = $this->listScopedDataKegiatanWargaUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
@@ -48,4 +48,3 @@ class DataKegiatanWargaPrintController extends Controller
         return $pdf->stream("data-kegiatan-warga-{$level}-report.pdf");
     }
 }
-

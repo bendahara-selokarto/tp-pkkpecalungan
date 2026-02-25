@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\DataKegiatanWarga\Repositories;
 
 use App\Domains\Wilayah\DataKegiatanWarga\DTOs\DataKegiatanWargaData;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class DataKegiatanWargaRepository implements DataKegiatanWargaRepositoryInterface
@@ -18,6 +19,16 @@ class DataKegiatanWargaRepository implements DataKegiatanWargaRepositoryInterfac
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return DataKegiatanWarga::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection
