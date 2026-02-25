@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -71,8 +72,64 @@ class KecamatanBantuanTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/bantuans');
 
         $response->assertOk();
-        $response->assertSee('Desa Gombong');
-        $response->assertDontSee('Desa Sidomulyo');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/Bantuan/Index')
+                ->has('bantuans.data', 1)
+                ->where('bantuans.data.0.lokasi_penerima', 'Desa Gombong')
+                ->where('bantuans.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_bantuan_kecamatan_menggunakan_payload_pagination(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            Bantuan::create([
+                'name' => 'Desa A ' . $index,
+                'category' => 'uang',
+                'description' => 'Untuk kecamatan A',
+                'source' => 'kabupaten',
+                'amount' => 45000000 + $index,
+                'received_date' => now()->subDays($index)->toDateString(),
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        Bantuan::create([
+            'name' => 'Desa B Bocor',
+            'category' => 'barang',
+            'description' => 'Untuk kecamatan B',
+            'source' => 'pihak_ketiga',
+            'amount' => 15000000,
+            'received_date' => now()->toDateString(),
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/bantuans?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Desa B Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/Bantuan/Index')
+                ->has('bantuans.data', 1)
+                ->where('bantuans.current_page', 2)
+                ->where('bantuans.per_page', 10)
+                ->where('bantuans.total', 11)
+                ->where('filters.per_page', 10);
+        });
     }
 
     #[Test]

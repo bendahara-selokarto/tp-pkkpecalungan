@@ -32,7 +32,7 @@ class BantuanReportPrintController extends Controller
         $this->authorize('viewAny', Bantuan::class);
 
         $items = $this->listScopedBantuanUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

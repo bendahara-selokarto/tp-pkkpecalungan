@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Bantuan\Repositories;
 
 use App\Domains\Wilayah\Bantuan\DTOs\BantuanData;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class BantuanRepository implements BantuanRepositoryInterface
@@ -21,6 +22,17 @@ class BantuanRepository implements BantuanRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return Bantuan::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('received_date')
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

@@ -4,11 +4,14 @@ namespace App\Domains\Wilayah\Bantuan\Repositories;
 
 use App\Domains\Wilayah\Bantuan\DTOs\BantuanData;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface BantuanRepositoryInterface
 {
     public function store(BantuanData $data): Bantuan;
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 
@@ -18,5 +21,4 @@ interface BantuanRepositoryInterface
 
     public function delete(Bantuan $bantuan): void;
 }
-
 

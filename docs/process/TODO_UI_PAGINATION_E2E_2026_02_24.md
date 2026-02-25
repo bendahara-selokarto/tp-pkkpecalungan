@@ -23,7 +23,7 @@ Status: `in-progress`
 - [x] `AgendaSurat` (Desa + Kecamatan)
 - [x] `AnggotaPokja` (Desa + Kecamatan)
 - [x] `AnggotaTimPenggerak` (Desa + Kecamatan)
-- [ ] `Bantuan` (Desa + Kecamatan)
+- [x] `Bantuan` (Desa + Kecamatan)
 - [ ] `Bkl` (Desa + Kecamatan)
 - [ ] `Bkr` (Desa + Kecamatan)
 - [ ] `BukuKeuangan` (Desa + Kecamatan)

@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Bantuan\Actions\CreateScopedBantuanAction;
 use App\Domains\Wilayah\Bantuan\Actions\UpdateBantuanAction;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Bantuan\Repositories\BantuanRepositoryInterface;
+use App\Domains\Wilayah\Bantuan\Requests\ListBantuanRequest;
 use App\Domains\Wilayah\Bantuan\Requests\StoreBantuanRequest;
 use App\Domains\Wilayah\Bantuan\Requests\UpdateBantuanRequest;
 use App\Domains\Wilayah\Bantuan\UseCases\GetScopedBantuanUseCase;
@@ -28,13 +29,21 @@ class DesaBantuanController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListBantuanRequest $request): Response
     {
         $this->authorize('viewAny', Bantuan::class);
-        $bantuans = $this->listScopedBantuanUseCase->execute('desa');
+        $bantuans = $this->listScopedBantuanUseCase
+            ->execute('desa', $request->perPage())
+            ->through(fn (Bantuan $item) => $this->serializeBantuan($item));
 
         return Inertia::render('Desa/Bantuan/Index', [
-            'bantuans' => $bantuans->values()->map(fn (Bantuan $item) => $this->serializeBantuan($item)),
+            'bantuans' => $bantuans,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
