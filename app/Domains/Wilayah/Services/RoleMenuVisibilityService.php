@@ -154,12 +154,42 @@ class RoleMenuVisibilityService
     ];
 
     /**
+     * @var array<string, array<string, string|null>>
+     */
+    private const ROLE_MODULE_MODE_OVERRIDES = [
+        // Modul pokja tertentu diturunkan menjadi read-only untuk role kecamatan pokja.
+        'kecamatan-pokja-i' => [
+            'bkl' => self::MODE_READ_ONLY,
+            'bkr' => self::MODE_READ_ONLY,
+            'paar' => self::MODE_READ_ONLY,
+            'data-warga' => self::MODE_READ_ONLY,
+            'data-kegiatan-warga' => self::MODE_READ_ONLY,
+        ],
+        'kecamatan-pokja-ii' => [
+            'taman-bacaan' => self::MODE_READ_ONLY,
+            'koperasi' => self::MODE_READ_ONLY,
+            'kejar-paket' => self::MODE_READ_ONLY,
+        ],
+        'kecamatan-pokja-iii' => [
+            'data-keluarga' => self::MODE_READ_ONLY,
+            'data-industri-rumah-tangga' => self::MODE_READ_ONLY,
+            'data-pemanfaatan-tanah-pekarangan-hatinya-pkk' => self::MODE_READ_ONLY,
+            'warung-pkk' => self::MODE_READ_ONLY,
+        ],
+        'kecamatan-pokja-iv' => [
+            'posyandu' => self::MODE_READ_ONLY,
+            'simulasi-penyuluhan' => self::MODE_READ_ONLY,
+        ],
+    ];
+
+    /**
      * @return array{groups: array<string, string>, modules: array<string, string>}
      */
     public function resolveForScope(User $user, string $scope): array
     {
         $groupModes = $this->resolveGroupModesForScope($user, $scope);
         $moduleModes = $this->resolveModuleModes($groupModes);
+        $moduleModes = $this->applyRoleModuleModeOverrides($user, $moduleModes);
 
         return [
             'groups' => $groupModes,
@@ -237,5 +267,26 @@ class RoleMenuVisibilityService
         if ($mode === self::MODE_READ_WRITE || $existing === null) {
             $modes[$key] = $mode;
         }
+    }
+
+    /**
+     * @param array<string, string> $moduleModes
+     * @return array<string, string>
+     */
+    private function applyRoleModuleModeOverrides(User $user, array $moduleModes): array
+    {
+        foreach ($user->getRoleNames() as $roleName) {
+            $overrides = self::ROLE_MODULE_MODE_OVERRIDES[(string) $roleName] ?? [];
+            foreach ($overrides as $moduleSlug => $mode) {
+                if ($mode === null) {
+                    unset($moduleModes[$moduleSlug]);
+                    continue;
+                }
+
+                $moduleModes[$moduleSlug] = $mode;
+            }
+        }
+
+        return $moduleModes;
     }
 }

@@ -146,4 +146,19 @@ class ModuleVisibilityMiddlewareTest extends TestCase
             'created_by' => $user->id,
         ]);
     }
+
+    public function test_kecamatan_pokja_i_hanya_baca_pada_modul_desa_only(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $user->assignRole('kecamatan-pokja-i');
+
+        $this->actingAs($user);
+
+        $this->get('/kecamatan/data-warga')->assertOk();
+        $this->get('/kecamatan/data-warga/create')->assertForbidden();
+        $this->post('/kecamatan/data-warga', [])->assertForbidden();
+    }
 }

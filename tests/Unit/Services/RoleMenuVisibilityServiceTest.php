@@ -73,9 +73,23 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertArrayNotHasKey('sekretaris-tpk', $visibility['groups']);
         $this->assertArrayNotHasKey('monitoring', $visibility['groups']);
 
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['data-keluarga'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['data-keluarga'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['activities'] ?? null);
         $this->assertArrayNotHasKey('data-warga', $visibility['modules']);
+    }
+
+    public function test_kecamatan_pokja_ii_modul_desa_only_diturunkan_ke_read_only(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-pokja-ii');
+
+        $visibility = $this->service->resolveForScope($user, 'kecamatan');
+
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['activities'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['data-pelatihan-kader'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['taman-bacaan'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['koperasi'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['kejar-paket'] ?? null);
     }
 
     public function test_admin_kecamatan_kompatibel_rw_dengan_monitoring_ro(): void
