@@ -7,6 +7,7 @@ use App\Domains\Wilayah\KaderKhusus\Actions\CreateScopedKaderKhususAction;
 use App\Domains\Wilayah\KaderKhusus\Actions\UpdateKaderKhususAction;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use App\Domains\Wilayah\KaderKhusus\Repositories\KaderKhususRepositoryInterface;
+use App\Domains\Wilayah\KaderKhusus\Requests\ListKaderKhususRequest;
 use App\Domains\Wilayah\KaderKhusus\Requests\StoreKaderKhususRequest;
 use App\Domains\Wilayah\KaderKhusus\Requests\UpdateKaderKhususRequest;
 use App\Domains\Wilayah\KaderKhusus\UseCases\GetScopedKaderKhususUseCase;
@@ -28,20 +29,28 @@ class DesaKaderKhususController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListKaderKhususRequest $request): Response
     {
         $this->authorize('viewAny', KaderKhusus::class);
-        $items = $this->listScopedKaderKhususUseCase->execute(ScopeLevel::DESA->value);
-
-        return Inertia::render('Desa/KaderKhusus/Index', [
-            'kaderKhususItems' => $items->values()->map(fn (KaderKhusus $item) => [
+        $items = $this->listScopedKaderKhususUseCase
+            ->execute(ScopeLevel::DESA->value, $request->perPage())
+            ->through(fn (KaderKhusus $item) => [
                 'id' => $item->id,
                 'nama' => $item->nama,
                 'jenis_kelamin' => $item->jenis_kelamin,
                 'umur' => $item->umur,
                 'status_perkawinan' => $item->status_perkawinan,
                 'jenis_kader_khusus' => $item->jenis_kader_khusus,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/KaderKhusus/Index', [
+            'kaderKhususItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -121,5 +130,4 @@ class DesaKaderKhususController extends Controller
         return redirect()->route('desa.kader-khusus.index')->with('success', 'Data buku kader khusus berhasil dihapus');
     }
 }
-
 

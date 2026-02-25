@@ -20,7 +20,7 @@ class ListScopedAnggotaDanKaderUseCase
                 ->sortBy('id')
                 ->values(),
             'kaderKhusus' => $this->listScopedKaderKhususUseCase
-                ->execute($level)
+                ->executeAll($level)
                 ->sortBy('id')
                 ->values(),
         ];

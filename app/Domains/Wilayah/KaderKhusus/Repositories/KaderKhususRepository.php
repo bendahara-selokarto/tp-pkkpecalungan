@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\KaderKhusus\Repositories;
 
 use App\Domains\Wilayah\KaderKhusus\DTOs\KaderKhususData;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class KaderKhususRepository implements KaderKhususRepositoryInterface
@@ -24,6 +25,16 @@ class KaderKhususRepository implements KaderKhususRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return KaderKhusus::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

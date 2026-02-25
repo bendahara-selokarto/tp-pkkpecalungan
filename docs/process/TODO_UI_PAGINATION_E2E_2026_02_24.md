@@ -30,7 +30,7 @@ Status: `in-progress`
 
 - [x] `Buku Anggota Tim Penggerak` (`AnggotaTimPenggerak`) (Desa + Kecamatan)
 - [x] `Buku Anggota Tim Penggerak Kader` (`AnggotaTimPenggerak`) (Desa + Kecamatan; list page mengikuti modul induk)
-- [ ] `Buku Kader Khusus` (`KaderKhusus`) (Desa + Kecamatan)
+- [x] `Buku Kader Khusus` (`KaderKhusus`) (Desa + Kecamatan)
 - [x] `Buku Agenda Surat` (`AgendaSurat`) (Desa + Kecamatan)
 - [x] `Buku Keuangan` (`BukuKeuangan`) (Desa + Kecamatan)
 - [x] `Buku Bantuan` (`Bantuan`) (Desa + Kecamatan)

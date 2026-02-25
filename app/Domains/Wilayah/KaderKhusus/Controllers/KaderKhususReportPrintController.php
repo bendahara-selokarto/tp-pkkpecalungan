@@ -32,7 +32,7 @@ class KaderKhususReportPrintController extends Controller
         $this->authorize('viewAny', KaderKhusus::class);
 
         $items = $this->listScopedKaderKhususUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
@@ -48,4 +48,3 @@ class KaderKhususReportPrintController extends Controller
         return $pdf->stream("buku-kader-khusus-{$level}-report.pdf");
     }
 }
-

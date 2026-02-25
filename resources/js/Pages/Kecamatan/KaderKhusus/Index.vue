@@ -1,16 +1,27 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
+import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiAccountGroup } from '@mdi/js'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-defineProps({
+const props = defineProps({
   kaderKhususItems: {
-    type: Array,
+    type: Object,
     required: true,
+  },
+  filters: {
+    type: Object,
+    default: () => ({}),
+  },
+  pagination: {
+    type: Object,
+    default: () => ({
+      perPageOptions: [10, 25, 50],
+    }),
   },
 })
 
@@ -21,6 +32,17 @@ const formatStatusPerkawinan = (value) => (value === 'kawin' ? 'Nikah' : 'Belum 
 const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data kader khusus ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
+const perPage = computed(() => props.filters.per_page ?? 10)
+
+const updatePerPage = (event) => {
+  const selectedPerPage = Number(event.target.value)
+
+  router.get('/kecamatan/kader-khusus', { per_page: selectedPerPage }, {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
 
 const hapusKaderKhusus = (id) => {
   deletingId.value = id
@@ -54,6 +76,18 @@ const cancelDelete = () => {
       <div class="mb-4 flex items-center justify-between gap-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Kader Khusus</h3>
         <div class="flex items-center gap-2">
+          <label class="text-xs text-gray-600 dark:text-gray-300">
+            Per halaman
+            <select
+              :value="perPage"
+              class="ml-2 rounded-md border border-gray-300 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              @change="updatePerPage"
+            >
+              <option v-for="option in pagination.perPageOptions" :key="`per-page-${option}`" :value="option">
+                {{ option }}
+              </option>
+            </select>
+          </label>
           <a
             href="/kecamatan/kader-khusus/report/pdf"
             target="_blank"
@@ -85,7 +119,7 @@ const cancelDelete = () => {
           </thead>
           <tbody>
             <tr
-              v-for="item in kaderKhususItems"
+              v-for="item in kaderKhususItems.data"
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
@@ -118,7 +152,7 @@ const cancelDelete = () => {
                 </div>
               </td>
             </tr>
-            <tr v-if="kaderKhususItems.length === 0">
+            <tr v-if="kaderKhususItems.data.length === 0">
               <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Data kader khusus belum tersedia.
               </td>
@@ -126,6 +160,13 @@ const cancelDelete = () => {
           </tbody>
         </table>
       </div>
+
+      <PaginationBar
+        :links="kaderKhususItems.links"
+        :from="kaderKhususItems.from"
+        :to="kaderKhususItems.to"
+        :total="kaderKhususItems.total"
+      />
     </CardBox>
 
     <ConfirmActionModal
@@ -138,7 +179,6 @@ const cancelDelete = () => {
     />
   </SectionMain>
 </template>
-
 
 
 
