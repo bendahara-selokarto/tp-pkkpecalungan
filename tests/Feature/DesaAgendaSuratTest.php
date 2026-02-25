@@ -95,8 +95,110 @@ class DesaAgendaSuratTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Desa/AgendaSurat/Index')
-                ->has('agendaSurats', 1)
-                ->where('agendaSurats.0.nomor_surat', '001/DSA/II/2026');
+                ->has('agendaSurats.data', 1)
+                ->where('agendaSurats.data.0.nomor_surat', '001/DSA/II/2026')
+                ->where('agendaSurats.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_agenda_surat_desa_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        for ($index = 1; $index <= 12; $index++) {
+            AgendaSurat::create([
+                'jenis_surat' => 'masuk',
+                'tanggal_terima' => '2026-02-20',
+                'tanggal_surat' => now()->subDays($index)->toDateString(),
+                'nomor_surat' => sprintf('DSA/%03d/II/2026', $index),
+                'asal_surat' => 'Kecamatan',
+                'dari' => 'Sekretariat Kecamatan',
+                'kepada' => null,
+                'perihal' => 'Undangan Rapat',
+                'lampiran' => '1 berkas',
+                'diteruskan_kepada' => 'Ketua',
+                'tembusan' => null,
+                'keterangan' => null,
+                'level' => 'desa',
+                'area_id' => $this->desaA->id,
+                'created_by' => $adminDesa->id,
+            ]);
+        }
+
+        AgendaSurat::create([
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2026-02-20',
+            'tanggal_surat' => now()->toDateString(),
+            'nomor_surat' => 'DSB/BOCOR/II/2026',
+            'asal_surat' => 'Kecamatan',
+            'dari' => 'Sekretariat Kecamatan',
+            'kepada' => null,
+            'perihal' => 'Data Bocor',
+            'lampiran' => null,
+            'diteruskan_kepada' => null,
+            'tembusan' => null,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaB->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/agenda-surat?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('DSB/BOCOR/II/2026');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/AgendaSurat/Index')
+                ->has('agendaSurats.data', 2)
+                ->where('agendaSurats.current_page', 2)
+                ->where('agendaSurats.per_page', 10)
+                ->where('agendaSurats.total', 12)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_agenda_surat_desa_kembali_ke_default(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        AgendaSurat::create([
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2026-02-20',
+            'tanggal_surat' => '2026-02-19',
+            'nomor_surat' => 'DSA/DEFAULT/II/2026',
+            'asal_surat' => 'Kecamatan',
+            'dari' => 'Sekretariat Kecamatan',
+            'kepada' => null,
+            'perihal' => 'Undangan',
+            'lampiran' => null,
+            'diteruskan_kepada' => null,
+            'tembusan' => null,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/agenda-surat?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/AgendaSurat/Index')
+                ->where('filters.per_page', 10)
+                ->where('agendaSurats.per_page', 10);
         });
     }
 

@@ -87,8 +87,72 @@ class KecamatanAgendaSuratTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Kecamatan/AgendaSurat/Index')
-                ->has('agendaSurats', 1)
-                ->where('agendaSurats.0.nomor_surat', '001/KCA/II/2026');
+                ->has('agendaSurats.data', 1)
+                ->where('agendaSurats.data.0.nomor_surat', '001/KCA/II/2026')
+                ->where('agendaSurats.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_agenda_surat_kecamatan_menggunakan_payload_pagination(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            AgendaSurat::create([
+                'jenis_surat' => 'masuk',
+                'tanggal_terima' => '2026-02-20',
+                'tanggal_surat' => now()->subDays($index)->toDateString(),
+                'nomor_surat' => sprintf('KCA/%03d/II/2026', $index),
+                'asal_surat' => 'Kabupaten',
+                'dari' => 'Sekretariat Kabupaten',
+                'kepada' => null,
+                'perihal' => 'Instruksi',
+                'lampiran' => null,
+                'diteruskan_kepada' => 'Ketua',
+                'tembusan' => null,
+                'keterangan' => null,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        AgendaSurat::create([
+            'jenis_surat' => 'keluar',
+            'tanggal_terima' => null,
+            'tanggal_surat' => now()->toDateString(),
+            'nomor_surat' => 'KCB/BOCOR/II/2026',
+            'asal_surat' => null,
+            'dari' => null,
+            'kepada' => 'Kabupaten',
+            'perihal' => 'Tidak Boleh Muncul',
+            'lampiran' => null,
+            'diteruskan_kepada' => null,
+            'tembusan' => null,
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/agenda-surat?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('KCB/BOCOR/II/2026');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/AgendaSurat/Index')
+                ->has('agendaSurats.data', 1)
+                ->where('agendaSurats.current_page', 2)
+                ->where('agendaSurats.per_page', 10)
+                ->where('agendaSurats.total', 11)
+                ->where('filters.per_page', 10);
         });
     }
 

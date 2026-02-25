@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\AgendaSurat\Repositories;
 
 use App\Domains\Wilayah\AgendaSurat\DTOs\AgendaSuratData;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class AgendaSuratRepository implements AgendaSuratRepositoryInterface
@@ -27,6 +28,17 @@ class AgendaSuratRepository implements AgendaSuratRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return AgendaSurat::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('tanggal_surat')
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

@@ -6,6 +6,7 @@ use App\Domains\Wilayah\AgendaSurat\Actions\CreateScopedAgendaSuratAction;
 use App\Domains\Wilayah\AgendaSurat\Actions\UpdateAgendaSuratAction;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\AgendaSurat\Repositories\AgendaSuratRepositoryInterface;
+use App\Domains\Wilayah\AgendaSurat\Requests\ListAgendaSuratRequest;
 use App\Domains\Wilayah\AgendaSurat\Requests\StoreAgendaSuratRequest;
 use App\Domains\Wilayah\AgendaSurat\Requests\UpdateAgendaSuratRequest;
 use App\Domains\Wilayah\AgendaSurat\UseCases\GetScopedAgendaSuratUseCase;
@@ -28,13 +29,21 @@ class KecamatanAgendaSuratController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListAgendaSuratRequest $request): Response
     {
         $this->authorize('viewAny', AgendaSurat::class);
-        $items = $this->listScopedAgendaSuratUseCase->execute('kecamatan');
+        $items = $this->listScopedAgendaSuratUseCase
+            ->execute('kecamatan', $request->perPage())
+            ->through(fn (AgendaSurat $item) => $this->toArray($item));
 
         return Inertia::render('Kecamatan/AgendaSurat/Index', [
-            'agendaSurats' => $items->values()->map(fn (AgendaSurat $item) => $this->toArray($item)),
+            'agendaSurats' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

@@ -20,7 +20,7 @@ Status: `in-progress`
 
 ### Backlog Modul Pending Pagination
 
-- [ ] `AgendaSurat` (Desa + Kecamatan)
+- [x] `AgendaSurat` (Desa + Kecamatan)
 - [ ] `AnggotaPokja` (Desa + Kecamatan)
 - [ ] `AnggotaTimPenggerak` (Desa + Kecamatan)
 - [ ] `Bantuan` (Desa + Kecamatan)
