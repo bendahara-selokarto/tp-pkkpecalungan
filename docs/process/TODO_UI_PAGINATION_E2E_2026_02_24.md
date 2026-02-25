@@ -8,6 +8,47 @@ Status: `in-progress`
 - Fase 1 selesai untuk domain `Buku Kegiatan` (`desa/activities`, `kecamatan/activities`, `kecamatan/desa-activities`).
 - Modul list domain lain masih mengikuti backlog concern yang sama dan belum dieksekusi.
 
+## Hasil Scan Pending (2026-02-25)
+
+- Baseline scan `Index.vue`:
+  - total halaman list: `57`
+  - sudah implementasi pagination: `4` (`SuperAdmin/Users` + 3 halaman `Activities`)
+  - belum implementasi pagination: `53` halaman list
+- Baseline scan backend:
+  - repository yang sudah memakai `paginate(...)`: `UserManagementRepository`, `ActivityRepository`
+  - repository domain lain masih dominan `Collection` pada jalur list scoped
+
+### Backlog Modul Pending Pagination
+
+- [ ] `AgendaSurat` (Desa + Kecamatan)
+- [ ] `AnggotaPokja` (Desa + Kecamatan)
+- [ ] `AnggotaTimPenggerak` (Desa + Kecamatan)
+- [ ] `Bantuan` (Desa + Kecamatan)
+- [ ] `Bkl` (Desa + Kecamatan)
+- [ ] `Bkr` (Desa + Kecamatan)
+- [ ] `BukuKeuangan` (Desa + Kecamatan)
+- [ ] `CatatanKeluarga` (Desa + Kecamatan)
+- [ ] `DataIndustriRumahTangga` (Desa + Kecamatan)
+- [ ] `DataKegiatanWarga` (Desa + Kecamatan)
+- [ ] `DataKeluarga` (Desa + Kecamatan)
+- [ ] `DataPelatihanKader` (Desa + Kecamatan)
+- [ ] `DataPemanfaatanTanahPekaranganHatinyaPkk` (Desa + Kecamatan)
+- [ ] `DataWarga` (Desa + Kecamatan)
+- [ ] `Inventaris` (Desa + Kecamatan)
+- [ ] `KaderKhusus` (Desa + Kecamatan)
+- [ ] `KejarPaket` (Desa + Kecamatan)
+- [ ] `Koperasi` (Desa + Kecamatan)
+- [ ] `Paar` (Desa + Kecamatan)
+- [ ] `Posyandu` (Desa + Kecamatan)
+- [ ] `PrestasiLomba` (Desa + Kecamatan)
+- [ ] `ProgramPrioritas` (Desa + Kecamatan)
+- [ ] `SimulasiPenyuluhan` (Desa + Kecamatan)
+- [ ] `TamanBacaan` (Desa + Kecamatan)
+- [ ] `WarungPkk` (Desa + Kecamatan)
+- [ ] `LaporanTahunanPkk` (Shared page lintas scope)
+- [ ] `PilotProjectKeluargaSehat` (Shared page lintas scope)
+- [ ] `PilotProjectNaskahPelaporan` (Shared page lintas scope)
+
 ## Konteks
 
 - Saat ini pagination belum menjadi kontrak UI yang seragam lintas modul list.
