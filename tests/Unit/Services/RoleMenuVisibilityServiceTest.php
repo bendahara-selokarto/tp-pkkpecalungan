@@ -23,9 +23,17 @@ class RoleMenuVisibilityServiceTest extends TestCase
         foreach ([
             'desa-sekretaris',
             'kecamatan-sekretaris',
+            'desa-pokja-ii',
+            'desa-pokja-iii',
+            'desa-pokja-iv',
+            'kecamatan-pokja-i',
+            'kecamatan-pokja-ii',
             'desa-pokja-i',
             'kecamatan-pokja-iii',
+            'kecamatan-pokja-iv',
+            'admin-desa',
             'admin-kecamatan',
+            'super-admin',
         ] as $roleName) {
             Role::create(['name' => $roleName]);
         }
@@ -81,5 +89,42 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['pokja-ii'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['monitoring'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['desa-activities'] ?? null);
+    }
+
+    public function test_semua_role_operasional_memiliki_menu_buku_kegiatan(): void
+    {
+        $roleScopeMatrix = [
+            ['role' => 'desa-sekretaris', 'scope' => 'desa'],
+            ['role' => 'kecamatan-sekretaris', 'scope' => 'kecamatan'],
+            ['role' => 'desa-pokja-i', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-ii', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-iii', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-iv', 'scope' => 'desa'],
+            ['role' => 'kecamatan-pokja-i', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-ii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
+            ['role' => 'admin-desa', 'scope' => 'desa'],
+            ['role' => 'admin-kecamatan', 'scope' => 'kecamatan'],
+            ['role' => 'super-admin', 'scope' => 'desa'],
+            ['role' => 'super-admin', 'scope' => 'kecamatan'],
+        ];
+
+        foreach ($roleScopeMatrix as $item) {
+            $user = User::factory()->create();
+            $user->assignRole($item['role']);
+
+            $visibility = $this->service->resolveForScope($user, $item['scope']);
+
+            $this->assertSame(
+                RoleMenuVisibilityService::MODE_READ_WRITE,
+                $visibility['modules']['activities'] ?? null,
+                sprintf(
+                    'Role %s pada scope %s harus memiliki modul activities (Buku Kegiatan).',
+                    $item['role'],
+                    $item['scope']
+                )
+            );
+        }
     }
 }
