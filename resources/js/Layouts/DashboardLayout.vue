@@ -66,9 +66,9 @@ const buildScopedMenuGroups = (scope) => [
     label: 'Sekretaris TPK',
     code: 'ST',
     items: [
-      { href: `/${scope}/anggota-tim-penggerak`, label: 'Buku Daftar Anggota Tim Penggerak PKK' },
-      { href: `/${scope}/kader-khusus`, label: 'Buku Daftar Kader Tim Penggerak PKK' },
-      { href: `/${scope}/agenda-surat`, label: 'Buku Agenda Surat Masuk/Keluar' },
+      { href: `/${scope}/anggota-tim-penggerak`, label: 'Daftar Anggota Tim Penggerak PKK' },
+      { href: `/${scope}/kader-khusus`, label: 'Daftar Kader Tim Penggerak PKK' },
+      { href: `/${scope}/agenda-surat`, label: 'Agenda Surat Masuk/Keluar' },
       { href: `/${scope}/buku-keuangan`, label: 'Buku Keuangan' },
       { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -97,9 +97,9 @@ const buildScopedMenuGroups = (scope) => [
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/data-pelatihan-kader`, label: 'Data Pelatihan Kader' },
-      { href: `/${scope}/taman-bacaan`, label: 'Data Isian Taman Bacaan/Perpustakaan' },
-      { href: `/${scope}/koperasi`, label: 'Data Isian Koperasi' },
-      { href: `/${scope}/kejar-paket`, label: 'Data Isian Kejar Paket/KF/PAUD' },
+      { href: `/${scope}/taman-bacaan`, label: 'Data Taman Bacaan/Perpustakaan' },
+      { href: `/${scope}/koperasi`, label: 'Data Koperasi' },
+      { href: `/${scope}/kejar-paket`, label: 'Data Kejar Paket/KF/PAUD' },
     ],
   },
   {
@@ -111,7 +111,7 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/data-keluarga`, label: 'Data Keluarga' },
       { href: `/${scope}/data-industri-rumah-tangga`, label: 'Buku Industri Rumah Tangga' },
       { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku HATINYA PKK' },
-      { href: `/${scope}/warung-pkk`, label: 'Data Aset (Sarana) Desa/Kelurahan' },
+      { href: `/${scope}/warung-pkk`, label: 'Data Aset Sarana Desa/Kelurahan' },
     ],
   },
   {
@@ -139,7 +139,7 @@ const kecamatanMenuGroups = [
     label: 'Monitoring Kecamatan',
     code: 'MON',
     items: [
-      { href: '/kecamatan/desa-activities', label: 'Kegiatan Desa' },
+      { href: '/kecamatan/desa-activities', label: 'Rekap Kegiatan Desa' },
     ],
   },
 ]
@@ -175,6 +175,10 @@ const withMode = (groups) => {
 
 const desaVisibleMenuGroups = computed(() => withMode(desaMenuGroups))
 const kecamatanVisibleMenuGroups = computed(() => withMode(kecamatanMenuGroups))
+const hasVisibleDomainMenu = computed(() =>
+  (isDesaScope.value && desaVisibleMenuGroups.value.length > 0)
+  || (isKecamatanScope.value && kecamatanVisibleMenuGroups.value.length > 0),
+)
 
 const shouldOpenGroupByDefault = (group) =>
   isGroupActive(group) || group.mode === 'read-write'
@@ -535,6 +539,13 @@ onBeforeUnmount(() => {
                 </div>
               </div>
             </template>
+
+            <p
+              v-if="!hasRole('super-admin') && !hasVisibleDomainMenu"
+              class="rounded-md border border-dashed border-slate-300 px-3 py-2 text-xs text-slate-500 dark:border-slate-600 dark:text-slate-300"
+            >
+              Belum ada menu domain yang dapat ditampilkan untuk akun ini.
+            </p>
           </div>
 
         </nav>

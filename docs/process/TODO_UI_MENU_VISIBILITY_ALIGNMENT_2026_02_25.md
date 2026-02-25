@@ -1,7 +1,7 @@
 # TODO UI Menu Visibility Alignment 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `planned`
+Status: `done`
 
 ## Konteks
 
@@ -30,20 +30,20 @@ Status: `planned`
 
 ## Langkah Eksekusi
 
-- [ ] Audit kondisi render sidebar saat ini per role utama (`desa`, `kecamatan`, `super-admin`).
-- [ ] Petakan item menu yang berpotensi duplikat atau ambigu label.
-- [ ] Refactor komposisi grouping + sorting item pada layer UI.
-- [ ] Normalisasi copywriting label menu agar natural user dan konsisten.
-- [ ] Tambahkan guard UI agar group kosong tidak tampil membingungkan.
-- [ ] Sinkronkan dokumentasi terkait jika ada perubahan istilah canonical di UI.
+- [x] Audit kondisi render sidebar saat ini per role utama (`desa`, `kecamatan`, `super-admin`).
+- [x] Petakan item menu yang berpotensi duplikat atau ambigu label.
+- [x] Refactor komposisi grouping + sorting item pada layer UI.
+- [x] Normalisasi copywriting label menu agar natural user dan konsisten.
+- [x] Tambahkan guard UI agar group kosong tidak tampil membingungkan.
+- [x] Sinkronkan dokumentasi terkait jika ada perubahan istilah canonical di UI.
 
 ## Validasi (UI Only)
 
-- [ ] Smoke test manual desktop (`lg/xl`): group menu tampil sesuai role.
-- [ ] Smoke test manual tablet/mobile: collapse/expand tetap konsisten.
-- [ ] Verifikasi tidak ada menu duplikat pada role gabungan.
-- [ ] Verifikasi label menu konsisten antar halaman concern yang sama.
-- [ ] `npm run build`.
+- [x] Smoke test manual desktop (`lg/xl`): group menu tampil sesuai role.
+- [x] Smoke test manual tablet/mobile: collapse/expand tetap konsisten.
+- [x] Verifikasi tidak ada menu duplikat pada role gabungan.
+- [x] Verifikasi label menu konsisten antar halaman concern yang sama.
+- [x] `npm run build`.
 
 ## Risiko
 
