@@ -34,7 +34,7 @@ Tempel output/ringkasan hasil:
 - [ ] `php artisan test --filter=header_kolom_pdf` (jika perubahan PDF prioritas)
 - [ ] `php artisan test --filter=role_dan_level_area_tidak_sinkron` (jika perubahan auth/scope)
 - [ ] `php artisan test --filter=role_kecamatan_tetapi_area_level_desa` (jika perubahan auth/scope)
-- [ ] `php artisan test` (jika perubahan signifikan)
+- [ ] `php -d memory_limit=512M artisan test --compact` (jika perubahan signifikan)
 
 ## Manual PDF Verification (Release Gate)
 

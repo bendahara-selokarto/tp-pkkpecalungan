@@ -15,7 +15,7 @@ Cara pakai:
 4. Implementasi concern ini end-to-end: kode, test, dokumentasi, validasi.
 5. Jangan berhenti di analisis, langsung eksekusi.
 6. Patch minimal, jangan ubah file di luar concern.
-7. Setelah selesai, jalankan `php artisan test` lalu laporkan hasilnya.
+7. Setelah selesai, jalankan `php -d memory_limit=512M artisan test --compact` lalu laporkan hasilnya.
 8. Jalankan validasi report: `php artisan route:list --name=report` dan test terkait.
 9. Untuk dokumen autentik: baca -> laporkan/konfirmasi -> sinkronkan -> implementasi.
 10. Jika ada deviasi dari pedoman, catat di `docs/domain/DOMAIN_DEVIATION_LOG.md`.

@@ -895,3 +895,49 @@ Catatan blocker:
 Status:
 - `PASS` untuk seluruh concern otomatis pada batch ini.
 - `PENDING` hanya pada gate full test dan gate manual/time-based yang belum dapat ditutup otomatis.
+
+## Hardening Command Test Memory Limit: 2026-02-25
+
+Ruang lingkup:
+- Menstandarkan command full test agar tidak bergantung `php.ini` lokal (default `128M`).
+- Menyamakan command test gate di CI untuk mencegah error memory sporadis.
+
+Artefak:
+- `composer.json`
+- `.github/workflows/domain-contract-gate.yml`
+- `.github/pull_request_template.md`
+- `docs/process/COMMAND_NUMBER_SHORTCUTS.md`
+
+Keputusan:
+- Command canonical full test dikunci menjadi:
+  - `php -d memory_limit=512M artisan test --compact`
+- Composer script ditambah:
+  - `composer test:full`
+  - `composer test:full:unit`
+  - `composer test:full:feature`
+
+Status:
+- `PASS` untuk hardening command dan sinkronisasi dokumen/process template.
+
+## Verifikasi Pasca Hardening Memory Limit: 2026-02-25
+
+Ruang lingkup:
+- Memverifikasi eksekusi test suite setelah hardening memory-limit pada command + `phpunit.xml`.
+- Memastikan error `Allowed memory size of 134217728 bytes exhausted` tidak lagi menjadi blocker utama.
+
+Perintah validasi:
+- `composer test:full:unit`
+  - hasil: `PASS` (`314` tests).
+- `composer test:full:feature`
+  - hasil: tidak ada lagi error memory-limit.
+  - suite berhenti pada `4` kegagalan non-memory:
+    - `LaporanTahunanPkkReportPrintTest` (`2` fail): template `.docx` tidak ditemukan.
+    - `PdfBaselineFixtureComplianceTest` (`2` fail): mismatch token judul fixture untuk `data-pemanfaatan-tanah-pekarangan-hatinya-pkk` dan `data-industri-rumah-tangga`.
+
+Keputusan:
+- Gate memory-limit dinyatakan `stabil`: eksekusi sudah tidak pecah oleh limit `128M`.
+- Blocker tersisa dipindahkan ke concern terpisah `fixture/template consistency` karena tidak terkait kapasitas memory.
+
+Status:
+- `PASS` untuk concern memory-limit.
+- `PENDING` untuk 4 kegagalan regresi non-memory pada suite feature.
