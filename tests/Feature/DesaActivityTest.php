@@ -6,6 +6,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
 use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\Activities\Models\Activity;
@@ -199,6 +200,85 @@ class DesaActivityTest extends TestCase
         $response = $this->get('/desa/activities');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function daftar_kegiatan_desa_menggunakan_payload_pagination_dan_tetap_scoped(): void
+    {
+        $desaUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $desaUser->assignRole('admin-desa');
+
+        $desaLain = Area::create([
+            'name' => 'Bandung',
+            'level' => 'desa',
+            'parent_id' => $this->kecamatan->id,
+        ]);
+
+        for ($index = 1; $index <= 12; $index++) {
+            Activity::create([
+                'title' => 'Kegiatan Desa Gombong ' . $index,
+                'level' => 'desa',
+                'area_id' => $this->desa->id,
+                'created_by' => $desaUser->id,
+                'activity_date' => now()->subDays($index)->toDateString(),
+                'status' => 'draft',
+            ]);
+        }
+
+        Activity::create([
+            'title' => 'Kegiatan Desa Bandung Bocor',
+            'level' => 'desa',
+            'area_id' => $desaLain->id,
+            'created_by' => $desaUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($desaUser)->get('/desa/activities?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Kegiatan Desa Bandung Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/Activities/Index')
+                ->has('activities.data', 2)
+                ->where('activities.current_page', 2)
+                ->where('activities.per_page', 10)
+                ->where('activities.total', 12)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_otomatis_kembali_ke_default(): void
+    {
+        $desaUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $desaUser->assignRole('admin-desa');
+
+        Activity::create([
+            'title' => 'Kegiatan Default Per Page',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $desaUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($desaUser)->get('/desa/activities?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/Activities/Index')
+                ->where('filters.per_page', 10)
+                ->where('activities.per_page', 10);
+        });
     }
 
     #[Test]

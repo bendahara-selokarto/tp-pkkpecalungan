@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -144,6 +145,51 @@ class KecamatanDesaActivityTest extends TestCase
 
         $response->assertStatus(403);
     }
-}
 
+    #[Test]
+    public function daftar_kegiatan_desa_di_kecamatan_memakai_pagination_payload(): void
+    {
+        $kecamatanUser = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $kecamatanUser->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            Activity::create([
+                'title' => 'Kegiatan Desa Gombong ' . $index,
+                'description' => 'Dalam kecamatan user',
+                'level' => 'desa',
+                'area_id' => $this->desaA1->id,
+                'created_by' => $kecamatanUser->id,
+                'activity_date' => now()->subDays($index)->toDateString(),
+                'status' => 'published',
+            ]);
+        }
+
+        Activity::create([
+            'title' => 'Kegiatan Desa Kalisalak Tidak Boleh Muncul',
+            'description' => 'Luar kecamatan user',
+            'level' => 'desa',
+            'area_id' => $this->desaB1->id,
+            'created_by' => $kecamatanUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        $response = $this->actingAs($kecamatanUser)->get('/kecamatan/desa-activities?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Kegiatan Desa Kalisalak Tidak Boleh Muncul');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DesaActivities/Index')
+                ->has('activities.data', 1)
+                ->where('activities.current_page', 2)
+                ->where('activities.per_page', 10)
+                ->where('activities.total', 11)
+                ->where('filters.per_page', 10);
+        });
+    }
+}
 
