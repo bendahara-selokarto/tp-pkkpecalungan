@@ -28,6 +28,7 @@ Aturan anti-ambiguity:
 - Jika dokumen internal berbeda istilah dengan pedoman utama, istilah domain mengikuti pedoman utama.
 - Jika status dokumen berbeda dengan implementasi aktual, status dokumen wajib diperbarui sebelum final report (`doc-hardening pass`).
 - Jika ada referensi ganda pada concern yang sama, gunakan referensi terakhir dari user sebagai acuan final dan tandai referensi sebelumnya sebagai `superseded`.
+- Untuk TODO baru, gunakan kode unik singkat setelah kata `TODO` agar targeting spesifik tidak ambigu.
 
 ## 3. Jalur Tunggal Eksekusi (Mandatory)
 
@@ -55,6 +56,7 @@ Aturan anti-ambiguity:
 
 6. `Doc-Hardening`
 - Wajib saat trigger canonical aktif (akses, scope, dashboard representation, query key, metadata sumber, atau lintas dokumen concern).
+- Saat membuat TODO baru, pastikan format judul mengikuti `TODO <KODE_UNIK> ...` sesuai `AGENTS.md`.
 
 7. `Report`
 - Laporkan: apa diubah, kenapa, file terdampak, hasil validasi, risiko residual.

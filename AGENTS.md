@@ -195,6 +195,10 @@ Guardrail tetap:
 
 Aturan markdown operasional:
 - Semua rencana aksi lintas-file wajib dibuat dalam dokumen TODO terpisah di `docs/process/`.
+- Penamaan TODO baru wajib memakai kode unik singkat tepat setelah kata `TODO` pada judul dokumen.
+  - Format judul: `# TODO <KODE_UNIK> <Judul Ringkas>`.
+  - `KODE_UNIK` harus mudah diketik: huruf kapital + angka saja (tanpa simbol), panjang 4-8 karakter.
+  - Format nama file disarankan: `TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
 - Gunakan format checklist `- [ ]` untuk task dan `- [x]` untuk task selesai.
 - Setiap TODO wajib memuat: konteks, target hasil, langkah eksekusi, validasi, risiko, keputusan.
 - Setiap update dokumen harus ringkas, diff-first, dan hindari pengulangan konteks yang sama.
