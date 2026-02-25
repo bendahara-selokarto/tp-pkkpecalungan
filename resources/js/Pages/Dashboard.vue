@@ -378,13 +378,15 @@ watch(
 const isByLevelMode = computed(() => selectedMode.value === 'by-level')
 const isBySubLevelMode = computed(() => selectedMode.value === 'by-sub-level')
 
+const buildGlobalFilterQuery = () => ({
+  mode: selectedMode.value,
+  level: isByLevelMode.value ? selectedLevel.value : 'all',
+  sub_level: isBySubLevelMode.value ? selectedSubLevel.value : 'all',
+  section1_month: normalizedSection1Month.value,
+})
+
 const applyFilters = () => {
-  router.get('/dashboard', {
-    mode: selectedMode.value,
-    level: isByLevelMode.value ? selectedLevel.value : 'all',
-    sub_level: isBySubLevelMode.value ? selectedSubLevel.value : 'all',
-    section1_month: normalizedSection1Month.value,
-  }, {
+  router.get('/dashboard', buildGlobalFilterQuery(), {
     preserveState: true,
     preserveScroll: true,
     replace: true,
@@ -519,6 +521,27 @@ watch(
     }
 
     selectedSection1Month.value = 'all'
+  },
+  { immediate: true },
+)
+
+watch(
+  [hasSekretarisSections, hasMonthFilterAwareBlocks, () => page.url],
+  ([isSekretarisView, isMonthFilterRelevant, url]) => {
+    if (isSekretarisView || isMonthFilterRelevant) {
+      return
+    }
+
+    const params = parseQuery(url)
+    if (normalizeToken(params.get('section1_month'), 'all') === 'all') {
+      return
+    }
+
+    router.get('/dashboard', buildGlobalFilterQuery(), {
+      preserveState: true,
+      preserveScroll: true,
+      replace: true,
+    })
   },
   { immediate: true },
 )
