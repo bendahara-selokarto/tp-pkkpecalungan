@@ -13,11 +13,46 @@ use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
 class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 {
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        $kegiatanByNama = DataKegiatanWarga::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->pluck('aktivitas', 'kegiatan');
+
+        $activityLabel = static function (Collection $items, string $kegiatan): string {
+            return (bool) $items->get($kegiatan, false) ? 'Ya' : 'Tidak';
+        };
+
+        return DataWarga::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->through(function (DataWarga $item, int $index) use ($activityLabel, $kegiatanByNama): array {
+                return [
+                    'id' => $item->id,
+                    'nomor_urut' => $index + 1,
+                    'nama_kepala_rumah_tangga' => $item->nama_kepala_keluarga,
+                    'jumlah_anggota_rumah_tangga' => $item->total_warga,
+                    'kerja_bakti' => $activityLabel($kegiatanByNama, 'Kerja Bakti'),
+                    'rukun_kematian' => $activityLabel($kegiatanByNama, 'Rukun Kematian'),
+                    'kegiatan_keagamaan' => $activityLabel($kegiatanByNama, 'Kegiatan Keagamaan'),
+                    'jimpitan' => $activityLabel($kegiatanByNama, 'Jimpitan'),
+                    'arisan' => $activityLabel($kegiatanByNama, 'Arisan'),
+                    'lain_lain' => $activityLabel($kegiatanByNama, 'Lain-Lain'),
+                    'keterangan' => $item->keterangan,
+                ];
+            })
+            ->withQueryString();
+    }
+
     public function getByLevelAndArea(string $level, int $areaId): Collection
     {
         $kegiatanByNama = DataKegiatanWarga::query()

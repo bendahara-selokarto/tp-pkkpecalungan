@@ -2,11 +2,14 @@
 
 namespace App\Domains\Wilayah\CatatanKeluarga\Repositories;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface CatatanKeluargaRepositoryInterface
 {
     // 4.15 catatan keluarga dasar
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 
     // 4.16 rekap/catatan data kegiatan warga

@@ -237,7 +237,7 @@ class CatatanKeluargaPrintController extends Controller
         $this->authorize('viewAny', CatatanKeluarga::class);
 
         $items = $this->listScopedCatatanKeluargaUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->values();
 
         $user = auth()->user()->loadMissing('area');

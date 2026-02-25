@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\CatatanKeluarga\Controllers;
 
 use App\Domains\Wilayah\CatatanKeluarga\Models\CatatanKeluarga;
+use App\Domains\Wilayah\CatatanKeluarga\Requests\ListCatatanKeluargaRequest;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanKeluargaUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Http\Controllers\Controller;
@@ -17,14 +18,19 @@ class KecamatanCatatanKeluargaController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListCatatanKeluargaRequest $request): Response
     {
         $this->authorize('viewAny', CatatanKeluarga::class);
-        $items = $this->listScopedCatatanKeluargaUseCase->execute(ScopeLevel::KECAMATAN->value);
+        $items = $this->listScopedCatatanKeluargaUseCase->execute(ScopeLevel::KECAMATAN->value, $request->perPage());
 
         return Inertia::render('Kecamatan/CatatanKeluarga/Index', [
-            'catatanKeluargaItems' => $items->values(),
+            'catatanKeluargaItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 }
-

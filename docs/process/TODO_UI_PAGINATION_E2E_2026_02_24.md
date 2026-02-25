@@ -27,7 +27,7 @@ Status: `in-progress`
 - [x] `Bkl` (Desa + Kecamatan)
 - [x] `Bkr` (Desa + Kecamatan)
 - [x] `BukuKeuangan` (Desa + Kecamatan)
-- [ ] `CatatanKeluarga` (Desa + Kecamatan)
+- [x] `CatatanKeluarga` (Desa + Kecamatan)
 - [ ] `DataIndustriRumahTangga` (Desa + Kecamatan)
 - [ ] `DataKegiatanWarga` (Desa + Kecamatan)
 - [ ] `DataKeluarga` (Desa + Kecamatan)

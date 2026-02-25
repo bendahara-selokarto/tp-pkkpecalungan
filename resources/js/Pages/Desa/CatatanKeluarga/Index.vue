@@ -1,15 +1,40 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
+import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import { router } from '@inertiajs/vue3'
 import { mdiBookOpenVariant } from '@mdi/js'
+import { computed } from 'vue'
 
 const props = defineProps({
   catatanKeluargaItems: {
-    type: Array,
+    type: Object,
     required: true,
   },
+  filters: {
+    type: Object,
+    default: () => ({}),
+  },
+  pagination: {
+    type: Object,
+    default: () => ({
+      perPageOptions: [10, 25, 50],
+    }),
+  },
 })
+
+const perPage = computed(() => props.filters.per_page ?? 10)
+
+const updatePerPage = (event) => {
+  const selectedPerPage = Number(event.target.value)
+
+  router.get('/desa/catatan-keluarga', { per_page: selectedPerPage }, {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
 </script>
 
 <template>
@@ -18,6 +43,18 @@ const props = defineProps({
 
     <CardBox>
       <div class="mb-4 flex flex-wrap items-center justify-end gap-2">
+        <label class="text-xs text-gray-600 dark:text-gray-300">
+          Per halaman
+          <select
+            :value="perPage"
+            class="ml-2 rounded-md border border-gray-300 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            @change="updatePerPage"
+          >
+            <option v-for="option in pagination.perPageOptions" :key="`per-page-${option}`" :value="option">
+              {{ option }}
+            </option>
+          </select>
+        </label>
         <a
           href="/desa/catatan-keluarga/report/pdf"
           target="_blank"
@@ -182,7 +219,7 @@ const props = defineProps({
           </thead>
           <tbody>
             <tr
-              v-for="item in props.catatanKeluargaItems"
+              v-for="item in props.catatanKeluargaItems.data"
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
@@ -197,7 +234,7 @@ const props = defineProps({
               <td class="px-3 py-3 text-center text-gray-700 dark:text-gray-300">{{ item.lain_lain }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.keterangan || '-' }}</td>
             </tr>
-            <tr v-if="props.catatanKeluargaItems.length === 0">
+            <tr v-if="props.catatanKeluargaItems.data.length === 0">
               <td colspan="10" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Catatan Keluarga belum tersedia. Isi data di modul Data Warga dan Data Kegiatan Warga terlebih dahulu.
               </td>
@@ -205,6 +242,13 @@ const props = defineProps({
           </tbody>
         </table>
       </div>
+
+      <PaginationBar
+        :links="catatanKeluargaItems.links"
+        :from="catatanKeluargaItems.from"
+        :to="catatanKeluargaItems.to"
+        :total="catatanKeluargaItems.total"
+      />
     </CardBox>
   </SectionMain>
 </template>

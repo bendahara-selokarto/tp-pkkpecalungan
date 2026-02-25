@@ -7,6 +7,7 @@ use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -89,9 +90,97 @@ class DesaCatatanKeluargaTest extends TestCase
         $response = $this->actingAs($adminDesa)->get('/desa/catatan-keluarga');
 
         $response->assertOk();
-        $response->assertSee('Kepala A');
-        $response->assertDontSee('Kepala B');
-        $response->assertSee('Ya');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/CatatanKeluarga/Index')
+                ->has('catatanKeluargaItems.data', 1)
+                ->where('catatanKeluargaItems.data.0.nama_kepala_rumah_tangga', 'Kepala A')
+                ->where('catatanKeluargaItems.data.0.kerja_bakti', 'Ya')
+                ->where('catatanKeluargaItems.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_catatan_keluarga_desa_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        for ($index = 1; $index <= 12; $index++) {
+            DataWarga::create([
+                'dasawisma' => 'Melati ' . $index,
+                'nama_kepala_keluarga' => 'Kepala Desa ' . $index,
+                'alamat' => 'Alamat ' . $index,
+                'jumlah_warga_laki_laki' => 2,
+                'jumlah_warga_perempuan' => 1,
+                'keterangan' => 'Keterangan ' . $index,
+                'level' => 'desa',
+                'area_id' => $this->desaA->id,
+                'created_by' => $adminDesa->id,
+            ]);
+        }
+
+        DataWarga::create([
+            'dasawisma' => 'Bocor',
+            'nama_kepala_keluarga' => 'Kepala Bocor',
+            'alamat' => 'Alamat Bocor',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => 'Bocor',
+            'level' => 'desa',
+            'area_id' => $this->desaB->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/catatan-keluarga?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Kepala Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/CatatanKeluarga/Index')
+                ->has('catatanKeluargaItems.data', 2)
+                ->where('catatanKeluargaItems.current_page', 2)
+                ->where('catatanKeluargaItems.per_page', 10)
+                ->where('catatanKeluargaItems.total', 12)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_catatan_keluarga_desa_kembali_ke_default(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        DataWarga::create([
+            'dasawisma' => 'Melati 1',
+            'nama_kepala_keluarga' => 'Kepala Default',
+            'alamat' => 'Alamat Default',
+            'jumlah_warga_laki_laki' => 2,
+            'jumlah_warga_perempuan' => 2,
+            'keterangan' => 'Default Per Page',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/catatan-keluarga?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/CatatanKeluarga/Index')
+                ->where('filters.per_page', 10)
+                ->where('catatanKeluargaItems.per_page', 10);
+        });
     }
 
     #[Test]
@@ -122,4 +211,3 @@ class DesaCatatanKeluargaTest extends TestCase
         $response->assertStatus(403);
     }
 }
-

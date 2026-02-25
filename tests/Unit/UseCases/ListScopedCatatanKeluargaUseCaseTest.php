@@ -73,11 +73,15 @@ class ListScopedCatatanKeluargaUseCaseTest extends TestCase
         $this->actingAs($user);
         $useCase = app(ListScopedCatatanKeluargaUseCase::class);
 
-        $result = $useCase->execute('desa');
+        $result = $useCase->execute('desa', 10);
 
-        $this->assertCount(1, $result);
-        $this->assertSame('Kepala A', $result[0]['nama_kepala_rumah_tangga']);
-        $this->assertSame('Ya', $result[0]['kerja_bakti']);
+        $this->assertSame(1, $result->total());
+        $this->assertCount(1, $result->items());
+        $this->assertSame('Kepala A', $result->items()[0]['nama_kepala_rumah_tangga']);
+        $this->assertSame('Ya', $result->items()[0]['kerja_bakti']);
+
+        $allResult = $useCase->executeAll('desa');
+        $this->assertCount(1, $allResult);
+        $this->assertSame('Kepala A', $allResult[0]['nama_kepala_rumah_tangga']);
     }
 }
-
