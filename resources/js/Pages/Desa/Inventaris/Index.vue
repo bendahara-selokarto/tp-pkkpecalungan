@@ -1,23 +1,45 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
+import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiPackageVariantClosed } from '@mdi/js'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-defineProps({
+const props = defineProps({
   inventaris: {
-    type: Array,
+    type: Object,
     required: true,
+  },
+  filters: {
+    type: Object,
+    default: () => ({}),
+  },
+  pagination: {
+    type: Object,
+    default: () => ({
+      perPageOptions: [10, 25, 50],
+    }),
   },
 })
 
 const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data buku inventaris ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
+const perPage = computed(() => props.filters.per_page ?? 10)
+
+const updatePerPage = (event) => {
+  const selectedPerPage = Number(event.target.value)
+
+  router.get('/desa/inventaris', { per_page: selectedPerPage }, {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
 
 const hapusInventaris = (id) => {
   deletingId.value = id
@@ -54,6 +76,18 @@ const formatDate = (value) => formatDateForDisplay(value)
       <div class="mb-4 flex items-center justify-between gap-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Buku Inventaris</h3>
         <div class="flex items-center gap-2">
+          <label class="text-xs text-gray-600 dark:text-gray-300">
+            Per halaman
+            <select
+              :value="perPage"
+              class="ml-2 rounded-md border border-gray-300 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              @change="updatePerPage"
+            >
+              <option v-for="option in pagination.perPageOptions" :key="`per-page-${option}`" :value="option">
+                {{ option }}
+              </option>
+            </select>
+          </label>
           <a
             href="/desa/inventaris/report/pdf"
             target="_blank"
@@ -85,7 +119,7 @@ const formatDate = (value) => formatDateForDisplay(value)
           </thead>
           <tbody>
             <tr
-              v-for="item in inventaris"
+              v-for="item in inventaris.data"
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
@@ -118,7 +152,7 @@ const formatDate = (value) => formatDateForDisplay(value)
                 </div>
               </td>
             </tr>
-            <tr v-if="inventaris.length === 0">
+            <tr v-if="inventaris.data.length === 0">
               <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Data buku inventaris belum tersedia.
               </td>
@@ -126,6 +160,13 @@ const formatDate = (value) => formatDateForDisplay(value)
           </tbody>
         </table>
       </div>
+
+      <PaginationBar
+        :links="inventaris.links"
+        :from="inventaris.from"
+        :to="inventaris.to"
+        :total="inventaris.total"
+      />
     </CardBox>
 
     <ConfirmActionModal

@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -69,8 +70,93 @@ class KecamatanInventarisTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/inventaris');
 
         $response->assertOk();
-        $response->assertSee('Kursi Aula Kecamatan');
-        $response->assertDontSee('Printer Kecamatan B');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/Inventaris/Index')
+                ->has('inventaris.data', 1)
+                ->where('inventaris.data.0.name', 'Kursi Aula Kecamatan')
+                ->where('inventaris.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_inventaris_kecamatan_mendukung_pagination_dan_tetap_scoped()
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            Inventaris::create([
+                'name' => 'Inventaris Kec ' . $index,
+                'description' => 'Aset ' . $index,
+                'quantity' => $index,
+                'unit' => 'buah',
+                'condition' => 'baik',
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        Inventaris::create([
+            'name' => 'Inventaris Bocor',
+            'description' => 'Aset bocor',
+            'quantity' => 1,
+            'unit' => 'buah',
+            'condition' => 'baik',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/inventaris?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Inventaris Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/Inventaris/Index')
+                ->has('inventaris.data', 1)
+                ->where('inventaris.current_page', 2)
+                ->where('inventaris.per_page', 10)
+                ->where('inventaris.total', 11)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_inventaris_kecamatan_kembali_ke_default()
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        Inventaris::create([
+            'name' => 'Inventaris Default',
+            'description' => 'Aset default',
+            'quantity' => 1,
+            'unit' => 'buah',
+            'condition' => 'baik',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/inventaris?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/Inventaris/Index')
+                ->where('filters.per_page', 10)
+                ->where('inventaris.per_page', 10);
+        });
     }
 
     #[Test]
@@ -158,5 +244,4 @@ class KecamatanInventarisTest extends TestCase
         $response->assertStatus(403);
     }
 }
-
 

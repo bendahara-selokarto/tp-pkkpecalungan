@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Inventaris\Actions\CreateScopedInventarisAction;
 use App\Domains\Wilayah\Inventaris\Actions\UpdateInventarisAction;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
+use App\Domains\Wilayah\Inventaris\Requests\ListInventarisRequest;
 use App\Domains\Wilayah\Inventaris\Requests\StoreInventarisRequest;
 use App\Domains\Wilayah\Inventaris\Requests\UpdateInventarisRequest;
 use App\Domains\Wilayah\Inventaris\UseCases\GetScopedInventarisUseCase;
@@ -28,13 +29,12 @@ class DesaInventarisController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListInventarisRequest $request): Response
     {
         $this->authorize('viewAny', Inventaris::class);
-        $inventaris = $this->listScopedInventarisUseCase->execute('desa');
-
-        return Inertia::render('Desa/Inventaris/Index', [
-            'inventaris' => $inventaris->values()->map(fn (Inventaris $item) => [
+        $inventaris = $this->listScopedInventarisUseCase
+            ->execute('desa', $request->perPage())
+            ->through(fn (Inventaris $item) => [
                 'id' => $item->id,
                 'name' => $item->name,
                 'asal_barang' => $item->asal_barang,
@@ -45,7 +45,16 @@ class DesaInventarisController extends Controller
                 'tanggal_penerimaan' => $this->formatDateForPayload($item->tanggal_penerimaan),
                 'tempat_penyimpanan' => $item->tempat_penyimpanan,
                 'condition' => $item->condition,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/Inventaris/Index', [
+            'inventaris' => $inventaris,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

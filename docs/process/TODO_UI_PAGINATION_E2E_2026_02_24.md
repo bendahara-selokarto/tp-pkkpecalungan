@@ -34,7 +34,7 @@ Status: `in-progress`
 - [x] `Buku Agenda Surat` (`AgendaSurat`) (Desa + Kecamatan)
 - [x] `Buku Keuangan` (`BukuKeuangan`) (Desa + Kecamatan)
 - [x] `Buku Bantuan` (`Bantuan`) (Desa + Kecamatan)
-- [ ] `Buku Inventaris` (`Inventaris`) (Desa + Kecamatan)
+- [x] `Buku Inventaris` (`Inventaris`) (Desa + Kecamatan)
 - [x] `Buku Kegiatan` (`Activities`) (Desa + Kecamatan + Monitoring Kecamatan)
 - [x] `Daftar Anggota Pokja` (`AnggotaPokja`) (Desa + Kecamatan)
 - [ ] `Buku Prestasi/Lomba` (`PrestasiLomba`) (Desa + Kecamatan)

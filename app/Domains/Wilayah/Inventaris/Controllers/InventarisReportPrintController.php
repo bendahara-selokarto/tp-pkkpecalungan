@@ -32,7 +32,7 @@ class InventarisReportPrintController extends Controller
         $this->authorize('viewAny', Inventaris::class);
 
         $items = $this->listScopedInventarisUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
