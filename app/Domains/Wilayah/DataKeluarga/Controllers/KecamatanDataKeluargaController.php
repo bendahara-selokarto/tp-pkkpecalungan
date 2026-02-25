@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataKeluarga\Actions\CreateScopedDataKeluargaAction;
 use App\Domains\Wilayah\DataKeluarga\Actions\UpdateDataKeluargaAction;
 use App\Domains\Wilayah\DataKeluarga\Models\DataKeluarga;
 use App\Domains\Wilayah\DataKeluarga\Repositories\DataKeluargaRepositoryInterface;
+use App\Domains\Wilayah\DataKeluarga\Requests\ListDataKeluargaRequest;
 use App\Domains\Wilayah\DataKeluarga\Requests\StoreDataKeluargaRequest;
 use App\Domains\Wilayah\DataKeluarga\Requests\UpdateDataKeluargaRequest;
 use App\Domains\Wilayah\DataKeluarga\UseCases\GetScopedDataKeluargaUseCase;
@@ -28,18 +29,26 @@ class KecamatanDataKeluargaController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListDataKeluargaRequest $request): Response
     {
         $this->authorize('viewAny', DataKeluarga::class);
-        $items = $this->listScopedDataKeluargaUseCase->execute(ScopeLevel::KECAMATAN->value);
-
-        return Inertia::render('Kecamatan/DataKeluarga/Index', [
-            'dataKeluargaItems' => $items->values()->map(fn (DataKeluarga $item) => [
+        $items = $this->listScopedDataKeluargaUseCase
+            ->execute(ScopeLevel::KECAMATAN->value, $request->perPage())
+            ->through(fn (DataKeluarga $item) => [
                 'id' => $item->id,
                 'kategori_keluarga' => $item->kategori_keluarga,
                 'jumlah_keluarga' => $item->jumlah_keluarga,
                 'keterangan' => $item->keterangan,
-            ]),
+            ]);
+
+        return Inertia::render('Kecamatan/DataKeluarga/Index', [
+            'dataKeluargaItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -109,4 +118,3 @@ class KecamatanDataKeluargaController extends Controller
         return redirect()->route('kecamatan.data-keluarga.index')->with('success', 'Data keluarga berhasil dihapus');
     }
 }
-

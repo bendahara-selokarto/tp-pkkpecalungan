@@ -48,7 +48,7 @@ Status: `in-progress`
 - [ ] `Data Taman Bacaan` (`TamanBacaan`) (Desa + Kecamatan)
 - [ ] `Data Koperasi` (`Koperasi`) (Desa + Kecamatan)
 - [ ] `Data Kejar Paket` (`KejarPaket`) (Desa + Kecamatan)
-- [ ] `Data Keluarga` (`DataKeluarga`) (Desa + Kecamatan)
+- [x] `Data Keluarga` (`DataKeluarga`) (Desa + Kecamatan)
 - [x] `Data Industri Rumah Tangga` (`DataIndustriRumahTangga`) (Desa + Kecamatan)
 - [ ] `Data HATINYA PKK` (`DataPemanfaatanTanahPekaranganHatinyaPkk`) (Desa + Kecamatan)
 - [ ] `Data Warung PKK` (`WarungPkk`) (Desa + Kecamatan)

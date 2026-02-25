@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataKeluarga\Models\DataKeluarga;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -65,8 +66,87 @@ class KecamatanDataKeluargaTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-keluarga');
 
         $response->assertOk();
-        $response->assertSee('Sejahtera III');
-        $response->assertDontSee('Sejahtera III Plus');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DataKeluarga/Index')
+                ->has('dataKeluargaItems.data', 1)
+                ->where('dataKeluargaItems.data.0.kategori_keluarga', 'Sejahtera III')
+                ->where('dataKeluargaItems.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_data_keluarga_kecamatan_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            DataKeluarga::create([
+                'kategori_keluarga' => 'Kategori Kec ' . $index,
+                'jumlah_keluarga' => $index,
+                'keterangan' => 'Keterangan ' . $index,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        DataKeluarga::create([
+            'kategori_keluarga' => 'Kategori Bocor',
+            'jumlah_keluarga' => 99,
+            'keterangan' => 'Bocor',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-keluarga?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Kategori Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DataKeluarga/Index')
+                ->has('dataKeluargaItems.data', 1)
+                ->where('dataKeluargaItems.current_page', 2)
+                ->where('dataKeluargaItems.per_page', 10)
+                ->where('dataKeluargaItems.total', 11)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_data_keluarga_kecamatan_kembali_ke_default(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        DataKeluarga::create([
+            'kategori_keluarga' => 'Kategori Default',
+            'jumlah_keluarga' => 10,
+            'keterangan' => 'Default',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-keluarga?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DataKeluarga/Index')
+                ->where('filters.per_page', 10)
+                ->where('dataKeluargaItems.per_page', 10);
+        });
     }
 
     #[Test]

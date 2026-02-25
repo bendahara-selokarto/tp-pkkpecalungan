@@ -32,7 +32,7 @@ class DataKeluargaPrintController extends Controller
         $this->authorize('viewAny', DataKeluarga::class);
 
         $items = $this->listScopedDataKeluargaUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
@@ -48,5 +48,4 @@ class DataKeluargaPrintController extends Controller
         return $pdf->stream("data-keluarga-{$level}-report.pdf");
     }
 }
-
 

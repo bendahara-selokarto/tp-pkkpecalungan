@@ -4,11 +4,14 @@ namespace App\Domains\Wilayah\DataKeluarga\Repositories;
 
 use App\Domains\Wilayah\DataKeluarga\DTOs\DataKeluargaData;
 use App\Domains\Wilayah\DataKeluarga\Models\DataKeluarga;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface DataKeluargaRepositoryInterface
 {
     public function store(DataKeluargaData $data): DataKeluarga;
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 
@@ -18,4 +21,3 @@ interface DataKeluargaRepositoryInterface
 
     public function delete(DataKeluarga $dataKeluarga): void;
 }
-
