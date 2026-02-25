@@ -1,7 +1,7 @@
 # TODO Refactor Dashboard Lintas Role 2026-02-24
 
 Tanggal: 2026-02-24  
-Status: `done`
+Status: `done` (`superseded` untuk koherensi kritis oleh `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`)
 
 ## Konteks
 
