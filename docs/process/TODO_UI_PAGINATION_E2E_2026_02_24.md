@@ -1,7 +1,12 @@
 # TODO UI Pagination E2E 2026-02-24
 
 Tanggal: 2026-02-24  
-Status: `planned`
+Status: `in-progress`
+
+## Progress
+
+- Fase 1 selesai untuk domain `Buku Kegiatan` (`desa/activities`, `kecamatan/activities`, `kecamatan/desa-activities`).
+- Modul list domain lain masih mengikuti backlog concern yang sama dan belum dieksekusi.
 
 ## Konteks
 
@@ -19,47 +24,47 @@ Status: `planned`
 
 ## Kontrak Teknis Pagination (Locked)
 
-- [ ] Parameter query canonical: `page`, `per_page` (opsional, dinormalisasi backend).
-- [ ] Nilai `per_page` hanya dari whitelist (mis. `10, 25, 50`) dengan fallback default aman.
-- [ ] Semua query list tetap melalui repository boundary (tanpa query domain baru di controller/view).
-- [ ] Otorisasi + scope dieksekusi sebelum pagination; tidak ada bypass di UI.
-- [ ] Metadata pagination dikirim terstruktur ke Inertia (`data`, `current_page`, `last_page`, `per_page`, `total`, `links`).
-- [ ] URL state wajib mempertahankan filter aktif saat navigasi halaman.
+- [x] Parameter query canonical: `page`, `per_page` (opsional, dinormalisasi backend).
+- [x] Nilai `per_page` hanya dari whitelist (mis. `10, 25, 50`) dengan fallback default aman.
+- [x] Semua query list tetap melalui repository boundary (tanpa query domain baru di controller/view).
+- [x] Otorisasi + scope dieksekusi sebelum pagination; tidak ada bypass di UI.
+- [x] Metadata pagination dikirim terstruktur ke Inertia (`data`, `current_page`, `last_page`, `per_page`, `total`, `links`).
+- [x] URL state wajib mempertahankan filter aktif saat navigasi halaman.
 
 ## Langkah Eksekusi (Checklist)
 
-- [ ] `P1` Inventory modul list prioritas yang akan dipaginasi (desa + kecamatan), lalu petakan controller/use case/repository yang terdampak.
-- [ ] `P2` Tetapkan kontrak request pagination (normalisasi `page/per_page`, whitelist, fallback) di request layer.
-- [ ] `P3` Implementasi concern backend per modul:
+- [x] `P1` Inventory modul list prioritas yang akan dipaginasi (desa + kecamatan), lalu petakan controller/use case/repository yang terdampak.
+- [x] `P2` Tetapkan kontrak request pagination (normalisasi `page/per_page`, whitelist, fallback) di request layer.
+- [x] `P3` Implementasi concern backend per modul:
   - repository gunakan `paginate(...)` + `withQueryString()` bila relevan,
   - use case mengembalikan payload pagination terstruktur,
   - controller tetap tipis (mapping Inertia props saja).
-- [ ] `P4` Implementasi concern UI:
+- [x] `P4` Implementasi concern UI:
   - buat komponen pagination reusable,
   - integrasikan ke halaman list target,
   - pastikan state filter tidak hilang saat klik next/prev/nomor halaman.
-- [ ] `P5` Tambahkan copywriting pass untuk label pagination agar natural user (bukan istilah teknis internal).
-- [ ] `P6` Tambahkan regression guard UI agar error runtime JavaScript pada event pagination tidak memutus alur utama.
-- [ ] `P7` Tambahkan test coverage E2E concern pagination:
+- [x] `P5` Tambahkan copywriting pass untuk label pagination agar natural user (bukan istilah teknis internal).
+- [x] `P6` Tambahkan regression guard UI agar error runtime JavaScript pada event pagination tidak memutus alur utama.
+- [x] `P7` Tambahkan test coverage E2E concern pagination:
   - jalur sukses role/scope valid,
   - tolak akses role tidak valid,
   - tolak mismatch role-area level,
   - anti data leak antar area pada halaman berbeda.
-- [ ] `P8` Doc-hardening pass: sinkronkan status TODO concern dashboard/UI terkait jika ada overlap kontrak query/filter.
+- [x] `P8` Doc-hardening pass: sinkronkan status TODO concern dashboard/UI terkait jika ada overlap kontrak query/filter.
 
 ## Rencana Commit By Concern
 
-- [ ] `C1` Contract & request normalization pagination.
-- [ ] `C2` Repository/use case/controller pagination integration.
-- [ ] `C3` UI pagination reusable + integrasi halaman.
-- [ ] `C4` Test E2E pagination (feature/unit) + hardening anti leak.
-- [ ] `C5` Doc-hardening + copywriting hardening + sinkron status TODO.
+- [x] `C1` Contract & request normalization pagination.
+- [x] `C2` Repository/use case/controller pagination integration.
+- [x] `C3` UI pagination reusable + integrasi halaman.
+- [x] `C4` Test E2E pagination (feature/unit) + hardening anti leak.
+- [x] `C5` Doc-hardening + copywriting hardening + sinkron status TODO.
 
 ## Validasi Wajib
 
-- [ ] `php artisan test` (minimal targeted test concern pagination + policy/scope terkait).
-- [ ] `php artisan test` penuh setelah semua concern selesai.
-- [ ] `npm run build`.
+- [x] `php artisan test` (minimal targeted test concern pagination + policy/scope terkait).
+- [x] `php artisan test` penuh setelah semua concern selesai.
+- [x] `npm run build`.
 - [ ] Smoke test manual:
   - pindah halaman tetap mempertahankan filter,
   - back/forward browser tetap konsisten,
@@ -80,6 +85,6 @@ Status: `planned`
 
 ## Keputusan
 
-- [ ] Implementasi pagination dilakukan bertahap `by concern`, bukan big-bang rewrite.
-- [ ] Kontrak akses backend tetap prioritas; UI hanya consumer.
-- [ ] Jika ditemukan konflik UX vs kontrak domain, kontrak domain canonical tetap menang.
+- [x] Implementasi pagination dilakukan bertahap `by concern`, bukan big-bang rewrite.
+- [x] Kontrak akses backend tetap prioritas; UI hanya consumer.
+- [x] Jika ditemukan konflik UX vs kontrak domain, kontrak domain canonical tetap menang.
