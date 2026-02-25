@@ -10,6 +10,7 @@ Status: `done`
 - Dokumen ini adalah catatan implementasi historis.
 - Untuk concern koherensi dashboard eksperimen UI terbaru, acuan wajib:
   - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/TODO_DCF25R1_KOHERENSI_CHART_FILTER_LINTAS_ROLE_2026_02_25.md`
   - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 - Jika ada analisa yang memakai dokumen ini sebagai acuan final concern aktif, analisa tersebut dianggap usang dan wajib mengikuti dokumen acuan terbaru di atas.
 

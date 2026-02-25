@@ -9,6 +9,8 @@ Status: `done` (`experimental-ui-only`, non-final, rolling)
 - Marker: `DASH-COHERENCE-EXP-2026-02-25-R1`
 - Jika ada analisa yang memakai versi TODO ini sebelum marker ini ditambahkan, analisa tersebut dianggap usang.
 - Wajib gunakan isi terbaru dokumen ini sebagai acuan concern koherensi UI dashboard eksperimen.
+- Concern turunan chart/filter lintas role pasca Apex dipisahkan ke acuan tunggal:
+  - `docs/process/TODO_DCF25R1_KOHERENSI_CHART_FILTER_LINTAS_ROLE_2026_02_25.md`
 
 ## Konteks
 
@@ -114,5 +116,4 @@ Status: `done` (`experimental-ui-only`, non-final, rolling)
 - [x] Baseline visual sementara tetap `kecamatan-sekretaris` versi aktif.
 - [x] Keputusan pada fase ini bersifat eksperimental UI dan dapat berubah pada iterasi berikutnya.
 - [x] Perubahan backend/E2E baru boleh dibuka jika ada concern terpisah setelah eksperimen UI stabil.
-
 
