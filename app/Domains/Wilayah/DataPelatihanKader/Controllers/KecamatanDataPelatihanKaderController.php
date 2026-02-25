@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataPelatihanKader\Actions\CreateScopedDataPelatihanKade
 use App\Domains\Wilayah\DataPelatihanKader\Actions\UpdateDataPelatihanKaderAction;
 use App\Domains\Wilayah\DataPelatihanKader\Models\DataPelatihanKader;
 use App\Domains\Wilayah\DataPelatihanKader\Repositories\DataPelatihanKaderRepositoryInterface;
+use App\Domains\Wilayah\DataPelatihanKader\Requests\ListDataPelatihanKaderRequest;
 use App\Domains\Wilayah\DataPelatihanKader\Requests\StoreDataPelatihanKaderRequest;
 use App\Domains\Wilayah\DataPelatihanKader\Requests\UpdateDataPelatihanKaderRequest;
 use App\Domains\Wilayah\DataPelatihanKader\UseCases\GetScopedDataPelatihanKaderUseCase;
@@ -28,13 +29,12 @@ class KecamatanDataPelatihanKaderController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListDataPelatihanKaderRequest $request): Response
     {
         $this->authorize('viewAny', DataPelatihanKader::class);
-        $items = $this->listScopedDataPelatihanKaderUseCase->execute(ScopeLevel::KECAMATAN->value);
-
-        return Inertia::render('Kecamatan/DataPelatihanKader/Index', [
-            'dataPelatihanKaderItems' => $items->values()->map(fn (DataPelatihanKader $item) => [
+        $items = $this->listScopedDataPelatihanKaderUseCase
+            ->execute(ScopeLevel::KECAMATAN->value, $request->perPage())
+            ->through(fn (DataPelatihanKader $item) => [
                 'id' => $item->id,
                 'nomor_registrasi' => $item->nomor_registrasi,
                 'nama_lengkap_kader' => $item->nama_lengkap_kader,
@@ -42,7 +42,16 @@ class KecamatanDataPelatihanKaderController extends Controller
                 'judul_pelatihan' => $item->judul_pelatihan,
                 'tahun_penyelenggaraan' => $item->tahun_penyelenggaraan,
                 'status_sertifikat' => $item->status_sertifikat,
-            ]),
+            ]);
+
+        return Inertia::render('Kecamatan/DataPelatihanKader/Index', [
+            'dataPelatihanKaderItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

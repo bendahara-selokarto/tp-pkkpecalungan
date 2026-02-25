@@ -32,7 +32,7 @@ class DataPelatihanKaderPrintController extends Controller
         $this->authorize('viewAny', DataPelatihanKader::class);
 
         $items = $this->listScopedDataPelatihanKaderUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

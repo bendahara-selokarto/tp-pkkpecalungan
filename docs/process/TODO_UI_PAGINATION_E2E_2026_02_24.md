@@ -44,7 +44,7 @@ Status: `in-progress`
 - [x] `Rekap Kelompok BKL` (`Bkl`) (Desa + Kecamatan)
 - [x] `Rekap Kelompok BKR` (`Bkr`) (Desa + Kecamatan)
 - [ ] `Data PAAR` (`Paar`) (Desa + Kecamatan)
-- [ ] `Data Pelatihan Kader` (`DataPelatihanKader`) (Desa + Kecamatan)
+- [x] `Data Pelatihan Kader` (`DataPelatihanKader`) (Desa + Kecamatan)
 - [ ] `Data Taman Bacaan` (`TamanBacaan`) (Desa + Kecamatan)
 - [ ] `Data Koperasi` (`Koperasi`) (Desa + Kecamatan)
 - [ ] `Data Kejar Paket` (`KejarPaket`) (Desa + Kecamatan)

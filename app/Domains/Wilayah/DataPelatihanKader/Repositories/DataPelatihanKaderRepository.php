@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\DataPelatihanKader\Repositories;
 
 use App\Domains\Wilayah\DataPelatihanKader\DTOs\DataPelatihanKaderData;
 use App\Domains\Wilayah\DataPelatihanKader\Models\DataPelatihanKader;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class DataPelatihanKaderRepository implements DataPelatihanKaderRepositoryInterface
@@ -25,6 +26,16 @@ class DataPelatihanKaderRepository implements DataPelatihanKaderRepositoryInterf
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return DataPelatihanKader::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection
