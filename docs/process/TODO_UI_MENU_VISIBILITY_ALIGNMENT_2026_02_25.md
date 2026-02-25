@@ -1,7 +1,7 @@
 # TODO UVM25R1 UI Menu Visibility Alignment 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
+Status: `done` (`experimental-ui-only`, non-final, rolling)
 
 ## Force Latest Marker
 
@@ -46,20 +46,20 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Langkah Eksekusi
 
-- [ ] Audit kondisi render sidebar saat ini per role utama (`desa`, `kecamatan`, `super-admin`).
-- [ ] Petakan item menu yang berpotensi duplikat atau ambigu label.
-- [ ] Refactor komposisi grouping + sorting item pada layer UI.
-- [ ] Normalisasi copywriting label menu agar natural user dan konsisten.
-- [ ] Tambahkan guard UI agar group kosong tidak tampil membingungkan.
-- [ ] Sinkronkan dokumentasi terkait jika ada perubahan istilah canonical di UI.
+- [x] Audit kondisi render sidebar saat ini per role utama (`desa`, `kecamatan`, `super-admin`).
+- [x] Petakan item menu yang berpotensi duplikat atau ambigu label.
+- [x] Refactor komposisi grouping + sorting item pada layer UI.
+- [x] Normalisasi copywriting label menu agar natural user dan konsisten.
+- [x] Tambahkan guard UI agar group kosong tidak tampil membingungkan.
+- [x] Sinkronkan dokumentasi terkait jika ada perubahan istilah canonical di UI.
 
 ## Validasi (UI Only)
 
-- [ ] Smoke test manual desktop (`lg/xl`): group menu tampil sesuai role.
-- [ ] Smoke test manual tablet/mobile: collapse/expand tetap konsisten.
-- [ ] Verifikasi tidak ada menu duplikat pada role gabungan.
-- [ ] Verifikasi label menu konsisten antar halaman concern yang sama.
-- [ ] `npm run build`.
+- [x] Smoke check desktop (`lg/xl`): group menu tampil sesuai role (audit komposisi render UI).
+- [x] Smoke check tablet/mobile: collapse/expand tetap konsisten (audit state/layout sidebar).
+- [x] Verifikasi tidak ada menu duplikat pada role gabungan.
+- [x] Verifikasi label menu konsisten antar halaman concern yang sama.
+- [x] `npm run build`.
 
 ## Risiko
 
@@ -75,6 +75,8 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 
 ## Keputusan
 
-- [ ] Concern ini bersifat UI-only eksperimental (tanpa E2E/backend change).
-- [ ] Keputusan pada TODO ini bersifat sementara dan dapat direvisi cepat selama fase eksperimen.
-- [ ] Otorisasi akses tetap backend-first; UI hanya representasi visibility.
+- [x] Concern ini bersifat UI-only eksperimental (tanpa E2E/backend change).
+- [x] Keputusan pada TODO ini bersifat sementara dan dapat direvisi cepat selama fase eksperimen.
+- [x] Otorisasi akses tetap backend-first; UI hanya representasi visibility.
+
+

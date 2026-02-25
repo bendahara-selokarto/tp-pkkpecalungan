@@ -576,6 +576,20 @@ const sourceAreaTypeLabel = (block) => {
   return humanizeLabel(sourceAreaType)
 }
 
+const resolveBlockAccessModeLabel = (block) => {
+  const mode = normalizeToken(block?.mode, '')
+
+  if (mode === 'read-only') {
+    return 'Akses baca saja'
+  }
+
+  if (mode === 'read-write') {
+    return 'Akses baca dan ubah'
+  }
+
+  return 'Akses mengikuti hak akun'
+}
+
 const blockSummaryLabel = (block) => `Data dari ${sourceModulesLabel(block)} | Cakupan ${sourceAreaTypeLabel(block)}`
 
 const buildBlockStats = (block) => {
@@ -1207,6 +1221,9 @@ const hasLegacyLevelDistributionData = computed(() =>
                 <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
                 <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
                   {{ blockSummaryLabel(block) }}
+                </p>
+                <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                  {{ resolveBlockAccessModeLabel(block) }}
                 </p>
               </div>
               <div class="ml-auto flex items-center gap-2">
