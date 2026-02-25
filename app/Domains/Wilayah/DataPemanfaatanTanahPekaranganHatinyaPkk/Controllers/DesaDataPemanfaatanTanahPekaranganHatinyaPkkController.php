@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Actions\CreateS
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Actions\UpdateDataPemanfaatanTanahPekaranganHatinyaPkkAction;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPemanfaatanTanahPekaranganHatinyaPkk;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Repositories\DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface;
+use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Requests\ListDataPemanfaatanTanahPekaranganHatinyaPkkRequest;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Requests\StoreDataPemanfaatanTanahPekaranganHatinyaPkkRequest;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Requests\UpdateDataPemanfaatanTanahPekaranganHatinyaPkkRequest;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\UseCases\GetScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase;
@@ -28,18 +29,26 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListDataPemanfaatanTanahPekaranganHatinyaPkkRequest $request): Response
     {
         $this->authorize('viewAny', DataPemanfaatanTanahPekaranganHatinyaPkk::class);
-        $items = $this->listScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase->execute(ScopeLevel::DESA->value);
-
-        return Inertia::render('Desa/DataPemanfaatanTanahPekaranganHatinyaPkk/Index', [
-            'dataPemanfaatanTanahPekaranganHatinyaPkkItems' => $items->values()->map(fn (DataPemanfaatanTanahPekaranganHatinyaPkk $item) => [
+        $items = $this->listScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase
+            ->execute(ScopeLevel::DESA->value, $request->perPage())
+            ->through(fn (DataPemanfaatanTanahPekaranganHatinyaPkk $item) => [
                 'id' => $item->id,
                 'kategori_pemanfaatan_lahan' => $item->kategori_pemanfaatan_lahan,
                 'komoditi' => $item->komoditi,
                 'jumlah_komoditi' => $item->jumlah_komoditi,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/DataPemanfaatanTanahPekaranganHatinyaPkk/Index', [
+            'dataPemanfaatanTanahPekaranganHatinyaPkkItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -109,4 +118,3 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkController extends Controller
         return redirect()->route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil dihapus');
     }
 }
-

@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPema
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -73,8 +74,87 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $response = $this->actingAs($adminDesa)->get('/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk');
 
         $response->assertOk();
-        $response->assertSee('Peternakan');
-        $response->assertDontSee('Perikanan');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataPemanfaatanTanahPekaranganHatinyaPkk/Index')
+                ->has('dataPemanfaatanTanahPekaranganHatinyaPkkItems.data', 1)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.data.0.kategori_pemanfaatan_lahan', 'Peternakan')
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_desa_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        for ($index = 1; $index <= 12; $index++) {
+            DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+                'kategori_pemanfaatan_lahan' => 'Peternakan',
+                'komoditi' => 'Komoditi ' . $index,
+                'jumlah_komoditi' => $index . ' unit',
+                'level' => 'desa',
+                'area_id' => $this->desaA->id,
+                'created_by' => $adminDesa->id,
+            ]);
+        }
+
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'Perikanan',
+            'komoditi' => 'Komoditi Bocor',
+            'jumlah_komoditi' => '1 unit',
+            'level' => 'desa',
+            'area_id' => $this->desaB->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Komoditi Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataPemanfaatanTanahPekaranganHatinyaPkk/Index')
+                ->has('dataPemanfaatanTanahPekaranganHatinyaPkkItems.data', 2)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.current_page', 2)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.per_page', 10)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.total', 12)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_desa_kembali_ke_default(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'Peternakan',
+            'komoditi' => 'Komoditi Default',
+            'jumlah_komoditi' => '2 unit',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataPemanfaatanTanahPekaranganHatinyaPkk/Index')
+                ->where('filters.per_page', 10)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.per_page', 10);
+        });
     }
 
     #[Test]
@@ -139,5 +219,4 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $response->assertStatus(403);
     }
 }
-
 

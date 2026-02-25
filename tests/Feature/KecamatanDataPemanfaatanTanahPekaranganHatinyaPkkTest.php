@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPema
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -65,8 +66,87 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk');
 
         $response->assertOk();
-        $response->assertSee('Peternakan');
-        $response->assertDontSee('Perikanan');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DataPemanfaatanTanahPekaranganHatinyaPkk/Index')
+                ->has('dataPemanfaatanTanahPekaranganHatinyaPkkItems.data', 1)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.data.0.kategori_pemanfaatan_lahan', 'Peternakan')
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_kecamatan_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+                'kategori_pemanfaatan_lahan' => 'Peternakan',
+                'komoditi' => 'Komoditi ' . $index,
+                'jumlah_komoditi' => $index . ' unit',
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'Perikanan',
+            'komoditi' => 'Komoditi Bocor',
+            'jumlah_komoditi' => '1 unit',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Komoditi Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DataPemanfaatanTanahPekaranganHatinyaPkk/Index')
+                ->has('dataPemanfaatanTanahPekaranganHatinyaPkkItems.data', 1)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.current_page', 2)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.per_page', 10)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.total', 11)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_kecamatan_kembali_ke_default(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'Peternakan',
+            'komoditi' => 'Komoditi Default',
+            'jumlah_komoditi' => '2 unit',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DataPemanfaatanTanahPekaranganHatinyaPkk/Index')
+                ->where('filters.per_page', 10)
+                ->where('dataPemanfaatanTanahPekaranganHatinyaPkkItems.per_page', 10);
+        });
     }
 
     #[Test]
@@ -133,5 +213,4 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         $response->assertStatus(403);
     }
 }
-
 

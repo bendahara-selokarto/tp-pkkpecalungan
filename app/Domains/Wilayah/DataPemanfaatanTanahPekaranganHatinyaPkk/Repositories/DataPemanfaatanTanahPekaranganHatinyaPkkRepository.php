@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Repositor
 
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\DTOs\DataPemanfaatanTanahPekaranganHatinyaPkkData;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPemanfaatanTanahPekaranganHatinyaPkk;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class DataPemanfaatanTanahPekaranganHatinyaPkkRepository implements DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface
@@ -18,6 +19,16 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkRepository implements DataPemanfaa
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return DataPemanfaatanTanahPekaranganHatinyaPkk::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection
@@ -50,6 +61,5 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkRepository implements DataPemanfaa
         $dataPemanfaatanTanahPekaranganHatinyaPkk->delete();
     }
 }
-
 
 

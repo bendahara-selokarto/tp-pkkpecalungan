@@ -4,11 +4,14 @@ namespace App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Repositor
 
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\DTOs\DataPemanfaatanTanahPekaranganHatinyaPkkData;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPemanfaatanTanahPekaranganHatinyaPkk;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface
 {
     public function store(DataPemanfaatanTanahPekaranganHatinyaPkkData $data): DataPemanfaatanTanahPekaranganHatinyaPkk;
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 
@@ -18,6 +21,5 @@ interface DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface
 
     public function delete(DataPemanfaatanTanahPekaranganHatinyaPkk $dataPemanfaatanTanahPekaranganHatinyaPkk): void;
 }
-
 
 

@@ -32,7 +32,7 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkPrintController extends Controller
         $this->authorize('viewAny', DataPemanfaatanTanahPekaranganHatinyaPkk::class);
 
         $items = $this->listScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
@@ -48,7 +48,6 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkPrintController extends Controller
         return $pdf->stream("data-pemanfaatan-tanah-pekarangan-hatinya-pkk-{$level}-report.pdf");
     }
 }
-
 
 
 
