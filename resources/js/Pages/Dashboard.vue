@@ -365,6 +365,7 @@ const applyFilters = () => {
     mode: selectedMode.value,
     level: isByLevelMode.value ? selectedLevel.value : 'all',
     sub_level: isBySubLevelMode.value ? selectedSubLevel.value : 'all',
+    section1_month: selectedSection1Month.value,
   }, {
     preserveState: true,
     preserveScroll: true,
@@ -415,7 +416,12 @@ const onSection2GroupChange = () => {
 
 const onSection1MonthChange = () => {
   selectedSection1Month.value = resolveOptionValue(selectedSection1Month.value, SECTION1_MONTH_OPTIONS, 'all')
-  applySekretarisSectionFilters()
+  if (hasSekretarisSections.value) {
+    applySekretarisSectionFilters()
+    return
+  }
+
+  applyFilters()
 }
 
 const onSection3GroupChange = () => {
@@ -833,12 +839,20 @@ const buildActivityMonthlyMultiAxisOptions = (block) => {
 const hasActivityMonthlyData = (block) =>
   (block?.charts?.monthly?.values ?? []).some((value) => toNumber(value) > 0)
 
-const isKecamatanSekretarisSection1Block = (block) =>
-  normalizeToken(block?.section?.key, '') === 'sekretaris-section-1'
-  && normalizeToken(block?.section?.source_level, '') === 'kecamatan'
+const hasByDesaActivityMetrics = (block) => {
+  const byDesa = block?.charts?.by_desa
+  if (!byDesa || typeof byDesa !== 'object') {
+    return false
+  }
+
+  return ['labels', 'values', 'books_total', 'books_filled'].some((metricKey) => {
+    const values = byDesa?.[metricKey]
+    return Array.isArray(values) && values.length > 0
+  })
+}
 
 const shouldShowActivityByDesaChart = (block) =>
-  isKecamatanSekretarisSection1Block(block)
+  hasByDesaActivityMetrics(block)
 
 const resolveActivityByDesaMetrics = (block) => {
   const labels = block?.charts?.by_desa?.labels ?? []
