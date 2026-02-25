@@ -18,36 +18,47 @@ Status: `in-progress`
   - repository yang sudah memakai `paginate(...)`: `UserManagementRepository`, `ActivityRepository`
   - repository domain lain masih dominan `Collection` pada jalur list scoped
 
-### Backlog Modul Pending Pagination
+### Sinkronisasi Domain Excel (2026-02-25)
 
-- [x] `AgendaSurat` (Desa + Kecamatan)
-- [x] `AnggotaPokja` (Desa + Kecamatan)
-- [x] `AnggotaTimPenggerak` (Desa + Kecamatan)
-- [x] `Bantuan` (Desa + Kecamatan)
-- [x] `Bkl` (Desa + Kecamatan)
-- [x] `Bkr` (Desa + Kecamatan)
-- [x] `BukuKeuangan` (Desa + Kecamatan)
-- [x] `CatatanKeluarga` (Desa + Kecamatan)
-- [ ] `DataIndustriRumahTangga` (Desa + Kecamatan)
-- [ ] `DataKegiatanWarga` (Desa + Kecamatan)
-- [ ] `DataKeluarga` (Desa + Kecamatan)
-- [ ] `DataPelatihanKader` (Desa + Kecamatan)
-- [ ] `DataPemanfaatanTanahPekaranganHatinyaPkk` (Desa + Kecamatan)
-- [ ] `DataWarga` (Desa + Kecamatan)
-- [ ] `Inventaris` (Desa + Kecamatan)
-- [ ] `KaderKhusus` (Desa + Kecamatan)
-- [ ] `KejarPaket` (Desa + Kecamatan)
-- [ ] `Koperasi` (Desa + Kecamatan)
-- [ ] `Paar` (Desa + Kecamatan)
-- [ ] `Posyandu` (Desa + Kecamatan)
-- [ ] `PrestasiLomba` (Desa + Kecamatan)
-- [ ] `ProgramPrioritas` (Desa + Kecamatan)
-- [ ] `SimulasiPenyuluhan` (Desa + Kecamatan)
-- [ ] `TamanBacaan` (Desa + Kecamatan)
-- [ ] `WarungPkk` (Desa + Kecamatan)
-- [ ] `LaporanTahunanPkk` (Shared page lintas scope)
-- [ ] `PilotProjectKeluargaSehat` (Shared page lintas scope)
-- [ ] `PilotProjectNaskahPelaporan` (Shared page lintas scope)
+- Sumber sinkronisasi: `docs/process/exports/FORMAT_MODUL_NATURAL_TERISI_2026_02_25.xlsx` (sheet `Daftar Modul`).
+- Total modul terdaftar: `31`.
+- Keputusan normalisasi nama:
+  - `Buku Anggota Tim Penggerak Kader` dipetakan ke domain `AnggotaTimPenggerak` (tidak ada halaman list terpisah; variasi ada di jalur report).
+  - `Monitoring Kegiatan Desa` dipetakan ke domain `Activities` (`/kecamatan/desa-activities`).
+
+### Backlog Modul Pagination (Tersinkron Excel)
+
+- [x] `Buku Anggota Tim Penggerak` (`AnggotaTimPenggerak`) (Desa + Kecamatan)
+- [x] `Buku Anggota Tim Penggerak Kader` (`AnggotaTimPenggerak`) (Desa + Kecamatan; list page mengikuti modul induk)
+- [ ] `Buku Kader Khusus` (`KaderKhusus`) (Desa + Kecamatan)
+- [x] `Buku Agenda Surat` (`AgendaSurat`) (Desa + Kecamatan)
+- [x] `Buku Keuangan` (`BukuKeuangan`) (Desa + Kecamatan)
+- [x] `Buku Bantuan` (`Bantuan`) (Desa + Kecamatan)
+- [ ] `Buku Inventaris` (`Inventaris`) (Desa + Kecamatan)
+- [x] `Buku Kegiatan` (`Activities`) (Desa + Kecamatan + Monitoring Kecamatan)
+- [x] `Daftar Anggota Pokja` (`AnggotaPokja`) (Desa + Kecamatan)
+- [ ] `Buku Prestasi/Lomba` (`PrestasiLomba`) (Desa + Kecamatan)
+- [ ] `Laporan Tahunan PKK` (`LaporanTahunanPkk`) (Shared page lintas scope)
+- [ ] `Data Warga` (`DataWarga`) (Desa + Kecamatan)
+- [ ] `Data Kegiatan Warga` (`DataKegiatanWarga`) (Desa + Kecamatan)
+- [x] `Rekap Kelompok BKL` (`Bkl`) (Desa + Kecamatan)
+- [x] `Rekap Kelompok BKR` (`Bkr`) (Desa + Kecamatan)
+- [ ] `Data PAAR` (`Paar`) (Desa + Kecamatan)
+- [ ] `Data Pelatihan Kader` (`DataPelatihanKader`) (Desa + Kecamatan)
+- [ ] `Data Taman Bacaan` (`TamanBacaan`) (Desa + Kecamatan)
+- [ ] `Data Koperasi` (`Koperasi`) (Desa + Kecamatan)
+- [ ] `Data Kejar Paket` (`KejarPaket`) (Desa + Kecamatan)
+- [ ] `Data Keluarga` (`DataKeluarga`) (Desa + Kecamatan)
+- [ ] `Data Industri Rumah Tangga` (`DataIndustriRumahTangga`) (Desa + Kecamatan)
+- [ ] `Data HATINYA PKK` (`DataPemanfaatanTanahPekaranganHatinyaPkk`) (Desa + Kecamatan)
+- [ ] `Data Warung PKK` (`WarungPkk`) (Desa + Kecamatan)
+- [ ] `Data Posyandu` (`Posyandu`) (Desa + Kecamatan)
+- [ ] `Kelompok Simulasi/Penyuluhan` (`SimulasiPenyuluhan`) (Desa + Kecamatan)
+- [x] `Catatan Keluarga` (`CatatanKeluarga`) (Desa + Kecamatan)
+- [ ] `Program Prioritas` (`ProgramPrioritas`) (Desa + Kecamatan)
+- [ ] `Pilot Project Naskah Pelaporan` (`PilotProjectNaskahPelaporan`) (Shared page lintas scope)
+- [ ] `Pilot Project Keluarga Sehat` (`PilotProjectKeluargaSehat`) (Shared page lintas scope)
+- [x] `Monitoring Kegiatan Desa` (`Activities` - `kecamatan/desa-activities`) (Kecamatan)
 
 ## Konteks
 
