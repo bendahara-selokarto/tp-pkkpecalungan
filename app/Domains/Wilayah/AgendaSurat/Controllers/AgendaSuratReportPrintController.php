@@ -42,7 +42,7 @@ class AgendaSuratReportPrintController extends Controller
         $this->authorize('viewAny', AgendaSurat::class);
 
         $items = $this->listScopedAgendaSuratUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
@@ -63,7 +63,7 @@ class AgendaSuratReportPrintController extends Controller
         $this->authorize('viewAny', AgendaSurat::class);
 
         $items = $this->listScopedAgendaSuratUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->where('jenis_surat', 'keluar')
             ->sortBy('id')
             ->values();
