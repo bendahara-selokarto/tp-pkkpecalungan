@@ -93,10 +93,10 @@ Temuan yang perlu dijaga:
   - `Keluar`
 
 Checklist audit sidebar berikutnya:
-- [ ] Verifikasi `L1/L2/L3` terhadap `TERMINOLOGY_NORMALIZATION_MAP`.
-- [ ] Verifikasi slug route di `DashboardLayout.vue` tetap match dengan matrix domain.
-- [ ] Verifikasi penempatan domain baru selalu masuk group organisasi yang benar.
-- [ ] Jika ada label baru/non-canonical, catat deviasi di `DOMAIN_DEVIATION_LOG`.
+- [x] Verifikasi `L1/L2/L3` terhadap `TERMINOLOGY_NORMALIZATION_MAP`.
+- [x] Verifikasi slug route di `DashboardLayout.vue` tetap match dengan matrix domain.
+- [x] Verifikasi penempatan domain baru selalu masuk group organisasi yang benar.
+- [x] Jika ada label baru/non-canonical, catat deviasi di `DOMAIN_DEVIATION_LOG` (hasil: tidak ada deviasi baru pada batch ini).
 
 ## Catatan Audit Metode Collapse Sidebar (2026-02-22)
 
@@ -105,22 +105,23 @@ Scope audit:
 - Fokus hanya pada mekanisme collapse, breakpoint behavior, dan persistence state.
 
 Ringkasan temuan:
-- Implementasi saat ini belum 1:1 dengan metode template asli.
-- Template asli menyembunyikan aside pada desktop `xl` saat collapsed (`xl:hidden`) dan konten kembali full-width.
-- Implementasi saat ini mempertahankan rail sempit (`lg:w-20`) saat collapsed.
-- Key persistence berbeda:
-  - Template asli: `admin-one-sidebar-collapsed`
-  - Implementasi saat ini: `sidebar-collapsed`
-- Kontrol collapse saat ini ditampilkan di header desktop dan tombol floating tepi sidebar.
+- State pattern sudah disamakan: `isAsideMobileExpanded`, `isAsideLgActive`, `isAsideDesktopCollapsed`.
+- Desktop collapse mengikuti pola template:
+  - panel `lg` diperlakukan sebagai off-canvas aktif/non-aktif,
+  - panel `xl` mengikuti state collapse (`xl:translate-x-0` / `xl:-translate-x-full`) dan konten kembali full-width saat collapse.
+- Key persistence sudah disamakan ke `admin-one-sidebar-collapsed`.
+- Kontrol collapse dipisahkan sesuai breakpoint:
+  - `lg` (non-`xl`): toggle panel,
+  - `xl`: toggle collapse desktop.
 
 Keputusan audit saat ini:
-- `catat-only` (tidak dieksekusi refactor metode collapse pada sesi ini).
+- Refactor metode collapse dieksekusi pada sesi ini untuk menyamakan pola state + persistence dengan template admin-one.
 - Tidak ada perubahan kontrak domain/menu; concern murni pada UX dan keselarasan pattern template.
 
 Checklist tindak lanjut (opsional, jika nanti disetujui refactor):
-- [ ] Samakan state pattern menjadi `isAsideMobileExpanded`, `isAsideLgActive`, `isAsideDesktopCollapsed`.
-- [ ] Samakan behavior desktop collapse agar mengikuti pola `AsideMenu` (`lg:hidden xl:flex` + `xl:hidden`).
-- [ ] Samakan key localStorage dengan template (`admin-one-sidebar-collapsed`) atau dokumentasikan alasan deviasi.
+- [x] Samakan state pattern menjadi `isAsideMobileExpanded`, `isAsideLgActive`, `isAsideDesktopCollapsed`.
+- [x] Samakan behavior desktop collapse agar mengikuti pola `AsideMenu` (`lg:hidden xl:flex` + `xl:hidden`).
+- [x] Samakan key localStorage dengan template (`admin-one-sidebar-collapsed`) atau dokumentasikan alasan deviasi.
 - [ ] Validasi manual UX di desktop (lg/xl), tablet, dan mobile setelah refactor.
 
 ## Implementasi Teknis
