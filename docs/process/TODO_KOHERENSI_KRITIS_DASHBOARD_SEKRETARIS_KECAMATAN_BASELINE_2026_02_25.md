@@ -1,7 +1,7 @@
 # TODO Koherensi Kritis Dashboard Baseline Sekretaris Kecamatan 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `planned` (`experimental-ui-only`, non-final)
+Status: `done` (`experimental-ui-only`, non-final)
 
 ## Force Latest Marker
 
@@ -31,16 +31,16 @@ Status: `planned` (`experimental-ui-only`, non-final)
 
 ## Definisi Koherensi Kritis (Locked)
 
-- [ ] Struktur utama konsisten:
+- [x] Struktur utama konsisten:
   - header dashboard,
   - panel filter,
   - kartu KPI,
   - area chart,
   - empty-state.
-- [ ] Visibilitas metadata konsisten lintas role (aturan tampil/sembunyi sama untuk concern yang setara).
-- [ ] Tidak ada branch UI khusus role yang mengubah model section tanpa justifikasi kontrak backend.
-- [ ] Istilah user-facing natural, konsisten, dan tanpa token teknis internal.
-- [ ] URL filter tetap stabil (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`).
+- [x] Visibilitas metadata konsisten lintas role (aturan tampil/sembunyi sama untuk concern yang setara).
+- [x] Tidak ada branch UI khusus role yang mengubah model section tanpa justifikasi kontrak backend.
+- [x] Istilah user-facing natural, konsisten, dan tanpa token teknis internal.
+- [x] URL filter tetap stabil (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`).
 
 ## Scope Role
 
@@ -63,22 +63,22 @@ Status: `planned` (`experimental-ui-only`, non-final)
 
 ## Langkah Eksekusi (Checklist)
 
-- [ ] `K1` Contract lock baseline UI:
+- [x] `K1` Contract lock baseline UI:
   - tetapkan elemen wajib/opsional dashboard yang harus identik lintas role,
   - tetapkan deviasi yang diizinkan beserta justifikasi.
-- [ ] `K2` Refactor koherensi renderer dashboard:
+- [x] `K2` Refactor koherensi renderer dashboard:
   - audit dan eliminasi branch frontend yang membuat perilaku role-specific tidak setara,
   - ubah ke aturan berbasis kontrak section/block yang datang dari backend.
-- [ ] `K3` Standardisasi presentasi metadata:
+- [x] `K3` Standardisasi presentasi metadata:
   - definisikan mode tampilan metadata (ringkas/default),
   - terapkan rule tunggal lintas role untuk `Sumber`, `Cakupan`, dan status mode akses.
-- [ ] `K4` Copywriting hardening dashboard:
+- [x] `K4` Copywriting hardening dashboard:
   - normalisasi label filter, helper, empty-state, dan deskripsi section ke bahasa natural user,
   - hilangkan istilah teknis internal pada teks UI.
-- [ ] `K5` Validasi regresi UI dashboard:
+- [x] `K5` Validasi regresi UI dashboard:
   - verifikasi parity tampilan lintas role pada data yang sama (tanpa ubah kontrak backend),
   - verifikasi interaksi filter URL tetap stabil pada UI concern aktif.
-- [ ] `K6` Doc-hardening lintas concern dashboard:
+- [x] `K6` Doc-hardening lintas concern dashboard:
   - sinkronkan status dan keputusan pada TODO dashboard yang berelasi,
   - tandai dokumen lama sebagai `superseded` bila ada keputusan yang diganti.
 
@@ -92,9 +92,9 @@ Status: `planned` (`experimental-ui-only`, non-final)
 
 ## Validasi Wajib
 
-- [ ] `npm run build`
-- [ ] Smoke test manual desktop + mobile untuk seluruh matrix role scope.
-- [ ] Smoke test manual filter URL (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`) pada role concern aktif.
+- [x] `npm run build`
+- [x] Smoke test manual desktop + mobile untuk seluruh matrix role scope.
+- [x] Smoke test manual filter URL (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`) pada role concern aktif.
 
 ## Risiko
 
@@ -110,6 +110,6 @@ Status: `planned` (`experimental-ui-only`, non-final)
 
 ## Keputusan (To Lock)
 
-- [ ] Baseline visual sementara tetap `kecamatan-sekretaris` versi aktif.
-- [ ] Keputusan pada fase ini bersifat eksperimental UI dan dapat berubah pada iterasi berikutnya.
-- [ ] Perubahan backend/E2E baru boleh dibuka jika ada concern terpisah setelah eksperimen UI stabil.
+- [x] Baseline visual sementara tetap `kecamatan-sekretaris` versi aktif.
+- [x] Keputusan pada fase ini bersifat eksperimental UI dan dapat berubah pada iterasi berikutnya.
+- [x] Perubahan backend/E2E baru boleh dibuka jika ada concern terpisah setelah eksperimen UI stabil.
