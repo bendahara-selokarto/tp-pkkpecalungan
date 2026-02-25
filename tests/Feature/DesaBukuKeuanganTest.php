@@ -6,6 +6,7 @@ use App\Domains\Wilayah\BukuKeuangan\Models\BukuKeuangan;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -79,8 +80,96 @@ class DesaBukuKeuanganTest extends TestCase
         $response = $this->actingAs($adminDesa)->get('/desa/buku-keuangan');
 
         $response->assertOk();
-        $response->assertSee('Iuran anggota');
-        $response->assertDontSee('Biaya konsumsi rapat');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/BukuKeuangan/Index')
+                ->has('entries.data', 1)
+                ->where('entries.data.0.description', 'Iuran anggota')
+                ->where('entries.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_buku_keuangan_desa_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        for ($index = 1; $index <= 12; $index++) {
+            BukuKeuangan::create([
+                'transaction_date' => now()->subDays($index)->toDateString(),
+                'source' => 'kas_tunai',
+                'description' => 'Iuran anggota ' . $index,
+                'reference_number' => 'BK-' . str_pad((string) $index, 3, '0', STR_PAD_LEFT),
+                'entry_type' => 'pemasukan',
+                'amount' => 1000000 + $index,
+                'level' => 'desa',
+                'area_id' => $this->desaA->id,
+                'created_by' => $adminDesa->id,
+            ]);
+        }
+
+        BukuKeuangan::create([
+            'transaction_date' => now()->toDateString(),
+            'source' => 'bank',
+            'description' => 'Transaksi Bocor',
+            'reference_number' => 'BK-BOCOR',
+            'entry_type' => 'pengeluaran',
+            'amount' => 500000,
+            'level' => 'desa',
+            'area_id' => $this->desaB->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/buku-keuangan?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Transaksi Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/BukuKeuangan/Index')
+                ->has('entries.data', 2)
+                ->where('entries.current_page', 2)
+                ->where('entries.per_page', 10)
+                ->where('entries.total', 12)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_buku_keuangan_desa_kembali_ke_default(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        BukuKeuangan::create([
+            'transaction_date' => '2026-02-01',
+            'source' => 'kas_tunai',
+            'description' => 'Default Per Page',
+            'reference_number' => 'BK-DEFAULT',
+            'entry_type' => 'pemasukan',
+            'amount' => 1000000,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/buku-keuangan?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/BukuKeuangan/Index')
+                ->where('filters.per_page', 10)
+                ->where('entries.per_page', 10);
+        });
     }
 
     #[Test]

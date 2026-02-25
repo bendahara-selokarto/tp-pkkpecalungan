@@ -32,7 +32,7 @@ class BukuKeuanganReportPrintController extends Controller
         $this->authorize('viewAny', BukuKeuangan::class);
 
         $items = $this->listScopedBukuKeuanganUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy(fn (BukuKeuangan $item): string => sprintf(
                 '%s-%010d',
                 $item->transaction_date?->format('Y-m-d'),

@@ -4,6 +4,8 @@ namespace App\Domains\Wilayah\BukuKeuangan\UseCases;
 
 use App\Domains\Wilayah\BukuKeuangan\Repositories\BukuKeuanganRepositoryInterface;
 use App\Domains\Wilayah\BukuKeuangan\Services\BukuKeuanganScopeService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ListScopedBukuKeuanganUseCase
 {
@@ -13,7 +15,14 @@ class ListScopedBukuKeuanganUseCase
     ) {
     }
 
-    public function execute(string $level)
+    public function execute(string $level, int $perPage): LengthAwarePaginator
+    {
+        $areaId = $this->bukuKeuanganScopeService->requireUserAreaId();
+
+        return $this->bukuKeuanganRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+    }
+
+    public function executeAll(string $level): Collection
     {
         $areaId = $this->bukuKeuanganScopeService->requireUserAreaId();
 

@@ -6,6 +6,7 @@ use App\Domains\Wilayah\BukuKeuangan\Models\BukuKeuangan;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -71,8 +72,64 @@ class KecamatanBukuKeuanganTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/buku-keuangan');
 
         $response->assertOk();
-        $response->assertSee('Dana program kecamatan');
-        $response->assertDontSee('Belanja kecamatan lain');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/BukuKeuangan/Index')
+                ->has('entries.data', 1)
+                ->where('entries.data.0.description', 'Dana program kecamatan')
+                ->where('entries.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_buku_keuangan_kecamatan_menggunakan_payload_pagination(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            BukuKeuangan::create([
+                'transaction_date' => now()->subDays($index)->toDateString(),
+                'source' => 'kabupaten',
+                'description' => 'Dana program kecamatan ' . $index,
+                'reference_number' => 'BK-' . str_pad((string) $index, 3, '0', STR_PAD_LEFT),
+                'entry_type' => 'pemasukan',
+                'amount' => 45000000 + $index,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        BukuKeuangan::create([
+            'transaction_date' => now()->toDateString(),
+            'source' => 'bank',
+            'description' => 'Belanja kecamatan bocor',
+            'reference_number' => 'BK-BOCOR',
+            'entry_type' => 'pengeluaran',
+            'amount' => 15000000,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/buku-keuangan?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Belanja kecamatan bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/BukuKeuangan/Index')
+                ->has('entries.data', 1)
+                ->where('entries.current_page', 2)
+                ->where('entries.per_page', 10)
+                ->where('entries.total', 11)
+                ->where('filters.per_page', 10);
+        });
     }
 
     #[Test]

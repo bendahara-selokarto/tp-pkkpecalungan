@@ -6,6 +6,7 @@ use App\Domains\Wilayah\BukuKeuangan\Actions\CreateScopedBukuKeuanganAction;
 use App\Domains\Wilayah\BukuKeuangan\Actions\UpdateBukuKeuanganAction;
 use App\Domains\Wilayah\BukuKeuangan\Models\BukuKeuangan;
 use App\Domains\Wilayah\BukuKeuangan\Repositories\BukuKeuanganRepositoryInterface;
+use App\Domains\Wilayah\BukuKeuangan\Requests\ListBukuKeuanganRequest;
 use App\Domains\Wilayah\BukuKeuangan\Requests\StoreBukuKeuanganRequest;
 use App\Domains\Wilayah\BukuKeuangan\Requests\UpdateBukuKeuanganRequest;
 use App\Domains\Wilayah\BukuKeuangan\UseCases\GetScopedBukuKeuanganUseCase;
@@ -28,13 +29,12 @@ class DesaBukuKeuanganController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListBukuKeuanganRequest $request): Response
     {
         $this->authorize('viewAny', BukuKeuangan::class);
-        $items = $this->listScopedBukuKeuanganUseCase->execute('desa');
-
-        return Inertia::render('Desa/BukuKeuangan/Index', [
-            'entries' => $items->values()->map(fn (BukuKeuangan $item) => [
+        $items = $this->listScopedBukuKeuanganUseCase
+            ->execute('desa', $request->perPage())
+            ->through(fn (BukuKeuangan $item) => [
                 'id' => $item->id,
                 'transaction_date' => $this->formatDateForPayload($item->transaction_date?->format('Y-m-d')),
                 'source' => $item->source,
@@ -42,7 +42,16 @@ class DesaBukuKeuanganController extends Controller
                 'reference_number' => $item->reference_number,
                 'entry_type' => $item->entry_type,
                 'amount' => $item->amount,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/BukuKeuangan/Index', [
+            'entries' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

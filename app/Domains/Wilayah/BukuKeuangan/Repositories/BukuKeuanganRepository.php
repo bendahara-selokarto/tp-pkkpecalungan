@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\BukuKeuangan\Repositories;
 
 use App\Domains\Wilayah\BukuKeuangan\DTOs\BukuKeuanganData;
 use App\Domains\Wilayah\BukuKeuangan\Models\BukuKeuangan;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class BukuKeuanganRepository implements BukuKeuanganRepositoryInterface
@@ -21,6 +22,17 @@ class BukuKeuanganRepository implements BukuKeuanganRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return BukuKeuangan::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('transaction_date')
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection
