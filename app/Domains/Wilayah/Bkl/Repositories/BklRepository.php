@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Bkl\Repositories;
 
 use App\Domains\Wilayah\Bkl\DTOs\BklData;
 use App\Domains\Wilayah\Bkl\Models\Bkl;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class BklRepository implements BklRepositoryInterface
@@ -21,6 +22,16 @@ class BklRepository implements BklRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return Bkl::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

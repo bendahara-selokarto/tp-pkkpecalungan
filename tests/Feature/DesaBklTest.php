@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Bkl\Models\Bkl;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -79,8 +80,64 @@ class DesaBklTest extends TestCase
         $response = $this->actingAs($adminDesa)->get('/desa/bkl');
 
         $response->assertOk();
-        $response->assertSee('BKL Mawar');
-        $response->assertDontSee('BKL Melati');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/Bkl/Index')
+                ->has('bklItems.data', 1)
+                ->where('bklItems.data.0.nama_bkl', 'BKL Mawar')
+                ->where('bklItems.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_bkl_desa_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        for ($index = 1; $index <= 12; $index++) {
+            Bkl::create([
+                'desa' => 'Gombong',
+                'nama_bkl' => 'BKL Desa ' . $index,
+                'no_tgl_sk' => '01/SK/BKL/2026',
+                'nama_ketua_kelompok' => 'Ketua ' . $index,
+                'jumlah_anggota' => 20 + $index,
+                'kegiatan' => 'Pertemuan kader',
+                'level' => 'desa',
+                'area_id' => $this->desaA->id,
+                'created_by' => $adminDesa->id,
+            ]);
+        }
+
+        Bkl::create([
+            'desa' => 'Bandung',
+            'nama_bkl' => 'BKL Bocor',
+            'no_tgl_sk' => '02/SK/BKL/2026',
+            'nama_ketua_kelompok' => 'Rina Wati',
+            'jumlah_anggota' => 30,
+            'kegiatan' => 'Kelas pembinaan keluarga',
+            'level' => 'desa',
+            'area_id' => $this->desaB->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/bkl?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('BKL Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/Bkl/Index')
+                ->has('bklItems.data', 2)
+                ->where('bklItems.current_page', 2)
+                ->where('bklItems.per_page', 10)
+                ->where('bklItems.total', 12)
+                ->where('filters.per_page', 10);
+        });
     }
 
     #[Test]

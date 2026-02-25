@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Bkl\Actions\CreateScopedBklAction;
 use App\Domains\Wilayah\Bkl\Actions\UpdateBklAction;
 use App\Domains\Wilayah\Bkl\Models\Bkl;
 use App\Domains\Wilayah\Bkl\Repositories\BklRepositoryInterface;
+use App\Domains\Wilayah\Bkl\Requests\ListBklRequest;
 use App\Domains\Wilayah\Bkl\Requests\StoreBklRequest;
 use App\Domains\Wilayah\Bkl\Requests\UpdateBklRequest;
 use App\Domains\Wilayah\Bkl\UseCases\GetScopedBklUseCase;
@@ -28,13 +29,12 @@ class KecamatanBklController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListBklRequest $request): Response
     {
         $this->authorize('viewAny', Bkl::class);
-        $items = $this->listScopedBklUseCase->execute(ScopeLevel::KECAMATAN->value);
-
-        return Inertia::render('Kecamatan/Bkl/Index', [
-            'bklItems' => $items->values()->map(fn (Bkl $item) => [
+        $items = $this->listScopedBklUseCase
+            ->execute(ScopeLevel::KECAMATAN->value, $request->perPage())
+            ->through(fn (Bkl $item) => [
                 'id' => $item->id,
                 'desa' => $item->desa,
                 'nama_bkl' => $item->nama_bkl,
@@ -42,7 +42,16 @@ class KecamatanBklController extends Controller
                 'nama_ketua_kelompok' => $item->nama_ketua_kelompok,
                 'jumlah_anggota' => $item->jumlah_anggota,
                 'kegiatan' => $item->kegiatan,
-            ]),
+            ]);
+
+        return Inertia::render('Kecamatan/Bkl/Index', [
+            'bklItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

@@ -32,7 +32,7 @@ class BklPrintController extends Controller
         $this->authorize('viewAny', Bkl::class);
 
         $items = $this->listScopedBklUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

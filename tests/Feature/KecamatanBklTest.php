@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Bkl\Models\Bkl;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -71,8 +72,64 @@ class KecamatanBklTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/bkl');
 
         $response->assertOk();
-        $response->assertSee('BKL Anyelir');
-        $response->assertDontSee('BKL Dahlia');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/Bkl/Index')
+                ->has('bklItems.data', 1)
+                ->where('bklItems.data.0.nama_bkl', 'BKL Anyelir')
+                ->where('bklItems.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_bkl_kecamatan_menggunakan_payload_pagination(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            Bkl::create([
+                'desa' => 'Gombong',
+                'nama_bkl' => 'BKL Kecamatan A ' . $index,
+                'no_tgl_sk' => '11/SK/BKL/2026',
+                'nama_ketua_kelompok' => 'Dewi Lestari',
+                'jumlah_anggota' => 22,
+                'kegiatan' => 'Kelas pendampingan keluarga',
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        Bkl::create([
+            'desa' => 'Kragan',
+            'nama_bkl' => 'BKL Bocor',
+            'no_tgl_sk' => '12/SK/BKL/2026',
+            'nama_ketua_kelompok' => 'Sri Handayani',
+            'jumlah_anggota' => 19,
+            'kegiatan' => 'Pelatihan komunikasi keluarga',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/bkl?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('BKL Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/Bkl/Index')
+                ->has('bklItems.data', 1)
+                ->where('bklItems.current_page', 2)
+                ->where('bklItems.per_page', 10)
+                ->where('bklItems.total', 11)
+                ->where('filters.per_page', 10);
+        });
     }
 
     #[Test]

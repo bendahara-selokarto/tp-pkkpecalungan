@@ -24,7 +24,7 @@ Status: `in-progress`
 - [x] `AnggotaPokja` (Desa + Kecamatan)
 - [x] `AnggotaTimPenggerak` (Desa + Kecamatan)
 - [x] `Bantuan` (Desa + Kecamatan)
-- [ ] `Bkl` (Desa + Kecamatan)
+- [x] `Bkl` (Desa + Kecamatan)
 - [ ] `Bkr` (Desa + Kecamatan)
 - [ ] `BukuKeuangan` (Desa + Kecamatan)
 - [ ] `CatatanKeluarga` (Desa + Kecamatan)
