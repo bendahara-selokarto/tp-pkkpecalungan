@@ -6,6 +6,7 @@ use App\Domains\Wilayah\TamanBacaan\Actions\CreateScopedTamanBacaanAction;
 use App\Domains\Wilayah\TamanBacaan\Actions\UpdateTamanBacaanAction;
 use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
 use App\Domains\Wilayah\TamanBacaan\Repositories\TamanBacaanRepositoryInterface;
+use App\Domains\Wilayah\TamanBacaan\Requests\ListTamanBacaanRequest;
 use App\Domains\Wilayah\TamanBacaan\Requests\StoreTamanBacaanRequest;
 use App\Domains\Wilayah\TamanBacaan\Requests\UpdateTamanBacaanRequest;
 use App\Domains\Wilayah\TamanBacaan\UseCases\GetScopedTamanBacaanUseCase;
@@ -28,13 +29,12 @@ class DesaTamanBacaanController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListTamanBacaanRequest $request): Response
     {
         $this->authorize('viewAny', TamanBacaan::class);
-        $items = $this->listScopedTamanBacaanUseCase->execute(ScopeLevel::DESA->value);
-
-        return Inertia::render('Desa/TamanBacaan/Index', [
-            'tamanBacaanItems' => $items->values()->map(fn (TamanBacaan $item) => [
+        $items = $this->listScopedTamanBacaanUseCase
+            ->execute(ScopeLevel::DESA->value, $request->perPage())
+            ->through(fn (TamanBacaan $item) => [
                 'id' => $item->id,
                 'nama_taman_bacaan' => $item->nama_taman_bacaan,
                 'nama_pengelola' => $item->nama_pengelola,
@@ -42,7 +42,16 @@ class DesaTamanBacaanController extends Controller
                 'jenis_buku' => $item->jenis_buku,
                 'kategori' => $item->kategori,
                 'jumlah' => $item->jumlah,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/TamanBacaan/Index', [
+            'tamanBacaanItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -115,5 +124,4 @@ class DesaTamanBacaanController extends Controller
         return redirect()->route('desa.taman-bacaan.index')->with('success', 'Data isian taman bacaan/perpustakaan berhasil dihapus');
     }
 }
-
 

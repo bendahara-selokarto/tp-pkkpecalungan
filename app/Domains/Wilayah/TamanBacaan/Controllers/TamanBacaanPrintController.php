@@ -32,7 +32,7 @@ class TamanBacaanPrintController extends Controller
         $this->authorize('viewAny', TamanBacaan::class);
 
         $items = $this->listScopedTamanBacaanUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
@@ -48,5 +48,4 @@ class TamanBacaanPrintController extends Controller
         return $pdf->stream("taman-bacaan-{$level}-report.pdf");
     }
 }
-
 

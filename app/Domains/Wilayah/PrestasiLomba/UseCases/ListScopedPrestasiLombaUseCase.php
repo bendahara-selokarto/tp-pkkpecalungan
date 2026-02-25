@@ -4,6 +4,8 @@ namespace App\Domains\Wilayah\PrestasiLomba\UseCases;
 
 use App\Domains\Wilayah\PrestasiLomba\Repositories\PrestasiLombaRepositoryInterface;
 use App\Domains\Wilayah\PrestasiLomba\Services\PrestasiLombaScopeService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ListScopedPrestasiLombaUseCase
 {
@@ -13,7 +15,14 @@ class ListScopedPrestasiLombaUseCase
     ) {
     }
 
-    public function execute(string $level)
+    public function execute(string $level, int $perPage): LengthAwarePaginator
+    {
+        $areaId = $this->prestasiLombaScopeService->requireUserAreaId();
+
+        return $this->prestasiLombaRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+    }
+
+    public function executeAll(string $level): Collection
     {
         $areaId = $this->prestasiLombaScopeService->requireUserAreaId();
 

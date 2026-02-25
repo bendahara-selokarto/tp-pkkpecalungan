@@ -4,7 +4,7 @@ namespace App\Domains\Wilayah\LaporanTahunanPkk\UseCases;
 
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepositoryInterface;
 use App\Domains\Wilayah\LaporanTahunanPkk\Services\LaporanTahunanPkkScopeService;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ListScopedLaporanTahunanPkkUseCase
 {
@@ -14,11 +14,10 @@ class ListScopedLaporanTahunanPkkUseCase
     ) {
     }
 
-    public function execute(string $level): Collection
+    public function execute(string $level, int $perPage): LengthAwarePaginator
     {
         $areaId = $this->scopeService->requireUserAreaId();
 
-        return $this->repository->getByLevelAndArea($level, $areaId);
+        return $this->repository->paginateByLevelAndArea($level, $areaId, $perPage);
     }
 }
-

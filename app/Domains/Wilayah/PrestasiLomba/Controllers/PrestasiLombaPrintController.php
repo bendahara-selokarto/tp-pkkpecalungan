@@ -32,7 +32,7 @@ class PrestasiLombaPrintController extends Controller
         $this->authorize('viewAny', PrestasiLomba::class);
 
         $items = $this->listScopedPrestasiLombaUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

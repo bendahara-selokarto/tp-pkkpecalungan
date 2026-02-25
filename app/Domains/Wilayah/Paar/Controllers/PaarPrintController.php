@@ -32,7 +32,7 @@ class PaarPrintController extends Controller
         $this->authorize('viewAny', Paar::class);
 
         $items = $this->listScopedPaarUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy(static function (Paar $item): int {
                 $position = array_search($item->indikator, Paar::indicatorKeys(), true);
 

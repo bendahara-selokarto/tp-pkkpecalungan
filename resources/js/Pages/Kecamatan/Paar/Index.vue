@@ -1,22 +1,50 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
+import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiAccountGroup } from '@mdi/js'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
-defineProps({
+const props = defineProps({
   paarItems: {
-    type: Array,
+    type: Object,
     required: true,
+  },
+  filters: {
+    type: Object,
+    default: () => ({}),
+  },
+  pagination: {
+    type: Object,
+    default: () => ({
+      perPageOptions: [10, 25, 50],
+    }),
   },
 })
 
 const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus buku PAAR ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
+const perPage = computed(() => props.filters.per_page ?? 10)
+const pageStartIndex = computed(() => {
+  const currentPage = Number(props.paarItems.current_page ?? 1)
+  const currentPerPage = Number(props.paarItems.per_page ?? perPage.value)
+
+  return (currentPage - 1) * currentPerPage
+})
+
+const updatePerPage = (event) => {
+  const selectedPerPage = Number(event.target.value)
+
+  router.get('/kecamatan/paar', { per_page: selectedPerPage }, {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
 
 const hapusPaar = (id) => {
   deletingId.value = id
@@ -50,6 +78,18 @@ const cancelDelete = () => {
       <div class="mb-4 flex items-center justify-between gap-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Buku PAAR</h3>
         <div class="flex items-center gap-2">
+          <label class="text-xs text-gray-600 dark:text-gray-300">
+            Per halaman
+            <select
+              :value="perPage"
+              class="ml-2 rounded-md border border-gray-300 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              @change="updatePerPage"
+            >
+              <option v-for="option in pagination.perPageOptions" :key="`per-page-${option}`" :value="option">
+                {{ option }}
+              </option>
+            </select>
+          </label>
           <a
             href="/kecamatan/paar/report/pdf"
             target="_blank"
@@ -80,11 +120,11 @@ const cancelDelete = () => {
           </thead>
           <tbody>
             <tr
-              v-for="(item, index) in paarItems"
+              v-for="(item, index) in paarItems.data"
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
-              <td class="px-3 py-3 text-center text-gray-900 dark:text-gray-100">{{ index + 1 }}</td>
+              <td class="px-3 py-3 text-center text-gray-900 dark:text-gray-100">{{ pageStartIndex + index + 1 }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.indikator_label }}</td>
               <td class="px-3 py-3 text-center text-gray-700 dark:text-gray-300">{{ item.jumlah }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.keterangan || '-' }}</td>
@@ -112,7 +152,7 @@ const cancelDelete = () => {
                 </div>
               </td>
             </tr>
-            <tr v-if="paarItems.length === 0">
+            <tr v-if="paarItems.data.length === 0">
               <td colspan="5" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Buku PAAR belum tersedia.
               </td>
@@ -120,6 +160,13 @@ const cancelDelete = () => {
           </tbody>
         </table>
       </div>
+
+      <PaginationBar
+        :links="paarItems.links"
+        :from="paarItems.from"
+        :to="paarItems.to"
+        :total="paarItems.total"
+      />
     </CardBox>
 
     <ConfirmActionModal

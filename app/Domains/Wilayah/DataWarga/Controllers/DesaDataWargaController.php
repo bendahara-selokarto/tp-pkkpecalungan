@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataWarga\Actions\CreateScopedDataWargaAction;
 use App\Domains\Wilayah\DataWarga\Actions\UpdateDataWargaAction;
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\DataWarga\Repositories\DataWargaRepositoryInterface;
+use App\Domains\Wilayah\DataWarga\Requests\ListDataWargaRequest;
 use App\Domains\Wilayah\DataWarga\Requests\StoreDataWargaRequest;
 use App\Domains\Wilayah\DataWarga\Requests\UpdateDataWargaRequest;
 use App\Domains\Wilayah\DataWarga\UseCases\GetScopedDataWargaUseCase;
@@ -28,13 +29,12 @@ class DesaDataWargaController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListDataWargaRequest $request): Response
     {
         $this->authorize('viewAny', DataWarga::class);
-        $items = $this->listScopedDataWargaUseCase->execute(ScopeLevel::DESA->value);
-
-        return Inertia::render('Desa/DataWarga/Index', [
-            'dataWargaItems' => $items->values()->map(fn (DataWarga $item) => [
+        $items = $this->listScopedDataWargaUseCase
+            ->execute(ScopeLevel::DESA->value, $request->perPage())
+            ->through(fn (DataWarga $item) => [
                 'id' => $item->id,
                 'dasawisma' => $item->dasawisma,
                 'nama_kepala_keluarga' => $item->nama_kepala_keluarga,
@@ -43,7 +43,16 @@ class DesaDataWargaController extends Controller
                 'jumlah_warga_perempuan' => $item->jumlah_warga_perempuan,
                 'total_warga' => $item->total_warga,
                 'keterangan' => $item->keterangan,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/DataWarga/Index', [
+            'dataWargaItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

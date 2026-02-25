@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -71,8 +72,96 @@ class KecamatanDataWargaTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-warga');
 
         $response->assertOk();
-        $response->assertSee('Dewi Lestari');
-        $response->assertDontSee('Sri Handayani');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DataWarga/Index')
+                ->has('dataWargaItems.data', 1)
+                ->where('dataWargaItems.data.0.nama_kepala_keluarga', 'Dewi Lestari')
+                ->where('dataWargaItems.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_data_warga_kecamatan_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            DataWarga::create([
+                'dasawisma' => 'Anyelir ' . str_pad((string) $index, 2, '0', STR_PAD_LEFT),
+                'nama_kepala_keluarga' => 'Kepala Kecamatan ' . $index,
+                'alamat' => 'RW 01',
+                'jumlah_warga_laki_laki' => 1,
+                'jumlah_warga_perempuan' => 1,
+                'keterangan' => null,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        DataWarga::create([
+            'dasawisma' => 'Bocor 01',
+            'nama_kepala_keluarga' => 'Kepala Bocor',
+            'alamat' => 'RW 10',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-warga?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Kepala Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DataWarga/Index')
+                ->has('dataWargaItems.data', 1)
+                ->where('dataWargaItems.current_page', 2)
+                ->where('dataWargaItems.per_page', 10)
+                ->where('dataWargaItems.total', 11)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_data_warga_kecamatan_kembali_ke_default(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        DataWarga::create([
+            'dasawisma' => 'Default 01',
+            'nama_kepala_keluarga' => 'Kepala Default',
+            'alamat' => 'RW 01',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-warga?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DataWarga/Index')
+                ->where('filters.per_page', 10)
+                ->where('dataWargaItems.per_page', 10);
+        });
     }
 
     #[Test]

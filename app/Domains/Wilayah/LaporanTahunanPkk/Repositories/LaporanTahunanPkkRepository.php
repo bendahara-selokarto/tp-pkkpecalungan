@@ -7,6 +7,7 @@ use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkEntry;
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
 use DateTimeInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -25,6 +26,18 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
         $report->update($payload);
 
         return $report;
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return LaporanTahunanPkkReport::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->withCount('entries')
+            ->latest('tahun_laporan')
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

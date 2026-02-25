@@ -7,6 +7,7 @@ use App\Domains\Wilayah\LaporanTahunanPkk\Actions\CreateLaporanTahunanPkkAction;
 use App\Domains\Wilayah\LaporanTahunanPkk\Actions\DeleteLaporanTahunanPkkAction;
 use App\Domains\Wilayah\LaporanTahunanPkk\Actions\UpdateLaporanTahunanPkkAction;
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
+use App\Domains\Wilayah\LaporanTahunanPkk\Requests\ListLaporanTahunanPkkRequest;
 use App\Domains\Wilayah\LaporanTahunanPkk\Requests\StoreLaporanTahunanPkkRequest;
 use App\Domains\Wilayah\LaporanTahunanPkk\Requests\UpdateLaporanTahunanPkkRequest;
 use App\Domains\Wilayah\LaporanTahunanPkk\UseCases\BuildLaporanTahunanPkkDocumentUseCase;
@@ -30,24 +31,30 @@ class KecamatanLaporanTahunanPkkController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListLaporanTahunanPkkRequest $request): Response
     {
         $this->authorize('viewAny', LaporanTahunanPkkReport::class);
 
-        $reports = $this->listUseCase->execute(ScopeLevel::KECAMATAN->value)
-            ->map(fn (LaporanTahunanPkkReport $report) => [
+        $reports = $this->listUseCase
+            ->execute(ScopeLevel::KECAMATAN->value, $request->perPage())
+            ->through(fn (LaporanTahunanPkkReport $report) => [
                 'id' => $report->id,
                 'judul_laporan' => $report->judul_laporan,
                 'tahun_laporan' => $report->tahun_laporan,
                 'entries_count' => $report->entries_count ?? 0,
                 'updated_at' => $report->updated_at?->toDateTimeString(),
-            ])
-            ->values();
+            ]);
 
         return Inertia::render('LaporanTahunanPkk/Index', [
             'scopeLabel' => 'Kecamatan',
             'scopePrefix' => '/kecamatan/laporan-tahunan-pkk',
             'reports' => $reports,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -169,4 +176,3 @@ class KecamatanLaporanTahunanPkkController extends Controller
         return sprintf('Ketua TP. PKK %s', strtoupper($scopeTitle));
     }
 }
-

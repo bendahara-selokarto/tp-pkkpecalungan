@@ -7,6 +7,7 @@ use App\Domains\Wilayah\DataWarga\Models\DataWargaAnggota;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -80,8 +81,96 @@ class DesaDataWargaTest extends TestCase
         $response = $this->actingAs($adminDesa)->get('/desa/data-warga');
 
         $response->assertOk();
-        $response->assertSee('Siti Aminah');
-        $response->assertDontSee('Rina Wati');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataWarga/Index')
+                ->has('dataWargaItems.data', 1)
+                ->where('dataWargaItems.data.0.nama_kepala_keluarga', 'Siti Aminah')
+                ->where('dataWargaItems.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_data_warga_desa_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        for ($index = 1; $index <= 12; $index++) {
+            DataWarga::create([
+                'dasawisma' => 'Mawar ' . str_pad((string) $index, 2, '0', STR_PAD_LEFT),
+                'nama_kepala_keluarga' => 'Kepala Desa ' . $index,
+                'alamat' => 'RT 01 RW 01',
+                'jumlah_warga_laki_laki' => 1,
+                'jumlah_warga_perempuan' => 1,
+                'keterangan' => null,
+                'level' => 'desa',
+                'area_id' => $this->desaA->id,
+                'created_by' => $adminDesa->id,
+            ]);
+        }
+
+        DataWarga::create([
+            'dasawisma' => 'Bocor 01',
+            'nama_kepala_keluarga' => 'Kepala Bocor',
+            'alamat' => 'RT 09 RW 09',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaB->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/data-warga?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Kepala Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataWarga/Index')
+                ->has('dataWargaItems.data', 2)
+                ->where('dataWargaItems.current_page', 2)
+                ->where('dataWargaItems.per_page', 10)
+                ->where('dataWargaItems.total', 12)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_data_warga_desa_kembali_ke_default(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        DataWarga::create([
+            'dasawisma' => 'Default 01',
+            'nama_kepala_keluarga' => 'Kepala Default',
+            'alamat' => 'RT 01 RW 01',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/data-warga?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataWarga/Index')
+                ->where('filters.per_page', 10)
+                ->where('dataWargaItems.per_page', 10);
+        });
     }
 
     #[Test]

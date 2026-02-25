@@ -6,6 +6,7 @@ use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -56,8 +57,84 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/laporan-tahunan-pkk');
 
         $response->assertOk();
-        $response->assertSee('Laporan Kecamatan A');
-        $response->assertDontSee('Laporan Kecamatan B');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('LaporanTahunanPkk/Index')
+                ->has('reports.data', 1)
+                ->where('reports.data.0.judul_laporan', 'Laporan Kecamatan A')
+                ->where('reports.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_laporan_tahunan_pkk_kecamatan_mendukung_pagination_dan_tetap_scoped(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            LaporanTahunanPkkReport::create([
+                'judul_laporan' => 'Laporan Kecamatan ' . $index,
+                'tahun_laporan' => 2010 + $index,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        LaporanTahunanPkkReport::create([
+            'judul_laporan' => 'Laporan Bocor',
+            'tahun_laporan' => 2040,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/laporan-tahunan-pkk?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Laporan Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('LaporanTahunanPkk/Index')
+                ->has('reports.data', 1)
+                ->where('reports.current_page', 2)
+                ->where('reports.per_page', 10)
+                ->where('reports.total', 11)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function per_page_tidak_valid_di_laporan_tahunan_pkk_kecamatan_kembali_ke_default(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        LaporanTahunanPkkReport::create([
+            'judul_laporan' => 'Laporan Default',
+            'tahun_laporan' => 2025,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/laporan-tahunan-pkk?per_page=999');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('LaporanTahunanPkk/Index')
+                ->where('filters.per_page', 10)
+                ->where('reports.per_page', 10);
+        });
     }
 
     #[Test]
@@ -128,4 +205,3 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
         $response->assertStatus(403);
     }
 }
-

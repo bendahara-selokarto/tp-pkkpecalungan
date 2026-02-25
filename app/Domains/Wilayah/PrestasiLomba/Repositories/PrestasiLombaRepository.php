@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\PrestasiLomba\Repositories;
 
 use App\Domains\Wilayah\PrestasiLomba\DTOs\PrestasiLombaData;
 use App\Domains\Wilayah\PrestasiLomba\Models\PrestasiLomba;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class PrestasiLombaRepository implements PrestasiLombaRepositoryInterface
@@ -23,6 +24,16 @@ class PrestasiLombaRepository implements PrestasiLombaRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return PrestasiLomba::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

@@ -32,7 +32,7 @@ class DataWargaPrintController extends Controller
         $this->authorize('viewAny', DataWarga::class);
 
         $items = $this->listScopedDataWargaUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->load('anggota')
             ->sortBy('id')
             ->values();

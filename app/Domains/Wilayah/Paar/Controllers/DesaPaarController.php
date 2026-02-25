@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Paar\Actions\CreateScopedPaarAction;
 use App\Domains\Wilayah\Paar\Actions\UpdatePaarAction;
 use App\Domains\Wilayah\Paar\Models\Paar;
 use App\Domains\Wilayah\Paar\Repositories\PaarRepositoryInterface;
+use App\Domains\Wilayah\Paar\Requests\ListPaarRequest;
 use App\Domains\Wilayah\Paar\Requests\StorePaarRequest;
 use App\Domains\Wilayah\Paar\Requests\UpdatePaarRequest;
 use App\Domains\Wilayah\Paar\UseCases\GetScopedPaarUseCase;
@@ -28,12 +29,22 @@ class DesaPaarController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListPaarRequest $request): Response
     {
         $this->authorize('viewAny', Paar::class);
 
+        $paarItems = $this->listScopedPaarUseCase
+            ->execute(ScopeLevel::DESA->value, $request->perPage())
+            ->through(fn (Paar $item): array => $this->buildItemPayload($item));
+
         return Inertia::render('Desa/Paar/Index', [
-            'paarItems' => $this->buildItemsPayload(ScopeLevel::DESA->value),
+            'paarItems' => $paarItems,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -91,23 +102,6 @@ class DesaPaarController extends Controller
         $this->paarRepository->delete($paar);
 
         return redirect()->route('desa.paar.index')->with('success', 'Buku PAAR berhasil dihapus');
-    }
-
-    /**
-     * @return array<int, array{id:int,indikator:string,indikator_label:string,jumlah:int,keterangan:?string}>
-     */
-    private function buildItemsPayload(string $level): array
-    {
-        return $this->listScopedPaarUseCase
-            ->execute($level)
-            ->sortBy(static function (Paar $item): int {
-                $position = array_search($item->indikator, Paar::indicatorKeys(), true);
-
-                return is_int($position) ? $position : 999;
-            })
-            ->values()
-            ->map(fn (Paar $item): array => $this->buildItemPayload($item))
-            ->all();
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\LaporanTahunanPkk\Repositories;
 
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface LaporanTahunanPkkRepositoryInterface
@@ -13,6 +14,8 @@ interface LaporanTahunanPkkRepositoryInterface
         LaporanTahunanPkkReport $report,
         array $payload
     ): LaporanTahunanPkkReport;
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 
@@ -34,4 +37,3 @@ interface LaporanTahunanPkkRepositoryInterface
 
     public function deleteReport(LaporanTahunanPkkReport $report): void;
 }
-

@@ -7,6 +7,7 @@ use App\Domains\Wilayah\PrestasiLomba\Actions\CreateScopedPrestasiLombaAction;
 use App\Domains\Wilayah\PrestasiLomba\Actions\UpdatePrestasiLombaAction;
 use App\Domains\Wilayah\PrestasiLomba\Models\PrestasiLomba;
 use App\Domains\Wilayah\PrestasiLomba\Repositories\PrestasiLombaRepositoryInterface;
+use App\Domains\Wilayah\PrestasiLomba\Requests\ListPrestasiLombaRequest;
 use App\Domains\Wilayah\PrestasiLomba\Requests\StorePrestasiLombaRequest;
 use App\Domains\Wilayah\PrestasiLomba\Requests\UpdatePrestasiLombaRequest;
 use App\Domains\Wilayah\PrestasiLomba\UseCases\GetScopedPrestasiLombaUseCase;
@@ -28,13 +29,12 @@ class DesaPrestasiLombaController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListPrestasiLombaRequest $request): Response
     {
         $this->authorize('viewAny', PrestasiLomba::class);
-        $items = $this->listScopedPrestasiLombaUseCase->execute(ScopeLevel::DESA->value);
-
-        return Inertia::render('Desa/PrestasiLomba/Index', [
-            'prestasiLombaItems' => $items->values()->map(fn (PrestasiLomba $item) => [
+        $items = $this->listScopedPrestasiLombaUseCase
+            ->execute(ScopeLevel::DESA->value, $request->perPage())
+            ->through(fn (PrestasiLomba $item) => [
                 'id' => $item->id,
                 'tahun' => $item->tahun,
                 'jenis_lomba' => $item->jenis_lomba,
@@ -44,7 +44,16 @@ class DesaPrestasiLombaController extends Controller
                 'prestasi_provinsi' => (bool) $item->prestasi_provinsi,
                 'prestasi_nasional' => (bool) $item->prestasi_nasional,
                 'keterangan' => $item->keterangan,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/PrestasiLomba/Index', [
+            'prestasiLombaItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

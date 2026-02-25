@@ -4,6 +4,8 @@ namespace App\Domains\Wilayah\Paar\UseCases;
 
 use App\Domains\Wilayah\Paar\Repositories\PaarRepositoryInterface;
 use App\Domains\Wilayah\Paar\Services\PaarScopeService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ListScopedPaarUseCase
 {
@@ -13,7 +15,14 @@ class ListScopedPaarUseCase
     ) {
     }
 
-    public function execute(string $level)
+    public function execute(string $level, int $perPage): LengthAwarePaginator
+    {
+        $areaId = $this->paarScopeService->requireUserAreaId();
+
+        return $this->paarRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+    }
+
+    public function executeAll(string $level): Collection
     {
         $areaId = $this->paarScopeService->requireUserAreaId();
 
