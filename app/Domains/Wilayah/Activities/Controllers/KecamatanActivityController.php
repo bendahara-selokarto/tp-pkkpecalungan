@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\Activities\Controllers;
 use App\Domains\Wilayah\Activities\Actions\CreateScopedActivityAction;
 use App\Domains\Wilayah\Activities\Actions\UpdateActivityAction;
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\Activities\Requests\ListActivitiesRequest;
 use App\Domains\Wilayah\Activities\Requests\StoreActivityRequest;
 use App\Domains\Wilayah\Activities\Requests\UpdateActivityRequest;
 use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
@@ -28,13 +29,12 @@ class KecamatanActivityController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListActivitiesRequest $request): Response
     {
         $this->authorize('viewAny', Activity::class);
-        $activities = $this->listScopedActivitiesUseCase->execute('kecamatan');
-
-        return Inertia::render('Kecamatan/Activities/Index', [
-            'activities' => $activities->map(fn (Activity $activity) => [
+        $activities = $this->listScopedActivitiesUseCase
+            ->execute('kecamatan', $request->perPage())
+            ->through(fn (Activity $activity) => [
                 'id' => $activity->id,
                 'title' => $activity->title,
                 'description' => $activity->description,
@@ -45,7 +45,16 @@ class KecamatanActivityController extends Controller
                 'tanda_tangan' => $activity->tanda_tangan,
                 'activity_date' => $this->formatDateForPayload($activity->activity_date),
                 'status' => $activity->status,
-            ])->values(),
+            ]);
+
+        return Inertia::render('Kecamatan/Activities/Index', [
+            'activities' => $activities,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Activities\DTOs\ActivityData;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
@@ -35,14 +36,28 @@ class ActivityRepository implements ActivityRepositoryInterface
         ]);
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
     {
-        return Activity::where('level', $level)
+        return Activity::query()
+            ->where('level', $level)
             ->where('area_id', $areaId)
+            ->latest('activity_date')
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
+    }
+
+    public function listByLevelAndArea(string $level, int $areaId): Collection
+    {
+        return Activity::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('activity_date')
+            ->latest('id')
             ->get();
     }
 
-    public function getDesaActivitiesByKecamatan(int $kecamatanAreaId): Collection
+    public function paginateDesaActivitiesByKecamatan(int $kecamatanAreaId, int $perPage): LengthAwarePaginator
     {
         $desaIds = $this->areaRepository
             ->getDesaByKecamatan($kecamatanAreaId)
@@ -54,7 +69,8 @@ class ActivityRepository implements ActivityRepositoryInterface
             ->whereIn('area_id', $desaIds)
             ->latest('activity_date')
             ->latest('id')
-            ->get();
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function queryScopedByUser(User $user): Builder

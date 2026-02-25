@@ -6,15 +6,18 @@ use App\Domains\Wilayah\Activities\DTOs\ActivityData;
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface ActivityRepositoryInterface
 {
     public function store(ActivityData $data): Activity;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
-    public function getDesaActivitiesByKecamatan(int $kecamatanAreaId): Collection;
+    public function listByLevelAndArea(string $level, int $areaId): Collection;
+
+    public function paginateDesaActivitiesByKecamatan(int $kecamatanAreaId, int $perPage): LengthAwarePaginator;
 
     public function queryScopedByUser(User $user): Builder;
 
@@ -24,4 +27,3 @@ interface ActivityRepositoryInterface
 
     public function delete(Activity $activity): void;
 }
-

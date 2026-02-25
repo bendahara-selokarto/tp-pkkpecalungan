@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\Activities\Controllers;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\Activities\Requests\ListActivitiesRequest;
 use App\Domains\Wilayah\Activities\UseCases\GetKecamatanDesaActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\ListKecamatanDesaActivitiesUseCase;
 use App\Http\Controllers\Controller;
@@ -18,13 +19,12 @@ class KecamatanDesaActivityController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListActivitiesRequest $request): Response
     {
         $this->authorize('viewAny', Activity::class);
-        $activities = $this->listKecamatanDesaActivitiesUseCase->execute();
-
-        return Inertia::render('Kecamatan/DesaActivities/Index', [
-            'activities' => $activities->map(fn (Activity $activity) => [
+        $activities = $this->listKecamatanDesaActivitiesUseCase
+            ->execute($request->perPage())
+            ->through(fn (Activity $activity) => [
                 'id' => $activity->id,
                 'title' => $activity->title,
                 'description' => $activity->description,
@@ -47,7 +47,16 @@ class KecamatanDesaActivityController extends Controller
                         'name' => $activity->creator->name,
                     ]
                     : null,
-            ])->values(),
+            ]);
+
+        return Inertia::render('Kecamatan/DesaActivities/Index', [
+            'activities' => $activities,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

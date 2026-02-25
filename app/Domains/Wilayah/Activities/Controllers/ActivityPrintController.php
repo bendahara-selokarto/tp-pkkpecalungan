@@ -71,7 +71,7 @@ class ActivityPrintController extends Controller
         $this->authorize('viewAny', Activity::class);
 
         $items = $this->listScopedActivitiesUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

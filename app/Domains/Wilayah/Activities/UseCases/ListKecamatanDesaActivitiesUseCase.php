@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Activities\UseCases;
 
 use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\Activities\Services\ActivityScopeService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 class ListKecamatanDesaActivitiesUseCase
 {
@@ -13,10 +14,10 @@ class ListKecamatanDesaActivitiesUseCase
     ) {
     }
 
-    public function execute()
+    public function execute(int $perPage): LengthAwarePaginator
     {
         $kecamatanAreaId = $this->activityScopeService->requireUserAreaId();
 
-        return $this->activityRepository->getDesaActivitiesByKecamatan($kecamatanAreaId);
+        return $this->activityRepository->paginateDesaActivitiesByKecamatan($kecamatanAreaId, $perPage);
     }
 }
