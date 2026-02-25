@@ -50,7 +50,19 @@
         ],
         "test": [
             "@php artisan config:clear --ansi",
-            "@php artisan test"
+            "@php -d memory_limit=512M artisan test --compact"
+        ],
+        "test:full": [
+            "@php artisan config:clear --ansi",
+            "@php -d memory_limit=512M artisan test --compact"
+        ],
+        "test:full:unit": [
+            "@php artisan config:clear --ansi",
+            "@php -d memory_limit=512M artisan test tests/Unit --compact"
+        ],
+        "test:full:feature": [
+            "@php artisan config:clear --ansi",
+            "@php -d memory_limit=512M artisan test tests/Feature --compact"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",

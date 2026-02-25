@@ -141,8 +141,8 @@ jobs:
           MAIL_MAILER: array
         run: |
           php artisan route:list --name=report
-          php artisan test --filter=PdfBaselineFixtureComplianceTest
-          php artisan test --filter=scope_metadata_tidak_sinkron
+          php -d memory_limit=512M artisan test --filter=PdfBaselineFixtureComplianceTest --compact
+          php -d memory_limit=512M artisan test --filter=scope_metadata_tidak_sinkron --compact
 
       - name: Run conditional PDF header regression gates
         if: steps.changes.outputs.pdf_contract == 'true'
@@ -153,7 +153,7 @@ jobs:
           SESSION_DRIVER: array
           QUEUE_CONNECTION: sync
           MAIL_MAILER: array
-        run: php artisan test --filter=header_kolom_pdf
+        run: php -d memory_limit=512M artisan test --filter=header_kolom_pdf --compact
 
       - name: Run conditional auth/scope regression gates
         if: steps.changes.outputs.auth_scope == 'true'
@@ -165,5 +165,5 @@ jobs:
           QUEUE_CONNECTION: sync
           MAIL_MAILER: array
         run: |
-          php artisan test --filter=role_dan_level_area_tidak_sinkron
-          php artisan test --filter=role_kecamatan_tetapi_area_level_desa
+          php -d memory_limit=512M artisan test --filter=role_dan_level_area_tidak_sinkron --compact
+          php -d memory_limit=512M artisan test --filter=role_kecamatan_tetapi_area_level_desa --compact
