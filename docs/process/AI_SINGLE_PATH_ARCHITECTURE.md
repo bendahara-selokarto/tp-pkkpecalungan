@@ -29,6 +29,8 @@ Aturan anti-ambiguity:
 - Jika status dokumen berbeda dengan implementasi aktual, status dokumen wajib diperbarui sebelum final report (`doc-hardening pass`).
 - Jika ada referensi ganda pada concern yang sama, gunakan referensi terakhir dari user sebagai acuan final dan tandai referensi sebelumnya sebagai `superseded`.
 - Untuk TODO baru, gunakan kode unik singkat setelah kata `TODO` agar targeting spesifik tidak ambigu.
+- Untuk ambiguity lintas TODO concern yang sama, resolver wajib memakai registry:
+  - `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
 
 ## 3. Jalur Tunggal Eksekusi (Mandatory)
 
