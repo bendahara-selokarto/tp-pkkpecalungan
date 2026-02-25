@@ -11,6 +11,7 @@ Status: `done` (`superseded` untuk koherensi kritis oleh `docs/process/TODO_KOHE
 - Acuan aktif wajib:
   - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
   - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+- Khusus penataan menu/sidebar, acuan tunggal tetap `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`.
 
 ## Konteks
 

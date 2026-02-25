@@ -10,6 +10,14 @@ Status: `in-progress` (`experimental-ui-only`, non-final, rolling)
 - Jika ada analisa yang memakai versi TODO ini sebelum marker ini ditambahkan, analisa tersebut dianggap usang.
 - Wajib gunakan isi terbaru dokumen ini sebagai acuan kerja concern visibility UI eksperimen.
 
+## Single Source Concern Sidebar
+
+- Dokumen ini adalah satu-satunya acuan aktif untuk concern penataan menu/sidebar eksperimen UI.
+- Dokumen terkait berikut diperlakukan sebagai historis (bukan acuan eksekusi aktif concern sidebar):
+  - `docs/process/TODO_UI_VISIBILITY_BY_PENANGGUNGJAWAB.md` (implementasi E2E historis).
+  - `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md` (refactor dashboard historis).
+- Jika ada mismatch narasi antar dokumen, keputusan concern sidebar mengikuti dokumen ini.
+
 ## Konteks
 
 - Navigasi sidebar perlu ditata ulang agar visibilitas menu per role terasa konsisten dan mudah dipahami user.
