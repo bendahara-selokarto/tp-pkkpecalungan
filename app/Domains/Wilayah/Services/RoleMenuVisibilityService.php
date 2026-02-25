@@ -29,6 +29,8 @@ class RoleMenuVisibilityService
         ],
         'pokja-i' => [
             'activities',
+            'anggota-pokja',
+            'prestasi-lomba',
             'data-warga',
             'data-kegiatan-warga',
             'bkl',
@@ -37,6 +39,8 @@ class RoleMenuVisibilityService
         ],
         'pokja-ii' => [
             'activities',
+            'anggota-pokja',
+            'prestasi-lomba',
             'data-pelatihan-kader',
             'taman-bacaan',
             'koperasi',
@@ -44,6 +48,8 @@ class RoleMenuVisibilityService
         ],
         'pokja-iii' => [
             'activities',
+            'anggota-pokja',
+            'prestasi-lomba',
             'data-keluarga',
             'data-industri-rumah-tangga',
             'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
@@ -51,6 +57,8 @@ class RoleMenuVisibilityService
         ],
         'pokja-iv' => [
             'activities',
+            'anggota-pokja',
+            'prestasi-lomba',
             'posyandu',
             'simulasi-penyuluhan',
             'catatan-keluarga',

@@ -141,4 +141,45 @@ class RoleMenuVisibilityServiceTest extends TestCase
             );
         }
     }
+
+    public function test_semua_role_pokja_memiliki_anggota_pokja_dan_prestasi_lomba_rw(): void
+    {
+        $roleScopeMatrix = [
+            ['role' => 'desa-pokja-i', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-ii', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-iii', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-iv', 'scope' => 'desa'],
+            ['role' => 'kecamatan-pokja-i', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-ii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
+        ];
+
+        foreach ($roleScopeMatrix as $item) {
+            $user = User::factory()->create();
+            $user->assignRole($item['role']);
+
+            $visibility = $this->service->resolveForScope($user, $item['scope']);
+
+            $this->assertSame(
+                RoleMenuVisibilityService::MODE_READ_WRITE,
+                $visibility['modules']['anggota-pokja'] ?? null,
+                sprintf(
+                    'Role %s pada scope %s harus RW pada modul anggota-pokja.',
+                    $item['role'],
+                    $item['scope']
+                )
+            );
+
+            $this->assertSame(
+                RoleMenuVisibilityService::MODE_READ_WRITE,
+                $visibility['modules']['prestasi-lomba'] ?? null,
+                sprintf(
+                    'Role %s pada scope %s harus RW pada modul prestasi-lomba.',
+                    $item['role'],
+                    $item['scope']
+                )
+            );
+        }
+    }
 }
