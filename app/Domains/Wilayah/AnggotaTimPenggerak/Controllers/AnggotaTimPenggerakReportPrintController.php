@@ -45,7 +45,7 @@ class AnggotaTimPenggerakReportPrintController extends Controller
         $this->authorize('viewAny', AnggotaTimPenggerak::class);
 
         $items = $this->listScopedAnggotaTimPenggerakUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
@@ -81,4 +81,3 @@ class AnggotaTimPenggerakReportPrintController extends Controller
         return $pdf->stream("anggota-dan-kader-{$level}-report.pdf");
     }
 }
-

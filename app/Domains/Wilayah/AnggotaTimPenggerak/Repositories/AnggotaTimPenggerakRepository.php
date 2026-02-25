@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\AnggotaTimPenggerak\Repositories;
 
 use App\Domains\Wilayah\AnggotaTimPenggerak\DTOs\AnggotaTimPenggerakData;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class AnggotaTimPenggerakRepository implements AnggotaTimPenggerakRepositoryInterface
@@ -25,6 +26,16 @@ class AnggotaTimPenggerakRepository implements AnggotaTimPenggerakRepositoryInte
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return AnggotaTimPenggerak::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection
@@ -64,5 +75,4 @@ class AnggotaTimPenggerakRepository implements AnggotaTimPenggerakRepositoryInte
         $anggotaTimPenggerak->delete();
     }
 }
-
 

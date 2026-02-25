@@ -16,7 +16,7 @@ class ListScopedAnggotaDanKaderUseCase
     {
         return [
             'anggotaTimPenggerak' => $this->listScopedAnggotaTimPenggerakUseCase
-                ->execute($level)
+                ->executeAll($level)
                 ->sortBy('id')
                 ->values(),
             'kaderKhusus' => $this->listScopedKaderKhususUseCase

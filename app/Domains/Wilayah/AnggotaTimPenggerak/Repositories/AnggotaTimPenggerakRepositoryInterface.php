@@ -4,11 +4,14 @@ namespace App\Domains\Wilayah\AnggotaTimPenggerak\Repositories;
 
 use App\Domains\Wilayah\AnggotaTimPenggerak\DTOs\AnggotaTimPenggerakData;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface AnggotaTimPenggerakRepositoryInterface
 {
     public function store(AnggotaTimPenggerakData $data): AnggotaTimPenggerak;
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 
@@ -18,6 +21,5 @@ interface AnggotaTimPenggerakRepositoryInterface
 
     public function delete(AnggotaTimPenggerak $anggotaTimPenggerak): void;
 }
-
 
 

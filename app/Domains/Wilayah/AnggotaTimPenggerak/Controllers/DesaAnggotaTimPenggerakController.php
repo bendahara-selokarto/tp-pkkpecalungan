@@ -6,6 +6,7 @@ use App\Domains\Wilayah\AnggotaTimPenggerak\Actions\CreateScopedAnggotaTimPengge
 use App\Domains\Wilayah\AnggotaTimPenggerak\Actions\UpdateAnggotaTimPenggerakAction;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Repositories\AnggotaTimPenggerakRepositoryInterface;
+use App\Domains\Wilayah\AnggotaTimPenggerak\Requests\ListAnggotaTimPenggerakRequest;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Requests\StoreAnggotaTimPenggerakRequest;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Requests\UpdateAnggotaTimPenggerakRequest;
 use App\Domains\Wilayah\AnggotaTimPenggerak\UseCases\GetScopedAnggotaTimPenggerakUseCase;
@@ -27,19 +28,27 @@ class DesaAnggotaTimPenggerakController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListAnggotaTimPenggerakRequest $request): Response
     {
         $this->authorize('viewAny', AnggotaTimPenggerak::class);
-        $anggotaTimPenggeraks = $this->listScopedAnggotaTimPenggerakUseCase->execute('desa');
-
-        return Inertia::render('Desa/AnggotaTimPenggerak/Index', [
-            'anggotaTimPenggeraks' => $anggotaTimPenggeraks->values()->map(fn (AnggotaTimPenggerak $item) => [
+        $anggotaTimPenggeraks = $this->listScopedAnggotaTimPenggerakUseCase
+            ->execute('desa', $request->perPage())
+            ->through(fn (AnggotaTimPenggerak $item) => [
                 'id' => $item->id,
                 'nama' => $item->nama,
                 'jabatan' => $item->jabatan,
                 'jenis_kelamin' => $item->jenis_kelamin,
                 'umur' => $item->umur,
-            ]),
+            ]);
+
+        return Inertia::render('Desa/AnggotaTimPenggerak/Index', [
+            'anggotaTimPenggeraks' => $anggotaTimPenggeraks,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -121,6 +130,5 @@ class DesaAnggotaTimPenggerakController extends Controller
         return redirect()->route('desa.anggota-tim-penggerak.index')->with('success', 'Buku Daftar Anggota Tim Penggerak PKK berhasil dihapus');
     }
 }
-
 
 

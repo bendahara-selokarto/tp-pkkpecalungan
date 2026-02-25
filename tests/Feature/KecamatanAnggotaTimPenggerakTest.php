@@ -6,6 +6,7 @@ use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -79,8 +80,72 @@ class KecamatanAnggotaTimPenggerakTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/anggota-tim-penggerak');
 
         $response->assertOk();
-        $response->assertSee('Agus Setiawan');
-        $response->assertDontSee('Budi Prasetyo');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/AnggotaTimPenggerak/Index')
+                ->has('anggotaTimPenggeraks.data', 1)
+                ->where('anggotaTimPenggeraks.data.0.nama', 'Agus Setiawan')
+                ->where('anggotaTimPenggeraks.total', 1)
+                ->where('filters.per_page', 10);
+        });
+    }
+
+    #[Test]
+    public function daftar_anggota_tim_penggerak_kecamatan_menggunakan_payload_pagination(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        for ($index = 1; $index <= 11; $index++) {
+            AnggotaTimPenggerak::create([
+                'nama' => 'Anggota Kecamatan A ' . $index,
+                'jabatan' => 'Anggota',
+                'jenis_kelamin' => 'L',
+                'tempat_lahir' => 'Batang',
+                'tanggal_lahir' => '1988-04-04',
+                'status_perkawinan' => 'kawin',
+                'alamat' => 'Jl. Mawar ' . $index,
+                'pendidikan' => 'S1',
+                'pekerjaan' => 'PNS',
+                'keterangan' => null,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatanA->id,
+                'created_by' => $adminKecamatan->id,
+            ]);
+        }
+
+        AnggotaTimPenggerak::create([
+            'nama' => 'Anggota Kecamatan B Bocor',
+            'jabatan' => 'Sekretaris',
+            'jenis_kelamin' => 'L',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1989-05-05',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Mawar 99',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'Wiraswasta',
+            'keterangan' => null,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/anggota-tim-penggerak?page=2&per_page=10');
+
+        $response->assertOk();
+        $response->assertDontSee('Anggota Kecamatan B Bocor');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/AnggotaTimPenggerak/Index')
+                ->has('anggotaTimPenggeraks.data', 1)
+                ->where('anggotaTimPenggeraks.current_page', 2)
+                ->where('anggotaTimPenggeraks.per_page', 10)
+                ->where('anggotaTimPenggeraks.total', 11)
+                ->where('filters.per_page', 10);
+        });
     }
 
     #[Test]
