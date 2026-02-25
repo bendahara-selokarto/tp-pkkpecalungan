@@ -4,11 +4,14 @@ namespace App\Domains\Wilayah\DataIndustriRumahTangga\Repositories;
 
 use App\Domains\Wilayah\DataIndustriRumahTangga\DTOs\DataIndustriRumahTanggaData;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface DataIndustriRumahTanggaRepositoryInterface
 {
     public function store(DataIndustriRumahTanggaData $data): DataIndustriRumahTangga;
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 
@@ -18,7 +21,6 @@ interface DataIndustriRumahTanggaRepositoryInterface
 
     public function delete(DataIndustriRumahTangga $dataIndustriRumahTangga): void;
 }
-
 
 
 

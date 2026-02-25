@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\DataIndustriRumahTangga\Repositories;
 
 use App\Domains\Wilayah\DataIndustriRumahTangga\DTOs\DataIndustriRumahTanggaData;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class DataIndustriRumahTanggaRepository implements DataIndustriRumahTanggaRepositoryInterface
@@ -18,6 +19,16 @@ class DataIndustriRumahTanggaRepository implements DataIndustriRumahTanggaReposi
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return DataIndustriRumahTangga::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection
@@ -50,7 +61,6 @@ class DataIndustriRumahTanggaRepository implements DataIndustriRumahTanggaReposi
         $dataIndustriRumahTangga->delete();
     }
 }
-
 
 
 

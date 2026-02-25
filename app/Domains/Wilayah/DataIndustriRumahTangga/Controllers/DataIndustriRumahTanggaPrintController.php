@@ -32,7 +32,7 @@ class DataIndustriRumahTanggaPrintController extends Controller
         $this->authorize('viewAny', DataIndustriRumahTangga::class);
 
         $items = $this->listScopedDataIndustriRumahTanggaUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 
@@ -48,7 +48,6 @@ class DataIndustriRumahTanggaPrintController extends Controller
         return $pdf->stream("data-industri-rumah-tangga-{$level}-report.pdf");
     }
 }
-
 
 
 

@@ -6,6 +6,7 @@ use App\Domains\Wilayah\DataIndustriRumahTangga\Actions\CreateScopedDataIndustri
 use App\Domains\Wilayah\DataIndustriRumahTangga\Actions\UpdateDataIndustriRumahTanggaAction;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Repositories\DataIndustriRumahTanggaRepositoryInterface;
+use App\Domains\Wilayah\DataIndustriRumahTangga\Requests\ListDataIndustriRumahTanggaRequest;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Requests\StoreDataIndustriRumahTanggaRequest;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Requests\UpdateDataIndustriRumahTanggaRequest;
 use App\Domains\Wilayah\DataIndustriRumahTangga\UseCases\GetScopedDataIndustriRumahTanggaUseCase;
@@ -28,18 +29,26 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListDataIndustriRumahTanggaRequest $request): Response
     {
         $this->authorize('viewAny', DataIndustriRumahTangga::class);
-        $items = $this->listScopedDataIndustriRumahTanggaUseCase->execute(ScopeLevel::KECAMATAN->value);
-
-        return Inertia::render('Kecamatan/DataIndustriRumahTangga/Index', [
-            'dataIndustriRumahTanggaItems' => $items->values()->map(fn (DataIndustriRumahTangga $item) => [
+        $items = $this->listScopedDataIndustriRumahTanggaUseCase
+            ->execute(ScopeLevel::KECAMATAN->value, $request->perPage())
+            ->through(fn (DataIndustriRumahTangga $item) => [
                 'id' => $item->id,
                 'kategori_jenis_industri' => $item->kategori_jenis_industri,
                 'komoditi' => $item->komoditi,
                 'jumlah_komoditi' => $item->jumlah_komoditi,
-            ]),
+            ]);
+
+        return Inertia::render('Kecamatan/DataIndustriRumahTangga/Index', [
+            'dataIndustriRumahTanggaItems' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -109,5 +118,4 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
         return redirect()->route('kecamatan.data-industri-rumah-tangga.index')->with('success', 'Buku Industri Rumah Tangga berhasil dihapus');
     }
 }
-
 

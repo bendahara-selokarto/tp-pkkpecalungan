@@ -49,7 +49,7 @@ Status: `in-progress`
 - [ ] `Data Koperasi` (`Koperasi`) (Desa + Kecamatan)
 - [ ] `Data Kejar Paket` (`KejarPaket`) (Desa + Kecamatan)
 - [ ] `Data Keluarga` (`DataKeluarga`) (Desa + Kecamatan)
-- [ ] `Data Industri Rumah Tangga` (`DataIndustriRumahTangga`) (Desa + Kecamatan)
+- [x] `Data Industri Rumah Tangga` (`DataIndustriRumahTangga`) (Desa + Kecamatan)
 - [ ] `Data HATINYA PKK` (`DataPemanfaatanTanahPekaranganHatinyaPkk`) (Desa + Kecamatan)
 - [ ] `Data Warung PKK` (`WarungPkk`) (Desa + Kecamatan)
 - [ ] `Data Posyandu` (`Posyandu`) (Desa + Kecamatan)
