@@ -3,6 +3,13 @@
 Tanggal: 2026-02-23  
 Status: `implemented` (backend + UI + test)
 
+## Marker Keterbaruan
+
+- Dokumen ini adalah catatan implementasi E2E historis.
+- Untuk concern eksperimen UI visibility saat ini, acuan wajib terbaru adalah:
+  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+- Jika ada analisa yang mencampur concern eksperimen UI dengan dokumen historis ini, wajib ikuti acuan terbaru di atas.
+
 ## Konteks
 
 - Saat ini grouping menu domain sudah ada per organisasi (`Sekretaris TPK`, `Pokja I-IV`) di:

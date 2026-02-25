@@ -1,13 +1,20 @@
 # TODO UI Menu Visibility Alignment 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `planned`
+Status: `planned` (`experimental-ui-only`, non-final)
+
+## Force Latest Marker
+
+- Marker: `VIS-UI-EXP-2026-02-25-R1`
+- Jika ada analisa yang memakai versi TODO ini sebelum marker ini ditambahkan, analisa tersebut dianggap usang.
+- Wajib gunakan isi terbaru dokumen ini sebagai acuan kerja concern visibility UI eksperimen.
 
 ## Konteks
 
 - Navigasi sidebar perlu ditata ulang agar visibilitas menu per role terasa konsisten dan mudah dipahami user.
 - Concern ini dibatasi pada UI (`resources/js`) dan tidak mengubah kontrak otorisasi backend.
 - Fokus utama: kejelasan grouping, urutan, label, dan konsistensi state tampil/sembunyi menu.
+- Track ini bersifat eksperimental UI, belum menjadi keputusan final, dan bisa sering berubah.
 
 ## Target Hasil
 
@@ -59,5 +66,6 @@ Status: `planned`
 
 ## Keputusan
 
-- [x] Concern ini dikunci sebagai UI-only (tanpa E2E/backend change).
+- [x] Concern ini bersifat UI-only eksperimental (tanpa E2E/backend change).
+- [x] Keputusan pada TODO ini bersifat sementara dan dapat direvisi cepat selama fase eksperimen.
 - [x] Otorisasi akses tetap backend-first; UI hanya representasi visibility.

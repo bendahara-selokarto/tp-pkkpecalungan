@@ -1,7 +1,13 @@
 # TODO Koherensi Kritis Dashboard Baseline Sekretaris Kecamatan 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `planned`
+Status: `planned` (`experimental-ui-only`, non-final)
+
+## Force Latest Marker
+
+- Marker: `DASH-COHERENCE-EXP-2026-02-25-R1`
+- Jika ada analisa yang memakai versi TODO ini sebelum marker ini ditambahkan, analisa tersebut dianggap usang.
+- Wajib gunakan isi terbaru dokumen ini sebagai acuan concern koherensi UI dashboard eksperimen.
 
 ## Konteks
 
@@ -14,13 +20,14 @@ Status: `planned`
   - `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
   - `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
   - `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
+- Fase saat ini dibatasi pada eksperimen UI (presentasi) dan belum menjadi keputusan final.
 
 ## Target Hasil
 
 - Semua dashboard non `super-admin` koheren terhadap baseline `kecamatan-sekretaris` pada aspek visual kritis.
 - Perbedaan antar role hanya pada data dan hak akses backend, bukan pola UI utama.
 - Metadata teknis tidak mendominasi area konten pada role mana pun.
-- Kontrak role/scope/area dan anti data leak tetap terjaga.
+- Perubahan ini tidak mengubah kontrak backend; akses dan anti data leak tetap mengikuti implementasi yang sudah ada.
 
 ## Definisi Koherensi Kritis (Locked)
 
@@ -44,6 +51,16 @@ Status: `planned`
 - `admin-desa` (kompatibilitas)
 - `admin-kecamatan` (kompatibilitas)
 
+## Scope Eksekusi
+
+- In scope:
+  - penyesuaian presentasi UI dashboard (`resources/js`),
+  - copywriting user-facing,
+  - sinkronisasi dokumen TODO concern UI dashboard.
+- Out of scope:
+  - perubahan policy/middleware/repository/query backend,
+  - perubahan test matrix E2E backend sebagai syarat fase eksperimen UI.
+
 ## Langkah Eksekusi (Checklist)
 
 - [ ] `K1` Contract lock baseline UI:
@@ -58,9 +75,9 @@ Status: `planned`
 - [ ] `K4` Copywriting hardening dashboard:
   - normalisasi label filter, helper, empty-state, dan deskripsi section ke bahasa natural user,
   - hilangkan istilah teknis internal pada teks UI.
-- [ ] `K5` Hardening test matrix dashboard:
-  - tambah/rapikan test untuk memastikan parity perilaku lintas role pada payload yang dirender,
-  - jaga regression anti data leak dan stabilitas query filter.
+- [ ] `K5` Validasi regresi UI dashboard:
+  - verifikasi parity tampilan lintas role pada data yang sama (tanpa ubah kontrak backend),
+  - verifikasi interaksi filter URL tetap stabil pada UI concern aktif.
 - [ ] `K6` Doc-hardening lintas concern dashboard:
   - sinkronkan status dan keputusan pada TODO dashboard yang berelasi,
   - tandai dokumen lama sebagai `superseded` bila ada keputusan yang diganti.
@@ -68,10 +85,6 @@ Status: `planned`
 ## File Target (Rencana)
 
 - `resources/js/Pages/Dashboard.vue`
-- `app/Http/Controllers/DashboardController.php` (jika perlu normalisasi context payload)
-- `app/Domains/Wilayah/Dashboard/UseCases/BuildRoleAwareDashboardBlocksUseCase.php`
-- `tests/Feature/DashboardDocumentCoverageTest.php`
-- `tests/Feature/DashboardActivityChartTest.php`
 - `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
 - `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
 - `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
@@ -80,11 +93,8 @@ Status: `planned`
 ## Validasi Wajib
 
 - [ ] `npm run build`
-- [ ] `php artisan test --filter=DashboardDocumentCoverageTest`
-- [ ] `php artisan test --filter=DashboardActivityChartTest`
-- [ ] `php artisan test --filter=DashboardCoverageMenuSyncTest`
-- [ ] `php artisan test` (full suite sebelum final close concern)
 - [ ] Smoke test manual desktop + mobile untuk seluruh matrix role scope.
+- [ ] Smoke test manual filter URL (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`) pada role concern aktif.
 
 ## Risiko
 
@@ -100,7 +110,6 @@ Status: `planned`
 
 ## Keputusan (To Lock)
 
-- [ ] Baseline visual final tetap `kecamatan-sekretaris` versi aktif.
-- [ ] Cabang render role-specific di frontend hanya boleh ada jika dibuktikan oleh kontrak backend.
-- [ ] Parity koherensi lintas role menjadi gate wajib sebelum concern dashboard ditutup.
-
+- [ ] Baseline visual sementara tetap `kecamatan-sekretaris` versi aktif.
+- [ ] Keputusan pada fase ini bersifat eksperimental UI dan dapat berubah pada iterasi berikutnya.
+- [ ] Perubahan backend/E2E baru boleh dibuka jika ada concern terpisah setelah eksperimen UI stabil.
