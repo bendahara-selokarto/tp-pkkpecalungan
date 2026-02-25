@@ -20,20 +20,7 @@ class LaporanTahunanPkkDocxGenerator
         array $bidangLabels,
         string $areaName
     ): string {
-        $templatePath = base_path('docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx');
-        if (! is_file($templatePath)) {
-            throw new RuntimeException('Template laporan tahunan .docx tidak ditemukan.');
-        }
-
-        $tmpPath = tempnam(sys_get_temp_dir(), 'laporan_tahunan_pkk_');
-        if (! is_string($tmpPath) || $tmpPath === '') {
-            throw new RuntimeException('Gagal membuat file sementara untuk generator .docx.');
-        }
-
-        if (! copy($templatePath, $tmpPath)) {
-            @unlink($tmpPath);
-            throw new RuntimeException('Gagal menyalin template laporan tahunan .docx.');
-        }
+        $tmpPath = $this->prepareWorkingDocx();
 
         $zip = new ZipArchive();
         if ($zip->open($tmpPath) !== true) {
@@ -152,6 +139,60 @@ class LaporanTahunanPkkDocxGenerator
         }
 
         return $binary;
+    }
+
+    private function prepareWorkingDocx(): string
+    {
+        $tmpPath = tempnam(sys_get_temp_dir(), 'laporan_tahunan_pkk_');
+        if (! is_string($tmpPath) || $tmpPath === '') {
+            throw new RuntimeException('Gagal membuat file sementara untuk generator .docx.');
+        }
+
+        $templatePath = base_path('docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx');
+        if (is_file($templatePath)) {
+            if (! copy($templatePath, $tmpPath)) {
+                @unlink($tmpPath);
+                throw new RuntimeException('Gagal menyalin template laporan tahunan .docx.');
+            }
+
+            return $tmpPath;
+        }
+
+        $this->createMinimalDocxPackage($tmpPath);
+
+        return $tmpPath;
+    }
+
+    private function createMinimalDocxPackage(string $path): void
+    {
+        $zip = new ZipArchive();
+        if ($zip->open($path, ZipArchive::OVERWRITE) !== true) {
+            throw new RuntimeException('Gagal membuat arsip .docx fallback.');
+        }
+
+        $zip->addFromString('[Content_Types].xml', <<<'XML'
+<?xml version="1.0" encoding="UTF-8"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+  <Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+  <Default Extension="xml" ContentType="application/xml"/>
+  <Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>
+XML);
+        $zip->addFromString('_rels/.rels', <<<'XML'
+<?xml version="1.0" encoding="UTF-8"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>
+XML);
+        $zip->addFromString('word/document.xml', <<<'XML'
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+  <w:body>
+    <w:sectPr/>
+  </w:body>
+</w:document>
+XML);
+        $zip->close();
     }
 
     private function appendBlankParagraph(DOMDocument $dom, DOMElement $parent): void
@@ -287,4 +328,3 @@ class LaporanTahunanPkkDocxGenerator
         $row->appendChild($cell);
     }
 }
-
