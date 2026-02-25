@@ -123,6 +123,7 @@ PHP;
 namespace App\Domains\Reports\\{$name}\Services;
 
 use App\Domains\Reports\\{$name}\Repositories\\{$name}ReportRepository;
+use Illuminate\Support\Carbon;
 
 class {$class}
 {
@@ -130,11 +131,28 @@ class {$class}
         private {$name}ReportRepository \$repository
     ) {}
 
-    public function process(array \$data)
+    public function process(array \$filters): array
     {
-        // TODO: Implement business logic
+        \$normalizedFilters = \$this->normalizeFilters(\$filters);
+        \$rows = \$this->repository->fetchRows(\$normalizedFilters);
+        \$summary = \$this->repository->fetchSummary(\$normalizedFilters);
 
-        return \$data;
+        return [
+            'meta' => [
+                'generated_at' => Carbon::now()->toDateTimeString(),
+                'filters' => \$normalizedFilters,
+                'total_rows' => count(\$rows),
+            ],
+            'rows' => \$rows,
+            'summary' => \$summary,
+        ];
+    }
+
+    private function normalizeFilters(array \$filters): array
+    {
+        return collect(\$filters)
+            ->reject(fn (\$value) => \$value === null || \$value === '')
+            ->all();
     }
 }
 PHP;
@@ -156,7 +174,17 @@ namespace App\Domains\Reports\\{$name}\Repositories;
 
 class {$class}
 {
-    // TODO: Implement database logic
+    public function fetchRows(array \$filters): array
+    {
+        return [];
+    }
+
+    public function fetchSummary(array \$filters): array
+    {
+        return [
+            'total' => 0,
+        ];
+    }
 }
 PHP;
 
@@ -292,14 +320,29 @@ PHP;
         public function test_process_returns_data()
         {
             \$repo = Mockery::mock({$name}ReportRepository::class);
+            \$repo->shouldReceive('fetchRows')
+                ->once()
+                ->with(['status' => 'aktif'])
+                ->andReturn([
+                    ['id' => 1, 'status' => 'aktif'],
+                ]);
+            \$repo->shouldReceive('fetchSummary')
+                ->once()
+                ->with(['status' => 'aktif'])
+                ->andReturn([
+                    'total' => 1,
+                ]);
 
             \$service = new {$name}ReportService(\$repo);
 
-            \$data = ['amount' => 100];
+            \$filters = ['status' => 'aktif', 'q' => ''];
 
-            \$result = \$service->process(\$data);
+            \$result = \$service->process(\$filters);
 
-            \$this->assertEquals(\$data, \$result);
+            \$this->assertSame(1, \$result['meta']['total_rows']);
+            \$this->assertSame(['status' => 'aktif'], \$result['meta']['filters']);
+            \$this->assertSame([['id' => 1, 'status' => 'aktif']], \$result['rows']);
+            \$this->assertSame(['total' => 1], \$result['summary']);
         }
     }
     PHP;
