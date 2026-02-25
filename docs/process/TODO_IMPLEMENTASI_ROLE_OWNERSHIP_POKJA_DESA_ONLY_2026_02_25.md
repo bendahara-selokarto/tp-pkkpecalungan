@@ -1,7 +1,7 @@
 # TODO Implementasi Role Ownership Pokja Desa-Only 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `in-progress`
+Status: `done`
 
 ## Konteks
 
@@ -28,10 +28,10 @@ Status: `in-progress`
 
 - [x] `php artisan test --filter=RoleMenuVisibilityService`
 - [x] `php artisan test --filter=scope_metadata_tidak_sinkron|role_dan_level_area_tidak_sinkron` (dijalankan terpisah per token filter karena karakter `|` tidak kompatibel dengan shell command parser sesi ini)
-- [ ] `php artisan test` penuh
+- [x] `php artisan test` penuh
 
 Catatan validasi:
-- `php artisan test` penuh gagal ditutup pada sesi ini karena batas memory PHP default (`134217728`) dan percobaan ulang dengan `memory_limit=512M` melebihi timeout eksekusi.
+- `php artisan test` penuh lulus pada eksekusi 2026-02-25 (suite hijau end-to-end).
 
 ## Risiko
 

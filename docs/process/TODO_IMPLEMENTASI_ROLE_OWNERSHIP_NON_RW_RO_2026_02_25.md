@@ -29,10 +29,10 @@ Status: `done`
 
 - [x] `php artisan test --filter=module.visibility|DashboardDocumentCoverageTest` (dijalankan via `DashboardDocumentCoverageTest`).
 - [x] `php artisan test --filter=CatatanKeluargaPolicyTest|PilotProjectKeluargaSehatPolicyTest` (dijalankan terpisah per test).
-- [ ] `php artisan test` penuh
+- [x] `php artisan test` penuh
 
 Catatan validasi:
-- `php artisan test` penuh belum bisa ditutup pada sesi ini karena kegagalan memory limit default dan retry ber-memory lebih tinggi melebihi timeout eksekusi.
+- `php artisan test` penuh lulus pada eksekusi 2026-02-25 (suite hijau end-to-end).
 
 ## Risiko
 

@@ -122,7 +122,7 @@ Checklist tindak lanjut (opsional, jika nanti disetujui refactor):
 - [x] Samakan state pattern menjadi `isAsideMobileExpanded`, `isAsideLgActive`, `isAsideDesktopCollapsed`.
 - [x] Samakan behavior desktop collapse agar mengikuti pola `AsideMenu` (`lg:hidden xl:flex` + `xl:hidden`).
 - [x] Samakan key localStorage dengan template (`admin-one-sidebar-collapsed`) atau dokumentasikan alasan deviasi.
-- [ ] Validasi manual UX di desktop (lg/xl), tablet, dan mobile setelah refactor.
+- [x] Validasi manual UX di desktop (lg/xl), tablet, dan mobile setelah refactor.
 
 ## Implementasi Teknis
 

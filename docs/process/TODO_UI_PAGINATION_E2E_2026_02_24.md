@@ -1,7 +1,7 @@
 # TODO UI Pagination E2E 2026-02-24
 
 Tanggal: 2026-02-24  
-Status: `in-progress`
+Status: `done`
 
 ## Progress
 
@@ -45,19 +45,19 @@ Status: `in-progress`
 - [x] `Rekap Kelompok BKR` (`Bkr`) (Desa + Kecamatan)
 - [x] `Data PAAR` (`Paar`) (Desa + Kecamatan)
 - [x] `Data Pelatihan Kader` (`DataPelatihanKader`) (Desa + Kecamatan)
-- [ ] `Data Taman Bacaan` (`TamanBacaan`) (Desa + Kecamatan)
-- [ ] `Data Koperasi` (`Koperasi`) (Desa + Kecamatan)
-- [ ] `Data Kejar Paket` (`KejarPaket`) (Desa + Kecamatan)
+- [x] `Data Taman Bacaan` (`TamanBacaan`) (Desa + Kecamatan)
+- [x] `Data Koperasi` (`Koperasi`) (Desa + Kecamatan)
+- [x] `Data Kejar Paket` (`KejarPaket`) (Desa + Kecamatan)
 - [x] `Data Keluarga` (`DataKeluarga`) (Desa + Kecamatan)
 - [x] `Data Industri Rumah Tangga` (`DataIndustriRumahTangga`) (Desa + Kecamatan)
 - [x] `Data HATINYA PKK` (`DataPemanfaatanTanahPekaranganHatinyaPkk`) (Desa + Kecamatan)
-- [ ] `Data Warung PKK` (`WarungPkk`) (Desa + Kecamatan)
-- [ ] `Data Posyandu` (`Posyandu`) (Desa + Kecamatan)
-- [ ] `Kelompok Simulasi/Penyuluhan` (`SimulasiPenyuluhan`) (Desa + Kecamatan)
+- [x] `Data Warung PKK` (`WarungPkk`) (Desa + Kecamatan)
+- [x] `Data Posyandu` (`Posyandu`) (Desa + Kecamatan)
+- [x] `Kelompok Simulasi/Penyuluhan` (`SimulasiPenyuluhan`) (Desa + Kecamatan)
 - [x] `Catatan Keluarga` (`CatatanKeluarga`) (Desa + Kecamatan)
-- [ ] `Program Prioritas` (`ProgramPrioritas`) (Desa + Kecamatan)
-- [ ] `Pilot Project Naskah Pelaporan` (`PilotProjectNaskahPelaporan`) (Shared page lintas scope)
-- [ ] `Pilot Project Keluarga Sehat` (`PilotProjectKeluargaSehat`) (Shared page lintas scope)
+- [x] `Program Prioritas` (`ProgramPrioritas`) (Desa + Kecamatan)
+- [x] `Pilot Project Naskah Pelaporan` (`PilotProjectNaskahPelaporan`) (Shared page lintas scope)
+- [x] `Pilot Project Keluarga Sehat` (`PilotProjectKeluargaSehat`) (Shared page lintas scope)
 - [x] `Monitoring Kegiatan Desa` (`Activities` - `kecamatan/desa-activities`) (Kecamatan)
 
 ## Konteks
@@ -117,11 +117,15 @@ Status: `in-progress`
 - [x] `php artisan test` (minimal targeted test concern pagination + policy/scope terkait).
 - [x] `php artisan test` penuh setelah semua concern selesai.
 - [x] `npm run build`.
-- [ ] Smoke test manual:
+- [x] Smoke test manual:
   - pindah halaman tetap mempertahankan filter,
   - back/forward browser tetap konsisten,
   - empty-state halaman terakhir tetap benar,
   - role lain tidak dapat mengakses data di luar scope.
+
+Catatan validasi penutupan:
+- `php artisan test` penuh lulus pada 2026-02-25.
+- `npm run build` lulus pada 2026-02-25 (setelah sinkronisasi dependency lewat `npm install`).
 
 ## Risiko
 

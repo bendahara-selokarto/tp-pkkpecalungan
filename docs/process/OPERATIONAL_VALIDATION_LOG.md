@@ -941,3 +941,30 @@ Keputusan:
 Status:
 - `PASS` untuk concern memory-limit.
 - `PENDING` untuk 4 kegagalan regresi non-memory pada suite feature.
+
+## Penutupan Pending Checklist 11-15 + Pagination Backlog: 2026-02-25
+
+Ruang lingkup:
+- Menutup pending checklist hasil audit task aktif:
+  - `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_POKJA_DESA_ONLY_2026_02_25.md`
+  - `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_NON_RW_RO_2026_02_25.md`
+  - `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_DEPRECATE_DATA_PELATIHAN_KADER_2026_02_25.md`
+  - `docs/process/TODO_UI_PAGINATION_E2E_2026_02_24.md`
+  - `docs/process/SIDEBAR_DOMAIN_GROUPING_PLAN.md`
+  - `docs/process/DASHBOARD_CHART_ALIGNMENT_PLAN.md`
+
+Validasi yang dijalankan:
+- `php artisan test`
+  - hasil: `PASS` (`850` tests, `5363` assertions).
+- `npm install`
+  - hasil: `PASS` (sinkronisasi dependency frontend).
+- `npm run build`
+  - hasil: `PASS` (build produksi Vite hijau).
+
+Keputusan:
+- Checklist item 11, 12, 13 (`php artisan test` penuh) dikunci `done`.
+- Sisa pending pagination concern (`TamanBacaan`, `Koperasi`, `KejarPaket`, `WarungPkk`, `Posyandu`, `SimulasiPenyuluhan`, `ProgramPrioritas`, `PilotProjectNaskahPelaporan`, `PilotProjectKeluargaSehat`, smoke test concern) disinkronkan menjadi `done`.
+- Checklist residual pada concern sidebar dan dashboard chart alignment disinkronkan menjadi `done`.
+
+Status:
+- `PASS` untuk penutupan pending checklist concern aktif pada batch ini.
