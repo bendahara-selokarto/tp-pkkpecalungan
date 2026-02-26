@@ -52,6 +52,12 @@ const currentModuleMode = computed(() =>
 const isCurrentModuleReadOnly = computed(() => currentModuleMode.value === 'read-only')
 
 const hasRole = (role) => roles.value.includes(role)
+const isSekretarisRole = computed(() =>
+  hasRole('desa-sekretaris')
+  || hasRole('kecamatan-sekretaris')
+  || hasRole('admin-desa')
+  || hasRole('admin-kecamatan'),
+)
 
 const isActive = (prefix) => page.url.startsWith(prefix)
 const isExternalItem = (item) => item.external === true
@@ -72,6 +78,16 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/buku-keuangan`, label: 'Buku Keuangan' },
       { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
+      {
+        href: `/${scope}/data-warga`,
+        label: 'Data Warga',
+        uiVisibility: 'sekretaris-only',
+      },
+      {
+        href: `/${scope}/data-kegiatan-warga`,
+        label: 'Data Kegiatan Warga',
+        uiVisibility: 'sekretaris-only',
+      },
       { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja' },
       { href: `/${scope}/prestasi-lomba`, label: 'Prestasi Lomba' },
       { href: `/${scope}/laporan-tahunan-pkk`, label: 'Laporan Tahunan Tim Penggerak PKK' },
@@ -83,8 +99,11 @@ const buildScopedMenuGroups = (scope) => [
     code: 'P1',
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-      { href: `/${scope}/data-warga`, label: 'Daftar Warga TP PKK' },
-      { href: `/${scope}/data-kegiatan-warga`, label: 'Data Kegiatan Warga' },
+      {
+        href: `/${scope}/simulasi-penyuluhan`,
+        label: 'Kelompok Simulasi dan Penyuluhan',
+        uiVisibility: 'desa-pokja-i-only',
+      },
       { href: `/${scope}/bkl`, label: 'BKL' },
       { href: `/${scope}/bkr`, label: 'BKR' },
       { href: `/${scope}/paar`, label: 'Buku PAAR' },
@@ -121,11 +140,10 @@ const buildScopedMenuGroups = (scope) => [
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
-      { href: `/${scope}/simulasi-penyuluhan`, label: 'Kelompok Simulasi dan Penyuluhan' },
-      { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga' },
-      { href: `/${scope}/program-prioritas`, label: 'Program Prioritas' },
-      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },
-      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
+      { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga', uiVisibility: 'disabled' },
+      { href: `/${scope}/program-prioritas`, label: 'Program Prioritas', uiVisibility: 'disabled' },
+      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV', uiVisibility: 'disabled' },
+      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana', uiVisibility: 'disabled' },
     ],
   },
 ]
@@ -139,7 +157,7 @@ const kecamatanMenuGroups = [
     label: 'Monitoring Kecamatan',
     code: 'MON',
     items: [
-      { href: '/kecamatan/desa-activities', label: 'Rekap Kegiatan Desa' },
+      { href: '/kecamatan/desa-activities', label: 'Rekap Kegiatan Desa', uiVisibility: 'disabled' },
     ],
   },
 ]
@@ -148,6 +166,24 @@ const buildGroupState = (groups) => groups.reduce((state, group) => {
   state[group.key] = group.items.some((item) => isItemActive(item))
   return state
 }, {})
+
+const isMenuItemVisibleByExperimentalPlacement = (item) => {
+  const visibility = String(item?.uiVisibility ?? 'default')
+
+  if (visibility === 'disabled') {
+    return false
+  }
+
+  if (visibility === 'sekretaris-only') {
+    return isSekretarisRole.value
+  }
+
+  if (visibility === 'desa-pokja-i-only') {
+    return isDesaScope.value && hasRole('desa-pokja-i')
+  }
+
+  return true
+}
 
 const withMode = (groups) => {
   const seenInternalHrefs = new Set()
@@ -158,6 +194,10 @@ const withMode = (groups) => {
       ...group,
       mode: menuGroupModes.value[group.key],
       items: group.items.filter((item) => {
+        if (!isMenuItemVisibleByExperimentalPlacement(item)) {
+          return false
+        }
+
         if (isExternalItem(item)) {
           return true
         }
