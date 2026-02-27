@@ -2,6 +2,13 @@
 
 Sumber canonical domain:
 - `docs/referensi/Rakernas X.pdf`
+- `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md` (status ketersediaan buku, autentikasi buku, dan penanggung jawab buku)
+
+Status interpretasi:
+- Dokumen ini adalah interpretasi teknis-operasional dari Rakernas X untuk kebutuhan implementasi aplikasi.
+- Saat terjadi konflik interpretasi, sumber primer yang wajib diikuti adalah:
+  - `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
+  - `docs/referensi/Rakernas X.pdf`
 
 Aturan baca:
 - Kolom `field canonical` berisi field inti domain. Untuk tabel persisten, invariant wajib: `level`, `area_id`, `created_by`.

@@ -7,6 +7,8 @@ Status: `implemented` (`historical-e2e`, sinkronisasi concern sidebar aktif ada 
 
 - Todo Code: `UVPJ23R1`
 - Dokumen ini adalah catatan implementasi E2E historis.
+- Untuk matrix penanggung jawab buku lintas desa/kecamatan yang berlaku sebagai acuan domain aktif, gunakan:
+  - `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md`
 - Untuk concern eksperimen UI visibility saat ini, acuan wajib terbaru adalah:
   - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 - Jika ada analisa yang mencampur concern eksperimen UI dengan dokumen historis ini, wajib ikuti acuan terbaru di atas.
