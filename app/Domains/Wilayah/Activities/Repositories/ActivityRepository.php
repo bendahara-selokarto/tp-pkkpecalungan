@@ -88,16 +88,43 @@ class ActivityRepository implements ActivityRepositoryInterface
             ->get();
     }
 
-    public function paginateDesaActivitiesByKecamatan(int $kecamatanAreaId, int $perPage): LengthAwarePaginator
+    public function paginateDesaActivitiesByKecamatan(
+        int $kecamatanAreaId,
+        int $perPage,
+        ?int $desaId = null,
+        ?string $status = null,
+        ?string $keyword = null
+    ): LengthAwarePaginator
     {
         $desaIds = $this->areaRepository
             ->getDesaByKecamatan($kecamatanAreaId)
             ->pluck('id');
 
-        return Activity::query()
+        $query = Activity::query()
             ->with(['area', 'creator'])
             ->where('level', ScopeLevel::DESA->value)
-            ->whereIn('area_id', $desaIds)
+            ->whereIn('area_id', $desaIds);
+
+        if (is_int($desaId)) {
+            $query->where('area_id', $desaId);
+        }
+
+        if (is_string($status) && $status !== '') {
+            $query->where('status', $status);
+        }
+
+        if (is_string($keyword) && $keyword !== '') {
+            $normalizedKeyword = trim($keyword);
+            $query->where(static function (Builder $inner) use ($normalizedKeyword): void {
+                $inner
+                    ->where('title', 'like', '%' . $normalizedKeyword . '%')
+                    ->orWhere('description', 'like', '%' . $normalizedKeyword . '%')
+                    ->orWhere('nama_petugas', 'like', '%' . $normalizedKeyword . '%')
+                    ->orWhere('tempat_kegiatan', 'like', '%' . $normalizedKeyword . '%');
+            });
+        }
+
+        return $query
             ->latest('activity_date')
             ->latest('id')
             ->paginate($perPage)

@@ -14,10 +14,21 @@ class ListKecamatanDesaActivitiesUseCase
     ) {
     }
 
-    public function execute(int $perPage): LengthAwarePaginator
+    public function execute(
+        int $perPage,
+        ?int $desaId = null,
+        ?string $status = null,
+        ?string $keyword = null
+    ): LengthAwarePaginator
     {
         $kecamatanAreaId = $this->activityScopeService->requireUserAreaId();
 
-        return $this->activityRepository->paginateDesaActivitiesByKecamatan($kecamatanAreaId, $perPage);
+        return $this->activityRepository->paginateDesaActivitiesByKecamatan(
+            $kecamatanAreaId,
+            $perPage,
+            $desaId,
+            $status,
+            $keyword
+        );
     }
 }

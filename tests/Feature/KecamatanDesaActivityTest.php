@@ -189,7 +189,123 @@ class KecamatanDesaActivityTest extends TestCase
                 ->where('activities.current_page', 2)
                 ->where('activities.per_page', 10)
                 ->where('activities.total', 11)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.desa_id', null)
+                ->where('filters.status', null)
+                ->where('filters.q', null);
+        });
+    }
+
+    #[Test]
+    public function daftar_kegiatan_desa_monitoring_bisa_difilter_berdasarkan_desa_status_dan_kata_kunci(): void
+    {
+        $kecamatanUser = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $kecamatanUser->assignRole('kecamatan-sekretaris');
+
+        $desaA2 = Area::create([
+            'name' => 'Karanganyar',
+            'level' => 'desa',
+            'parent_id' => $this->kecamatanA->id,
+        ]);
+
+        Activity::create([
+            'title' => 'Monitoring Posyandu Gombong',
+            'description' => 'Sesuai filter',
+            'level' => 'desa',
+            'area_id' => $this->desaA1->id,
+            'created_by' => $kecamatanUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        Activity::create([
+            'title' => 'Monitoring Posyandu Karanganyar',
+            'description' => 'Beda desa',
+            'level' => 'desa',
+            'area_id' => $desaA2->id,
+            'created_by' => $kecamatanUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        Activity::create([
+            'title' => 'Draft Posyandu Gombong',
+            'description' => 'Beda status',
+            'level' => 'desa',
+            'area_id' => $this->desaA1->id,
+            'created_by' => $kecamatanUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($kecamatanUser)->get(
+            route('kecamatan.desa-activities.index', [
+                'desa_id' => $this->desaA1->id,
+                'status' => 'published',
+                'q' => 'Posyandu Gombong',
+            ])
+        );
+
+        $response->assertOk();
+        $response->assertSee('Monitoring Posyandu Gombong');
+        $response->assertDontSee('Monitoring Posyandu Karanganyar');
+        $response->assertDontSee('Draft Posyandu Gombong');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DesaActivities/Index')
+                ->where('filters.desa_id', $this->desaA1->id)
+                ->where('filters.status', 'published')
+                ->where('filters.q', 'Posyandu Gombong')
+                ->has('desaOptions', 2)
+                ->where('statusOptions.0.value', 'draft')
+                ->where('statusOptions.1.value', 'published');
+        });
+    }
+
+    #[Test]
+    public function filter_desa_di_luar_kecamatan_sendiri_tetap_tidak_membocorkan_data(): void
+    {
+        $kecamatanUser = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $kecamatanUser->assignRole('admin-kecamatan');
+
+        Activity::create([
+            'title' => 'Kegiatan Desa Gombong',
+            'description' => 'Dalam kecamatan user',
+            'level' => 'desa',
+            'area_id' => $this->desaA1->id,
+            'created_by' => $kecamatanUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Desa Kalisalak',
+            'description' => 'Luar kecamatan user',
+            'level' => 'desa',
+            'area_id' => $this->desaB1->id,
+            'created_by' => $kecamatanUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        $response = $this->actingAs($kecamatanUser)->get(
+            route('kecamatan.desa-activities.index', ['desa_id' => $this->desaB1->id])
+        );
+
+        $response->assertOk();
+        $response->assertDontSee('Kegiatan Desa Gombong');
+        $response->assertDontSee('Kegiatan Desa Kalisalak');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DesaActivities/Index')
+                ->where('activities.total', 0)
+                ->has('activities.data', 0);
         });
     }
 
