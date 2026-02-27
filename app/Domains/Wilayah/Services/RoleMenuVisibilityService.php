@@ -215,6 +215,13 @@ class RoleMenuVisibilityService
     public function resolveForScope(User $user, string $scope): array
     {
         $groupModes = $this->resolveGroupModesForScope($user, $scope);
+        if ($groupModes === []) {
+            return [
+                'groups' => [],
+                'modules' => [],
+            ];
+        }
+
         $moduleModes = $this->resolveModuleModes($groupModes);
         $moduleModes = $this->applyRoleModuleModeOverrides($user, $moduleModes);
 
@@ -244,6 +251,10 @@ class RoleMenuVisibilityService
      */
     private function resolveGroupModesForScope(User $user, string $scope): array
     {
+        if (! $user->hasRole('super-admin') && ! $user->hasRoleForScope($scope)) {
+            return [];
+        }
+
         $allowedGroups = self::GROUPS_BY_SCOPE[$scope] ?? [];
         if ($allowedGroups === []) {
             return [];

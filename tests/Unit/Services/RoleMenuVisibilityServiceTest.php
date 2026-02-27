@@ -274,4 +274,23 @@ class RoleMenuVisibilityServiceTest extends TestCase
             }
         }
     }
+
+    public function test_scope_mismatch_tidak_menghasilkan_group_mode_untuk_role_non_super_admin(): void
+    {
+        $desaUser = User::factory()->create();
+        $desaUser->assignRole('desa-pokja-i');
+
+        $kecamatanVisibility = $this->service->resolveForScope($desaUser, 'kecamatan');
+        $this->assertSame([], $kecamatanVisibility['groups']);
+        $this->assertSame([], $kecamatanVisibility['modules']);
+        $this->assertNull($this->service->resolveModuleModeForScope($desaUser, 'kecamatan', 'anggota-pokja'));
+
+        $kecamatanUser = User::factory()->create();
+        $kecamatanUser->assignRole('kecamatan-pokja-i');
+
+        $desaVisibility = $this->service->resolveForScope($kecamatanUser, 'desa');
+        $this->assertSame([], $desaVisibility['groups']);
+        $this->assertSame([], $desaVisibility['modules']);
+        $this->assertNull($this->service->resolveModuleModeForScope($kecamatanUser, 'desa', 'anggota-pokja'));
+    }
 }
