@@ -197,4 +197,29 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->get('/desa/program-prioritas')->assertForbidden();
         $this->get('/desa/program-prioritas/create')->assertForbidden();
     }
+
+    public function test_role_pokja_tidak_bisa_akses_modul_buku_sekretaris(): void
+    {
+        $desaPokja = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desa->id,
+        ]);
+        $desaPokja->assignRole('desa-pokja-i');
+
+        $this->actingAs($desaPokja);
+        $this->get('/desa/buku-notulen-rapat')->assertForbidden();
+        $this->get('/desa/buku-daftar-hadir')->assertForbidden();
+        $this->get('/desa/buku-tamu')->assertForbidden();
+
+        $kecamatanPokja = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $kecamatanPokja->assignRole('kecamatan-pokja-i');
+
+        $this->actingAs($kecamatanPokja);
+        $this->get('/kecamatan/buku-notulen-rapat')->assertForbidden();
+        $this->get('/kecamatan/buku-daftar-hadir')->assertForbidden();
+        $this->get('/kecamatan/buku-tamu')->assertForbidden();
+    }
 }

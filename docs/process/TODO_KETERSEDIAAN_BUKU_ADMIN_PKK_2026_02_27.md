@@ -41,7 +41,7 @@
 ### D. Penanggung Jawab Buku
 - [x] Audit matriks penanggung jawab buku per level (sekretaris vs pokja).
 - [x] Validasi mode akses (`read-write` vs `read-only`) terhadap tanggung jawab buku.
-- [ ] Pastikan tidak ada modul buku yang ditempatkan pada role yang tidak sesuai kontrak.
+- [x] Pastikan tidak ada modul buku yang ditempatkan pada role yang tidak sesuai kontrak.
 
 ### E. Rencana Implementasi Gap
 - [x] Susun prioritas implementasi buku `missing` (gelombang 1: sekretaris inti, gelombang 2: buku pokja pendukung).
@@ -124,6 +124,7 @@
 - Pemetaan `buku-program-kerja` telah dikunci pada ownership `sekretaris-tpk` agar tidak overlap dengan domain `pokja-iv`.
 - Test matrix mismatch `role-scope-area` untuk `program-prioritas` telah ditambah (desa + kecamatan) dan lolos regresi suite.
 - Validasi print/report untuk `buku-notulen-rapat`, `buku-daftar-hadir`, dan `buku-tamu` telah ditambah dan lolos pada scope desa/kecamatan.
+- Guard ownership modul buku sekretaris terhadap role pokja telah dikunci lewat test unit mapping + middleware feature.
 - Setelah kontrak field terkunci, lanjut implementasi per buku dengan boundary:
   - route + request + action/use case + repository + policy + test.
 
@@ -134,7 +135,7 @@
 - [ ] Validasi peta header dokumen bertabel sampai `rowspan/colspan`.
 - [ ] Simpan bukti validasi (text-layer + screenshot visual) dan tautkan ke dokumen mapping.
 - [ ] Turunkan status ke `verified` hanya untuk buku dengan bukti lengkap.
-- [ ] Pastikan tidak ada modul buku di role yang tidak sesuai kontrak ownership.
+- [x] Pastikan tidak ada modul buku di role yang tidak sesuai kontrak ownership.
 - [ ] Kunci keputusan K3: batas kewenangan pokja kecamatan untuk modul rekap.
 - [ ] Kunci keputusan K4: strategi migrasi jika perlu pemecahan domain/modul.
 - [ ] Definisikan kontrak field minimum per buku sebelum coding.

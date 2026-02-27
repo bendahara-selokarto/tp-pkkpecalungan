@@ -206,4 +206,72 @@ class RoleMenuVisibilityServiceTest extends TestCase
             );
         }
     }
+
+    public function test_modul_buku_sekretaris_hanya_terpetakan_pada_group_sekretaris(): void
+    {
+        $bukuSekretarisModules = [
+            'buku-notulen-rapat',
+            'buku-daftar-hadir',
+            'buku-tamu',
+            'program-prioritas',
+        ];
+
+        $sekretarisModules = $this->service->modulesForGroup('sekretaris-tpk');
+        foreach ($bukuSekretarisModules as $moduleSlug) {
+            $this->assertContains($moduleSlug, $sekretarisModules);
+        }
+
+        foreach (['pokja-i', 'pokja-ii', 'pokja-iii', 'pokja-iv', 'monitoring'] as $group) {
+            $groupModules = $this->service->modulesForGroup($group);
+
+            foreach ($bukuSekretarisModules as $moduleSlug) {
+                $this->assertNotContains(
+                    $moduleSlug,
+                    $groupModules,
+                    sprintf('Module %s tidak boleh dipetakan ke group %s.', $moduleSlug, $group)
+                );
+            }
+        }
+    }
+
+    public function test_role_pokja_tidak_mendapat_modul_buku_sekretaris(): void
+    {
+        $bukuSekretarisModules = [
+            'buku-notulen-rapat',
+            'buku-daftar-hadir',
+            'buku-tamu',
+            'program-prioritas',
+        ];
+
+        $roleScopeMatrix = [
+            ['role' => 'desa-pokja-i', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-ii', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-iii', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-iv', 'scope' => 'desa'],
+            ['role' => 'kecamatan-pokja-i', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-ii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
+        ];
+
+        foreach ($roleScopeMatrix as $item) {
+            $user = User::factory()->create();
+            $user->assignRole($item['role']);
+
+            $visibility = $this->service->resolveForScope($user, $item['scope']);
+
+            foreach ($bukuSekretarisModules as $moduleSlug) {
+                $this->assertArrayNotHasKey(
+                    $moduleSlug,
+                    $visibility['modules'],
+                    sprintf(
+                        'Role %s pada scope %s tidak boleh memiliki modul %s.',
+                        $item['role'],
+                        $item['scope'],
+                        $moduleSlug
+                    )
+                );
+            }
+        }
+    }
 }
