@@ -67,7 +67,7 @@ Gunakan status autentikasi:
 ### A. Level Desa/Kelurahan
 | Kelompok | Nama Buku | Penanggung Jawab | Status Ketersediaan | Status Autentikasi | Catatan Tindak Lanjut |
 |---|---|---|---|---|---|
-| Sekretaris | Buku Daftar Anggota TP PKK | Sekretaris Desa/Kelurahan | available | partial | Sinkronkan label dengan lampiran autentik |
+| Sekretaris | Buku Daftar Anggota Tim Penggerak PKK | Sekretaris Desa/Kelurahan | available | partial | Label diselaraskan dengan lampiran autentik |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Desa/Kelurahan | available | verified | Jaga konsistensi format output |
 | Sekretaris | Buku Notulen Rapat | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Daftar Hadir | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
@@ -98,7 +98,7 @@ Gunakan status autentikasi:
 ### B. Level Kecamatan
 | Kelompok | Nama Buku | Penanggung Jawab | Status Ketersediaan | Status Autentikasi | Catatan Tindak Lanjut |
 |---|---|---|---|---|---|
-| Sekretaris | Buku Daftar Anggota TP PKK Kecamatan | Sekretaris Kecamatan | available | partial | Sinkronkan nomenklatur kecamatan |
+| Sekretaris | Buku Daftar Anggota Tim Penggerak PKK Kecamatan | Sekretaris Kecamatan | available | partial | Label diselaraskan dengan lampiran autentik |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Kecamatan | available | verified | Konsisten antar level |
 | Sekretaris | Buku Notulen Rapat | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Daftar Hadir | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
@@ -144,6 +144,12 @@ Kontrol akses minimal:
 2. Kecamatan: `scope.role:kecamatan`.
 3. Konsistensi role-scope-area wajib tervalidasi backend.
 
+Keputusan operasional terkunci (2026-02-27):
+1. Pokja kecamatan pada concern rekap lintas desa diposisikan sebagai monitoring/evaluasi (`read-only`) dan bukan jalur mutasi data sumber.
+2. Mutasi data sumber tetap terjadi di level desa sesuai ownership pokja terkait.
+3. Enforcement backend mengikuti guard `RoleMenuVisibilityService` + middleware visibilitas modul + policy/scope service.
+4. Jika modul perlu dipecah domain, migrasi wajib bertahap (parallel compatibility -> adapter transisi -> cutover route/menu -> cleanup setelah parity test).
+
 ---
 
 ## VI. Rencana Implementasi Gap (Checklist Kerja)
@@ -159,9 +165,9 @@ Kontrol akses minimal:
 - [ ] Sinkronkan kontrak field per buku dengan hasil baca autentik final.
 
 ### C. Penanggung Jawab Buku
-- [ ] Audit seluruh modul agar ownership sesuai sekretaris/pokja.
-- [ ] Audit mode akses pokja kecamatan agar sesuai kebijakan monitoring.
-- [ ] Tambah test untuk mismatch role-area-level pada modul gap baru.
+- [x] Audit seluruh modul agar ownership sesuai sekretaris/pokja.
+- [x] Audit mode akses pokja kecamatan agar sesuai kebijakan monitoring.
+- [x] Tambah test untuk mismatch role-area-level pada modul gap baru.
 
 ---
 

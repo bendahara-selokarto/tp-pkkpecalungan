@@ -30,7 +30,7 @@
 ### B. Validasi Interpretasi Rakernas X
 - [x] Pastikan setiap entri buku punya referensi lampiran/istilah Rakernas X.
 - [x] Jika ada mismatch istilah, catat deviasi dan kunci keputusan fallback ke sumber primer.
-- [ ] Normalisasi label buku lintas dokumen agar konsisten dengan pedoman.
+- [x] Normalisasi label buku lintas dokumen agar konsisten dengan pedoman.
 
 ### C. Autentikasi Buku
 - [x] Prioritaskan buku status `partial/unverified` untuk validasi autentik bertahap.
@@ -45,9 +45,9 @@
 
 ### E. Rencana Implementasi Gap
 - [x] Susun prioritas implementasi buku `missing` (gelombang 1: sekretaris inti, gelombang 2: buku pokja pendukung).
-- [ ] Definisikan kontrak field minimum per buku sebelum coding.
-- [ ] Definisikan boundary implementasi per buku: route, request, action/use case, repository, policy, test.
-- [ ] Definisikan fallback/compatibility plan untuk modul yang sudah berjalan agar tidak behavior drift.
+- [x] Definisikan kontrak field minimum per buku sebelum coding.
+- [x] Definisikan boundary implementasi per buku: route, request, action/use case, repository, policy, test.
+- [x] Definisikan fallback/compatibility plan untuk modul yang sudah berjalan agar tidak behavior drift.
 
 ### F. Validasi dan Gate
 - [x] Tambah/rapikan test matrix untuk role-scope-area mismatch pada buku baru/yang diubah.
@@ -70,8 +70,8 @@
 ## Keputusan yang Harus Dikunci
 - [x] K1: Urutan prioritas implementasi buku `missing` per level.
 - [x] K2: Kriteria final `verified` untuk autentikasi buku.
-- [ ] K3: Batas kewenangan pokja kecamatan untuk modul rekap (monitoring vs mutasi).
-- [ ] K4: Strategi migrasi jika ada buku yang perlu pemecahan domain/modul.
+- [x] K3: Batas kewenangan pokja kecamatan untuk modul rekap (monitoring vs mutasi).
+- [x] K4: Strategi migrasi jika ada buku yang perlu pemecahan domain/modul.
 
 ## Output Wajib Tiap Update
 - [x] Daftar buku yang berubah status (`available/planned/missing`, `verified/partial/unverified`).
@@ -136,24 +136,58 @@
 - Setelah kontrak field terkunci, lanjut implementasi per buku dengan boundary:
   - route + request + action/use case + repository + policy + test.
 
+### Keputusan Operasional Terkunci (K3/K4)
+- K3 (monitoring vs mutasi pokja kecamatan):
+  - Modul rekap lintas desa pada level kecamatan diposisikan sebagai monitoring/evaluasi (`read-only`) untuk pokja kecamatan.
+  - Mutasi data sumber tetap dilakukan di level desa sesuai ownership pokja masing-masing.
+  - Enforcement backend dikunci melalui `RoleMenuVisibilityService` + `EnsureModuleVisibility` + matrix test role-scope-area.
+- K4 (strategi migrasi pemecahan domain/modul):
+  - Fase 1: tambah modul target baru secara paralel tanpa memutus modul lama (read path tetap kompatibel).
+  - Fase 2: tambah adapter normalisasi request/repository agar payload lama tetap diterima selama masa transisi.
+  - Fase 3: migrasi route/menu bertahap, pertahankan alias report/print lama sampai test regresi concern hijau penuh.
+  - Fase 4: hapus coupling lama hanya setelah parity test + audit data leak lintas scope dinyatakan aman.
+
+### Kontrak Field Minimum Gelombang 2 (Siap Coding)
+| Domain Target | Level | Field Minimum (di luar invariant `level`, `area_id`, `created_by`) | Owner Teknis |
+| --- | --- | --- | --- |
+| `evaluasi-program-pokja-i` | desa/kecamatan | `period_year`, `period_semester`, `program`, `indikator`, `target`, `realisasi`, `capaian_persen`, `evaluation_note`, `tindak_lanjut` | Backend Domain Wilayah |
+| `evaluasi-program-pokja-ii` | desa/kecamatan | `period_year`, `period_semester`, `program`, `indikator`, `target`, `realisasi`, `capaian_persen`, `evaluation_note`, `tindak_lanjut` | Backend Domain Wilayah |
+| `evaluasi-program-pokja-iii` | desa/kecamatan | `period_year`, `period_semester`, `program`, `indikator`, `target`, `realisasi`, `capaian_persen`, `evaluation_note`, `tindak_lanjut` | Backend Domain Wilayah |
+| `evaluasi-program-pokja-iv` | desa/kecamatan | `period_year`, `period_semester`, `program`, `indikator`, `target`, `realisasi`, `capaian_persen`, `evaluation_note`, `tindak_lanjut` | Backend Domain Wilayah |
+| Penguatan `program-prioritas` (Buku Program Kerja) | desa/kecamatan | `program`, `prioritas_program`, `kegiatan`, `sasaran_target`, `jadwal_bulan_1..12`, `sumber_dana_*`, `keterangan` | Backend Domain Wilayah |
+
+### Boundary Implementasi Gelombang 2 (Mandatory)
+- Route + middleware: `scope.role:{desa|kecamatan}` + `module.visibility`.
+- Request: validasi canonical token periode + normalisasi boolean jadwal/sumber dana.
+- UseCase/Action: hanya memuat business flow evaluasi/rencana kerja, tanpa query langsung controller.
+- Repository Interface + Repository: seluruh query domain lewat boundary repository scoped `areas`.
+- Policy + Scope Service: enforce ownership pokja/sekretaris sesuai level dan area.
+- Inertia page mapping: frontend consume payload backend tanpa authority akses.
+- Test matrix minimum:
+  - feature success role/scope valid,
+  - feature reject role tidak valid,
+  - feature reject mismatch role-area-level,
+  - unit policy/scope service,
+  - anti data leak repository/use case.
+
 ## Rencana Sprint Mingguan (Eksekusi)
 
 ### Sprint 1 (P1) - Kontrak dan Bukti Canonical
-- [ ] Normalisasi label buku lintas dokumen agar konsisten dengan pedoman Rakernas X.
+- [x] Normalisasi label buku lintas dokumen agar konsisten dengan pedoman Rakernas X.
 - [ ] Validasi peta header dokumen bertabel sampai `rowspan/colspan`.
 - [ ] Simpan bukti validasi (text-layer + screenshot visual) dan tautkan ke dokumen mapping.
 - [ ] Turunkan status ke `verified` hanya untuk buku dengan bukti lengkap.
 - [x] Pastikan tidak ada modul buku di role yang tidak sesuai kontrak ownership.
-- [ ] Kunci keputusan K3: batas kewenangan pokja kecamatan untuk modul rekap.
-- [ ] Kunci keputusan K4: strategi migrasi jika perlu pemecahan domain/modul.
-- [ ] Definisikan kontrak field minimum per buku sebelum coding.
-- [ ] Definisikan boundary implementasi per buku: route, request, use case/action, repository, policy, test.
-- [ ] Definisikan fallback/compatibility plan agar tidak terjadi behavior drift.
+- [x] Kunci keputusan K3: batas kewenangan pokja kecamatan untuk modul rekap.
+- [x] Kunci keputusan K4: strategi migrasi jika perlu pemecahan domain/modul.
+- [x] Definisikan kontrak field minimum per buku sebelum coding.
+- [x] Definisikan boundary implementasi per buku: route, request, use case/action, repository, policy, test.
+- [x] Definisikan fallback/compatibility plan agar tidak terjadi behavior drift.
 
 Exit criteria Sprint 1:
 - [ ] Semua buku bertabel target Sprint 1 memiliki bukti header valid (`rowspan/colspan`) yang terdokumentasi.
-- [ ] Keputusan K3/K4 berstatus terkunci.
-- [ ] Kontrak field + boundary implementasi untuk gelombang buku `missing` sudah final.
+- [x] Keputusan K3/K4 berstatus terkunci.
+- [x] Kontrak field + boundary implementasi untuk gelombang buku `missing` sudah final.
 
 ### Sprint 2 (P2) - Quality Gate dan Replikasi Role
 - [x] Tambah/rapikan test matrix mismatch `role-scope-area` pada buku baru/diubah.
@@ -165,9 +199,9 @@ Exit criteria Sprint 1:
 - [x] Tambah test sinkronisasi menu-vs-dashboard jika ada slug/group baru.
 
 Exit criteria Sprint 2:
-- [ ] Seluruh test gate concern buku + dashboard role replication lulus.
-- [ ] Tidak ada temuan data leak lintas scope pada validasi regresi.
-- [ ] Kontrak dashboard role baru terdokumentasi dan tervalidasi test.
+- [x] Seluruh test gate concern buku + dashboard role replication lulus.
+- [x] Tidak ada temuan data leak lintas scope pada validasi regresi.
+- [x] Kontrak dashboard role baru terdokumentasi dan tervalidasi test.
 
 ### Sprint 3 (P3) - Delivery Backlog Modul Missing
 - [x] Implementasi modul `buku-notulen-rapat` untuk desa/kecamatan.
