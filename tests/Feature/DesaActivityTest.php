@@ -24,6 +24,11 @@ class DesaActivityTest extends TestCase
 
         // Buat role desa
         Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'desa-pokja-iii']);
+        Role::create(['name' => 'desa-pokja-iv']);
 
         // Buat Kecamatan
         $this->kecamatan = Area::create([
@@ -304,5 +309,74 @@ class DesaActivityTest extends TestCase
         $this->assertDatabaseMissing('activities', [
             'title' => 'Kegiatan Tidak Valid',
         ]);
+    }
+
+    #[Test]
+    public function pokja_i_hanya_melihat_kegiatan_pokja_i_pada_desa_yang_sama(): void
+    {
+        $pokjaIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIUser->assignRole('desa-pokja-i');
+
+        $pokjaIIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIIUser->assignRole('desa-pokja-ii');
+
+        Activity::create([
+            'title' => 'Kegiatan Pokja I Selokarto',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Pokja II Selokarto',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($pokjaIUser)->get('/desa/activities');
+
+        $response->assertOk();
+        $response->assertSee('Kegiatan Pokja I Selokarto');
+        $response->assertDontSee('Kegiatan Pokja II Selokarto');
+    }
+
+    #[Test]
+    public function pokja_i_tidak_boleh_melihat_detail_kegiatan_pokja_lain_meski_satu_desa(): void
+    {
+        $pokjaIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIUser->assignRole('desa-pokja-i');
+
+        $pokjaIIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIIUser->assignRole('desa-pokja-ii');
+
+        $activityPokjaII = Activity::create([
+            'title' => 'Detail Pokja II',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($pokjaIUser)->get(route('desa.activities.show', $activityPokjaII->id));
+
+        $response->assertStatus(403);
     }
 }

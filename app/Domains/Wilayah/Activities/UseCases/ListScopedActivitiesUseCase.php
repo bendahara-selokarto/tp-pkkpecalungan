@@ -17,15 +17,17 @@ class ListScopedActivitiesUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        $actor = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
 
-        return $this->activityRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->activityRepository->paginateByLevelAndArea($level, $areaId, $perPage, $actor);
     }
 
     public function executeAll(string $level): Collection
     {
+        $actor = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
 
-        return $this->activityRepository->listByLevelAndArea($level, $areaId);
+        return $this->activityRepository->listByLevelAndArea($level, $areaId, $actor);
     }
 }

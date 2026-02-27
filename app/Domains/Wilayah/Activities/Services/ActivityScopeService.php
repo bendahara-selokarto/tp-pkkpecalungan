@@ -10,6 +10,35 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ActivityScopeService
 {
+    /**
+     * @var array<string, list<string>>
+     */
+    private const ROLE_SCOPED_ACTIVITY_ROLES_BY_LEVEL = [
+        ScopeLevel::DESA->value => [
+            'desa-sekretaris',
+            'desa-pokja-i',
+            'desa-pokja-ii',
+            'desa-pokja-iii',
+            'desa-pokja-iv',
+        ],
+        ScopeLevel::KECAMATAN->value => [
+            'kecamatan-sekretaris',
+            'kecamatan-pokja-i',
+            'kecamatan-pokja-ii',
+            'kecamatan-pokja-iii',
+            'kecamatan-pokja-iv',
+        ],
+    ];
+
+    /**
+     * @var list<string>
+     */
+    private const ROLE_SCOPED_ACTIVITY_BYPASS_ROLES = [
+        'super-admin',
+        'admin-desa',
+        'admin-kecamatan',
+    ];
+
     public function __construct(
         private readonly UserAreaContextService $userAreaContextService
     ) {
@@ -28,6 +57,71 @@ class ActivityScopeService
     public function requireUserAreaId(): int
     {
         return $this->userAreaContextService->requireUserAreaId();
+    }
+
+    public function requireAuthenticatedUser(): User
+    {
+        $user = auth()->user();
+        if (! $user instanceof User) {
+            throw new HttpException(403, 'Pengguna tidak terautentikasi.');
+        }
+
+        return $user;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function resolveRoleScopedActivityRoles(User $user, string $level): array
+    {
+        $allowedRoles = self::ROLE_SCOPED_ACTIVITY_ROLES_BY_LEVEL[$level] ?? [];
+        if ($allowedRoles === []) {
+            return [];
+        }
+
+        $userRoles = $user->getRoleNames()->all();
+
+        return array_values(array_intersect($allowedRoles, $userRoles));
+    }
+
+    public function requiresRoleScopedActivityFilter(User $user, string $level): bool
+    {
+        if ($user->hasAnyRole(self::ROLE_SCOPED_ACTIVITY_BYPASS_ROLES)) {
+            return false;
+        }
+
+        return $this->resolveRoleScopedActivityRoles($user, $level) !== [];
+    }
+
+    public function canAccessRoleScopedActivity(User $user, Activity $activity, string $level): bool
+    {
+        if (! $this->requiresRoleScopedActivityFilter($user, $level)) {
+            return true;
+        }
+
+        $allowedRoles = $this->resolveRoleScopedActivityRoles($user, $level);
+        if ($allowedRoles === []) {
+            return false;
+        }
+
+        $activity->loadMissing('creator.roles');
+        $creator = $activity->creator;
+        if (! $creator) {
+            return false;
+        }
+
+        $creatorRoles = $creator->getRoleNames()->all();
+
+        return array_intersect($allowedRoles, $creatorRoles) !== [];
+    }
+
+    public function authorizeRoleScopedActivity(User $user, Activity $activity, string $level): Activity
+    {
+        if (! $this->canAccessRoleScopedActivity($user, $activity, $level)) {
+            throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
+        return $activity;
     }
 
     public function isSameLevelAndArea(Activity $activity, string $level, int $areaId): bool

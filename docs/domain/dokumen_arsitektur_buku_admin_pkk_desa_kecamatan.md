@@ -143,6 +143,7 @@ Kontrol akses minimal:
 1. Desa: `scope.role:desa`.
 2. Kecamatan: `scope.role:kecamatan`.
 3. Konsistensi role-scope-area wajib tervalidasi backend.
+4. Untuk modul shared lintas group (contoh: `Buku Kegiatan`/`activities`), list/detail wajib terfilter kombinasi `role group + level + area` agar tidak terjadi data leak antar-pokja pada area yang sama.
 
 Keputusan operasional terkunci (2026-02-27):
 1. Pokja kecamatan pada concern rekap lintas desa diposisikan sebagai monitoring/evaluasi (`read-only`) dan bukan jalur mutasi data sumber.
