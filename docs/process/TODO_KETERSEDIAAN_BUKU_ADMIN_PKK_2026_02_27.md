@@ -227,3 +227,6 @@ Blocker tersisa sebelum concern `done`:
 1. Validasi peta header dokumen bertabel sampai `rowspan/colspan` untuk buku yang masih `unverified`.
 2. Bukti visual autentik (text-layer + screenshot header) belum lengkap untuk seluruh buku target Sprint 1.
 3. Status autentikasi belum bisa diturunkan ke `verified` sebelum butir 1 dan 2 terpenuhi.
+
+Rute eksekusi blocker:
+- `docs/process/TODO_AUTENTIK_SEKRETARIS_INTI_2026_02_27.md`
