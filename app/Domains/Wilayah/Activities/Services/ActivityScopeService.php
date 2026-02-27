@@ -15,18 +15,10 @@ class ActivityScopeService
      */
     private const ROLE_SCOPED_ACTIVITY_ROLES_BY_LEVEL = [
         ScopeLevel::DESA->value => [
-            'desa-sekretaris',
             'desa-pokja-i',
             'desa-pokja-ii',
             'desa-pokja-iii',
             'desa-pokja-iv',
-        ],
-        ScopeLevel::KECAMATAN->value => [
-            'kecamatan-sekretaris',
-            'kecamatan-pokja-i',
-            'kecamatan-pokja-ii',
-            'kecamatan-pokja-iii',
-            'kecamatan-pokja-iv',
         ],
     ];
 

@@ -379,4 +379,50 @@ class DesaActivityTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    #[Test]
+    public function sekretaris_desa_tetap_melihat_semua_kegiatan_pada_area_desa_yang_sama(): void
+    {
+        $sekretarisUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $sekretarisUser->assignRole('desa-sekretaris');
+
+        $pokjaIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIUser->assignRole('desa-pokja-i');
+
+        $pokjaIIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIIUser->assignRole('desa-pokja-ii');
+
+        Activity::create([
+            'title' => 'Kegiatan Pokja I',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Pokja II',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($sekretarisUser)->get('/desa/activities');
+
+        $response->assertOk();
+        $response->assertSee('Kegiatan Pokja I');
+        $response->assertSee('Kegiatan Pokja II');
+    }
 }
