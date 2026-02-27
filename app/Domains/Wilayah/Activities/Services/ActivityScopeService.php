@@ -20,6 +20,12 @@ class ActivityScopeService
             'desa-pokja-iii',
             'desa-pokja-iv',
         ],
+        ScopeLevel::KECAMATAN->value => [
+            'kecamatan-pokja-i',
+            'kecamatan-pokja-ii',
+            'kecamatan-pokja-iii',
+            'kecamatan-pokja-iv',
+        ],
     ];
 
     /**
