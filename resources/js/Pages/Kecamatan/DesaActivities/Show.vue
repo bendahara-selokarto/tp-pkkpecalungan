@@ -5,6 +5,7 @@ import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineW
 import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link } from '@inertiajs/vue3'
 import { mdiClipboardList } from '@mdi/js'
+import { computed } from 'vue'
 
 const props = defineProps({
   activity: {
@@ -26,6 +27,30 @@ const props = defineProps({
 })
 
 const formatDate = (value) => formatDateForDisplay(value)
+
+const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg']
+
+const resolveExtension = (value) => {
+  if (!value || typeof value !== 'string') {
+    return ''
+  }
+
+  const sanitized = value.split('?')[0].split('#')[0]
+  const parts = sanitized.split('.')
+
+  if (parts.length < 2) {
+    return ''
+  }
+
+  return String(parts.pop() || '').toLowerCase()
+}
+
+const documentExtension = computed(() => {
+  return resolveExtension(props.activity.document_path || props.activity.document_url || '')
+})
+
+const isDocumentPdf = computed(() => documentExtension.value === 'pdf')
+const isDocumentImage = computed(() => imageExtensions.includes(documentExtension.value))
 </script>
 
 <template>
@@ -84,29 +109,49 @@ const formatDate = (value) => formatDateForDisplay(value)
       <div class="grid gap-4 md:grid-cols-2">
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Gambar</p>
-          <a
-            v-if="props.activity.image_url"
-            :href="props.activity.image_url"
-            target="_blank"
-            rel="noopener"
-            class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-400"
-          >
-            Lihat gambar
-          </a>
-          <p v-else class="text-sm text-gray-700 dark:text-gray-300">-</p>
+          <div v-if="props.activity.image_url" class="space-y-2">
+            <img
+              :src="props.activity.image_url"
+              alt="Foto kegiatan"
+              class="h-48 w-full rounded-md border border-gray-200 object-cover dark:border-slate-700"
+            >
+            <a
+              :href="props.activity.image_url"
+              target="_blank"
+              rel="noopener"
+              class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-400"
+            >
+              Buka gambar penuh
+            </a>
+          </div>
+          <p v-else class="text-sm text-gray-700 dark:text-gray-300">Belum ada gambar.</p>
         </div>
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Berkas</p>
-          <a
-            v-if="props.activity.document_url"
-            :href="props.activity.document_url"
-            target="_blank"
-            rel="noopener"
-            class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-400"
-          >
-            Lihat berkas
-          </a>
-          <p v-else class="text-sm text-gray-700 dark:text-gray-300">-</p>
+          <div v-if="props.activity.document_url" class="space-y-2">
+            <iframe
+              v-if="isDocumentPdf"
+              :src="props.activity.document_url"
+              class="h-48 w-full rounded-md border border-gray-200 dark:border-slate-700"
+              title="Preview berkas kegiatan"
+            />
+            <img
+              v-else-if="isDocumentImage"
+              :src="props.activity.document_url"
+              alt="Berkas kegiatan"
+              class="h-48 w-full rounded-md border border-gray-200 object-cover dark:border-slate-700"
+            >
+            <p v-else class="text-sm text-gray-700 dark:text-gray-300">Preview belum tersedia untuk format berkas ini.</p>
+            <a
+              :href="props.activity.document_url"
+              target="_blank"
+              rel="noopener"
+              class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-400"
+            >
+              Buka berkas
+            </a>
+          </div>
+          <p v-else class="text-sm text-gray-700 dark:text-gray-300">Belum ada berkas.</p>
         </div>
       </div>
 

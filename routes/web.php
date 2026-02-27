@@ -145,6 +145,9 @@ Route::prefix('desa')
     ->group(function () {
 
         Route::resource('activities', DesaActivityController::class);
+        Route::get('activities/{id}/attachments/{type}', [DesaActivityController::class, 'attachment'])
+            ->whereIn('type', ['image', 'document'])
+            ->name('activities.attachments.show');
         Route::resource('agenda-surat', DesaAgendaSuratController::class);
         Route::resource('buku-daftar-hadir', DesaBukuDaftarHadirController::class);
         Route::resource('buku-tamu', DesaBukuTamuController::class);
@@ -238,6 +241,9 @@ Route::prefix('kecamatan')
     ->group(function () {
 
         Route::resource('activities', KecamatanActivityController::class);
+        Route::get('activities/{id}/attachments/{type}', [KecamatanActivityController::class, 'attachment'])
+            ->whereIn('type', ['image', 'document'])
+            ->name('activities.attachments.show');
         Route::resource('agenda-surat', KecamatanAgendaSuratController::class);
         Route::resource('buku-daftar-hadir', KecamatanBukuDaftarHadirController::class);
         Route::resource('buku-tamu', KecamatanBukuTamuController::class);
@@ -321,6 +327,9 @@ Route::prefix('kecamatan')
         Route::get('simulasi-penyuluhan/report/pdf', [SimulasiPenyuluhanPrintController::class, 'printKecamatanReport'])->name('simulasi-penyuluhan.report');
         Route::get('desa-activities', [KecamatanDesaActivityController::class, 'index'])->name('desa-activities.index');
         Route::get('desa-activities/{id}', [KecamatanDesaActivityController::class, 'show'])->name('desa-activities.show');
+        Route::get('desa-activities/{id}/attachments/{type}', [KecamatanDesaActivityController::class, 'attachment'])
+            ->whereIn('type', ['image', 'document'])
+            ->name('desa-activities.attachments.show');
         Route::get('desa-activities/{id}/print', [ActivityPrintController::class, 'printKecamatanDesa'])->name('desa-activities.print');
         Route::get('program-prioritas/report/pdf', [ProgramPrioritasPrintController::class, 'printKecamatanReport'])->name('program-prioritas.report');
         Route::get('pilot-project-keluarga-sehat/report/pdf', [PilotProjectKeluargaSehatPrintController::class, 'printKecamatanReport'])->name('pilot-project-keluarga-sehat.report');

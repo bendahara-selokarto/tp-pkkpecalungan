@@ -18,6 +18,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class KecamatanActivityController extends Controller
 {
@@ -81,6 +82,26 @@ class KecamatanActivityController extends Controller
         ]);
     }
 
+    public function attachment(int $id, string $type): StreamedResponse
+    {
+        $activity = $this->getScopedActivityUseCase->execute($id, 'kecamatan');
+        $this->authorize('view', $activity);
+
+        $path = match ($type) {
+            'image' => $activity->image_path,
+            'document' => $activity->document_path,
+            default => null,
+        };
+
+        if (! is_string($path) || $path === '' || ! Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+
+        return Storage::disk('public')->response($path, basename($path), [
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
     public function edit(int $id): Response
     {
         $activity = $this->getScopedActivityUseCase->execute($id, 'kecamatan');
@@ -127,9 +148,9 @@ class KecamatanActivityController extends Controller
             'activity_date' => $this->formatDateForPayload($activity->activity_date),
             'status' => $activity->status,
             'image_path' => $activity->image_path,
-            'image_url' => $this->resolvePublicUrl($activity->image_path),
+            'image_url' => $this->resolveAttachmentUrl($activity, 'image'),
             'document_path' => $activity->document_path,
-            'document_url' => $this->resolvePublicUrl($activity->document_path),
+            'document_url' => $this->resolveAttachmentUrl($activity, 'document'),
         ];
     }
 
@@ -142,12 +163,21 @@ class KecamatanActivityController extends Controller
         return Carbon::parse($value)->format('Y-m-d');
     }
 
-    private function resolvePublicUrl(?string $path): ?string
+    private function resolveAttachmentUrl(Activity $activity, string $type): ?string
     {
+        $path = match ($type) {
+            'image' => $activity->image_path,
+            'document' => $activity->document_path,
+            default => null,
+        };
+
         if (! is_string($path) || $path === '') {
             return null;
         }
 
-        return Storage::disk('public')->url($path);
+        return route('kecamatan.activities.attachments.show', [
+            'id' => $activity->id,
+            'type' => $type,
+        ]);
     }
 }
