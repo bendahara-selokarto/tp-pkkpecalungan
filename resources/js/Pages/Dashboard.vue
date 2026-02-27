@@ -659,7 +659,6 @@ const resolveGroupContextLabel = (group) => {
 
   return humanizeLabel(token)
 }
-}
 
 const resolveBlockAccessModeLabel = (block) => {
   const mode = normalizeToken(block?.mode, '')
