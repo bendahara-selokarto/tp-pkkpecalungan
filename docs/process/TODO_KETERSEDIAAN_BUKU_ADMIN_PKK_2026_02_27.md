@@ -88,6 +88,8 @@
 - Snapshot kontrak domain/lampiran: `docs/domain/DOMAIN_CONTRACT_MATRIX.md`.
 
 ### Daftar Buku yang Berubah Status (Update Dokumen)
+- `Buku Kegiatan Pokja I` (Desa): `partial` -> `verified`.
+- `Buku Kegiatan Pokja III` (Desa): `partial` -> `verified`.
 - Buku Notulen Rapat:
   - Level desa/kelurahan: `missing -> available` (autentikasi tetap `unverified`).
   - Level kecamatan: `missing -> available` (autentikasi tetap `unverified`).
@@ -97,7 +99,9 @@
 - Buku Tamu:
   - Level desa/kelurahan: `missing -> available` (autentikasi tetap `unverified`).
   - Level kecamatan: `missing -> available` (autentikasi tetap `unverified`).
-- Bukti implementasi: route resource aktif, domain module aktif, policy aktif, menu visibility aktif, dan test concern modul tersedia.
+- Alasan perubahan:
+  - bukti autentik header 4.13 (`text-layer + visual`) dan baseline compliance PDF sudah lengkap/konsisten,
+  - route resource aktif, domain module aktif, policy aktif, menu visibility aktif, dan test concern modul tersedia.
 
 ### Temuan Audit Baseline
 - Modul inti buku sekretaris/pokja desa-kecamatan sudah tersedia pada route utama (`resource` + `report/pdf`).
@@ -112,6 +116,12 @@
 - Gelombang 2 (pokja pendukung):
   - `buku-evaluasi-program` per pokja (I-IV) dengan kontrak data minimum.
   - penguatan buku rencana kerja pokja agar tidak overlap dengan domain kegiatan.
+
+Owner teknis implementasi:
+- Route + middleware: tim backend routing/auth scope.
+- Request + Action/UseCase + Repository: tim backend domain sekretaris.
+- Policy + Scope Service: tim backend authorization.
+- Feature/Unit test: tim QA automation + backend owner modul.
 
 ### Kriteria Final Verified (K2 Dikunci)
 - Status `verified` hanya jika:

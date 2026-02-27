@@ -76,7 +76,7 @@ Gunakan status autentikasi:
 | Sekretaris | Buku Program Kerja TP PKK | Sekretaris Desa/Kelurahan | partial | partial | Konsolidasikan domain program kerja |
 | Sekretaris | Rekap Data Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Desa/Kelurahan | available | verified | Pertahankan chain rekap berjenjang |
 | Pokja I | Buku Rencana Kerja Pokja I | Pokja I Desa | partial | partial | Tegaskan pemisahan rencana vs kegiatan |
-| Pokja I | Buku Kegiatan Pokja I | Pokja I Desa | available | partial | Audit coverage field kegiatan |
+| Pokja I | Buku Kegiatan Pokja I | Pokja I Desa | available | verified | Format autentik 4.13 tervalidasi; lanjut audit coverage field kegiatan |
 | Pokja I | Buku Daftar Hadir Kegiatan | Pokja I Desa | missing | unverified | Reuse model daftar hadir lintas pokja |
 | Pokja I | Buku Data Kegiatan | Pokja I Desa | available | partial | Normalisasi istilah data kegiatan |
 | Pokja I | Buku Evaluasi Program | Pokja I Desa | planned | unverified | Tambah struktur evaluasi periodik |
@@ -88,7 +88,7 @@ Gunakan status autentikasi:
 | Pokja III | Buku Data Ketahanan Pangan Keluarga | Pokja III Desa | partial | partial | Tegaskan indikator ketahanan |
 | Pokja III | Buku Data Pemanfaatan Pekarangan | Pokja III Desa | available | verified | Pertahankan format autentik aktif |
 | Pokja III | Buku Data Rumah Sehat | Pokja III Desa | partial | partial | Definisikan indikator rumah sehat |
-| Pokja III | Buku Kegiatan Pokja III | Pokja III Desa | available | partial | Sinkronkan sumber kegiatan |
+| Pokja III | Buku Kegiatan Pokja III | Pokja III Desa | available | verified | Format autentik 4.13 tervalidasi; sinkronkan sumber kegiatan lintas pokja |
 | Pokja III | Buku Evaluasi Program | Pokja III Desa | planned | unverified | Tambahkan rubric evaluasi |
 | Pokja IV | Buku Data Ibu Hamil/Kelahiran/Kematian | Pokja IV Desa | available | verified | Pertahankan rekap konsisten |
 | Pokja IV | Buku Kegiatan Posyandu | Pokja IV Desa | available | verified | Pastikan cakupan layanan lengkap |
@@ -190,3 +190,82 @@ Setiap update dokumen ini wajib menyebut:
 2. Alasan perubahan.
 3. Dampak ke modul/rute/policy/test.
 4. Bukti validasi autentik yang digunakan.
+
+---
+
+## IX. Kontrak Minimum Implementasi Gap Gelombang 1
+Kontrak ini dipakai sebagai baseline sebelum coding modul buku yang masih `missing`.
+
+Invariant wajib untuk seluruh modul baru:
+1. Menyimpan `level`, `area_id`, `created_by` sebagai metadata canonical wilayah.
+2. `level` record harus sinkron dengan `areas.level` dari user scope aktif.
+3. Route tetap dipisah per scope (`desa`/`kecamatan`) dan dijaga backend (`scope.role` + `module.visibility`).
+
+### A. Buku Notulen Rapat (`buku-notulen-rapat`)
+Tujuan:
+1. Mencatat jalannya rapat resmi per level wilayah.
+2. Menyimpan keputusan dan tindak lanjut yang dapat diaudit.
+
+Field minimum:
+1. `tanggal_rapat`
+2. `waktu_mulai`
+3. `waktu_selesai`
+4. `tempat`
+5. `agenda`
+6. `pimpinan_rapat`
+7. `peserta_hadir`
+8. `ringkasan_pembahasan`
+9. `keputusan`
+10. `tindak_lanjut`
+11. `notulis`
+12. `keterangan` (opsional)
+
+### B. Buku Daftar Hadir (`buku-daftar-hadir`)
+Tujuan:
+1. Menyimpan bukti kehadiran kegiatan rapat/kegiatan pokja.
+2. Menjadi basis validasi partisipasi kegiatan periodik.
+
+Field minimum:
+1. `tanggal_kegiatan`
+2. `nama_kegiatan`
+3. `tempat`
+4. `nama_peserta`
+5. `jabatan`
+6. `instansi_atau_kelompok`
+7. `nomor_kontak` (opsional)
+8. `status_kehadiran`
+9. `tanda_tangan` (opsional, media/path)
+10. `keterangan` (opsional)
+
+### C. Buku Tamu (`buku-tamu`)
+Tujuan:
+1. Mencatat kunjungan tamu ke sekretariat/pengurus.
+2. Menjadi jejak administrasi layanan tamu lintas level.
+
+Field minimum:
+1. `tanggal_kunjungan`
+2. `nama_tamu`
+3. `instansi_atau_asal`
+4. `keperluan`
+5. `diterima_oleh`
+6. `nomor_kontak` (opsional)
+7. `waktu_datang`
+8. `waktu_pulang` (opsional)
+9. `keterangan` (opsional)
+
+### D. Boundary Implementasi Teknis (Wajib)
+1. Route: `scope.role:{desa|kecamatan}` + `module.visibility`.
+2. Request: validasi field wajib + normalisasi tanggal/waktu.
+3. Action/Use Case: seluruh business flow di layer ini.
+4. Repository Interface + Repository: query scoped `level` + `area_id`.
+5. Policy + Scope Service: enforce role-scope-area + mode `read-only`/`read-write`.
+6. Test minimum:
+   - sukses role/scope valid,
+   - tolak role tidak valid,
+   - tolak mismatch role-area-level,
+   - anti data leak scoped query.
+
+### E. Fallback/Compatibility Plan
+1. Tidak ada dual-write ke modul legacy/non-canonical.
+2. Integrasi dashboard dilakukan via agregasi read-only dari repository modul baru.
+3. Jika kontrak autentik final menambah kolom, gunakan migrasi additive + backfill terkontrol.
