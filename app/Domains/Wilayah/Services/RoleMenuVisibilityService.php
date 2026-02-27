@@ -19,6 +19,7 @@ class RoleMenuVisibilityService
             'anggota-tim-penggerak-kader',
             'kader-khusus',
             'agenda-surat',
+            'buku-notulen-rapat',
             'buku-keuangan',
             'bantuans',
             'inventaris',

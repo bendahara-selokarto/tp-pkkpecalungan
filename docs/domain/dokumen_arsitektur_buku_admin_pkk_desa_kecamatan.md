@@ -69,7 +69,7 @@ Gunakan status autentikasi:
 |---|---|---|---|---|---|
 | Sekretaris | Buku Daftar Anggota TP PKK | Sekretaris Desa/Kelurahan | available | partial | Sinkronkan label dengan lampiran autentik |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Desa/Kelurahan | available | verified | Jaga konsistensi format output |
-| Sekretaris | Buku Notulen Rapat | Sekretaris Desa/Kelurahan | missing | unverified | Buat modul dedicated + matriks field |
+| Sekretaris | Buku Notulen Rapat | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Daftar Hadir | Sekretaris Desa/Kelurahan | missing | unverified | Buat modul dedicated + relasi kegiatan |
 | Sekretaris | Buku Inventaris | Sekretaris Desa/Kelurahan | available | verified | Pertahankan kontrak autentik aktif |
 | Sekretaris | Buku Tamu | Sekretaris Desa/Kelurahan | missing | unverified | Definisikan kontrak data tamu |
@@ -100,7 +100,7 @@ Gunakan status autentikasi:
 |---|---|---|---|---|---|
 | Sekretaris | Buku Daftar Anggota TP PKK Kecamatan | Sekretaris Kecamatan | available | partial | Sinkronkan nomenklatur kecamatan |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Kecamatan | available | verified | Konsisten antar level |
-| Sekretaris | Buku Notulen Rapat | Sekretaris Kecamatan | missing | unverified | Implementasi modul notulen |
+| Sekretaris | Buku Notulen Rapat | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Program Kerja TP PKK Kecamatan | Sekretaris Kecamatan | partial | partial | Konsolidasi kontrak program kerja |
 | Sekretaris | Buku Inventaris | Sekretaris Kecamatan | available | verified | Pertahankan validasi autentik |
 | Sekretaris | Rekapitulasi Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Kecamatan | available | verified | Pertahankan rekap lintas desa |
@@ -146,7 +146,7 @@ Kontrol akses minimal:
 
 ## VI. Rencana Implementasi Gap (Checklist Kerja)
 ### A. Ketersediaan Buku
-- [ ] Tambah modul `buku-notulen-rapat` desa/kecamatan.
+- [x] Tambah modul `buku-notulen-rapat` desa/kecamatan.
 - [ ] Tambah modul `buku-daftar-hadir` desa/kecamatan.
 - [ ] Tambah modul `buku-tamu` desa/kecamatan.
 - [ ] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap.

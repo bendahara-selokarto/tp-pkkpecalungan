@@ -88,13 +88,14 @@
 - Snapshot kontrak domain/lampiran: `docs/domain/DOMAIN_CONTRACT_MATRIX.md`.
 
 ### Daftar Buku yang Berubah Status (Update Dokumen)
-- Tidak ada perubahan status buku pada eksekusi ini.
-- Perubahan fokus: validasi baseline implementasi terhadap status yang sudah ada.
+- Buku Notulen Rapat:
+  - Level desa/kelurahan: `missing -> available` (autentikasi tetap `unverified`).
+  - Level kecamatan: `missing -> available` (autentikasi tetap `unverified`).
+- Bukti implementasi: route resource aktif, domain module aktif, policy aktif, menu visibility aktif, dan test concern modul tersedia.
 
 ### Temuan Audit Baseline
 - Modul inti buku sekretaris/pokja desa-kecamatan sudah tersedia pada route utama (`resource` + `report/pdf`).
 - Buku yang belum tersedia sebagai modul dedicated masih konsisten dengan baseline `missing`:
-  - Buku Notulen Rapat
   - Buku Daftar Hadir
   - Buku Tamu
 - Status interpretasi Rakernas X sudah terkunci pada dokumen canonical + matrix domain.
@@ -154,7 +155,7 @@ Exit criteria Sprint 2:
 - [ ] Kontrak dashboard role baru terdokumentasi dan tervalidasi test.
 
 ### Sprint 3 (P3) - Delivery Backlog Modul Missing
-- [ ] Implementasi modul `buku-notulen-rapat` untuk desa/kecamatan.
+- [x] Implementasi modul `buku-notulen-rapat` untuk desa/kecamatan.
 - [ ] Implementasi modul `buku-daftar-hadir` untuk desa/kecamatan.
 - [ ] Implementasi modul `buku-tamu` untuk desa/kecamatan.
 - [ ] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap domain.

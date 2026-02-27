@@ -12,6 +12,8 @@ use App\Domains\Wilayah\Activities\Controllers\KecamatanDesaActivityController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\DesaAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\KecamatanAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\AgendaSuratReportPrintController;
+use App\Domains\Wilayah\BukuNotulenRapat\Controllers\DesaBukuNotulenRapatController;
+use App\Domains\Wilayah\BukuNotulenRapat\Controllers\KecamatanBukuNotulenRapatController;
 use App\Domains\Wilayah\Inventaris\Controllers\DesaInventarisController;
 use App\Domains\Wilayah\Inventaris\Controllers\KecamatanInventarisController;
 use App\Domains\Wilayah\Inventaris\Controllers\InventarisReportPrintController;
@@ -137,6 +139,7 @@ Route::prefix('desa')
 
         Route::resource('activities', DesaActivityController::class);
         Route::resource('agenda-surat', DesaAgendaSuratController::class);
+        Route::resource('buku-notulen-rapat', DesaBukuNotulenRapatController::class);
         Route::resource('inventaris', DesaInventarisController::class);
         Route::resource('bantuans', DesaBantuanController::class);
         Route::resource('buku-keuangan', DesaBukuKeuanganController::class);
@@ -224,6 +227,7 @@ Route::prefix('kecamatan')
 
         Route::resource('activities', KecamatanActivityController::class);
         Route::resource('agenda-surat', KecamatanAgendaSuratController::class);
+        Route::resource('buku-notulen-rapat', KecamatanBukuNotulenRapatController::class);
         Route::resource('inventaris', KecamatanInventarisController::class);
         Route::resource('bantuans', KecamatanBantuanController::class);
         Route::resource('buku-keuangan', KecamatanBukuKeuanganController::class);
