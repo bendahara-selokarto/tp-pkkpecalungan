@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>html2canvas + jsPDF Example</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; color: #0f172a; background: #f8fafc; }
+    .container { max-width: 980px; margin: 0 auto; }
+    .panel { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .button { background: #0f766e; color: #fff; border: 0; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+    .capture-area { border: 1px dashed #94a3b8; border-radius: 8px; padding: 16px; background: #f1f5f9; }
+    .bars { display: flex; gap: 10px; align-items: flex-end; height: 220px; margin-top: 10px; }
+    .chart-only { background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px; margin-top: 12px; }
+    .bar-item { width: 54px; text-align: center; font-size: 12px; }
+    .bar { width: 100%; background: linear-gradient(180deg, #0891b2, #0f766e); border-radius: 6px 6px 0 0; }
+    .hint { font-size: 12px; color: #475569; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>html2canvas + jsPDF</h1>
+    <p class="hint">Contoh capture area dashboard (chart + teks) menjadi PDF.</p>
+    <div class="panel">
+      <div class="toolbar">
+        <strong>Dashboard Snapshot</strong>
+        <button id="btnCapture" class="button">Capture Chart to PDF</button>
+      </div>
+
+      <div id="captureArea" class="capture-area">
+        <h3 style="margin: 0 0 8px;">Ringkasan Aktivitas Desa</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;">
+          <div style="background: #ffffff; border-radius: 6px; padding: 8px; border: 1px solid #cbd5e1;">
+            <div class="hint">Total Kegiatan</div>
+            <strong style="font-size: 24px;">73</strong>
+          </div>
+          <div style="background: #ffffff; border-radius: 6px; padding: 8px; border: 1px solid #cbd5e1;">
+            <div class="hint">Buku Terisi</div>
+            <strong style="font-size: 24px;">18</strong>
+          </div>
+          <div style="background: #ffffff; border-radius: 6px; padding: 8px; border: 1px solid #cbd5e1;">
+            <div class="hint">Buku Kosong</div>
+            <strong style="font-size: 24px;">6</strong>
+          </div>
+        </div>
+
+        <div id="captureChart" class="chart-only">
+          <div class="hint" style="font-weight: 700; margin-bottom: 6px;">Chart Aktivitas Bulanan</div>
+          <div class="bars">
+            <div class="bar-item"><div class="bar" style="height: 80px;"></div>Jan</div>
+            <div class="bar-item"><div class="bar" style="height: 120px;"></div>Feb</div>
+            <div class="bar-item"><div class="bar" style="height: 96px;"></div>Mar</div>
+            <div class="bar-item"><div class="bar" style="height: 170px;"></div>Apr</div>
+            <div class="bar-item"><div class="bar" style="height: 140px;"></div>Mei</div>
+            <div class="bar-item"><div class="bar" style="height: 110px;"></div>Jun</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+  <script>
+    document.getElementById('btnCapture').addEventListener('click', async () => {
+      const captureNode = document.getElementById('captureChart');
+      const canvas = await html2canvas(captureNode, { scale: 2, backgroundColor: '#ffffff' });
+      const imageData = canvas.toDataURL('image/png');
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const ratio = Math.min((pageWidth - 80) / canvas.width, (pageHeight - 80) / canvas.height);
+      const renderWidth = canvas.width * ratio;
+      const renderHeight = canvas.height * ratio;
+      const x = (pageWidth - renderWidth) / 2;
+      const y = (pageHeight - renderHeight) / 2;
+
+      pdf.addImage(imageData, 'PNG', x, y, renderWidth, renderHeight);
+      pdf.save('html2canvas-jspdf-portrait-centered.pdf');
+    });
+  </script>
+</body>
+</html>
