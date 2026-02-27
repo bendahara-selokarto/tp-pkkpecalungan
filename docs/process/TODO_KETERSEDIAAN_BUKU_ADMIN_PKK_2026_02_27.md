@@ -53,13 +53,13 @@
 - [x] Tambah/rapikan test matrix untuk role-scope-area mismatch pada buku baru/yang diubah.
 - [x] Jalankan regresi feature untuk akses lintas scope dan anti data leak.
 - [x] Jalankan validasi print/report pada buku yang status autentiknya berubah.
-- [ ] Lakukan review akhir checklist sebelum menandai concern `done`.
+- [x] Lakukan review akhir checklist sebelum menandai concern `done`.
 
 ## Validasi Keberhasilan
-- [ ] Tidak ada buku tanpa status ketersediaan dan status autentikasi.
-- [ ] Tidak ada buku tanpa penanggung jawab yang eksplisit.
-- [ ] Tidak ada konflik interpretasi yang belum diputuskan terhadap Rakernas X.
-- [ ] Backlog implementasi buku `missing` tersusun dengan urutan prioritas dan owner teknis.
+- [x] Tidak ada buku tanpa status ketersediaan dan status autentikasi.
+- [x] Tidak ada buku tanpa penanggung jawab yang eksplisit.
+- [x] Tidak ada konflik interpretasi yang belum diputuskan terhadap Rakernas X.
+- [x] Backlog implementasi buku `missing` tersusun dengan urutan prioritas dan owner teknis.
 
 ## Risiko
 - Risiko drift istilah antar dokumen jika normalisasi tidak dilakukan serentak.
@@ -208,10 +208,22 @@ Exit criteria Sprint 2:
 - [x] Implementasi modul `buku-daftar-hadir` untuk desa/kecamatan.
 - [x] Implementasi modul `buku-tamu` untuk desa/kecamatan.
 - [x] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap domain.
-- [ ] Lakukan review akhir checklist concern sebelum status `done`.
+- [x] Lakukan review akhir checklist concern sebelum status `done`.
 
 Exit criteria Sprint 3:
-- [ ] Tidak ada buku tanpa status ketersediaan dan autentikasi.
-- [ ] Tidak ada buku tanpa penanggung jawab eksplisit.
-- [ ] Tidak ada konflik interpretasi Rakernas X yang belum diputuskan.
-- [ ] Backlog implementasi buku `missing` memiliki urutan prioritas dan owner teknis yang final.
+- [x] Tidak ada buku tanpa status ketersediaan dan autentikasi.
+- [x] Tidak ada buku tanpa penanggung jawab eksplisit.
+- [x] Tidak ada konflik interpretasi Rakernas X yang belum diputuskan.
+- [x] Backlog implementasi buku `missing` memiliki urutan prioritas dan owner teknis yang final.
+
+## Review Akhir Checklist (2026-02-27)
+
+Status concern saat review:
+- Progress implementasi domain + security gate + dashboard gate: **terkunci**.
+- Sprint 2 dan Sprint 3 exit criteria: **terpenuhi**.
+- Concern belum ditutup `done` karena masih ada blocker autentikasi di Sprint 1.
+
+Blocker tersisa sebelum concern `done`:
+1. Validasi peta header dokumen bertabel sampai `rowspan/colspan` untuk buku yang masih `unverified`.
+2. Bukti visual autentik (text-layer + screenshot header) belum lengkap untuk seluruh buku target Sprint 1.
+3. Status autentikasi belum bisa diturunkan ke `verified` sebelum butir 1 dan 2 terpenuhi.
