@@ -13,9 +13,20 @@ interface ActivityRepositoryInterface
 {
     public function store(ActivityData $data): Activity;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?User $actor = null): LengthAwarePaginator;
+    public function paginateByLevelAndArea(
+        string $level,
+        int $areaId,
+        int $perPage,
+        ?User $actor = null,
+        ?int $creatorIdFilter = null
+    ): LengthAwarePaginator;
 
-    public function listByLevelAndArea(string $level, int $areaId, ?User $actor = null): Collection;
+    public function listByLevelAndArea(
+        string $level,
+        int $areaId,
+        ?User $actor = null,
+        ?int $creatorIdFilter = null
+    ): Collection;
 
     public function paginateDesaActivitiesByKecamatan(int $kecamatanAreaId, int $perPage): LengthAwarePaginator;
 

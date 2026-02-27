@@ -19,15 +19,17 @@ class ListScopedActivitiesUseCase
     {
         $actor = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->activityScopeService->resolveCreatorIdFilterForList($actor, $level);
 
-        return $this->activityRepository->paginateByLevelAndArea($level, $areaId, $perPage, $actor);
+        return $this->activityRepository->paginateByLevelAndArea($level, $areaId, $perPage, $actor, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
         $actor = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->activityScopeService->resolveCreatorIdFilterForList($actor, $level);
 
-        return $this->activityRepository->listByLevelAndArea($level, $areaId, $actor);
+        return $this->activityRepository->listByLevelAndArea($level, $areaId, $actor, $creatorIdFilter);
     }
 }

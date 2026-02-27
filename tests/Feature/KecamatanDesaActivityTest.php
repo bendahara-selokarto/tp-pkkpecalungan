@@ -26,6 +26,7 @@ class KecamatanDesaActivityTest extends TestCase
 
         Role::create(['name' => 'admin-kecamatan']);
         Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -191,5 +192,57 @@ class KecamatanDesaActivityTest extends TestCase
                 ->where('filters.per_page', 10);
         });
     }
-}
 
+    #[Test]
+    public function sekretaris_kecamatan_mode_desa_melihat_semua_desa_di_kecamatan_sendiri(): void
+    {
+        $sekretarisUser = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $sekretarisUser->assignRole('kecamatan-sekretaris');
+
+        $desaA2 = Area::create([
+            'name' => 'Karanganyar',
+            'level' => 'desa',
+            'parent_id' => $this->kecamatanA->id,
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Desa Gombong',
+            'description' => 'Dalam kecamatan user',
+            'level' => 'desa',
+            'area_id' => $this->desaA1->id,
+            'created_by' => $sekretarisUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Desa Karanganyar',
+            'description' => 'Dalam kecamatan user',
+            'level' => 'desa',
+            'area_id' => $desaA2->id,
+            'created_by' => $sekretarisUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Desa Kalisalak',
+            'description' => 'Luar kecamatan user',
+            'level' => 'desa',
+            'area_id' => $this->desaB1->id,
+            'created_by' => $sekretarisUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        $response = $this->actingAs($sekretarisUser)->get(route('kecamatan.desa-activities.index'));
+
+        $response->assertOk();
+        $response->assertSee('Kegiatan Desa Gombong');
+        $response->assertSee('Kegiatan Desa Karanganyar');
+        $response->assertDontSee('Kegiatan Desa Kalisalak');
+    }
+}

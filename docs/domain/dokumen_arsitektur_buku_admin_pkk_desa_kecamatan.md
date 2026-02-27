@@ -143,7 +143,7 @@ Kontrol akses minimal:
 1. Desa: `scope.role:desa`.
 2. Kecamatan: `scope.role:kecamatan`.
 3. Konsistensi role-scope-area wajib tervalidasi backend.
-4. Untuk modul shared lintas group (contoh: `Buku Kegiatan`/`activities`), list/detail role `desa-pokja-i` s.d. `desa-pokja-iv` dan `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv` wajib terfilter kombinasi `role group + level + area`; role sekretaris tetap by area sesuai levelnya.
+4. Untuk modul shared lintas group (contoh: `Buku Kegiatan`/`activities`), list/detail role `desa-pokja-i` s.d. `desa-pokja-iv` dan `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv` wajib terfilter kombinasi `role group + level + area`; untuk sekretaris, `desa-sekretaris` tetap by area sesuai level, sedangkan `kecamatan-sekretaris` pada mode `kecamatan` dibatasi ke data milik sendiri (`created_by` user login) dan mode `desa` dipakai sebagai monitoring seluruh desa dalam wilayah kecamatan sendiri.
 5. Frontend wajib merender item menu hanya dari slug yang ada pada `auth.user.moduleModes`; item menu tanpa mode backend dianggap tidak valid dan tidak boleh ditampilkan.
 6. Modul `Buku Kegiatan` (`activities`) wajib tersedia untuk seluruh role operasional pada scope validnya masing-masing (sekretaris desa/kecamatan, pokja I-IV desa/kecamatan, role admin kompatibilitas, dan `super-admin`) dengan mode akses mengikuti kontrak backend.
 

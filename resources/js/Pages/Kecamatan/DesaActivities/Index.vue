@@ -4,9 +4,9 @@ import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { formatDateForDisplay } from '@/utils/dateFormatter'
-import { Link, router } from '@inertiajs/vue3'
+import { Link, router, usePage } from '@inertiajs/vue3'
 import { mdiClipboardList } from '@mdi/js'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   activities: {
@@ -25,8 +25,32 @@ const props = defineProps({
   },
 })
 
+const page = usePage()
 const formatDate = (value) => formatDateForDisplay(value)
 const perPage = computed(() => props.filters.per_page ?? 10)
+const selectedCakupan = ref('desa')
+const userRoles = computed(() => page.props.auth?.user?.roles ?? [])
+const isKecamatanSekretaris = computed(() => userRoles.value.includes('kecamatan-sekretaris'))
+
+const pindahCakupan = (event) => {
+  const value = String(event.target.value || 'desa')
+  selectedCakupan.value = value
+
+  if (value === 'kecamatan') {
+    router.get('/kecamatan/activities', { per_page: perPage.value }, {
+      preserveScroll: true,
+      preserveState: false,
+      replace: true,
+    })
+    return
+  }
+
+  router.get('/kecamatan/desa-activities', { per_page: perPage.value }, {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
 
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
@@ -46,12 +70,38 @@ const updatePerPage = (event) => {
     <CardBox>
       <div class="mb-4">
         <div class="flex flex-wrap items-center justify-between gap-3">
-          <Link
+          <div v-if="isKecamatanSekretaris" class="flex flex-wrap items-center gap-4 text-sm text-gray-700 dark:text-gray-200">
+            <span class="font-medium">Cakupan Data</span>
+            <label class="inline-flex items-center gap-2">
+              <input
+                v-model="selectedCakupan"
+                type="radio"
+                name="cakupan-kegiatan-kecamatan"
+                value="kecamatan"
+                class="h-4 w-4 border-gray-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-900"
+                @change="pindahCakupan"
+              >
+              Kecamatan
+            </label>
+            <label class="inline-flex items-center gap-2">
+              <input
+                v-model="selectedCakupan"
+                type="radio"
+                name="cakupan-kegiatan-kecamatan"
+                value="desa"
+                class="h-4 w-4 border-gray-300 text-emerald-600 focus:ring-emerald-500 dark:border-slate-600 dark:bg-slate-900"
+                @change="pindahCakupan"
+              >
+              Desa (Monitoring)
+            </label>
+          </div>
+          <a
+            v-else
             href="/kecamatan/activities"
             class="text-sm font-medium text-emerald-700 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
           >
             Lihat Kegiatan Kecamatan
-          </Link>
+          </a>
 
           <label class="text-xs text-gray-600 dark:text-gray-300">
             Per halaman

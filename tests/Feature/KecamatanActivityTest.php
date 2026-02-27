@@ -321,7 +321,7 @@ class KecamatanActivityTest extends TestCase
     }
 
     #[Test]
-    public function sekretaris_kecamatan_tetap_melihat_semua_kegiatan_pada_area_kecamatan_yang_sama(): void
+    public function sekretaris_kecamatan_hanya_melihat_kegiatan_milik_sendiri_pada_mode_kecamatan(): void
     {
         $sekretarisUser = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
@@ -340,6 +340,15 @@ class KecamatanActivityTest extends TestCase
             'scope' => 'kecamatan',
         ]);
         $pokjaIIUser->assignRole('kecamatan-pokja-ii');
+
+        Activity::create([
+            'title' => 'Kegiatan Kec Milik Sekretaris',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $sekretarisUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
 
         Activity::create([
             'title' => 'Kegiatan Kec Pokja I',
@@ -362,7 +371,8 @@ class KecamatanActivityTest extends TestCase
         $response = $this->actingAs($sekretarisUser)->get('/kecamatan/activities');
 
         $response->assertOk();
-        $response->assertSee('Kegiatan Kec Pokja I');
-        $response->assertSee('Kegiatan Kec Pokja II');
+        $response->assertSee('Kegiatan Kec Milik Sekretaris');
+        $response->assertDontSee('Kegiatan Kec Pokja I');
+        $response->assertDontSee('Kegiatan Kec Pokja II');
     }
 }

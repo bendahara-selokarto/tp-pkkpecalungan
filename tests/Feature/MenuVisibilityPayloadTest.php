@@ -103,4 +103,22 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.moduleModes.data-warga', 'read-write')
             );
     }
+
+    public function test_payload_kecamatan_sekretaris_memiliki_monitoring_desa_read_only(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
+                ->where('auth.user.menuGroupModes.monitoring', 'read-only')
+                ->where('auth.user.moduleModes.activities', 'read-write')
+                ->where('auth.user.moduleModes.desa-activities', 'read-only')
+            );
+    }
 }

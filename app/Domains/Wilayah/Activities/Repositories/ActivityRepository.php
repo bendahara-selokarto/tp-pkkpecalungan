@@ -40,11 +40,21 @@ class ActivityRepository implements ActivityRepositoryInterface
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?User $actor = null): LengthAwarePaginator
+    public function paginateByLevelAndArea(
+        string $level,
+        int $areaId,
+        int $perPage,
+        ?User $actor = null,
+        ?int $creatorIdFilter = null
+    ): LengthAwarePaginator
     {
         $query = Activity::query()
             ->where('level', $level)
             ->where('area_id', $areaId);
+
+        if (is_int($creatorIdFilter)) {
+            $query->where('created_by', $creatorIdFilter);
+        }
 
         $query = $this->applyRoleScopedCreatorFilter($query, $actor, $level);
 
@@ -55,11 +65,20 @@ class ActivityRepository implements ActivityRepositoryInterface
             ->withQueryString();
     }
 
-    public function listByLevelAndArea(string $level, int $areaId, ?User $actor = null): Collection
+    public function listByLevelAndArea(
+        string $level,
+        int $areaId,
+        ?User $actor = null,
+        ?int $creatorIdFilter = null
+    ): Collection
     {
         $query = Activity::query()
             ->where('level', $level)
             ->where('area_id', $areaId);
+
+        if (is_int($creatorIdFilter)) {
+            $query->where('created_by', $creatorIdFilter);
+        }
 
         $query = $this->applyRoleScopedCreatorFilter($query, $actor, $level);
 

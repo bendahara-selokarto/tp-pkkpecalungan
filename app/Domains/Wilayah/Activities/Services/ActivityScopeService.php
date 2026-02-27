@@ -91,6 +91,18 @@ class ActivityScopeService
         return $this->resolveRoleScopedActivityRoles($user, $level) !== [];
     }
 
+    public function resolveCreatorIdFilterForList(User $user, string $level): ?int
+    {
+        if (
+            $level === ScopeLevel::KECAMATAN->value
+            && $user->hasRole('kecamatan-sekretaris')
+        ) {
+            return $user->id;
+        }
+
+        return null;
+    }
+
     public function canAccessRoleScopedActivity(User $user, Activity $activity, string $level): bool
     {
         if (! $this->requiresRoleScopedActivityFilter($user, $level)) {

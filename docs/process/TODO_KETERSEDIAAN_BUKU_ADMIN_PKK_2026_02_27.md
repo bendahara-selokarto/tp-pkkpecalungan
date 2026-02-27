@@ -133,7 +133,7 @@
 - Sinkronisasi query URL ke `sources.filter_context` pada blok dashboard sekretaris telah divalidasi lewat feature test.
 - Sinkronisasi menu-vs-dashboard pada level group dikunci dengan unit test agar setiap group utama punya minimal satu slug coverage.
 - Role-menu mapping kini menolak `scope` mismatch untuk role non-super-admin di service boundary (anti bypass scope gate).
-- Guard query modul `activities` kini dikunci pada kombinasi `role group + level + area` khusus role `desa-pokja-i` s.d. `desa-pokja-iv` dan `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv`, sehingga `pokja-i` hanya melihat detail/list kegiatan dari group-nya pada area yang sama; role sekretaris tetap by area sesuai level.
+- Guard query modul `activities` kini dikunci pada kombinasi `role group + level + area` khusus role `desa-pokja-i` s.d. `desa-pokja-iv` dan `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv`, sehingga `pokja-i` hanya melihat detail/list kegiatan dari group-nya pada area yang sama; `kecamatan-sekretaris` pada mode kecamatan dibatasi ke data milik sendiri (`created_by` user login), sementara mode monitoring desa tetap menampilkan seluruh desa dalam wilayah kecamatan sendiri.
 - Guard anti-bocor antar-pokja pada modul `activities` telah ditambah lewat feature test index + detail (satu area, role berbeda).
 - Kontrak ketersediaan `Buku Kegiatan` (`activities`) kini dikunci untuk seluruh role operasional pada scope validnya, termasuk `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv`; sinkronisasi backend visibility + middleware + payload menu tervalidasi test.
 - Kontrak anti mismatch menu-vs-otorisasi dikunci: sidebar frontend hanya boleh menampilkan item dengan slug yang tersedia di `auth.user.moduleModes`; guard ini dikunci lewat unit test kontrak frontend.
