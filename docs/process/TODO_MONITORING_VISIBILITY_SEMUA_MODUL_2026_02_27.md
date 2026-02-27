@@ -103,10 +103,14 @@
 
 ### B. Validasi Teknis
 - [x] Jalankan validasi global lintas modul dengan `php artisan test`.
+- [x] Tambah gate test kontrak global:
+  - `tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php`.
 
 ## Bukti Validasi (2026-02-27)
 - [x] `php artisan test`
   - hasil: `PASS` (`925` tests, `5750` assertions).
+- [x] `php artisan test tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
+  - hasil: `PASS` (`28` tests, `322` assertions).
 
 ## Risiko Residual
 - Drift kontrak jika perubahan modul tidak memutakhirkan baseline inventory di dokumen ini.

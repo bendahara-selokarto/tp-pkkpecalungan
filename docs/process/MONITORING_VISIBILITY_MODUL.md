@@ -30,6 +30,7 @@ Jalankan monitoring ini setiap ada:
 - `resources/js/Layouts/DashboardLayout.vue`
 - Test visibility:
   - `tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+  - `tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php`
   - `tests/Feature/ModuleVisibilityMiddlewareTest.php`
   - `tests/Feature/MenuVisibilityPayloadTest.php`
   - `tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
@@ -52,6 +53,7 @@ Jalankan monitoring ini setiap ada:
 ### C. Validasi Teknis
 - [ ] Jalankan test targeted visibility:
   - `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+  - `php artisan test tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php`
   - `php artisan test tests/Feature/ModuleVisibilityMiddlewareTest.php`
   - `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
   - `php artisan test tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
