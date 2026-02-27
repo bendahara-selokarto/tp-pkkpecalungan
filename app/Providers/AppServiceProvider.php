@@ -101,6 +101,8 @@ use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNas
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepository;
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepositoryInterface;
+use App\Domains\Wilayah\Arsip\Repositories\ArsipDocumentRepository;
+use App\Domains\Wilayah\Arsip\Repositories\ArsipDocumentRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepository;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepository;
@@ -341,6 +343,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             DashboardGroupCoverageRepositoryInterface::class,
             DashboardGroupCoverageRepository::class
+        );
+
+        $this->app->bind(
+            ArsipDocumentRepositoryInterface::class,
+            ArsipDocumentRepository::class
         );
     }
 

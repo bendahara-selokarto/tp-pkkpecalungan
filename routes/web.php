@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ArsipController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UiRuntimeErrorLogController;
 use Illuminate\Support\Facades\Route;
@@ -122,6 +123,12 @@ Route::get('/dashboard', DashboardController::class)
 Route::get('/dashboard/charts/report/pdf', [DashboardController::class, 'printChartPdf'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard.charts.report');
+Route::get('/arsip', ArsipController::class)
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.index');
+Route::get('/arsip/download/{document}', [ArsipController::class, 'download'])
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.download');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

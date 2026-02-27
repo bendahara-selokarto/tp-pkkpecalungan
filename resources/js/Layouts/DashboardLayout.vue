@@ -438,6 +438,14 @@ onBeforeUnmount(() => {
           >
             Dashboard
           </Link>
+          <Link
+            v-if="!hasRole('super-admin')"
+            href="/arsip"
+            :class="isActive('/arsip') ? 'text-cyan-700 dark:text-cyan-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'"
+            class="text-sm font-medium"
+          >
+            Arsip
+          </Link>
           <div class="relative">
             <button
               type="button"
