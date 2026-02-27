@@ -968,3 +968,54 @@ Keputusan:
 
 Status:
 - `PASS` untuk penutupan pending checklist concern aktif pada batch ini.
+
+## Siklus Monitoring Visibility Modul Kegiatan: 2026-02-27
+
+Ruang lingkup:
+- Menjalankan baseline monitoring khusus modul `activities` dan `desa-activities`.
+- Memastikan kontrak visibilitas role-scope sinkron antara backend dan menu frontend.
+
+Artefak:
+- `docs/process/MONITORING_VISIBILITY_MODUL.md`
+- `docs/process/TODO_MONITORING_VISIBILITY_MODUL_KEGIATAN_2026_02_27.md`
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `app/Http/Middleware/EnsureModuleVisibility.php`
+- `app/Domains/Wilayah/Activities/Services/ActivityScopeService.php`
+- `resources/js/Layouts/DashboardLayout.vue`
+
+Perintah validasi:
+- `php artisan test tests/Feature/DesaActivityTest.php tests/Feature/KecamatanActivityTest.php tests/Feature/KecamatanDesaActivityTest.php tests/Feature/ActivityPrintTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Policies/ActivityPolicyTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
+  - hasil: `PASS` (`55` tests, `371` assertions).
+
+Keputusan:
+- Kontrak `activities` dikunci tersedia untuk seluruh role operasional pada scope validnya.
+- Kontrak `desa-activities` dipertahankan sebagai monitoring kecamatan.
+- Gate monitoring visibility modul kegiatan ditetapkan aktif untuk setiap perubahan `add/remove/change-mode`.
+
+Status:
+- `PASS`.
+
+## Siklus Monitoring Visibility Semua Modul: 2026-02-27
+
+Ruang lingkup:
+- Menaikkan target monitoring visibility dari modul kegiatan ke seluruh modul aktif.
+- Mengunci baseline inventory slug modul dan profil visibility per role berdasarkan source of truth backend.
+
+Artefak:
+- `docs/process/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`
+- `docs/process/TODO_MONITORING_VISIBILITY_MODUL_KEGIATAN_2026_02_27.md`
+- `docs/process/MONITORING_VISIBILITY_MODUL.md`
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `app/Http/Middleware/EnsureModuleVisibility.php`
+- `resources/js/Layouts/DashboardLayout.vue`
+
+Perintah validasi:
+- `php artisan test`
+  - hasil: `PASS` (`925` tests, `5750` assertions).
+
+Keputusan:
+- Gate monitoring visibility lintas semua modul dinyatakan aktif.
+- Concern kegiatan tetap dipertahankan sebagai sub-scope agar detail guard `activities` tidak hilang.
+
+Status:
+- `PASS`.
