@@ -119,3 +119,49 @@
 - Eksekusi berikut wajib fokus ke definisi kontrak field minimum Gelombang 1 sebelum coding.
 - Setelah kontrak field terkunci, lanjut implementasi per buku dengan boundary:
   - route + request + action/use case + repository + policy + test.
+
+## Rencana Sprint Mingguan (Eksekusi)
+
+### Sprint 1 (P1) - Kontrak dan Bukti Canonical
+- [ ] Normalisasi label buku lintas dokumen agar konsisten dengan pedoman Rakernas X.
+- [ ] Validasi peta header dokumen bertabel sampai `rowspan/colspan`.
+- [ ] Simpan bukti validasi (text-layer + screenshot visual) dan tautkan ke dokumen mapping.
+- [ ] Turunkan status ke `verified` hanya untuk buku dengan bukti lengkap.
+- [ ] Pastikan tidak ada modul buku di role yang tidak sesuai kontrak ownership.
+- [ ] Kunci keputusan K3: batas kewenangan pokja kecamatan untuk modul rekap.
+- [ ] Kunci keputusan K4: strategi migrasi jika perlu pemecahan domain/modul.
+- [ ] Definisikan kontrak field minimum per buku sebelum coding.
+- [ ] Definisikan boundary implementasi per buku: route, request, use case/action, repository, policy, test.
+- [ ] Definisikan fallback/compatibility plan agar tidak terjadi behavior drift.
+
+Exit criteria Sprint 1:
+- [ ] Semua buku bertabel target Sprint 1 memiliki bukti header valid (`rowspan/colspan`) yang terdokumentasi.
+- [ ] Keputusan K3/K4 berstatus terkunci.
+- [ ] Kontrak field + boundary implementasi untuk gelombang buku `missing` sudah final.
+
+### Sprint 2 (P2) - Quality Gate dan Replikasi Role
+- [ ] Tambah/rapikan test matrix mismatch `role-scope-area` pada buku baru/diubah.
+- [ ] Jalankan regresi feature akses lintas scope dan anti data leak.
+- [ ] Jalankan validasi print/report pada buku dengan status autentik yang berubah.
+- [ ] Tetapkan kontrak section role dashboard baru (section aktif, source level, query key filter).
+- [ ] Sinkronkan mapping role ke group-mode di `RoleMenuVisibilityService` tanpa bypass scope gate.
+- [ ] Sinkronkan query URL dengan `sources.filter_context` untuk role yang direplikasi.
+- [ ] Tambah test sinkronisasi menu-vs-dashboard jika ada slug/group baru.
+
+Exit criteria Sprint 2:
+- [ ] Seluruh test gate concern buku + dashboard role replication lulus.
+- [ ] Tidak ada temuan data leak lintas scope pada validasi regresi.
+- [ ] Kontrak dashboard role baru terdokumentasi dan tervalidasi test.
+
+### Sprint 3 (P3) - Delivery Backlog Modul Missing
+- [ ] Implementasi modul `buku-notulen-rapat` untuk desa/kecamatan.
+- [ ] Implementasi modul `buku-daftar-hadir` untuk desa/kecamatan.
+- [ ] Implementasi modul `buku-tamu` untuk desa/kecamatan.
+- [ ] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap domain.
+- [ ] Lakukan review akhir checklist concern sebelum status `done`.
+
+Exit criteria Sprint 3:
+- [ ] Tidak ada buku tanpa status ketersediaan dan autentikasi.
+- [ ] Tidak ada buku tanpa penanggung jawab eksplisit.
+- [ ] Tidak ada konflik interpretasi Rakernas X yang belum diputuskan.
+- [ ] Backlog implementasi buku `missing` memiliki urutan prioritas dan owner teknis yang final.
