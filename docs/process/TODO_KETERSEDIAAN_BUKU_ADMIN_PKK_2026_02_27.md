@@ -52,7 +52,7 @@
 ### F. Validasi dan Gate
 - [x] Tambah/rapikan test matrix untuk role-scope-area mismatch pada buku baru/yang diubah.
 - [x] Jalankan regresi feature untuk akses lintas scope dan anti data leak.
-- [ ] Jalankan validasi print/report pada buku yang status autentiknya berubah.
+- [x] Jalankan validasi print/report pada buku yang status autentiknya berubah.
 - [ ] Lakukan review akhir checklist sebelum menandai concern `done`.
 
 ## Validasi Keberhasilan
@@ -123,6 +123,7 @@
 ### Dampak ke Gelombang Berikutnya
 - Pemetaan `buku-program-kerja` telah dikunci pada ownership `sekretaris-tpk` agar tidak overlap dengan domain `pokja-iv`.
 - Test matrix mismatch `role-scope-area` untuk `program-prioritas` telah ditambah (desa + kecamatan) dan lolos regresi suite.
+- Validasi print/report untuk `buku-notulen-rapat`, `buku-daftar-hadir`, dan `buku-tamu` telah ditambah dan lolos pada scope desa/kecamatan.
 - Setelah kontrak field terkunci, lanjut implementasi per buku dengan boundary:
   - route + request + action/use case + repository + policy + test.
 
@@ -148,7 +149,7 @@ Exit criteria Sprint 1:
 ### Sprint 2 (P2) - Quality Gate dan Replikasi Role
 - [x] Tambah/rapikan test matrix mismatch `role-scope-area` pada buku baru/diubah.
 - [x] Jalankan regresi feature akses lintas scope dan anti data leak.
-- [ ] Jalankan validasi print/report pada buku dengan status autentik yang berubah.
+- [x] Jalankan validasi print/report pada buku dengan status autentik yang berubah.
 - [ ] Tetapkan kontrak section role dashboard baru (section aktif, source level, query key filter).
 - [ ] Sinkronkan mapping role ke group-mode di `RoleMenuVisibilityService` tanpa bypass scope gate.
 - [ ] Sinkronkan query URL dengan `sources.filter_context` untuk role yang direplikasi.
