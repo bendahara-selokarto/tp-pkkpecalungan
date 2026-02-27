@@ -17,6 +17,17 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  desaOptions: {
+    type: Array,
+    default: () => ([]),
+  },
+  statusOptions: {
+    type: Array,
+    default: () => ([
+      { value: 'draft', label: 'Draft' },
+      { value: 'published', label: 'Published' },
+    ]),
+  },
   pagination: {
     type: Object,
     default: () => ({
@@ -29,8 +40,29 @@ const page = usePage()
 const formatDate = (value) => formatDateForDisplay(value)
 const perPage = computed(() => props.filters.per_page ?? 10)
 const selectedCakupan = ref('desa')
+const selectedDesaId = ref(props.filters.desa_id ? String(props.filters.desa_id) : '')
+const selectedStatus = ref(props.filters.status ?? '')
+const searchKeyword = ref(props.filters.q ?? '')
 const userRoles = computed(() => page.props.auth?.user?.roles ?? [])
 const isKecamatanSekretaris = computed(() => userRoles.value.includes('kecamatan-sekretaris'))
+
+const buildFilterQuery = (customPerPage = perPage.value) => {
+  const query = { per_page: customPerPage }
+
+  if (selectedDesaId.value !== '') {
+    query.desa_id = Number(selectedDesaId.value)
+  }
+
+  if (selectedStatus.value !== '') {
+    query.status = selectedStatus.value
+  }
+
+  if (searchKeyword.value.trim() !== '') {
+    query.q = searchKeyword.value.trim()
+  }
+
+  return query
+}
 
 const pindahCakupan = (event) => {
   const value = String(event.target.value || 'desa')
@@ -45,7 +77,7 @@ const pindahCakupan = (event) => {
     return
   }
 
-  router.get('/kecamatan/desa-activities', { per_page: perPage.value }, {
+  router.get('/kecamatan/desa-activities', buildFilterQuery(), {
     preserveScroll: true,
     preserveState: true,
     replace: true,
@@ -55,7 +87,27 @@ const pindahCakupan = (event) => {
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/kecamatan/desa-activities', { per_page: selectedPerPage }, {
+  router.get('/kecamatan/desa-activities', buildFilterQuery(selectedPerPage), {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
+
+const terapkanFilter = () => {
+  router.get('/kecamatan/desa-activities', buildFilterQuery(), {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
+
+const resetFilter = () => {
+  selectedDesaId.value = ''
+  selectedStatus.value = ''
+  searchKeyword.value = ''
+
+  router.get('/kecamatan/desa-activities', { per_page: perPage.value }, {
     preserveScroll: true,
     preserveState: true,
     replace: true,
@@ -115,6 +167,66 @@ const updatePerPage = (event) => {
               </option>
             </select>
           </label>
+        </div>
+
+        <div class="mt-4 grid gap-3 md:grid-cols-4">
+          <div class="md:col-span-2">
+            <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-300">
+              Kata Kunci
+            </label>
+            <input
+              v-model="searchKeyword"
+              type="text"
+              placeholder="Cari judul, petugas, tempat kegiatan"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              @keyup.enter="terapkanFilter"
+            >
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-300">
+              Desa
+            </label>
+            <select
+              v-model="selectedDesaId"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            >
+              <option value="">Semua Desa</option>
+              <option v-for="desa in desaOptions" :key="`desa-${desa.id}`" :value="String(desa.id)">
+                {{ desa.name }}
+              </option>
+            </select>
+          </div>
+          <div>
+            <label class="mb-1 block text-xs font-medium text-gray-600 dark:text-gray-300">
+              Status
+            </label>
+            <select
+              v-model="selectedStatus"
+              class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            >
+              <option value="">Semua Status</option>
+              <option v-for="status in statusOptions" :key="`status-${status.value}`" :value="status.value">
+                {{ status.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div class="mt-3 flex items-center gap-2">
+          <button
+            type="button"
+            class="inline-flex rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+            @click="terapkanFilter"
+          >
+            Terapkan Filter
+          </button>
+          <button
+            type="button"
+            class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            @click="resetFilter"
+          >
+            Reset
+          </button>
         </div>
       </div>
 
