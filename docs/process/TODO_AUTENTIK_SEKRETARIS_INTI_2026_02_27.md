@@ -37,7 +37,7 @@
   - teks header terbaca.
 
 ### C. Sinkronisasi Kontrak
-- [ ] Buat/ubah dokumen mapping domain khusus untuk 3 buku sekretaris inti.
+- [x] Buat/ubah dokumen mapping domain khusus untuk 3 buku sekretaris inti.
 - [ ] Sinkronkan field canonical terhadap header autentik final.
 - [ ] Sinkronkan blade PDF jika ditemukan drift struktur kolom.
 
@@ -80,6 +80,8 @@
 - `tests/Feature/BukuNotulenRapatReportPrintTest.php`
 - `tests/Feature/BukuDaftarHadirReportPrintTest.php`
 - `tests/Feature/BukuTamuReportPrintTest.php`
+- `docs/domain/BUKU_SEKRETARIS_INTI_AUTH_MAPPING.md`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 
 ### Catatan
 - Gate struktur header PDF internal modul sekretaris inti telah terkunci via test.
