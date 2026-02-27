@@ -439,6 +439,20 @@ class BuildRoleAwareDashboardBlocksUseCase
     ): array {
         $blocks = [];
         $sekretarisMode = (string) ($groupModes['sekretaris-tpk'] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
+        $availablePokjaGroups = collect(self::POKJA_GROUPS)
+            ->filter(static fn (string $group): bool => array_key_exists($group, $groupModes))
+            ->values()
+            ->all();
+
+        $selectedSection2Group = $this->resolveSelectedPokjaGroup(
+            $dashboardContext['section2_group'] ?? null,
+            $availablePokjaGroups
+        );
+        $selectedSection3Group = $this->resolveSelectedPokjaGroup(
+            $dashboardContext['section3_group'] ?? null,
+            $availablePokjaGroups
+        );
+
         $blocks[] = $this->buildActivityBlock(
             $effectiveScope,
             $sekretarisMode,
@@ -448,13 +462,132 @@ class BuildRoleAwareDashboardBlocksUseCase
                 'level' => $effectiveScope,
                 'sub_level' => 'all',
                 'section1_month' => $dashboardContext['section1_month'] ?? 'all',
-                'section2_group' => 'all',
-                'section3_group' => 'all',
+                'section2_group' => $selectedSection2Group ?? 'all',
+                'section3_group' => $selectedSection3Group ?? 'all',
             ],
             $this->buildSectionMeta(self::SECTION_SEKRETARIS_1, $effectiveScope)
         );
 
+        $section2Groups = $selectedSection2Group === null
+            ? $availablePokjaGroups
+            : [$selectedSection2Group];
+
+        foreach ($section2Groups as $groupKey) {
+            $modules = $this->roleMenuVisibilityService->modulesForGroup($groupKey);
+            if ($modules === []) {
+                continue;
+            }
+
+            $groupDocumentItems = $documentItems
+                ->filter(
+                    static fn (array $item): bool => in_array((string) $item['slug'], $modules, true)
+                )
+                ->values();
+            if ($groupDocumentItems->isEmpty()) {
+                continue;
+            }
+
+            $groupMode = (string) ($groupModes[$groupKey] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
+
+            $blocks[] = $this->buildDocumentBlock(
+                $groupKey,
+                $groupMode,
+                $effectiveScope,
+                $groupDocumentItems,
+                $modules,
+                [
+                    'mode' => 'by-level',
+                    'level' => $effectiveScope,
+                    'sub_level' => 'all',
+                    'section1_month' => $dashboardContext['section1_month'] ?? 'all',
+                    'section2_group' => $selectedSection2Group ?? 'all',
+                    'section3_group' => $selectedSection3Group ?? 'all',
+                ],
+                $this->buildSectionMeta(self::SECTION_SEKRETARIS_2, $effectiveScope),
+                ''
+            );
+        }
+
+        if ($effectiveScope !== ScopeLevel::KECAMATAN->value) {
+            return $blocks;
+        }
+
+        $section3Groups = $selectedSection3Group === null
+            ? $availablePokjaGroups
+            : [$selectedSection3Group];
+
+        foreach ($section3Groups as $groupKey) {
+            $modules = $this->roleMenuVisibilityService->modulesForGroup($groupKey);
+            if ($modules === []) {
+                continue;
+            }
+
+            $groupMode = (string) ($groupModes[$groupKey] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
+            $section3Block = $this->buildKecamatanPokjaByDesaBlock(
+                $user,
+                $groupKey,
+                $groupMode,
+                $effectiveScope,
+                $modules,
+                [
+                    'mode' => 'by-level',
+                    'level' => ScopeLevel::DESA->value,
+                    'sub_level' => 'all',
+                    'section1_month' => $dashboardContext['section1_month'] ?? 'all',
+                    'section2_group' => $selectedSection2Group ?? 'all',
+                    'section3_group' => $selectedSection3Group ?? 'all',
+                ]
+            );
+
+            if (! is_array($section3Block)) {
+                continue;
+            }
+
+            $blocks[] = $this->attachSection(
+                $section3Block,
+                $this->buildSectionMeta(self::SECTION_SEKRETARIS_3, $effectiveScope)
+            );
+        }
+
+        if (
+            $this->shouldRenderSekretarisSection4(
+                $effectiveScope,
+                $availablePokjaGroups,
+                ['section3_group' => $selectedSection3Group ?? 'all']
+            )
+        ) {
+            $section4Block = $this->buildSekretarisSection4Block(
+                $user,
+                $effectiveScope,
+                (string) ($groupModes['pokja-i'] ?? RoleMenuVisibilityService::MODE_READ_ONLY),
+                [
+                    'section1_month' => $dashboardContext['section1_month'] ?? 'all',
+                    'section2_group' => $selectedSection2Group ?? 'all',
+                    'section3_group' => $selectedSection3Group ?? 'all',
+                ]
+            );
+
+            if (is_array($section4Block)) {
+                $blocks[] = $section4Block;
+            }
+        }
+
         return $blocks;
+    }
+
+    /**
+     * @param list<string> $availablePokjaGroups
+     */
+    private function resolveSelectedPokjaGroup(mixed $value, array $availablePokjaGroups): ?string
+    {
+        $selectedGroup = $this->normalizeContextToken($value, 'all');
+        if ($selectedGroup === 'all') {
+            return null;
+        }
+
+        return in_array($selectedGroup, $availablePokjaGroups, true)
+            ? $selectedGroup
+            : null;
     }
 
     /**

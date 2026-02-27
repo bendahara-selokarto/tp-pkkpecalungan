@@ -303,14 +303,41 @@ const dashboardSections = computed(() => {
     }]
   }
 
-  const section1 = {
+  const sections = [{
     key: 'sekretaris-section-1',
     label: resolveSectionLabel('sekretaris-section-1', sekretarisSection1Blocks.value, 'Ringkasan Tugas Sekretaris'),
     filter: null,
     blocks: sekretarisSection1Blocks.value,
+  }]
+
+  if (sekretarisSection2Blocks.value.length > 0) {
+    sections.push({
+      key: 'sekretaris-section-2',
+      label: resolveSectionLabel('sekretaris-section-2', sekretarisSection2Blocks.value, 'Ringkasan Pokja di Level Anda'),
+      filter: resolveSectionFilter(sekretarisSection2Blocks.value, 'section2_group'),
+      blocks: filteredSekretarisSection2Blocks.value,
+    })
   }
 
-  return [section1]
+  if (sekretarisSection3Blocks.value.length > 0) {
+    sections.push({
+      key: 'sekretaris-section-3',
+      label: resolveSectionLabel('sekretaris-section-3', sekretarisSection3Blocks.value, 'Ringkasan Pokja per Desa'),
+      filter: resolveSectionFilter(sekretarisSection3Blocks.value, 'section3_group'),
+      blocks: filteredSekretarisSection3Blocks.value,
+    })
+  }
+
+  if (hasSekretarisFourthSection.value) {
+    sections.push({
+      key: 'sekretaris-section-4',
+      label: resolveSectionLabel('sekretaris-section-4', sekretarisSection4Blocks.value, 'Rincian Pokja I per Desa'),
+      filter: null,
+      blocks: sekretarisSection4Blocks.value,
+    })
+  }
+
+  return sections
 })
 
 const visibleDashboardSections = computed(() => dashboardSections.value)

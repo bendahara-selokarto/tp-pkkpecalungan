@@ -125,6 +125,12 @@
 - Test matrix mismatch `role-scope-area` untuk `program-prioritas` telah ditambah (desa + kecamatan) dan lolos regresi suite.
 - Validasi print/report untuk `buku-notulen-rapat`, `buku-daftar-hadir`, dan `buku-tamu` telah ditambah dan lolos pada scope desa/kecamatan.
 - Guard ownership modul buku sekretaris terhadap role pokja telah dikunci lewat test unit mapping + middleware feature.
+- Kontrak dashboard role-aware kini aktif untuk section sekretaris:
+  - section 1 (ringkasan sekretaris),
+  - section 2 (ringkasan pokja level aktif, filter `section2_group`),
+  - section 3 (ringkasan pokja per desa untuk scope kecamatan, filter `section3_group`),
+  - section 4 (rincian Pokja I per desa saat `section3_group=pokja-i`).
+- Sinkronisasi query URL ke `sources.filter_context` pada blok dashboard sekretaris telah divalidasi lewat feature test.
 - Setelah kontrak field terkunci, lanjut implementasi per buku dengan boundary:
   - route + request + action/use case + repository + policy + test.
 
@@ -151,9 +157,9 @@ Exit criteria Sprint 1:
 - [x] Tambah/rapikan test matrix mismatch `role-scope-area` pada buku baru/diubah.
 - [x] Jalankan regresi feature akses lintas scope dan anti data leak.
 - [x] Jalankan validasi print/report pada buku dengan status autentik yang berubah.
-- [ ] Tetapkan kontrak section role dashboard baru (section aktif, source level, query key filter).
+- [x] Tetapkan kontrak section role dashboard baru (section aktif, source level, query key filter).
 - [ ] Sinkronkan mapping role ke group-mode di `RoleMenuVisibilityService` tanpa bypass scope gate.
-- [ ] Sinkronkan query URL dengan `sources.filter_context` untuk role yang direplikasi.
+- [x] Sinkronkan query URL dengan `sources.filter_context` untuk role yang direplikasi.
 - [ ] Tambah test sinkronisasi menu-vs-dashboard jika ada slug/group baru.
 
 Exit criteria Sprint 2:
