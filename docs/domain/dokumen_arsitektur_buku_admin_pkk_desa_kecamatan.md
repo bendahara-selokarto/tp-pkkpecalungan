@@ -72,7 +72,7 @@ Gunakan status autentikasi:
 | Sekretaris | Buku Notulen Rapat | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Daftar Hadir | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Inventaris | Sekretaris Desa/Kelurahan | available | verified | Pertahankan kontrak autentik aktif |
-| Sekretaris | Buku Tamu | Sekretaris Desa/Kelurahan | missing | unverified | Definisikan kontrak data tamu |
+| Sekretaris | Buku Tamu | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Program Kerja TP PKK | Sekretaris Desa/Kelurahan | partial | partial | Konsolidasikan domain program kerja |
 | Sekretaris | Rekap Data Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Desa/Kelurahan | available | verified | Pertahankan chain rekap berjenjang |
 | Pokja I | Buku Rencana Kerja Pokja I | Pokja I Desa | partial | partial | Tegaskan pemisahan rencana vs kegiatan |
@@ -102,6 +102,7 @@ Gunakan status autentikasi:
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Kecamatan | available | verified | Konsisten antar level |
 | Sekretaris | Buku Notulen Rapat | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Daftar Hadir | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
+| Sekretaris | Buku Tamu | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Program Kerja TP PKK Kecamatan | Sekretaris Kecamatan | partial | partial | Konsolidasi kontrak program kerja |
 | Sekretaris | Buku Inventaris | Sekretaris Kecamatan | available | verified | Pertahankan validasi autentik |
 | Sekretaris | Rekapitulasi Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Kecamatan | available | verified | Pertahankan rekap lintas desa |
@@ -149,7 +150,7 @@ Kontrol akses minimal:
 ### A. Ketersediaan Buku
 - [x] Tambah modul `buku-notulen-rapat` desa/kecamatan.
 - [x] Tambah modul `buku-daftar-hadir` desa/kecamatan.
-- [ ] Tambah modul `buku-tamu` desa/kecamatan.
+- [x] Tambah modul `buku-tamu` desa/kecamatan.
 - [ ] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap.
 
 ### B. Autentikasi Buku

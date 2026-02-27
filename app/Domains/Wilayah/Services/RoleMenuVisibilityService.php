@@ -20,6 +20,7 @@ class RoleMenuVisibilityService
             'kader-khusus',
             'agenda-surat',
             'buku-daftar-hadir',
+            'buku-tamu',
             'buku-notulen-rapat',
             'buku-keuangan',
             'bantuans',

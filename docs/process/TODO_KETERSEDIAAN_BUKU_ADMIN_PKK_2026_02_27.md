@@ -94,19 +94,21 @@
 - Buku Daftar Hadir:
   - Level desa/kelurahan: `missing -> available` (autentikasi tetap `unverified`).
   - Level kecamatan: `missing -> available` (autentikasi tetap `unverified`).
+- Buku Tamu:
+  - Level desa/kelurahan: `missing -> available` (autentikasi tetap `unverified`).
+  - Level kecamatan: `missing -> available` (autentikasi tetap `unverified`).
 - Bukti implementasi: route resource aktif, domain module aktif, policy aktif, menu visibility aktif, dan test concern modul tersedia.
 
 ### Temuan Audit Baseline
 - Modul inti buku sekretaris/pokja desa-kecamatan sudah tersedia pada route utama (`resource` + `report/pdf`).
-- Buku yang belum tersedia sebagai modul dedicated masih konsisten dengan baseline `missing`:
-  - Buku Tamu
+- Gelombang 1 sekretaris inti (`buku-notulen-rapat`, `buku-daftar-hadir`, `buku-tamu`) sudah tersedia sebagai modul dedicated.
 - Status interpretasi Rakernas X sudah terkunci pada dokumen canonical + matrix domain.
 
 ### Prioritas Implementasi Gap (K1 Dikunci)
 - Gelombang 1 (sekretaris inti):
   - `buku-notulen-rapat` (`done`)
   - `buku-daftar-hadir` (`done`)
-  - `buku-tamu`
+  - `buku-tamu` (`done`)
 - Gelombang 2 (pokja pendukung):
   - `buku-evaluasi-program` per pokja (I-IV) dengan kontrak data minimum.
   - penguatan buku rencana kerja pokja agar tidak overlap dengan domain kegiatan.
@@ -119,7 +121,7 @@
   4. Kontrak field/report sinkron dengan bukti autentik.
 
 ### Dampak ke Gelombang Berikutnya
-- Eksekusi berikut wajib fokus ke definisi kontrak field minimum untuk `buku-tamu` sebelum coding.
+- Eksekusi berikut wajib fokus ke pemetaan `buku-program-kerja` agar tidak overlap domain.
 - Setelah kontrak field terkunci, lanjut implementasi per buku dengan boundary:
   - route + request + action/use case + repository + policy + test.
 
@@ -159,7 +161,7 @@ Exit criteria Sprint 2:
 ### Sprint 3 (P3) - Delivery Backlog Modul Missing
 - [x] Implementasi modul `buku-notulen-rapat` untuk desa/kecamatan.
 - [x] Implementasi modul `buku-daftar-hadir` untuk desa/kecamatan.
-- [ ] Implementasi modul `buku-tamu` untuk desa/kecamatan.
+- [x] Implementasi modul `buku-tamu` untuk desa/kecamatan.
 - [ ] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap domain.
 - [ ] Lakukan review akhir checklist concern sebelum status `done`.
 
