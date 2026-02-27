@@ -131,6 +131,7 @@
   - section 3 (ringkasan pokja per desa untuk scope kecamatan, filter `section3_group`),
   - section 4 (rincian Pokja I per desa saat `section3_group=pokja-i`).
 - Sinkronisasi query URL ke `sources.filter_context` pada blok dashboard sekretaris telah divalidasi lewat feature test.
+- Sinkronisasi menu-vs-dashboard pada level group dikunci dengan unit test agar setiap group utama punya minimal satu slug coverage.
 - Setelah kontrak field terkunci, lanjut implementasi per buku dengan boundary:
   - route + request + action/use case + repository + policy + test.
 
@@ -160,7 +161,7 @@ Exit criteria Sprint 1:
 - [x] Tetapkan kontrak section role dashboard baru (section aktif, source level, query key filter).
 - [ ] Sinkronkan mapping role ke group-mode di `RoleMenuVisibilityService` tanpa bypass scope gate.
 - [x] Sinkronkan query URL dengan `sources.filter_context` untuk role yang direplikasi.
-- [ ] Tambah test sinkronisasi menu-vs-dashboard jika ada slug/group baru.
+- [x] Tambah test sinkronisasi menu-vs-dashboard jika ada slug/group baru.
 
 Exit criteria Sprint 2:
 - [ ] Seluruh test gate concern buku + dashboard role replication lulus.
