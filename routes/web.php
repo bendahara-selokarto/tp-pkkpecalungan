@@ -110,6 +110,9 @@ Route::get('/', function () {
 Route::get('/dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+Route::get('/dashboard/charts/report/pdf', [DashboardController::class, 'printChartPdf'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard.charts.report');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -173,7 +173,7 @@ class DashboardDocumentCoverageTest extends TestCase
         });
     }
 
-    public function test_dashboard_desa_sekretaris_menghasilkan_section_1_dan_section_2_tanpa_section_3(): void
+    public function test_dashboard_desa_sekretaris_hanya_menghasilkan_section_1(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -201,17 +201,20 @@ class DashboardDocumentCoverageTest extends TestCase
                     $section3 = $collected
                         ->where('section.key', 'sekretaris-section-3')
                         ->first();
+                    $section4 = $collected
+                        ->where('section.key', 'sekretaris-section-4')
+                        ->first();
 
                     return is_array($section1)
-                        && is_array($section2)
+                        && $section2 === null
                         && $section3 === null
-                        && ($section2['sources']['filter_context']['level'] ?? null) === 'desa'
-                        && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'all';
+                        && $section4 === null
+                        && ($section1['section']['source_level'] ?? null) === 'desa';
                 });
         });
     }
 
-    public function test_dashboard_kecamatan_sekretaris_menghasilkan_section_2_dan_section_3_dengan_konteks_group(): void
+    public function test_dashboard_kecamatan_sekretaris_hanya_menghasilkan_section_1_meski_query_section_lanjutan_dikirim(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -246,23 +249,19 @@ class DashboardDocumentCoverageTest extends TestCase
                         ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
 
                     return is_array($section1)
-                        && is_array($section2)
-                        && is_array($section3)
+                        && $section2 === null
+                        && $section3 === null
                         && $section4 === null
                         && ($section1['section']['source_level'] ?? null) === 'kecamatan'
                         && ($section1['charts']['by_desa']['labels'] ?? null) === ['Gombong']
                         && ($section1['charts']['by_desa']['values'] ?? null) === [1]
-                        && ($section1['charts']['by_desa']['books_total'] ?? null) === [19]
-                        && ($section1['charts']['by_desa']['books_filled'] ?? null) === [1]
-                        && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
-                        && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'pokja-i'
-                        && ($section3['sources']['filter_context']['level'] ?? null) === 'desa'
-                        && ($section3['sources']['filter_context']['section3_group'] ?? null) === 'pokja-ii';
+                        && ($section1['charts']['by_desa']['books_total'] ?? null) === [18]
+                        && ($section1['charts']['by_desa']['books_filled'] ?? null) === [1];
                 });
         });
     }
 
-    public function test_dashboard_kecamatan_sekretaris_section_4_muncul_saat_filter_section_3_pokja_i_dan_anti_data_leak(): void
+    public function test_dashboard_kecamatan_sekretaris_tetap_tanpa_section_lanjutan_saat_section3_group_pokja_i(): void
     {
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -291,30 +290,19 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->component('Dashboard')
                 ->where('dashboardBlocks', function ($blocks): bool {
                     $collected = collect($blocks);
+                    $section1 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-1');
+                    $section2 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-2');
+                    $section3 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-3');
                     $section4 = $collected
                         ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
 
-                    if (! is_array($section4)) {
-                        return false;
-                    }
-
-                    $items = collect($section4['charts']['coverage_per_module']['items'] ?? []);
-                    $labels = $items->pluck('label')->all();
-                    $totalsByLabel = $items->mapWithKeys(
-                        static fn (array $item): array => [(string) ($item['label'] ?? '-') => (int) ($item['total'] ?? 0)]
-                    );
-
-                    return ($section4['group'] ?? null) === 'pokja-i'
-                        && ($section4['section']['depends_on'] ?? null) === 'section3_group:pokja-i'
-                        && ($section4['sources']['source_scope'] ?? null) === 'kecamatan'
-                        && ($section4['sources']['source_area_type'] ?? null) === 'desa-turunan'
-                        && ($section4['sources']['source_modules'] ?? null) === ['data-warga', 'data-kegiatan-warga', 'bkl', 'bkr', 'paar']
-                        && ($section4['sources']['filter_context']['section3_group'] ?? null) === 'pokja-i'
-                        && in_array('Gombong', $labels, true)
-                        && in_array('Bandung', $labels, true)
-                        && ! in_array('Sidomukti', $labels, true)
-                        && ($totalsByLabel['Gombong'] ?? null) === 1
-                        && ($totalsByLabel['Bandung'] ?? null) === 1;
+                    return is_array($section1)
+                        && $section2 === null
+                        && $section3 === null
+                        && $section4 === null;
                 });
         });
     }

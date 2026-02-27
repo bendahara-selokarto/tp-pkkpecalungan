@@ -4,6 +4,7 @@ import { router, usePage } from '@inertiajs/vue3'
 import CardBox from '@/admin-one/components/CardBox.vue'
 import CardBoxWidget from '@/admin-one/components/CardBoxWidget.vue'
 import BarChart from '@/admin-one/components/Charts/BarChart.vue'
+import BaseButton from '@/admin-one/components/BaseButton.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import {
@@ -13,6 +14,7 @@ import {
   mdiClipboardList,
   mdiFileDocumentCheck,
   mdiFileDocumentMinus,
+  mdiPrinter,
 } from '@mdi/js'
 
 const props = defineProps({
@@ -87,13 +89,13 @@ const SECTION_GROUP_OPTIONS = [
 ]
 
 const MODE_OPTIONS = [
-  { value: 'all', label: 'Semua Level' },
-  { value: 'by-level', label: 'Per Level' },
+  { value: 'all', label: 'Semua Data' },
+  { value: 'by-level', label: 'Per Tingkat Wilayah' },
   { value: 'by-sub-level', label: 'Per Wilayah Turunan' },
 ]
 
 const LEVEL_OPTIONS = [
-  { value: 'all', label: 'Semua Level' },
+  { value: 'all', label: 'Semua Tingkat' },
   { value: 'desa', label: 'Desa' },
   { value: 'kecamatan', label: 'Kecamatan' },
 ]
@@ -153,6 +155,12 @@ const selectedSubLevel = ref(normalizeToken(currentQuery.get('sub_level'), 'all'
 const selectedSection1Month = ref(resolveOptionValue(currentQuery.get('section1_month'), SECTION1_MONTH_OPTIONS, 'all'))
 const selectedSection2Group = ref(resolveOptionValue(currentQuery.get('section2_group'), SECTION_GROUP_OPTIONS, 'all'))
 const selectedSection3Group = ref(resolveOptionValue(currentQuery.get('section3_group'), SECTION_GROUP_OPTIONS, 'all'))
+const dashboardChartPdfUrl = computed(() => {
+  const params = parseQuery(page.url)
+  const query = params.toString()
+
+  return query === '' ? '/dashboard/charts/report/pdf' : `/dashboard/charts/report/pdf?${query}`
+})
 
 const dynamicBlocks = computed(() =>
   Array.isArray(props.dashboardBlocks)
@@ -253,14 +261,14 @@ const resolveSectionLabel = (sectionKey, blocks, fallback) => {
 
 const resolveSectionDescription = (sectionKey) => {
   if (sectionKey === 'sekretaris-section-1') {
-    return 'Ringkasan sekretaris ditampilkan tanpa filter pokja.'
+    return 'Ringkasan untuk peran sekretaris ditampilkan tanpa filter pokja.'
   }
 
   if (sectionKey === 'sekretaris-section-4') {
-    return 'Rincian Pokja I per desa mengikuti pilihan filter pokja pada ringkasan desa.'
+    return 'Rincian Pokja I per desa turunan mengikuti pilihan pada bagian sebelumnya.'
   }
 
-  return 'Gunakan filter pokja untuk fokus ke Pokja I-IV atau tampilkan semua pokja.'
+  return 'Gunakan pilihan pokja untuk fokus ke kelompok tertentu atau tampilkan semuanya.'
 }
 
 const resolveSectionFilter = (blocks, fallbackQueryKey) => {
@@ -302,34 +310,7 @@ const dashboardSections = computed(() => {
     blocks: sekretarisSection1Blocks.value,
   }
 
-  const section2 = {
-    key: 'sekretaris-section-2',
-    label: resolveSectionLabel('sekretaris-section-2', sekretarisSection2Blocks.value, 'Ringkasan Pokja di Level Anda'),
-    filter: resolveSectionFilter(sekretarisSection2Blocks.value, 'section2_group'),
-    blocks: filteredSekretarisSection2Blocks.value,
-  }
-
-  const sections = [section1, section2]
-
-  if (hasSekretarisLowerSection.value) {
-    sections.push({
-      key: 'sekretaris-section-3',
-      label: resolveSectionLabel('sekretaris-section-3', sekretarisSection3Blocks.value, 'Ringkasan Pokja per Desa'),
-      filter: resolveSectionFilter(sekretarisSection3Blocks.value, 'section3_group'),
-      blocks: filteredSekretarisSection3Blocks.value,
-    })
-  }
-
-  if (hasSekretarisFourthSection.value) {
-    sections.push({
-      key: 'sekretaris-section-4',
-      label: resolveSectionLabel('sekretaris-section-4', sekretarisSection4Blocks.value, 'Rincian Pokja I per Desa'),
-      filter: null,
-      blocks: sekretarisSection4Blocks.value,
-    })
-  }
-
-  return sections
+  return [section1]
 })
 
 const visibleDashboardSections = computed(() => dashboardSections.value)
@@ -639,6 +620,47 @@ const sourceAreaTypeLabel = (block) => {
   return humanizeLabel(sourceAreaType)
 }
 
+const resolveModeContextLabel = (mode) => {
+  const token = normalizeToken(mode, 'all')
+  if (token === 'by-level') {
+    return 'Per Tingkat Wilayah'
+  }
+
+  if (token === 'by-sub-level') {
+    return 'Per Wilayah Turunan'
+  }
+
+  return 'Semua Data'
+}
+
+const resolveLevelContextLabel = (level) => {
+  const token = normalizeToken(level, 'all')
+  if (token === 'desa') {
+    return 'Desa'
+  }
+
+  if (token === 'kecamatan') {
+    return 'Kecamatan'
+  }
+
+  return 'Semua Tingkat'
+}
+
+const resolveSubLevelContextLabel = (subLevel) => {
+  const token = normalizeToken(subLevel, 'all')
+  return token === 'all' ? 'Semua Wilayah Turunan' : humanizeLabel(token)
+}
+
+const resolveGroupContextLabel = (group) => {
+  const token = normalizeToken(group, 'all')
+  if (token === 'all') {
+    return 'Semua Pokja'
+  }
+
+  return humanizeLabel(token)
+}
+}
+
 const resolveBlockAccessModeLabel = (block) => {
   const mode = normalizeToken(block?.mode, '')
 
@@ -735,6 +757,91 @@ const buildBlockStats = (block) => {
       color: 'text-violet-500',
     },
   ]
+}
+
+const resolveBlockKindLabel = (kind) => (kind === 'activity' ? 'Kegiatan' : 'Dokumen')
+
+const resolveBlockModeDescription = (mode) =>
+  (mode === 'read-only' ? 'Hanya Lihat' : 'Bisa Lihat dan Ubah')
+
+const buildLevelRows = (block) => {
+  if (block?.kind === 'activity') {
+    const labels = block?.charts?.level?.labels ?? []
+    const values = block?.charts?.level?.values ?? []
+
+    if (!Array.isArray(labels) || !Array.isArray(values) || labels.length === 0) {
+      return []
+    }
+
+    return labels.map((label, index) => ({
+      info: `Level ${String(label)}`,
+      value: toNumber(values[index] ?? 0).toLocaleString('id-ID'),
+      note: 'Jumlah kegiatan pada tingkat wilayah ini.',
+    }))
+  }
+
+  const items = block?.charts?.coverage_per_module?.items
+  if (!Array.isArray(items) || items.length === 0) {
+    return []
+  }
+
+  const hasLevelBreakdown = items.some((item) => item && (item.desa !== undefined || item.kecamatan !== undefined))
+  if (!hasLevelBreakdown) {
+    return []
+  }
+
+  const levelDesa = items.reduce((total, item) => total + toNumber(item?.desa ?? 0), 0)
+  const levelKecamatan = items.reduce((total, item) => total + toNumber(item?.kecamatan ?? 0), 0)
+
+  return [
+    {
+      info: 'Level Desa',
+      value: levelDesa.toLocaleString('id-ID'),
+      note: 'Total entri yang berasal dari desa.',
+    },
+    {
+      info: 'Level Kecamatan',
+      value: levelKecamatan.toLocaleString('id-ID'),
+      note: 'Total entri yang berasal dari kecamatan.',
+    },
+  ]
+}
+
+const buildInformativeTableRows = (block) => {
+  const context = block?.sources?.filter_context ?? {}
+  const levelRows = buildLevelRows(block)
+  const statsRows = buildBlockStats(block).map((item) => ({
+    info: item.label,
+    value: toNumber(item.number).toLocaleString('id-ID'),
+    note: block?.kind === 'activity'
+      ? 'Ringkasan angka kegiatan pada tampilan saat ini.'
+      : 'Ringkasan angka dokumen pada tampilan saat ini.',
+  }))
+
+  const profileRows = [
+    {
+      info: 'Jenis Ringkasan',
+      value: resolveBlockKindLabel(block?.kind),
+      note: 'Menjelaskan kategori ringkasan data.',
+    },
+    {
+      info: 'Hak Akses',
+      value: resolveBlockModeDescription(block?.mode),
+      note: 'Hak lihat/ubah sesuai peran akun Anda.',
+    },
+    {
+      info: 'Jangkauan Wilayah',
+      value: String(block?.sources?.source_area_type ?? '-'),
+      note: 'Menjelaskan wilayah asal data yang dihitung.',
+    },
+    {
+      info: 'Pilihan Tampilan Aktif',
+      value: `Cara Tampil ${resolveModeContextLabel(context.mode)} | Tingkat Wilayah ${resolveLevelContextLabel(context.level)}`,
+      note: 'Pilihan tampilan yang sedang Anda pakai.',
+    },
+  ]
+
+  return [...profileRows, ...levelRows, ...statsRows]
 }
 
 const resolveDocumentCoverageItems = (block) => {
@@ -1166,7 +1273,16 @@ const hasLegacyLevelDistributionData = computed(() =>
 
 <template>
   <SectionMain class="!pt-2">
-    <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Dashboard" main />
+    <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Dashboard" main>
+      <BaseButton
+        :icon="mdiPrinter"
+        label="Cetak Chart PDF"
+        color="info"
+        :href="dashboardChartPdfUrl"
+        target="_blank"
+        small
+      />
+    </SectionTitleLineWithButton>
 
     <CardBox v-if="shouldShowGlobalDashboardFilters" class="mb-6">
       <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
@@ -1226,7 +1342,7 @@ const hasLegacyLevelDistributionData = computed(() =>
             :disabled="!isBySubLevelMode"
             type="text"
             class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-            placeholder="contoh: desa-gombong"
+            placeholder="Ketik nama atau kode wilayah turunan"
             @keyup.enter="onSubLevelApply"
             @blur="onSubLevelApply"
           >
@@ -1246,7 +1362,7 @@ const hasLegacyLevelDistributionData = computed(() =>
         </div>
       </div>
       <p class="mt-3 text-xs text-slate-500 dark:text-slate-300">
-        Pilihan ini tersimpan di URL agar tampilan mudah dibuka ulang atau dibagikan.
+        Pilihan ini akan diingat, jadi tampilan yang sama bisa dibuka lagi kapan saja.
       </p>
     </CardBox>
 
@@ -1330,6 +1446,29 @@ const hasLegacyLevelDistributionData = computed(() =>
                 :label="statItem.label"
                 :color="statItem.color"
               />
+            </div>
+
+            <div class="mt-4 overflow-x-auto rounded-md border border-slate-200 dark:border-slate-700">
+              <table class="min-w-full text-xs">
+                <thead class="bg-slate-50 dark:bg-slate-800/60">
+                  <tr>
+                    <th class="px-3 py-2 text-left font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">Informasi</th>
+                    <th class="px-3 py-2 text-left font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">Nilai</th>
+                    <th class="px-3 py-2 text-left font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">Keterangan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    v-for="row in buildInformativeTableRows(block)"
+                    :key="`${block.key}-${row.info}`"
+                    class="border-t border-slate-200 dark:border-slate-700"
+                  >
+                    <td class="px-3 py-2 font-medium text-slate-700 dark:text-slate-200">{{ row.info }}</td>
+                    <td class="px-3 py-2 text-slate-900 dark:text-slate-100">{{ row.value }}</td>
+                    <td class="px-3 py-2 text-slate-600 dark:text-slate-300">{{ row.note }}</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
 
             <template v-if="isBlockExpanded(block.key) && block.kind === 'documents'">
@@ -1519,7 +1658,7 @@ const hasLegacyLevelDistributionData = computed(() =>
             <BarChart :data="legacyCoveragePerLampiranChartData" />
           </div>
           <p v-if="!hasLegacyLampiranCoverageData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
-            Belum ada data terhitung pada cakupan per lampiran untuk scope ini.
+            Belum ada data terhitung pada cakupan per lampiran untuk wilayah ini.
           </p>
           <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div
@@ -1541,7 +1680,7 @@ const hasLegacyLevelDistributionData = computed(() =>
             <BarChart :data="legacyLevelDistributionChartData" />
           </div>
           <p v-if="!hasLegacyLevelDistributionData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
-            Belum ada data terhitung pada distribusi level dokumen untuk scope ini.
+            Belum ada data terhitung pada distribusi level dokumen untuk wilayah ini.
           </p>
           <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
             <div

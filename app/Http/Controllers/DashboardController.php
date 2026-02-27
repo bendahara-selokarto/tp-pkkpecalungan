@@ -5,17 +5,20 @@ namespace App\Http\Controllers;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildDashboardDocumentCoverageUseCase;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildRoleAwareDashboardBlocksUseCase;
 use App\Services\DashboardActivityChartService;
+use App\Support\Pdf\PdfViewFactory;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class DashboardController extends Controller
 {
     public function __construct(
         private readonly DashboardActivityChartService $dashboardActivityChartService,
         private readonly BuildDashboardDocumentCoverageUseCase $buildDashboardDocumentCoverageUseCase,
-        private readonly BuildRoleAwareDashboardBlocksUseCase $buildRoleAwareDashboardBlocksUseCase
+        private readonly BuildRoleAwareDashboardBlocksUseCase $buildRoleAwareDashboardBlocksUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
 
@@ -25,8 +28,38 @@ class DashboardController extends Controller
             return redirect()->route('super-admin.users.index');
         }
 
+        $dashboardPayload = $this->buildDashboardPayload($request);
+
+        return Inertia::render('Dashboard', [
+            'dashboardStats' => $dashboardPayload['stats'],
+            'dashboardCharts' => $dashboardPayload['charts'],
+            'dashboardBlocks' => $dashboardPayload['blocks'],
+        ]);
+    }
+
+    public function printChartPdf(Request $request): SymfonyResponse|RedirectResponse
+    {
+        if (auth()->user()?->hasRole('super-admin')) {
+            return redirect()->route('super-admin.users.index');
+        }
+
+        $dashboardPayload = $this->buildDashboardPayload($request);
+        $user = auth()->user()?->loadMissing('area');
+        $pdf = $this->pdfViewFactory->loadView('pdf.dashboard_chart_report', [
+            'stats' => $dashboardPayload['stats'],
+            'charts' => $dashboardPayload['charts'],
+            'filters' => $dashboardPayload['context'],
+            'printedBy' => $user,
+            'printedAt' => now(),
+        ]);
+
+        return $pdf->stream('dashboard-chart-report.pdf');
+    }
+
+    private function buildDashboardPayload(Request $request): array
+    {
+        $user = auth()->user();
         $section1Month = $this->resolveSection1Month($request->query('section1_month', 'all'));
-        $activityData = $this->dashboardActivityChartService->buildForUser(auth()->user(), $section1Month);
         $dashboardContext = [
             'mode' => $request->query('mode', 'all'),
             'level' => $request->query('level', 'all'),
@@ -36,12 +69,10 @@ class DashboardController extends Controller
             'section1_month' => $section1Month === null ? 'all' : (string) $section1Month,
             'block' => 'documents',
         ];
-        $documentData = $this->buildDashboardDocumentCoverageUseCase->execute(
-            auth()->user(),
-            $dashboardContext
-        );
+        $activityData = $this->dashboardActivityChartService->buildForUser($user, $section1Month);
+        $documentData = $this->buildDashboardDocumentCoverageUseCase->execute($user, $dashboardContext);
         $dashboardBlocks = $this->buildRoleAwareDashboardBlocksUseCase->execute(
-            auth()->user(),
+            $user,
             $activityData,
             $documentData,
             $dashboardContext
@@ -54,7 +85,6 @@ class DashboardController extends Controller
                 'documents' => $documentData['stats'],
             ]
         );
-
         $charts = array_merge(
             $activityData['charts'],
             [
@@ -63,11 +93,12 @@ class DashboardController extends Controller
             ]
         );
 
-        return Inertia::render('Dashboard', [
-            'dashboardStats' => $stats,
-            'dashboardCharts' => $charts,
-            'dashboardBlocks' => $dashboardBlocks,
-        ]);
+        return [
+            'stats' => $stats,
+            'charts' => $charts,
+            'blocks' => $dashboardBlocks,
+            'context' => $dashboardContext,
+        ];
     }
 
     private function resolveSection1Month(mixed $rawMonth): ?int

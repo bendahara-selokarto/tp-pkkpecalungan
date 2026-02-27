@@ -438,13 +438,6 @@ class BuildRoleAwareDashboardBlocksUseCase
         array $dashboardContext
     ): array {
         $blocks = [];
-        $pokjaGroups = array_values(
-            array_filter(
-                self::POKJA_GROUPS,
-                static fn (string $group): bool => array_key_exists($group, $groupModes)
-            )
-        );
-
         $sekretarisMode = (string) ($groupModes['sekretaris-tpk'] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
         $blocks[] = $this->buildActivityBlock(
             $effectiveScope,
@@ -455,104 +448,11 @@ class BuildRoleAwareDashboardBlocksUseCase
                 'level' => $effectiveScope,
                 'sub_level' => 'all',
                 'section1_month' => $dashboardContext['section1_month'] ?? 'all',
-                'section2_group' => $dashboardContext['section2_group'] ?? 'all',
-                'section3_group' => $dashboardContext['section3_group'] ?? 'all',
+                'section2_group' => 'all',
+                'section3_group' => 'all',
             ],
             $this->buildSectionMeta(self::SECTION_SEKRETARIS_1, $effectiveScope)
         );
-
-        $sameLevelContext = [
-            'mode' => 'by-level',
-            'level' => $effectiveScope,
-            'sub_level' => 'all',
-            'section1_month' => $dashboardContext['section1_month'] ?? 'all',
-            'section2_group' => $dashboardContext['section2_group'] ?? 'all',
-            'section3_group' => $dashboardContext['section3_group'] ?? 'all',
-        ];
-
-        foreach ($pokjaGroups as $groupKey) {
-            $modules = $this->roleMenuVisibilityService->modulesForGroup($groupKey);
-            if ($modules === []) {
-                continue;
-            }
-
-            $groupDocumentItems = $documentItems
-                ->filter(
-                    static fn (array $item): bool => in_array((string) $item['slug'], $modules, true)
-                )
-                ->values();
-
-            if ($groupDocumentItems->isEmpty()) {
-                continue;
-            }
-
-            $mode = (string) ($groupModes[$groupKey] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
-            $blocks[] = $this->buildDocumentBlock(
-                $groupKey,
-                $mode,
-                $effectiveScope,
-                $groupDocumentItems,
-                $modules,
-                $sameLevelContext,
-                $this->buildSectionMeta(self::SECTION_SEKRETARIS_2, $effectiveScope),
-                'same-level'
-            );
-        }
-
-        if ($effectiveScope !== ScopeLevel::KECAMATAN->value) {
-            return $blocks;
-        }
-
-        $lowerLevelContext = [
-            'mode' => 'by-level',
-            'level' => ScopeLevel::DESA->value,
-            'sub_level' => 'all',
-            'section1_month' => $dashboardContext['section1_month'] ?? 'all',
-            'section2_group' => $dashboardContext['section2_group'] ?? 'all',
-            'section3_group' => $dashboardContext['section3_group'] ?? 'all',
-        ];
-
-        foreach ($pokjaGroups as $groupKey) {
-            $modules = $this->roleMenuVisibilityService->modulesForGroup($groupKey);
-            if ($modules === []) {
-                continue;
-            }
-
-            $groupDocumentItems = $documentItems
-                ->filter(
-                    static fn (array $item): bool => in_array((string) $item['slug'], $modules, true)
-                )
-                ->values();
-
-            if ($groupDocumentItems->isEmpty()) {
-                continue;
-            }
-
-            $mode = (string) ($groupModes[$groupKey] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
-            $blocks[] = $this->buildDocumentBlock(
-                $groupKey,
-                $mode,
-                $effectiveScope,
-                $groupDocumentItems,
-                $modules,
-                $lowerLevelContext,
-                $this->buildSectionMeta(self::SECTION_SEKRETARIS_3, $effectiveScope),
-                'lower-level'
-            );
-        }
-
-        if ($this->shouldRenderSekretarisSection4($effectiveScope, $pokjaGroups, $dashboardContext)) {
-            $section4Block = $this->buildSekretarisSection4Block(
-                $user,
-                $effectiveScope,
-                (string) ($groupModes['pokja-i'] ?? RoleMenuVisibilityService::MODE_READ_ONLY),
-                $dashboardContext
-            );
-
-            if (is_array($section4Block)) {
-                $blocks[] = $section4Block;
-            }
-        }
 
         return $blocks;
     }
