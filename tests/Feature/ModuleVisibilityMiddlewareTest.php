@@ -24,6 +24,7 @@ class ModuleVisibilityMiddlewareTest extends TestCase
             'desa-sekretaris',
             'kecamatan-sekretaris',
             'desa-pokja-i',
+            'desa-pokja-iv',
             'kecamatan-pokja-i',
         ] as $roleName) {
             Role::create(['name' => $roleName]);
@@ -167,5 +168,33 @@ class ModuleVisibilityMiddlewareTest extends TestCase
 
         $this->get('/kecamatan/anggota-pokja')->assertOk();
         $this->get('/kecamatan/prestasi-lomba')->assertOk();
+    }
+
+    public function test_desa_sekretaris_memiliki_akses_rw_ke_program_prioritas(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desa->id,
+        ]);
+        $user->assignRole('desa-sekretaris');
+
+        $this->actingAs($user);
+
+        $this->get('/desa/program-prioritas')->assertOk();
+        $this->get('/desa/program-prioritas/create')->assertOk();
+    }
+
+    public function test_desa_pokja_iv_tidak_memiliki_akses_program_prioritas(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desa->id,
+        ]);
+        $user->assignRole('desa-pokja-iv');
+
+        $this->actingAs($user);
+
+        $this->get('/desa/program-prioritas')->assertForbidden();
+        $this->get('/desa/program-prioritas/create')->assertForbidden();
     }
 }

@@ -158,11 +158,11 @@ Mapping grup sidebar:
 
 | Grup Sidebar | Slug Modul |
 | --- | --- |
-| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-daftar-hadir`, `buku-tamu`, `buku-notulen-rapat`, `buku-keuangan`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
+| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-daftar-hadir`, `buku-tamu`, `buku-notulen-rapat`, `buku-keuangan`, `inventaris`, `activities`, `program-prioritas`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
 | Pokja I | `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`, `paar` |
 | Pokja II | `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
 | Pokja III | `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |
-| Pokja IV | `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`, `program-prioritas`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` |
+| Pokja IV | `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` |
 
 Implementasi aktif:
 - `resources/js/Layouts/DashboardLayout.vue`

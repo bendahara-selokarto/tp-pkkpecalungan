@@ -151,7 +151,7 @@ Kontrol akses minimal:
 - [x] Tambah modul `buku-notulen-rapat` desa/kecamatan.
 - [x] Tambah modul `buku-daftar-hadir` desa/kecamatan.
 - [x] Tambah modul `buku-tamu` desa/kecamatan.
-- [ ] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap.
+- [x] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap (ownership `sekretaris-tpk`, tidak berada pada group `pokja-iv`).
 
 ### B. Autentikasi Buku
 - [ ] Lengkapi validasi autentik untuk buku berstatus `partial`.

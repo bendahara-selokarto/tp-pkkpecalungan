@@ -121,7 +121,7 @@
   4. Kontrak field/report sinkron dengan bukti autentik.
 
 ### Dampak ke Gelombang Berikutnya
-- Eksekusi berikut wajib fokus ke pemetaan `buku-program-kerja` agar tidak overlap domain.
+- Pemetaan `buku-program-kerja` telah dikunci pada ownership `sekretaris-tpk` agar tidak overlap dengan domain `pokja-iv`.
 - Setelah kontrak field terkunci, lanjut implementasi per buku dengan boundary:
   - route + request + action/use case + repository + policy + test.
 
@@ -162,7 +162,7 @@ Exit criteria Sprint 2:
 - [x] Implementasi modul `buku-notulen-rapat` untuk desa/kecamatan.
 - [x] Implementasi modul `buku-daftar-hadir` untuk desa/kecamatan.
 - [x] Implementasi modul `buku-tamu` untuk desa/kecamatan.
-- [ ] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap domain.
+- [x] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap domain.
 - [ ] Lakukan review akhir checklist concern sebelum status `done`.
 
 Exit criteria Sprint 3:

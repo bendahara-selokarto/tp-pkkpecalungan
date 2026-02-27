@@ -81,6 +81,7 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/buku-keuangan`, label: 'Buku Keuangan' },
       { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
+      { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja TP PKK' },
       {
         href: `/${scope}/data-warga`,
         label: 'Data Warga',
@@ -144,7 +145,6 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
       { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga', uiVisibility: 'disabled' },
-      { href: `/${scope}/program-prioritas`, label: 'Program Prioritas', uiVisibility: 'disabled' },
       { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV', uiVisibility: 'disabled' },
       { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana', uiVisibility: 'disabled' },
     ],

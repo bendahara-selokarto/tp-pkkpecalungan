@@ -3,6 +3,9 @@
 Tanggal: 2026-02-25  
 Status: `done`
 
+Catatan supersede 2026-02-27:
+- Keputusan sementara `program-prioritas -> retain` digantikan pemetaan final ownership ke `sekretaris-tpk` agar tidak overlap dengan `pokja-iv`.
+
 ## Konteks
 
 - Hasil koreksi domain menyatakan beberapa modul tidak memiliki owner `RW/RO`.
