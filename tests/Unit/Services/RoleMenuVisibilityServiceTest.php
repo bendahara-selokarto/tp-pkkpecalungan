@@ -75,26 +75,26 @@ class RoleMenuVisibilityServiceTest extends TestCase
 
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['anggota-pokja'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['prestasi-lomba'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['activities'] ?? null);
         $this->assertArrayNotHasKey('data-keluarga', $visibility['modules']);
-        $this->assertArrayNotHasKey('activities', $visibility['modules']);
-        $this->assertCount(2, $visibility['modules']);
+        $this->assertCount(3, $visibility['modules']);
     }
 
-    public function test_kecamatan_pokja_ii_hanya_memiliki_dua_modul_rw(): void
+    public function test_kecamatan_pokja_ii_memiliki_tiga_modul_rw_termasuk_buku_kegiatan(): void
     {
         $user = User::factory()->create();
         $user->assignRole('kecamatan-pokja-ii');
 
         $visibility = $this->service->resolveForScope($user, 'kecamatan');
 
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['activities'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['anggota-pokja'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['prestasi-lomba'] ?? null);
-        $this->assertArrayNotHasKey('activities', $visibility['modules']);
         $this->assertArrayNotHasKey('data-pelatihan-kader', $visibility['modules']);
         $this->assertArrayNotHasKey('taman-bacaan', $visibility['modules']);
         $this->assertArrayNotHasKey('koperasi', $visibility['modules']);
         $this->assertArrayNotHasKey('kejar-paket', $visibility['modules']);
-        $this->assertCount(2, $visibility['modules']);
+        $this->assertCount(3, $visibility['modules']);
     }
 
     public function test_admin_kecamatan_kompatibel_rw_dengan_monitoring_ro(): void
@@ -119,6 +119,10 @@ class RoleMenuVisibilityServiceTest extends TestCase
             ['role' => 'desa-pokja-ii', 'scope' => 'desa'],
             ['role' => 'desa-pokja-iii', 'scope' => 'desa'],
             ['role' => 'desa-pokja-iv', 'scope' => 'desa'],
+            ['role' => 'kecamatan-pokja-i', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-ii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
             ['role' => 'admin-desa', 'scope' => 'desa'],
             ['role' => 'admin-kecamatan', 'scope' => 'kecamatan'],
             ['role' => 'super-admin', 'scope' => 'desa'],
@@ -184,7 +188,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         }
     }
 
-    public function test_semua_pokja_kecamatan_hanya_memiliki_dua_menu(): void
+    public function test_semua_pokja_kecamatan_hanya_memiliki_tiga_menu(): void
     {
         $kecamatanPokjaRoles = [
             'kecamatan-pokja-i',
@@ -200,9 +204,9 @@ class RoleMenuVisibilityServiceTest extends TestCase
             $visibility = $this->service->resolveForScope($user, 'kecamatan');
 
             $this->assertSame(
-                ['anggota-pokja', 'prestasi-lomba'],
+                ['activities', 'anggota-pokja', 'prestasi-lomba'],
                 array_keys($visibility['modules']),
-                sprintf('Role %s harus hanya memiliki 2 menu modul.', $role)
+                sprintf('Role %s harus hanya memiliki 3 menu modul.', $role)
             );
         }
     }

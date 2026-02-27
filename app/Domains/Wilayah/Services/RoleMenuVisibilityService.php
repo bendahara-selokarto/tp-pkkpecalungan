@@ -170,7 +170,6 @@ class RoleMenuVisibilityService
     private const ROLE_MODULE_MODE_OVERRIDES = [
         // Modul pokja tertentu diturunkan menjadi read-only untuk role kecamatan pokja.
         'kecamatan-pokja-i' => [
-            'activities' => null,
             'data-warga' => null,
             'data-kegiatan-warga' => null,
             'bkl' => null,
@@ -180,7 +179,6 @@ class RoleMenuVisibilityService
             'prestasi-lomba' => self::MODE_READ_WRITE,
         ],
         'kecamatan-pokja-ii' => [
-            'activities' => null,
             'data-pelatihan-kader' => null,
             'taman-bacaan' => null,
             'koperasi' => null,
@@ -189,7 +187,6 @@ class RoleMenuVisibilityService
             'prestasi-lomba' => self::MODE_READ_WRITE,
         ],
         'kecamatan-pokja-iii' => [
-            'activities' => null,
             'data-keluarga' => null,
             'data-industri-rumah-tangga' => null,
             'data-pemanfaatan-tanah-pekarangan-hatinya-pkk' => null,
@@ -198,7 +195,6 @@ class RoleMenuVisibilityService
             'prestasi-lomba' => self::MODE_READ_WRITE,
         ],
         'kecamatan-pokja-iv' => [
-            'activities' => null,
             'posyandu' => null,
             'simulasi-penyuluhan' => null,
             'catatan-keluarga' => null,

@@ -123,7 +123,7 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->get('/kecamatan/desa-activities')->assertForbidden();
     }
 
-    public function test_kecamatan_pokja_i_tidak_memiliki_akses_buku_kegiatan_scope_kecamatan(): void
+    public function test_kecamatan_pokja_i_dapat_akses_dan_menulis_buku_kegiatan_scope_kecamatan(): void
     {
         $user = User::factory()->create([
             'scope' => 'kecamatan',
@@ -133,12 +133,19 @@ class ModuleVisibilityMiddlewareTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get('/kecamatan/activities')->assertForbidden();
-        $this->get('/kecamatan/activities/create')->assertForbidden();
+        $this->get('/kecamatan/activities')->assertOk();
+        $this->get('/kecamatan/activities/create')->assertOk();
         $this->post('/kecamatan/activities', [
             'title' => 'Kegiatan Pokja I Kecamatan',
             'activity_date' => '2026-02-24',
-        ])->assertForbidden();
+        ])->assertRedirect('/kecamatan/activities');
+
+        $this->assertDatabaseHas('activities', [
+            'title' => 'Kegiatan Pokja I Kecamatan',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+            'created_by' => $user->id,
+        ]);
     }
 
     public function test_kecamatan_pokja_i_tidak_memiliki_akses_modul_desa_only(): void
