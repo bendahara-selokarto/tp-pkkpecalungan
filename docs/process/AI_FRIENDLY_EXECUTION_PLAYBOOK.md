@@ -54,6 +54,7 @@ Gunakan status:
 | `P-017` | Zero-Ambiguity Single Path Routing | User meminta kepastian jalur tunggal AI atau task lintas concern berisiko multi-interpretasi | Task routing deterministik (concern -> file target -> validation ladder) dan output konsisten lintas sesi | Sinkronisasi `AGENTS.md` + dokumen single-path + log hardening concern | `active` |
 | `P-018` | UI Runtime Safety Guardrail | Perubahan UI kritikal berbasis JavaScript (layout, dropdown, theme, dynamic state) | Behavior UI tetap terkontrol saat terjadi runtime error JavaScript | Guard global JS + fallback UI + build frontend | `active` |
 | `P-019` | Attachment Render Recovery via Protected Stream Route | Lampiran (foto/berkas) tidak tampil di halaman show, terutama pada setup Apache/Windows | Lampiran tetap bisa preview dan dibuka tanpa bergantung pada static `/storage` URL | Targeted feature tests concern + `php artisan route:list --name=attachments.show` | `active` |
+| `P-020` | Kecamatan Dual-Scope List Contract (`kecamatan` vs `desa monitoring`) | Daftar modul di scope kecamatan butuh mode data sendiri + mode monitoring desa | Mode `kecamatan` konsisten ke data milik sendiri, mode `desa` konsisten ke seluruh desa dalam kecamatan, dan monitoring tetap read-only | Feature test list kedua mode + payload mode visibility + middleware anti write bypass | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -450,3 +451,32 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Route attachment menambah endpoint baru; regression auth wajib dijalankan untuk mencegah data leak.
 - Catatan reuse lintas domain/project:
   - Jadikan pattern pertama untuk insiden lampiran tidak tampil di modul Inertia/Laravel yang menyimpan file pada disk `public`.
+
+### P-020 - Kecamatan Dual-Scope List Contract (`kecamatan` vs `desa monitoring`)
+- Tanggal: 2026-02-28
+- Status: active
+- Konteks: Role level kecamatan (khususnya `kecamatan-sekretaris`) membutuhkan dua mode daftar dalam satu concern: mode kerja level kecamatan dan mode monitoring desa.
+- Trigger:
+  - UI daftar level kecamatan menambahkan toggle cakupan (`kecamatan`/`desa`).
+  - Ada kebutuhan mencegah data campur antara daftar kerja kecamatan dan daftar monitoring desa.
+- Langkah eksekusi:
+  1) Tetapkan kontrak mode:
+     - mode `kecamatan`: list kegiatan level kecamatan milik aktor login (`created_by = user_id` untuk `kecamatan-sekretaris`).
+     - mode `desa`: list seluruh data level desa dalam parent kecamatan aktor login.
+  2) Implementasikan filter di backend (use case/repository), bukan di frontend.
+  3) Pastikan mode monitoring desa tetap `read-only` di payload visibilitas + middleware anti bypass mutasi.
+  4) Gunakan toggle UI hanya sebagai pengalih endpoint/list source, bukan authority akses data.
+- Guardrail:
+  - Jangan menyamakan mode `kecamatan` dengan semua data kecamatan by-area jika kontrak menyebut data milik sendiri.
+  - Jangan membolehkan mode monitoring desa melakukan `create/update/delete`.
+  - Pastikan boundary query tetap melalui repository dan tetap scoped ke `areas` canonical.
+- Validasi minimum:
+  - Feature test mode `kecamatan` hanya menampilkan data milik aktor.
+  - Feature test mode `desa` menampilkan data semua desa dalam kecamatan sendiri dan menolak desa luar kecamatan.
+  - Feature test payload visibilitas/middleware memastikan `desa-activities` untuk `kecamatan-sekretaris` tetap `read-only`.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada commit `339275e` untuk concern `activities` (`kecamatan/activities` + `kecamatan/desa-activities`) beserta test kontrak dan hardening dokumentasi.
+- Risiko:
+  - Jika tidak didokumentasikan, concern lain mudah mereplikasi toggle UI tanpa konsistensi kontrak query backend.
+- Catatan reuse lintas domain/project:
+  - Gunakan sebagai template default untuk semua daftar scope kecamatan yang punya mode operasional internal + monitoring desa.
