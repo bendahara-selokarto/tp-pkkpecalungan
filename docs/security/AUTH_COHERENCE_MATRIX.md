@@ -1,5 +1,10 @@
 # Auth Coherence Matrix (Buku Sekretaris PKK)
 
+Status dokumen:
+- Dokumen ini adalah snapshot audit coherence auth/scope.
+- Untuk acuan canonical aktif terkait ketersediaan buku, autentikasi buku, dan penanggung jawab buku, gunakan:
+  - `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md`
+
 Tujuan:
 - Memetakan `role -> scope -> area level -> akses modul` untuk lampiran 4.9-4.15.
 - Menjadi baseline audit sebelum perubahan policy/scope di modul sekretaris.
