@@ -255,7 +255,7 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ($section1['section']['source_level'] ?? null) === 'kecamatan'
                         && ($section1['charts']['by_desa']['labels'] ?? null) === ['Gombong']
                         && ($section1['charts']['by_desa']['values'] ?? null) === [1]
-                        && ($section1['charts']['by_desa']['books_total'] ?? null) === [18]
+                        && ($section1['charts']['by_desa']['books_total'] ?? null) === [19]
                         && ($section1['charts']['by_desa']['books_filled'] ?? null) === [1];
                 });
         });
