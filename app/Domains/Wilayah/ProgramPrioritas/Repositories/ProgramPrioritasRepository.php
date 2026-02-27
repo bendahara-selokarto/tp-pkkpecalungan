@@ -42,11 +42,12 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
         ]);
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
     {
         return ProgramPrioritas::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('id')
             ->get();
     }
@@ -94,3 +95,7 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
         $programPrioritas->delete();
     }
 }
+
+
+
+

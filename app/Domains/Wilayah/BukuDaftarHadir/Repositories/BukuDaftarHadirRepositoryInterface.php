@@ -11,9 +11,9 @@ interface BukuDaftarHadirRepositoryInterface
 {
     public function store(BukuDaftarHadirData $data): BukuDaftarHadir;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection;
 
     public function listActivityOptionsByLevelAndArea(string $level, int $areaId): Collection;
 
@@ -23,3 +23,4 @@ interface BukuDaftarHadirRepositoryInterface
 
     public function delete(BukuDaftarHadir $bukuDaftarHadir): void;
 }
+

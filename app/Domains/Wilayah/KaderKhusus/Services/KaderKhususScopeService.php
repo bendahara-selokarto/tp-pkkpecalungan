@@ -51,4 +51,9 @@ class KaderKhususScopeService
 
         return $kaderKhusus;
     }
+    public function resolveCreatorIdFilterForList(string $level): ?int
+    {
+        return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
+    }
 }
+

@@ -63,4 +63,9 @@ class BukuDaftarHadirScopeService
 
         return $activity;
     }
+    public function resolveCreatorIdFilterForList(string $level): ?int
+    {
+        return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
+    }
 }
+

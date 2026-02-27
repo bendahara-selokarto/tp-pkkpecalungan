@@ -11,9 +11,9 @@ interface BukuTamuRepositoryInterface
 {
     public function store(BukuTamuData $data): BukuTamu;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection;
 
     public function find(int $id): BukuTamu;
 
@@ -21,3 +21,4 @@ interface BukuTamuRepositoryInterface
 
     public function delete(BukuTamu $bukuTamu): void;
 }
+

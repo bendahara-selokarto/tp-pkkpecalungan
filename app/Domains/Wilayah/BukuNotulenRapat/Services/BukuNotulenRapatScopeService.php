@@ -51,4 +51,9 @@ class BukuNotulenRapatScopeService
 
         return $bukuNotulenRapat;
     }
+    public function resolveCreatorIdFilterForList(string $level): ?int
+    {
+        return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
+    }
 }
+

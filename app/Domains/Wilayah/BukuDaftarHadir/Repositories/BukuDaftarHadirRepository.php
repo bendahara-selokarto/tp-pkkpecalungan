@@ -24,24 +24,26 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
         return BukuDaftarHadir::query()
             ->with('activity:id,title,activity_date')
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('attendance_date')
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
     {
         return BukuDaftarHadir::query()
             ->with('activity:id,title,activity_date')
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('attendance_date')
             ->latest('id')
             ->get();
@@ -82,3 +84,7 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
         $bukuDaftarHadir->delete();
     }
 }
+
+
+
+

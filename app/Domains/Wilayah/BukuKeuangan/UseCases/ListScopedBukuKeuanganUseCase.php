@@ -17,15 +17,21 @@ class ListScopedBukuKeuanganUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->bukuKeuanganScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->bukuKeuanganScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bukuKeuanganRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->bukuKeuanganRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->bukuKeuanganScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->bukuKeuanganScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bukuKeuanganRepository->getByLevelAndArea($level, $areaId);
+        return $this->bukuKeuanganRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+

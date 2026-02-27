@@ -23,22 +23,24 @@ class BukuNotulenRapatRepository implements BukuNotulenRapatRepositoryInterface
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
         return BukuNotulenRapat::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('entry_date')
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
     {
         return BukuNotulenRapat::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('entry_date')
             ->latest('id')
             ->get();
@@ -67,3 +69,7 @@ class BukuNotulenRapatRepository implements BukuNotulenRapatRepositoryInterface
         $bukuNotulenRapat->delete();
     }
 }
+
+
+
+

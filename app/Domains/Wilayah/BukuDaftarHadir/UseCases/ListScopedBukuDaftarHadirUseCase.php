@@ -17,15 +17,21 @@ class ListScopedBukuDaftarHadirUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->bukuDaftarHadirScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->bukuDaftarHadirScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bukuDaftarHadirRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->bukuDaftarHadirRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->bukuDaftarHadirScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->bukuDaftarHadirScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bukuDaftarHadirRepository->getByLevelAndArea($level, $areaId);
+        return $this->bukuDaftarHadirRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+

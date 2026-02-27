@@ -51,4 +51,9 @@ class BukuTamuScopeService
 
         return $bukuTamu;
     }
+    public function resolveCreatorIdFilterForList(string $level): ?int
+    {
+        return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
+    }
 }
+

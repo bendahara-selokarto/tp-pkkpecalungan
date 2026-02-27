@@ -51,4 +51,9 @@ class PrestasiLombaScopeService
 
         return $prestasiLomba;
     }
+    public function resolveCreatorIdFilterForList(string $level): ?int
+    {
+        return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
+    }
 }
+

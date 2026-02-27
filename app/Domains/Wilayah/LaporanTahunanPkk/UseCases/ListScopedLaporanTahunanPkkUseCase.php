@@ -16,8 +16,12 @@ class ListScopedLaporanTahunanPkkUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->scopeService->requireUserAreaId();
+        $creatorIdFilter = $this->scopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->repository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->repository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 }
+
+

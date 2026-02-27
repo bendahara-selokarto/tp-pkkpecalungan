@@ -17,15 +17,21 @@ class ListScopedBukuNotulenRapatUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->bukuNotulenRapatScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->bukuNotulenRapatScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bukuNotulenRapatRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->bukuNotulenRapatRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->bukuNotulenRapatScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->bukuNotulenRapatScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bukuNotulenRapatRepository->getByLevelAndArea($level, $areaId);
+        return $this->bukuNotulenRapatRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+

@@ -17,15 +17,21 @@ class ListScopedAnggotaPokjaUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->anggotaPokjaScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->anggotaPokjaScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->anggotaPokjaRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->anggotaPokjaRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->anggotaPokjaScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->anggotaPokjaScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->anggotaPokjaRepository->getByLevelAndArea($level, $areaId);
+        return $this->anggotaPokjaRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+

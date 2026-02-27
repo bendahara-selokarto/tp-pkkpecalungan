@@ -69,4 +69,21 @@ class UserAreaContextService
 
         return $this->canAccessLevel($user, $areaLevel) ? $areaLevel : null;
     }
+
+    public function resolveCreatorIdFilterForKecamatanSekretaris(string $level): ?int
+    {
+        $user = auth()->user();
+        if (! $user instanceof User) {
+            return null;
+        }
+
+        if (
+            $level === ScopeLevel::KECAMATAN->value
+            && $user->hasRole('kecamatan-sekretaris')
+        ) {
+            return (int) $user->id;
+        }
+
+        return null;
+    }
 }

@@ -11,9 +11,9 @@ interface AnggotaPokjaRepositoryInterface
 {
     public function store(AnggotaPokjaData $data): AnggotaPokja;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection;
 
     public function find(int $id): AnggotaPokja;
 
@@ -21,4 +21,5 @@ interface AnggotaPokjaRepositoryInterface
 
     public function delete(AnggotaPokja $anggotaPokja): void;
 }
+
 

@@ -15,8 +15,12 @@ class ListScopedProgramPrioritasUseCase
 
     public function execute(string $level)
     {
+        
         $areaId = $this->programPrioritasScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->programPrioritasScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->programPrioritasRepository->getByLevelAndArea($level, $areaId);
+        return $this->programPrioritasRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+
