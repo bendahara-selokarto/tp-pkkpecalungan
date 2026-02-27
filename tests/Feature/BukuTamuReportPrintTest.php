@@ -7,11 +7,13 @@ use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
+use Tests\Feature\Concerns\AssertsPdfReportHeaders;
 use Tests\TestCase;
 
 class BukuTamuReportPrintTest extends TestCase
 {
     use RefreshDatabase;
+    use AssertsPdfReportHeaders;
 
     protected Area $kecamatanA;
     protected Area $kecamatanB;
@@ -27,6 +29,18 @@ class BukuTamuReportPrintTest extends TestCase
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
         $this->desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $this->kecamatanA->id]);
+    }
+
+    public function test_header_kolom_pdf_buku_tamu_tetap_stabil(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.buku_tamu_report', [
+            'NO',
+            'TANGGAL',
+            'NAMA TAMU',
+            'KEPERLUAN',
+            'INSTANSI',
+            'KETERANGAN',
+        ]);
     }
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_buku_tamu_desanya_sendiri(): void

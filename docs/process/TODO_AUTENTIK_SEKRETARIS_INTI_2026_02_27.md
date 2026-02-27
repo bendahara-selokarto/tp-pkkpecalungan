@@ -42,8 +42,8 @@
 - [ ] Sinkronkan blade PDF jika ditemukan drift struktur kolom.
 
 ### D. Validasi
-- [ ] Tambah/rapikan test header kolom PDF untuk 3 buku sekretaris inti.
-- [ ] Jalankan test targeted concern + regresi report/print terkait.
+- [x] Tambah/rapikan test header kolom PDF untuk 3 buku sekretaris inti.
+- [x] Jalankan test targeted concern + regresi report/print terkait.
 - [ ] Jalankan `php artisan test` bila ada perubahan lintas modul.
 
 ## Validasi Keberhasilan
@@ -65,3 +65,22 @@
 - [ ] Daftar perubahan status autentikasi per buku.
 - [ ] Bukti validasi yang dipakai (token identitas + screenshot).
 - [ ] File terdampak dan alasan sinkronisasi.
+
+## Progress Eksekusi (2026-02-27)
+
+### Validasi yang Sudah Dijalankan
+- `php artisan test tests/Feature/BukuNotulenRapatReportPrintTest.php`
+  - hasil: `4 passed` (termasuk test baru `header kolom pdf buku notulen rapat tetap stabil`).
+- `php artisan test tests/Feature/BukuDaftarHadirReportPrintTest.php`
+  - hasil: `4 passed` (termasuk test baru `header kolom pdf buku daftar hadir tetap stabil`).
+- `php artisan test tests/Feature/BukuTamuReportPrintTest.php`
+  - hasil: `4 passed` (termasuk test baru `header kolom pdf buku tamu tetap stabil`).
+
+### File Terdampak (Concern Validasi Header)
+- `tests/Feature/BukuNotulenRapatReportPrintTest.php`
+- `tests/Feature/BukuDaftarHadirReportPrintTest.php`
+- `tests/Feature/BukuTamuReportPrintTest.php`
+
+### Catatan
+- Gate struktur header PDF internal modul sekretaris inti telah terkunci via test.
+- Status autentikasi canonical masih `unverified` sampai sumber autentik primer + bukti screenshot header resmi tersedia.
