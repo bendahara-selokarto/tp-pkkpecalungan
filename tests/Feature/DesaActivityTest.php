@@ -112,6 +112,44 @@ class DesaActivityTest extends TestCase
     }
 
     #[Test]
+    public function pengguna_desa_menghapus_kegiatan_juga_menghapus_file_lampiran(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $user->assignRole('admin-desa');
+
+        $imagePath = sprintf('activities/desa/%d/images/activity-image.jpg', $this->desa->id);
+        $documentPath = sprintf('activities/desa/%d/documents/activity-document.pdf', $this->desa->id);
+        Storage::disk('public')->put($imagePath, 'image-content');
+        Storage::disk('public')->put($documentPath, 'document-content');
+
+        $activity = Activity::create([
+            'title' => 'Kegiatan Hapus Lampiran Desa',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $user->id,
+            'activity_date' => '2026-02-28',
+            'status' => 'draft',
+            'image_path' => $imagePath,
+            'document_path' => $documentPath,
+        ]);
+
+        $this->actingAs($user)
+            ->delete(route('desa.activities.destroy', $activity->id))
+            ->assertStatus(302);
+
+        $this->assertDatabaseMissing('activities', [
+            'id' => $activity->id,
+        ]);
+        Storage::disk('public')->assertMissing($imagePath);
+        Storage::disk('public')->assertMissing($documentPath);
+    }
+
+    #[Test]
     public function pengguna_desa_dapat_memperbarui_kegiatan()
     {
         $user = User::factory()->create([

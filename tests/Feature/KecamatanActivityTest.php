@@ -145,6 +145,44 @@ class KecamatanActivityTest extends TestCase
     }
 
     #[Test]
+    public function admin_kecamatan_menghapus_kegiatan_juga_menghapus_file_lampiran(): void
+    {
+        Storage::fake('public');
+
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $imagePath = sprintf('activities/kecamatan/%d/images/activity-image.jpg', $this->kecamatanA->id);
+        $documentPath = sprintf('activities/kecamatan/%d/documents/activity-document.pdf', $this->kecamatanA->id);
+        Storage::disk('public')->put($imagePath, 'image-content');
+        Storage::disk('public')->put($documentPath, 'document-content');
+
+        $activity = Activity::create([
+            'title' => 'Kegiatan Hapus Lampiran Kecamatan',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'activity_date' => '2026-02-28',
+            'status' => 'draft',
+            'image_path' => $imagePath,
+            'document_path' => $documentPath,
+        ]);
+
+        $this->actingAs($adminKecamatan)
+            ->delete(route('kecamatan.activities.destroy', $activity->id))
+            ->assertStatus(302);
+
+        $this->assertDatabaseMissing('activities', [
+            'id' => $activity->id,
+        ]);
+        Storage::disk('public')->assertMissing($imagePath);
+        Storage::disk('public')->assertMissing($documentPath);
+    }
+
+    #[Test]
     public function tanggal_kegiatan_kecamatan_harus_format_yyyy_mm_dd(): void
     {
         $adminKecamatan = User::factory()->create([
