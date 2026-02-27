@@ -53,6 +53,7 @@ Gunakan status:
 | `P-016` | Triggered Doc-Hardening Pass | Ada sinyal canonical drift pada dokumentasi concern aktif | Kontrak dokumen lintas file tetap koheren dan tidak mismatch dengan implementasi | Scoped drift audit + sinkronisasi TODO/process/domain + ringkasan validasi | `active` |
 | `P-017` | Zero-Ambiguity Single Path Routing | User meminta kepastian jalur tunggal AI atau task lintas concern berisiko multi-interpretasi | Task routing deterministik (concern -> file target -> validation ladder) dan output konsisten lintas sesi | Sinkronisasi `AGENTS.md` + dokumen single-path + log hardening concern | `active` |
 | `P-018` | UI Runtime Safety Guardrail | Perubahan UI kritikal berbasis JavaScript (layout, dropdown, theme, dynamic state) | Behavior UI tetap terkontrol saat terjadi runtime error JavaScript | Guard global JS + fallback UI + build frontend | `active` |
+| `P-019` | Attachment Render Recovery via Protected Stream Route | Lampiran (foto/berkas) tidak tampil di halaman show, terutama pada setup Apache/Windows | Lampiran tetap bisa preview dan dibuka tanpa bergantung pada static `/storage` URL | Targeted feature tests concern + `php artisan route:list --name=attachments.show` | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -421,3 +422,31 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Tanpa deduplikasi error, banner bisa muncul berulang untuk root cause yang sama.
 - Catatan reuse lintas domain/project:
   - Terapkan pada aplikasi SPA/Inertia yang mengandalkan layout global untuk interaksi kritikal.
+
+### P-019 - Attachment Render Recovery via Protected Stream Route
+- Tanggal: 2026-02-27
+- Status: active
+- Konteks: Pada environment Apache/Windows, URL lampiran berbasis static path (`/storage/...`) bisa gagal render (404/403) walau file ada dan symlink sudah benar.
+- Trigger:
+  - User melaporkan halaman show tidak menampilkan foto/berkas.
+  - Browser membuka error page Apache saat klik lampiran.
+- Langkah eksekusi:
+  1) Lakukan cek cepat environment: `APP_URL`, keberadaan `public/storage`, dan keberadaan file pada `storage/app/public`.
+  2) Jika issue tetap muncul, hindari ketergantungan direct static URL; tambahkan route attachment terproteksi per scope (`desa`, `kecamatan`, `kecamatan/desa-activities`).
+  3) Di controller, stream file via `Storage::disk('public')->response(...)` setelah `authorize('view', $activity)` agar akses tetap mengikuti policy/scope.
+  4) Ubah payload `image_url`/`document_url` menjadi URL route attachment terproteksi.
+  5) Di UI show, render preview inline (gambar/PDF) dan sediakan fallback tautan `Buka berkas`.
+- Guardrail:
+  - Route attachment wajib berada di belakang middleware + policy concern yang sama dengan halaman detail.
+  - Dilarang membuka file path langsung tanpa validasi akses backend.
+  - Gunakan perubahan minimal; jangan mengubah kontrak domain `areas`, role, atau scope.
+- Validasi minimum:
+  - `php artisan test tests/Feature/DesaActivityTest.php tests/Feature/KecamatanActivityTest.php tests/Feature/KecamatanDesaActivityTest.php`
+  - `php artisan route:list --name=attachments.show`
+  - Build frontend sukses (`npm run build`) jika ada perubahan renderer preview.
+- Bukti efisiensi/akurasi:
+  - Menangani kegagalan render lampiran tanpa perlu perubahan server Apache global.
+- Risiko:
+  - Route attachment menambah endpoint baru; regression auth wajib dijalankan untuk mencegah data leak.
+- Catatan reuse lintas domain/project:
+  - Jadikan pattern pertama untuk insiden lampiran tidak tampil di modul Inertia/Laravel yang menyimpan file pada disk `public`.
