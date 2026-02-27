@@ -69,6 +69,35 @@ const formatDate = (value) => formatDateForDisplay(value)
         </div>
       </div>
 
+      <div class="grid gap-4 md:grid-cols-2">
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Gambar</p>
+          <a
+            v-if="props.activity.image_url"
+            :href="props.activity.image_url"
+            target="_blank"
+            rel="noopener"
+            class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-400"
+          >
+            Lihat gambar
+          </a>
+          <p v-else class="text-sm text-gray-700 dark:text-gray-300">-</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Berkas</p>
+          <a
+            v-if="props.activity.document_url"
+            :href="props.activity.document_url"
+            target="_blank"
+            rel="noopener"
+            class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-400"
+          >
+            Lihat berkas
+          </a>
+          <p v-else class="text-sm text-gray-700 dark:text-gray-300">-</p>
+        </div>
+      </div>
+
       <div class="flex items-center justify-end gap-2">
         <Link href="/desa/activities" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
           Kembali

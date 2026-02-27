@@ -5,6 +5,8 @@ use PHPUnit\Framework\Attributes\Test;
 
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
@@ -77,6 +79,36 @@ class DesaActivityTest extends TestCase
             'description' => 'Rapat tahunan',
             'area_id' => $this->desa->id,
         ]);
+    }
+
+    #[Test]
+    public function pengguna_desa_dapat_upload_gambar_dan_berkas_pada_kegiatan(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $user->assignRole('admin-desa');
+
+        $response = $this->actingAs($user)->post('/desa/activities', [
+            'title' => 'Kegiatan dengan Lampiran Desa',
+            'activity_date' => '2026-02-12',
+            'image_upload' => UploadedFile::fake()->image('kegiatan-desa.jpg'),
+            'document_upload' => UploadedFile::fake()->create('kegiatan-desa.pdf', 120, 'application/pdf'),
+        ]);
+
+        $response->assertStatus(302);
+
+        $activity = Activity::query()
+            ->where('title', 'Kegiatan dengan Lampiran Desa')
+            ->firstOrFail();
+
+        $this->assertNotNull($activity->image_path);
+        $this->assertNotNull($activity->document_path);
+        Storage::disk('public')->assertExists($activity->image_path);
+        Storage::disk('public')->assertExists($activity->document_path);
     }
 
     #[Test]

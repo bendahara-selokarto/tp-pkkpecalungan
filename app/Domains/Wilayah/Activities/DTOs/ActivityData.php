@@ -17,6 +17,8 @@ class ActivityData
         public ?string $tempat_kegiatan,
         public string $status = 'draft',
         public ?string $tanda_tangan = null,
+        public ?string $image_path = null,
+        public ?string $document_path = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -34,6 +36,8 @@ class ActivityData
             $data['tempat_kegiatan'] ?? null,
             $data['status'] ?? 'draft',
             $data['tanda_tangan'] ?? null,
+            $data['image_path'] ?? null,
+            $data['document_path'] ?? null,
         );
     }
 }

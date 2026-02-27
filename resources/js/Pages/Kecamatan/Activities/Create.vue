@@ -13,7 +13,14 @@ const form = useForm({
   uraian: '',
   tanda_tangan: '',
   activity_date: '',
+  image_upload: null,
+  document_upload: null,
 })
+
+const setFile = (field, event) => {
+  const [file] = event.target.files || []
+  form[field] = file || null
+}
 
 const submit = () => {
   form
@@ -21,7 +28,9 @@ const submit = () => {
       ...data,
       description: data.uraian || null,
     }))
-    .post('/kecamatan/activities')
+    .post('/kecamatan/activities', {
+      forceFormData: true,
+    })
 }
 </script>
 
@@ -75,6 +84,31 @@ const submit = () => {
           <p v-if="form.errors.tanda_tangan" class="mt-1 text-xs text-rose-600">{{ form.errors.tanda_tangan }}</p>
         </div>
 
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Upload Gambar</label>
+            <input
+              type="file"
+              accept="image/*"
+              class="block w-full text-sm text-gray-700 file:mr-4 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-700 hover:file:bg-emerald-100 dark:text-slate-200 dark:file:bg-emerald-900/30 dark:file:text-emerald-300"
+              @change="setFile('image_upload', $event)"
+            >
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Maksimum 5MB. Format gambar umum (jpg, png, webp).</p>
+            <p v-if="form.errors.image_upload" class="mt-1 text-xs text-rose-600">{{ form.errors.image_upload }}</p>
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Upload Berkas</label>
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,image/*"
+              class="block w-full text-sm text-gray-700 file:mr-4 file:rounded-md file:border-0 file:bg-sky-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-sky-700 hover:file:bg-sky-100 dark:text-slate-200 dark:file:bg-sky-900/30 dark:file:text-sky-300"
+              @change="setFile('document_upload', $event)"
+            >
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Maksimum 10MB. Format: PDF, Office, atau gambar.</p>
+            <p v-if="form.errors.document_upload" class="mt-1 text-xs text-rose-600">{{ form.errors.document_upload }}</p>
+          </div>
+        </div>
+
         <div class="flex items-center justify-end gap-2">
           <Link href="/kecamatan/activities" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
             Batal
@@ -87,4 +121,3 @@ const submit = () => {
     </CardBox>
   </SectionMain>
 </template>
-

@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Activities\Requests\ListActivitiesRequest;
 use App\Domains\Wilayah\Activities\UseCases\GetKecamatanDesaActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\ListKecamatanDesaActivitiesUseCase;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -35,6 +36,10 @@ class KecamatanDesaActivityController extends Controller
                 'tanda_tangan' => $activity->tanda_tangan,
                 'activity_date' => $activity->activity_date,
                 'status' => $activity->status,
+                'image_path' => $activity->image_path,
+                'image_url' => $this->resolvePublicUrl($activity->image_path),
+                'document_path' => $activity->document_path,
+                'document_url' => $this->resolvePublicUrl($activity->document_path),
                 'area' => $activity->area
                     ? [
                         'id' => $activity->area->id,
@@ -77,6 +82,10 @@ class KecamatanDesaActivityController extends Controller
                 'tanda_tangan' => $activity->tanda_tangan,
                 'activity_date' => $activity->activity_date,
                 'status' => $activity->status,
+                'image_path' => $activity->image_path,
+                'image_url' => $this->resolvePublicUrl($activity->image_path),
+                'document_path' => $activity->document_path,
+                'document_url' => $this->resolvePublicUrl($activity->document_path),
                 'area' => $activity->area
                     ? [
                         'id' => $activity->area->id,
@@ -97,5 +106,14 @@ class KecamatanDesaActivityController extends Controller
                 'print' => route('kecamatan.desa-activities.print', $activity->id),
             ],
         ]);
+    }
+
+    private function resolvePublicUrl(?string $path): ?string
+    {
+        if (! is_string($path) || $path === '') {
+            return null;
+        }
+
+        return Storage::disk('public')->url($path);
     }
 }

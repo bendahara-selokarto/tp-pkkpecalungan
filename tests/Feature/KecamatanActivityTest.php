@@ -8,6 +8,8 @@ use App\Domains\Wilayah\Activities\UseCases\ListScopedActivitiesUseCase;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
@@ -92,6 +94,54 @@ class KecamatanActivityTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
         ]);
+    }
+
+    #[Test]
+    public function admin_kecamatan_dapat_mengganti_upload_gambar_dan_berkas_pada_kegiatan(): void
+    {
+        Storage::fake('public');
+
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $oldImagePath = sprintf('activities/kecamatan/%d/images/old-image.jpg', $this->kecamatanA->id);
+        $oldDocumentPath = sprintf('activities/kecamatan/%d/documents/old-doc.pdf', $this->kecamatanA->id);
+        Storage::disk('public')->put($oldImagePath, 'old-image');
+        Storage::disk('public')->put($oldDocumentPath, 'old-document');
+
+        $activity = Activity::create([
+            'title' => 'Kegiatan Lampiran Lama',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'activity_date' => '2026-02-23',
+            'status' => 'draft',
+            'image_path' => $oldImagePath,
+            'document_path' => $oldDocumentPath,
+        ]);
+
+        $this->actingAs($adminKecamatan)->post(route('kecamatan.activities.update', $activity->id), [
+            '_method' => 'PUT',
+            'title' => 'Kegiatan Lampiran Baru',
+            'activity_date' => '2026-02-24',
+            'status' => 'published',
+            'image_upload' => UploadedFile::fake()->image('new-image.jpg'),
+            'document_upload' => UploadedFile::fake()->create('new-doc.pdf', 120, 'application/pdf'),
+        ])->assertStatus(302);
+
+        $activity->refresh();
+
+        $this->assertNotNull($activity->image_path);
+        $this->assertNotNull($activity->document_path);
+        $this->assertNotSame($oldImagePath, $activity->image_path);
+        $this->assertNotSame($oldDocumentPath, $activity->document_path);
+        Storage::disk('public')->assertMissing($oldImagePath);
+        Storage::disk('public')->assertMissing($oldDocumentPath);
+        Storage::disk('public')->assertExists($activity->image_path);
+        Storage::disk('public')->assertExists($activity->document_path);
     }
 
     #[Test]

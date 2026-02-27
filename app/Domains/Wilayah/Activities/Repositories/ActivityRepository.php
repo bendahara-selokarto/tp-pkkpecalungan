@@ -35,6 +35,8 @@ class ActivityRepository implements ActivityRepositoryInterface
             'tempat_kegiatan' => $data->tempat_kegiatan,
             'status'        => $data->status,
             'tanda_tangan'  => $data->tanda_tangan,
+            'image_path'    => $data->image_path,
+            'document_path' => $data->document_path,
         ]);
     }
 
@@ -154,6 +156,8 @@ class ActivityRepository implements ActivityRepositoryInterface
             'tempat_kegiatan' => $data->tempat_kegiatan,
             'status'        => $data->status,
             'tanda_tangan' => $data->tanda_tangan,
+            'image_path' => $data->image_path,
+            'document_path' => $data->document_path,
         ]);
 
         return $activity;
