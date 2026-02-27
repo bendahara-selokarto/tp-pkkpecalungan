@@ -66,6 +66,33 @@ const openExternal = (href) => {
   window.open(href, '_blank', 'noopener,noreferrer')
 }
 
+const resolveModuleSlugFromHref = (href) => {
+  if (typeof href !== 'string' || href.length === 0 || href.startsWith('http')) {
+    return null
+  }
+
+  const normalizedPath = href.split('?')[0]
+  const segments = normalizedPath.split('/').filter(Boolean)
+  if (segments.length < 2) {
+    return null
+  }
+
+  return segments[1]
+}
+
+const isModuleAllowedForCurrentUser = (item) => {
+  if (isExternalItem(item)) {
+    return true
+  }
+
+  const moduleSlug = resolveModuleSlugFromHref(item.href)
+  if (!moduleSlug) {
+    return true
+  }
+
+  return !!moduleModes.value[moduleSlug]
+}
+
 const buildScopedMenuGroups = (scope) => [
   {
     key: 'sekretaris-tpk',
@@ -201,15 +228,17 @@ const withMode = (groups) => {
           return false
         }
 
-        if (isExternalItem(item)) {
-          return true
-        }
-
-        if (seenInternalHrefs.has(item.href)) {
+        if (!isModuleAllowedForCurrentUser(item)) {
           return false
         }
 
-        seenInternalHrefs.add(item.href)
+        if (!isExternalItem(item) && seenInternalHrefs.has(item.href)) {
+          return false
+        }
+
+        if (!isExternalItem(item)) {
+          seenInternalHrefs.add(item.href)
+        }
         return true
       }),
     }))

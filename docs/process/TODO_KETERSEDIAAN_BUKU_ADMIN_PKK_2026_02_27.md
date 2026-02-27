@@ -135,6 +135,7 @@
 - Role-menu mapping kini menolak `scope` mismatch untuk role non-super-admin di service boundary (anti bypass scope gate).
 - Guard query modul `activities` kini dikunci pada kombinasi `role group + level + area` khusus role `desa-pokja-i` s.d. `desa-pokja-iv` dan `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv`, sehingga `pokja-i` hanya melihat detail/list kegiatan dari group-nya pada area yang sama; role sekretaris tetap by area sesuai level.
 - Guard anti-bocor antar-pokja pada modul `activities` telah ditambah lewat feature test index + detail (satu area, role berbeda).
+- Kontrak anti mismatch menu-vs-otorisasi dikunci: sidebar frontend hanya boleh menampilkan item dengan slug yang tersedia di `auth.user.moduleModes`; guard ini dikunci lewat unit test kontrak frontend.
 - Guard header kolom PDF untuk `buku-notulen-rapat`, `buku-daftar-hadir`, dan `buku-tamu` sudah dikunci lewat feature test khusus.
 - Baseline mapping autentik internal untuk 3 buku sekretaris inti sudah dikunci pada:
   - `docs/domain/BUKU_SEKRETARIS_INTI_AUTH_MAPPING.md`
