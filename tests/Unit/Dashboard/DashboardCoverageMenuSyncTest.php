@@ -20,6 +20,7 @@ class DashboardCoverageMenuSyncTest extends TestCase
         'bantuans',
         'bkl',
         'bkr',
+        'buku-daftar-hadir',
         'buku-notulen-rapat',
         'desa-activities',
         'laporan-tahunan-pkk',

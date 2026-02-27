@@ -21,6 +21,7 @@ Aturan baca:
 | 4.9b | `kader-khusus` | Buku Kader Khusus | Field inti: `nama`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `status_perkawinan`, `alamat`, `pendidikan`, `jenis_kader_khusus`, `keterangan`; proyeksi report autentik: `jenis_kelamin -> (L/P)`, `status_perkawinan -> (NIKAH/BLM NIKAH)` | `BUKU KADER KHUSUS` | Referensi terbaru `docs/referensi/excel/BUKU BANTU.xlsx` (sheet `Buku Kader Khusus`) + Rakernas X (Lampiran 4.9b) | implemented (menggunakan referensi terakhir; schema existing tetap normal) |
 | 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | `jenis_surat`, `tanggal_terima`, `tanggal_surat`, `nomor_surat`, `asal_surat`, `dari`, `kepada`, `perihal`, `lampiran`, `diteruskan_kepada`, `tembusan`, `keterangan` | `BUKU AGENDA SURAT MASUK/KELUAR` | Rakernas X (Lampiran 4.10) | match (merge header + nomor kolom 1-15 sinkron autentik) |
 | Ekstensi Lokal 2026 | `buku-notulen-rapat` | Buku Notulen Rapat | `entry_date`, `title`, `person_name`, `institution`, `description` | - | Rakernas X (kelompok buku sekretaris) | implemented (modul desa/kecamatan aktif; autentikasi format tabel masih `unverified`) |
+| Ekstensi Lokal 2026 | `buku-daftar-hadir` | Buku Daftar Hadir | `attendance_date`, `activity_id`, `attendee_name`, `institution`, `description` | - | Rakernas X (kelompok buku sekretaris) | implemented (modul desa/kecamatan aktif; autentikasi format tabel masih `unverified`) |
 | 4.11 | `buku-keuangan` | Buku Tabungan | `transaction_date`, `source`, `description`, `reference_number`, `entry_type`, `amount` | `BUKU TABUNGAN` | Rakernas X (Lampiran 4.11) | implemented (layout autentik 12 kolom sinkron; domain transaksi keuangan terpisah dari bantuan) |
 | Ekstensi Lokal 2026 | `bantuan` | Buku Bantuan | Kontrak input/report autentik: `tanggal`, `asal_bantuan`, `jenis_bantuan`, `jumlah`, `lokasi_penerima`, `keterangan`; storage kompatibilitas: `received_date`, `source`, `category`, `amount`, `name`, `description` | `BUKU BANTUAN {LEVEL}` | Dokumen autentik `docs/referensi/excel/BUKU BANTU.xlsx` (sheet `Buku Bantuan`) | implemented (header merge sinkron autentik + normalisasi request/repository tanpa drift schema) |
 | Ekstensi Lokal 2026 | `prestasi-lomba` | Buku Prestasi | `tahun`, `jenis_lomba`, `lokasi`, `prestasi_kecamatan`, `prestasi_kabupaten`, `prestasi_provinsi`, `prestasi_nasional`, `keterangan` | `BUKU PRESTASI {LEVEL}` | Dokumen autentik `docs/referensi/excel/BUKU BANTU.xlsx` (sheet `Buku Prestasi`) | implemented (header grup prestasi 4 tingkat sinkron autentik; field boolean capaian tetap normal) |
@@ -68,6 +69,7 @@ Aturan baca:
   - `database/migrations/2026_02_20_210000_create_kader_khusus_table.php`
   - `database/migrations/2026_02_21_050000_create_agenda_surats_table.php`
   - `database/migrations/2026_02_27_120000_create_buku_notulen_rapats_table.php`
+  - `database/migrations/2026_02_27_130000_create_buku_daftar_hadirs_table.php`
   - `database/migrations/2026_02_16_180000_create_bantuans_table.php`
   - `database/migrations/2026_02_23_070000_create_buku_keuangans_table.php`
   - `database/migrations/2026_02_16_170000_create_inventaris_table.php`
@@ -154,7 +156,7 @@ Mapping grup sidebar:
 
 | Grup Sidebar | Slug Modul |
 | --- | --- |
-| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-notulen-rapat`, `buku-keuangan`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
+| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-notulen-rapat`, `buku-daftar-hadir`, `buku-keuangan`, `inventaris`, `activities`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
 | Pokja I | `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`, `paar` |
 | Pokja II | `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
 | Pokja III | `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |

@@ -75,6 +75,7 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/anggota-tim-penggerak`, label: 'Daftar Anggota Tim Penggerak PKK' },
       { href: `/${scope}/kader-khusus`, label: 'Daftar Kader Tim Penggerak PKK' },
       { href: `/${scope}/agenda-surat`, label: 'Agenda Surat Masuk/Keluar' },
+      { href: `/${scope}/buku-daftar-hadir`, label: 'Buku Daftar Hadir' },
       { href: `/${scope}/buku-notulen-rapat`, label: 'Buku Notulen Rapat' },
       { href: `/${scope}/buku-keuangan`, label: 'Buku Keuangan' },
       { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
