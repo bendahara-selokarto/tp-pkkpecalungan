@@ -17,6 +17,9 @@ Status: `done`
 Catatan lanjutan visual minimalis:
 - Eksekusi refactor UI minimalis direncanakan di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
 - Acuan baseline visual: dashboard role `kecamatan-sekretaris` yang sudah diperbaiki pada sesi aktif.
+- Update skenario aktif 2026-02-26: untuk concern sekretaris, rendering dikunci satu section (`sekretaris-section-1`), section lanjutan tidak dirender.
+- Update representasi 2026-02-26: tiap blok dashboard menampilkan tabel informatif (`Informasi|Nilai|Keterangan`) untuk melengkapi kartu KPI.
+- Update copywriting 2026-02-26: label user-facing dashboard ditulis dengan bahasa natural user (mengurangi istilah teknis seperti `RO/RW`, `By Level`, `Read Only`).
 - Harmonisasi koherensi UI terbaru mengikuti:
   - `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
   - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
