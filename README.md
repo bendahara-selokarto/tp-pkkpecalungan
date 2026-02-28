@@ -2,6 +2,7 @@
 
 Dokumen ini adalah panduan manusia untuk memahami dan mengimplementasikan proyek.
 Dokumen AI dan optimasi rate limiter ada di `AGENTS.md`.
+Indeks dokumentasi ada di `docs/README.md`.
 
 ## 0. Referensi Domain Utama
 
@@ -9,6 +10,12 @@ Dokumen AI dan optimasi rate limiter ada di `AGENTS.md`.
 - Ringkasan sinkronisasi lokal: `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
 - Jika ada ketidakkoherenan istilah/label domain, utamakan pedoman domain utama di atas.
 - Aturan teknis implementasi tetap mengacu ke `AGENTS.md`.
+
+## 0.1 Arsitektur Dokumentasi Eksekusi
+
+- Rencana eksekusi lintas-file: `docs/process/TODO_*.md` (format `TODO <KODE_UNIK> ...`).
+- Keputusan arsitektur lintas concern: `docs/adr/ADR_*.md`.
+- TODO adalah jalur eksekusi, ADR adalah jejak keputusan + trade-off.
 
 ## 1. Tujuan Proyek
 

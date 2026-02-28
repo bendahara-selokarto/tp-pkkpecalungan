@@ -4,6 +4,7 @@ Dokumen ini adalah source of truth AI untuk repository ini.
 Dokumen manusia ada di `README.md`.
 Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` (sumber: `docs/referensi/Rakernas X.pdf`).
 Dokumen jalur tunggal eksekusi AI ada di `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`.
+Dokumen keputusan arsitektur ada di `docs/adr/` (`ADR_*` + `README.md`).
 
 ## 0. Priority
 
@@ -11,7 +12,8 @@ Jika konflik dokumen:
 1. `AGENTS.md` (aturan teknis, arsitektur, eksekusi agent)
 2. `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` (routing operasional AI deterministik)
 3. `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` (terminologi/kontrak domain canonical aktif)
-4. `README.md`
+4. `docs/adr/ADR_*.md` (keputusan arsitektur teknis lintas concern; tidak boleh melanggar poin 1-3)
+5. `README.md`
 
 Aturan koherensi domain:
 - Jika ada perbedaan istilah, label, atau kontrak domain antara dokumen internal dan pedoman utama, utamakan `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`.
@@ -58,7 +60,8 @@ Legacy artifacts (historical; non-canonical):
 3. Patch minimal: perubahan sekecil mungkin, hindari rewrite luas.
 4. Validate: jalankan test/cek dampak, pastikan tidak ada behavior drift.
 5. Doc-hardening pass (triggered): jika ada pemicu dokumentasi canonical, wajib jalankan hardening dokumen sebelum final report.
-6. Copywriting pass (triggered): jika ada pemicu copy UI, wajib lakukan hardening teks user-facing sebelum final report.
+6. ADR pass (triggered): jika ada keputusan arsitektur/kontrak teknis lintas concern, wajib catat/sinkronkan ADR.
+7. Copywriting pass (triggered): jika ada pemicu copy UI, wajib lakukan hardening teks user-facing sebelum final report.
 
 Rute operasional detail wajib mengikuti:
 - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
@@ -68,12 +71,24 @@ Trigger doc-hardening pass:
 - Perubahan lintas lebih dari satu dokumen rencana/proses untuk fitur yang sama.
 - Ditemukan istilah ambigu atau istilah lama yang berpotensi drift kontrak (contoh: token query generik pada multi-section).
 - Ada selisih status implementasi vs status dokumen (`planned/in-progress/done`) pada concern yang sama.
+- Ada perubahan status/isi ADR yang belum tersinkron ke TODO concern atau dokumen process/domain terkait.
 
 Langkah minimal doc-hardening pass:
 1. Audit drift istilah/kontrak pada dokumen yang terdampak (scoped grep + diff).
-2. Normalisasi istilah canonical lintas TODO/process/domain matrix/playbook.
-3. Sinkronkan checklist status/keputusan agar sesuai implementasi aktual.
+2. Normalisasi istilah canonical lintas TODO/process/domain matrix/playbook/ADR.
+3. Sinkronkan checklist status/keputusan (TODO + ADR) agar sesuai implementasi aktual.
 4. Laporkan hasil hardening: file terdampak, keputusan yang dikunci, dan validasi yang dijalankan.
+
+Trigger ADR pass:
+- Perubahan boundary arsitektur utama (`Controller -> UseCase/Action -> Repository -> Model`).
+- Perubahan enforcement authorization backend (`Policy`, `Scope Service`, middleware akses).
+- Keputusan teknis strategis dengan opsi trade-off yang perlu jejak audit lintas sesi.
+
+Langkah minimal ADR pass:
+1. Tulis/ubah ADR di `docs/adr/ADR_<NOMOR4>_<RINGKASAN>.md`.
+2. Tautkan ADR ke TODO concern aktif pada `docs/process/TODO_*`.
+3. Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern.
+4. Laporkan alasan keputusan + dampak + fallback plan pada final report.
 
 Trigger copywriting pass:
 - Ditemukan label UI teknis/internal yang tampil ke user akhir (contoh: token query key, istilah section teknis, slug mentah).
@@ -199,9 +214,15 @@ Aturan markdown operasional:
   - Format judul: `# TODO <KODE_UNIK> <Judul Ringkas>`.
   - `KODE_UNIK` harus mudah diketik: huruf kapital + angka saja (tanpa simbol), panjang 4-8 karakter.
   - Format nama file disarankan: `TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
+- Keputusan arsitektur lintas concern wajib dicatat pada ADR di `docs/adr/`.
+  - Format judul: `# ADR <NOMOR4> <Judul Ringkas>`.
+  - Format nama file: `ADR_<NOMOR4>_<RINGKASAN>.md`.
+  - Status ADR wajib salah satu: `proposed`, `accepted`, `superseded`, `deprecated`.
 - Gunakan format checklist `- [ ]` untuk task dan `- [x]` untuk task selesai.
 - Setiap TODO wajib memuat: konteks, target hasil, langkah eksekusi, validasi, risiko, keputusan.
+- Jika concern memiliki dampak arsitektur, TODO wajib menautkan ADR terkait.
 - Setiap update dokumen harus ringkas, diff-first, dan hindari pengulangan konteks yang sama.
 - Perubahan dengan sinyal canonical wajib mengupdate minimal satu markdown arsitektur (`AGENTS.md` / playbook / terminology map) dan diverifikasi oleh CI gate.
 - Jika trigger doc-hardening pass aktif, pembaruan dokumen wajib mencakup sinkronisasi lintas dokumen terkait concern yang sama (bukan hanya satu file terisolasi).
+- Jika trigger ADR pass aktif, pembaruan dokumen wajib mencakup sinkronisasi TODO + ADR + dokumen process/domain concern terkait.
 - Jika trigger copywriting pass aktif, teks user-facing wajib distandardkan ke bahasa natural user dan menghindari istilah teknis internal.

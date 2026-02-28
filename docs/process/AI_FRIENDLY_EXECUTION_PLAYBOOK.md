@@ -55,6 +55,7 @@ Gunakan status:
 | `P-018` | UI Runtime Safety Guardrail | Perubahan UI kritikal berbasis JavaScript (layout, dropdown, theme, dynamic state) | Behavior UI tetap terkontrol saat terjadi runtime error JavaScript | Guard global JS + fallback UI + build frontend | `active` |
 | `P-019` | Attachment Render Recovery via Protected Stream Route | Lampiran (foto/berkas) tidak tampil di halaman show, terutama pada setup Apache/Windows | Lampiran tetap bisa preview dan dibuka tanpa bergantung pada static `/storage` URL | Targeted feature tests concern + `php artisan route:list --name=attachments.show` | `active` |
 | `P-020` | Kecamatan Dual-Scope List Contract (`kecamatan` vs `desa monitoring`) | Daftar modul di scope kecamatan butuh mode data sendiri + mode monitoring desa | Mode `kecamatan` konsisten ke data milik sendiri, mode `desa` konsisten ke seluruh desa dalam kecamatan, dan monitoring tetap read-only | Feature test list kedua mode + payload mode visibility + middleware anti write bypass | `active` |
+| `P-021` | ADR + TODO Coupled Governance | Ada keputusan arsitektur/canonical berdampak lintas sesi atau lintas modul | Keputusan teknis punya jejak trade-off yang bisa diaudit dan eksekusi concern tetap terikat checklist validasi | ADR template terisi + TODO concern aktif + sinkronisasi status keputusan | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -481,3 +482,30 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Jika tidak didokumentasikan, concern lain mudah mereplikasi toggle UI tanpa konsistensi kontrak query backend.
 - Catatan reuse lintas domain/project:
   - Gunakan sebagai template default untuk semua daftar scope kecamatan yang punya mode operasional internal + monitoring desa.
+
+### P-021 - ADR + TODO Coupled Governance
+- Tanggal: 2026-02-28
+- Status: active
+- Konteks: Concern berisiko drift saat keputusan arsitektur hanya ada di chat/TODO tanpa catatan keputusan formal yang memuat opsi dan trade-off.
+- Trigger:
+  - Perubahan kontrak arsitektur, authorization, atau boundary repository yang berdampak lintas modul.
+  - Keputusan teknis strategis yang perlu jejak audit lintas sesi.
+- Langkah eksekusi:
+  1) Kunci rencana eksekusi concern pada TODO aktif (`docs/process/TODO_*`) dengan basis `docs/process/TEMPLATE_TODO_CONCERN.md`.
+  2) Catat keputusan arsitektur pada ADR (`docs/adr/ADR_<NOMOR4>_<RINGKASAN>.md`) dengan basis `docs/adr/ADR_TEMPLATE.md`.
+  3) Tautkan ADR ke TODO concern dan area validasi test.
+  4) Saat keputusan berubah, buat ADR baru dan tandai ADR lama sebagai `superseded`.
+- Guardrail:
+  - TODO tetap sumber rencana eksekusi; ADR sumber keputusan arsitektur.
+  - Jangan ubah status ADR ke `accepted` tanpa rencana validasi yang jelas.
+  - Hindari keputusan penting hanya tersimpan di chat.
+- Validasi minimum:
+  - ADR berisi konteks, opsi, keputusan, dampak, validasi, fallback.
+  - TODO concern menyimpan checklist eksekusi dan hasil validasi terbaru.
+  - Referensi silang ADR <-> TODO konsisten.
+- Bukti efisiensi/akurasi:
+  - Menurunkan ambiguitas pada perubahan jangka panjang karena keputusan dan eksekusi terdokumentasi terpisah namun terhubung.
+- Risiko:
+  - Tambahan overhead dokumentasi jika dipakai untuk perubahan kecil yang tidak strategis.
+- Catatan reuse lintas domain/project:
+  - Cocok untuk project yang memerlukan jejak keputusan audit-friendly tanpa mengorbankan patch minimal.

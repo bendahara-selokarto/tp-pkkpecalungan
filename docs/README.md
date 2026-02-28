@@ -2,6 +2,11 @@
 
 Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
 
+## Protokol Eksekusi
+- Rencana kerja lintas-file ditulis pada TODO concern di `docs/process/TODO_*.md`.
+- Keputusan arsitektur strategis ditulis pada ADR di `docs/adr/ADR_*.md`.
+- TODO dan ADR wajib saling merujuk jika concern menyentuh perubahan arsitektur.
+
 ## Root (Dokumen Inti)
 - `AGENTS.md`: kontrak eksekusi AI dan aturan teknis utama.
 - `README.md`: panduan manusia untuk penggunaan dan pengembangan.
@@ -26,9 +31,16 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
 - Runbook, rencana eksekusi, gate operasional, dan log validasi.
 - File utama:
   - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+  - `docs/process/TEMPLATE_TODO_CONCERN.md`
   - `docs/process/RUNBOOK_429_RATE_LIMITER.md`
   - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
   - `docs/process/RELEASE_CHECKLIST_PDF.md`
+
+## docs/adr
+- Arsip keputusan arsitektur (`Architecture Decision Record`) untuk keputusan teknis berdampak jangka panjang.
+- File utama:
+  - `docs/adr/README.md`
+  - `docs/adr/ADR_TEMPLATE.md`
 
 ## docs/user-guide
 - Panduan penggunaan sistem untuk pengguna akhir per peran dan per alur kerja.

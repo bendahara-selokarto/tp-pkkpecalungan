@@ -34,6 +34,7 @@ Status: `active` (`truth-registry`, deterministic-routing)
 | `C-USER-GUIDE` | User guide natural humanis | `docs/process/TODO_USER_GUIDE_NATURAL_HUMANIS_2026_02_24.md` | `done` | - | Concern tunggal, tidak overlap aktif. |
 | `C-DATABASE-NORMALISASI` | Normalisasi database & legacy reduction | `docs/process/TODO_NORMALISASI_DATABASE_2026_02_24.md` | `done` | `TODO_CLEANUP_HIERARKI_FOLDER_2026_02_23.md`, `TODO_COVERAGE_UNIT_TEST_DAN_SEEDER_2026_02_22.md` | Untuk keputusan struktur data legacy gunakan TODO normalisasi sebagai acuan utama. |
 | `C-PROCESS-EXECUTION` | Jalur eksekusi AI zero ambiguity | `docs/process/TODO_ZERO_AMBIGUITY_AI_SINGLE_PATH_2026_02_23.md` | `done` | `TODO_FLOW_BACA_LAPOR_SINKRON_HEADER_TABEL.md` | Eksekusi AI concern process dirujuk ke arsitektur aktif + flow baca-lapor-sinkron. |
+| `C-DOC-ARCH-V2` | Refactor arsitektur markdown TODO + ADR | `docs/process/TODO_MDA26R1_REFACTOR_MARKDOWN_ARSITEKTUR_BARU_2026_02_28.md` | `done` | `docs/adr/ADR_0001_DOCUMENTATION_GOVERNANCE_TODO_ADR.md` (`decision-record`) | Concern dokumentasi arsitektural mengikuti pasangan TODO + ADR; sinkronisasi wajib lintas AGENTS/single-path/playbook/index. |
 
 ## Daftar Dokumen Ambigu yang Diturunkan Statusnya
 

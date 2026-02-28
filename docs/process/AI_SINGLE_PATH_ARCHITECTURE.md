@@ -20,8 +20,9 @@ Jika ada konflik, gunakan urutan ini:
 1. `AGENTS.md`
 2. `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` (dokumen ini)
 3. `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
-4. dokumen domain/proses lain di `docs/`
-5. `README.md`
+4. `docs/adr/ADR_*.md`
+5. dokumen domain/proses lain di `docs/`
+6. `README.md`
 
 Aturan anti-ambiguity:
 - Jika instruksi user bertentangan dengan invariants `AGENTS.md`, tolak jalur yang melanggar invariant.
@@ -29,8 +30,10 @@ Aturan anti-ambiguity:
 - Jika status dokumen berbeda dengan implementasi aktual, status dokumen wajib diperbarui sebelum final report (`doc-hardening pass`).
 - Jika ada referensi ganda pada concern yang sama, gunakan referensi terakhir dari user sebagai acuan final dan tandai referensi sebelumnya sebagai `superseded`.
 - Untuk TODO baru, gunakan kode unik singkat setelah kata `TODO` agar targeting spesifik tidak ambigu.
+- Untuk ADR baru, gunakan nomor 4 digit (`ADR_0001`, dst) dan status eksplisit (`proposed/accepted/superseded/deprecated`).
 - Untuk ambiguity lintas TODO concern yang sama, resolver wajib memakai registry:
   - `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- Jika concern memiliki dampak arsitektur, resolver wajib memastikan TODO concern menunjuk ADR yang aktif.
 
 ## 3. Jalur Tunggal Eksekusi (Mandatory)
 
@@ -41,6 +44,7 @@ Aturan anti-ambiguity:
 2. `Contract Lock`
 - Kunci kontrak concern: target, scope role, boundary data, acceptance criteria.
 - Tetapkan file target sebelum patch.
+- Jika menyentuh arsitektur, kunci juga `TODO concern + ADR` sebagai pasangan dokumen keputusan/eksekusi.
 
 3. `Scoped Read`
 - Baca hanya file concern + dependensi langsung.
@@ -60,7 +64,11 @@ Aturan anti-ambiguity:
 - Wajib saat trigger canonical aktif (akses, scope, dashboard representation, query key, metadata sumber, atau lintas dokumen concern).
 - Saat membuat TODO baru, pastikan format judul mengikuti `TODO <KODE_UNIK> ...` sesuai `AGENTS.md`.
 
-7. `Report`
+7. `ADR Sync`
+- Wajib saat concern menyentuh keputusan arsitektur lintas concern.
+- Pastikan status ADR sinkron dengan status TODO concern.
+
+8. `Report`
 - Laporkan: apa diubah, kenapa, file terdampak, hasil validasi, risiko residual.
 
 ## 4. Task Router (Deterministik)
@@ -74,6 +82,7 @@ Aturan anti-ambiguity:
 | Dokumen pedoman autentik | Contract sync doc | `docs/domain/*_MAPPING.md`, `docs/process/TODO_AUTENTIK_*` | Validasi header tabel sampai merge cell (`rowspan/colspan`) |
 | Normalisasi label/copy UI | Copywriting hardening | `resources/js/**/*`, `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md` | Smoke UI + test feature terdampak |
 | Audit/risk assessment | Arsitektur & risiko | `docs/process/*RISK*`, `docs/security/*` | Evidence command + keputusan mitigasi |
+| Keputusan arsitektur lintas concern | ADR governance | `docs/adr/ADR_*.md`, `docs/process/TODO_*` | ADR terhubung ke TODO concern + validasi concern terdampak |
 
 Jika permintaan tidak cocok tabel:
 - map ke concern paling dekat,
@@ -137,7 +146,8 @@ Jalankan hardening bila salah satu terjadi:
 - perubahan role/scope/matrix akses,
 - perubahan section dashboard berbasis hak akses,
 - perubahan istilah user-facing lintas komponen,
-- perubahan status implementasi tanpa update TODO/process terkait.
+- perubahan status implementasi tanpa update TODO/process terkait,
+- perubahan keputusan arsitektur tanpa sinkronisasi ADR.
 
 Output hardening minimum:
 - daftar file terdampak,
@@ -158,6 +168,7 @@ Mitigasi:
 
 - `AGENTS.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+- `docs/adr/README.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 - `docs/security/AUTH_COHERENCE_MATRIX.md`
 - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
