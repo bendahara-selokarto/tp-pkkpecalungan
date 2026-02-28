@@ -116,6 +116,13 @@ const SECTION1_MONTH_OPTIONS = [
   { value: '12', label: 'Desember' },
 ]
 const CHART_EMPTY_STATE_TEXT = 'Belum ada data untuk filter yang dipilih.'
+const CHART_AXIS_LABEL_COLOR = '#64748b'
+const CHART_AXIS_LABEL_FONT_SIZE = '11px'
+const CHART_GRID_BORDER_COLOR = '#e2e8f0'
+const CHART_GRID_STROKE_DASH = 4
+const CHART_TOOLTIP_THEME = 'light'
+const CHART_BAR_BORDER_RADIUS = 4
+const CHART_PIE_COLORS = ['#06b6d4', '#f97316', '#ef4444', '#22c55e', '#a855f7', '#eab308', '#0f766e', '#db2777', '#1d4ed8', '#65a30d']
 
 const USER_SECTION_LABELS = {
   'sekretaris-section-1': 'Ringkasan Tugas Sekretaris',
@@ -248,14 +255,18 @@ const filteredSekretarisSection3Blocks = computed(() =>
 )
 
 const resolveSectionLabel = (sectionKey, blocks, fallback) => {
+  const firstBlock = blocks[0]
+  const sectionLabel = firstBlock?.section?.label
+
+  if (typeof sectionLabel === 'string' && sectionLabel.trim() !== '') {
+    return sectionLabel
+  }
+
   if (typeof USER_SECTION_LABELS[sectionKey] === 'string') {
     return USER_SECTION_LABELS[sectionKey]
   }
 
-  const firstBlock = blocks[0]
-  const label = firstBlock?.section?.label
-
-  return typeof label === 'string' && label.trim() !== '' ? label : fallback
+  return fallback
 }
 
 const resolveSectionDescription = (sectionKey) => {
@@ -436,11 +447,6 @@ const applySekretarisSectionFilters = () => {
   })
 }
 
-const onSection2GroupChange = () => {
-  selectedSection2Group.value = resolveOptionValue(selectedSection2Group.value, SECTION_GROUP_OPTIONS, 'all')
-  applySekretarisSectionFilters()
-}
-
 const onSection1MonthChange = () => {
   selectedSection1Month.value = resolveOptionValue(selectedSection1Month.value, SECTION1_MONTH_OPTIONS, 'all')
   if (!hasMonthFilterAwareBlocks.value) {
@@ -455,9 +461,29 @@ const onSection1MonthChange = () => {
   applyFilters()
 }
 
-const onSection3GroupChange = () => {
-  selectedSection3Group.value = resolveOptionValue(selectedSection3Group.value, SECTION_GROUP_OPTIONS, 'all')
-  applySekretarisSectionFilters()
+const resolveSectionGroupFilterValue = (queryKey) => {
+  if (queryKey === 'section2_group') {
+    return selectedSection2Group.value
+  }
+
+  if (queryKey === 'section3_group') {
+    return selectedSection3Group.value
+  }
+
+  return 'all'
+}
+
+const onSectionGroupFilterChange = (queryKey, rawValue) => {
+  if (queryKey === 'section2_group') {
+    selectedSection2Group.value = resolveOptionValue(rawValue, SECTION_GROUP_OPTIONS, 'all')
+    applySekretarisSectionFilters()
+    return
+  }
+
+  if (queryKey === 'section3_group') {
+    selectedSection3Group.value = resolveOptionValue(rawValue, SECTION_GROUP_OPTIONS, 'all')
+    applySekretarisSectionFilters()
+  }
 }
 
 watch(
@@ -601,6 +627,19 @@ const availableSubLevelOptions = computed(() => {
 })
 
 const toNumber = (value) => Number(value ?? 0)
+const buildAxisLabelStyles = (labels) => ({
+  colors: (labels ?? []).map(() => CHART_AXIS_LABEL_COLOR),
+  fontSize: CHART_AXIS_LABEL_FONT_SIZE,
+})
+const buildChartNoData = () => ({
+  text: CHART_EMPTY_STATE_TEXT,
+  align: 'center',
+  verticalAlign: 'middle',
+})
+const buildCartesianGrid = () => ({
+  borderColor: CHART_GRID_BORDER_COLOR,
+  strokeDashArray: CHART_GRID_STROKE_DASH,
+})
 const formatPieAbsoluteValue = (_value, options) => {
   const seriesIndex = toNumber(options?.seriesIndex)
   const seriesValue = toNumber(options?.w?.config?.series?.[seriesIndex] ?? 0)
@@ -684,6 +723,17 @@ const resolveGroupContextLabel = (group) => {
   }
 
   return humanizeLabel(token)
+}
+
+const resolveFilterContextSummary = (context) => {
+  const modeLabel = resolveModeContextLabel(context?.mode)
+  const modeToken = normalizeToken(context?.mode, 'all')
+
+  if (modeToken === 'by-sub-level') {
+    return `Cara Tampil ${modeLabel} | Wilayah Turunan ${resolveSubLevelContextLabel(context?.sub_level)}`
+  }
+
+  return `Cara Tampil ${modeLabel} | Tingkat Wilayah ${resolveLevelContextLabel(context?.level)}`
 }
 
 const resolveBlockAccessModeLabel = (block) => {
@@ -856,12 +906,12 @@ const buildInformativeTableRows = (block) => {
     },
     {
       info: 'Jangkauan Wilayah',
-      value: String(block?.sources?.source_area_type ?? '-'),
+      value: sourceAreaTypeLabel(block),
       note: 'Menjelaskan wilayah asal data yang dihitung.',
     },
     {
       info: 'Pilihan Tampilan Aktif',
-      value: `Cara Tampil ${resolveModeContextLabel(context.mode)} | Tingkat Wilayah ${resolveLevelContextLabel(context.level)}`,
+      value: resolveFilterContextSummary(context),
       note: 'Pilihan tampilan yang sedang Anda pakai.',
     },
   ]
@@ -946,10 +996,7 @@ const buildActivityMonthlyMultiAxisSeries = (block) => {
 
 const buildActivityMonthlyMultiAxisOptions = (block) => {
   const labels = block?.charts?.monthly?.labels ?? []
-  const axisLabelStyles = {
-    colors: labels.map(() => '#64748b'),
-    fontSize: '11px',
-  }
+  const axisLabelStyles = buildAxisLabelStyles(labels)
 
   return {
     chart: {
@@ -966,16 +1013,16 @@ const buildActivityMonthlyMultiAxisOptions = (block) => {
         horizontal: false,
         distributed: false,
         columnWidth: '55%',
-        borderRadius: 4,
+        borderRadius: CHART_BAR_BORDER_RADIUS,
       },
     },
     colors: ['#0ea5e9', '#6366f1'],
     dataLabels: {
       enabled: false,
     },
-    grid: {
-      borderColor: '#e2e8f0',
-      strokeDashArray: 4,
+    grid: buildCartesianGrid(),
+    tooltip: {
+      theme: CHART_TOOLTIP_THEME,
     },
     legend: {
       show: true,
@@ -1017,11 +1064,7 @@ const buildActivityMonthlyMultiAxisOptions = (block) => {
         },
       },
     ],
-    noData: {
-      text: CHART_EMPTY_STATE_TEXT,
-      align: 'center',
-      verticalAlign: 'middle',
-    },
+    noData: buildChartNoData(),
   }
 }
 
@@ -1082,7 +1125,7 @@ const buildActivityByDesaKegiatanOptions = (block) => {
       },
     },
     labels,
-    colors: ['#06b6d4', '#f97316', '#ef4444', '#22c55e', '#a855f7', '#eab308', '#0f766e', '#db2777', '#1d4ed8', '#65a30d'],
+    colors: CHART_PIE_COLORS,
     dataLabels: {
       enabled: true,
       formatter: formatPieAbsoluteValue,
@@ -1091,11 +1134,10 @@ const buildActivityByDesaKegiatanOptions = (block) => {
       show: true,
       position: 'bottom',
     },
-    noData: {
-      text: CHART_EMPTY_STATE_TEXT,
-      align: 'center',
-      verticalAlign: 'middle',
+    tooltip: {
+      theme: CHART_TOOLTIP_THEME,
     },
+    noData: buildChartNoData(),
   }
 }
 const buildActivityByDesaBookCoverageSeries = (block) => {
@@ -1117,10 +1159,7 @@ const buildActivityByDesaBookCoverageSeries = (block) => {
 
 const buildActivityByDesaBookCoverageOptions = (block) => {
   const { labels } = resolveActivityByDesaMetrics(block)
-  const axisLabelStyles = {
-    colors: labels.map(() => '#64748b'),
-    fontSize: '11px',
-  }
+  const axisLabelStyles = buildAxisLabelStyles(labels)
 
   return {
     chart: {
@@ -1136,7 +1175,7 @@ const buildActivityByDesaBookCoverageOptions = (block) => {
       bar: {
         horizontal: false,
         columnWidth: '45%',
-        borderRadius: 4,
+        borderRadius: CHART_BAR_BORDER_RADIUS,
       },
     },
     colors: ['#7e22ce', '#16a34a'],
@@ -1147,6 +1186,10 @@ const buildActivityByDesaBookCoverageOptions = (block) => {
       show: true,
       position: 'top',
       horizontalAlign: 'left',
+    },
+    grid: buildCartesianGrid(),
+    tooltip: {
+      theme: CHART_TOOLTIP_THEME,
     },
     xaxis: {
       categories: labels,
@@ -1166,15 +1209,11 @@ const buildActivityByDesaBookCoverageOptions = (block) => {
       },
       labels: {
         style: {
-          colors: ['#7e22ce'],
+          colors: [CHART_AXIS_LABEL_COLOR],
         },
       },
     },
-    noData: {
-      text: CHART_EMPTY_STATE_TEXT,
-      align: 'center',
-      verticalAlign: 'middle',
-    },
+    noData: buildChartNoData(),
   }
 }
 
@@ -1396,25 +1435,10 @@ const hasLegacyLevelDistributionData = computed(() =>
                 </label>
 
                 <select
-                  v-if="section.filter.queryKey === 'section2_group'"
-                  v-model="selectedSection2Group"
+                  v-if="section.filter.queryKey === 'section2_group' || section.filter.queryKey === 'section3_group'"
+                  :value="resolveSectionGroupFilterValue(section.filter.queryKey)"
                   class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-                  @change="onSection2GroupChange"
-                >
-                  <option
-                    v-for="option in section.filter.options"
-                    :key="`${section.key}-${option.value}`"
-                    :value="option.value"
-                  >
-                    {{ option.label }}
-                  </option>
-                </select>
-
-                <select
-                  v-else-if="section.filter.queryKey === 'section3_group'"
-                  v-model="selectedSection3Group"
-                  class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-                  @change="onSection3GroupChange"
+                  @change="onSectionGroupFilterChange(section.filter.queryKey, $event.target.value)"
                 >
                   <option
                     v-for="option in section.filter.options"
@@ -1491,7 +1515,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                     {{ resolveCoverageChartHeading(block) }}
                   </h4>
                   <div class="h-80">
-                    <BarChart :data="buildDocumentCoverageChartData(block)" horizontal />
+                    <BarChart :data="buildDocumentCoverageChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" horizontal />
                   </div>
                   <p v-if="!hasDocumentCoverageData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
                     Belum ada data untuk filter yang dipilih.
@@ -1548,7 +1572,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                     </div>
                   </div>
                   <p class="mb-2 text-[11px] text-slate-500 dark:text-slate-400">
-                    {{ activityByDesaChartModeLabel(block) }}
+                    {{ activityByDesaChartModeLabel() }}
                   </p>
                   <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
                     <div>
@@ -1620,7 +1644,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                     Distribusi Level
                   </h4>
                   <div class="h-72">
-                    <BarChart :data="buildActivityLevelChartData(block)" />
+                    <BarChart :data="buildActivityLevelChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
                   </div>
                 </div>
               </div>
@@ -1656,13 +1680,13 @@ const hasLegacyLevelDistributionData = computed(() =>
         <CardBox>
           <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Buku</h3>
           <div class="h-96">
-            <BarChart :data="legacyCoveragePerBukuChartData" horizontal />
+            <BarChart :data="legacyCoveragePerBukuChartData" :empty-text="CHART_EMPTY_STATE_TEXT" horizontal />
           </div>
         </CardBox>
         <CardBox>
           <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Lampiran</h3>
           <div class="h-96">
-            <BarChart :data="legacyCoveragePerLampiranChartData" />
+            <BarChart :data="legacyCoveragePerLampiranChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
           </div>
           <p v-if="!hasLegacyLampiranCoverageData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
             Belum ada data terhitung pada cakupan per lampiran untuk wilayah ini.
@@ -1684,7 +1708,7 @@ const hasLegacyLevelDistributionData = computed(() =>
         <CardBox>
           <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Distribusi Level Data Dokumen</h3>
           <div class="h-72">
-            <BarChart :data="legacyLevelDistributionChartData" />
+            <BarChart :data="legacyLevelDistributionChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
           </div>
           <p v-if="!hasLegacyLevelDistributionData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
             Belum ada data terhitung pada distribusi level dokumen untuk wilayah ini.

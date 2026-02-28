@@ -423,6 +423,9 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ($block['group'] ?? null) === 'pokja-i'
                         && ($block['charts']['coverage_per_module']['dimension'] ?? null) === 'desa'
                         && ($block['sources']['source_area_type'] ?? null) === 'desa-turunan'
+                        && ($block['sources']['filter_context']['mode'] ?? null) === 'by-level'
+                        && ($block['sources']['filter_context']['level'] ?? null) === 'desa'
+                        && ($block['sources']['filter_context']['sub_level'] ?? null) === 'all'
                         && in_array('Gombong', $labels, true)
                         && in_array('Bandung', $labels, true)
                         && ! in_array('Sidomukti', $labels, true)
@@ -432,7 +435,7 @@ class DashboardDocumentCoverageTest extends TestCase
         });
     }
 
-    public function test_dashboard_query_filter_mengubah_filter_context_dan_mode_sub_level_tetap_stabil(): void
+    public function test_dashboard_role_kecamatan_pokja_mengunci_filter_context_ke_level_desa_untuk_breakdown_per_desa(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -475,8 +478,9 @@ class DashboardDocumentCoverageTest extends TestCase
                     $first = collect($blocks)->first();
 
                     return is_array($first)
-                        && ($first['sources']['filter_context']['mode'] ?? null) === 'by-sub-level'
-                        && ($first['sources']['filter_context']['sub_level'] ?? null) === 'desa-gombong';
+                        && ($first['sources']['filter_context']['mode'] ?? null) === 'by-level'
+                        && ($first['sources']['filter_context']['level'] ?? null) === 'desa'
+                        && ($first['sources']['filter_context']['sub_level'] ?? null) === 'all';
                 });
         });
     }

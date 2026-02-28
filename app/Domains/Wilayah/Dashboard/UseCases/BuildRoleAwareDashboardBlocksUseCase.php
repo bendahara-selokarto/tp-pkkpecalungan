@@ -113,7 +113,7 @@ class BuildRoleAwareDashboardBlocksUseCase
                     (string) $mode,
                     $effectiveScope,
                     $modules,
-                    $dashboardContext
+                    $this->buildKecamatanByDesaFilterContext($dashboardContext)
                 );
 
                 if (is_array($kecamatanByDesaBlock)) {
@@ -402,6 +402,22 @@ class BuildRoleAwareDashboardBlocksUseCase
         $token = strtolower(trim((string) $value));
 
         return $token === '' ? $fallback : $token;
+    }
+
+    /**
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @return array{mode: string, level: string, sub_level: string, section1_month: mixed, section2_group: mixed, section3_group: mixed}
+     */
+    private function buildKecamatanByDesaFilterContext(array $dashboardContext): array
+    {
+        return [
+            'mode' => 'by-level',
+            'level' => ScopeLevel::DESA->value,
+            'sub_level' => 'all',
+            'section1_month' => $dashboardContext['section1_month'] ?? 'all',
+            'section2_group' => $dashboardContext['section2_group'] ?? 'all',
+            'section3_group' => $dashboardContext['section3_group'] ?? 'all',
+        ];
     }
 
     /**
