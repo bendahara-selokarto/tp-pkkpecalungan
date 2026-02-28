@@ -23,6 +23,7 @@ class AgendaSurat extends Model
         'diteruskan_kepada',
         'tembusan',
         'keterangan',
+        'data_dukung_path',
         'level',
         'area_id',
         'created_by',

@@ -86,6 +86,20 @@ const formatDate = (value) => formatDateForDisplay(value)
         <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.agendaSurat.keterangan || '-' }}</p>
       </div>
 
+      <div>
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Data Dukung</p>
+        <a
+          v-if="props.agendaSurat.data_dukung_url"
+          :href="props.agendaSurat.data_dukung_url"
+          target="_blank"
+          rel="noopener"
+          class="text-sm font-medium text-sky-600 hover:underline dark:text-sky-400"
+        >
+          Lihat berkas data dukung
+        </a>
+        <p v-else class="text-sm text-gray-700 dark:text-gray-300">-</p>
+      </div>
+
       <div class="flex items-center justify-end gap-2">
         <Link href="/desa/agenda-surat" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
           Kembali

@@ -24,6 +24,7 @@ class AgendaSuratRepository implements AgendaSuratRepositoryInterface
             'diteruskan_kepada' => $data->diteruskan_kepada,
             'tembusan' => $data->tembusan,
             'keterangan' => $data->keterangan,
+            'data_dukung_path' => $data->data_dukung_path,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
@@ -73,6 +74,7 @@ class AgendaSuratRepository implements AgendaSuratRepositoryInterface
             'diteruskan_kepada' => $data->diteruskan_kepada,
             'tembusan' => $data->tembusan,
             'keterangan' => $data->keterangan,
+            'data_dukung_path' => $data->data_dukung_path,
         ]);
 
         return $agendaSurat;

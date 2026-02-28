@@ -25,10 +25,23 @@ const form = useForm({
   diteruskan_kepada: props.agendaSurat.diteruskan_kepada ?? '',
   tembusan: props.agendaSurat.tembusan ?? '',
   keterangan: props.agendaSurat.keterangan ?? '',
+  data_dukung_upload: null,
 })
 
+const setFile = (event) => {
+  const [file] = event.target.files || []
+  form.data_dukung_upload = file || null
+}
+
 const submit = () => {
-  form.put(`/desa/agenda-surat/${props.agendaSurat.id}`)
+  form
+    .transform((data) => ({
+      ...data,
+      _method: 'put',
+    }))
+    .post(`/desa/agenda-surat/${props.agendaSurat.id}`, {
+      forceFormData: true,
+    })
 }
 </script>
 
@@ -115,6 +128,27 @@ const submit = () => {
           <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Keterangan</label>
           <textarea v-model="form.keterangan" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
           <p v-if="form.errors.keterangan" class="mt-1 text-xs text-rose-600">{{ form.errors.keterangan }}</p>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Data Dukung (Unggah Berkas)</label>
+          <a
+            v-if="props.agendaSurat.data_dukung_url"
+            :href="props.agendaSurat.data_dukung_url"
+            target="_blank"
+            rel="noopener"
+            class="mb-2 inline-block text-xs font-medium text-sky-600 hover:underline dark:text-sky-400"
+          >
+            Lihat berkas data dukung saat ini
+          </a>
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,image/*"
+            class="block w-full text-sm text-gray-700 file:mr-4 file:rounded-md file:border-0 file:bg-sky-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-sky-700 hover:file:bg-sky-100 dark:text-slate-200 dark:file:bg-sky-900/30 dark:file:text-sky-300"
+            @change="setFile"
+          >
+          <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kosongkan jika tidak ingin mengganti berkas.</p>
+          <p v-if="form.errors.data_dukung_upload" class="mt-1 text-xs text-rose-600">{{ form.errors.data_dukung_upload }}</p>
         </div>
 
         <div class="flex items-center justify-end gap-2">

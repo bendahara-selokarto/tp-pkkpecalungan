@@ -33,6 +33,7 @@ class StoreAgendaSuratRequest extends FormRequest
             'diteruskan_kepada' => 'nullable|string|max:255',
             'tembusan' => 'nullable|string|max:255',
             'keterangan' => 'nullable|string',
+            'data_dukung_upload' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp|max:10240',
         ];
     }
 }

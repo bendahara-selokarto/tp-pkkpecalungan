@@ -169,6 +169,8 @@ Route::prefix('desa')
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');
         Route::resource('agenda-surat', DesaAgendaSuratController::class);
+        Route::get('agenda-surat/{id}/attachment/data-dukung', [DesaAgendaSuratController::class, 'attachment'])
+            ->name('agenda-surat.attachments.show');
         Route::resource('buku-daftar-hadir', DesaBukuDaftarHadirController::class);
         Route::resource('buku-tamu', DesaBukuTamuController::class);
         Route::resource('buku-notulen-rapat', DesaBukuNotulenRapatController::class);
@@ -265,6 +267,8 @@ Route::prefix('kecamatan')
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');
         Route::resource('agenda-surat', KecamatanAgendaSuratController::class);
+        Route::get('agenda-surat/{id}/attachment/data-dukung', [KecamatanAgendaSuratController::class, 'attachment'])
+            ->name('agenda-surat.attachments.show');
         Route::resource('buku-daftar-hadir', KecamatanBukuDaftarHadirController::class);
         Route::resource('buku-tamu', KecamatanBukuTamuController::class);
         Route::resource('buku-notulen-rapat', KecamatanBukuNotulenRapatController::class);
