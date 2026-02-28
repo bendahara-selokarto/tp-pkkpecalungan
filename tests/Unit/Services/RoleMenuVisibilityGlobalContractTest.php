@@ -75,6 +75,7 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
         ],
         'monitoring' => [
             'desa-activities',
+            'desa-arsip',
         ],
     ];
 
@@ -292,7 +293,9 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             ->values();
 
         foreach ($allModuleSlugs as $slug) {
-            $expectedScopes = $slug === 'desa-activities' ? ['kecamatan'] : ['desa', 'kecamatan'];
+            $expectedScopes = in_array($slug, ['desa-activities', 'desa-arsip'], true)
+                ? ['kecamatan']
+                : ['desa', 'kecamatan'];
 
             foreach ($expectedScopes as $scope) {
                 $hasRoute = $routeUris->contains(

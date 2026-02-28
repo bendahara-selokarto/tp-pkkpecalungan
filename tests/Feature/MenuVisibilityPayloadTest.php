@@ -119,6 +119,7 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.menuGroupModes.monitoring', 'read-only')
                 ->where('auth.user.moduleModes.activities', 'read-write')
                 ->where('auth.user.moduleModes.desa-activities', 'read-only')
+                ->where('auth.user.moduleModes.desa-arsip', 'read-only')
             );
     }
 }

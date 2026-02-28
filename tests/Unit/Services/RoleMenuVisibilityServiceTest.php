@@ -108,6 +108,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['pokja-ii'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['monitoring'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['desa-activities'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['desa-arsip'] ?? null);
     }
 
     public function test_semua_role_operasional_memiliki_menu_buku_kegiatan(): void
