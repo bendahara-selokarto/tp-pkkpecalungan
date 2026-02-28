@@ -1,7 +1,7 @@
 # ADR 0002 Modular Access Management Super Admin
 
 Tanggal: 2026-02-28  
-Status: `proposed`  
+Status: `accepted`  
 Owner: Access governance  
 Related TODO: `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`  
 Supersedes: `-`  
@@ -29,17 +29,20 @@ Superseded by: `-`
 - Konsekuensi: risiko tinggi jika seed/konfigurasi rusak, kompleksitas bootstrap besar, rollback lebih sulit.
 
 ## Keputusan
-- Opsi terpilih: Opsi B (sementara, menunggu implementasi concern).
+- Opsi terpilih: Opsi B.
 - Alasan utama: menjaga baseline keamanan existing sambil membuka jalur pengelolaan akses oleh super-admin.
 - Kontrak yang dikunci:
   - fallback matrix hardcoded wajib tetap tersedia,
   - override hanya bisa dilakukan pada kombinasi role-group/modul yang valid,
-  - enforcement akhir tetap di backend (`EnsureModuleVisibility` + policy), bukan frontend.
+  - enforcement akhir tetap di backend (`EnsureModuleVisibility` + policy), bukan frontend,
+  - implementasi dilakukan bertahap per concern modul (bukan big-bang),
+  - tahap awal wajib read-only untuk validasi desain sebelum write override.
 
 ## Dampak
 - Dampak positif:
   - perubahan mapping akses tidak selalu memerlukan perubahan kode.
   - audit keputusan akses menjadi lebih eksplisit.
+  - risiko rollout menurun karena aktivasi write dilakukan per modul.
 - Trade-off:
   - kompleksitas runtime resolver bertambah.
   - butuh test regression lebih luas pada seluruh role operasional.
@@ -65,6 +68,9 @@ Superseded by: `-`
 - `app/Http/Middleware/EnsureModuleVisibility.php`
 - `app/Support/RoleScopeMatrix.php`
 - `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
+- `docs/process/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`
+- `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`
 
 ## Status Log
-- 2026-02-28: `proposed` | baseline keputusan untuk concern management ijin akses modul-group role.
+- 2026-02-28: `proposed` | baseline keputusan concern.
+- 2026-02-28: `proposed` -> `accepted` | disetujui implementasi Opsi B bertahap per concern modul, dimulai observasi + finalisasi markdown.
