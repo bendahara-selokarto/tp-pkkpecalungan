@@ -115,7 +115,6 @@ const SECTION1_MONTH_OPTIONS = [
   { value: '11', label: 'November' },
   { value: '12', label: 'Desember' },
 ]
-const BY_DESA_PIE_MAX_ITEMS = 8
 const CHART_EMPTY_STATE_TEXT = 'Belum ada data untuk filter yang dipilih.'
 
 const USER_SECTION_LABELS = {
@@ -1043,14 +1042,8 @@ const hasByDesaActivityMetrics = (block) => {
 
 const shouldShowActivityByDesaChart = (block) =>
   hasByDesaActivityMetrics(block)
-const shouldUsePieForActivityByDesa = (block) => {
-  const { labels } = resolveActivityByDesaMetrics(block)
-  return labels.length > 0 && labels.length <= BY_DESA_PIE_MAX_ITEMS
-}
-const activityByDesaChartModeLabel = (block) =>
-  (shouldUsePieForActivityByDesa(block)
-    ? 'Grafik pai dipakai saat jumlah desa ringkas agar komposisi cepat terbaca.'
-    : 'Grafik batang dipakai saat jumlah desa lebih banyak agar label tetap terbaca.')
+const activityByDesaChartModeLabel = () =>
+  'Grafik pai ditampilkan di sisi kiri, dan grafik batang ditampilkan di sisi kanan.'
 
 const resolveActivityByDesaMetrics = (block) => {
   const labels = block?.charts?.by_desa?.labels ?? []
@@ -1105,12 +1098,6 @@ const buildActivityByDesaKegiatanOptions = (block) => {
     },
   }
 }
-const buildActivityByDesaKegiatanBarData = (block) => {
-  const { labels, syncedActivityValues } = resolveActivityByDesaMetrics(block)
-
-  return buildSingleDataset(labels, syncedActivityValues, '#06b6d4')
-}
-
 const buildActivityByDesaBookCoverageSeries = (block) => {
   const { syncedTotalBookValues, syncedFilledBookValues } = resolveActivityByDesaMetrics(block)
 
@@ -1570,17 +1557,11 @@ const hasLegacyLevelDistributionData = computed(() =>
                       </h5>
                       <div class="h-72">
                         <apexchart
-                          v-if="shouldUsePieForActivityByDesa(block)"
                           type="pie"
                           width="100%"
                           height="100%"
                           :options="buildActivityByDesaKegiatanOptions(block)"
                           :series="buildActivityByDesaKegiatanSeries(block)"
-                        />
-                        <BarChart
-                          v-else
-                          :data="buildActivityByDesaKegiatanBarData(block)"
-                          horizontal
                         />
                       </div>
                       <p
