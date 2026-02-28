@@ -87,6 +87,14 @@ const formatDate = (value) => formatDateForDisplay(value)
               </option>
             </select>
           </label>
+          <a
+            href="/kecamatan/buku-notulen-rapat/report/pdf"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
+          >
+            Cetak PDF
+          </a>
           <Link
             href="/kecamatan/buku-notulen-rapat/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
