@@ -32,7 +32,7 @@ Tujuan:
 | --- | --- | --- | --- | --- | --- |
 | 4.9a | `anggota-tim-penggerak` | Buku Daftar Anggota Tim Penggerak PKK | Sidebar masih memakai `Buku Daftar Anggota TP PKK`; PDF sudah mengikuti pedoman | Sinkronkan label sidebar ke istilah canonical `Tim Penggerak` | partial |
 | 4.9b | `kader-khusus` | Buku Daftar Kader Tim Penggerak PKK | Sidebar masih memakai `Buku Daftar Kader TP PKK`; PDF sudah mengikuti pedoman | Sinkronkan label sidebar ke istilah canonical `Tim Penggerak` | partial |
-| 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | Sidebar dan index masih memakai `Buku Agenda Surat` | Lengkapi label menu/index menjadi `Buku Agenda Surat Masuk/Keluar` | partial |
+| 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | Sidebar/menu/index sudah memakai `Agenda Surat Masuk/Keluar`; form tambah/edit memakai label natural `Data Dukung (Unggah Berkas)` untuk lampiran file | Pertahankan label canonical pedoman + label upload natural user-facing | match |
 | 4.11 | `buku-keuangan` | Buku Keuangan | UI/PDF sudah mengarah ke label pedoman; alias route legacy `bantuans.keuangan` tetap aktif untuk transisi | Pertahankan domain dedicated + alias kompatibilitas | match |
 | 4.12 | `inventaris` | Buku Inventaris | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.13 | `activities` | Buku Kegiatan | PDF judul utama sudah `BUKU KEGIATAN TP PKK` | Pertahankan | match |

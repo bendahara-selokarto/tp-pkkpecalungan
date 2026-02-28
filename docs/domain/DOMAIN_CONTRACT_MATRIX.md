@@ -19,7 +19,7 @@ Aturan baca:
 | --- | --- | --- | --- | --- | --- | --- |
 | 4.9a | `anggota-tim-penggerak` | Buku Daftar Anggota Tim Penggerak PKK | `nama`, `jabatan`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `status_perkawinan`, `alamat`, `pendidikan`, `pekerjaan`, `keterangan` | `BUKU DAFTAR ANGGOTA TIM PENGGERAK PKK` | Rakernas X (Lampiran 4.9a) | match (header nomor kolom 1-11 sinkron autentik) |
 | 4.9b | `kader-khusus` | Buku Kader Khusus | Field inti: `nama`, `jenis_kelamin`, `tempat_lahir`, `tanggal_lahir`, `status_perkawinan`, `alamat`, `pendidikan`, `jenis_kader_khusus`, `keterangan`; proyeksi report autentik: `jenis_kelamin -> (L/P)`, `status_perkawinan -> (NIKAH/BLM NIKAH)` | `BUKU KADER KHUSUS` | Referensi terbaru `docs/referensi/excel/BUKU BANTU.xlsx` (sheet `Buku Kader Khusus`) + Rakernas X (Lampiran 4.9b) | implemented (menggunakan referensi terakhir; schema existing tetap normal) |
-| 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | `jenis_surat`, `tanggal_terima`, `tanggal_surat`, `nomor_surat`, `asal_surat`, `dari`, `kepada`, `perihal`, `lampiran`, `diteruskan_kepada`, `tembusan`, `keterangan` | `BUKU AGENDA SURAT MASUK/KELUAR` | Rakernas X (Lampiran 4.10) | match (merge header + nomor kolom 1-15 sinkron autentik) |
+| 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | `jenis_surat`, `tanggal_terima`, `tanggal_surat`, `nomor_surat`, `asal_surat`, `dari`, `kepada`, `perihal`, `lampiran`, `diteruskan_kepada`, `tembusan`, `keterangan`, `data_dukung_path` (opsional, upload berkas operasional) | `BUKU AGENDA SURAT MASUK/KELUAR` | Rakernas X (Lampiran 4.10) | match (merge header + nomor kolom 1-15 sinkron autentik; data dukung upload adalah ekstensi operasional non-drift pedoman) |
 | Ekstensi Lokal 2026 | `buku-notulen-rapat` | Buku Notulen Rapat | `entry_date`, `title`, `person_name`, `institution`, `description` | - | Rakernas X (kelompok buku sekretaris) | implemented (`unverified`): baseline header internal terkunci via test; menunggu sumber autentik primer + bukti visual final |
 | Ekstensi Lokal 2026 | `buku-daftar-hadir` | Buku Daftar Hadir | `attendance_date`, `activity_id`, `attendee_name`, `institution`, `description` | - | Rakernas X (kelompok buku sekretaris) | implemented (`unverified`): baseline header internal terkunci via test; menunggu sumber autentik primer + bukti visual final |
 | Ekstensi Lokal 2026 | `buku-tamu` | Buku Tamu | `visit_date`, `guest_name`, `purpose`, `institution`, `description` | - | Rakernas X (kelompok buku sekretaris) | implemented (`unverified`): baseline header internal terkunci via test; menunggu sumber autentik primer + bukti visual final |
@@ -69,6 +69,7 @@ Aturan baca:
   - `database/migrations/2026_02_20_120000_create_anggota_tim_penggeraks_table.php`
   - `database/migrations/2026_02_20_210000_create_kader_khusus_table.php`
   - `database/migrations/2026_02_21_050000_create_agenda_surats_table.php`
+  - `database/migrations/2026_02_28_000000_add_data_dukung_path_to_agenda_surats_table.php`
   - `database/migrations/2026_02_27_120000_create_buku_notulen_rapats_table.php`
   - `database/migrations/2026_02_27_130000_create_buku_daftar_hadirs_table.php`
   - `database/migrations/2026_02_27_140000_create_buku_tamus_table.php`
