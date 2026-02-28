@@ -1,4 +1,4 @@
-# AI Single Path Architecture (Zero Ambiguity)
+# AI Single Path Architecture (Zero Ambiguity + Self-Reflective Routing)
 
 Tanggal efektif: 2026-02-23  
 Status: `active`  
@@ -7,12 +7,22 @@ Audience: AI agent eksekusi teknis pada repository ini.
 ## 1. Tujuan
 
 Dokumen ini menetapkan jalur tunggal eksekusi AI agar:
-- keputusan kerja deterministik,
-- file target jelas,
-- validasi tidak ambigu,
-- dan hasil lintas sesi konsisten.
+- keputusan deterministik,
+- checkpoint refleksi terkontrol,
+- file target dan validasi jelas,
+- hasil lintas sesi konsisten.
 
 Dokumen ini tidak menggantikan prioritas dokumen pada `AGENTS.md`, tetapi menjadi rute operasional default yang wajib diikuti.
+
+## DSL Contract
+
+```dsl
+ROUTER_VERSION: 1
+ROUTER_MODE: SINGLE_PATH_REFLECTIVE
+MODEL_TIER_MAP: low=small, medium=mid, high=large
+REFLECTIVE_LIMIT: max_route_correction=1
+SYNC_REQUIRED: playbook,single-path,todo,adr
+```
 
 ## 2. Prioritas Sumber Kebenaran
 
@@ -25,50 +35,49 @@ Jika ada konflik, gunakan urutan ini:
 6. `README.md`
 
 Aturan anti-ambiguity:
-- Jika instruksi user bertentangan dengan invariants `AGENTS.md`, tolak jalur yang melanggar invariant.
-- Jika dokumen internal berbeda istilah dengan pedoman utama, istilah domain mengikuti pedoman utama.
-- Jika status dokumen berbeda dengan implementasi aktual, status dokumen wajib diperbarui sebelum final report (`doc-hardening pass`).
-- Jika ada referensi ganda pada concern yang sama, gunakan referensi terakhir dari user sebagai acuan final dan tandai referensi sebelumnya sebagai `superseded`.
-- Untuk TODO baru, gunakan kode unik singkat setelah kata `TODO` agar targeting spesifik tidak ambigu.
-- Untuk ADR baru, gunakan nomor 4 digit (`ADR_0001`, dst) dan status eksplisit (`proposed/accepted/superseded/deprecated`).
-- Untuk ambiguity lintas TODO concern yang sama, resolver wajib memakai registry:
-  - `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
-- Jika concern memiliki dampak arsitektur, resolver wajib memastikan TODO concern menunjuk ADR yang aktif.
+- Prioritas tetap mengikuti `AGENTS.md`; konflik instruksi yang melanggar invariants harus ditolak.
+- Istilah domain mengikuti pedoman utama; status dokumen harus sinkron dengan implementasi sebelum final report.
+- Untuk concern ganda, acuan final adalah referensi user terakhir dan referensi lama ditandai `superseded`.
+- Resolver ambiguity TODO wajib memakai registry SOT: `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
+- TODO baru wajib berkode unik; ADR baru wajib bernomor 4 digit + status eksplisit.
 
 ## 3. Jalur Tunggal Eksekusi (Mandatory)
 
 1. `Classify`
-- Klasifikasikan task user ke satu concern utama (lihat Section 4).
-- Jika task multi-concern, pecah per concern dan eksekusi berurutan.
+- Klasifikasikan task ke satu concern utama (lihat Section 4); jika multi-concern, pecah berurutan.
 
-2. `Contract Lock`
-- Kunci kontrak concern: target, scope role, boundary data, acceptance criteria.
-- Tetapkan file target sebelum patch.
-- Jika menyentuh arsitektur, kunci juga `TODO concern + ADR` sebagai pasangan dokumen keputusan/eksekusi.
+2. `Self-Reflective Checkpoint`
+- Sebelum patch besar, evaluasi ulang hasil `Classify` menggunakan bukti dari scoped read awal.
+- Jika concern/file target/validation ladder tidak cocok, lakukan satu kali koreksi rute secara eksplisit.
+- Tetapkan tier model: `low -> small`, `medium -> mid`, `high -> large`.
+- Kunci hasil koreksi pada TODO concern (dan ADR jika concern strategis lintas concern).
 
-3. `Scoped Read`
+3. `Contract Lock`
+- Kunci target, scope, boundary data, acceptance criteria, dan file target.
+- Jika menyentuh arsitektur, kunci pasangan `TODO concern + ADR`.
+
+4. `Scoped Read`
 - Baca hanya file concern + dependensi langsung.
 - Dilarang scan massal tanpa alasan teknis.
 
-4. `Minimal Patch`
-- Patch sekecil mungkin di boundary arsitektur:
+5. `Minimal Patch`
+- Patch sekecil mungkin pada boundary:
   - `Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`
   - `Policy -> Scope Service`
 
-5. `Validation Ladder`
+6. `Validation Ladder`
 - L1: lint/syntax/test targeted concern.
 - L2: regression test concern terkait.
 - L3: `php artisan test` full untuk perubahan signifikan.
 
-6. `Doc-Hardening`
-- Wajib saat trigger canonical aktif (akses, scope, dashboard representation, query key, metadata sumber, atau lintas dokumen concern).
-- Saat membuat TODO baru, pastikan format judul mengikuti `TODO <KODE_UNIK> ...` sesuai `AGENTS.md`.
+7. `Doc-Hardening`
+- Wajib saat trigger canonical aktif (akses, scope, dashboard, query key, metadata sumber, atau lintas dokumen concern).
+- TODO baru wajib mengikuti format `TODO <KODE_UNIK> ...`.
 
-7. `ADR Sync`
-- Wajib saat concern menyentuh keputusan arsitektur lintas concern.
-- Pastikan status ADR sinkron dengan status TODO concern.
+8. `ADR Sync`
+- Wajib untuk keputusan arsitektur lintas concern; status ADR harus sinkron dengan TODO concern.
 
-8. `Report`
+9. `Report`
 - Laporkan: apa diubah, kenapa, file terdampak, hasil validasi, risiko residual.
 
 ## 4. Task Router (Deterministik)
@@ -85,27 +94,22 @@ Aturan anti-ambiguity:
 | Keputusan arsitektur lintas concern | ADR governance | `docs/adr/ADR_*.md`, `docs/process/TODO_*` | ADR terhubung ke TODO concern + validasi concern terdampak |
 
 Jika permintaan tidak cocok tabel:
-- map ke concern paling dekat,
-- tulis asumsi eksplisit,
-- lanjutkan dengan scoped read.
+- map ke concern terdekat, tulis asumsi eksplisit, lalu lanjut scoped read.
 
 ## 5. Decision Gates (No-Assumption Rules)
 
 Gate A - Scope & Area:
-- Semua data wilayah harus punya `level`, `area_id`, `created_by`.
-- `area_id` user harus konsisten dengan `scope` dan `areas.level`.
+- Data wilayah wajib memiliki `level`, `area_id`, `created_by`.
+- `area_id` user wajib konsisten dengan `scope` dan `areas.level`.
 
 Gate B - Authorization:
-- Frontend bukan authority akses.
-- Semua enforcement akses harus bisa dibuktikan dari backend (policy/middleware/scope service).
+- Frontend bukan authority akses; enforcement wajib terbukti di backend (policy/middleware/scope service).
 
 Gate C - Repository Boundary:
-- Query domain baru hanya melalui repository boundary.
-- Dilarang menambah query domain ad-hoc di controller/view/helper.
+- Query domain baru hanya melalui repository boundary; query ad-hoc di controller/view/helper dilarang.
 
 Gate D - Legacy Control:
-- `areas` adalah satu-satunya source of truth wilayah.
-- Tidak boleh menambah coupling baru ke artefak legacy non-canonical.
+- `areas` adalah source of truth wilayah; coupling baru ke artefak legacy non-canonical dilarang.
 
 Gate E - Documentation Sync:
 - Perubahan canonical tanpa update dokumen terkait = `belum selesai`.
@@ -116,11 +120,7 @@ Urutan validasi:
 1. Syntax/lint file yang diubah.
 2. Test targeted concern.
 3. Regression concern terdekat.
-4. Full suite (`php artisan test`) bila:
-   - perubahan lintas domain,
-   - perubahan akses/policy/scope,
-   - perubahan dashboard agregat,
-   - perubahan migrasi/seeder canonical.
+4. Full suite (`php artisan test`) bila perubahan lintas domain, akses/policy/scope, dashboard agregat, atau migrasi/seeder canonical.
 
 Kriteria selesai:
 - Semua gate concern terpenuhi.
@@ -132,7 +132,7 @@ Kriteria selesai:
 Aturan commit:
 - Satu commit = satu concern logis.
 - Pesan commit format: `type(scope): intent`.
-- Jika concern besar: pecah menjadi beberapa commit yang independen dan bisa rollback granular.
+- Concern besar dipecah ke commit independen agar rollback granular.
 
 Contoh concern:
 - `refactor(seeder): migrate legacy role assignments to sekretaris`
@@ -150,9 +150,7 @@ Jalankan hardening bila salah satu terjadi:
 - perubahan keputusan arsitektur tanpa sinkronisasi ADR.
 
 Output hardening minimum:
-- daftar file terdampak,
-- keputusan yang dikunci,
-- validasi yang dijalankan.
+- daftar file terdampak, keputusan terkunci, dan validasi yang dijalankan.
 
 ## 9. Residual Risk & Mitigation
 
@@ -161,8 +159,9 @@ Risiko:
 - AI terlalu kaku pada kasus edge yang butuh eksplorasi non-standar.
 
 Mitigasi:
-- Setiap perubahan pola eksekusi wajib update playbook + dokumen ini dalam sesi yang sama.
-- Jika edge case butuh deviasi, deviasi harus tertulis eksplisit di TODO concern dan log validasi.
+- Perubahan pola eksekusi wajib update playbook + dokumen ini pada sesi yang sama.
+- Deviasi edge case wajib ditulis di TODO concern + log validasi.
+- Checkpoint refleksi dibatasi satu koreksi rute utama per concern.
 
 ## 10. Referensi Operasional
 

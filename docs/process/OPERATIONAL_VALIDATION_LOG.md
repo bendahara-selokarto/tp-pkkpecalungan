@@ -1077,3 +1077,37 @@ Keputusan:
 
 Status:
 - `PASS`.
+
+## Hardening Process Routing + Model Tier: 2026-03-01
+
+Ruang lingkup:
+- Menetapkan `Self-Reflective Routing` dan aturan tier model kompleksitas.
+
+Artefak:
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+- `docs/process/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/process/TODO_ZERO_AMBIGUITY_AI_SINGLE_PATH_2026_02_23.md`
+- `docs/adr/ADR_0003_SELF_REFLECTIVE_ROUTING.md`
+
+Perintah validasi:
+- `rg "P-022|Self-Reflective Routing|Self-Reflective Checkpoint" docs/process docs/adr` -> `PASS`.
+- `rg "low.*small model|medium.*mid model|high.*large model" docs/process docs/adr` -> `PASS`.
+
+Keputusan:
+- `P-022` tetap `active`.
+- Checkpoint refleksi maksimal satu koreksi rute utama per concern.
+- Tier model dikunci: `low -> small`, `medium -> mid`, `high -> large`.
+
+Status:
+- `PASS`.
+
+```dsl
+LOG_SCOPE: process_routing_model_tier_hardening
+PATTERN: P-022
+MODEL_TIER_MAP: low=small, medium=mid, high=large
+ROUTE_CORRECTION_LIMIT: 1
+VALIDATION: rg_pattern_sync=PASS, rg_model_tier_sync=PASS
+STATUS: PASS
+```

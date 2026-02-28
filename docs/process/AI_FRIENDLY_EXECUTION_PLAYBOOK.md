@@ -56,6 +56,7 @@ Gunakan status:
 | `P-019` | Attachment Render Recovery via Protected Stream Route | Lampiran (foto/berkas) tidak tampil di halaman show, terutama pada setup Apache/Windows | Lampiran tetap bisa preview dan dibuka tanpa bergantung pada static `/storage` URL | Targeted feature tests concern + `php artisan route:list --name=attachments.show` | `active` |
 | `P-020` | Kecamatan Dual-Scope List Contract (`kecamatan` vs `desa monitoring`) | Daftar modul di scope kecamatan butuh mode data sendiri + mode monitoring desa | Mode `kecamatan` konsisten ke data milik sendiri, mode `desa` konsisten ke seluruh desa dalam kecamatan, dan monitoring tetap read-only | Feature test list kedua mode + payload mode visibility + middleware anti write bypass | `active` |
 | `P-021` | ADR + TODO Coupled Governance | Ada keputusan arsitektur/canonical berdampak lintas sesi atau lintas modul | Keputusan teknis punya jejak trade-off yang bisa diaudit dan eksekusi concern tetap terikat checklist validasi | ADR template terisi + TODO concern aktif + sinkronisasi status keputusan | `active` |
+| `P-022` | Self-Reflective Routing | User meminta jalur reflektif atau task berisiko salah klasifikasi concern pada routing awal | Jalur eksekusi tetap deterministik tetapi punya checkpoint refleksi terkontrol sebelum patch besar | Re-check concern+boundary+validation ladder + sinkronisasi single-path doc/playbook/TODO/ADR concern | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -509,3 +510,26 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Tambahan overhead dokumentasi jika dipakai untuk perubahan kecil yang tidak strategis.
 - Catatan reuse lintas domain/project:
   - Cocok untuk project yang memerlukan jejak keputusan audit-friendly tanpa mengorbankan patch minimal.
+
+### P-022 - Self-Reflective Routing
+- Tanggal: 2026-03-01
+- Status: active
+- Konteks: mencegah salah klasifikasi concern pada routing awal.
+- Trigger: user meminta self-reflective routing atau ditemukan mismatch concern pasca scoped read.
+- Langkah: klasifikasi awal -> checkpoint refleksi -> tier model (`low/small`, `medium/mid`, `high/large`) -> koreksi rute 1x jika mismatch -> kunci keputusan di TODO/ADR.
+- Guardrail: tidak boleh loop; maksimal 1 koreksi rute utama per concern, tetap patuh `AGENTS.md`, dan tidak mengubah boundary auth/backend.
+- Validasi minimum: single-path, playbook, TODO, dan ADR concern sinkron.
+- Bukti efisiensi/akurasi: rework karena salah route awal menurun.
+- Risiko: tanpa batas koreksi, eksekusi melambat.
+- Reuse: cocok untuk governance dokumen ketat.
+
+```dsl
+PATTERN_ID: P-022
+PATTERN_NAME: SELF_REFLECTIVE_ROUTING
+TRIGGER: user_request_self_reflective|post_scoped_read_mismatch
+FLOW: classify>reflective_checkpoint>model_tier_select>route_fix_once>lock_todo_adr
+MODEL_TIER_MAP: low=small, medium=mid, high=large
+GUARDRAIL: max_route_correction=1
+VALIDATION: sync(single-path,playbook,todo,adr)
+STATUS: active
+```
