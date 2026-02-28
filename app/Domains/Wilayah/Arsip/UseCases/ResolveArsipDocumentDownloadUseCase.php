@@ -2,7 +2,9 @@
 
 namespace App\Domains\Wilayah\Arsip\UseCases;
 
+use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
 use App\Domains\Wilayah\Arsip\Repositories\ArsipDocumentRepositoryInterface;
+use App\Models\User;
 
 class ResolveArsipDocumentDownloadUseCase
 {
@@ -12,18 +14,19 @@ class ResolveArsipDocumentDownloadUseCase
     }
 
     /**
-     * @return array{name: string, path: string}|null
+     * @return array{download_name: string, storage_path: string}|null
      */
-    public function execute(string $documentName): ?array
+    public function execute(User $user, ArsipDocument $arsipDocument): ?array
     {
-        $document = $this->arsipDocumentRepository->findDocumentByName($documentName);
-        if (! is_array($document)) {
+        if (! $user->can('view', $arsipDocument)) {
             return null;
         }
 
+        $this->arsipDocumentRepository->incrementDownloadCount($arsipDocument);
+
         return [
-            'name' => (string) $document['name'],
-            'path' => (string) $document['path'],
+            'download_name' => (string) $arsipDocument->original_name,
+            'storage_path' => (string) $arsipDocument->file_path,
         ];
     }
 }

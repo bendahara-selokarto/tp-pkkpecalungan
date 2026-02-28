@@ -101,6 +101,7 @@ use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNas
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepository;
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepositoryInterface;
+use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
 use App\Domains\Wilayah\Arsip\Repositories\ArsipDocumentRepository;
 use App\Domains\Wilayah\Arsip\Repositories\ArsipDocumentRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepository;
@@ -141,6 +142,7 @@ use App\Policies\SimulasiPenyuluhanPolicy;
 use App\Policies\PilotProjectKeluargaSehatPolicy;
 use App\Policies\PilotProjectNaskahPelaporanPolicy;
 use App\Policies\LaporanTahunanPkkPolicy;
+use App\Policies\ArsipDocumentPolicy;
 use App\Policies\UserPolicy;
 use App\Repositories\SuperAdmin\UserManagementRepository;
 use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
@@ -389,6 +391,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(PilotProjectKeluargaSehatReport::class, PilotProjectKeluargaSehatPolicy::class);
         Gate::policy(PilotProjectNaskahPelaporanReport::class, PilotProjectNaskahPelaporanPolicy::class);
         Gate::policy(LaporanTahunanPkkReport::class, LaporanTahunanPkkPolicy::class);
+        Gate::policy(ArsipDocument::class, ArsipDocumentPolicy::class);
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin') ? true : null;

@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
 use App\Domains\Wilayah\Arsip\UseCases\ListArsipDocumentsUseCase;
 use App\Domains\Wilayah\Arsip\UseCases\ResolveArsipDocumentDownloadUseCase;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class ArsipController extends Controller
 {
@@ -21,7 +24,7 @@ class ArsipController extends Controller
         $documents = collect($this->listArsipDocumentsUseCase->execute())
             ->map(static fn (array $document): array => [
                 ...$document,
-                'download_url' => route('arsip.download', ['document' => $document['name']], absolute: false),
+                'download_url' => route('arsip.download', ['arsipDocument' => $document['id']], absolute: false),
             ])
             ->values()
             ->all();
@@ -31,14 +34,18 @@ class ArsipController extends Controller
         ]);
     }
 
-    public function download(string $document): BinaryFileResponse
+    public function download(Request $request, ArsipDocument $arsipDocument): SymfonyResponse
     {
-        $resolvedDocument = $this->resolveArsipDocumentDownloadUseCase->execute($document);
-        abort_if(! is_array($resolvedDocument), 404);
+        $user = $request->user();
+        abort_if(! $user, 403);
 
-        return response()->download(
-            $resolvedDocument['path'],
-            $resolvedDocument['name']
+        $resolvedDocument = $this->resolveArsipDocumentDownloadUseCase->execute($user, $arsipDocument);
+        abort_if(! is_array($resolvedDocument), 404);
+        abort_if(! Storage::disk('public')->exists($resolvedDocument['storage_path']), 404);
+
+        return Storage::disk('public')->download(
+            $resolvedDocument['storage_path'],
+            $resolvedDocument['download_name']
         );
     }
 }

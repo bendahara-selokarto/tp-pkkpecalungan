@@ -58,6 +58,7 @@ const formatDateTime = (isoDateTime) => {
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
               <th class="px-3 py-3 font-semibold">Nama Dokumen</th>
+              <th class="px-3 py-3 font-semibold">Judul Arsip</th>
               <th class="px-3 py-3 font-semibold">Jenis</th>
               <th class="px-3 py-3 font-semibold">Ukuran</th>
               <th class="px-3 py-3 font-semibold">Pembaruan Terakhir</th>
@@ -67,10 +68,11 @@ const formatDateTime = (isoDateTime) => {
           <tbody>
             <tr
               v-for="document in documents"
-              :key="document.name"
+              :key="document.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
               <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ document.name }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ document.title }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ document.extension }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatBytes(document.size_bytes) }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDateTime(document.updated_at) }}</td>
@@ -84,7 +86,7 @@ const formatDateTime = (isoDateTime) => {
               </td>
             </tr>
             <tr v-if="documents.length === 0">
-              <td colspan="5" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Belum ada dokumen arsip yang tersedia.
               </td>
             </tr>

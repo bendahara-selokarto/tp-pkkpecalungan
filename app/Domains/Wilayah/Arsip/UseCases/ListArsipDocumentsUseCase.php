@@ -13,23 +13,31 @@ class ListArsipDocumentsUseCase
 
     /**
      * @return list<array{
+     *     id: int,
+     *     title: string,
+     *     description: string|null,
+     *     original_name: string,
      *     name: string,
      *     extension: string,
      *     size_bytes: int,
-     *     updated_at: string|null
+     *     updated_at: string|null,
+     *     published_at: string|null
      * }>
      */
     public function execute(): array
     {
-        return collect($this->arsipDocumentRepository->listDocuments())
-            ->map(static function (array $document): array {
-                $lastModifiedAt = $document['last_modified_at'];
-
+        return $this->arsipDocumentRepository->listPublished()
+            ->map(static function ($document): array {
                 return [
-                    'name' => (string) $document['name'],
-                    'extension' => strtoupper((string) $document['extension']),
-                    'size_bytes' => (int) $document['size_bytes'],
-                    'updated_at' => $lastModifiedAt?->toIso8601String(),
+                    'id' => (int) $document->id,
+                    'title' => (string) $document->title,
+                    'description' => $document->description,
+                    'original_name' => (string) $document->original_name,
+                    'name' => (string) $document->original_name,
+                    'extension' => strtoupper((string) $document->extension),
+                    'size_bytes' => (int) $document->size_bytes,
+                    'updated_at' => $document->updated_at?->toIso8601String(),
+                    'published_at' => $document->published_at?->toIso8601String(),
                 ];
             })
             ->values()

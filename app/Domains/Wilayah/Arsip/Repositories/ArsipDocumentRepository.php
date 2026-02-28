@@ -2,93 +2,51 @@
 
 namespace App\Domains\Wilayah\Arsip\Repositories;
 
-use Carbon\CarbonImmutable;
+use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ArsipDocumentRepository implements ArsipDocumentRepositoryInterface
 {
-    /**
-     * @var list<string>
-     */
-    private const ALLOWED_EXTENSIONS = [
-        'pdf',
-        'doc',
-        'docx',
-        'xls',
-        'xlsx',
-    ];
-
-    public function listDocuments(): array
+    public function listPublished(): Collection
     {
-        $referenceDirectory = base_path('docs/referensi');
-        if (! is_dir($referenceDirectory)) {
-            return [];
-        }
-
-        $filePaths = glob($referenceDirectory.DIRECTORY_SEPARATOR.'*');
-        if (! is_array($filePaths)) {
-            return [];
-        }
-
-        return collect($filePaths)
-            ->filter(static fn ($path): bool => is_string($path) && is_file($path))
-            ->map(fn (string $path): ?array => $this->buildDocumentPayload($path))
-            ->filter(static fn ($document): bool => is_array($document))
-            ->sortBy('name', SORT_NATURAL | SORT_FLAG_CASE)
-            ->values()
-            ->all();
+        return ArsipDocument::query()
+            ->where('is_published', true)
+            ->orderByDesc('published_at')
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->get();
     }
 
-    public function findDocumentByName(string $documentName): ?array
+    public function paginateForManagement(int $perPage = 10): LengthAwarePaginator
     {
-        $normalizedName = $this->normalizeDocumentName($documentName);
-        if ($normalizedName === null) {
-            return null;
-        }
-
-        return collect($this->listDocuments())
-            ->first(static fn (array $document): bool => $document['name'] === $normalizedName);
+        return ArsipDocument::query()
+            ->orderByDesc('is_published')
+            ->orderByDesc('updated_at')
+            ->orderByDesc('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
-    /**
-     * @return array{
-     *     name: string,
-     *     path: string,
-     *     extension: string,
-     *     size_bytes: int,
-     *     last_modified_at: CarbonImmutable|null
-     * }|null
-     */
-    private function buildDocumentPayload(string $path): ?array
+    public function store(array $payload): ArsipDocument
     {
-        $name = basename($path);
-        $extension = strtolower(pathinfo($name, PATHINFO_EXTENSION));
-        if (! in_array($extension, self::ALLOWED_EXTENSIONS, true)) {
-            return null;
-        }
-
-        $lastModifiedTimestamp = @filemtime($path);
-        $lastModifiedAt = is_int($lastModifiedTimestamp)
-            ? CarbonImmutable::createFromTimestamp($lastModifiedTimestamp)
-            : null;
-
-        return [
-            'name' => $name,
-            'path' => $path,
-            'extension' => $extension,
-            'size_bytes' => (int) filesize($path),
-            'last_modified_at' => $lastModifiedAt,
-        ];
+        return ArsipDocument::create($payload);
     }
 
-    private function normalizeDocumentName(string $documentName): ?string
+    public function update(ArsipDocument $arsipDocument, array $payload): ArsipDocument
     {
-        $trimmedName = trim($documentName);
-        if ($trimmedName === '') {
-            return null;
-        }
+        $arsipDocument->update($payload);
 
-        $basename = basename($trimmedName);
+        return $arsipDocument->refresh();
+    }
 
-        return $basename === $trimmedName ? $basename : null;
+    public function delete(ArsipDocument $arsipDocument): void
+    {
+        $arsipDocument->delete();
+    }
+
+    public function incrementDownloadCount(ArsipDocument $arsipDocument): void
+    {
+        $arsipDocument->increment('download_count');
     }
 }

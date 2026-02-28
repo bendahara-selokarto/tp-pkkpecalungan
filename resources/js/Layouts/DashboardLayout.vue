@@ -537,6 +537,15 @@ onBeforeUnmount(() => {
               <span v-show="!isAsideDesktopCollapsed">Manajemen User</span>
               <span v-show="isAsideDesktopCollapsed">MU</span>
             </Link>
+            <Link
+              v-if="hasRole('super-admin')"
+              href="/super-admin/arsip"
+              :class="[isAsideDesktopCollapsed ? 'justify-center' : '', isActive('/super-admin/arsip') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
+            >
+              <span v-show="!isAsideDesktopCollapsed">Management Arsip</span>
+              <span v-show="isAsideDesktopCollapsed">AR</span>
+            </Link>
           </div>
 
           <div v-if="!isProfilePage" class="space-y-1">

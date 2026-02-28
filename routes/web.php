@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UiRuntimeErrorLogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
+use App\Http\Controllers\SuperAdmin\ArsipManagementController;
 use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
 use App\Domains\Wilayah\Activities\Controllers\ActivityPrintController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanActivityController;
@@ -126,7 +127,7 @@ Route::get('/dashboard/charts/report/pdf', [DashboardController::class, 'printCh
 Route::get('/arsip', ArsipController::class)
     ->middleware(['auth', 'verified'])
     ->name('arsip.index');
-Route::get('/arsip/download/{document}', [ArsipController::class, 'download'])
+Route::get('/arsip/download/{arsipDocument}', [ArsipController::class, 'download'])
     ->middleware(['auth', 'verified'])
     ->name('arsip.download');
 
@@ -144,6 +145,8 @@ Route::middleware(['auth', 'role:super-admin'])
     ->name('super-admin.')
     ->group(function () {
         Route::resource('users', UserManagementController::class);
+        Route::resource('arsip', ArsipManagementController::class)
+            ->parameters(['arsip' => 'arsipDocument']);
     });
 
 Route::prefix('desa')

@@ -2,29 +2,24 @@
 
 namespace App\Domains\Wilayah\Arsip\Repositories;
 
-use Carbon\CarbonImmutable;
+use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 interface ArsipDocumentRepositoryInterface
 {
     /**
-     * @return list<array{
-     *     name: string,
-     *     path: string,
-     *     extension: string,
-     *     size_bytes: int,
-     *     last_modified_at: CarbonImmutable|null
-     * }>
+     * @return Collection<int, ArsipDocument>
      */
-    public function listDocuments(): array;
+    public function listPublished(): Collection;
 
-    /**
-     * @return array{
-     *     name: string,
-     *     path: string,
-     *     extension: string,
-     *     size_bytes: int,
-     *     last_modified_at: CarbonImmutable|null
-     * }|null
-     */
-    public function findDocumentByName(string $documentName): ?array;
+    public function paginateForManagement(int $perPage = 10): LengthAwarePaginator;
+
+    public function store(array $payload): ArsipDocument;
+
+    public function update(ArsipDocument $arsipDocument, array $payload): ArsipDocument;
+
+    public function delete(ArsipDocument $arsipDocument): void;
+
+    public function incrementDownloadCount(ArsipDocument $arsipDocument): void;
 }
