@@ -65,6 +65,43 @@ Hasil:
 Status:
 - `PASS`.
 
+## Hardening Kontrak Akses Arsip Global/Pribadi: 2026-02-28
+
+Ruang lingkup:
+- Mengunci kontrak akses arsip:
+  - arsip `global` (unggahan `super-admin`) visible semua role,
+  - arsip private non `super-admin` tetap owner-managed,
+  - monitoring arsip desa untuk kecamatan mengikuti pola dual-scope concern `activities`.
+- Menyamakan mekanisme UI monitoring arsip dengan menu kegiatan (toggle di halaman concern, bukan entry sidebar langsung).
+
+Artefak:
+- `app/Domains/Wilayah/Arsip/Repositories/ArsipDocumentRepository.php`
+- `app/Http/Controllers/ArsipController.php`
+- `app/Domains/Wilayah/Arsip/UseCases/ResolveArsipDocumentDownloadUseCase.php`
+- `resources/js/Pages/Arsip/Index.vue`
+- `resources/js/Layouts/DashboardLayout.vue`
+- `tests/Feature/ArsipTest.php`
+- `docs/process/TODO_ARS26B2_HARDENING_AKSES_ARSIP_GLOBAL_PRIBADI_2026_02_28.md`
+- `docs/process/TODO_ASM26B1_MANAGEMENT_ARSIP_SUPER_ADMIN_2026_02_27.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/process/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`
+- `docs/process/TODO_SKC0201_ROADMAP_SEKRETARIS_KECAMATAN_2026_02_28.md`
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+
+Perintah validasi:
+- `php artisan test tests/Feature/ArsipTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Feature/SuperAdmin/ArsipManagementTest.php tests/Unit/Policies/ArsipDocumentPolicyTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php`
+  - hasil: `PASS` (`32` tests, `287` assertions).
+- `php artisan test`
+  - hasil: `PASS`.
+
+Keputusan:
+- Bypass `Gate::before` untuk download private arsip ditutup pada jalur `/arsip/download` dengan evaluasi policy langsung.
+- Mutasi private arsip via jalur `/arsip` dipaksa owner-only.
+- Concern `arsip` dinyatakan reuse pattern `P-020` (dual-scope kecamatan vs desa monitoring).
+
+Status:
+- `PASS`.
+
 ### R4. Verifikasi PDF Sample Desa dan Kecamatan
 
 Metode verifikasi baseline (otomatis):

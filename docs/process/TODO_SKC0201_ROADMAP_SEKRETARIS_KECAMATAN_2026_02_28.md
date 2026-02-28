@@ -26,6 +26,7 @@
   - mode `kecamatan` daftar difilter ke data milik user login untuk role `kecamatan-sekretaris` (`created_by = user_id`),
   - role lain (mis. `admin-kecamatan`) tidak berubah kontraknya.
 - Implementasi mode monitoring desa (`read-only`) tetap berlaku pada concern `activities` sesuai baseline commit `339275e`.
+- Implementasi mode monitoring desa (`read-only`) diperluas ke concern `arsip` melalui jalur `arsip` -> `desa-arsip` dengan toggle sekretaris kecamatan.
 - Validasi selesai:
   - targeted feature tests concern lintas modul sekretaris kecamatan,
   - full suite `php artisan test` (hijau).
@@ -49,7 +50,7 @@
 - [x] Pastikan tidak ada bypass mutasi via URL langsung pada mode monitoring.
 
 Catatan implementasi gelombang 1:
-- Concern Tipe B aktif saat ini: `activities` (sudah selesai pada commit `339275e`).
+- Concern Tipe B aktif saat ini: `activities` (commit `339275e`) dan `arsip` (hardening akses 2026-02-28).
 - Concern `sekretaris-tpk` non-`activities` saat ini berjalan sebagai Tipe A; implementasi difokuskan pada filter mode `kecamatan` (data milik sendiri) untuk role `kecamatan-sekretaris`.
 
 ### C. Implementasi Concern Gelombang 2 (Pokja Read-Only untuk Sekretaris Kecamatan)

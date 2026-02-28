@@ -476,6 +476,7 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Feature test payload visibilitas/middleware memastikan `desa-activities` untuk `kecamatan-sekretaris` tetap `read-only`.
 - Bukti efisiensi/akurasi:
   - Diterapkan pada commit `339275e` untuk concern `activities` (`kecamatan/activities` + `kecamatan/desa-activities`) beserta test kontrak dan hardening dokumentasi.
+  - Direuse pada concern `arsip` (2026-02-28) untuk toggle `Arsip Saya` vs `Desa (Monitoring)` dengan guard monitoring tetap `read-only`.
 - Risiko:
   - Jika tidak didokumentasikan, concern lain mudah mereplikasi toggle UI tanpa konsistensi kontrak query backend.
 - Catatan reuse lintas domain/project:

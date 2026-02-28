@@ -1,23 +1,31 @@
 # TODO ASM26B1 Management Arsip Super Admin 2026-02-27
 
 Tanggal: 2026-02-27  
-Status: `planned`
+Status: `in-progress`
 
 ## Konteks
 - Baseline saat ini: menu `Arsip` sudah tersedia untuk daftar/unduh dokumen statis.
-- Arah baru: management arsip (upload, ubah, hapus, kontrol publikasi) dipusatkan ke `super-admin`.
+- Arah baru: management arsip global dipusatkan ke `super-admin`, sementara arsip non-global tetap dikelola pemilik dokumen.
 - Concern ini beririsan dengan akses role, struktur route `super-admin`, dan representasi menu super-admin.
 
 ## Kontrak Concern (Lock)
 - Domain: `Arsip Management`.
 - Role authority:
-  - `super-admin`: `create`, `update`, `delete`, `publish/unpublish` dokumen arsip.
-  - non `super-admin`: hanya `view/download` dokumen arsip yang berstatus publik.
+  - `super-admin`: `create`, `update`, `delete` dokumen arsip global.
+  - non `super-admin`: dapat `create` arsip pribadi, `update/delete` hanya untuk dokumen milik sendiri.
+  - `kecamatan-sekretaris`: dapat `view/download` arsip user desa dalam parent kecamatan sendiri (monitoring read-only).
 - Boundary data:
   - Metadata arsip dikelola melalui boundary repository.
   - File arsip disimpan pada storage aplikasi (bukan membaca bebas dari filesystem arbitrary path).
 - Arsitektur wajib: `Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`.
 - Enforcement akses wajib backend: middleware `role:super-admin` + policy/authorization gate untuk operasi management.
+
+## Update Kontrak 2026-02-28
+- Concern turunan aktif: `docs/process/TODO_ARS26B2_HARDENING_AKSES_ARSIP_GLOBAL_PRIBADI_2026_02_28.md`.
+- Kontrak akses terkunci:
+  - arsip unggahan `super-admin` bernilai `global` dan visible semua role,
+  - arsip unggahan non `super-admin` bernilai private dan mutasi hanya owner,
+  - jalur monitoring desa untuk arsip kecamatan mengikuti pola dual-scope concern `activities`.
 
 ## Target Hasil
 - [ ] Panel management arsip tersedia pada area `super-admin`.

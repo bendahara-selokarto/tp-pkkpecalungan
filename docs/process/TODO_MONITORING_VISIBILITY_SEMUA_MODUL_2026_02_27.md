@@ -76,6 +76,7 @@
 
 ### F. Group `monitoring`
 - [x] `desa-activities`
+- [x] `desa-arsip`
 
 ## Baseline Profil Visibility Role (Ringkas)
 - [x] `desa-sekretaris`: `sekretaris-tpk` RW, group `pokja-i..iv` RO.

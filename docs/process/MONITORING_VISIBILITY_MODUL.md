@@ -27,12 +27,14 @@ Jalankan monitoring ini setiap ada:
 - `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
 - `app/Http/Middleware/EnsureModuleVisibility.php`
 - `app/Domains/Wilayah/Activities/Services/ActivityScopeService.php` (jika concern menyentuh `activities`)
+- `app/Policies/ArsipDocumentPolicy.php` (jika concern menyentuh `desa-arsip`)
 - `resources/js/Layouts/DashboardLayout.vue`
 - Test visibility:
   - `tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
   - `tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php`
   - `tests/Feature/ModuleVisibilityMiddlewareTest.php`
   - `tests/Feature/MenuVisibilityPayloadTest.php`
+  - `tests/Feature/KecamatanDesaArsipTest.php` (jika concern menyentuh `desa-arsip`)
   - `tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
 - Dokumen canonical/process concern:
   - `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md`
