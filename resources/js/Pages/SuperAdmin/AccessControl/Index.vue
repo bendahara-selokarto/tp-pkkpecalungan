@@ -4,7 +4,7 @@ import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiShieldCheckOutline } from '@mdi/js'
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 
 const props = defineProps({
   filters: {
@@ -90,6 +90,40 @@ const modeBadgeClass = (mode) => {
   }
 
   return 'border-slate-300 text-slate-700 dark:border-slate-700 dark:text-slate-300'
+}
+
+const pilotActionKey = ref(null)
+
+const isPilotActionLoading = (row, action) => pilotActionKey.value === `${row.id}:${action}`
+
+const setPilotMode = (row, mode) => {
+  pilotActionKey.value = `${row.id}:${mode}`
+  router.put('/super-admin/access-control/pilot/catatan-keluarga', {
+    scope: row.scope,
+    role: row.role,
+    mode,
+  }, {
+    preserveScroll: true,
+    preserveState: true,
+    onFinish: () => {
+      pilotActionKey.value = null
+    },
+  })
+}
+
+const rollbackPilotMode = (row) => {
+  pilotActionKey.value = `${row.id}:rollback`
+  router.delete('/super-admin/access-control/pilot/catatan-keluarga', {
+    data: {
+      scope: row.scope,
+      role: row.role,
+    },
+    preserveScroll: true,
+    preserveState: true,
+    onFinish: () => {
+      pilotActionKey.value = null
+    },
+  })
 }
 </script>
 
@@ -206,6 +240,7 @@ const modeBadgeClass = (mode) => {
               <th class="px-3 py-3 font-semibold">Group Role</th>
               <th class="px-3 py-3 font-semibold">Modul</th>
               <th class="px-3 py-3 font-semibold">Mode Efektif</th>
+              <th class="px-3 py-3 font-semibold">Kontrol Pilot</th>
             </tr>
           </thead>
           <tbody>
@@ -232,9 +267,66 @@ const modeBadgeClass = (mode) => {
                   {{ row.mode_label }}
                 </span>
               </td>
+              <td class="px-3 py-3">
+                <div v-if="row.pilot_manageable" class="space-y-2">
+                  <p class="text-xs text-slate-500 dark:text-slate-400">
+                    Baseline: {{ row.pilot_baseline_mode_label }}
+                    <span v-if="row.pilot_override_active" class="font-semibold text-emerald-700 dark:text-emerald-300">
+                      (override aktif: {{ row.pilot_override_mode }})
+                    </span>
+                  </p>
+                  <div class="flex flex-wrap gap-2">
+                    <button
+                      type="button"
+                      class="inline-flex rounded border px-2.5 py-1 text-xs font-semibold"
+                      :class="row.mode === 'read-only'
+                        ? 'border-amber-400 bg-amber-100 text-amber-800 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200'
+                        : 'border-amber-200 text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20'"
+                      :disabled="isPilotActionLoading(row, 'read-only')"
+                      @click="setPilotMode(row, 'read-only')"
+                    >
+                      Set Baca
+                    </button>
+                    <button
+                      type="button"
+                      class="inline-flex rounded border px-2.5 py-1 text-xs font-semibold"
+                      :class="row.mode === 'read-write'
+                        ? 'border-emerald-400 bg-emerald-100 text-emerald-800 dark:border-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200'
+                        : 'border-emerald-200 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/20'"
+                      :disabled="isPilotActionLoading(row, 'read-write')"
+                      @click="setPilotMode(row, 'read-write')"
+                    >
+                      Set Baca-Tulis
+                    </button>
+                    <button
+                      type="button"
+                      class="inline-flex rounded border px-2.5 py-1 text-xs font-semibold"
+                      :class="row.mode === 'hidden'
+                        ? 'border-slate-400 bg-slate-100 text-slate-800 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100'
+                        : 'border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'"
+                      :disabled="isPilotActionLoading(row, 'hidden')"
+                      @click="setPilotMode(row, 'hidden')"
+                    >
+                      Set Tidak Tampil
+                    </button>
+                    <button
+                      v-if="row.pilot_override_active"
+                      type="button"
+                      class="inline-flex rounded border border-rose-200 px-2.5 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
+                      :disabled="isPilotActionLoading(row, 'rollback')"
+                      @click="rollbackPilotMode(row)"
+                    >
+                      Rollback
+                    </button>
+                  </div>
+                </div>
+                <p v-else class="text-xs text-slate-400 dark:text-slate-500">
+                  N/A
+                </p>
+              </td>
             </tr>
             <tr v-if="rows.length === 0">
-              <td colspan="5" class="px-3 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
+              <td colspan="6" class="px-3 py-6 text-center text-sm text-slate-500 dark:text-slate-400">
                 Tidak ada data untuk kombinasi filter saat ini.
               </td>
             </tr>

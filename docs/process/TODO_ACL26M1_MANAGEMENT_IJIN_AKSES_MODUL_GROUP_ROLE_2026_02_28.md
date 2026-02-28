@@ -51,22 +51,22 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Finalisasi markdown baseline concern (master TODO + ADR + registry SOT).
 - [x] Menu baru sidebar super-admin: `Management Ijin Akses`.
 - [x] Halaman matrix akses read-only untuk kontrol keputusan desain.
-- [ ] Fitur update override akses untuk pilot modul `catatan-keluarga`.
-- [ ] Jejak audit perubahan ijin akses (`changed_by`, waktu, before/after).
+- [x] Fitur update override akses untuk pilot modul `catatan-keluarga`.
+- [x] Jejak audit perubahan ijin akses (`changed_by`, waktu, before/after).
 
 ## Langkah Eksekusi
 - [x] Audit kontrak akses existing (`RoleMenuVisibilityService`, middleware, matrix role).
 - [x] Finalisasi keputusan bertahap via markdown (master TODO + ADR + child TODO).
 - [x] Implementasi Tahap 1 read-only matrix super-admin.
 - [ ] Validasi desain matrix bersama stakeholder domain.
-- [ ] Implementasi Tahap 2 write override modul `catatan-keluarga`.
+- [x] Implementasi Tahap 2 write override modul `catatan-keluarga`.
 - [ ] Rollout modul berikutnya per concern terpisah.
 - [ ] Sinkronisasi dokumen domain/process/ADR pada setiap batch concern.
 
 ## Test Matrix Minimum (Concern Ini)
 - [x] Feature test super-admin dapat melihat matrix akses read-only.
 - [x] Feature test role non super-admin ditolak akses menu management ijin.
-- [ ] Feature test pilot override `catatan-keluarga` sukses dan fallback aman.
+- [x] Feature test pilot override `catatan-keluarga` sukses dan fallback aman.
 - [x] Unit test resolver akses: prioritas override vs hardcoded fallback.
 - [x] Regression test `MenuVisibilityPayload` + middleware visibilitas.
 - [x] `php artisan test` penuh sebelum close concern.
@@ -74,7 +74,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 ## Validasi
 - [x] Validasi observasi scoped file akses + route `catatan-keluarga`.
 - [x] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`
-- [ ] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`
+- [x] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`
 - [x] `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
 - [x] `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
 - [x] `php artisan test`
@@ -87,12 +87,12 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 ## Keputusan
 - [x] K1: Implementasi dilakukan bertahap per concern modul (bukan big-bang).
 - [x] K2: Tahap awal wajib read-only untuk mengunci keputusan desain sebelum write.
-- [ ] K3: Override storage aktif terbatas pada modul pilot sampai test matrix stabil.
+- [x] K3: Override storage aktif terbatas pada modul pilot sampai test matrix stabil.
 - [x] K4: Authority tetap backend (`EnsureScopeRole` + `EnsureModuleVisibility` + policy), frontend hanya konsumsi payload.
 
 ## Fallback Plan
-- [ ] Flag rollback untuk menonaktifkan pembacaan override storage dan kembali ke hardcoded penuh.
-- [ ] Snapshot matrix sebelum perubahan write massal.
+- [x] Flag rollback untuk menonaktifkan pembacaan override storage dan kembali ke hardcoded penuh.
+- [x] Snapshot matrix sebelum perubahan write massal.
 
 ## Output Final
 - [ ] Ringkasan perubahan + alasan + dampak.
@@ -103,3 +103,8 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - Tahap 1 read-only selesai diimplementasikan dengan route/controller/use case/UI/table filter.
 - Kontrak mode `read-only|read-write|hidden` sudah dapat diobservasi dari UI super-admin tanpa endpoint mutasi.
 - Concern aktif berpindah ke validasi stakeholder dan persiapan Tahap 2 (pilot write modul `catatan-keluarga`).
+
+## Progress Tahap 2 (2026-02-28)
+- Tahap 2 pilot write modul `catatan-keluarga` sudah aktif untuk update + rollback dari UI super-admin.
+- Audit trail perubahan mode sudah tercatat (`before_mode`, `after_mode`, `changed_by`, `changed_at`).
+- Resolver runtime sudah memprioritaskan override pilot saat aktif dan fallback ke hardcoded saat rollback.

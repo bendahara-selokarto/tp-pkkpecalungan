@@ -2,13 +2,18 @@
 
 namespace App\Domains\Wilayah\Services;
 
+use App\Domains\Wilayah\AccessControl\Repositories\ModuleAccessOverrideRepositoryInterface;
 use App\Models\User;
 
 class RoleMenuVisibilityService
 {
+    public const PILOT_MODULE_SLUG = 'catatan-keluarga';
+
     public const MODE_READ_ONLY = 'read-only';
 
     public const MODE_READ_WRITE = 'read-write';
+
+    public const MODE_HIDDEN = 'hidden';
 
     /**
      * @var array<string, list<string>>
@@ -206,6 +211,11 @@ class RoleMenuVisibilityService
         ],
     ];
 
+    public function __construct(
+        private readonly ModuleAccessOverrideRepositoryInterface $moduleAccessOverrideRepository
+    ) {
+    }
+
     /**
      * @return array{groups: array<string, string>, modules: array<string, string>}
      */
@@ -220,7 +230,7 @@ class RoleMenuVisibilityService
         }
 
         $moduleModes = $this->resolveModuleModes($groupModes);
-        $moduleModes = $this->applyRoleModuleModeOverrides($user, $moduleModes);
+        $moduleModes = $this->applyRoleModuleModeOverrides($user, $scope, $moduleModes);
 
         return [
             'groups' => $groupModes,
@@ -248,25 +258,19 @@ class RoleMenuVisibilityService
      */
     public function resolveForRoleScope(string $role, string $scope): array
     {
-        $allowedGroups = self::GROUPS_BY_SCOPE[$scope] ?? [];
-        if ($allowedGroups === []) {
+        $groupModes = $this->resolveRoleGroupModesForScope($role, $scope);
+        if ($groupModes === []) {
             return [
                 'groups' => [],
                 'modules' => [],
             ];
         }
 
-        $groupModes = [];
-        foreach (self::ROLE_GROUP_MODES[$role] ?? [] as $group => $mode) {
-            if (! in_array($group, $allowedGroups, true)) {
-                continue;
-            }
-
-            $this->assignMode($groupModes, $group, $mode);
-        }
-
         $moduleModes = $this->resolveModuleModes($groupModes);
-        $moduleModes = $this->applyRoleModuleModeOverridesMap(self::ROLE_MODULE_MODE_OVERRIDES[$role] ?? [], $moduleModes);
+        $moduleModes = $this->applyRoleModuleModeOverridesMap(
+            $this->roleModuleModeOverrides($role, $scope),
+            $moduleModes
+        );
 
         return [
             'groups' => $groupModes,
@@ -277,9 +281,42 @@ class RoleMenuVisibilityService
     /**
      * @return array<string, string|null>
      */
-    public function roleModuleModeOverrides(string $role): array
+    public function roleModuleModeOverrides(string $role, ?string $scope = null): array
     {
-        return self::ROLE_MODULE_MODE_OVERRIDES[$role] ?? [];
+        $overrides = self::ROLE_MODULE_MODE_OVERRIDES[$role] ?? [];
+
+        if (! is_string($scope) || ! $this->isPilotOverrideEnabled()) {
+            return $overrides;
+        }
+
+        $pilotMode = $this->moduleAccessOverrideRepository->findMode($scope, $role, self::PILOT_MODULE_SLUG);
+        if (! is_string($pilotMode)) {
+            return $overrides;
+        }
+
+        $overrides[self::PILOT_MODULE_SLUG] = $this->normalizeOverrideModeForResolver($pilotMode);
+
+        return $overrides;
+    }
+
+    public function resolveModuleModeForRoleScope(string $role, string $scope, string $moduleSlug): ?string
+    {
+        $visibility = $this->resolveForRoleScope($role, $scope);
+
+        return $visibility['modules'][$moduleSlug] ?? null;
+    }
+
+    public function resolveBaselineModuleModeForRoleScope(string $role, string $scope, string $moduleSlug): ?string
+    {
+        $groupModes = $this->resolveRoleGroupModesForScope($role, $scope);
+        if ($groupModes === []) {
+            return null;
+        }
+
+        $moduleModes = $this->resolveModuleModes($groupModes);
+        $moduleModes = $this->applyRoleModuleModeOverridesMap(self::ROLE_MODULE_MODE_OVERRIDES[$role] ?? [], $moduleModes);
+
+        return $moduleModes[$moduleSlug] ?? null;
     }
 
     /**
@@ -355,14 +392,65 @@ class RoleMenuVisibilityService
      * @param array<string, string> $moduleModes
      * @return array<string, string>
      */
-    private function applyRoleModuleModeOverrides(User $user, array $moduleModes): array
+    private function applyRoleModuleModeOverrides(User $user, string $scope, array $moduleModes): array
     {
-        foreach ($user->getRoleNames() as $roleName) {
-            $overrides = self::ROLE_MODULE_MODE_OVERRIDES[(string) $roleName] ?? [];
+        $roleNames = $user->getRoleNames()
+            ->map(static fn (string $roleName): string => (string) $roleName)
+            ->values()
+            ->all();
+
+        $pilotOverrides = $this->pilotOverridesByScopeRoles($scope, $roleNames);
+
+        foreach ($roleNames as $roleName) {
+            $overrides = self::ROLE_MODULE_MODE_OVERRIDES[$roleName] ?? [];
+
+            if (array_key_exists($roleName, $pilotOverrides)) {
+                $overrides[self::PILOT_MODULE_SLUG] = $this->normalizeOverrideModeForResolver($pilotOverrides[$roleName]);
+            }
+
             $moduleModes = $this->applyRoleModuleModeOverridesMap($overrides, $moduleModes);
         }
 
         return $moduleModes;
+    }
+
+    /**
+     * @param list<string> $roleNames
+     * @return array<string, string>
+     */
+    private function pilotOverridesByScopeRoles(string $scope, array $roleNames): array
+    {
+        if (! $this->isPilotOverrideEnabled()) {
+            return [];
+        }
+
+        return $this->moduleAccessOverrideRepository->listModesForScopeRolesAndModule(
+            $scope,
+            $roleNames,
+            self::PILOT_MODULE_SLUG
+        );
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function resolveRoleGroupModesForScope(string $role, string $scope): array
+    {
+        $allowedGroups = self::GROUPS_BY_SCOPE[$scope] ?? [];
+        if ($allowedGroups === []) {
+            return [];
+        }
+
+        $groupModes = [];
+        foreach (self::ROLE_GROUP_MODES[$role] ?? [] as $group => $mode) {
+            if (! in_array($group, $allowedGroups, true)) {
+                continue;
+            }
+
+            $this->assignMode($groupModes, $group, $mode);
+        }
+
+        return $groupModes;
     }
 
     /**
@@ -382,5 +470,15 @@ class RoleMenuVisibilityService
         }
 
         return $moduleModes;
+    }
+
+    private function normalizeOverrideModeForResolver(string $mode): ?string
+    {
+        return $mode === self::MODE_HIDDEN ? null : $mode;
+    }
+
+    private function isPilotOverrideEnabled(): bool
+    {
+        return (bool) config('access_control.pilot_override.enabled', true);
     }
 }

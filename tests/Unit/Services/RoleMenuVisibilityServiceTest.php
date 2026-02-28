@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Domains\Wilayah\AccessControl\Models\ModuleAccessOverride;
 use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -297,5 +298,61 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertSame([], $desaVisibility['groups']);
         $this->assertSame([], $desaVisibility['modules']);
         $this->assertNull($this->service->resolveModuleModeForScope($kecamatanUser, 'desa', 'anggota-pokja'));
+    }
+
+    public function test_override_pilot_catatan_keluarga_menggantikan_hardcoded_hidden(): void
+    {
+        $actor = User::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-pokja-iv');
+
+        $this->assertNull(
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+        );
+
+        ModuleAccessOverride::query()->create([
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-iv',
+            'module_slug' => RoleMenuVisibilityService::PILOT_MODULE_SLUG,
+            'mode' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'changed_by' => $actor->id,
+        ]);
+
+        $this->assertSame(
+            RoleMenuVisibilityService::MODE_READ_ONLY,
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+        );
+    }
+
+    public function test_rollback_override_pilot_kembali_ke_fallback_hardcoded(): void
+    {
+        $actor = User::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-pokja-iv');
+
+        ModuleAccessOverride::query()->create([
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-iv',
+            'module_slug' => RoleMenuVisibilityService::PILOT_MODULE_SLUG,
+            'mode' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'changed_by' => $actor->id,
+        ]);
+
+        $this->assertSame(
+            RoleMenuVisibilityService::MODE_READ_ONLY,
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+        );
+
+        ModuleAccessOverride::query()
+            ->where('scope', 'kecamatan')
+            ->where('role_name', 'kecamatan-pokja-iv')
+            ->where('module_slug', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+            ->delete();
+
+        $this->assertNull(
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+        );
     }
 }

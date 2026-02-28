@@ -55,9 +55,9 @@ Superseded by: `-`
   - dokumen TODO/domain matrix/terminology map.
 
 ## Validasi
-- [ ] Targeted test concern.
-- [ ] Regression test concern terkait.
-- [ ] `php artisan test` (jika perubahan signifikan).
+- [x] Targeted test concern.
+- [x] Regression test concern terkait.
+- [x] `php artisan test` (jika perubahan signifikan).
 
 ## Rollback/Fallback Plan
 - Langkah rollback minimum: nonaktifkan pembacaan override storage dan pakai matrix hardcoded penuh.
@@ -74,3 +74,5 @@ Superseded by: `-`
 ## Status Log
 - 2026-02-28: `proposed` | baseline keputusan concern.
 - 2026-02-28: `proposed` -> `accepted` | disetujui implementasi Opsi B bertahap per concern modul, dimulai observasi + finalisasi markdown.
+- 2026-02-28: tahap 1 read-only matrix selesai (`ACL26S1`).
+- 2026-02-28: tahap 2 pilot write `catatan-keluarga` selesai (`ACL26C1`) dengan update, rollback, audit trail, dan fallback flag.

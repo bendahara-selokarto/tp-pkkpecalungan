@@ -108,6 +108,8 @@ use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageReposito
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepository;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryInterface;
+use App\Domains\Wilayah\AccessControl\Repositories\ModuleAccessOverrideRepository;
+use App\Domains\Wilayah\AccessControl\Repositories\ModuleAccessOverrideRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Observers\InvalidateDashboardDocumentCacheObserver;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
@@ -350,6 +352,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             ArsipDocumentRepositoryInterface::class,
             ArsipDocumentRepository::class
+        );
+
+        $this->app->bind(
+            ModuleAccessOverrideRepositoryInterface::class,
+            ModuleAccessOverrideRepository::class
         );
     }
 
