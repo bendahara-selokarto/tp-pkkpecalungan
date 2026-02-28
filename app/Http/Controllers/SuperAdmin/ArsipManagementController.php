@@ -48,6 +48,8 @@ class ArsipManagementController extends Controller
 
     public function edit(ArsipDocument $arsipDocument): Response
     {
+        abort_if(! $arsipDocument->is_global, 404);
+
         return Inertia::render('SuperAdmin/Arsip/Edit', [
             'document' => [
                 'id' => $arsipDocument->id,
@@ -56,14 +58,14 @@ class ArsipManagementController extends Controller
                 'original_name' => $arsipDocument->original_name,
                 'extension' => strtoupper($arsipDocument->extension),
                 'size_bytes' => (int) $arsipDocument->size_bytes,
-                'is_published' => (bool) $arsipDocument->is_published,
-                'published_at' => $arsipDocument->published_at?->toIso8601String(),
+                'is_global' => (bool) $arsipDocument->is_global,
             ],
         ]);
     }
 
     public function update(UpdateArsipDocumentRequest $request, ArsipDocument $arsipDocument): RedirectResponse
     {
+        abort_if(! $arsipDocument->is_global, 404);
         $this->updateArsipDocumentAction->execute($arsipDocument, $request->validated(), $request->user());
 
         return redirect()
@@ -73,6 +75,7 @@ class ArsipManagementController extends Controller
 
     public function destroy(ArsipDocument $arsipDocument): RedirectResponse
     {
+        abort_if(! $arsipDocument->is_global, 404);
         $this->deleteArsipDocumentAction->execute($arsipDocument);
 
         return redirect()

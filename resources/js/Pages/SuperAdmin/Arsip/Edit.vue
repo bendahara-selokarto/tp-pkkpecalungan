@@ -15,7 +15,6 @@ const props = defineProps({
 const form = useForm({
   title: props.document.title ?? '',
   description: props.document.description ?? '',
-  is_published: !!props.document.is_published,
   document_file: null,
 })
 
@@ -75,10 +74,9 @@ const submit = () => {
           <p v-if="form.errors.document_file" class="mt-1 text-xs text-rose-600">{{ form.errors.document_file }}</p>
         </div>
 
-        <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
-          <input v-model="form.is_published" type="checkbox" class="rounded border-gray-300 text-emerald-600 focus:ring-emerald-500">
-          <span>Publikasikan dokumen ini untuk pengguna umum</span>
-        </label>
+        <p class="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-800 dark:border-emerald-900/50 dark:bg-emerald-900/20 dark:text-emerald-300">
+          Dokumen ini termasuk arsip global dan tetap dapat diakses seluruh role.
+        </p>
 
         <div class="flex items-center justify-end gap-2">
           <Link

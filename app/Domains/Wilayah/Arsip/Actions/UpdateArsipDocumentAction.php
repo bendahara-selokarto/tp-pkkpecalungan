@@ -26,15 +26,9 @@ class UpdateArsipDocumentAction
             $replacementPath = $replacementFile->store('arsip-documents', 'public');
         }
 
-        $isPublished = (bool) ($payload['is_published'] ?? false);
-
         $updatePayload = [
             'title' => (string) $payload['title'],
             'description' => $payload['description'] ?? null,
-            'is_published' => $isPublished,
-            'published_at' => $isPublished
-                ? ($arsipDocument->published_at ?? now())
-                : null,
             'updated_by' => $actor->id,
         ];
 

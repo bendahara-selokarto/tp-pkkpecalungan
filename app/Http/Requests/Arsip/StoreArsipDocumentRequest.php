@@ -18,14 +18,6 @@ class StoreArsipDocumentRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'document_file' => 'required|file|mimes:pdf,doc,docx,xls,xlsx|max:20480',
-            'is_published' => 'nullable|boolean',
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'is_published' => filter_var($this->input('is_published', false), FILTER_VALIDATE_BOOLEAN),
-        ]);
     }
 }

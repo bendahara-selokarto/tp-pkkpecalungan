@@ -2,10 +2,11 @@
 
 namespace App\Domains\Wilayah\Arsip\Models;
 
-use Database\Factories\ArsipDocumentFactory;
+use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\ArsipDocumentFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class ArsipDocument extends Model
 {
@@ -21,16 +22,16 @@ class ArsipDocument extends Model
         'mime_type',
         'extension',
         'size_bytes',
-        'is_published',
-        'published_at',
+        'is_global',
+        'level',
+        'area_id',
         'download_count',
         'created_by',
         'updated_by',
     ];
 
     protected $casts = [
-        'is_published' => 'boolean',
-        'published_at' => 'datetime',
+        'is_global' => 'boolean',
         'size_bytes' => 'integer',
         'download_count' => 'integer',
     ];
@@ -43,6 +44,11 @@ class ArsipDocument extends Model
     public function updater()
     {
         return $this->belongsTo(User::class, 'updated_by');
+    }
+
+    public function area()
+    {
+        return $this->belongsTo(Area::class, 'area_id');
     }
 
     protected static function newFactory(): ArsipDocumentFactory

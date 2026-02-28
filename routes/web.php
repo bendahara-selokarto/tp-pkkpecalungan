@@ -11,6 +11,7 @@ use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
 use App\Domains\Wilayah\Activities\Controllers\ActivityPrintController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanActivityController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanDesaActivityController;
+use App\Domains\Wilayah\Arsip\Controllers\KecamatanDesaArsipController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\DesaAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\KecamatanAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\AgendaSuratReportPrintController;
@@ -127,6 +128,15 @@ Route::get('/dashboard/charts/report/pdf', [DashboardController::class, 'printCh
 Route::get('/arsip', ArsipController::class)
     ->middleware(['auth', 'verified'])
     ->name('arsip.index');
+Route::post('/arsip', [ArsipController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.store');
+Route::put('/arsip/{arsipDocument}', [ArsipController::class, 'update'])
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.update');
+Route::delete('/arsip/{arsipDocument}', [ArsipController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.destroy');
 Route::get('/arsip/download/{arsipDocument}', [ArsipController::class, 'download'])
     ->middleware(['auth', 'verified'])
     ->name('arsip.download');
@@ -341,6 +351,7 @@ Route::prefix('kecamatan')
             ->whereIn('type', ['image', 'document'])
             ->name('desa-activities.attachments.show');
         Route::get('desa-activities/{id}/print', [ActivityPrintController::class, 'printKecamatanDesa'])->name('desa-activities.print');
+        Route::get('desa-arsip', [KecamatanDesaArsipController::class, 'index'])->name('desa-arsip.index');
         Route::get('program-prioritas/report/pdf', [ProgramPrioritasPrintController::class, 'printKecamatanReport'])->name('program-prioritas.report');
         Route::get('pilot-project-keluarga-sehat/report/pdf', [PilotProjectKeluargaSehatPrintController::class, 'printKecamatanReport'])->name('pilot-project-keluarga-sehat.report');
         Route::get('pilot-project-naskah-pelaporan/report/pdf', [PilotProjectNaskahPelaporanPrintController::class, 'printKecamatanReport'])->name('pilot-project-naskah-pelaporan.report');

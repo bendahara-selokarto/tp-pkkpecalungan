@@ -71,6 +71,7 @@ class RoleMenuVisibilityService
         ],
         'monitoring' => [
             'desa-activities',
+            'desa-arsip',
         ],
     ];
 

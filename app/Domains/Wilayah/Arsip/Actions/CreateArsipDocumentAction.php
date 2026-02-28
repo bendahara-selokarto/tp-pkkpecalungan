@@ -4,14 +4,16 @@ namespace App\Domains\Wilayah\Arsip\Actions;
 
 use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
 use App\Domains\Wilayah\Arsip\Repositories\ArsipDocumentRepositoryInterface;
+use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class CreateArsipDocumentAction
 {
     public function __construct(
-        private readonly ArsipDocumentRepositoryInterface $arsipDocumentRepository
+        private readonly ArsipDocumentRepositoryInterface $arsipDocumentRepository,
+        private readonly AreaRepositoryInterface $areaRepository
     ) {
     }
 
@@ -21,7 +23,14 @@ class CreateArsipDocumentAction
         $uploadedFile = $payload['document_file'];
         $storedPath = $uploadedFile->store('arsip-documents', 'public');
 
-        $isPublished = (bool) ($payload['is_published'] ?? false);
+        $areaId = is_numeric($actor->area_id) ? (int) $actor->area_id : 0;
+        $areaLevel = $areaId > 0 ? $this->areaRepository->getLevelById($areaId) : null;
+
+        if (! in_array($areaLevel, ['desa', 'kecamatan'], true)) {
+            throw new HttpException(403, 'Area pengguna belum valid untuk mengelola arsip.');
+        }
+
+        $isGlobal = $actor->hasRole('super-admin');
 
         return $this->arsipDocumentRepository->store([
             'title' => (string) $payload['title'],
@@ -31,8 +40,9 @@ class CreateArsipDocumentAction
             'mime_type' => $uploadedFile->getClientMimeType(),
             'extension' => strtolower($uploadedFile->getClientOriginalExtension()),
             'size_bytes' => (int) $uploadedFile->getSize(),
-            'is_published' => $isPublished,
-            'published_at' => $isPublished ? now() : null,
+            'is_global' => $isGlobal,
+            'level' => $areaLevel,
+            'area_id' => $areaId,
             'created_by' => $actor->id,
             'updated_by' => $actor->id,
         ]);

@@ -5,11 +5,13 @@ namespace App\Domains\Wilayah\Arsip\UseCases;
 use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
 use App\Domains\Wilayah\Arsip\Repositories\ArsipDocumentRepositoryInterface;
 use App\Models\User;
+use App\Policies\ArsipDocumentPolicy;
 
 class ResolveArsipDocumentDownloadUseCase
 {
     public function __construct(
-        private readonly ArsipDocumentRepositoryInterface $arsipDocumentRepository
+        private readonly ArsipDocumentRepositoryInterface $arsipDocumentRepository,
+        private readonly ArsipDocumentPolicy $arsipDocumentPolicy
     ) {
     }
 
@@ -18,7 +20,7 @@ class ResolveArsipDocumentDownloadUseCase
      */
     public function execute(User $user, ArsipDocument $arsipDocument): ?array
     {
-        if (! $user->can('view', $arsipDocument)) {
+        if (! $this->arsipDocumentPolicy->view($user, $arsipDocument)) {
             return null;
         }
 

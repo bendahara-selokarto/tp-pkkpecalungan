@@ -20,12 +20,16 @@ return new class extends Migration
             $table->string('mime_type', 120)->nullable();
             $table->string('extension', 20);
             $table->unsignedBigInteger('size_bytes')->default(0);
-            $table->boolean('is_published')->default(false);
-            $table->timestamp('published_at')->nullable();
+            $table->boolean('is_global')->default(false);
+            $table->string('level', 20);
+            $table->foreignId('area_id')->constrained('areas')->cascadeOnDelete();
             $table->unsignedBigInteger('download_count')->default(0);
-            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
+
+            $table->index(['is_global', 'updated_at']);
+            $table->index(['level', 'area_id']);
         });
     }
 

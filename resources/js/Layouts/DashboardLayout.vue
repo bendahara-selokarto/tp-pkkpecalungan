@@ -188,6 +188,7 @@ const kecamatanMenuGroups = [
     code: 'MON',
     items: [
       { href: '/kecamatan/desa-activities', label: 'Rekap Kegiatan Desa', uiVisibility: 'disabled' },
+      { href: '/kecamatan/desa-arsip', label: 'Rekap Arsip Desa', uiVisibility: 'disabled' },
     ],
   },
 ]

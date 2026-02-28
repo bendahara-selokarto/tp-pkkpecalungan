@@ -90,7 +90,8 @@ const confirmDelete = () => {
             <tr class="text-left text-gray-600 dark:text-gray-300">
               <th class="px-3 py-3 font-semibold">Judul</th>
               <th class="px-3 py-3 font-semibold">File</th>
-              <th class="px-3 py-3 font-semibold">Status</th>
+              <th class="px-3 py-3 font-semibold">Tipe</th>
+              <th class="px-3 py-3 font-semibold">Pengunggah</th>
               <th class="px-3 py-3 font-semibold">Ukuran</th>
               <th class="px-3 py-3 font-semibold">Diunduh</th>
               <th class="px-3 py-3 font-semibold">Diperbarui</th>
@@ -113,13 +114,14 @@ const confirmDelete = () => {
               <td class="px-3 py-3">
                 <span
                   class="inline-flex rounded border px-2 py-1 text-xs font-semibold"
-                  :class="document.is_published
+                  :class="document.is_global
                     ? 'border-emerald-200 text-emerald-700 dark:border-emerald-900/50 dark:text-emerald-300'
                     : 'border-amber-200 text-amber-700 dark:border-amber-900/50 dark:text-amber-300'"
                 >
-                  {{ document.is_published ? 'Publik' : 'Draft' }}
+                  {{ document.is_global ? 'Global' : 'Pribadi' }}
                 </span>
               </td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ document.creator_name || '-' }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatBytes(document.size_bytes) }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ document.download_count }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDateTime(document.updated_at) }}</td>
@@ -142,7 +144,7 @@ const confirmDelete = () => {
               </td>
             </tr>
             <tr v-if="documents.data.length === 0">
-              <td colspan="7" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <td colspan="8" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Belum ada dokumen arsip yang dikelola.
               </td>
             </tr>
