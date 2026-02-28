@@ -5,6 +5,7 @@ use App\Http\Controllers\ArsipController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UiRuntimeErrorLogController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SuperAdmin\AccessControlManagementController;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
 use App\Http\Controllers\SuperAdmin\ArsipManagementController;
 use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
@@ -155,6 +156,8 @@ Route::middleware(['auth', 'role:super-admin'])
     ->name('super-admin.')
     ->group(function () {
         Route::resource('users', UserManagementController::class);
+        Route::get('access-control', AccessControlManagementController::class)
+            ->name('access-control.index');
         Route::resource('arsip', ArsipManagementController::class)
             ->parameters(['arsip' => 'arsipDocument']);
     });

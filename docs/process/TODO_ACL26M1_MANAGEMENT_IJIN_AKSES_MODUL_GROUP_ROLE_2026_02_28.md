@@ -49,35 +49,35 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 ## Target Hasil
 - [x] Observasi kontrak akses existing selesai dan tervalidasi scoped.
 - [x] Finalisasi markdown baseline concern (master TODO + ADR + registry SOT).
-- [ ] Menu baru sidebar super-admin: `Management Ijin Akses`.
-- [ ] Halaman matrix akses read-only untuk kontrol keputusan desain.
+- [x] Menu baru sidebar super-admin: `Management Ijin Akses`.
+- [x] Halaman matrix akses read-only untuk kontrol keputusan desain.
 - [ ] Fitur update override akses untuk pilot modul `catatan-keluarga`.
 - [ ] Jejak audit perubahan ijin akses (`changed_by`, waktu, before/after).
 
 ## Langkah Eksekusi
 - [x] Audit kontrak akses existing (`RoleMenuVisibilityService`, middleware, matrix role).
 - [x] Finalisasi keputusan bertahap via markdown (master TODO + ADR + child TODO).
-- [ ] Implementasi Tahap 1 read-only matrix super-admin.
+- [x] Implementasi Tahap 1 read-only matrix super-admin.
 - [ ] Validasi desain matrix bersama stakeholder domain.
 - [ ] Implementasi Tahap 2 write override modul `catatan-keluarga`.
 - [ ] Rollout modul berikutnya per concern terpisah.
 - [ ] Sinkronisasi dokumen domain/process/ADR pada setiap batch concern.
 
 ## Test Matrix Minimum (Concern Ini)
-- [ ] Feature test super-admin dapat melihat matrix akses read-only.
-- [ ] Feature test role non super-admin ditolak akses menu management ijin.
+- [x] Feature test super-admin dapat melihat matrix akses read-only.
+- [x] Feature test role non super-admin ditolak akses menu management ijin.
 - [ ] Feature test pilot override `catatan-keluarga` sukses dan fallback aman.
-- [ ] Unit test resolver akses: prioritas override vs hardcoded fallback.
-- [ ] Regression test `MenuVisibilityPayload` + middleware visibilitas.
-- [ ] `php artisan test` penuh sebelum close concern.
+- [x] Unit test resolver akses: prioritas override vs hardcoded fallback.
+- [x] Regression test `MenuVisibilityPayload` + middleware visibilitas.
+- [x] `php artisan test` penuh sebelum close concern.
 
 ## Validasi
 - [x] Validasi observasi scoped file akses + route `catatan-keluarga`.
-- [ ] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`
+- [x] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`
 - [ ] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`
-- [ ] `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
-- [ ] `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
-- [ ] `php artisan test`
+- [x] `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+- [x] `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
+- [x] `php artisan test`
 
 ## Risiko
 - Risiko eskalasi privilege jika kombinasi role/modul tidak divalidasi ketat.
@@ -98,3 +98,8 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [ ] Ringkasan perubahan + alasan + dampak.
 - [ ] Daftar file terdampak per layer (route/request/use case/repository/model/ui/test/docs).
 - [ ] Hasil validasi + residual risk + opsi lanjutan.
+
+## Progress Tahap 1 (2026-02-28)
+- Tahap 1 read-only selesai diimplementasikan dengan route/controller/use case/UI/table filter.
+- Kontrak mode `read-only|read-write|hidden` sudah dapat diobservasi dari UI super-admin tanpa endpoint mutasi.
+- Concern aktif berpindah ke validasi stakeholder dan persiapan Tahap 2 (pilot write modul `catatan-keluarga`).

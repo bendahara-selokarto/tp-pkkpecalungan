@@ -238,6 +238,53 @@ class RoleMenuVisibilityService
     /**
      * @return list<string>
      */
+    public function groupsForScope(string $scope): array
+    {
+        return self::GROUPS_BY_SCOPE[$scope] ?? [];
+    }
+
+    /**
+     * @return array{groups: array<string, string>, modules: array<string, string>}
+     */
+    public function resolveForRoleScope(string $role, string $scope): array
+    {
+        $allowedGroups = self::GROUPS_BY_SCOPE[$scope] ?? [];
+        if ($allowedGroups === []) {
+            return [
+                'groups' => [],
+                'modules' => [],
+            ];
+        }
+
+        $groupModes = [];
+        foreach (self::ROLE_GROUP_MODES[$role] ?? [] as $group => $mode) {
+            if (! in_array($group, $allowedGroups, true)) {
+                continue;
+            }
+
+            $this->assignMode($groupModes, $group, $mode);
+        }
+
+        $moduleModes = $this->resolveModuleModes($groupModes);
+        $moduleModes = $this->applyRoleModuleModeOverridesMap(self::ROLE_MODULE_MODE_OVERRIDES[$role] ?? [], $moduleModes);
+
+        return [
+            'groups' => $groupModes,
+            'modules' => $moduleModes,
+        ];
+    }
+
+    /**
+     * @return array<string, string|null>
+     */
+    public function roleModuleModeOverrides(string $role): array
+    {
+        return self::ROLE_MODULE_MODE_OVERRIDES[$role] ?? [];
+    }
+
+    /**
+     * @return list<string>
+     */
     public function modulesForGroup(string $group): array
     {
         return self::GROUP_MODULES[$group] ?? [];
@@ -312,14 +359,26 @@ class RoleMenuVisibilityService
     {
         foreach ($user->getRoleNames() as $roleName) {
             $overrides = self::ROLE_MODULE_MODE_OVERRIDES[(string) $roleName] ?? [];
-            foreach ($overrides as $moduleSlug => $mode) {
-                if ($mode === null) {
-                    unset($moduleModes[$moduleSlug]);
-                    continue;
-                }
+            $moduleModes = $this->applyRoleModuleModeOverridesMap($overrides, $moduleModes);
+        }
 
-                $moduleModes[$moduleSlug] = $mode;
+        return $moduleModes;
+    }
+
+    /**
+     * @param array<string, string|null> $overrides
+     * @param array<string, string> $moduleModes
+     * @return array<string, string>
+     */
+    private function applyRoleModuleModeOverridesMap(array $overrides, array $moduleModes): array
+    {
+        foreach ($overrides as $moduleSlug => $mode) {
+            if ($mode === null) {
+                unset($moduleModes[$moduleSlug]);
+                continue;
             }
+
+            $moduleModes[$moduleSlug] = $mode;
         }
 
         return $moduleModes;
