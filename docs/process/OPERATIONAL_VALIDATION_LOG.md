@@ -1111,3 +1111,33 @@ ROUTE_CORRECTION_LIMIT: 1
 VALIDATION: rg_pattern_sync=PASS, rg_model_tier_sync=PASS
 STATUS: PASS
 ```
+
+## Optimasi Bottleneck Process Execution (Exec 1-3): 2026-03-01
+
+Ruang lingkup:
+- Menetapkan threshold agar `P-021` tidak dipakai untuk perubahan minor `doc-only`.
+- Menambahkan jalur validasi cepat `doc-only fast lane` pada single-path.
+- Memisahkan backlog residual `fixture/template consistency` ke concern SOT terisolasi.
+
+Artefak:
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/process/TODO_BTLK26A1_OPTIMASI_BOTTLENECK_PROCESS_EXECUTION_2026_03_01.md`
+- `docs/process/TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md`
+
+Perintah validasi:
+- `rg -n "P-021|P-022|P-023|Doc-Only Fast Lane Validation|Self-Reflective Routing" docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+  - hasil: `PASS`.
+- `rg -n "Fast-lane|Khusus .*process/domain/adr" docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+  - hasil: `PASS`.
+- `rg -n "C-FIXTURE-TEMPLATE|TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md" docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md docs/process/TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md`
+  - hasil: `PASS`.
+
+Keputusan:
+- `P-021` hanya untuk keputusan strategis; `doc-only` minor tidak wajib ADR.
+- `doc-only fast lane` aktif untuk validasi ringan concern dokumen.
+- Concern `fixture/template consistency` dipisah ke SOT `FTC26A1`.
+
+Status:
+- `PASS` untuk sinkronisasi dokumen concern process execution.

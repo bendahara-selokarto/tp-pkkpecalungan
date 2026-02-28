@@ -69,6 +69,7 @@ Aturan anti-ambiguity:
 - L1: lint/syntax/test targeted concern.
 - L2: regression test concern terkait.
 - L3: `php artisan test` full untuk perubahan signifikan.
+- Fast-lane `doc-only`: jika perubahan hanya `docs/**`, cukup L1 audit scoped (`rg`) + catat di validation log.
 
 7. `Doc-Hardening`
 - Wajib saat trigger canonical aktif (akses, scope, dashboard, query key, metadata sumber, atau lintas dokumen concern).
@@ -121,6 +122,7 @@ Urutan validasi:
 2. Test targeted concern.
 3. Regression concern terdekat.
 4. Full suite (`php artisan test`) bila perubahan lintas domain, akses/policy/scope, dashboard agregat, atau migrasi/seeder canonical.
+5. Khusus `doc-only` process/domain/adr: boleh selesai di step 1 + log operasional, jika tidak ada perubahan runtime/backend contract.
 
 Kriteria selesai:
 - Semua gate concern terpenuhi.

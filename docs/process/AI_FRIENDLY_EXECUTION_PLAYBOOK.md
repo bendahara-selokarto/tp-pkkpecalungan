@@ -57,6 +57,7 @@ Gunakan status:
 | `P-020` | Kecamatan Dual-Scope List Contract (`kecamatan` vs `desa monitoring`) | Daftar modul di scope kecamatan butuh mode data sendiri + mode monitoring desa | Mode `kecamatan` konsisten ke data milik sendiri, mode `desa` konsisten ke seluruh desa dalam kecamatan, dan monitoring tetap read-only | Feature test list kedua mode + payload mode visibility + middleware anti write bypass | `active` |
 | `P-021` | ADR + TODO Coupled Governance | Ada keputusan arsitektur/canonical berdampak lintas sesi atau lintas modul | Keputusan teknis punya jejak trade-off yang bisa diaudit dan eksekusi concern tetap terikat checklist validasi | ADR template terisi + TODO concern aktif + sinkronisasi status keputusan | `active` |
 | `P-022` | Self-Reflective Routing | User meminta jalur reflektif atau task berisiko salah klasifikasi concern pada routing awal | Jalur eksekusi tetap deterministik tetapi punya checkpoint refleksi terkontrol sebelum patch besar | Re-check concern+boundary+validation ladder + sinkronisasi single-path doc/playbook/TODO/ADR concern | `active` |
+| `P-023` | Doc-Only Fast Lane Validation | Perubahan hanya dokumentasi process/domain/adr tanpa runtime change | Siklus validasi lebih cepat tanpa menurunkan guardrail sinkronisasi kontrak | L1 audit scoped (`rg`/link/status) + skip L3 bila tidak ada dampak runtime | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -487,10 +488,11 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
 ### P-021 - ADR + TODO Coupled Governance
 - Tanggal: 2026-02-28
 - Status: active
-- Konteks: Concern berisiko drift saat keputusan arsitektur hanya ada di chat/TODO tanpa catatan keputusan formal yang memuat opsi dan trade-off.
+- Konteks: Hindari keputusan arsitektur hanya tersimpan di chat/TODO.
 - Trigger:
   - Perubahan kontrak arsitektur, authorization, atau boundary repository yang berdampak lintas modul.
   - Keputusan teknis strategis yang perlu jejak audit lintas sesi.
+  - Bukan untuk perubahan minor `doc-only`.
 - Langkah eksekusi:
   1) Kunci rencana eksekusi concern pada TODO aktif (`docs/process/TODO_*`) dengan basis `docs/process/TEMPLATE_TODO_CONCERN.md`.
   2) Catat keputusan arsitektur pada ADR (`docs/adr/ADR_<NOMOR4>_<RINGKASAN>.md`) dengan basis `docs/adr/ADR_TEMPLATE.md`.
@@ -499,17 +501,44 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
 - Guardrail:
   - TODO tetap sumber rencana eksekusi; ADR sumber keputusan arsitektur.
   - Jangan ubah status ADR ke `accepted` tanpa rencana validasi yang jelas.
-  - Hindari keputusan penting hanya tersimpan di chat.
+  - `doc-only` wording/checklist/link: cukup update TODO concern.
 - Validasi minimum:
   - ADR berisi konteks, opsi, keputusan, dampak, validasi, fallback.
   - TODO concern menyimpan checklist eksekusi dan hasil validasi terbaru.
   - Referensi silang ADR <-> TODO konsisten.
 - Bukti efisiensi/akurasi:
-  - Menurunkan ambiguitas pada perubahan jangka panjang karena keputusan dan eksekusi terdokumentasi terpisah namun terhubung.
+  - Menurunkan ambiguitas keputusan jangka panjang.
 - Risiko:
   - Tambahan overhead dokumentasi jika dipakai untuk perubahan kecil yang tidak strategis.
 - Catatan reuse lintas domain/project:
-  - Cocok untuk project yang memerlukan jejak keputusan audit-friendly tanpa mengorbankan patch minimal.
+  - Cocok untuk project dengan kebutuhan audit trail.
+
+### P-023 - Doc-Only Fast Lane Validation
+- Tanggal: 2026-03-01
+- Status: active
+- Konteks: Perubahan dokumen sering tidak butuh full suite.
+- Trigger:
+  - Perubahan hanya pada `docs/**`.
+  - Tidak ada perubahan runtime/backend contract.
+- Langkah eksekusi:
+  1) Audit scoped istilah + referensi silang TODO/ADR/process.
+  2) Validasi cepat dengan `rg` token concern.
+  3) Catat hasil di `OPERATIONAL_VALIDATION_LOG.md` (`doc-only fast lane`).
+  4) Jalankan `L3` hanya jika ada sinyal drift ke runtime.
+- Guardrail:
+  - Tidak boleh dipakai jika ada perubahan kode aplikasi.
+  - Tetap wajib sinkron lintas dokumen concern saat trigger `P-016` aktif.
+  - Tetap wajib ADR jika perubahan bersifat keputusan arsitektur lintas concern.
+- Validasi minimum:
+  - `rg` token concern lintas `single-path/playbook/TODO/ADR` konsisten.
+  - Registry SOT tetap benar.
+  - Log operasional mencatat artefak + command.
+- Bukti efisiensi/akurasi:
+  - Mengurangi latency concern dokumentasi.
+- Risiko:
+  - False negative jika task salah diklasifikasikan sebagai `doc-only`.
+- Catatan reuse lintas domain/project:
+  - Cocok untuk repo dengan governance dokumen ketat.
 
 ### P-022 - Self-Reflective Routing
 - Tanggal: 2026-03-01
