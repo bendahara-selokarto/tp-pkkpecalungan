@@ -357,7 +357,19 @@ const dashboardSections = computed(() => {
   return sections
 })
 
-const visibleDashboardSections = computed(() => dashboardSections.value)
+const visibleDashboardSections = computed(() => {
+  const sections = dashboardSections.value
+
+  if (!Array.isArray(sections) || sections.length === 0) {
+    return []
+  }
+
+  // Product decision: keep dashboard in single-section mode to reduce cognitive load.
+  const firstNonEmptySection = sections.find((section) =>
+    Array.isArray(section?.blocks) && section.blocks.length > 0)
+
+  return [firstNonEmptySection ?? sections[0]]
+})
 const visibleDashboardBlocks = computed(() =>
   visibleDashboardSections.value.flatMap((section) =>
     Array.isArray(section?.blocks) ? section.blocks : []),

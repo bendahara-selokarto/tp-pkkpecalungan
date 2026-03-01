@@ -204,18 +204,17 @@ Payload utama:
 - Payload legacy (`dashboardStats`/`dashboardCharts`) hanya fallback transisi.
 
 Struktur section sekretaris:
-- Section 1: domain sekretaris (tanpa filter pokja).
-- Section 2: pokja level aktif, filter query `section2_group` dengan opsi `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
-- Section 3: khusus scope kecamatan, pokja level bawah (desa turunan), filter query `section3_group` dengan opsi `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
-- Section 4 (skenario khusus): hanya untuk kecamatan saat `section3_group=pokja-i`, menampilkan rincian sumber data pokja I per desa.
+- Single section aktif: dashboard hanya menampilkan satu section utama untuk mengurangi beban kognitif.
+- Section utama memprioritaskan domain sekretaris dan chart activity.
+- Pada scope `kecamatan`, chart activity menampilkan `jumlah kegiatan per desa` dengan filter bulan `section1_month` (`all|1..12`).
 
 Aturan role khusus:
-- `desa-sekretaris`: default `level=desa`, tanpa kontrol `sub_level`, filter yang tampil hanya `section2_group`.
-- `kecamatan-sekretaris`: tetap dapat mode bertingkat (`all|by-level|by-sub-level`) dengan filter section 2 dan section 3 yang independen.
+- `desa-sekretaris`: default `level=desa`, tanpa kontrol `sub_level`.
+- `kecamatan-sekretaris`: tetap dapat mode bertingkat (`all|by-level|by-sub-level`) dan filter bulan `section1_month` pada section utama.
 
 Kontrak metadata sumber (anti label ambigu):
 - `source_group`: `sekretaris-tpk|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
 - `source_scope`: `desa|kecamatan`.
 - `source_area_type`: `area-sendiri|desa-turunan`.
 - `source_modules`: daftar slug modul penyusun metrik.
-- `filter_context`: wajib memuat token query aktif termasuk `section2_group` dan/atau `section3_group` sesuai section.
+- `filter_context`: wajib memuat token query aktif minimal `mode|level|sub_level|section1_month`.
