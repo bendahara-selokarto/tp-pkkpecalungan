@@ -211,6 +211,7 @@ Struktur section sekretaris:
 Aturan role khusus:
 - `desa-sekretaris`: default `level=desa`, tanpa kontrol `sub_level`.
 - `kecamatan-sekretaris`: tetap dapat mode bertingkat (`all|by-level|by-sub-level`) dan filter bulan `section1_month` pada section utama.
+- `desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv`: section utama menampilkan chart activity bulanan pokja sendiri (scope area desa sendiri).
 
 Kontrak metadata sumber (anti label ambigu):
 - `source_group`: `sekretaris-tpk|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
