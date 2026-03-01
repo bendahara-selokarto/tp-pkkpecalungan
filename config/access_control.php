@@ -6,6 +6,7 @@ return [
         'modules' => [
             'catatan-keluarga',
             'pilot-project-keluarga-sehat',
+            'pilot-project-naskah-pelaporan',
         ],
     ],
 ];
