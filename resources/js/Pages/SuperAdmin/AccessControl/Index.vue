@@ -98,7 +98,7 @@ const isPilotActionLoading = (row, action) => pilotActionKey.value === `${row.id
 
 const setPilotMode = (row, mode) => {
   pilotActionKey.value = `${row.id}:${mode}`
-  router.put('/super-admin/access-control/pilot/catatan-keluarga', {
+  router.put(`/super-admin/access-control/pilot/${encodeURIComponent(row.module)}`, {
     scope: row.scope,
     role: row.role,
     mode,
@@ -113,7 +113,7 @@ const setPilotMode = (row, mode) => {
 
 const rollbackPilotMode = (row) => {
   pilotActionKey.value = `${row.id}:rollback`
-  router.delete('/super-admin/access-control/pilot/catatan-keluarga', {
+  router.delete(`/super-admin/access-control/pilot/${encodeURIComponent(row.module)}`, {
     data: {
       scope: row.scope,
       role: row.role,
@@ -135,7 +135,7 @@ const rollbackPilotMode = (row) => {
       <div class="mb-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Matriks Akses Modul dan Group Role</h3>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
-          Halaman ini read-only untuk observasi keputusan desain sebelum aktivasi perubahan ijin akses.
+          Halaman ini menampilkan matrix akses aktual. Kontrol pilot write aktif untuk Catatan Keluarga dan Pilot Project Keluarga Sehat.
         </p>
       </div>
 

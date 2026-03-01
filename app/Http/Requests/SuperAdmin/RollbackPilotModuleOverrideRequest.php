@@ -18,6 +18,7 @@ class RollbackPilotModuleOverrideRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'module_slug' => ['required', 'string', Rule::in(RoleMenuVisibilityService::pilotModuleSlugs())],
             'scope' => ['required', Rule::in(ScopeLevel::values())],
             'role' => [
                 'required',
@@ -34,11 +35,10 @@ class RollbackPilotModuleOverrideRequest extends FormRequest
         ];
     }
 
-    protected function passedValidation(): void
+    protected function prepareForValidation(): void
     {
-        $moduleSlug = (string) $this->route('moduleSlug', RoleMenuVisibilityService::PILOT_MODULE_SLUG);
-        if (! in_array($moduleSlug, RoleMenuVisibilityService::pilotModuleSlugs(), true)) {
-            abort(422, 'Modul pilot tidak valid.');
-        }
+        $this->merge([
+            'module_slug' => (string) $this->route('moduleSlug', RoleMenuVisibilityService::PILOT_MODULE_SLUG),
+        ]);
     }
 }

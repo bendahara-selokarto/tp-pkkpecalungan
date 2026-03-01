@@ -32,6 +32,9 @@ class AccessControlManagementReadOnlyTest extends TestCase
                 $page
                     ->component('SuperAdmin/AccessControl/Index')
                     ->where('summary.total_rows', static fn (mixed $value): bool => is_int($value) && $value > 0)
+                    ->where('rows', static fn (mixed $rows): bool => collect($rows)->every(
+                        static fn (mixed $row): bool => is_array($row) && ($row['role'] ?? null) !== 'super-admin'
+                    ))
                     ->where('rows', function (mixed $rows): bool {
                         $target = collect($rows)->first(function (mixed $row): bool {
                             return is_array($row)
@@ -43,7 +46,10 @@ class AccessControlManagementReadOnlyTest extends TestCase
 
                         return is_array($target)
                             && ($target['mode'] ?? null) === 'hidden';
-                    });
+                    })
+                    ->where('roleOptions', static fn (mixed $options): bool => collect($options)->every(
+                        static fn (mixed $option): bool => is_array($option) && ($option['value'] ?? null) !== 'super-admin'
+                    ));
             });
     }
 
