@@ -34,6 +34,24 @@ Status: `active` (`responsive-ux-refactor`)
 - [ ] Risiko ketidakkonsistenan jika refactor dilakukan parsial tanpa kontrak komponen tunggal.
 - [ ] Risiko scope creep bila refactor UI bercampur perubahan domain/backend.
 
+## Mitigasi per Risiko
+- [ ] `M1` Rollout bertahap per batch halaman prioritas (`Dashboard` -> `SuperAdmin Users` -> `Arsip` -> CRUD lain).
+- [ ] `M2` Gunakan feature flag `UI_RESPONSIVE_TABLE_V2` untuk transisi dan fallback cepat.
+- [ ] `M3` Terapkan komponen tunggal `ResponsiveDataTable` dengan metadata kolom wajib (`key`, `label`, `mobileLabel`).
+- [ ] `M4` Tambahkan guard CI/lint agar tabel baru tanpa metadata responsif tidak lolos review.
+- [ ] `M5` Standarkan utility sentuh mobile minimum `min-h-[44px]` pada aksi primer/sekunder/destruktif.
+- [ ] `M6` Refactor elemen klik non-semantic ke `button`/`a` dan pastikan state fokus terlihat.
+- [ ] `M7` Terapkan guard modal aksesibel: initial focus, focus trap, restore focus, dan `Escape` close.
+- [ ] `M8` Batasi scope PR concern ini hanya pada layer UI; perubahan backend/domain ditolak dan dipisah concern.
+- [ ] `M9` Simpan jalur rollback per batch (commit kecil + fallback komponen lama) untuk minimalkan blast radius.
+
+## Exit Criteria Mitigasi
+- [ ] Semua halaman batch aktif lolos uji breakpoint `360/390/768/1024/1280` tanpa layout break.
+- [ ] Tabel mobile batch aktif tetap terbaca dengan label kolom yang jelas.
+- [ ] Komponen interaktif utama batch aktif memenuhi minimum target sentuh 44px.
+- [ ] Navigasi dan modal batch aktif usable penuh via keyboard (`Tab`, `Enter`, `Space`, `Escape`).
+- [ ] Tidak ada perubahan route/use case/repository/policy pada PR refactor concern ini.
+
 ## Keputusan Dikunci
 - [x] Refactor difokuskan ke layer UI dan aksesibilitas tanpa mengubah kontrak domain backend.
 - [x] Concern ini memakai pendekatan bertahap, bukan rewrite menyeluruh satu rilis.
