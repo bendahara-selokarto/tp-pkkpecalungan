@@ -9,6 +9,7 @@ class RoleMenuVisibilityService
 {
     public const PILOT_MODULE_SLUG = 'catatan-keluarga';
     public const SECOND_PILOT_MODULE_SLUG = 'pilot-project-keluarga-sehat';
+    public const THIRD_PILOT_MODULE_SLUG = 'pilot-project-naskah-pelaporan';
 
     public const MODE_READ_ONLY = 'read-only';
 
@@ -306,10 +307,11 @@ class RoleMenuVisibilityService
         $configured = config('access_control.pilot_override.modules', [
             self::PILOT_MODULE_SLUG,
             self::SECOND_PILOT_MODULE_SLUG,
+            self::THIRD_PILOT_MODULE_SLUG,
         ]);
 
         if (! is_array($configured)) {
-            return [self::PILOT_MODULE_SLUG, self::SECOND_PILOT_MODULE_SLUG];
+            return [self::PILOT_MODULE_SLUG, self::SECOND_PILOT_MODULE_SLUG, self::THIRD_PILOT_MODULE_SLUG];
         }
 
         $normalized = array_values(array_unique(array_filter(
@@ -318,7 +320,7 @@ class RoleMenuVisibilityService
         )));
 
         return $normalized === []
-            ? [self::PILOT_MODULE_SLUG, self::SECOND_PILOT_MODULE_SLUG]
+            ? [self::PILOT_MODULE_SLUG, self::SECOND_PILOT_MODULE_SLUG, self::THIRD_PILOT_MODULE_SLUG]
             : $normalized;
     }
 

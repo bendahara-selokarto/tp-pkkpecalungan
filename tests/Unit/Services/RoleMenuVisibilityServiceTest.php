@@ -423,4 +423,60 @@ class RoleMenuVisibilityServiceTest extends TestCase
             $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::SECOND_PILOT_MODULE_SLUG)
         );
     }
+
+    public function test_override_pilot_naskah_pelaporan_menggantikan_hardcoded_hidden(): void
+    {
+        $actor = User::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-pokja-iv');
+
+        $this->assertNull(
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::THIRD_PILOT_MODULE_SLUG)
+        );
+
+        ModuleAccessOverride::query()->create([
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-iv',
+            'module_slug' => RoleMenuVisibilityService::THIRD_PILOT_MODULE_SLUG,
+            'mode' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'changed_by' => $actor->id,
+        ]);
+
+        $this->assertSame(
+            RoleMenuVisibilityService::MODE_READ_ONLY,
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::THIRD_PILOT_MODULE_SLUG)
+        );
+    }
+
+    public function test_rollback_override_pilot_naskah_pelaporan_kembali_ke_fallback_hardcoded(): void
+    {
+        $actor = User::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-pokja-iv');
+
+        ModuleAccessOverride::query()->create([
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-iv',
+            'module_slug' => RoleMenuVisibilityService::THIRD_PILOT_MODULE_SLUG,
+            'mode' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'changed_by' => $actor->id,
+        ]);
+
+        $this->assertSame(
+            RoleMenuVisibilityService::MODE_READ_ONLY,
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::THIRD_PILOT_MODULE_SLUG)
+        );
+
+        ModuleAccessOverride::query()
+            ->where('scope', 'kecamatan')
+            ->where('role_name', 'kecamatan-pokja-iv')
+            ->where('module_slug', RoleMenuVisibilityService::THIRD_PILOT_MODULE_SLUG)
+            ->delete();
+
+        $this->assertNull(
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::THIRD_PILOT_MODULE_SLUG)
+        );
+    }
 }
