@@ -1,5 +1,6 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
+import ResponsiveDataTable from '@/admin-one/components/ResponsiveDataTable.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { router, useForm, usePage } from '@inertiajs/vue3'
@@ -22,6 +23,16 @@ const roles = computed(() => page.props.auth?.user?.roles ?? [])
 const isKecamatanSekretaris = computed(() => roles.value.includes('kecamatan-sekretaris'))
 
 const selectedCakupan = ref('pribadi')
+const isResponsiveTableV2Enabled = computed(() => import.meta.env.VITE_UI_RESPONSIVE_TABLE_V2 !== 'false')
+const arsipTableColumns = [
+  { key: 'title', label: 'Judul', mobileLabel: 'Judul Arsip' },
+  { key: 'file', label: 'File', mobileLabel: 'Nama File' },
+  { key: 'type', label: 'Tipe', mobileLabel: 'Tipe Arsip' },
+  { key: 'owner_name', label: 'Pengunggah', mobileLabel: 'Pengunggah' },
+  { key: 'area_name', label: 'Wilayah', mobileLabel: 'Wilayah' },
+  { key: 'updated_at', label: 'Diperbarui', mobileLabel: 'Diperbarui' },
+  { key: 'actions', label: 'Aksi', mobileLabel: 'Aksi', headerClass: 'w-48' },
+]
 const form = useForm({
   title: '',
   description: '',
@@ -117,7 +128,7 @@ const formatDateTime = (isoDateTime) => {
           class="flex flex-wrap items-center gap-4 text-sm text-gray-700 dark:text-gray-200"
         >
           <span class="font-medium">Cakupan Arsip</span>
-          <label class="inline-flex items-center gap-2">
+          <label class="inline-flex min-h-[44px] items-center gap-2 py-2">
             <input
               v-model="selectedCakupan"
               type="radio"
@@ -128,7 +139,7 @@ const formatDateTime = (isoDateTime) => {
             >
             Arsip Saya
           </label>
-          <label class="inline-flex items-center gap-2">
+          <label class="inline-flex min-h-[44px] items-center gap-2 py-2">
             <input
               v-model="selectedCakupan"
               type="radio"
@@ -188,7 +199,7 @@ const formatDateTime = (isoDateTime) => {
         <div class="md:col-span-2 flex justify-end">
           <button
             type="submit"
-            class="inline-flex rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+            class="inline-flex min-h-[44px] items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
             :disabled="form.processing"
           >
             Unggah Arsip
@@ -196,7 +207,68 @@ const formatDateTime = (isoDateTime) => {
         </div>
       </form>
 
-      <div class="overflow-x-auto">
+      <ResponsiveDataTable
+        v-if="isResponsiveTableV2Enabled"
+        :columns="arsipTableColumns"
+        :rows="documents"
+        row-key="id"
+        min-width-class="min-w-[980px]"
+        empty-text="Belum ada arsip yang bisa ditampilkan."
+      >
+        <template #cell-title="{ row }">
+          <div class="text-left">
+            <p class="font-medium text-gray-900 dark:text-gray-100">{{ row.title }}</p>
+            <p v-if="row.description" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {{ row.description }}
+            </p>
+          </div>
+        </template>
+        <template #cell-file="{ row }">
+          <div class="text-left">
+            <p>{{ row.name }}</p>
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">{{ formatBytes(row.size_bytes) }}</p>
+          </div>
+        </template>
+        <template #cell-type="{ row }">
+          <span
+            class="inline-flex min-h-[44px] items-center rounded border px-3 py-2 text-xs font-semibold"
+            :class="row.is_global
+              ? 'border-emerald-200 text-emerald-700 dark:border-emerald-900/50 dark:text-emerald-300'
+              : 'border-sky-200 text-sky-700 dark:border-sky-900/50 dark:text-sky-300'"
+          >
+            {{ row.is_global ? 'Global' : 'Pribadi' }}
+          </span>
+        </template>
+        <template #cell-owner_name="{ row }">
+          {{ row.owner_name }}
+        </template>
+        <template #cell-area_name="{ row }">
+          {{ row.area_name || '-' }}
+        </template>
+        <template #cell-updated_at="{ row }">
+          {{ formatDateTime(row.updated_at) }}
+        </template>
+        <template #cell-actions="{ row }">
+          <div class="flex flex-wrap items-center justify-end gap-2 lg:justify-start">
+            <a
+              :href="row.download_url"
+              class="inline-flex min-h-[44px] items-center rounded-md border border-emerald-200 px-4 py-2 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/20"
+            >
+              Unduh
+            </a>
+            <button
+              v-if="row.can_manage"
+              type="button"
+              class="inline-flex min-h-[44px] items-center rounded-md border border-rose-200 px-4 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
+              @click="deleteDocument(row.id)"
+            >
+              Hapus
+            </button>
+          </div>
+        </template>
+      </ResponsiveDataTable>
+
+      <div v-else class="overflow-x-auto">
         <table class="w-full min-w-[980px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">

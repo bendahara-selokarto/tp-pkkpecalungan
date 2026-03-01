@@ -5,6 +5,7 @@ import CardBox from '@/admin-one/components/CardBox.vue'
 import CardBoxWidget from '@/admin-one/components/CardBoxWidget.vue'
 import BarChart from '@/admin-one/components/Charts/BarChart.vue'
 import BaseButton from '@/admin-one/components/BaseButton.vue'
+import ResponsiveDataTable from '@/admin-one/components/ResponsiveDataTable.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import {
@@ -123,6 +124,12 @@ const CHART_GRID_STROKE_DASH = 4
 const CHART_TOOLTIP_THEME = 'light'
 const CHART_BAR_BORDER_RADIUS = 4
 const CHART_PIE_COLORS = ['#06b6d4', '#f97316', '#ef4444', '#22c55e', '#a855f7', '#eab308', '#0f766e', '#db2777', '#1d4ed8', '#65a30d']
+const isResponsiveTableV2Enabled = computed(() => import.meta.env.VITE_UI_RESPONSIVE_TABLE_V2 !== 'false')
+const informativeTableColumns = [
+  { key: 'info', label: 'Informasi', mobileLabel: 'Informasi' },
+  { key: 'value', label: 'Nilai', mobileLabel: 'Nilai' },
+  { key: 'note', label: 'Keterangan', mobileLabel: 'Keterangan' },
+]
 
 const USER_SECTION_LABELS = {
   'sekretaris-section-1': 'Ringkasan Tugas Sekretaris',
@@ -1466,7 +1473,7 @@ const hasLegacyLevelDistributionData = computed(() =>
               <div class="ml-auto flex items-center gap-2">
                 <button
                   type="button"
-                  class="rounded-md border border-slate-300 px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                  class="inline-flex min-h-[44px] items-center rounded-md border border-slate-300 px-4 py-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
                   @click="toggleBlockExpanded(block.key)"
                 >
                   {{ isBlockExpanded(block.key) ? 'Sembunyikan Grafik' : 'Tampilkan Grafik' }}
@@ -1485,7 +1492,27 @@ const hasLegacyLevelDistributionData = computed(() =>
               />
             </div>
 
-            <div class="mt-4 overflow-x-auto rounded-md border border-slate-200 dark:border-slate-700">
+            <ResponsiveDataTable
+              v-if="isResponsiveTableV2Enabled"
+              class="mt-4 rounded-md border border-slate-200 p-3 dark:border-slate-700"
+              :columns="informativeTableColumns"
+              :rows="buildInformativeTableRows(block)"
+              row-key="info"
+              min-width-class="min-w-full"
+              empty-text="Belum ada ringkasan data untuk blok ini."
+            >
+              <template #cell-info="{ row }">
+                <span class="font-medium text-slate-700 dark:text-slate-200">{{ row.info }}</span>
+              </template>
+              <template #cell-value="{ row }">
+                <span class="text-slate-900 dark:text-slate-100">{{ row.value }}</span>
+              </template>
+              <template #cell-note="{ row }">
+                <span class="text-slate-600 dark:text-slate-300">{{ row.note }}</span>
+              </template>
+            </ResponsiveDataTable>
+
+            <div v-else class="mt-4 overflow-x-auto rounded-md border border-slate-200 dark:border-slate-700">
               <table class="min-w-full text-xs">
                 <thead class="bg-slate-50 dark:bg-slate-800/60">
                   <tr>
