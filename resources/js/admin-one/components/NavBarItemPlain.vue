@@ -1,5 +1,9 @@
 <script setup>
 defineProps({
+  as: {
+    type: String,
+    default: 'button',
+  },
   display: {
     type: String,
     default: 'flex',
@@ -9,10 +13,12 @@ defineProps({
 </script>
 
 <template>
-  <div
+  <component
+    :is="as"
+    :type="as === 'button' ? 'button' : null"
     :class="[display, useMargin ? 'mx-3 my-2' : 'px-3 py-2']"
-    class="navbar-item-label cursor-pointer items-center dark:text-white dark:hover:text-slate-400"
+    class="navbar-item-label min-h-[44px] cursor-pointer items-center rounded-md dark:text-white dark:hover:text-slate-400"
   >
     <slot />
-  </div>
+  </component>
 </template>

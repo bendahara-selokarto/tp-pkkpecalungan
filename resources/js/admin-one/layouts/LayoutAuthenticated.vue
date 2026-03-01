@@ -74,7 +74,7 @@ const toggleDesktopAside = () => {
             {{ isAsideDesktopCollapsed ? 'Expand sidebar' : 'Collapse sidebar' }}
           </span>
         </NavBarItemPlain>
-        <NavBarItemPlain use-margin>
+        <NavBarItemPlain as="div" use-margin>
           <FormControl placeholder="Search (ctrl+k)" ctrl-k-focus transparent borderless />
         </NavBarItemPlain>
       </NavBar>
