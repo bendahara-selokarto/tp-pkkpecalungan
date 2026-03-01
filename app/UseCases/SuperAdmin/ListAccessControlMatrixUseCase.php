@@ -67,8 +67,8 @@ class ListAccessControlMatrixUseCase
         $modeFilter = $this->normalizeFilter($filters['mode'] ?? null);
 
         $roleScopePairs = $this->roleScopePairs();
-        $pilotOverrides = $this->moduleAccessOverrideRepository->listModesForModule(RoleMenuVisibilityService::PILOT_MODULE_SLUG);
-        $rows = $this->buildRows($roleScopePairs, $pilotOverrides);
+        $pilotOverridesByModule = $this->pilotOverridesByModule();
+        $rows = $this->buildRows($roleScopePairs, $pilotOverridesByModule);
         $filteredRows = $this->filterRows($rows, $scopeFilter, $roleFilter, $modeFilter);
 
         return [
@@ -116,10 +116,10 @@ class ListAccessControlMatrixUseCase
 
     /**
      * @param list<array{scope: string, role: string}> $roleScopePairs
-     * @param array<string, string> $pilotOverrides
+     * @param array<string, array<string, string>> $pilotOverridesByModule
      * @return Collection<int, array<string, mixed>>
      */
-    private function buildRows(array $roleScopePairs, array $pilotOverrides): Collection
+    private function buildRows(array $roleScopePairs, array $pilotOverridesByModule): Collection
     {
         $rows = collect();
 
@@ -135,8 +135,10 @@ class ListAccessControlMatrixUseCase
 
                 foreach ($this->roleMenuVisibilityService->modulesForGroup($group) as $module) {
                     $mode = $this->resolveEffectiveMode($groupMode, $overrides, $module);
-                    $isPilotRow = $module === RoleMenuVisibilityService::PILOT_MODULE_SLUG;
-                    $pilotOverrideMode = $pilotOverrides[$this->pilotOverrideKey($scope, $role)] ?? null;
+                    $isPilotRow = in_array($module, RoleMenuVisibilityService::pilotModuleSlugs(), true);
+                    $pilotOverrideMode = $isPilotRow
+                        ? ($pilotOverridesByModule[$module][$this->pilotOverrideKey($scope, $role, $module)] ?? null)
+                        : null;
                     $baselineMode = $isPilotRow
                         ? $this->roleMenuVisibilityService->resolveBaselineModuleModeForRoleScope($role, $scope, $module)
                         : null;
@@ -170,6 +172,21 @@ class ListAccessControlMatrixUseCase
         return $rows;
     }
 
+    /**
+     * @return array<string, array<string, string>>
+     */
+    private function pilotOverridesByModule(): array
+    {
+        $result = [];
+
+        foreach (RoleMenuVisibilityService::pilotModuleSlugs() as $moduleSlug) {
+            $result[$moduleSlug] = $this->moduleAccessOverrideRepository
+                ->listModesForModule($moduleSlug);
+        }
+
+        return $result;
+    }
+
     private function resolveEffectiveMode(?string $groupMode, array $overrides, string $module): string
     {
         if (! is_string($groupMode)) {
@@ -194,10 +211,7 @@ class ListAccessControlMatrixUseCase
         $pairs = [];
 
         foreach (ScopeLevel::values() as $scope) {
-            $roles = array_values(array_unique([
-                ...($scopedRoles[$scope] ?? []),
-                'super-admin',
-            ]));
+            $roles = array_values(array_unique($scopedRoles[$scope] ?? []));
 
             foreach ($roles as $role) {
                 $pairs[] = [
@@ -280,9 +294,9 @@ class ListAccessControlMatrixUseCase
         return ucfirst(str_replace('-', ' ', $module));
     }
 
-    private function pilotOverrideKey(string $scope, string $role): string
+    private function pilotOverrideKey(string $scope, string $role, string $module): string
     {
-        return sprintf('%s|%s', $scope, $role);
+        return sprintf('%s|%s|%s', $scope, $role, $module);
     }
 
     private function normalizeFilter(mixed $value): ?string

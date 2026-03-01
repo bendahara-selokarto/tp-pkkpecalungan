@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\SuperAdmin;
 
-use App\Domains\Wilayah\AccessControl\Actions\RollbackPilotCatatanKeluargaOverrideAction;
-use App\Domains\Wilayah\AccessControl\Actions\UpsertPilotCatatanKeluargaOverrideAction;
+use App\Domains\Wilayah\AccessControl\Actions\RollbackPilotModuleOverrideAction;
+use App\Domains\Wilayah\AccessControl\Actions\UpsertPilotModuleOverrideAction;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SuperAdmin\RollbackPilotCatatanKeluargaOverrideRequest;
-use App\Http\Requests\SuperAdmin\UpdatePilotCatatanKeluargaOverrideRequest;
+use App\Http\Requests\SuperAdmin\RollbackPilotModuleOverrideRequest;
+use App\Http\Requests\SuperAdmin\UpdatePilotModuleOverrideRequest;
 use App\Support\RoleScopeMatrix;
 use App\Support\RoleLabelFormatter;
 use App\UseCases\SuperAdmin\ListAccessControlMatrixUseCase;
@@ -22,8 +22,8 @@ class AccessControlManagementController extends Controller
 {
     public function __construct(
         private readonly ListAccessControlMatrixUseCase $listAccessControlMatrixUseCase,
-        private readonly UpsertPilotCatatanKeluargaOverrideAction $upsertPilotCatatanKeluargaOverrideAction,
-        private readonly RollbackPilotCatatanKeluargaOverrideAction $rollbackPilotCatatanKeluargaOverrideAction
+        private readonly UpsertPilotModuleOverrideAction $upsertPilotModuleOverrideAction,
+        private readonly RollbackPilotModuleOverrideAction $rollbackPilotModuleOverrideAction
     ) {
     }
 
@@ -31,7 +31,6 @@ class AccessControlManagementController extends Controller
     {
         $allowedRoles = collect(RoleScopeMatrix::scopedRoles())
             ->flatten()
-            ->push('super-admin')
             ->unique()
             ->values()
             ->all();
@@ -49,15 +48,36 @@ class AccessControlManagementController extends Controller
         return Inertia::render('SuperAdmin/AccessControl/Index', $this->listAccessControlMatrixUseCase->execute($filters));
     }
 
-    public function updatePilotCatatanKeluarga(UpdatePilotCatatanKeluargaOverrideRequest $request): RedirectResponse
+    public function updatePilotCatatanKeluarga(UpdatePilotModuleOverrideRequest $request): RedirectResponse
+    {
+        return $this->updatePilotByModuleSlug($request, RoleMenuVisibilityService::PILOT_MODULE_SLUG);
+    }
+
+    public function updatePilotModule(UpdatePilotModuleOverrideRequest $request, string $moduleSlug): RedirectResponse
+    {
+        return $this->updatePilotByModuleSlug($request, $moduleSlug);
+    }
+
+    public function rollbackPilotCatatanKeluarga(RollbackPilotModuleOverrideRequest $request): RedirectResponse
+    {
+        return $this->rollbackPilotByModuleSlug($request, RoleMenuVisibilityService::PILOT_MODULE_SLUG);
+    }
+
+    public function rollbackPilotModule(RollbackPilotModuleOverrideRequest $request, string $moduleSlug): RedirectResponse
+    {
+        return $this->rollbackPilotByModuleSlug($request, $moduleSlug);
+    }
+
+    private function updatePilotByModuleSlug(UpdatePilotModuleOverrideRequest $request, string $moduleSlug): RedirectResponse
     {
         $scope = (string) $request->validated('scope');
         $role = (string) $request->validated('role');
         $mode = (string) $request->validated('mode');
 
-        $result = $this->upsertPilotCatatanKeluargaOverrideAction->execute(
+        $result = $this->upsertPilotModuleOverrideAction->execute(
             $scope,
             $role,
+            $moduleSlug,
             $mode,
             $request->user()
         );
@@ -67,7 +87,8 @@ class AccessControlManagementController extends Controller
             ->with(
                 'success',
                 sprintf(
-                    'Pilot override catatan keluarga untuk %s (%s) diperbarui: %s -> %s.',
+                    'Pilot override %s untuk %s (%s) diperbarui: %s -> %s.',
+                    $this->moduleLabel($moduleSlug),
                     RoleLabelFormatter::label($role),
                     ucfirst($scope),
                     $this->modeLabel($result['before_mode']),
@@ -76,14 +97,15 @@ class AccessControlManagementController extends Controller
             );
     }
 
-    public function rollbackPilotCatatanKeluarga(RollbackPilotCatatanKeluargaOverrideRequest $request): RedirectResponse
+    private function rollbackPilotByModuleSlug(RollbackPilotModuleOverrideRequest $request, string $moduleSlug): RedirectResponse
     {
         $scope = (string) $request->validated('scope');
         $role = (string) $request->validated('role');
 
-        $result = $this->rollbackPilotCatatanKeluargaOverrideAction->execute(
+        $result = $this->rollbackPilotModuleOverrideAction->execute(
             $scope,
             $role,
+            $moduleSlug,
             $request->user()
         );
 
@@ -92,13 +114,19 @@ class AccessControlManagementController extends Controller
             ->with(
                 'success',
                 sprintf(
-                    'Rollback pilot catatan keluarga untuk %s (%s): %s -> %s.',
+                    'Rollback pilot %s untuk %s (%s): %s -> %s.',
+                    $this->moduleLabel($moduleSlug),
                     RoleLabelFormatter::label($role),
                     ucfirst($scope),
                     $this->modeLabel($result['before_mode']),
                     $this->modeLabel($result['after_mode'])
                 )
             );
+    }
+
+    private function moduleLabel(string $moduleSlug): string
+    {
+        return ucfirst(str_replace('-', ' ', $moduleSlug));
     }
 
     private function modeLabel(string $mode): string
