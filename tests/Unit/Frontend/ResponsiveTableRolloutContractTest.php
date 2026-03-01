@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Frontend;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class ResponsiveTableRolloutContractTest extends TestCase
@@ -12,15 +13,12 @@ class ResponsiveTableRolloutContractTest extends TestCase
     public static function rolloutPagesProvider(): array
     {
         return [
-            'dashboard' => ['path' => 'resources/js/Pages/Dashboard.vue'],
             'super-admin-users' => ['path' => 'resources/js/Pages/SuperAdmin/Users/Index.vue'],
             'arsip-index' => ['path' => 'resources/js/Pages/Arsip/Index.vue'],
         ];
     }
 
-    /**
-     * @dataProvider rolloutPagesProvider
-     */
+    #[DataProvider('rolloutPagesProvider')]
     public function test_rollout_pages_menggunakan_kontrak_responsive_table_v2(string $path): void
     {
         $content = file_get_contents(base_path($path));
@@ -43,4 +41,3 @@ class ResponsiveTableRolloutContractTest extends TestCase
         );
     }
 }
-
