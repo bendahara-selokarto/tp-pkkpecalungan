@@ -25,7 +25,13 @@ class DashboardDocumentCoverageTest extends TestCase
         Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'desa-pokja-iii']);
+        Role::create(['name' => 'desa-pokja-iv']);
         Role::create(['name' => 'kecamatan-pokja-i']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
+        Role::create(['name' => 'kecamatan-pokja-iii']);
+        Role::create(['name' => 'kecamatan-pokja-iv']);
     }
 
     public function test_dashboard_coverage_dokumen_pengguna_desa_hanya_menghitung_data_desanya_sendiri(): void
@@ -354,6 +360,12 @@ class DashboardDocumentCoverageTest extends TestCase
         $user->assignRole('desa-pokja-i');
 
         $this->createActivity($user, 'desa', $desa->id, 'Aktivitas Pokja I');
+        $pokjaLainUser = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $pokjaLainUser->assignRole('desa-pokja-ii');
+        $this->createActivity($pokjaLainUser, 'desa', $desa->id, 'Aktivitas Pokja II');
         $this->createDataWarga($user, 'desa', $desa->id, 'Kepala Pokja I');
 
         $response = $this->actingAs($user)->get(route('dashboard'));
@@ -374,7 +386,10 @@ class DashboardDocumentCoverageTest extends TestCase
                     return count($groups) === 1
                         && $groups === ['pokja-i']
                         && is_array($block)
+                        && ($block['kind'] ?? null) === 'activity'
+                        && ($block['stats']['total'] ?? null) === 1
                         && ($block['section'] ?? null) === null
+                        && ($block['sources']['source_group'] ?? null) === 'pokja-i'
                         && ($block['sources']['source_scope'] ?? null) === 'desa';
                 });
         });
@@ -431,6 +446,43 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ! in_array('Sidomukti', $labels, true)
                         && ($totalsByLabel['Gombong'] ?? null) === 1
                         && ($totalsByLabel['Bandung'] ?? null) === 2;
+                });
+        });
+    }
+
+    public function test_dashboard_role_desa_pokja_iv_menggunakan_blok_activity_bulanan_pokja_sendiri(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $user->assignRole('desa-pokja-iv');
+
+        $this->createActivity($user, 'desa', $desa->id, 'Aktivitas Pokja IV');
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $block = collect($blocks)->first();
+                    if (! is_array($block)) {
+                        return false;
+                    }
+
+                    $monthlyValues = $block['charts']['monthly']['values'] ?? [];
+
+                    return ($block['group'] ?? null) === 'pokja-iv'
+                        && ($block['kind'] ?? null) === 'activity'
+                        && ($block['sources']['source_group'] ?? null) === 'pokja-iv'
+                        && ($block['section'] ?? null) === null
+                        && is_array($monthlyValues)
+                        && array_sum($monthlyValues) === 1;
                 });
         });
     }

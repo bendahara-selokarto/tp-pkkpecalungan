@@ -85,6 +85,20 @@ class BuildRoleAwareDashboardBlocksUseCase
             );
         }
 
+        $desaPokjaOwnGroup = $this->resolveDesaPokjaOwnGroup($effectiveScope, $groupModes);
+        if (is_string($desaPokjaOwnGroup)) {
+            return [
+                $this->buildGroupActivityBlock(
+                    $desaPokjaOwnGroup,
+                    $effectiveScope,
+                    (string) ($groupModes[$desaPokjaOwnGroup] ?? RoleMenuVisibilityService::MODE_READ_ONLY),
+                    $activityData,
+                    $dashboardContext,
+                    null
+                ),
+            ];
+        }
+
         $blocks = [];
 
         if (array_key_exists('sekretaris-tpk', $groupModes)) {
@@ -159,30 +173,80 @@ class BuildRoleAwareDashboardBlocksUseCase
         array $dashboardContext,
         ?array $section
     ): array {
+        return $this->buildGroupActivityBlock(
+            'sekretaris-tpk',
+            $effectiveScope,
+            $mode,
+            $activityData,
+            $dashboardContext,
+            $section
+        );
+    }
+
+    /**
+     * @param array<string, mixed> $activityData
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @return array<string, mixed>
+     */
+    private function buildGroupActivityBlock(
+        string $groupKey,
+        string $effectiveScope,
+        string $mode,
+        array $activityData,
+        array $dashboardContext,
+        ?array $section
+    ): array {
+        $groupLabel = self::GROUP_LABELS[$groupKey] ?? $groupKey;
+
         $block = [
-            'key' => 'activity-sekretaris-tpk',
+            'key' => sprintf('activity-%s', $groupKey),
             'kind' => 'activity',
-            'group' => 'sekretaris-tpk',
-            'group_label' => self::GROUP_LABELS['sekretaris-tpk'],
+            'group' => $groupKey,
+            'group_label' => $groupLabel,
             'mode' => $mode,
             'title' => sprintf(
                 'Dashboard %s - %s',
-                self::GROUP_LABELS['sekretaris-tpk'],
+                $groupLabel,
                 strtoupper($effectiveScope)
             ),
             'stats' => $activityData['stats'] ?? [],
             'charts' => $activityData['charts'] ?? [],
             'sources' => [
-                'source_group' => 'sekretaris-tpk',
+                'source_group' => $groupKey,
                 'source_scope' => $effectiveScope,
                 'source_area_type' => $this->resolveSourceAreaType($effectiveScope),
                 'source_modules' => ['activities'],
-                'source_note' => 'Agregasi aktivitas sesuai scope-area efektif pengguna.',
+                'source_note' => sprintf('Agregasi aktivitas %s sesuai scope-area efektif pengguna.', $groupLabel),
                 'filter_context' => $this->buildFilterContext($dashboardContext),
             ],
         ];
 
         return $this->attachSection($block, $section);
+    }
+
+    /**
+     * @param array<string, string> $groupModes
+     */
+    private function resolveDesaPokjaOwnGroup(string $effectiveScope, array $groupModes): ?string
+    {
+        if ($effectiveScope !== ScopeLevel::DESA->value) {
+            return null;
+        }
+
+        if (array_key_exists('sekretaris-tpk', $groupModes)) {
+            return null;
+        }
+
+        $availablePokjaGroups = collect(self::POKJA_GROUPS)
+            ->filter(static fn (string $group): bool => array_key_exists($group, $groupModes))
+            ->values()
+            ->all();
+
+        if (count($availablePokjaGroups) !== 1) {
+            return null;
+        }
+
+        return (string) $availablePokjaGroups[0];
     }
 
     /**

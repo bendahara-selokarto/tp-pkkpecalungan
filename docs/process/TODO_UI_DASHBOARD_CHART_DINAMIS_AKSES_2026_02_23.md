@@ -48,6 +48,8 @@ Catatan lanjutan visual minimalis:
   - Section utama menampilkan domain sekretaris dan chart activity.
   - Pada scope `kecamatan`, chart `jumlah kegiatan per desa` tetap tersedia dengan filter bulan `section1_month` (`all|1..12`).
   - Section 2/3/4 menjadi jejak historis kontrak awal dan tidak dirender pada UI aktif.
+- Khusus `desa-pokja-i..iv`:
+  - Section utama menampilkan chart `kegiatan bulanan` untuk data kegiatan pokja sendiri pada area desa sendiri.
 
 ## Kontrak UI Dinamis
 
