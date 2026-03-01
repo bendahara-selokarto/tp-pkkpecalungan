@@ -2,19 +2,12 @@
 import { computed, ref, watch } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
 import CardBox from '@/admin-one/components/CardBox.vue'
-import CardBoxWidget from '@/admin-one/components/CardBoxWidget.vue'
 import BarChart from '@/admin-one/components/Charts/BarChart.vue'
 import BaseButton from '@/admin-one/components/BaseButton.vue'
-import ResponsiveDataTable from '@/admin-one/components/ResponsiveDataTable.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import {
-  mdiBookOpenVariant,
-  mdiChartBar,
   mdiChartTimelineVariant,
-  mdiClipboardList,
-  mdiFileDocumentCheck,
-  mdiFileDocumentMinus,
   mdiPrinter,
 } from '@mdi/js'
 
@@ -124,12 +117,6 @@ const CHART_GRID_STROKE_DASH = 4
 const CHART_TOOLTIP_THEME = 'light'
 const CHART_BAR_BORDER_RADIUS = 4
 const CHART_PIE_COLORS = ['#06b6d4', '#f97316', '#ef4444', '#22c55e', '#a855f7', '#eab308', '#0f766e', '#db2777', '#1d4ed8', '#65a30d']
-const isResponsiveTableV2Enabled = computed(() => import.meta.env.VITE_UI_RESPONSIVE_TABLE_V2 !== 'false')
-const informativeTableColumns = [
-  { key: 'info', label: 'Informasi', mobileLabel: 'Informasi' },
-  { key: 'value', label: 'Nilai', mobileLabel: 'Nilai' },
-  { key: 'note', label: 'Keterangan', mobileLabel: 'Keterangan' },
-]
 
 const USER_SECTION_LABELS = {
   'sekretaris-section-1': 'Ringkasan Tugas Sekretaris',
@@ -208,9 +195,6 @@ const hasSekretarisSections = computed(() =>
     || sekretarisSection4Blocks.value.length > 0
   ),
 )
-const shouldShowGlobalDashboardFilters = computed(() =>
-  !isDesaPokjaUser.value && !hasSekretarisSections.value,
-)
 
 const expandedBlockKeys = ref({})
 
@@ -274,18 +258,6 @@ const resolveSectionLabel = (sectionKey, blocks, fallback) => {
   }
 
   return fallback
-}
-
-const resolveSectionDescription = (sectionKey) => {
-  if (sectionKey === 'sekretaris-section-1') {
-    return 'Ringkasan untuk peran sekretaris ditampilkan tanpa filter pokja.'
-  }
-
-  if (sectionKey === 'sekretaris-section-4') {
-    return 'Rincian Pokja I per desa turunan mengikuti pilihan pada bagian sebelumnya.'
-  }
-
-  return 'Gunakan pilihan pokja untuk fokus ke kelompok tertentu atau tampilkan semuanya.'
 }
 
 const resolveSectionFilter = (blocks, fallbackQueryKey) => {
@@ -704,57 +676,6 @@ const sourceAreaTypeLabel = (block) => {
   return humanizeLabel(sourceAreaType)
 }
 
-const resolveModeContextLabel = (mode) => {
-  const token = normalizeToken(mode, 'all')
-  if (token === 'by-level') {
-    return 'Per Tingkat Wilayah'
-  }
-
-  if (token === 'by-sub-level') {
-    return 'Per Wilayah Turunan'
-  }
-
-  return 'Semua Data'
-}
-
-const resolveLevelContextLabel = (level) => {
-  const token = normalizeToken(level, 'all')
-  if (token === 'desa') {
-    return 'Desa'
-  }
-
-  if (token === 'kecamatan') {
-    return 'Kecamatan'
-  }
-
-  return 'Semua Tingkat'
-}
-
-const resolveSubLevelContextLabel = (subLevel) => {
-  const token = normalizeToken(subLevel, 'all')
-  return token === 'all' ? 'Semua Wilayah Turunan' : humanizeLabel(token)
-}
-
-const resolveGroupContextLabel = (group) => {
-  const token = normalizeToken(group, 'all')
-  if (token === 'all') {
-    return 'Semua Pokja'
-  }
-
-  return humanizeLabel(token)
-}
-
-const resolveFilterContextSummary = (context) => {
-  const modeLabel = resolveModeContextLabel(context?.mode)
-  const modeToken = normalizeToken(context?.mode, 'all')
-
-  if (modeToken === 'by-sub-level') {
-    return `Cara Tampil ${modeLabel} | Wilayah Turunan ${resolveSubLevelContextLabel(context?.sub_level)}`
-  }
-
-  return `Cara Tampil ${modeLabel} | Tingkat Wilayah ${resolveLevelContextLabel(context?.level)}`
-}
-
 const resolveBlockAccessModeLabel = (block) => {
   const mode = normalizeToken(block?.mode, '')
 
@@ -770,210 +691,6 @@ const resolveBlockAccessModeLabel = (block) => {
 }
 
 const blockSummaryLabel = (block) => `Data dari ${sourceModulesLabel(block)} | Cakupan ${sourceAreaTypeLabel(block)}`
-
-const buildBlockStats = (block) => {
-  const groupLabel = String(block?.group_label ?? 'Dashboard').trim()
-
-  if (block?.kind === 'activity') {
-    const stats = block?.stats ?? {}
-    const activityStats = [
-      {
-        key: 'activity-total',
-        icon: mdiClipboardList,
-        label: 'Total Kegiatan',
-        number: toNumber(stats.total),
-        color: 'text-blue-500',
-      },
-      {
-        key: 'activity-this-month',
-        icon: mdiChartTimelineVariant,
-        label: 'Kegiatan Bulan Ini',
-        number: toNumber(stats.this_month),
-        color: 'text-indigo-500',
-      },
-    ]
-
-    if (shouldShowActivityByDesaChart(block)) {
-      const { syncedTotalBookValues, syncedFilledBookValues } = resolveActivityByDesaMetrics(block)
-      const totalBooks = syncedTotalBookValues.reduce((total, value) => total + toNumber(value), 0)
-      const filledBooks = syncedFilledBookValues.reduce((total, value) => total + toNumber(value), 0)
-
-      activityStats.push(
-        {
-          key: 'activity-total-book',
-          icon: mdiBookOpenVariant,
-          label: 'Jumlah Buku',
-          number: totalBooks,
-          color: 'text-cyan-500',
-        },
-        {
-          key: 'activity-filled-book',
-          icon: mdiFileDocumentCheck,
-          label: 'Buku Terisi',
-          number: filledBooks,
-          color: 'text-emerald-500',
-        },
-      )
-    }
-
-    return activityStats
-  }
-
-  const stats = block?.stats ?? {}
-
-  return [
-    {
-      key: 'documents-total-book',
-      icon: mdiBookOpenVariant,
-      label: `Total Buku ${groupLabel}`,
-      number: toNumber(stats.total_buku_tracked),
-      color: 'text-cyan-500',
-    },
-    {
-      key: 'documents-filled',
-      icon: mdiFileDocumentCheck,
-      label: `Buku Terisi ${groupLabel}`,
-      number: toNumber(stats.buku_terisi),
-      color: 'text-emerald-500',
-    },
-    {
-      key: 'documents-empty',
-      icon: mdiFileDocumentMinus,
-      label: `Buku Belum Terisi ${groupLabel}`,
-      number: toNumber(stats.buku_belum_terisi),
-      color: 'text-rose-500',
-    },
-    {
-      key: 'documents-total-entry',
-      icon: mdiChartBar,
-      label: `Total Entri ${groupLabel}`,
-      number: toNumber(stats.total_entri_buku),
-      color: 'text-violet-500',
-    },
-  ]
-}
-
-const resolveBlockKindLabel = (kind) => (kind === 'activity' ? 'Kegiatan' : 'Dokumen')
-
-const resolveBlockModeDescription = (mode) =>
-  (mode === 'read-only' ? 'Hanya Lihat' : 'Bisa Lihat dan Ubah')
-
-const buildLevelRows = (block) => {
-  if (block?.kind === 'activity') {
-    const labels = block?.charts?.level?.labels ?? []
-    const values = block?.charts?.level?.values ?? []
-
-    if (!Array.isArray(labels) || !Array.isArray(values) || labels.length === 0) {
-      return []
-    }
-
-    return labels.map((label, index) => ({
-      info: `Level ${String(label)}`,
-      value: toNumber(values[index] ?? 0).toLocaleString('id-ID'),
-      note: 'Jumlah kegiatan pada tingkat wilayah ini.',
-    }))
-  }
-
-  const items = block?.charts?.coverage_per_module?.items
-  if (!Array.isArray(items) || items.length === 0) {
-    return []
-  }
-
-  const hasLevelBreakdown = items.some((item) => item && (item.desa !== undefined || item.kecamatan !== undefined))
-  if (!hasLevelBreakdown) {
-    return []
-  }
-
-  const levelDesa = items.reduce((total, item) => total + toNumber(item?.desa ?? 0), 0)
-  const levelKecamatan = items.reduce((total, item) => total + toNumber(item?.kecamatan ?? 0), 0)
-
-  return [
-    {
-      info: 'Level Desa',
-      value: levelDesa.toLocaleString('id-ID'),
-      note: 'Total entri yang berasal dari desa.',
-    },
-    {
-      info: 'Level Kecamatan',
-      value: levelKecamatan.toLocaleString('id-ID'),
-      note: 'Total entri yang berasal dari kecamatan.',
-    },
-  ]
-}
-
-const buildInformativeTableRows = (block) => {
-  const context = block?.sources?.filter_context ?? {}
-  const levelRows = buildLevelRows(block)
-  const statsRows = buildBlockStats(block).map((item) => ({
-    info: item.label,
-    value: toNumber(item.number).toLocaleString('id-ID'),
-    note: block?.kind === 'activity'
-      ? 'Ringkasan angka kegiatan pada tampilan saat ini.'
-      : 'Ringkasan angka dokumen pada tampilan saat ini.',
-  }))
-
-  const profileRows = [
-    {
-      info: 'Jenis Ringkasan',
-      value: resolveBlockKindLabel(block?.kind),
-      note: 'Menjelaskan kategori ringkasan data.',
-    },
-    {
-      info: 'Hak Akses',
-      value: resolveBlockModeDescription(block?.mode),
-      note: 'Hak lihat/ubah sesuai peran akun Anda.',
-    },
-    {
-      info: 'Jangkauan Wilayah',
-      value: sourceAreaTypeLabel(block),
-      note: 'Menjelaskan wilayah asal data yang dihitung.',
-    },
-    {
-      info: 'Pilihan Tampilan Aktif',
-      value: resolveFilterContextSummary(context),
-      note: 'Pilihan tampilan yang sedang Anda pakai.',
-    },
-  ]
-
-  return [...profileRows, ...levelRows, ...statsRows]
-}
-
-const resolveDocumentCoverageItems = (block) => {
-  const rawItems = block?.charts?.coverage_per_module?.items
-  if (Array.isArray(rawItems) && rawItems.length > 0) {
-    return rawItems.map((item, index) => ({
-      label: String(item?.label ?? humanizeLabel(item?.slug ?? `Modul ${index + 1}`)),
-      total: toNumber(item?.resolved_total ?? item?.total ?? 0),
-    }))
-  }
-
-  const labels = block?.charts?.coverage_per_module?.labels ?? []
-  const values = block?.charts?.coverage_per_module?.values ?? []
-
-  return labels.map((label, index) => ({
-    label: humanizeLabel(label),
-    total: toNumber(values[index] ?? 0),
-  }))
-}
-
-const resolveCoverageDimension = (block) =>
-  normalizeToken(block?.charts?.coverage_per_module?.dimension, 'module')
-
-const resolveCoverageListHeading = (block) =>
-  (resolveCoverageDimension(block) === 'desa' ? 'Nilai Per Desa' : 'Nilai Per Modul')
-
-const resolveCoverageItemDetail = (item) => {
-  const perModule = item?.per_module
-  if (!perModule || typeof perModule !== 'object') {
-    return ''
-  }
-
-  const entries = Object.entries(perModule)
-    .filter(([, count]) => toNumber(count) > 0)
-    .map(([slug, count]) => `${humanizeLabel(slug)}: ${toNumber(count)}`)
-
-  return entries.join(' | ')
-}
 
 const buildActivityMonthlyMultiAxisSeries = (block) => {
   const values = (block?.charts?.monthly?.values ?? []).map((value) => toNumber(value))
@@ -1265,12 +982,6 @@ const hasBookComparisonData = (block) => {
   return totalBooks > 0 || filledBooks > 0
 }
 
-// Legacy fallback while dynamic blocks are still rolling out.
-const activityStats = computed(() => props.dashboardStats.activity ?? {
-  total: props.dashboardStats.total ?? 0,
-  this_month: props.dashboardStats.this_month ?? 0,
-})
-
 const documentStats = computed(() => props.dashboardStats.documents ?? {
   total_buku_tracked: 0,
   buku_terisi: 0,
@@ -1320,26 +1031,8 @@ const legacyBookComparisonChartData = computed(() => buildSingleDataset(
   ['#7e22ce', '#16a34a'],
 ))
 
-const legacyLampiranCoverageItems = computed(() => {
-  const rawItems = documentCharts.value.coverage_per_lampiran?.items
-  if (Array.isArray(rawItems) && rawItems.length > 0) {
-    return rawItems.map((item) => ({
-      label: String(item?.lampiran_group ?? '-'),
-      total: toNumber(item?.total ?? 0),
-    }))
-  }
-
-  const labels = documentCharts.value.coverage_per_lampiran?.labels ?? []
-  const values = documentCharts.value.coverage_per_lampiran?.values ?? []
-
-  return labels.map((label, index) => ({
-    label: String(label),
-    total: toNumber(values[index] ?? 0),
-  }))
-})
-
 const hasLegacyLampiranCoverageData = computed(() =>
-  legacyLampiranCoverageItems.value.some((item) => item.total > 0),
+  (documentCharts.value.coverage_per_lampiran?.values ?? []).some((value) => toNumber(value) > 0),
 )
 
 const hasLegacyBookComparisonData = computed(() =>
@@ -1360,122 +1053,9 @@ const hasLegacyBookComparisonData = computed(() =>
       />
     </SectionTitleLineWithButton>
 
-    <CardBox v-if="shouldShowGlobalDashboardFilters" class="mb-6">
-      <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
-        <div>
-          <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-            Cara Tampil
-          </label>
-          <select
-            v-model="selectedMode"
-            class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-            @change="onModeChange"
-          >
-            <option v-for="modeOption in MODE_OPTIONS" :key="modeOption.value" :value="modeOption.value">
-              {{ modeOption.label }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-            Cakupan Wilayah
-          </label>
-          <select
-            v-model="selectedLevel"
-            :disabled="!isByLevelMode"
-            class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-            @change="onLevelChange"
-          >
-            <option v-for="levelOption in LEVEL_OPTIONS" :key="levelOption.value" :value="levelOption.value">
-              {{ levelOption.label }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-            Wilayah Turunan
-          </label>
-          <select
-            v-if="availableSubLevelOptions.length > 1"
-            v-model="selectedSubLevel"
-            :disabled="!isBySubLevelMode"
-            class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-            @change="onSubLevelApply"
-          >
-            <option
-              v-for="subLevelOption in availableSubLevelOptions"
-              :key="`sub-level-${subLevelOption.value}`"
-              :value="subLevelOption.value"
-            >
-              {{ subLevelOption.label }}
-            </option>
-          </select>
-          <input
-            v-else
-            v-model="selectedSubLevel"
-            :disabled="!isBySubLevelMode"
-            type="text"
-            class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-            placeholder="Ketik nama atau kode wilayah turunan"
-            @keyup.enter="onSubLevelApply"
-            @blur="onSubLevelApply"
-          >
-          <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-            Pilih nama desa agar fokus wilayah lebih jelas.
-          </p>
-        </div>
-
-        <div class="flex items-end">
-          <button
-            type="button"
-            class="min-h-[44px] w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-            @click="applyFilters"
-          >
-            Tampilkan Data
-          </button>
-        </div>
-      </div>
-      <p class="mt-3 text-xs text-slate-500 dark:text-slate-300">
-        Pilihan ini akan diingat, jadi tampilan yang sama bisa dibuka lagi kapan saja.
-      </p>
-    </CardBox>
-
     <template v-if="hasDynamicBlocks">
       <div class="space-y-8">
         <div v-for="section in visibleDashboardSections" :key="section.key" class="space-y-4">
-          <CardBox v-if="hasSekretarisSections">
-            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-              <div>
-                <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ section.label }}</h3>
-                <p class="mt-1 text-xs text-slate-500 dark:text-slate-300">
-                  {{ resolveSectionDescription(section.key) }}
-                </p>
-              </div>
-              <div v-if="section.filter" class="lg:ml-auto lg:w-64">
-                <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                  Pilih Pokja
-                </label>
-
-                <select
-                  v-if="section.filter.queryKey === 'section2_group' || section.filter.queryKey === 'section3_group'"
-                  :value="resolveSectionGroupFilterValue(section.filter.queryKey)"
-                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-                  @change="onSectionGroupFilterChange(section.filter.queryKey, $event.target.value)"
-                >
-                  <option
-                    v-for="option in section.filter.options"
-                    :key="`${section.key}-${option.value}`"
-                    :value="option.value"
-                  >
-                    {{ option.label }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </CardBox>
-
           <CardBox v-for="block in section.blocks" :key="block.key">
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div class="min-w-0">
@@ -1498,62 +1078,8 @@ const hasLegacyBookComparisonData = computed(() =>
               </div>
             </div>
 
-            <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <CardBoxWidget
-                v-for="statItem in buildBlockStats(block)"
-                :key="`${block.key}-${statItem.key}`"
-                :icon="statItem.icon"
-                :number="statItem.number"
-                :label="statItem.label"
-                :color="statItem.color"
-              />
-            </div>
-
-            <ResponsiveDataTable
-              v-if="isResponsiveTableV2Enabled"
-              class="mt-4 rounded-md border border-slate-200 p-3 dark:border-slate-700"
-              :columns="informativeTableColumns"
-              :rows="buildInformativeTableRows(block)"
-              row-key="info"
-              min-width-class="min-w-full"
-              empty-text="Belum ada ringkasan data untuk blok ini."
-            >
-              <template #cell-info="{ row }">
-                <span class="font-medium text-slate-700 dark:text-slate-200">{{ row.info }}</span>
-              </template>
-              <template #cell-value="{ row }">
-                <span class="text-slate-900 dark:text-slate-100">{{ row.value }}</span>
-              </template>
-              <template #cell-note="{ row }">
-                <span class="text-slate-600 dark:text-slate-300">{{ row.note }}</span>
-              </template>
-            </ResponsiveDataTable>
-
-            <div v-else class="mt-4 overflow-x-auto rounded-md border border-slate-200 dark:border-slate-700">
-              <table class="min-w-full text-xs">
-                <thead class="bg-slate-50 dark:bg-slate-800/60">
-                  <tr>
-                    <th class="px-3 py-2 text-left font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">Informasi</th>
-                    <th class="px-3 py-2 text-left font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">Nilai</th>
-                    <th class="px-3 py-2 text-left font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">Keterangan</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="row in buildInformativeTableRows(block)"
-                    :key="`${block.key}-${row.info}`"
-                    class="border-t border-slate-200 dark:border-slate-700"
-                  >
-                    <td class="px-3 py-2 font-medium text-slate-700 dark:text-slate-200">{{ row.info }}</td>
-                    <td class="px-3 py-2 text-slate-900 dark:text-slate-100">{{ row.value }}</td>
-                    <td class="px-3 py-2 text-slate-600 dark:text-slate-300">{{ row.note }}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
             <template v-if="isBlockExpanded(block.key) && block.kind === 'documents'">
-              <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <div class="mt-6">
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                     Jumlah Buku vs Buku Terisi
@@ -1564,27 +1090,6 @@ const hasLegacyBookComparisonData = computed(() =>
                   <p v-if="!hasBookComparisonData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
                     Belum ada data untuk filter yang dipilih.
                   </p>
-                </div>
-
-                <div>
-                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    {{ resolveCoverageListHeading(block) }}
-                  </h4>
-                  <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    <div
-                      v-for="item in resolveDocumentCoverageItems(block)"
-                      :key="`${block.key}-${item.label}`"
-                      class="rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
-                    >
-                      <div class="flex items-center justify-between gap-2">
-                        <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
-                        <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
-                      </div>
-                      <p v-if="resolveCoverageItemDetail(item)" class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                        {{ resolveCoverageItemDetail(item) }}
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </template>
@@ -1698,31 +1203,17 @@ const hasLegacyBookComparisonData = computed(() =>
             </template>
           </CardBox>
 
-          <CardBox
+          <p
             v-if="hasSekretarisSections && section.blocks.length === 0"
-            class="border border-dashed border-slate-300 dark:border-slate-600"
+            class="text-xs text-slate-500 dark:text-slate-300"
           >
-            <p class="text-xs text-slate-500 dark:text-slate-300">
-              Belum ada data untuk pokja yang dipilih.
-            </p>
-          </CardBox>
+            Belum ada data untuk pokja yang dipilih.
+          </p>
         </div>
       </div>
     </template>
 
     <template v-else-if="showLegacyFallback">
-      <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <CardBoxWidget :icon="mdiClipboardList" :number="activityStats.total" label="Total Kegiatan" color="text-blue-500" />
-        <CardBoxWidget :icon="mdiChartTimelineVariant" :number="activityStats.this_month" label="Kegiatan Bulan Ini" color="text-indigo-500" />
-      </div>
-
-      <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <CardBoxWidget :icon="mdiBookOpenVariant" :number="documentStats.total_buku_tracked" label="Total Buku" color="text-cyan-500" />
-        <CardBoxWidget :icon="mdiFileDocumentCheck" :number="documentStats.buku_terisi" label="Buku Terisi" color="text-emerald-500" />
-        <CardBoxWidget :icon="mdiFileDocumentMinus" :number="documentStats.buku_belum_terisi" label="Buku Kosong" color="text-rose-500" />
-        <CardBoxWidget :icon="mdiChartBar" :number="documentStats.total_entri_buku" label="Total Entri Buku" color="text-violet-500" />
-      </div>
-
       <div class="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
         <CardBox>
           <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Buku</h3>
@@ -1738,16 +1229,6 @@ const hasLegacyBookComparisonData = computed(() =>
           <p v-if="!hasLegacyLampiranCoverageData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
             Belum ada data terhitung pada cakupan per lampiran untuk wilayah ini.
           </p>
-          <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <div
-              v-for="item in legacyLampiranCoverageItems"
-              :key="`lampiran-${item.label}`"
-              class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
-            >
-              <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
-              <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
-            </div>
-          </div>
         </CardBox>
       </div>
 
@@ -1764,11 +1245,9 @@ const hasLegacyBookComparisonData = computed(() =>
       </div>
     </template>
 
-    <CardBox v-else class="border border-dashed border-slate-300 dark:border-slate-600">
-      <p class="text-sm text-slate-600 dark:text-slate-300">
-        Belum ada blok dashboard yang bisa ditampilkan untuk akses akun ini.
-      </p>
-    </CardBox>
+    <p v-else class="text-sm text-slate-600 dark:text-slate-300">
+      Belum ada blok dashboard yang bisa ditampilkan untuk akses akun ini.
+    </p>
 
   </SectionMain>
 </template>
