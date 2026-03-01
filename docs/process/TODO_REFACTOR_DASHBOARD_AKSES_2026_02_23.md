@@ -15,6 +15,7 @@ Status: `done` (`historical`, diikuti fase minimalis dan koherensi kritis)
 Catatan lanjutan visual minimalis:
 - Rencana fase lanjutan UI ada di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
 - Baseline visual untuk fase minimalis mengacu ke dashboard role `kecamatan-sekretaris` versi aktif saat ini.
+- Update 2026-03-01: representasi dashboard disederhanakan ke `single-section` pada UI aktif; section 2/3/4 dipertahankan sebagai jejak historis kontrak awal.
 
 ## Konteks
 
@@ -48,14 +49,12 @@ Tujuan monitor data dikunci sebagai kontrak implementasi:
 
 ### Struktur Section Dashboard Sekretaris (Terkunci)
 
-- Section 1: `Domain Sekretaris` (`sekretaris-tpk`) tanpa filter pokja.
+- Section 1: `Domain Sekretaris` (`sekretaris-tpk`) sebagai section utama.
   - Pada scope `kecamatan`, section 1 menampilkan dua chart activity:
     - `jumlah kegiatan per desa` tipe `pie` (filter bulan),
     - `jumlah buku` terhadap `buku terisi` tipe `bar` (filter bulan).
   - Filter bulan khusus section 1 dikunci menggunakan query `section1_month` dengan opsi `all|1..12`.
-- Section 2: `Pokja Level Aktif` (agregat semua pokja pada level user) dengan filter group `all|pokja-i|pokja-ii|pokja-iii|pokja-iv` (query: `section2_group`).
-- Section 3: khusus scope `kecamatan`, `Pokja Level Bawah` (agregat pokja pada desa turunan) dengan filter group `all|pokja-i|pokja-ii|pokja-iii|pokja-iv` (query: `section3_group`).
-- Scenario khusus kecamatan: ketika `section 3` memilih `pokja-i`, tambahkan `section 4` berisi rincian sumber data per desa (`docs/process/TODO_SCENARIO_KECAMATAN_SECTION4_POKJA_I_2026_02_23.md`).
+- Section 2/3/4: status `historical` (kontrak awal), tidak ditampilkan pada UI aktif single-section.
 
 ### Blok Dashboard Canonical
 
