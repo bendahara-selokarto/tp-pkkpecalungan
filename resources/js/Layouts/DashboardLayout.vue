@@ -142,6 +142,7 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja' },
       { href: `/${scope}/prestasi-lomba`, label: 'Prestasi Lomba' },
       { href: `/${scope}/laporan-tahunan-pkk`, label: 'Laporan Tahunan Tim Penggerak PKK' },
+      ...buildCatatanKeluargaReportItems(scope),
     ],
   },
   {
@@ -191,7 +192,6 @@ const buildScopedMenuGroups = (scope) => [
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
-      ...buildCatatanKeluargaReportItems(scope),
       { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },
       { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
     ],

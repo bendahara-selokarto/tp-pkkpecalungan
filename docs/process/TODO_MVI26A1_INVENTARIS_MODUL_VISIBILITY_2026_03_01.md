@@ -73,5 +73,6 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 ## Progress Fast Mode (2026-03-01)
 - [x] Baseline `moduleModes` role `desa-sekretaris` dinaikkan ke full `read-write` lintas group (`sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, `pokja-iv`).
 - [x] Resolver override per-modul untuk role `desa-sekretaris` sementara dilewati agar mode tidak turun oleh pilot override.
-- [x] Sidebar `Pokja IV` menampilkan modul report-only turunan `catatan-keluarga` (termasuk `Data Umum PKK Kecamatan`) dengan label natural tanpa kode lampiran.
+- [x] Sidebar `Sekretaris TPK` menampilkan modul report-only turunan `catatan-keluarga` (termasuk `Data Umum PKK Kecamatan`) dengan label natural tanpa kode lampiran.
+- [x] Tombol `Cetak 4.xx` pada index `Catatan Keluarga` desa/kecamatan dipindahkan menjadi navigasi via submenu `Sekretaris TPK` (referensi implementasi: `TODO_RNM26S1_RENAME_LAMPIRAN_SUBMENU_SEKRETARIS_2026_03_01.md`).
 - [ ] Audit lanjutan tetap diperlukan untuk alignment sidebar agar navigasi UI konsisten dengan mode akses backend.
