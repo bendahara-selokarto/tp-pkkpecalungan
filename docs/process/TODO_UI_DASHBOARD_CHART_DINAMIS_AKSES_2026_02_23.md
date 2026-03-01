@@ -50,6 +50,10 @@ Catatan lanjutan visual minimalis:
   - Section 2/3/4 menjadi jejak historis kontrak awal dan tidak dirender pada UI aktif.
 - Khusus `desa-pokja-i..iv`:
   - Section utama menampilkan chart `kegiatan bulanan` untuk data kegiatan pokja sendiri pada area desa sendiri.
+- Chart `Distribusi Level` tidak lagi dirender pada UI dashboard aktif.
+- Pengganti chart lintas role:
+  - `sekretaris-desa`: `jumlah buku desa sendiri` vs `jumlah buku desa sendiri yang terisi`.
+  - `pokja-i..iv` level `desa` dan `kecamatan`: `jumlah buku sendiri` vs `jumlah buku sendiri yang terisi`.
 
 ## Kontrak UI Dinamis
 
