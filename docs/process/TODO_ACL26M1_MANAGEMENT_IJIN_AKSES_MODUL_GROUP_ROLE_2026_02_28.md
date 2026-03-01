@@ -108,3 +108,12 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - Tahap 2 pilot write modul `catatan-keluarga` sudah aktif untuk update + rollback dari UI super-admin.
 - Audit trail perubahan mode sudah tercatat (`before_mode`, `after_mode`, `changed_by`, `changed_at`).
 - Resolver runtime sudah memprioritaskan override pilot saat aktif dan fallback ke hardcoded saat rollback.
+
+## Hardening Koherensi Sidebar vs Matrix (2026-03-01)
+- Kontrak dikunci ulang: `super-admin` diposisikan sebagai role administratif jalur `/super-admin/*` dan tidak lagi dimodelkan sebagai role scoped operasional `desa|kecamatan`.
+- Dampak implementasi:
+  - baseline visibilitas `RoleMenuVisibilityService` untuk `super-admin` pada group domain/monitoring dihapus,
+  - `RoleScopeMatrix::scopedRoles()` tidak lagi memasukkan `super-admin` pada scope `kecamatan`.
+- Dampak produk:
+  - matrix management ijin tidak lagi menampilkan impresi bahwa `super-admin` bisa mengakses monitoring kecamatan,
+  - perilaku sidebar dan enforcement route menjadi koheren.

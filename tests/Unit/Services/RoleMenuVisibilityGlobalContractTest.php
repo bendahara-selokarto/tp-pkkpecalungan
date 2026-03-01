@@ -158,14 +158,6 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'pokja-iv' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'monitoring' => RoleMenuVisibilityService::MODE_READ_ONLY,
         ],
-        'super-admin' => [
-            'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-i' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'monitoring' => RoleMenuVisibilityService::MODE_READ_WRITE,
-        ],
     ];
 
     /**
@@ -243,8 +235,6 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
             ['role' => 'admin-desa', 'scope' => 'desa'],
             ['role' => 'admin-kecamatan', 'scope' => 'kecamatan'],
-            ['role' => 'super-admin', 'scope' => 'desa'],
-            ['role' => 'super-admin', 'scope' => 'kecamatan'],
         ];
 
         foreach ($roleScopeMatrix as $item) {

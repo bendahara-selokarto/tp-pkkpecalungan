@@ -160,14 +160,6 @@ class RoleMenuVisibilityService
             'pokja-iv' => self::MODE_READ_WRITE,
             'monitoring' => self::MODE_READ_ONLY,
         ],
-        'super-admin' => [
-            'sekretaris-tpk' => self::MODE_READ_WRITE,
-            'pokja-i' => self::MODE_READ_WRITE,
-            'pokja-ii' => self::MODE_READ_WRITE,
-            'pokja-iii' => self::MODE_READ_WRITE,
-            'pokja-iv' => self::MODE_READ_WRITE,
-            'monitoring' => self::MODE_READ_WRITE,
-        ],
     ];
 
     /**

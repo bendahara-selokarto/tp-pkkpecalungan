@@ -112,6 +112,20 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['desa-arsip'] ?? null);
     }
 
+    public function test_super_admin_tidak_mendapat_visibilitas_menu_scope_operasional(): void
+    {
+        $user = User::factory()->create();
+        $user->assignRole('super-admin');
+
+        $visibilityDesa = $this->service->resolveForScope($user, 'desa');
+        $visibilityKecamatan = $this->service->resolveForScope($user, 'kecamatan');
+
+        $this->assertSame([], $visibilityDesa['groups']);
+        $this->assertSame([], $visibilityDesa['modules']);
+        $this->assertSame([], $visibilityKecamatan['groups']);
+        $this->assertSame([], $visibilityKecamatan['modules']);
+    }
+
     public function test_semua_role_operasional_memiliki_menu_buku_kegiatan(): void
     {
         $roleScopeMatrix = [
@@ -127,8 +141,6 @@ class RoleMenuVisibilityServiceTest extends TestCase
             ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
             ['role' => 'admin-desa', 'scope' => 'desa'],
             ['role' => 'admin-kecamatan', 'scope' => 'kecamatan'],
-            ['role' => 'super-admin', 'scope' => 'desa'],
-            ['role' => 'super-admin', 'scope' => 'kecamatan'],
         ];
 
         foreach ($roleScopeMatrix as $item) {
