@@ -135,7 +135,7 @@ const rollbackPilotMode = (row) => {
       <div class="mb-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Matriks Akses Modul dan Group Role</h3>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
-          Halaman ini menampilkan matrix akses aktual. Kontrol pilot write aktif untuk Catatan Keluarga dan Pilot Project Keluarga Sehat.
+          Halaman ini menampilkan matrix akses aktual. Kontrol pilot write aktif untuk Catatan Keluarga, Pilot Project Keluarga Sehat, dan Pilot Project Naskah Pelaporan.
         </p>
       </div>
 

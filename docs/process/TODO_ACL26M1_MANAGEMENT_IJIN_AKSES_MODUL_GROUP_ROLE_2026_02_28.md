@@ -47,6 +47,8 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`
 - Tahap 2 perluasan kontrol pilot modul `pilot-project-keluarga-sehat`:
   - `docs/process/TODO_ACL26P2_KONTROLPILOT_MANAGEMENT_IJIN_AKSES_2026_03_01.md`
+- Tahap 2 perluasan kontrol pilot modul `pilot-project-naskah-pelaporan`:
+  - `docs/process/TODO_ACL26P3_KONTROLPILOT_NASKAH_PELAPORAN_2026_03_01.md`
 
 ## Target Hasil
 - [x] Observasi kontrak akses existing selesai dan tervalidasi scoped.

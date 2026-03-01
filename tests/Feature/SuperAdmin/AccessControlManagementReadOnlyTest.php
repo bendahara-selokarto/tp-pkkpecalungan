@@ -47,6 +47,19 @@ class AccessControlManagementReadOnlyTest extends TestCase
                         return is_array($target)
                             && ($target['mode'] ?? null) === 'hidden';
                     })
+                    ->where('rows', function (mixed $rows): bool {
+                        $target = collect($rows)->first(function (mixed $row): bool {
+                            return is_array($row)
+                                && ($row['scope'] ?? null) === 'kecamatan'
+                                && ($row['role'] ?? null) === 'kecamatan-pokja-iv'
+                                && ($row['group'] ?? null) === 'pokja-iv'
+                                && ($row['module'] ?? null) === 'pilot-project-naskah-pelaporan';
+                        });
+
+                        return is_array($target)
+                            && ($target['mode'] ?? null) === 'hidden'
+                            && ($target['pilot_manageable'] ?? null) === true;
+                    })
                     ->where('roleOptions', static fn (mixed $options): bool => collect($options)->every(
                         static fn (mixed $option): bool => is_array($option) && ($option['value'] ?? null) !== 'super-admin'
                     ));
