@@ -61,7 +61,7 @@ Referensi Pola: `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_
 4. Finalisasi dan Merge
 - [x] Jalankan validasi penuh `php artisan test`.
 - [x] Pastikan TODO/ADR terkait sinkron status implementasi.
-- [ ] Merge branch concern ke `main` setelah seluruh gate hijau.
+- [x] Merge branch concern ke `main` setelah seluruh gate hijau.
 
 ## File Scope Implementasi (Estimasi)
 - Route/Controller:

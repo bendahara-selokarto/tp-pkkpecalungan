@@ -18,9 +18,10 @@ Tujuan:
 - Hindari rewrite luas tanpa alasan teknis kuat.
 
 4. Tiered validation
-- L1: cek lokal cepat (lint/build/test targeted).
+- L1: cek lokal cepat (lint/build/test targeted) sebagai jalur default iterasi.
+- L1 debug fail-fast: gunakan `--stop-on-failure` saat investigasi untuk menekan output.
 - L2: regression area terkait.
-- L3: full suite untuk perubahan signifikan.
+- L3: full suite pada checkpoint final atau perubahan signifikan.
 
 5. Learning capture
 - Jika jalur baru lebih efisien/akurat, update playbook ini.
@@ -38,7 +39,7 @@ Gunakan status:
 | `P-001` | Scoped Analysis + Diff-First | Task menyentuh beberapa layer | Waktu analisa turun, patch kecil | L1 + cek side effect | `active` |
 | `P-002` | Contract -> Backend -> Frontend -> Test | Modul/menu baru | Drift kontrak turun | L2 + test matrix modul | `active` |
 | `P-003` | Reusable UI Component + Audit Command | Konsistensi UI lintas halaman | Duplikasi style turun | L1 build + audit rg | `active` |
-| `P-004` | Targeted Test Before Full Suite | Perubahan terlokalisir | Feedback lebih cepat | L1 targeted, L3 jika signifikan | `active` |
+| `P-004` | Targeted Test Before Full Suite | Perubahan terlokalisir | Feedback lebih cepat | L1 targeted (+ fail-fast saat debug), L3 checkpoint final/perubahan signifikan | `active` |
 | `P-005` | Docs Ref Path Normalization | Refactor dokumentasi | Link putus = 0 | Script cek referensi markdown | `active` |
 | `P-006` | New Menu -> Dashboard Trigger Audit | Ada menu/domain baru | Dashboard tetap representatif dan tidak drift | `DashboardDocumentCoverageTest` (+ `DashboardActivityChartTest` jika kontrak berubah) | `active` |
 | `P-007` | Canonical Date Input UI | Form menambah field tanggal | Format UI konsisten dan payload backend stabil | Cek `type="date"` + submit payload `YYYY-MM-DD` | `active` |

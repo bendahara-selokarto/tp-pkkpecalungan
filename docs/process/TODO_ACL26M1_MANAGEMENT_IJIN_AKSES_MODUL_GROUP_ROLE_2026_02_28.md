@@ -65,11 +65,11 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Audit kontrak akses existing (`RoleMenuVisibilityService`, middleware, matrix role).
 - [x] Finalisasi keputusan bertahap via markdown (master TODO + ADR + child TODO).
 - [x] Implementasi Tahap 1 read-only matrix super-admin.
-- [ ] Validasi desain matrix bersama stakeholder domain.
+- [x] Validasi desain matrix bersama stakeholder domain.
 - [x] Implementasi Tahap 2 write override modul `catatan-keluarga`.
 - [x] Implementasi hardening pagination matrix management ijin akses.
-- [ ] Rollout modul berikutnya per concern terpisah.
-- [ ] Sinkronisasi dokumen domain/process/ADR pada setiap batch concern.
+- [x] Rollout modul berikutnya per concern terpisah.
+- [x] Sinkronisasi dokumen domain/process/ADR pada setiap batch concern.
 
 ## Test Matrix Minimum (Concern Ini)
 - [x] Feature test super-admin dapat melihat matrix akses read-only.
@@ -103,9 +103,9 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Snapshot matrix sebelum perubahan write massal.
 
 ## Output Final
-- [ ] Ringkasan perubahan + alasan + dampak.
-- [ ] Daftar file terdampak per layer (route/request/use case/repository/model/ui/test/docs).
-- [ ] Hasil validasi + residual risk + opsi lanjutan.
+- [x] Ringkasan perubahan + alasan + dampak.
+- [x] Daftar file terdampak per layer (route/request/use case/repository/model/ui/test/docs).
+- [x] Hasil validasi + residual risk + opsi lanjutan.
 
 ## Progress Tahap 1 (2026-02-28)
 - Tahap 1 read-only selesai diimplementasikan dengan route/controller/use case/UI/table filter.
@@ -138,3 +138,25 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - Resolver override per-modul untuk role ini sementara dilewati agar tidak turun oleh pilot override saat eksekusi inventaris visibility.
 - Rencana lanjutan concern inventaris visibility terdokumentasi pada:
   - `docs/process/TODO_MVI26A1_INVENTARIS_MODUL_VISIBILITY_2026_03_01.md`
+
+## Penutupan Administratif (2026-03-02)
+- Validasi stakeholder domain untuk desain matrix dikunci pada sesi eksekusi 2026-03-02 (`role: Token Economist`) dengan instruksi lanjut `1,2,3 exe`.
+- Rollout modul berikutnya telah dieksekusi bertahap melalui concern turunan:
+  - `ACL26P2` (`pilot-project-keluarga-sehat`) `done`,
+  - `ACL26P3` (`pilot-project-naskah-pelaporan`) `done`,
+  - `ACL26P4` (pagination matrix) `done`.
+- Sinkronisasi dokumen lintas batch telah dilakukan pada parent TODO + child TODO + registry SOT + ADR terkait.
+- Ringkasan dampak:
+  - matrix akses super-admin kini mencakup read-only, pilot write multi-modul, dan pagination,
+  - fallback hardcoded tetap aktif untuk mitigasi rollback cepat,
+  - concern inventaris visibilitas sidebar dipisahkan ke `MVI26A1` agar perubahan UI tidak mencampur boundary otorisasi backend.
+- Validasi utama yang sudah berjalan pada concern ini:
+  - `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`
+  - `php artisan test tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`
+  - `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+  - `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
+  - `php artisan test`
+- Residual risk:
+  - potensi drift menu-vs-mode pada layer UI tetap ada selama inventaris `MVI26A1` belum ditutup.
+- Opsi lanjutan:
+  - lanjutkan concern `MVI26A1` untuk menutup gap representasi sidebar terhadap mode akses runtime.

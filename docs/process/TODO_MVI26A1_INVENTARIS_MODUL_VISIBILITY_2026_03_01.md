@@ -3,6 +3,7 @@
 Tanggal: 2026-03-01  
 Status: `in-progress`  
 Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
+Parent Concern (SOT Registry): `C-SIDEBAR-UI` via `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
 
 ## Konteks
 - Tujuan concern ini adalah menyiapkan inventaris modul domain yang sudah terbangun sebagai bahan desain grouping visibility yang konsisten.
