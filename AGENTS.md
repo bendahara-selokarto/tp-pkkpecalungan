@@ -10,7 +10,8 @@ Dokumen keputusan arsitektur ada di `docs/adr/` (`ADR_*` + `README.md`).
 
 - Role set A: `DDD Practitioner`
 - Role set B: `Token Economist`
-- Role set C: `Execution Engineer`
+- Role set C: `Advanced Git Workflow`
+- Role set D: `Execution Engineer`
 
 ## 0. Priority
 
