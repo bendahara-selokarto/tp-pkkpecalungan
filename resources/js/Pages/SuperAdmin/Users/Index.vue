@@ -1,12 +1,13 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
+import ResponsiveDataTable from '@/admin-one/components/ResponsiveDataTable.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { formatAreaLabel, formatRoleList, formatScopeLabel } from '@/utils/roleLabelFormatter'
 import { Link, router } from '@inertiajs/vue3'
 import { mdiAccountMultiple } from '@mdi/js'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps({
   users: {
@@ -18,6 +19,16 @@ const props = defineProps({
 const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus user ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
+const isResponsiveTableV2Enabled = computed(() => import.meta.env.VITE_UI_RESPONSIVE_TABLE_V2 !== 'false')
+
+const userTableColumns = [
+  { key: 'name', label: 'Nama', mobileLabel: 'Nama' },
+  { key: 'email', label: 'Email', mobileLabel: 'Email' },
+  { key: 'roles', label: 'Role', mobileLabel: 'Role' },
+  { key: 'scope', label: 'Scope', mobileLabel: 'Scope' },
+  { key: 'area', label: 'Wilayah', mobileLabel: 'Wilayah' },
+  { key: 'actions', label: 'Aksi', mobileLabel: 'Aksi', headerClass: 'w-44' },
+]
 
 const deleteUser = (userId) => {
   deletingId.value = userId
@@ -59,7 +70,46 @@ const cancelDelete = () => {
         </Link>
       </div>
 
-      <div class="overflow-x-auto">
+      <ResponsiveDataTable
+        v-if="isResponsiveTableV2Enabled"
+        :columns="userTableColumns"
+        :rows="users.data"
+        row-key="id"
+        min-width-class="min-w-[760px]"
+        empty-text="Data user belum tersedia."
+      >
+        <template #cell-name="{ row }">
+          <span class="font-medium text-gray-900 dark:text-gray-100">{{ row.name }}</span>
+        </template>
+        <template #cell-roles="{ row }">
+          {{ formatRoleList(row.roles) }}
+        </template>
+        <template #cell-scope="{ row }">
+          {{ formatScopeLabel(row.scope) }}
+        </template>
+        <template #cell-area="{ row }">
+          {{ formatAreaLabel(row.area) }}
+        </template>
+        <template #cell-actions="{ row }">
+          <div class="flex flex-wrap items-center justify-end gap-2 lg:justify-start">
+            <Link
+              :href="`/super-admin/users/${row.id}/edit`"
+              class="inline-flex min-h-[44px] items-center rounded-md border border-amber-200 px-4 py-2 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
+            >
+              Edit
+            </Link>
+            <button
+              type="button"
+              class="inline-flex min-h-[44px] items-center rounded-md border border-rose-200 px-4 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
+              @click="deleteUser(row.id)"
+            >
+              Hapus
+            </button>
+          </div>
+        </template>
+      </ResponsiveDataTable>
+
+      <div v-else class="overflow-x-auto">
         <table class="w-full min-w-[760px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
@@ -113,13 +163,13 @@ const cancelDelete = () => {
         <template v-for="(link, index) in users.links" :key="`page-${index}`">
           <span
             v-if="!link.url"
-            class="rounded-md border border-gray-200 px-3 py-1.5 text-xs text-gray-400 dark:border-slate-700 dark:text-gray-500"
+            class="inline-flex min-h-[44px] items-center rounded-md border border-gray-200 px-4 py-2 text-xs text-gray-400 dark:border-slate-700 dark:text-gray-500"
             v-html="link.label"
           />
           <Link
             v-else
             :href="link.url"
-            class="rounded-md border px-3 py-1.5 text-xs"
+            class="inline-flex min-h-[44px] items-center rounded-md border px-4 py-2 text-xs"
             :class="link.active
               ? 'border-emerald-600 bg-emerald-600 text-white'
               : 'border-gray-200 text-gray-700 hover:bg-gray-100 dark:border-slate-700 dark:text-gray-300 dark:hover:bg-slate-800'"
