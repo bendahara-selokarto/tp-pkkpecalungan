@@ -691,6 +691,77 @@ const resolveBlockAccessModeLabel = (block) => {
 }
 
 const blockSummaryLabel = (block) => `Data dari ${sourceModulesLabel(block)} | Cakupan ${sourceAreaTypeLabel(block)}`
+const formatSummaryValue = (value) => toNumber(value).toLocaleString('id-ID')
+const summaryToneClasses = (tone) => {
+  if (tone === 'info') {
+    return {
+      box: 'border border-cyan-200 dark:border-cyan-900/50',
+      label: 'text-[11px] uppercase tracking-wide text-cyan-700 dark:text-cyan-300',
+      value: 'mt-1 text-lg font-semibold text-cyan-700 dark:text-cyan-300',
+    }
+  }
+
+  if (tone === 'success') {
+    return {
+      box: 'border border-emerald-200 dark:border-emerald-900/50',
+      label: 'text-[11px] uppercase tracking-wide text-emerald-700 dark:text-emerald-300',
+      value: 'mt-1 text-lg font-semibold text-emerald-700 dark:text-emerald-300',
+    }
+  }
+
+  if (tone === 'warning') {
+    return {
+      box: 'border border-amber-200 dark:border-amber-900/50',
+      label: 'text-[11px] uppercase tracking-wide text-amber-700 dark:text-amber-300',
+      value: 'mt-1 text-lg font-semibold text-amber-700 dark:text-amber-300',
+    }
+  }
+
+  if (tone === 'muted') {
+    return {
+      box: 'border border-slate-300 dark:border-slate-700',
+      label: 'text-[11px] uppercase tracking-wide text-slate-600 dark:text-slate-300',
+      value: 'mt-1 text-lg font-semibold text-slate-700 dark:text-slate-200',
+    }
+  }
+
+  return {
+    box: 'border border-slate-200 dark:border-slate-700',
+    label: 'text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400',
+    value: 'mt-1 text-lg font-semibold text-slate-800 dark:text-slate-100',
+  }
+}
+const countActiveCoverageItems = (block) => {
+  const values = block?.charts?.coverage_per_module?.values
+  if (!Array.isArray(values)) {
+    return 0
+  }
+
+  return values.filter((value) => toNumber(value) > 0).length
+}
+const buildDashboardSummaryTiles = (block) => {
+  const totalBooks = toNumber(block?.kind === 'documents' ? block?.stats?.total_buku_tracked : block?.stats?.books_total)
+  const filledBooks = toNumber(block?.kind === 'documents' ? block?.stats?.buku_terisi : block?.stats?.books_filled)
+  const unfilledBooks = Math.max(totalBooks - filledBooks, 0)
+
+  if (block?.kind === 'activity') {
+    return [
+      { key: 'total-kegiatan', label: 'Total Kegiatan', value: formatSummaryValue(block?.stats?.total), tone: 'default' },
+      { key: 'kegiatan-bulan-ini', label: 'Bulan Ini', value: formatSummaryValue(block?.stats?.this_month), tone: 'default' },
+      { key: 'jumlah-buku', label: 'Jumlah Buku', value: formatSummaryValue(totalBooks), tone: 'info' },
+      { key: 'buku-terisi', label: 'Buku Terisi', value: formatSummaryValue(filledBooks), tone: 'success' },
+      { key: 'buku-belum-terisi', label: 'Buku Belum Terisi', value: formatSummaryValue(unfilledBooks), tone: 'warning' },
+    ]
+  }
+
+  return [
+    { key: 'total-buku', label: 'Total Buku', value: formatSummaryValue(totalBooks), tone: 'default' },
+    { key: 'total-entri', label: 'Total Entri', value: formatSummaryValue(block?.stats?.total_entri_buku), tone: 'default' },
+    { key: 'modul-aktif', label: 'Modul Aktif', value: formatSummaryValue(countActiveCoverageItems(block)), tone: 'info' },
+    { key: 'buku-terisi', label: 'Buku Terisi', value: formatSummaryValue(filledBooks), tone: 'success' },
+    { key: 'buku-belum-terisi', label: 'Buku Belum Terisi', value: formatSummaryValue(unfilledBooks), tone: 'muted' },
+  ]
+}
 
 const buildActivityMonthlyMultiAxisSeries = (block) => {
   const values = (block?.charts?.monthly?.values ?? []).map((value) => toNumber(value))
@@ -1075,6 +1146,18 @@ const hasLegacyBookComparisonData = computed(() =>
                 >
                   {{ isBlockExpanded(block.key) ? 'Sembunyikan Grafik' : 'Tampilkan Grafik' }}
                 </button>
+              </div>
+            </div>
+
+            <div class="mt-4 grid gap-3 md:grid-cols-3 xl:grid-cols-5">
+              <div
+                v-for="tile in buildDashboardSummaryTiles(block)"
+                :key="`${block.key}-${tile.key}`"
+                class="rounded px-3 py-2"
+                :class="summaryToneClasses(tile.tone).box"
+              >
+                <p :class="summaryToneClasses(tile.tone).label">{{ tile.label }}</p>
+                <p :class="summaryToneClasses(tile.tone).value">{{ tile.value }}</p>
               </div>
             </div>
 
