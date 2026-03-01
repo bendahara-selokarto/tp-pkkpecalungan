@@ -214,6 +214,7 @@ Aturan role khusus:
 - `desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv`: section utama menampilkan chart activity bulanan pokja sendiri (scope area desa sendiri).
 - Seluruh chart `Distribusi Level` dihapus dari UI dashboard aktif; diganti chart `Jumlah Buku vs Buku Terisi` sesuai konteks role.
 - Layout dashboard aktif dipadatkan ke card chart saja; card ringkasan non-chart dan tabel informasi tidak lagi dirender.
+- Ringkasan angka di dalam card dashboard ditampilkan sebagai tile mini di atas chart dengan gaya visual konsisten seperti halaman `management ijin akses`.
 
 Kontrak metadata sumber (anti label ambigu):
 - `source_group`: `sekretaris-tpk|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
