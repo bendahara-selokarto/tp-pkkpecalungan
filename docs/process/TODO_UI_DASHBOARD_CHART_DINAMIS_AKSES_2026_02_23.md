@@ -56,6 +56,7 @@ Catatan lanjutan visual minimalis:
   - `pokja-i..iv` level `desa` dan `kecamatan`: `jumlah buku sendiri` vs `jumlah buku sendiri yang terisi`.
 - UI aktif menampilkan card chart saja; card non-chart (ringkasan/statistik/filter) dan tabel informasi dihapus.
 - Setiap card dashboard menampilkan ringkasan angka gaya `management ijin akses` (tile mini di bagian atas card) sebelum area chart.
+- Filter chart diintegrasikan langsung di dalam card yang sama (di atas area chart) dan query filter memengaruhi data chart yang dirender.
 
 ## Kontrak UI Dinamis
 

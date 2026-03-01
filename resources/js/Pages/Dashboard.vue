@@ -402,24 +402,18 @@ const applyFilters = () => {
   })
 }
 
-const onModeChange = () => {
-  if (!isByLevelMode.value) {
-    selectedLevel.value = 'all'
-  }
-
-  if (!isBySubLevelMode.value) {
-    selectedSubLevel.value = 'all'
-  }
-
-  applyFilters()
-}
-
-const onLevelChange = () => {
-  applyFilters()
-}
-
-const onSubLevelApply = () => {
+const applyChartFilters = () => {
+  selectedSection1Month.value = resolveOptionValue(selectedSection1Month.value, SECTION1_MONTH_OPTIONS, 'all')
   selectedSubLevel.value = normalizeToken(selectedSubLevel.value, 'all')
+  if (!hasMonthFilterAwareBlocks.value) {
+    selectedSection1Month.value = 'all'
+  }
+
+  if (hasSekretarisSections.value) {
+    applySekretarisSectionFilters()
+    return
+  }
+
   applyFilters()
 }
 
@@ -438,44 +432,16 @@ const applySekretarisSectionFilters = () => {
   })
 }
 
-const onSection1MonthChange = () => {
-  selectedSection1Month.value = resolveOptionValue(selectedSection1Month.value, SECTION1_MONTH_OPTIONS, 'all')
-  if (!hasMonthFilterAwareBlocks.value) {
-    selectedSection1Month.value = 'all'
+const onChartFilterModeChange = () => {
+  if (!isByLevelMode.value) {
+    selectedLevel.value = 'all'
   }
 
-  if (hasSekretarisSections.value) {
-    applySekretarisSectionFilters()
-    return
-  }
-
-  applyFilters()
-}
-
-const resolveSectionGroupFilterValue = (queryKey) => {
-  if (queryKey === 'section2_group') {
-    return selectedSection2Group.value
-  }
-
-  if (queryKey === 'section3_group') {
-    return selectedSection3Group.value
-  }
-
-  return 'all'
-}
-
-const onSectionGroupFilterChange = (queryKey, rawValue) => {
-  if (queryKey === 'section2_group') {
-    selectedSection2Group.value = resolveOptionValue(rawValue, SECTION_GROUP_OPTIONS, 'all')
-    applySekretarisSectionFilters()
-    return
-  }
-
-  if (queryKey === 'section3_group') {
-    selectedSection3Group.value = resolveOptionValue(rawValue, SECTION_GROUP_OPTIONS, 'all')
-    applySekretarisSectionFilters()
+  if (!isBySubLevelMode.value) {
+    selectedSubLevel.value = 'all'
   }
 }
+
 
 watch(
   isDesaPokjaUser,
@@ -1161,6 +1127,95 @@ const hasLegacyBookComparisonData = computed(() =>
               </div>
             </div>
 
+            <div class="mt-4 grid grid-cols-1 gap-3 rounded border border-slate-200 p-3 md:grid-cols-2 xl:grid-cols-5 dark:border-slate-700">
+              <div>
+                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                  Cara Tampil
+                </label>
+                <select
+                  v-model="selectedMode"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
+                  @change="onChartFilterModeChange"
+                >
+                  <option v-for="modeOption in MODE_OPTIONS" :key="`block-${block.key}-${modeOption.value}`" :value="modeOption.value">
+                    {{ modeOption.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                  Tingkat
+                </label>
+                <select
+                  v-model="selectedLevel"
+                  :disabled="!isByLevelMode"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                >
+                  <option v-for="levelOption in LEVEL_OPTIONS" :key="`block-level-${block.key}-${levelOption.value}`" :value="levelOption.value">
+                    {{ levelOption.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                  Wilayah Turunan
+                </label>
+                <select
+                  v-if="availableSubLevelOptions.length > 1"
+                  v-model="selectedSubLevel"
+                  :disabled="!isBySubLevelMode"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                >
+                  <option
+                    v-for="subLevelOption in availableSubLevelOptions"
+                    :key="`block-sub-level-${block.key}-${subLevelOption.value}`"
+                    :value="subLevelOption.value"
+                  >
+                    {{ subLevelOption.label }}
+                  </option>
+                </select>
+                <input
+                  v-else
+                  v-model="selectedSubLevel"
+                  :disabled="!isBySubLevelMode"
+                  type="text"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                  placeholder="Ketik nama wilayah"
+                >
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                  Bulan
+                </label>
+                <select
+                  v-model="selectedSection1Month"
+                  :disabled="!blockSupportsMonthFilter(block)"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                >
+                  <option
+                    v-for="monthOption in SECTION1_MONTH_OPTIONS"
+                    :key="`block-month-${block.key}-${monthOption.value}`"
+                    :value="monthOption.value"
+                  >
+                    {{ monthOption.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="flex items-end">
+                <button
+                  type="button"
+                  class="min-h-[44px] w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                  @click="applyChartFilters"
+                >
+                  Terapkan Filter Chart
+                </button>
+              </div>
+            </div>
+
             <template v-if="isBlockExpanded(block.key) && block.kind === 'documents'">
               <div class="mt-6">
                 <div>
@@ -1180,28 +1235,10 @@ const hasLegacyBookComparisonData = computed(() =>
             <template v-else-if="isBlockExpanded(block.key)">
               <template v-if="shouldShowActivityByDesaChart(block)">
                 <div class="mt-6">
-                  <div class="mb-2 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:items-end">
+                  <div class="mb-2">
                     <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                       Kegiatan per Desa
                     </h4>
-                    <div v-if="blockSupportsMonthFilter(block)" class="lg:ml-auto lg:w-56">
-                      <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                        Bulan
-                      </label>
-                      <select
-                        v-model="selectedSection1Month"
-                        class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-                        @change="onSection1MonthChange"
-                      >
-                        <option
-                          v-for="monthOption in SECTION1_MONTH_OPTIONS"
-                          :key="`section1-month-${monthOption.value}`"
-                          :value="monthOption.value"
-                        >
-                          {{ monthOption.label }}
-                        </option>
-                      </select>
-                    </div>
                   </div>
                   <p class="mb-2 text-[11px] text-slate-500 dark:text-slate-400">
                     {{ activityByDesaChartModeLabel() }}
