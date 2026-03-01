@@ -102,6 +102,33 @@ Keputusan:
 Status:
 - `PASS`.
 
+## Penutupan Concern ASM26B1 Management Arsip Super Admin: 2026-03-02
+
+Ruang lingkup:
+- Menutup drift status dokumentasi concern `ASM26B1` yang masih `in-progress` walau implementasi sudah berjalan.
+- Menyinkronkan checklist TODO, status registry SOT, dan bukti validasi runtime terbaru.
+
+Artefak:
+- `docs/process/TODO_ASM26B1_MANAGEMENT_ARSIP_SUPER_ADMIN_2026_02_27.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/process/OPERATIONAL_VALIDATION_LOG.md`
+
+Perintah validasi:
+- `php artisan test tests/Feature/ArsipTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Feature/SuperAdmin/ArsipManagementTest.php tests/Unit/Policies/ArsipDocumentPolicyTest.php --stop-on-failure`
+  - hasil: `PASS` (`18` tests, `83` assertions).
+- `php artisan test`
+  - hasil: `PASS` (`1002` tests, `6317` assertions).
+
+Keputusan:
+- Status concern `C-ARSIP-MGMT` dikunci ke `done`.
+- Kontrak visibilitas final tetap:
+  - arsip unggahan `super-admin` bersifat global,
+  - arsip private non-super-admin tetap owner-managed,
+  - monitoring arsip desa tetap read-only khusus jalur kecamatan.
+
+Status:
+- `PASS` (`asm26b1-closed`).
+
 ### R4. Verifikasi PDF Sample Desa dan Kecamatan
 
 Metode verifikasi baseline (otomatis):
