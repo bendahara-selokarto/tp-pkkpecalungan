@@ -132,3 +132,9 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - payload pagination matrix ditambahkan (`page`, `per_page`, `total`, `last_page`, `from`, `to`),
   - UI matrix memiliki kontrol `baris per halaman` + `sebelumnya/berikutnya`,
   - feature test read-only concern akses-control diperluas untuk guard pagination.
+
+## Progress Fast Mode Desa-Sekretaris (2026-03-01)
+- Baseline `moduleModes` role `desa-sekretaris` dinaikkan sementara menjadi `full read-write` lintas group.
+- Resolver override per-modul untuk role ini sementara dilewati agar tidak turun oleh pilot override saat eksekusi inventaris visibility.
+- Rencana lanjutan concern inventaris visibility terdokumentasi pada:
+  - `docs/process/TODO_MVI26A1_INVENTARIS_MODUL_VISIBILITY_2026_03_01.md`

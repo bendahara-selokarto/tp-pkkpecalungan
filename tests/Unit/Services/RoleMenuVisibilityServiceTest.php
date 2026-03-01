@@ -40,7 +40,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         }
     }
 
-    public function test_desa_sekretaris_memiliki_sekretaris_rw_dan_pokja_ro(): void
+    public function test_desa_sekretaris_memiliki_sekretaris_dan_pokja_rw(): void
     {
         $user = User::factory()->create();
         $user->assignRole('desa-sekretaris');
@@ -48,8 +48,8 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $visibility = $this->service->resolveForScope($user, 'desa');
 
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['sekretaris-tpk'] ?? null);
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['pokja-i'] ?? null);
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['pokja-iv'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['pokja-i'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['pokja-iv'] ?? null);
         $this->assertArrayNotHasKey('monitoring', $visibility['groups']);
         $this->assertArrayNotHasKey('referensi', $visibility['groups']);
 
@@ -57,7 +57,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['activities'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['anggota-tim-penggerak-kader'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['laporan-tahunan-pkk'] ?? null);
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['data-warga'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['data-warga'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['program-prioritas'] ?? null);
     }
 

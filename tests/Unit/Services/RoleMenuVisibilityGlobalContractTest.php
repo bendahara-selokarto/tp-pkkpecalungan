@@ -106,10 +106,10 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
     private const BASELINE_ROLE_GROUP_MODES = [
         'desa-sekretaris' => [
             'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-i' => RoleMenuVisibilityService::MODE_READ_ONLY,
-            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_ONLY,
-            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_ONLY,
-            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-i' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_WRITE,
         ],
         'kecamatan-sekretaris' => [
             'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,

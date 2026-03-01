@@ -42,7 +42,7 @@ class MenuVisibilityPayloadTest extends TestCase
         ]);
     }
 
-    public function test_payload_sekretaris_berisi_rw_dan_pokja_ro(): void
+    public function test_payload_sekretaris_berisi_rw_pada_semua_group_desa(): void
     {
         $user = User::factory()->create([
             'scope' => 'desa',
@@ -54,12 +54,12 @@ class MenuVisibilityPayloadTest extends TestCase
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
-                ->where('auth.user.menuGroupModes.pokja-i', 'read-only')
-                ->where('auth.user.menuGroupModes.pokja-iv', 'read-only')
+                ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
+                ->where('auth.user.menuGroupModes.pokja-iv', 'read-write')
                 ->missing('auth.user.menuGroupModes.referensi')
                 ->where('auth.user.moduleModes.buku-keuangan', 'read-write')
                 ->where('auth.user.moduleModes.program-prioritas', 'read-write')
-                ->where('auth.user.moduleModes.data-warga', 'read-only')
+                ->where('auth.user.moduleModes.data-warga', 'read-write')
             );
     }
 

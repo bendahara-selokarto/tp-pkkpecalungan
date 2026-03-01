@@ -92,6 +92,27 @@ const isModuleAllowedForCurrentUser = (item) => {
   return !!moduleModes.value[moduleSlug]
 }
 
+const buildCatatanKeluargaReportItems = (scope) => ([
+  { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga' },
+  { href: `/${scope}/catatan-keluarga/rekap-dasa-wisma/report/pdf`, label: 'Rekap Catatan Warga Dasa Wisma' },
+  { href: `/${scope}/catatan-keluarga/rekap-pkk-rt/report/pdf`, label: 'Rekap Catatan Warga PKK RT' },
+  { href: `/${scope}/catatan-keluarga/catatan-pkk-rw/report/pdf`, label: 'Catatan Warga PKK RW' },
+  { href: `/${scope}/catatan-keluarga/rekap-rw/report/pdf`, label: 'Catatan Warga Dusun/Lingkungan' },
+  { href: `/${scope}/catatan-keluarga/tp-pkk-desa-kelurahan/report/pdf`, label: 'Catatan Warga TP PKK Desa/Kelurahan' },
+  { href: `/${scope}/catatan-keluarga/tp-pkk-kecamatan/report/pdf`, label: 'Catatan Warga TP PKK Kecamatan' },
+  { href: `/${scope}/catatan-keluarga/tp-pkk-kabupaten-kota/report/pdf`, label: 'Catatan Warga TP PKK Kabupaten/Kota' },
+  { href: `/${scope}/catatan-keluarga/tp-pkk-provinsi/report/pdf`, label: 'Catatan Warga TP PKK Provinsi' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-dasawisma/report/pdf`, label: 'Rekap Ibu Hamil Dasawisma' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-pkk-rt/report/pdf`, label: 'Rekap Ibu Hamil PKK RT' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-pkk-rw/report/pdf`, label: 'Rekap Ibu Hamil PKK RW' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-pkk-dusun-lingkungan/report/pdf`, label: 'Rekap Ibu Hamil PKK Dusun/Lingkungan' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-tp-pkk-kecamatan/report/pdf`, label: 'Rekap Ibu Hamil TP PKK Kecamatan' },
+  { href: `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`, label: 'Data Umum PKK' },
+  { href: `/${scope}/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf`, label: 'Data Umum PKK Kecamatan' },
+  { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Data Kegiatan PKK Pokja III' },
+  { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Data Kegiatan PKK Pokja IV' },
+])
+
 const buildScopedMenuGroups = (scope) => [
   {
     key: 'sekretaris-tpk',
@@ -170,9 +191,9 @@ const buildScopedMenuGroups = (scope) => [
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
-      { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga', uiVisibility: 'disabled' },
-      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV', uiVisibility: 'disabled' },
-      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana', uiVisibility: 'disabled' },
+      ...buildCatatanKeluargaReportItems(scope),
+      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },
+      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
     ],
   },
 ]

@@ -42,7 +42,7 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         ]);
     }
 
-    public function test_desa_sekretaris_read_only_pada_modul_pokja(): void
+    public function test_desa_sekretaris_read_write_pada_modul_pokja(): void
     {
         $user = User::factory()->create([
             'scope' => 'desa',
@@ -53,8 +53,8 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->actingAs($user);
 
         $this->get('/desa/data-warga')->assertOk();
-        $this->get('/desa/data-warga/create')->assertForbidden();
-        $this->post('/desa/data-warga', [])->assertForbidden();
+        $this->get('/desa/data-warga/create')->assertOk();
+        $this->post('/desa/data-warga', [])->assertStatus(302);
     }
 
     public function test_desa_pokja_i_tidak_bisa_akses_modul_pokja_iii(): void

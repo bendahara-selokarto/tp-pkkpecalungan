@@ -109,10 +109,10 @@ class RoleMenuVisibilityService
     private const ROLE_GROUP_MODES = [
         'desa-sekretaris' => [
             'sekretaris-tpk' => self::MODE_READ_WRITE,
-            'pokja-i' => self::MODE_READ_ONLY,
-            'pokja-ii' => self::MODE_READ_ONLY,
-            'pokja-iii' => self::MODE_READ_ONLY,
-            'pokja-iv' => self::MODE_READ_ONLY,
+            'pokja-i' => self::MODE_READ_WRITE,
+            'pokja-ii' => self::MODE_READ_WRITE,
+            'pokja-iii' => self::MODE_READ_WRITE,
+            'pokja-iv' => self::MODE_READ_WRITE,
         ],
         'kecamatan-sekretaris' => [
             'sekretaris-tpk' => self::MODE_READ_WRITE,
@@ -270,6 +270,10 @@ class RoleMenuVisibilityService
      */
     public function roleModuleModeOverrides(string $role, ?string $scope = null): array
     {
+        if ($role === 'desa-sekretaris') {
+            return [];
+        }
+
         $overrides = self::ROLE_MODULE_MODE_OVERRIDES[$role] ?? [];
 
         if (! is_string($scope)) {
@@ -441,6 +445,12 @@ class RoleMenuVisibilityService
         $pilotOverrides = $this->pilotOverridesByScopeRoles($scope, $roleNames);
 
         foreach ($roleNames as $roleName) {
+            // Fast-mode policy: sementara ini desa-sekretaris wajib full access pada moduleModes.
+            // Override per-modul (termasuk pilot override) dilewati agar mode tidak turun.
+            if ($roleName === 'desa-sekretaris') {
+                continue;
+            }
+
             $overrides = self::ROLE_MODULE_MODE_OVERRIDES[$roleName] ?? [];
 
             if (array_key_exists($roleName, $pilotOverrides)) {
