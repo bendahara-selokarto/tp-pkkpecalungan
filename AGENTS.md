@@ -6,6 +6,12 @@ Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` (sumber
 Dokumen jalur tunggal eksekusi AI ada di `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`.
 Dokumen keputusan arsitektur ada di `docs/adr/` (`ADR_*` + `README.md`).
 
+## Role Set Registry
+
+- Role set A: `DDD Practitioner`
+- Role set B: `Token Economist`
+- Role set C: `Execution Engineer`
+
 ## 0. Priority
 
 Jika konflik dokumen:
