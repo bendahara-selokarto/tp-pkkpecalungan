@@ -148,19 +148,36 @@ class LaporanTahunanPkkDocxGenerator
             throw new RuntimeException('Gagal membuat file sementara untuk generator .docx.');
         }
 
-        $templatePath = base_path('docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx');
-        if (is_file($templatePath)) {
-            if (! copy($templatePath, $tmpPath)) {
-                @unlink($tmpPath);
-                throw new RuntimeException('Gagal menyalin template laporan tahunan .docx.');
+        foreach ($this->resolveTemplateCandidates() as $templatePath) {
+            if (! is_file($templatePath) || ! is_readable($templatePath)) {
+                continue;
             }
 
-            return $tmpPath;
+            // Tetap lanjut ke kandidat berikutnya jika copy gagal agar jalur print tidak hard-fail.
+            if (copy($templatePath, $tmpPath)) {
+                return $tmpPath;
+            }
         }
 
         $this->createMinimalDocxPackage($tmpPath);
 
         return $tmpPath;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function resolveTemplateCandidates(): array
+    {
+        $configured = config('laporan_tahunan_pkk.docx_template_candidates', []);
+        if (! is_array($configured)) {
+            return [];
+        }
+
+        return array_values(array_unique(array_map(
+            static fn ($path): string => base_path((string) $path),
+            array_filter($configured, static fn ($path): bool => is_string($path) && trim($path) !== '')
+        )));
     }
 
     private function createMinimalDocxPackage(string $path): void

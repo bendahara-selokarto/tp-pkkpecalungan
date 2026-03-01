@@ -1141,3 +1141,36 @@ Keputusan:
 
 Status:
 - `PASS` untuk sinkronisasi dokumen concern process execution.
+
+## Implementasi Concern Fixture/Template Consistency (F1-F3): 2026-03-01
+
+Ruang lingkup:
+- Menutup akar masalah jalur print laporan tahunan agar tidak hard-fail ketika template `.docx` tidak tersedia/tidak terbaca di environment tertentu.
+- Mengunci mapping kandidat template `.docx` secara canonical di config concern.
+- Audit fixture token baseline untuk modul `4.14.2b` dan `4.14.2c` terhadap kontrak judul aktif pada view PDF.
+
+Artefak:
+- `app/Domains/Wilayah/LaporanTahunanPkk/Services/LaporanTahunanPkkDocxGenerator.php`
+- `config/laporan_tahunan_pkk.php`
+- `docs/process/TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md`
+
+Perubahan inti:
+- Generator `.docx` kini membaca daftar `docx_template_candidates` dari config concern.
+- Jika kandidat template ada tetapi gagal disalin, alur tidak langsung gagal; generator mencoba kandidat lain lalu fallback ke paket `.docx` minimal.
+- Mapping canonical template concern dikunci:
+  - `docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx`
+  - `resources/templates/laporan-tahunan-pkk.docx` (opsional jika disediakan deployment tertentu).
+- Token fixture untuk `4.14.2b` (`BUKU HATINYA PKK`) dan `4.14.2c` (`BUKU INDUSTRI RUMAH TANGGA`) diverifikasi tetap selaras dengan judul aktif view.
+
+Perintah validasi:
+- `php artisan test --filter=LaporanTahunanPkkReportPrintTest`
+  - hasil: `BLOCKED` pada environment ini (`php: command not found`).
+- `php artisan test --filter=PdfBaselineFixtureComplianceTest`
+  - hasil: `BLOCKED` pada environment ini (`php: command not found`).
+
+Keputusan:
+- F1-F3 concern `FTC26A1` dinyatakan selesai pada level implementasi kode + sinkronisasi mapping.
+- F4-F5 tetap `pending` sampai validasi test dijalankan di environment yang memiliki runtime PHP.
+
+Status:
+- `PARTIAL` (`implementation-done`, `test-execution-blocked-by-environment`).

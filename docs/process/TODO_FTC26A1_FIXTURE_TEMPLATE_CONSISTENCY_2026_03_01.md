@@ -13,9 +13,9 @@ Status: `active` (`isolated-regression-fix`)
 - Gate concern lain tidak tertahan backlog ini.
 
 ## Langkah Eksekusi
-- [ ] `F1` Inventarisasi daftar kegagalan residual (`template .docx` hilang + mismatch token fixture).
-- [ ] `F2` Tetapkan mapping file/template canonical yang hilang atau berubah.
-- [ ] `F3` Sinkronkan fixture token dengan kontrak judul yang aktif.
+- [x] `F1` Inventarisasi daftar kegagalan residual (`template .docx` hilang + mismatch token fixture).
+- [x] `F2` Tetapkan mapping file/template canonical yang hilang atau berubah.
+- [x] `F3` Sinkronkan fixture token dengan kontrak judul yang aktif.
 - [ ] `F4` Jalankan targeted feature tests yang terdampak.
 - [ ] `F5` Catat hasil penutupan di `OPERATIONAL_VALIDATION_LOG.md`.
 
