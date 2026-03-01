@@ -49,6 +49,8 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `docs/process/TODO_ACL26P2_KONTROLPILOT_MANAGEMENT_IJIN_AKSES_2026_03_01.md`
 - Tahap 2 perluasan kontrol pilot modul `pilot-project-naskah-pelaporan`:
   - `docs/process/TODO_ACL26P3_KONTROLPILOT_NASKAH_PELAPORAN_2026_03_01.md`
+- Tahap 2 hardening usability matrix (pagination):
+  - `docs/process/TODO_ACL26P4_PAGINATION_MANAGEMENT_IJIN_AKSES_2026_03_01.md`
 
 ## Target Hasil
 - [x] Observasi kontrak akses existing selesai dan tervalidasi scoped.
@@ -57,6 +59,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Halaman matrix akses read-only untuk kontrol keputusan desain.
 - [x] Fitur update override akses untuk pilot modul `catatan-keluarga`.
 - [x] Jejak audit perubahan ijin akses (`changed_by`, waktu, before/after).
+- [x] Pagination matrix management ijin akses (`page/per_page`) untuk observasi data skala besar.
 
 ## Langkah Eksekusi
 - [x] Audit kontrak akses existing (`RoleMenuVisibilityService`, middleware, matrix role).
@@ -64,6 +67,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Implementasi Tahap 1 read-only matrix super-admin.
 - [ ] Validasi desain matrix bersama stakeholder domain.
 - [x] Implementasi Tahap 2 write override modul `catatan-keluarga`.
+- [x] Implementasi hardening pagination matrix management ijin akses.
 - [ ] Rollout modul berikutnya per concern terpisah.
 - [ ] Sinkronisasi dokumen domain/process/ADR pada setiap batch concern.
 
@@ -121,3 +125,10 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - Dampak produk:
   - matrix management ijin tidak lagi menampilkan impresi bahwa `super-admin` bisa mengakses monitoring kecamatan,
   - perilaku sidebar dan enforcement route menjadi koheren.
+
+## Progress Pagination Matrix (2026-03-01)
+- Concern `ACL26P4` selesai:
+  - kontrak query `page/per_page` tervalidasi backend,
+  - payload pagination matrix ditambahkan (`page`, `per_page`, `total`, `last_page`, `from`, `to`),
+  - UI matrix memiliki kontrol `baris per halaman` + `sebelumnya/berikutnya`,
+  - feature test read-only concern akses-control diperluas untuk guard pagination.

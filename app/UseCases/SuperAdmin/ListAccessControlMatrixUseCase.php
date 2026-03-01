@@ -12,6 +12,11 @@ use Illuminate\Support\Collection;
 class ListAccessControlMatrixUseCase
 {
     /**
+     * @var list<int>
+     */
+    public const PER_PAGE_OPTIONS = [10, 25, 50, 100];
+
+    /**
      * @var array<string, string>
      */
     private const MODE_LABELS = [
@@ -27,12 +32,13 @@ class ListAccessControlMatrixUseCase
     }
 
     /**
-     * @param array{scope?: string|null, role?: string|null, mode?: string|null} $filters
+     * @param array{scope?: string|null, role?: string|null, mode?: string|null, page?: int|string|null, per_page?: int|string|null} $filters
      * @return array{
-     *     filters: array{scope: string|null, role: string|null, mode: string|null},
+     *     filters: array{scope: string|null, role: string|null, mode: string|null, page: int, per_page: int},
      *     scopeOptions: list<array{value: string, label: string}>,
      *     roleOptions: list<array{value: string, label: string, scopes: list<string>}>,
      *     modeOptions: list<array{value: string, label: string}>,
+     *     perPageOptions: list<int>,
      *     rows: list<array{
      *         id: string,
      *         scope: string,
@@ -57,6 +63,14 @@ class ListAccessControlMatrixUseCase
      *         read_write: int,
      *         read_only: int,
      *         hidden: int
+     *     },
+     *     pagination: array{
+     *         page: int,
+     *         per_page: int,
+     *         total: int,
+     *         last_page: int,
+     *         from: int,
+     *         to: int
      *     }
      * }
      */
@@ -65,28 +79,47 @@ class ListAccessControlMatrixUseCase
         $scopeFilter = $this->normalizeFilter($filters['scope'] ?? null);
         $roleFilter = $this->normalizeFilter($filters['role'] ?? null);
         $modeFilter = $this->normalizeFilter($filters['mode'] ?? null);
+        $page = $this->normalizePage($filters['page'] ?? null);
+        $perPage = $this->normalizePerPage($filters['per_page'] ?? null);
 
         $roleScopePairs = $this->roleScopePairs();
         $pilotOverridesByModule = $this->pilotOverridesByModule();
         $rows = $this->buildRows($roleScopePairs, $pilotOverridesByModule);
         $filteredRows = $this->filterRows($rows, $scopeFilter, $roleFilter, $modeFilter);
+        $filteredRowsCount = $filteredRows->count();
+        $lastPage = max(1, (int) ceil($filteredRowsCount / $perPage));
+        $effectivePage = min($page, $lastPage);
+        $paginatedRows = $this->paginateRows($filteredRows, $effectivePage, $perPage);
+        $from = $filteredRowsCount === 0 ? 0 : (($effectivePage - 1) * $perPage) + 1;
+        $to = $filteredRowsCount === 0 ? 0 : min($effectivePage * $perPage, $filteredRowsCount);
 
         return [
             'filters' => [
                 'scope' => $scopeFilter,
                 'role' => $roleFilter,
                 'mode' => $modeFilter,
+                'page' => $effectivePage,
+                'per_page' => $perPage,
             ],
             'scopeOptions' => $this->scopeOptions(),
             'roleOptions' => $this->roleOptions($roleScopePairs),
             'modeOptions' => $this->modeOptions(),
-            'rows' => $filteredRows->values()->all(),
+            'perPageOptions' => $this->perPageOptions(),
+            'rows' => $paginatedRows->values()->all(),
             'summary' => [
                 'total_rows' => $rows->count(),
-                'filtered_rows' => $filteredRows->count(),
+                'filtered_rows' => $filteredRowsCount,
                 'read_write' => $filteredRows->where('mode', RoleMenuVisibilityService::MODE_READ_WRITE)->count(),
                 'read_only' => $filteredRows->where('mode', RoleMenuVisibilityService::MODE_READ_ONLY)->count(),
                 'hidden' => $filteredRows->where('mode', RoleMenuVisibilityService::MODE_HIDDEN)->count(),
+            ],
+            'pagination' => [
+                'page' => $effectivePage,
+                'per_page' => $perPage,
+                'total' => $filteredRowsCount,
+                'last_page' => $lastPage,
+                'from' => $from,
+                'to' => $to,
             ],
         ];
     }
@@ -170,6 +203,17 @@ class ListAccessControlMatrixUseCase
         }
 
         return $rows;
+    }
+
+    /**
+     * @param Collection<int, array<string, mixed>> $rows
+     * @return Collection<int, array<string, mixed>>
+     */
+    private function paginateRows(Collection $rows, int $page, int $perPage): Collection
+    {
+        $offset = ($page - 1) * $perPage;
+
+        return $rows->slice($offset, $perPage);
     }
 
     /**
@@ -276,6 +320,14 @@ class ListAccessControlMatrixUseCase
             ->all();
     }
 
+    /**
+     * @return list<int>
+     */
+    private function perPageOptions(): array
+    {
+        return self::PER_PAGE_OPTIONS;
+    }
+
     private function groupLabel(string $group): string
     {
         return match ($group) {
@@ -308,5 +360,20 @@ class ListAccessControlMatrixUseCase
         $trimmed = trim($value);
 
         return $trimmed !== '' ? $trimmed : null;
+    }
+
+    private function normalizePage(mixed $value): int
+    {
+        $page = is_numeric($value) ? (int) $value : 1;
+
+        return max(1, $page);
+    }
+
+    private function normalizePerPage(mixed $value): int
+    {
+        $perPage = is_numeric($value) ? (int) $value : 25;
+        $allowed = $this->perPageOptions();
+
+        return in_array($perPage, $allowed, true) ? $perPage : 25;
     }
 }

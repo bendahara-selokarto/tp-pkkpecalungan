@@ -43,6 +43,8 @@ class AccessControlManagementController extends Controller
                 RoleMenuVisibilityService::MODE_READ_ONLY,
                 'hidden',
             ])],
+            'page' => ['nullable', 'integer', 'min:1'],
+            'per_page' => ['nullable', 'integer', Rule::in(ListAccessControlMatrixUseCase::PER_PAGE_OPTIONS)],
         ]);
 
         return Inertia::render('SuperAdmin/AccessControl/Index', $this->listAccessControlMatrixUseCase->execute($filters));
