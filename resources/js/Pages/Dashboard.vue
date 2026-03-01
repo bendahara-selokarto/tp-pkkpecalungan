@@ -1351,7 +1351,7 @@ const hasLegacyLevelDistributionData = computed(() =>
           </label>
           <select
             v-model="selectedMode"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
+            class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
             @change="onModeChange"
           >
             <option v-for="modeOption in MODE_OPTIONS" :key="modeOption.value" :value="modeOption.value">
@@ -1367,7 +1367,7 @@ const hasLegacyLevelDistributionData = computed(() =>
           <select
             v-model="selectedLevel"
             :disabled="!isByLevelMode"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+            class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
             @change="onLevelChange"
           >
             <option v-for="levelOption in LEVEL_OPTIONS" :key="levelOption.value" :value="levelOption.value">
@@ -1384,7 +1384,7 @@ const hasLegacyLevelDistributionData = computed(() =>
             v-if="availableSubLevelOptions.length > 1"
             v-model="selectedSubLevel"
             :disabled="!isBySubLevelMode"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+            class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
             @change="onSubLevelApply"
           >
             <option
@@ -1400,7 +1400,7 @@ const hasLegacyLevelDistributionData = computed(() =>
             v-model="selectedSubLevel"
             :disabled="!isBySubLevelMode"
             type="text"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+            class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
             placeholder="Ketik nama atau kode wilayah turunan"
             @keyup.enter="onSubLevelApply"
             @blur="onSubLevelApply"
@@ -1413,7 +1413,7 @@ const hasLegacyLevelDistributionData = computed(() =>
         <div class="flex items-end">
           <button
             type="button"
-            class="w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+            class="min-h-[44px] w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
             @click="applyFilters"
           >
             Tampilkan Data
@@ -1444,7 +1444,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                 <select
                   v-if="section.filter.queryKey === 'section2_group' || section.filter.queryKey === 'section3_group'"
                   :value="resolveSectionGroupFilterValue(section.filter.queryKey)"
-                  class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
                   @change="onSectionGroupFilterChange(section.filter.queryKey, $event.target.value)"
                 >
                   <option
@@ -1585,7 +1585,7 @@ const hasLegacyLevelDistributionData = computed(() =>
                       </label>
                       <select
                         v-model="selectedSection1Month"
-                        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
+                        class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
                         @change="onSection1MonthChange"
                       >
                         <option
