@@ -44,11 +44,14 @@ Status: `active` (`responsive-ux-refactor`)
 - [ ] `M7` Terapkan guard modal aksesibel: initial focus, focus trap, restore focus, dan `Escape` close.
 - [ ] `M8` Batasi scope PR concern ini hanya pada layer UI; perubahan backend/domain ditolak dan dipisah concern.
 - [ ] `M9` Simpan jalur rollback per batch (commit kecil + fallback komponen lama) untuk minimalkan blast radius.
+- [ ] `M10` Hardening khusus Dashboard: semua kontrol filter utama (`mode`, `level`, `sub_level`, CTA) wajib memenuhi target sentuh minimum 44px.
+- [ ] `M11` Sinkronkan status concern dashboard pada registry SOT sebelum concern UI batch dinyatakan selesai.
 
 ## Exit Criteria Mitigasi
 - [ ] Semua halaman batch aktif lolos uji breakpoint `360/390/768/1024/1280` tanpa layout break.
 - [ ] Tabel mobile batch aktif tetap terbaca dengan label kolom yang jelas.
 - [ ] Komponen interaktif utama batch aktif memenuhi minimum target sentuh 44px.
+- [ ] Kontrol filter utama Dashboard (`Cara Tampil`, `Cakupan Wilayah`, `Wilayah Turunan`, `Tampilkan Data`) memenuhi minimum target sentuh 44px.
 - [ ] Navigasi dan modal batch aktif usable penuh via keyboard (`Tab`, `Enter`, `Space`, `Escape`).
 - [ ] Tidak ada perubahan route/use case/repository/policy pada PR refactor concern ini.
 
