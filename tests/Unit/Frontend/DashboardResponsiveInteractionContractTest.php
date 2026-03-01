@@ -12,19 +12,15 @@ class DashboardResponsiveInteractionContractTest extends TestCase
 
         $this->assertNotFalse($content, 'File Dashboard.vue tidak dapat dibaca.');
         $this->assertStringContainsString(
-            "const isResponsiveTableV2Enabled = computed(() => import.meta.env.VITE_UI_RESPONSIVE_TABLE_V2 !== 'false')",
+            'const showLegacyFallback = computed(() =>',
             $content
         );
         $this->assertStringContainsString(
-            '<ResponsiveDataTable',
+            'Boolean(import.meta.env.DEV)',
             $content
         );
         $this->assertStringContainsString(
-            'v-if="isResponsiveTableV2Enabled"',
-            $content
-        );
-        $this->assertStringContainsString(
-            '<div v-else class="mt-4 overflow-x-auto rounded-md border border-slate-200 dark:border-slate-700">',
+            '<template v-else-if="showLegacyFallback">',
             $content
         );
     }
@@ -44,4 +40,3 @@ class DashboardResponsiveInteractionContractTest extends TestCase
         );
     }
 }
-

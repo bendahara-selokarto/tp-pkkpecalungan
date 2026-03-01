@@ -95,7 +95,7 @@ class DesaActivityTest extends TestCase
         $response = $this->actingAs($user)->post('/desa/activities', [
             'title' => 'Kegiatan dengan Lampiran Desa',
             'activity_date' => '2026-02-12',
-            'image_upload' => UploadedFile::fake()->image('kegiatan-desa.jpg'),
+            'image_upload' => $this->fakeJpegUpload('kegiatan-desa.jpg'),
             'document_upload' => UploadedFile::fake()->create('kegiatan-desa.pdf', 120, 'application/pdf'),
         ]);
 
@@ -147,6 +147,13 @@ class DesaActivityTest extends TestCase
         ]);
         Storage::disk('public')->assertMissing($imagePath);
         Storage::disk('public')->assertMissing($documentPath);
+    }
+
+    private function fakeJpegUpload(string $fileName): UploadedFile
+    {
+        $jpegBinary = base64_decode('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAABAAEDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAVEQEBAAAAAAAAAAAAAAAAAAABAP/aAAwDAQACEAMQAAAAqgD/xAAUEAEAAAAAAAAAAAAAAAAAAAAQ/9oACAEBAAEFAm//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/AT//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/AT//2Q==', true);
+
+        return UploadedFile::fake()->createWithContent($fileName, $jpegBinary === false ? '' : $jpegBinary);
     }
 
     #[Test]

@@ -71,10 +71,10 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'pelaksanaan_4' => 'Pelaksanaan 4',
             'pelaksanaan_5' => 'Pelaksanaan 5',
             'penutup' => 'Penutup contoh',
-            'lampiran_6a_foto' => [UploadedFile::fake()->image('6a.jpg')],
-            'lampiran_6b_foto' => [UploadedFile::fake()->image('6b.jpg')],
+            'lampiran_6a_foto' => [$this->fakeJpegUpload('6a.jpg')],
+            'lampiran_6b_foto' => [$this->fakeJpegUpload('6b.jpg')],
             'lampiran_6d_dokumen' => [UploadedFile::fake()->create('6d.pdf', 10, 'application/pdf')],
-            'lampiran_6e_foto' => [UploadedFile::fake()->image('6e.jpg')],
+            'lampiran_6e_foto' => [$this->fakeJpegUpload('6e.jpg')],
         ])->assertStatus(302);
 
         $report = PilotProjectNaskahPelaporanReport::query()
@@ -117,7 +117,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'pelaksanaan_5' => 'Pelaksanaan 5 revisi',
             'penutup' => 'Penutup revisi',
             'remove_attachment_ids' => [$attachmentToRemove->id],
-            'lampiran_6e_foto' => [UploadedFile::fake()->image('6e-baru.jpg')],
+            'lampiran_6e_foto' => [$this->fakeJpegUpload('6e-baru.jpg')],
         ])->assertStatus(302);
 
         $this->assertDatabaseMissing('pilot_project_naskah_pelaporan_attachments', [
@@ -190,5 +190,12 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'pelaksanaan_5' => 'Pelaksanaan 5',
             'penutup' => 'Penutup contoh',
         ])->assertSessionHasErrors(['surat_tanggal']);
+    }
+
+    private function fakeJpegUpload(string $fileName): UploadedFile
+    {
+        $jpegBinary = base64_decode('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAABAAEDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAVEQEBAAAAAAAAAAAAAAAAAAABAP/aAAwDAQACEAMQAAAAqgD/xAAUEAEAAAAAAAAAAAAAAAAAAAAQ/9oACAEBAAEFAm//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/AT//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/AT//2Q==', true);
+
+        return UploadedFile::fake()->createWithContent($fileName, $jpegBinary === false ? '' : $jpegBinary);
     }
 }

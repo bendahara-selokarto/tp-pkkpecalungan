@@ -128,7 +128,7 @@ class KecamatanActivityTest extends TestCase
             'title' => 'Kegiatan Lampiran Baru',
             'activity_date' => '2026-02-24',
             'status' => 'published',
-            'image_upload' => UploadedFile::fake()->image('new-image.jpg'),
+            'image_upload' => $this->fakeJpegUpload('new-image.jpg'),
             'document_upload' => UploadedFile::fake()->create('new-doc.pdf', 120, 'application/pdf'),
         ])->assertStatus(302);
 
@@ -180,6 +180,13 @@ class KecamatanActivityTest extends TestCase
         ]);
         Storage::disk('public')->assertMissing($imagePath);
         Storage::disk('public')->assertMissing($documentPath);
+    }
+
+    private function fakeJpegUpload(string $fileName): UploadedFile
+    {
+        $jpegBinary = base64_decode('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAABAAEDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAVEQEBAAAAAAAAAAAAAAAAAAABAP/aAAwDAQACEAMQAAAAqgD/xAAUEAEAAAAAAAAAAAAAAAAAAAAQ/9oACAEBAAEFAm//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/AT//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/AT//2Q==', true);
+
+        return UploadedFile::fake()->createWithContent($fileName, $jpegBinary === false ? '' : $jpegBinary);
     }
 
     #[Test]
