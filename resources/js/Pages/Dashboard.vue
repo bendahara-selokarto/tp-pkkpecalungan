@@ -959,9 +959,6 @@ const resolveDocumentCoverageItems = (block) => {
 const resolveCoverageDimension = (block) =>
   normalizeToken(block?.charts?.coverage_per_module?.dimension, 'module')
 
-const resolveCoverageChartHeading = (block) =>
-  (resolveCoverageDimension(block) === 'desa' ? 'Cakupan Per Desa' : 'Cakupan Per Modul')
-
 const resolveCoverageListHeading = (block) =>
   (resolveCoverageDimension(block) === 'desa' ? 'Nilai Per Desa' : 'Nilai Per Modul')
 
@@ -977,19 +974,6 @@ const resolveCoverageItemDetail = (item) => {
 
   return entries.join(' | ')
 }
-
-const buildDocumentCoverageChartData = (block) => {
-  const items = resolveDocumentCoverageItems(block)
-
-  return buildSingleDataset(
-    items.map((item) => item.label),
-    items.map((item) => item.total),
-    '#10b981',
-  )
-}
-
-const hasDocumentCoverageData = (block) =>
-  resolveDocumentCoverageItems(block).some((item) => item.total > 0)
 
 const buildActivityMonthlyMultiAxisSeries = (block) => {
   const values = (block?.charts?.monthly?.values ?? []).map((value) => toNumber(value))
@@ -1243,11 +1227,42 @@ const hasActivityByDesaBookCoverageData = (block) =>
   ['books_total', 'books_filled'].some((metricKey) =>
     (block?.charts?.by_desa?.[metricKey] ?? []).some((value) => toNumber(value) > 0))
 
-const buildActivityLevelChartData = (block) => {
-  const labels = block?.charts?.level?.labels ?? ['Desa', 'Kecamatan']
-  const values = (block?.charts?.level?.values ?? [0, 0]).map((value) => toNumber(value))
+const resolveBookComparisonMetrics = (block) => {
+  if (block?.kind === 'documents') {
+    return {
+      totalBooks: toNumber(block?.stats?.total_buku_tracked),
+      filledBooks: toNumber(block?.stats?.buku_terisi),
+    }
+  }
 
-  return buildSingleDataset(labels, values, ['#06b6d4', '#6366f1'])
+  const chartValues = Array.isArray(block?.charts?.book_comparison?.values)
+    ? block.charts.book_comparison.values
+    : []
+  if (chartValues.length >= 2) {
+    return {
+      totalBooks: toNumber(chartValues[0] ?? 0),
+      filledBooks: toNumber(chartValues[1] ?? 0),
+    }
+  }
+
+  return {
+    totalBooks: toNumber(block?.stats?.books_total),
+    filledBooks: toNumber(block?.stats?.books_filled),
+  }
+}
+const buildBookComparisonChartData = (block) => {
+  const { totalBooks, filledBooks } = resolveBookComparisonMetrics(block)
+
+  return buildSingleDataset(
+    ['Jumlah Buku', 'Buku Terisi'],
+    [totalBooks, filledBooks],
+    ['#7e22ce', '#16a34a'],
+  )
+}
+const hasBookComparisonData = (block) => {
+  const { totalBooks, filledBooks } = resolveBookComparisonMetrics(block)
+
+  return totalBooks > 0 || filledBooks > 0
 }
 
 // Legacy fallback while dynamic blocks are still rolling out.
@@ -1299,10 +1314,10 @@ const legacyCoveragePerLampiranChartData = computed(() => buildSingleDataset(
   '#0ea5e9',
 ))
 
-const legacyLevelDistributionChartData = computed(() => buildSingleDataset(
-  documentCharts.value.level_distribution?.labels ?? ['Desa', 'Kecamatan'],
-  (documentCharts.value.level_distribution?.values ?? [0, 0]).map((value) => toNumber(value)),
-  ['#f59e0b', '#6366f1'],
+const legacyBookComparisonChartData = computed(() => buildSingleDataset(
+  ['Jumlah Buku', 'Buku Terisi'],
+  [toNumber(documentStats.value.total_buku_tracked), toNumber(documentStats.value.buku_terisi)],
+  ['#7e22ce', '#16a34a'],
 ))
 
 const legacyLampiranCoverageItems = computed(() => {
@@ -1323,22 +1338,12 @@ const legacyLampiranCoverageItems = computed(() => {
   }))
 })
 
-const legacyLevelDistributionItems = computed(() => {
-  const labels = documentCharts.value.level_distribution?.labels ?? ['Desa', 'Kecamatan']
-  const values = documentCharts.value.level_distribution?.values ?? [0, 0]
-
-  return labels.map((label, index) => ({
-    label: String(label),
-    total: toNumber(values[index] ?? 0),
-  }))
-})
-
 const hasLegacyLampiranCoverageData = computed(() =>
   legacyLampiranCoverageItems.value.some((item) => item.total > 0),
 )
 
-const hasLegacyLevelDistributionData = computed(() =>
-  legacyLevelDistributionItems.value.some((item) => item.total > 0),
+const hasLegacyBookComparisonData = computed(() =>
+  toNumber(documentStats.value.total_buku_tracked) > 0 || toNumber(documentStats.value.buku_terisi) > 0,
 )
 </script>
 
@@ -1551,12 +1556,12 @@ const hasLegacyLevelDistributionData = computed(() =>
               <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    {{ resolveCoverageChartHeading(block) }}
+                    Jumlah Buku vs Buku Terisi
                   </h4>
                   <div class="h-80">
-                    <BarChart :data="buildDocumentCoverageChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" horizontal />
+                    <BarChart :data="buildBookComparisonChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
                   </div>
-                  <p v-if="!hasDocumentCoverageData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
+                  <p v-if="!hasBookComparisonData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
                     Belum ada data untuk filter yang dipilih.
                   </p>
                 </div>
@@ -1680,11 +1685,14 @@ const hasLegacyLevelDistributionData = computed(() =>
 
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Distribusi Level
+                    Jumlah Buku vs Buku Terisi
                   </h4>
                   <div class="h-72">
-                    <BarChart :data="buildActivityLevelChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
+                    <BarChart :data="buildBookComparisonChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
                   </div>
+                  <p v-if="!hasBookComparisonData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
+                    Belum ada data untuk filter yang dipilih.
+                  </p>
                 </div>
               </div>
             </template>
@@ -1745,23 +1753,13 @@ const hasLegacyLevelDistributionData = computed(() =>
 
       <div class="mb-6">
         <CardBox>
-          <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Distribusi Level Data Dokumen</h3>
+          <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Jumlah Buku vs Buku Terisi</h3>
           <div class="h-72">
-            <BarChart :data="legacyLevelDistributionChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
+            <BarChart :data="legacyBookComparisonChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
           </div>
-          <p v-if="!hasLegacyLevelDistributionData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
-            Belum ada data terhitung pada distribusi level dokumen untuk wilayah ini.
+          <p v-if="!hasLegacyBookComparisonData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
+            Belum ada data buku terhitung untuk wilayah ini.
           </p>
-          <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <div
-              v-for="item in legacyLevelDistributionItems"
-              :key="`level-${item.label}`"
-              class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
-            >
-              <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
-              <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
-            </div>
-          </div>
         </CardBox>
       </div>
     </template>

@@ -81,6 +81,7 @@ class BuildRoleAwareDashboardBlocksUseCase
                 $groupModes,
                 $activityData,
                 $documentItems,
+                is_array($documentData['stats'] ?? null) ? $documentData['stats'] : [],
                 $dashboardContext
             );
         }
@@ -93,6 +94,7 @@ class BuildRoleAwareDashboardBlocksUseCase
                     $effectiveScope,
                     (string) ($groupModes[$desaPokjaOwnGroup] ?? RoleMenuVisibilityService::MODE_READ_ONLY),
                     $activityData,
+                    $this->resolveBookSummaryByGroup($desaPokjaOwnGroup, $documentItems, $dashboardContext),
                     $dashboardContext,
                     null
                 ),
@@ -106,6 +108,7 @@ class BuildRoleAwareDashboardBlocksUseCase
                 $effectiveScope,
                 (string) $groupModes['sekretaris-tpk'],
                 $activityData,
+                $this->resolveBookSummaryFromStats(is_array($documentData['stats'] ?? null) ? $documentData['stats'] : []),
                 $dashboardContext,
                 null
             );
@@ -163,6 +166,7 @@ class BuildRoleAwareDashboardBlocksUseCase
 
     /**
      * @param array<string, mixed> $activityData
+     * @param array<string, mixed> $bookSummary
      * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
      * @return array<string, mixed>
      */
@@ -170,6 +174,7 @@ class BuildRoleAwareDashboardBlocksUseCase
         string $effectiveScope,
         string $mode,
         array $activityData,
+        array $bookSummary,
         array $dashboardContext,
         ?array $section
     ): array {
@@ -178,6 +183,7 @@ class BuildRoleAwareDashboardBlocksUseCase
             $effectiveScope,
             $mode,
             $activityData,
+            $bookSummary,
             $dashboardContext,
             $section
         );
@@ -185,6 +191,7 @@ class BuildRoleAwareDashboardBlocksUseCase
 
     /**
      * @param array<string, mixed> $activityData
+     * @param array<string, mixed> $bookSummary
      * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
      * @return array<string, mixed>
      */
@@ -193,10 +200,15 @@ class BuildRoleAwareDashboardBlocksUseCase
         string $effectiveScope,
         string $mode,
         array $activityData,
+        array $bookSummary,
         array $dashboardContext,
         ?array $section
     ): array {
         $groupLabel = self::GROUP_LABELS[$groupKey] ?? $groupKey;
+        $stats = is_array($activityData['stats'] ?? null) ? $activityData['stats'] : [];
+        $charts = is_array($activityData['charts'] ?? null) ? $activityData['charts'] : [];
+        $booksTotal = (int) ($bookSummary['total_buku_tracked'] ?? 0);
+        $booksFilled = (int) ($bookSummary['buku_terisi'] ?? 0);
 
         $block = [
             'key' => sprintf('activity-%s', $groupKey),
@@ -209,8 +221,16 @@ class BuildRoleAwareDashboardBlocksUseCase
                 $groupLabel,
                 strtoupper($effectiveScope)
             ),
-            'stats' => $activityData['stats'] ?? [],
-            'charts' => $activityData['charts'] ?? [],
+            'stats' => array_merge($stats, [
+                'books_total' => $booksTotal,
+                'books_filled' => $booksFilled,
+            ]),
+            'charts' => array_merge($charts, [
+                'book_comparison' => [
+                    'labels' => ['Jumlah Buku', 'Buku Terisi'],
+                    'values' => [$booksTotal, $booksFilled],
+                ],
+            ]),
             'sources' => [
                 'source_group' => $groupKey,
                 'source_scope' => $effectiveScope,
@@ -222,6 +242,49 @@ class BuildRoleAwareDashboardBlocksUseCase
         ];
 
         return $this->attachSection($block, $section);
+    }
+
+    /**
+     * @param array<string, mixed> $stats
+     * @return array{total_buku_tracked: int, buku_terisi: int}
+     */
+    private function resolveBookSummaryFromStats(array $stats): array
+    {
+        return [
+            'total_buku_tracked' => (int) ($stats['total_buku_tracked'] ?? 0),
+            'buku_terisi' => (int) ($stats['buku_terisi'] ?? 0),
+        ];
+    }
+
+    /**
+     * @param Collection<int, array<string, mixed>> $documentItems
+     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @return array{total_buku_tracked: int, buku_terisi: int}
+     */
+    private function resolveBookSummaryByGroup(string $groupKey, Collection $documentItems, array $dashboardContext): array
+    {
+        $modules = $this->roleMenuVisibilityService->modulesForGroup($groupKey);
+        if ($modules === []) {
+            return [
+                'total_buku_tracked' => 0,
+                'buku_terisi' => 0,
+            ];
+        }
+
+        $groupItems = $documentItems
+            ->filter(
+                static fn (array $item): bool => in_array((string) ($item['slug'] ?? ''), $modules, true)
+            )
+            ->values();
+
+        $bukuTerisi = $groupItems->filter(
+            fn (array $item): bool => $this->resolveItemTotalByContext($item, $dashboardContext) > 0
+        )->count();
+
+        return [
+            'total_buku_tracked' => $groupItems->count(),
+            'buku_terisi' => $bukuTerisi,
+        ];
     }
 
     /**
@@ -506,6 +569,7 @@ class BuildRoleAwareDashboardBlocksUseCase
      * @param array<string, string> $groupModes
      * @param array<string, mixed> $activityData
      * @param Collection<int, array<string, mixed>> $documentItems
+     * @param array<string, mixed> $documentStats
      * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
      * @return array<int, array<string, mixed>>
      */
@@ -515,6 +579,7 @@ class BuildRoleAwareDashboardBlocksUseCase
         array $groupModes,
         array $activityData,
         Collection $documentItems,
+        array $documentStats,
         array $dashboardContext
     ): array {
         $blocks = [];
@@ -537,6 +602,7 @@ class BuildRoleAwareDashboardBlocksUseCase
             $effectiveScope,
             $sekretarisMode,
             $activityData,
+            $this->resolveBookSummaryFromStats($documentStats),
             [
                 'mode' => 'by-level',
                 'level' => $effectiveScope,

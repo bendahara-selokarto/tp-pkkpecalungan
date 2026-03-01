@@ -17,6 +17,7 @@ Catatan lanjutan visual minimalis:
 - Baseline visual untuk fase minimalis mengacu ke dashboard role `kecamatan-sekretaris` versi aktif saat ini.
 - Update 2026-03-01: representasi dashboard disederhanakan ke `single-section` pada UI aktif; section 2/3/4 dipertahankan sebagai jejak historis kontrak awal.
 - Update 2026-03-01 (concern pokja desa): role `desa-pokja-i..iv` pada UI aktif memakai chart activity bulanan pokja sendiri (tetap scoped ke area desa sendiri).
+- Update 2026-03-01 (concern buku chart): chart `Distribusi Level` dihapus dari UI aktif dan diganti `Jumlah Buku vs Buku Terisi` pada role terkait.
 
 ## Konteks
 
