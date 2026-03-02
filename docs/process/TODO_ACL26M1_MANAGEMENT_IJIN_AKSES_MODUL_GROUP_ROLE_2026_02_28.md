@@ -1,7 +1,7 @@
 # TODO ACL26M1 Management Ijin Akses Berbasis Modul dan Group Role 2026-02-28
 
 Tanggal: 2026-02-28  
-Status: `in-progress`  
+Status: `in-progress` (`state:phased-rollout`, `state:awaiting-stakeholder-validation`)  
 Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 
 ## Konteks
@@ -136,3 +136,15 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - Endpoint override digeneralisasi menjadi `PUT/DELETE /super-admin/access-control/override` dengan payload `module`.
 - Validasi role-scope-module ditambahkan untuk mencegah kombinasi override yang tidak kompatibel.
 - Resolver runtime kini membaca override hanya dari daftar modul rollout terkelola (`catatan-keluarga`, `activities`) dengan fallback hardcoded tetap aktif.
+
+## Mitigasi Ringan Blocker Eksternal (2026-03-02)
+- [x] Scope rollout dibekukan sementara pada modul terkelola saat ini (`catatan-keluarga`, `activities`) sampai validasi stakeholder selesai.
+- [x] Evidence pack teknis dikunci di concern ini:
+  - ringkasan perubahan per tahap (`read-only` -> `pilot` -> `rollout batch 1`),
+  - daftar file terdampak lintas layer,
+  - hasil validasi targeted suite (`PASS`, `26` tests, `280` assertions).
+- [x] Fallback operasional dikunci:
+  - rollback per kombinasi role-scope-module tetap tersedia,
+  - fallback global ke hardcoded tetap tersedia via flag konfigurasi.
+- [x] Agenda validasi stakeholder dijadwalkan pada siklus review mingguan berikutnya (`2026-03-09`).
+- [ ] Eksekusi sesi validasi stakeholder matrix dan catat keputusan final (go/hold/adjust) pada concern ini.
