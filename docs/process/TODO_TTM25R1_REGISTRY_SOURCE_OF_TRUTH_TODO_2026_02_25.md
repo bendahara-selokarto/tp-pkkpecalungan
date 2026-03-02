@@ -41,7 +41,7 @@ Status: `in-progress` (`state:truth-registry`, `state:deterministic-routing`)
 | `C-PROCESS-EXECUTION` | Jalur eksekusi AI zero ambiguity + self-reflective routing | `docs/process/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md` | `done` | `TODO_ZERO_AMBIGUITY_AI_SINGLE_PATH_2026_02_23.md` (`historical-baseline`), `TODO_FLOW_BACA_LAPOR_SINKRON_HEADER_TABEL.md` (`child-spec`), `TODO_BTLK26A1_OPTIMASI_BOTTLENECK_PROCESS_EXECUTION_2026_03_01.md` (`child-spec:done`), `docs/adr/ADR_0003_SELF_REFLECTIVE_ROUTING.md` (`decision-record`) | Eksekusi AI concern process wajib mengikuti single-path aktif dengan checkpoint refleksi terkontrol sebelum patch besar. |
 | `C-FIXTURE-TEMPLATE` | Konsistensi fixture dan template report print | `docs/process/TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md` | `done` | `docs/process/OPERATIONAL_VALIDATION_LOG.md` (`blocker-trace`) | Kegagalan residual fixture/template ditangani di concern ini (terpisah dari process execution); status disinkronkan 2026-03-02 setelah targeted tests hijau. |
 | `C-DOC-ARCH-V2` | Refactor arsitektur markdown TODO + ADR | `docs/process/TODO_MDA26R1_REFACTOR_MARKDOWN_ARSITEKTUR_BARU_2026_02_28.md` | `done` | `docs/adr/ADR_0001_DOCUMENTATION_GOVERNANCE_TODO_ADR.md` (`decision-record`) | Concern dokumentasi arsitektural mengikuti pasangan TODO + ADR; sinkronisasi wajib lintas AGENTS/single-path/playbook/index. |
-| `C-PDF-AUDIT` | Audit ketersediaan format PDF | `docs/process/TODO_PDF26A1_AUDIT_KETERSEDIAAN_FORMAT_PDF_2026_02_28.md` | `in-progress` (`state:operational-follow-up`) | `docs/process/TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md` (`child-spec:in-progress`) | `PDF26A1` dikunci sebagai baseline audit; eksekusi audit berkala dipindah ke `PDF26A2` agar status concern tidak drift. |
+| `C-PDF-AUDIT` | Audit ketersediaan format PDF | `docs/process/TODO_PDF26A1_AUDIT_KETERSEDIAAN_FORMAT_PDF_2026_02_28.md` | `in-progress` (`state:operational-follow-up`) | `docs/process/TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md` (`child-spec:done`) | `PDF26A1` dikunci sebagai baseline audit; eksekusi audit berkala dipindah ke `PDF26A2` agar status concern tidak drift (sinkronisasi siklus 2026-03-02). |
 
 ## Daftar Dokumen Ambigu yang Diturunkan Statusnya
 
@@ -76,6 +76,7 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 - [x] Relasi parent-child concern availability/autentik buku dan monitoring visibility dikunci untuk mencegah ambiguity update status.
 - [x] Sinkronisasi hasil audit sesi dicatat pada `docs/process/OPERATIONAL_VALIDATION_LOG.md`.
 - [x] Concern `C-MODULE-VISIBILITY` disinkronkan ke status `done` (`rolling-monitoring`) setelah mitigasi ringan output wajib + validasi targeted 2026-03-02.
+- [x] Child concern `PDF26A2` disinkronkan ke `done` untuk siklus audit PDF 2026-03-02; registry insiden diperbarui pada `PDF26A1`.
 
 ## Kriteria Exit Rolling
 
