@@ -102,6 +102,33 @@ Keputusan:
 Status:
 - `PASS`.
 
+## Penutupan Concern ASM26B1 Management Arsip Super Admin: 2026-03-02
+
+Ruang lingkup:
+- Menutup drift status dokumentasi concern `ASM26B1` yang masih `in-progress` walau implementasi sudah berjalan.
+- Menyinkronkan checklist TODO, status registry SOT, dan bukti validasi runtime terbaru.
+
+Artefak:
+- `docs/process/TODO_ASM26B1_MANAGEMENT_ARSIP_SUPER_ADMIN_2026_02_27.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/process/OPERATIONAL_VALIDATION_LOG.md`
+
+Perintah validasi:
+- `php artisan test tests/Feature/ArsipTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Feature/SuperAdmin/ArsipManagementTest.php tests/Unit/Policies/ArsipDocumentPolicyTest.php --stop-on-failure`
+  - hasil: `PASS` (`18` tests, `83` assertions).
+- `php artisan test`
+  - hasil: `PASS` (`1002` tests, `6317` assertions).
+
+Keputusan:
+- Status concern `C-ARSIP-MGMT` dikunci ke `done`.
+- Kontrak visibilitas final tetap:
+  - arsip unggahan `super-admin` bersifat global,
+  - arsip private non-super-admin tetap owner-managed,
+  - monitoring arsip desa tetap read-only khusus jalur kecamatan.
+
+Status:
+- `PASS` (`asm26b1-closed`).
+
 ### R4. Verifikasi PDF Sample Desa dan Kecamatan
 
 Metode verifikasi baseline (otomatis):
@@ -1174,3 +1201,47 @@ Keputusan:
 
 Status:
 - `PARTIAL` (`implementation-done`, `test-execution-blocked-by-environment`).
+
+## Sinkronisasi Strategi Test Bertahap Lintas Proses: 2026-03-02
+
+Ruang lingkup:
+- Menyelaraskan kontrak efisiensi test dari `AGENTS.md` ke dokumen proses utama tanpa mengurangi quality gate.
+- Menjaga konsistensi wording: targeted untuk iterasi, fail-fast saat debug, full suite di checkpoint final/perubahan signifikan.
+
+Artefak:
+- `AGENTS.md`
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+- `docs/process/TODO_BTLK26A1_OPTIMASI_BOTTLENECK_PROCESS_EXECUTION_2026_03_01.md`
+
+Perintah validasi:
+- `rg -n "targeted|stop-on-failure|checkpoint final|perubahan signifikan" AGENTS.md docs/process/AI_SINGLE_PATH_ARCHITECTURE.md docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md docs/process/TODO_BTLK26A1_OPTIMASI_BOTTLENECK_PROCESS_EXECUTION_2026_03_01.md`
+  - hasil: `PASS`.
+- `git diff -- AGENTS.md docs/process/AI_SINGLE_PATH_ARCHITECTURE.md docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md docs/process/TODO_BTLK26A1_OPTIMASI_BOTTLENECK_PROCESS_EXECUTION_2026_03_01.md`
+  - hasil: `PASS` (diff terbatas pada hardening wording/kontrak proses).
+
+Keputusan:
+- Kontrak test bertahap dikunci konsisten lintas dokumen proses.
+- Quality gate full suite tetap wajib untuk perubahan signifikan/lintas concern.
+
+Status:
+- `PASS` (`doc-only fast lane`).
+
+## Penutupan FTC26A1 Fixture/Template Consistency: 2026-03-02
+
+Ruang lingkup:
+- Menutup backlog `F4-F5` concern `docs/process/TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md`.
+- Memvalidasi ulang dua gate test residual fixture/template yang sebelumnya tertandai `BLOCKED`.
+
+Perintah validasi:
+- `php artisan test --filter=LaporanTahunanPkkReportPrintTest --stop-on-failure`
+  - hasil: `PASS` (`3` tests, `18` assertions, durasi `84.23s`).
+- `php artisan test --filter=PdfBaselineFixtureComplianceTest --stop-on-failure`
+  - hasil: `PASS` (`20` tests, `503` assertions, durasi `32.06s`).
+
+Keputusan:
+- Status concern `FTC26A1` dinaikkan menjadi `done`.
+- Tidak ditemukan fail residual pada jalur fixture/template concern ini.
+
+Status:
+- `PASS` (`ftc26a1-closed`).

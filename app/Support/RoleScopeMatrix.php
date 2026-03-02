@@ -45,7 +45,6 @@ class RoleScopeMatrix
                 'kecamatan-pokja-iv',
                 // Backward compatibility.
                 'admin-kecamatan',
-                'super-admin',
             ],
         ];
     }

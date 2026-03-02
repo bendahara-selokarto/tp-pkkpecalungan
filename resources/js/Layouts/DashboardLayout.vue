@@ -29,7 +29,6 @@ const persistSidebarCollapsedPreference = (collapsed) => {
 const isAsideMobileExpanded = ref(false)
 const isAsideLgActive = ref(false)
 const isAsideDesktopCollapsed = ref(readSidebarCollapsedPreference())
-const themeMenuOpen = ref(false)
 const runtimeErrorVisible = ref(false)
 let removeNavigateListener = null
 
@@ -93,6 +92,27 @@ const isModuleAllowedForCurrentUser = (item) => {
   return !!moduleModes.value[moduleSlug]
 }
 
+const buildCatatanKeluargaReportItems = (scope) => ([
+  { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga' },
+  { href: `/${scope}/catatan-keluarga/rekap-dasa-wisma/report/pdf`, label: 'Rekap Catatan Warga Dasa Wisma' },
+  { href: `/${scope}/catatan-keluarga/rekap-pkk-rt/report/pdf`, label: 'Rekap Catatan Warga PKK RT' },
+  { href: `/${scope}/catatan-keluarga/catatan-pkk-rw/report/pdf`, label: 'Catatan Warga PKK RW' },
+  { href: `/${scope}/catatan-keluarga/rekap-rw/report/pdf`, label: 'Catatan Warga Dusun/Lingkungan' },
+  { href: `/${scope}/catatan-keluarga/tp-pkk-desa-kelurahan/report/pdf`, label: 'Catatan Warga TP PKK Desa/Kelurahan' },
+  { href: `/${scope}/catatan-keluarga/tp-pkk-kecamatan/report/pdf`, label: 'Catatan Warga TP PKK Kecamatan' },
+  { href: `/${scope}/catatan-keluarga/tp-pkk-kabupaten-kota/report/pdf`, label: 'Catatan Warga TP PKK Kabupaten/Kota' },
+  { href: `/${scope}/catatan-keluarga/tp-pkk-provinsi/report/pdf`, label: 'Catatan Warga TP PKK Provinsi' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-dasawisma/report/pdf`, label: 'Rekap Ibu Hamil Dasawisma' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-pkk-rt/report/pdf`, label: 'Rekap Ibu Hamil PKK RT' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-pkk-rw/report/pdf`, label: 'Rekap Ibu Hamil PKK RW' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-pkk-dusun-lingkungan/report/pdf`, label: 'Rekap Ibu Hamil PKK Dusun/Lingkungan' },
+  { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-tp-pkk-kecamatan/report/pdf`, label: 'Rekap Ibu Hamil TP PKK Kecamatan' },
+  { href: `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`, label: 'Data Umum PKK' },
+  { href: `/${scope}/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf`, label: 'Data Umum PKK Kecamatan' },
+  { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Data Kegiatan PKK Pokja III' },
+  { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Data Kegiatan PKK Pokja IV' },
+])
+
 const buildScopedMenuGroups = (scope) => [
   {
     key: 'sekretaris-tpk',
@@ -122,6 +142,7 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja' },
       { href: `/${scope}/prestasi-lomba`, label: 'Prestasi Lomba' },
       { href: `/${scope}/laporan-tahunan-pkk`, label: 'Laporan Tahunan Tim Penggerak PKK' },
+      ...buildCatatanKeluargaReportItems(scope),
     ],
   },
   {
@@ -171,9 +192,8 @@ const buildScopedMenuGroups = (scope) => [
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
-      { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga', uiVisibility: 'disabled' },
-      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV', uiVisibility: 'disabled' },
-      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana', uiVisibility: 'disabled' },
+      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },
+      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
     ],
   },
 ]
@@ -326,7 +346,7 @@ const primaryHref = computed(() =>
   hasRole('super-admin') ? '/super-admin/users' : '/dashboard',
 )
 
-const layoutAsidePadding = computed(() => (isAsideDesktopCollapsed.value ? '' : 'xl:pl-64'))
+const layoutAsidePadding = computed(() => (isAsideDesktopCollapsed.value ? 'xl:pl-20' : 'xl:pl-64'))
 
 const toggleCollapse = () => {
   isAsideDesktopCollapsed.value = !isAsideDesktopCollapsed.value
@@ -337,9 +357,8 @@ const logout = () => {
   router.post('/logout')
 }
 
-const setTheme = (isDarkMode) => {
-  darkModeStore.set(isDarkMode, true)
-  themeMenuOpen.value = false
+const toggleTheme = () => {
+  darkModeStore.set(null, true)
 }
 
 const pkkLogo = '/images/pkk-logo.png'
@@ -350,7 +369,6 @@ const hideBrokenImage = (event) => {
 
 const showRuntimeErrorFallback = () => {
   runtimeErrorVisible.value = true
-  themeMenuOpen.value = false
 }
 
 const reloadPage = () => {
@@ -415,13 +433,6 @@ onBeforeUnmount(() => {
             </svg>
             <span class="text-xs font-medium">{{ isAsideLgActive ? 'Tutup' : 'Menu' }}</span>
           </button>
-          <button class="hidden xl:inline-flex items-center gap-2 rounded-md px-2.5 py-2 text-slate-500 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700" @click="toggleCollapse">
-            <span class="sr-only">Ringkas sidebar</span>
-            <svg class="h-5 w-5 transition-transform" :class="{ 'rotate-180': isAsideDesktopCollapsed }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-            </svg>
-            <span class="text-xs font-medium">{{ isAsideDesktopCollapsed ? 'Lebarkan' : 'Ringkas' }}</span>
-          </button>
           <Link :href="primaryHref" class="flex items-center gap-2 min-w-0">
             <img :src="pkkLogo" alt="" aria-hidden="true" class="h-6 w-6 object-contain" @error="hideBrokenImage">
             <span class="text-sm font-semibold tracking-wide uppercase text-slate-700 dark:text-slate-100 truncate">
@@ -447,36 +458,14 @@ onBeforeUnmount(() => {
           >
             Arsip
           </Link>
-          <div class="relative">
-            <button
-              type="button"
-              class="inline-flex items-center rounded-md border border-slate-300 px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
-              @click="themeMenuOpen = !themeMenuOpen"
-            >
-              Mode
-            </button>
-            <div
-              v-show="themeMenuOpen"
-              class="absolute right-0 z-50 mt-2 w-40 rounded-md border border-slate-200 bg-white p-1 shadow-lg dark:border-slate-700 dark:bg-slate-800"
-            >
-              <button
-                type="button"
-                :class="darkModeStore.isEnabled ? 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700' : 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200'"
-                class="block w-full rounded px-2 py-1.5 text-left text-sm"
-                @click="setTheme(false)"
-              >
-                Mode Siang
-              </button>
-              <button
-                type="button"
-                :class="darkModeStore.isEnabled ? 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/40 dark:text-cyan-200' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700'"
-                class="mt-1 block w-full rounded px-2 py-1.5 text-left text-sm"
-                @click="setTheme(true)"
-              >
-                Mode Malam
-              </button>
-            </div>
-          </div>
+          <button
+            type="button"
+            :class="{ 'transition-colors': !darkModeStore.isInProgress }"
+            class="inline-flex items-center rounded-md border border-slate-300 bg-white/90 px-3 py-1.5 text-xs font-semibold text-slate-700 shadow-sm backdrop-blur hover:bg-white dark:border-slate-600 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:bg-slate-900"
+            @click="toggleTheme"
+          >
+            {{ darkModeStore.isEnabled ? 'Light mode' : 'Dark mode' }}
+          </button>
           <a href="/profile" class="text-sm text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white">Profil</a>
           <button type="button" class="text-sm text-rose-600 hover:text-rose-700 dark:text-rose-400" @click="logout">
             Keluar
@@ -488,21 +477,19 @@ onBeforeUnmount(() => {
     <aside :class="[
       isAsideMobileExpanded ? 'translate-x-0' : '-translate-x-full',
       isAsideLgActive ? 'lg:translate-x-0' : 'lg:-translate-x-full',
-      isAsideDesktopCollapsed ? 'xl:-translate-x-full' : 'xl:translate-x-0',
       isAsideDesktopCollapsed ? 'xl:w-20' : 'xl:w-64',
-    ]" class="fixed inset-y-0 left-0 z-40 w-72 transform border-r border-slate-200 bg-white transition-all duration-200 ease-in-out dark:border-slate-700 dark:bg-slate-800">
+    ]" class="fixed inset-y-0 left-0 z-40 w-72 transform border-r border-slate-200 bg-white transition-all duration-200 ease-in-out dark:border-slate-700 dark:bg-slate-800 xl:translate-x-0">
       <button
         type="button"
-        class="absolute -right-3 top-20 z-50 hidden h-7 w-7 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 lg:hidden xl:inline-flex"
-        :title="isAsideDesktopCollapsed ? 'Lebarkan sidebar' : 'Ringkas sidebar'"
+        :title="isAsideDesktopCollapsed ? 'Lebarkan sidebar' : 'Minimize sidebar'"
+        class="absolute left-full top-1/2 z-50 hidden h-7 w-7 -translate-y-1/2 -ml-3 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 shadow-sm hover:bg-slate-100 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 xl:inline-flex"
         @click="toggleCollapse"
       >
-        <span class="sr-only">{{ isAsideDesktopCollapsed ? 'Lebarkan sidebar' : 'Ringkas sidebar' }}</span>
+        <span class="sr-only">Ringkas sidebar</span>
         <svg class="h-4 w-4 transition-transform" :class="{ 'rotate-180': isAsideDesktopCollapsed }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
-
       <div class="h-full flex flex-col">
         <div class="h-14 px-4 flex items-center justify-between border-b border-slate-200 dark:border-slate-700">
           <Link :href="primaryHref" :class="isAsideDesktopCollapsed ? 'justify-center w-full' : ''" class="flex items-center gap-2 min-w-0">

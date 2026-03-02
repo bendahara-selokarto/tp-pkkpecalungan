@@ -66,9 +66,10 @@ Aturan anti-ambiguity:
   - `Policy -> Scope Service`
 
 6. `Validation Ladder`
-- L1: lint/syntax/test targeted concern.
+- L1: lint/syntax/test targeted concern (jalur default iterasi cepat).
+- L1 debug fail-fast: gunakan `--stop-on-failure` saat investigasi untuk menekan output panjang.
 - L2: regression test concern terkait.
-- L3: `php artisan test` full untuk perubahan signifikan.
+- L3: `php artisan test` full pada checkpoint final atau perubahan signifikan.
 - Fast-lane `doc-only`: jika perubahan hanya `docs/**`, cukup L1 audit scoped (`rg`) + catat di validation log.
 
 7. `Doc-Hardening`
@@ -119,9 +120,9 @@ Gate E - Documentation Sync:
 
 Urutan validasi:
 1. Syntax/lint file yang diubah.
-2. Test targeted concern.
+2. Test targeted concern (prioritas iterasi lokal; boleh fail-fast saat debugging).
 3. Regression concern terdekat.
-4. Full suite (`php artisan test`) bila perubahan lintas domain, akses/policy/scope, dashboard agregat, atau migrasi/seeder canonical.
+4. Full suite (`php artisan test`) pada checkpoint final bila perubahan lintas domain, akses/policy/scope, dashboard agregat, atau migrasi/seeder canonical.
 5. Khusus `doc-only` process/domain/adr: boleh selesai di step 1 + log operasional, jika tidak ada perubahan runtime/backend contract.
 
 Kriteria selesai:

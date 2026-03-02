@@ -30,9 +30,9 @@ Status: `active` (`responsive-ux-refactor`)
 - [ ] `php artisan test` tetap hijau setelah batch refactor yang signifikan.
 
 ## Risiko
-- [ ] Risiko regresi visual lintas modul karena banyak halaman memakai pola tabel yang sama.
-- [ ] Risiko ketidakkonsistenan jika refactor dilakukan parsial tanpa kontrak komponen tunggal.
-- [ ] Risiko scope creep bila refactor UI bercampur perubahan domain/backend.
+- Risiko regresi visual lintas modul karena banyak halaman memakai pola tabel yang sama.
+- Risiko ketidakkonsistenan jika refactor dilakukan parsial tanpa kontrak komponen tunggal.
+- Risiko scope creep bila refactor UI bercampur perubahan domain/backend.
 
 ## Mitigasi per Risiko
 - [ ] `M1` Rollout bertahap per batch halaman prioritas (`Dashboard` -> `SuperAdmin Users` -> `Arsip` -> CRUD lain).

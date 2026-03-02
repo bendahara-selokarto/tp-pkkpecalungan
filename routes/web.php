@@ -162,6 +162,10 @@ Route::middleware(['auth', 'role:super-admin'])
             ->name('access-control.pilot.catatan-keluarga.update');
         Route::delete('access-control/pilot/catatan-keluarga', [AccessControlManagementController::class, 'rollbackPilotCatatanKeluarga'])
             ->name('access-control.pilot.catatan-keluarga.rollback');
+        Route::put('access-control/pilot/{moduleSlug}', [AccessControlManagementController::class, 'updatePilotModule'])
+            ->name('access-control.pilot.module.update');
+        Route::delete('access-control/pilot/{moduleSlug}', [AccessControlManagementController::class, 'rollbackPilotModule'])
+            ->name('access-control.pilot.module.rollback');
         Route::resource('arsip', ArsipManagementController::class)
             ->parameters(['arsip' => 'arsipDocument']);
     });

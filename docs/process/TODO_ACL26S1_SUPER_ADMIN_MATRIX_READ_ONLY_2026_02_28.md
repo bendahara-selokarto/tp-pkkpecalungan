@@ -55,3 +55,11 @@ Parent Concern: `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROL
   - feature test khusus read-only matrix super-admin,
   - regression test payload visibilitas menu,
   - full test suite (`php artisan test`) hijau.
+
+## Hardening Koherensi (2026-03-01)
+- Matrix read-only diselaraskan dengan kontrak runtime aktual bahwa `super-admin` tidak memiliki akses menu domain scoped (`desa/kecamatan`) termasuk `monitoring`.
+- Basis kontrak yang diperbarui:
+  - `RoleMenuVisibilityService`: baseline group mode `super-admin` untuk domain/monitoring dihapus.
+  - `RoleScopeMatrix`: `super-admin` tidak lagi tercatat sebagai scoped role `kecamatan`.
+- Efek yang diharapkan:
+  - tidak ada lagi mismatch antara tabel management ijin dan sidebar nyata untuk akun `super-admin`.

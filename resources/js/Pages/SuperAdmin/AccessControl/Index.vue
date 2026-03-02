@@ -23,6 +23,10 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  perPageOptions: {
+    type: Array,
+    required: true,
+  },
   rows: {
     type: Array,
     required: true,
@@ -31,12 +35,29 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  pagination: {
+    type: Object,
+    required: true,
+  },
+})
+
+const defaultPerPage = computed(() => {
+  if (props.perPageOptions.includes(25)) {
+    return 25
+  }
+
+  const firstOption = props.perPageOptions[0]
+  const normalizedOption = Number(firstOption)
+
+  return Number.isFinite(normalizedOption) && normalizedOption > 0 ? normalizedOption : 25
 })
 
 const filterForm = reactive({
   scope: props.filters.scope ?? '',
   role: props.filters.role ?? '',
   mode: props.filters.mode ?? '',
+  page: Number(props.filters.page ?? 1),
+  per_page: Number(props.filters.per_page ?? defaultPerPage.value),
 })
 
 const filteredRoleOptions = computed(() => {
@@ -49,6 +70,8 @@ const filteredRoleOptions = computed(() => {
 
 const buildQuery = () => {
   const query = {}
+  const page = Number(filterForm.page) > 0 ? Number(filterForm.page) : 1
+  const perPage = Number(filterForm.per_page)
 
   if (filterForm.scope) {
     query.scope = filterForm.scope
@@ -62,10 +85,18 @@ const buildQuery = () => {
     query.mode = filterForm.mode
   }
 
+  if (page > 1) {
+    query.page = page
+  }
+
+  if (props.perPageOptions.includes(perPage) && perPage !== defaultPerPage.value) {
+    query.per_page = perPage
+  }
+
   return query
 }
 
-const applyFilters = () => {
+const visitWithFilters = () => {
   router.get('/super-admin/access-control', buildQuery(), {
     preserveScroll: true,
     preserveState: true,
@@ -73,12 +104,36 @@ const applyFilters = () => {
   })
 }
 
+const applyFilters = () => {
+  filterForm.page = 1
+  visitWithFilters()
+}
+
 const resetFilters = () => {
   filterForm.scope = ''
   filterForm.role = ''
   filterForm.mode = ''
+  filterForm.page = 1
+  filterForm.per_page = defaultPerPage.value
   applyFilters()
 }
+
+const applyPerPage = () => {
+  filterForm.page = 1
+  visitWithFilters()
+}
+
+const goToPage = (page) => {
+  if (page < 1 || page > props.pagination.last_page || page === props.pagination.page) {
+    return
+  }
+
+  filterForm.page = page
+  visitWithFilters()
+}
+
+const canGoPrev = computed(() => props.pagination.page > 1)
+const canGoNext = computed(() => props.pagination.page < props.pagination.last_page)
 
 const modeBadgeClass = (mode) => {
   if (mode === 'read-write') {
@@ -98,7 +153,7 @@ const isPilotActionLoading = (row, action) => pilotActionKey.value === `${row.id
 
 const setPilotMode = (row, mode) => {
   pilotActionKey.value = `${row.id}:${mode}`
-  router.put('/super-admin/access-control/pilot/catatan-keluarga', {
+  router.put(`/super-admin/access-control/pilot/${encodeURIComponent(row.module)}`, {
     scope: row.scope,
     role: row.role,
     mode,
@@ -113,7 +168,7 @@ const setPilotMode = (row, mode) => {
 
 const rollbackPilotMode = (row) => {
   pilotActionKey.value = `${row.id}:rollback`
-  router.delete('/super-admin/access-control/pilot/catatan-keluarga', {
+  router.delete(`/super-admin/access-control/pilot/${encodeURIComponent(row.module)}`, {
     data: {
       scope: row.scope,
       role: row.role,
@@ -135,7 +190,7 @@ const rollbackPilotMode = (row) => {
       <div class="mb-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Matriks Akses Modul dan Group Role</h3>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
-          Halaman ini read-only untuk observasi keputusan desain sebelum aktivasi perubahan ijin akses.
+          Halaman ini menampilkan matrix akses aktual. Kontrol pilot write aktif untuk Catatan Keluarga, Pilot Project Keluarga Sehat, dan Pilot Project Naskah Pelaporan.
         </p>
       </div>
 
@@ -172,7 +227,7 @@ const rollbackPilotMode = (row) => {
     </CardBox>
 
     <CardBox class="mb-4">
-      <form class="grid gap-3 md:grid-cols-2 xl:grid-cols-5" @submit.prevent="applyFilters">
+      <form class="grid gap-3 md:grid-cols-2 xl:grid-cols-6" @submit.prevent="applyFilters">
         <label class="text-sm">
           <span class="mb-1 block text-slate-700 dark:text-slate-200">Scope</span>
           <select
@@ -208,6 +263,19 @@ const rollbackPilotMode = (row) => {
             <option value="">Semua Mode</option>
             <option v-for="option in modeOptions" :key="`mode-${option.value}`" :value="option.value">
               {{ option.label }}
+            </option>
+          </select>
+        </label>
+
+        <label class="text-sm">
+          <span class="mb-1 block text-slate-700 dark:text-slate-200">Baris per Halaman</span>
+          <select
+            v-model.number="filterForm.per_page"
+            class="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-800 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            @change="applyPerPage"
+          >
+            <option v-for="option in perPageOptions" :key="`per-page-${option}`" :value="option">
+              {{ option }}
             </option>
           </select>
         </label>
@@ -332,6 +400,34 @@ const rollbackPilotMode = (row) => {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      <div class="mt-4 flex flex-col gap-3 border-t border-slate-200 pt-4 dark:border-slate-700 sm:flex-row sm:items-center sm:justify-between">
+        <p class="text-xs text-slate-600 dark:text-slate-300">
+          Menampilkan {{ pagination.from }}-{{ pagination.to }} dari {{ pagination.total }} data
+        </p>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            class="inline-flex min-h-[40px] items-center rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+            :disabled="!canGoPrev"
+            @click="goToPage(pagination.page - 1)"
+          >
+            Sebelumnya
+          </button>
+          <span class="px-2 text-xs font-medium text-slate-700 dark:text-slate-200">
+            Halaman {{ pagination.page }} / {{ pagination.last_page }}
+          </span>
+          <button
+            type="button"
+            class="inline-flex min-h-[40px] items-center rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
+            :disabled="!canGoNext"
+            @click="goToPage(pagination.page + 1)"
+          >
+            Berikutnya
+          </button>
+        </div>
       </div>
     </CardBox>
   </SectionMain>

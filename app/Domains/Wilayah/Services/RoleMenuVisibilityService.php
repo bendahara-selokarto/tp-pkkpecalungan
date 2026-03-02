@@ -8,6 +8,8 @@ use App\Models\User;
 class RoleMenuVisibilityService
 {
     public const PILOT_MODULE_SLUG = 'catatan-keluarga';
+    public const SECOND_PILOT_MODULE_SLUG = 'pilot-project-keluarga-sehat';
+    public const THIRD_PILOT_MODULE_SLUG = 'pilot-project-naskah-pelaporan';
 
     public const MODE_READ_ONLY = 'read-only';
 
@@ -107,10 +109,10 @@ class RoleMenuVisibilityService
     private const ROLE_GROUP_MODES = [
         'desa-sekretaris' => [
             'sekretaris-tpk' => self::MODE_READ_WRITE,
-            'pokja-i' => self::MODE_READ_ONLY,
-            'pokja-ii' => self::MODE_READ_ONLY,
-            'pokja-iii' => self::MODE_READ_ONLY,
-            'pokja-iv' => self::MODE_READ_ONLY,
+            'pokja-i' => self::MODE_READ_WRITE,
+            'pokja-ii' => self::MODE_READ_WRITE,
+            'pokja-iii' => self::MODE_READ_WRITE,
+            'pokja-iv' => self::MODE_READ_WRITE,
         ],
         'kecamatan-sekretaris' => [
             'sekretaris-tpk' => self::MODE_READ_WRITE,
@@ -159,14 +161,6 @@ class RoleMenuVisibilityService
             'pokja-iii' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
             'monitoring' => self::MODE_READ_ONLY,
-        ],
-        'super-admin' => [
-            'sekretaris-tpk' => self::MODE_READ_WRITE,
-            'pokja-i' => self::MODE_READ_WRITE,
-            'pokja-ii' => self::MODE_READ_WRITE,
-            'pokja-iii' => self::MODE_READ_WRITE,
-            'pokja-iv' => self::MODE_READ_WRITE,
-            'monitoring' => self::MODE_READ_WRITE,
         ],
     ];
 
@@ -276,6 +270,10 @@ class RoleMenuVisibilityService
      */
     public function roleModuleModeOverrides(string $role, ?string $scope = null): array
     {
+        if ($role === 'desa-sekretaris') {
+            return [];
+        }
+
         $overrides = self::ROLE_MODULE_MODE_OVERRIDES[$role] ?? [];
 
         if (! is_string($scope)) {
@@ -303,6 +301,36 @@ class RoleMenuVisibilityService
         $moduleModes = $this->applyRoleModuleModeOverridesMap(self::ROLE_MODULE_MODE_OVERRIDES[$role] ?? [], $moduleModes);
 
         return $moduleModes[$moduleSlug] ?? null;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public static function pilotModuleSlugs(): array
+    {
+        $configured = config('access_control.pilot_override.modules', [
+            self::PILOT_MODULE_SLUG,
+            self::SECOND_PILOT_MODULE_SLUG,
+            self::THIRD_PILOT_MODULE_SLUG,
+        ]);
+
+        if (! is_array($configured)) {
+            return [self::PILOT_MODULE_SLUG, self::SECOND_PILOT_MODULE_SLUG, self::THIRD_PILOT_MODULE_SLUG];
+        }
+
+        $normalized = array_values(array_unique(array_filter(
+            array_map(static fn (mixed $item): string => is_string($item) ? trim($item) : '', $configured),
+            static fn (string $slug): bool => $slug !== ''
+        )));
+
+        return $normalized === []
+            ? [self::PILOT_MODULE_SLUG, self::SECOND_PILOT_MODULE_SLUG, self::THIRD_PILOT_MODULE_SLUG]
+            : $normalized;
+    }
+
+    public function isPilotModuleManaged(string $moduleSlug): bool
+    {
+        return in_array($moduleSlug, self::pilotModuleSlugs(), true);
     }
 
     /**
@@ -417,10 +445,18 @@ class RoleMenuVisibilityService
         $pilotOverrides = $this->pilotOverridesByScopeRoles($scope, $roleNames);
 
         foreach ($roleNames as $roleName) {
+            // Fast-mode policy: sementara ini desa-sekretaris wajib full access pada moduleModes.
+            // Override per-modul (termasuk pilot override) dilewati agar mode tidak turun.
+            if ($roleName === 'desa-sekretaris') {
+                continue;
+            }
+
             $overrides = self::ROLE_MODULE_MODE_OVERRIDES[$roleName] ?? [];
 
             if (array_key_exists($roleName, $pilotOverrides)) {
-                $overrides[self::PILOT_MODULE_SLUG] = $this->normalizeOverrideModeForResolver($pilotOverrides[$roleName]);
+                foreach ($pilotOverrides[$roleName] as $moduleSlug => $mode) {
+                    $overrides[$moduleSlug] = $this->normalizeOverrideModeForResolver($mode);
+                }
             }
 
             $moduleModes = $this->applyRoleModuleModeOverridesMap($overrides, $moduleModes);
@@ -431,7 +467,7 @@ class RoleMenuVisibilityService
 
     /**
      * @param list<string> $roleNames
-     * @return array<string, string>
+     * @return array<string, array<string, string>>
      */
     private function pilotOverridesByScopeRoles(string $scope, array $roleNames): array
     {
@@ -439,11 +475,25 @@ class RoleMenuVisibilityService
             return [];
         }
 
-        return $this->moduleAccessOverrideRepository->listModesForScopeRolesAndModule(
-            $scope,
-            $roleNames,
-            self::PILOT_MODULE_SLUG
-        );
+        $result = [];
+
+        foreach (self::pilotModuleSlugs() as $moduleSlug) {
+            $moduleOverrides = $this->moduleAccessOverrideRepository->listModesForScopeRolesAndModule(
+                $scope,
+                $roleNames,
+                $moduleSlug
+            );
+
+            foreach ($moduleOverrides as $roleName => $mode) {
+                if (! array_key_exists($roleName, $result)) {
+                    $result[$roleName] = [];
+                }
+
+                $result[$roleName][$moduleSlug] = $mode;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -493,12 +543,14 @@ class RoleMenuVisibilityService
             return $overrides;
         }
 
-        $pilotMode = $this->moduleAccessOverrideRepository->findMode($scope, $role, self::PILOT_MODULE_SLUG);
-        if (! is_string($pilotMode)) {
-            return $overrides;
-        }
+        foreach (self::pilotModuleSlugs() as $moduleSlug) {
+            $pilotMode = $this->moduleAccessOverrideRepository->findMode($scope, $role, $moduleSlug);
+            if (! is_string($pilotMode)) {
+                continue;
+            }
 
-        $overrides[self::PILOT_MODULE_SLUG] = $this->normalizeOverrideModeForResolver($pilotMode);
+            $overrides[$moduleSlug] = $this->normalizeOverrideModeForResolver($pilotMode);
+        }
 
         return $overrides;
     }

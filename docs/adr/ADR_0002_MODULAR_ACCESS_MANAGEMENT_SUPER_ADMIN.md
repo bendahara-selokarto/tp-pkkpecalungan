@@ -76,3 +76,4 @@ Superseded by: `-`
 - 2026-02-28: `proposed` -> `accepted` | disetujui implementasi Opsi B bertahap per concern modul, dimulai observasi + finalisasi markdown.
 - 2026-02-28: tahap 1 read-only matrix selesai (`ACL26S1`).
 - 2026-02-28: tahap 2 pilot write `catatan-keluarga` selesai (`ACL26C1`) dengan update, rollback, audit trail, dan fallback flag.
+- 2026-03-01: fast-mode sementara untuk `desa-sekretaris` dikunci `full read-write` pada `moduleModes`; resolver override per-modul role ini dilewati untuk mencegah penurunan mode saat inventaris visibility berjalan (`MVI26A1`).

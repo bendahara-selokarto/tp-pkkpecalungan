@@ -6,6 +6,13 @@ Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` (sumber
 Dokumen jalur tunggal eksekusi AI ada di `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`.
 Dokumen keputusan arsitektur ada di `docs/adr/` (`ADR_*` + `README.md`).
 
+## Role Set Registry
+
+- Role set A: `DDD Practitioner`
+- Role set B: `Token Economist`
+- Role set C: `Advanced Git Workflow`
+- Role set D: `Execution Engineer`
+
 ## 0. Priority
 
 Jika konflik dokumen:
@@ -123,6 +130,10 @@ Flow pembacaan dokumen (wajib, terutama header tabel):
 - Diff-first: prioritaskan patch kecil dibanding regenerasi file panjang.
 - Response compression: ringkas, padat, tanpa pengulangan konteks.
 - State-aware: jangan ulang informasi yang sudah dikonfirmasi pada sesi yang sama.
+- Test execution bertahap untuk efisiensi output/token:
+  - Iterasi perubahan kecil: utamakan test targeted (`php artisan test --filter ...` atau file test spesifik).
+  - Gunakan mode fail-fast (contoh: `--stop-on-failure`) saat debugging untuk menekan output panjang.
+  - Jalankan full suite (`php artisan test`) pada checkpoint final atau saat perubahan signifikan/lintas concern.
 - Jangan ubah file non-target.
 
 ## 5. Forbidden Patterns
