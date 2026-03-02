@@ -6,6 +6,17 @@ Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` (sumber
 Dokumen jalur tunggal eksekusi AI ada di `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`.
 Dokumen keputusan arsitektur ada di `docs/adr/` (`ADR_*` + `README.md`).
 
+## Peran AI
+
+Alias role aktif:
+- `khotib`: `Technical Auditor`
+- `iwan`: `Project Planner`
+- `santoso`: `LLM Optimization Engineer`
+- `manto`: `Technical Implementer`
+
+Aturan switch:
+- Untuk mempermudah switch role, cukup panggil nama alias.
+
 ## 0. Priority
 
 Jika konflik dokumen:
