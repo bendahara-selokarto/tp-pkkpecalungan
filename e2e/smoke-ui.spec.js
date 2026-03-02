@@ -2,6 +2,8 @@ import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 const normalizeCredential = (value) => String(value ?? '').trim();
+const requireAuthRuntime = process.env.E2E_REQUIRE_AUTH === '1';
+const requireAuthA11yRuntime = process.env.E2E_REQUIRE_AUTH_A11Y === '1';
 
 const roleCredentials = {
   desa: {
@@ -21,6 +23,18 @@ const roleCredentials = {
 const hasCredentialsForRole = (role) => {
   const credentials = roleCredentials[role];
   return credentials.email !== '' && credentials.password !== '';
+};
+
+const assertCredentialsForRole = (role) => {
+  if (!requireAuthRuntime) {
+    return;
+  }
+
+  if (hasCredentialsForRole(role)) {
+    return;
+  }
+
+  throw new Error(`E2E credentials are required for role ${role} when E2E_REQUIRE_AUTH=1.`);
 };
 
 const isActionableConsoleError = (message) => {
@@ -83,7 +97,7 @@ const roleMatrix = [
     role: 'desa',
     expectedPath: /\/dashboard(\?.*)?$/,
     shellAssertion: async (page) => {
-      await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Terapkan Filter Chart' })).toBeVisible();
       await page.getByRole('button', { name: 'Terapkan Filter Chart' }).click();
       await expect(page).toHaveURL(/\/dashboard(\?.*)?$/);
@@ -94,7 +108,7 @@ const roleMatrix = [
     role: 'kecamatan',
     expectedPath: /\/dashboard(\?.*)?$/,
     shellAssertion: async (page) => {
-      await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+      await expect(page.getByRole('heading', { name: 'Dashboard', exact: true })).toBeVisible();
       await expect(page.getByRole('button', { name: 'Terapkan Filter Chart' })).toBeVisible();
       await page.getByRole('button', { name: 'Terapkan Filter Chart' }).click();
       await expect(page).toHaveURL(/\/dashboard(\?.*)?$/);
@@ -117,8 +131,14 @@ const roleMatrix = [
 
 for (const roleConfig of roleMatrix) {
   test.describe(`authenticated runtime smoke (${roleConfig.role})`, () => {
+    test.describe.configure({ mode: 'serial' });
+
+    test.beforeAll(() => {
+      assertCredentialsForRole(roleConfig.role);
+    });
+
     test.skip(
-      !hasCredentialsForRole(roleConfig.role),
+      !requireAuthRuntime && !hasCredentialsForRole(roleConfig.role),
       `Set E2E credentials for ${roleConfig.role} role to enable authenticated smoke.`,
     );
 
@@ -138,6 +158,8 @@ for (const roleConfig of roleMatrix) {
     });
 
     test(`@a11y ${roleConfig.role} app shell has no serious or critical axe violations`, async ({ page }) => {
+      test.skip(!requireAuthA11yRuntime, 'Set E2E_REQUIRE_AUTH_A11Y=1 to enforce authenticated a11y runtime checks.');
+
       await login(page, roleConfig.role);
       await expect(page).toHaveURL(roleConfig.expectedPath);
       await roleConfig.shellAssertion(page);

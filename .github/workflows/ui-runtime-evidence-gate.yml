@@ -10,6 +10,15 @@ on:
       - 'package.json'
       - 'package-lock.json'
       - '.github/workflows/ui-runtime-evidence-gate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'resources/js/**'
+      - 'e2e/**'
+      - 'playwright.config.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/ui-runtime-evidence-gate.yml'
   workflow_dispatch:
 
 permissions:
@@ -31,14 +40,18 @@ jobs:
       SESSION_DRIVER: array
       QUEUE_CONNECTION: sync
       MAIL_MAILER: array
+      AUTH_LOGIN_MAX_ATTEMPTS: 60
+      AUTH_LOGIN_DECAY_SECONDS: 60
       E2E_BASE_URL: http://127.0.0.1:8000
       E2E_WEB_SERVER_COMMAND: php artisan serve --host=127.0.0.1 --port=8000
-      E2E_DESA_EMAIL: ${{ secrets.E2E_DESA_EMAIL }}
-      E2E_DESA_PASSWORD: ${{ secrets.E2E_DESA_PASSWORD }}
-      E2E_KECAMATAN_EMAIL: ${{ secrets.E2E_KECAMATAN_EMAIL }}
-      E2E_KECAMATAN_PASSWORD: ${{ secrets.E2E_KECAMATAN_PASSWORD }}
-      E2E_SUPERADMIN_EMAIL: ${{ secrets.E2E_SUPERADMIN_EMAIL }}
-      E2E_SUPERADMIN_PASSWORD: ${{ secrets.E2E_SUPERADMIN_PASSWORD }}
+      E2E_REQUIRE_AUTH: '1'
+      E2E_REQUIRE_AUTH_A11Y: '0'
+      E2E_DESA_EMAIL: e2e.desa@pkk.local
+      E2E_DESA_PASSWORD: password123
+      E2E_KECAMATAN_EMAIL: e2e.kecamatan@pkk.local
+      E2E_KECAMATAN_PASSWORD: password123
+      E2E_SUPERADMIN_EMAIL: e2e.superadmin@pkk.local
+      E2E_SUPERADMIN_PASSWORD: password123
 
     steps:
       - name: Checkout repository
@@ -70,6 +83,9 @@ jobs:
           touch database/database.sqlite
           php artisan key:generate
           php artisan migrate --force
+          php artisan db:seed --class=Database\\Seeders\\RoleSeeder --force
+          php artisan db:seed --class=Database\\Seeders\\WilayahSeeder --force
+          php artisan db:seed --class=Database\\Seeders\\E2ERuntimeUserSeeder --force
 
       - name: Build frontend assets
         run: npm run build

@@ -35,6 +35,7 @@ Related ADR: `-`
   - dashboard role `desa`,
   - dashboard role `kecamatan`,
   - shell `super-admin` (`users`, `access-control`, `arsip`).
+  - catatan: lane `a11y` authenticated disiapkan sebagai `strict-mode` opsional (`E2E_REQUIRE_AUTH_A11Y=1`) sambil backlog perbaikan aksesibilitas ditutup bertahap.
 - [ ] `P3` Tambah smoke CRUD prioritas (minimal create+filter+pagination+delete guard):
   - `activities`,
   - `agenda-surat`,
@@ -49,7 +50,10 @@ Related ADR: `-`
 ## Validasi
 - [x] L1: roadmap tervalidasi terhadap kontrak `AI_SINGLE_PATH_ARCHITECTURE` lane UI/UX auditability.
 - [x] L2: baseline matrix role dan secret mapping terdokumentasi + terimplementasi di workflow.
-- [ ] L3: dry-run alur CI pada branch uji (tanpa merge ke main) untuk memastikan gate tidak false-positive tinggi.
+- [x] L3: dry-run lokal setara CI untuk lane smoke/a11y berhasil:
+  - `npm run test:e2e:smoke` (`8 passed`) pada mode `E2E_REQUIRE_AUTH=1`;
+  - `npm run test:e2e:a11y` (`2 passed`, `6 skipped`) pada mode `E2E_REQUIRE_AUTH_A11Y=0`;
+  - `php artisan test --filter=DashboardLayoutMenuContractTest` (`PASS`).
 
 ## Risiko
 - Risiko 1: flakiness E2E meningkat saat coverage diperluas tanpa stabilisasi test data.
@@ -72,4 +76,4 @@ Related ADR: `-`
 ## Output Final
 - [x] Ringkasan roadmap fase + deliverable per fase.
 - [x] Daftar concern UI yang masuk batch eksekusi pertama.
-- [ ] Hasil dry-run gate CI + residual risk flakiness.
+- [x] Hasil dry-run gate CI + residual risk flakiness.

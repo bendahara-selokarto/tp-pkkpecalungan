@@ -243,6 +243,15 @@ Kredensial login (opsional untuk smoke terautentikasi):
 - `E2E_KECAMATAN_PASSWORD`
 - `E2E_SUPERADMIN_EMAIL`
 - `E2E_SUPERADMIN_PASSWORD`
+- `E2E_REQUIRE_AUTH=1` untuk memaksa lane auth tidak boleh `skip`.
+- `E2E_REQUIRE_AUTH_A11Y=1` untuk memaksa lane a11y terautentikasi (default `0` agar bisa rollout bertahap).
+
+Provisioning akun deterministik untuk CI:
+- Jalankan seeder `Database\\Seeders\\E2ERuntimeUserSeeder`.
+- Nilai default seeder:
+  - desa: `e2e.desa@pkk.local / password123`
+  - kecamatan: `e2e.kecamatan@pkk.local / password123`
+  - super-admin: `e2e.superadmin@pkk.local / password123`
 
 Fallback kompatibilitas lama:
 - `E2E_EMAIL` + `E2E_PASSWORD` tetap dibaca untuk role `super-admin` jika env khusus super-admin belum diisi.

@@ -329,6 +329,10 @@ const hasVisibleDomainMenu = computed(() =>
   || (isKecamatanScope.value && kecamatanVisibleMenuGroups.value.length > 0),
 )
 
+function isGroupActive(group) {
+  return group.items.some((item) => isItemActive(item))
+}
+
 const shouldOpenGroupByDefault = (group) =>
   isGroupActive(group) || group.mode === 'read-write'
 
@@ -359,8 +363,6 @@ watch(
   },
   { immediate: true },
 )
-
-const isGroupActive = (group) => group.items.some((item) => isItemActive(item))
 
 const openGroupPrimaryItem = (group) => {
   const firstItem = group.items[0]
