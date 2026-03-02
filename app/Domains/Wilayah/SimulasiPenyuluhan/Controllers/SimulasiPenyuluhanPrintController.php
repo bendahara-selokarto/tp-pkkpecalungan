@@ -32,7 +32,7 @@ class SimulasiPenyuluhanPrintController extends Controller
         $this->authorize('viewAny', SimulasiPenyuluhan::class);
 
         $items = $this->listScopedSimulasiPenyuluhanUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

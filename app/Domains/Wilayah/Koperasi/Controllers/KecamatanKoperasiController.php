@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Koperasi\Actions\UpdateKoperasiAction;
 use App\Domains\Wilayah\Koperasi\Models\Koperasi;
 use App\Domains\Wilayah\Koperasi\Repositories\KoperasiRepositoryInterface;
 use App\Domains\Wilayah\Koperasi\Requests\StoreKoperasiRequest;
+use App\Domains\Wilayah\Koperasi\Requests\ListKoperasiRequest;
 use App\Domains\Wilayah\Koperasi\Requests\UpdateKoperasiRequest;
 use App\Domains\Wilayah\Koperasi\UseCases\GetScopedKoperasiUseCase;
 use App\Domains\Wilayah\Koperasi\UseCases\ListScopedKoperasiUseCase;
@@ -28,13 +29,13 @@ class KecamatanKoperasiController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListKoperasiRequest $request): Response
     {
         $this->authorize('viewAny', Koperasi::class);
-        $items = $this->listScopedKoperasiUseCase->execute(ScopeLevel::KECAMATAN->value);
+        $items = $this->listScopedKoperasiUseCase->execute(ScopeLevel::KECAMATAN->value, $request->perPage());
 
         return Inertia::render('Kecamatan/Koperasi/Index', [
-            'koperasiItems' => $items->values()->map(fn (Koperasi $item) => [
+            'koperasiItems' => $items->through(fn (Koperasi $item) => [
                 'id' => $item->id,
                 'nama_koperasi' => $item->nama_koperasi,
                 'jenis_usaha' => $item->jenis_usaha,
@@ -43,6 +44,12 @@ class KecamatanKoperasiController extends Controller
                 'jumlah_anggota_l' => $item->jumlah_anggota_l,
                 'jumlah_anggota_p' => $item->jumlah_anggota_p,
             ]),
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -115,5 +122,4 @@ class KecamatanKoperasiController extends Controller
         return redirect()->route('kecamatan.koperasi.index')->with('success', 'Data koperasi berhasil dihapus');
     }
 }
-
 

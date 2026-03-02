@@ -32,7 +32,7 @@ class PosyanduPrintController extends Controller
         $this->authorize('viewAny', Posyandu::class);
 
         $items = $this->listScopedPosyanduUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

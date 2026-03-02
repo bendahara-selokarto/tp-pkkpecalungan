@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\SimulasiPenyuluhan\Repositories;
 
 use App\Domains\Wilayah\SimulasiPenyuluhan\DTOs\SimulasiPenyuluhanData;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class SimulasiPenyuluhanRepository implements SimulasiPenyuluhanRepositoryInterface
@@ -22,6 +23,16 @@ class SimulasiPenyuluhanRepository implements SimulasiPenyuluhanRepositoryInterf
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return SimulasiPenyuluhan::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

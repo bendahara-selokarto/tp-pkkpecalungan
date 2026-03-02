@@ -32,7 +32,7 @@ class WarungPkkPrintController extends Controller
         $this->authorize('viewAny', WarungPkk::class);
 
         $items = $this->listScopedWarungPkkUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

@@ -32,7 +32,7 @@ class KejarPaketPrintController extends Controller
         $this->authorize('viewAny', KejarPaket::class);
 
         $items = $this->listScopedKejarPaketUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

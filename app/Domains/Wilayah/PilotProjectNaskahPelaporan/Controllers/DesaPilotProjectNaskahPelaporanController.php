@@ -8,6 +8,7 @@ use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Actions\DeletePilotProjectNa
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Actions\UpdatePilotProjectNaskahPelaporanAction;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanAttachment;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanReport;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Requests\ListPilotProjectNaskahPelaporanRequest;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Requests\StorePilotProjectNaskahPelaporanRequest;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Requests\UpdatePilotProjectNaskahPelaporanRequest;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\UseCases\GetScopedPilotProjectNaskahPelaporanUseCase;
@@ -30,23 +31,29 @@ class DesaPilotProjectNaskahPelaporanController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListPilotProjectNaskahPelaporanRequest $request): Response
     {
         $this->authorize('viewAny', PilotProjectNaskahPelaporanReport::class);
 
-        $reports = $this->listUseCase->execute(ScopeLevel::DESA->value)
-            ->map(fn (PilotProjectNaskahPelaporanReport $report) => [
+        $reports = $this->listUseCase
+            ->execute(ScopeLevel::DESA->value, $request->perPage())
+            ->through(fn (PilotProjectNaskahPelaporanReport $report) => [
                 'id' => $report->id,
                 'judul_laporan' => $report->judul_laporan,
                 'attachments_count' => $report->attachments_count ?? 0,
                 'updated_at' => $report->updated_at?->toDateTimeString(),
-            ])
-            ->values();
+            ]);
 
         return Inertia::render('PilotProjectNaskahPelaporan/Index', [
             'scopeLabel' => 'Desa',
             'scopePrefix' => '/desa/pilot-project-naskah-pelaporan',
             'reports' => $reports,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -164,3 +171,4 @@ class DesaPilotProjectNaskahPelaporanController extends Controller
         return trim(sprintf('Tim Penggerak PKK %s %s', $scopeTitle, $areaName));
     }
 }
+

@@ -31,7 +31,7 @@ class PilotProjectKeluargaSehatPrintController extends Controller
     {
         $this->authorize('viewAny', PilotProjectKeluargaSehatReport::class);
 
-        $reports = $this->listUseCase->execute($level)
+        $reports = $this->listUseCase->executeAll($level)
             ->load(['values' => fn ($query) => $query->orderBy('sort_order')])
             ->values();
 

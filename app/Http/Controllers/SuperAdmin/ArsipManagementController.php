@@ -8,6 +8,7 @@ use App\Domains\Wilayah\Arsip\Actions\UpdateArsipDocumentAction;
 use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
 use App\Domains\Wilayah\Arsip\UseCases\ListManagedArsipDocumentsUseCase;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Arsip\ListManagedArsipRequest;
 use App\Http\Requests\Arsip\StoreArsipDocumentRequest;
 use App\Http\Requests\Arsip\UpdateArsipDocumentRequest;
 use Illuminate\Http\RedirectResponse;
@@ -25,10 +26,16 @@ class ArsipManagementController extends Controller
         $this->authorizeResource(ArsipDocument::class, 'arsipDocument');
     }
 
-    public function index(): Response
+    public function index(ListManagedArsipRequest $request): Response
     {
         return Inertia::render('SuperAdmin/Arsip/Index', [
-            'documents' => $this->listManagedArsipDocumentsUseCase->execute(10),
+            'documents' => $this->listManagedArsipDocumentsUseCase->execute($request->perPage()),
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

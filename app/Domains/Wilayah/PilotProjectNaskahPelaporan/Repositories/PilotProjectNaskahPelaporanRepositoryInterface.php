@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories;
 
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanReport;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface PilotProjectNaskahPelaporanRepositoryInterface
@@ -13,6 +14,8 @@ interface PilotProjectNaskahPelaporanRepositoryInterface
         PilotProjectNaskahPelaporanReport $report,
         array $payload
     ): PilotProjectNaskahPelaporanReport;
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 

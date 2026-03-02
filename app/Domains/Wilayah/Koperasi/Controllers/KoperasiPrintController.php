@@ -32,7 +32,7 @@ class KoperasiPrintController extends Controller
         $this->authorize('viewAny', Koperasi::class);
 
         $items = $this->listScopedKoperasiUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

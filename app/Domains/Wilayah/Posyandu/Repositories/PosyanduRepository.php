@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Posyandu\Repositories;
 
 use App\Domains\Wilayah\Posyandu\DTOs\PosyanduData;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class PosyanduRepository implements PosyanduRepositoryInterface
@@ -27,6 +28,16 @@ class PosyanduRepository implements PosyanduRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return Posyandu::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

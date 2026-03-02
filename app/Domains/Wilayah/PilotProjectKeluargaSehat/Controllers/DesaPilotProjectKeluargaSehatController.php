@@ -7,6 +7,7 @@ use App\Domains\Wilayah\PilotProjectKeluargaSehat\Actions\CreatePilotProjectKelu
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Actions\DeletePilotProjectKeluargaSehatAction;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Actions\UpdatePilotProjectKeluargaSehatAction;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Models\PilotProjectKeluargaSehatReport;
+use App\Domains\Wilayah\PilotProjectKeluargaSehat\Requests\ListPilotProjectKeluargaSehatRequest;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Requests\StorePilotProjectKeluargaSehatRequest;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Requests\UpdatePilotProjectKeluargaSehatRequest;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\UseCases\GetScopedPilotProjectKeluargaSehatUseCase;
@@ -28,25 +29,31 @@ class DesaPilotProjectKeluargaSehatController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListPilotProjectKeluargaSehatRequest $request): Response
     {
         $this->authorize('viewAny', PilotProjectKeluargaSehatReport::class);
 
-        $reports = $this->listUseCase->execute(ScopeLevel::DESA->value)
-            ->map(fn (PilotProjectKeluargaSehatReport $report) => [
+        $reports = $this->listUseCase
+            ->execute(ScopeLevel::DESA->value, $request->perPage())
+            ->through(fn (PilotProjectKeluargaSehatReport $report) => [
                 'id' => $report->id,
                 'judul_laporan' => $report->judul_laporan,
                 'tahun_awal' => $report->tahun_awal,
                 'tahun_akhir' => $report->tahun_akhir,
                 'values_count' => $report->values_count ?? 0,
                 'updated_at' => $report->updated_at?->toDateTimeString(),
-            ])
-            ->values();
+            ]);
 
         return Inertia::render('PilotProjectKeluargaSehat/Index', [
             'scopeLabel' => 'Desa',
             'scopePrefix' => '/desa/pilot-project-keluarga-sehat',
             'reports' => $reports,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -152,3 +159,4 @@ class DesaPilotProjectKeluargaSehatController extends Controller
         ];
     }
 }
+

@@ -7,6 +7,7 @@ use App\Domains\Wilayah\ProgramPrioritas\Actions\CreateScopedProgramPrioritasAct
 use App\Domains\Wilayah\ProgramPrioritas\Actions\UpdateProgramPrioritasAction;
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
 use App\Domains\Wilayah\ProgramPrioritas\Repositories\ProgramPrioritasRepositoryInterface;
+use App\Domains\Wilayah\ProgramPrioritas\Requests\ListProgramPrioritasRequest;
 use App\Domains\Wilayah\ProgramPrioritas\Requests\StoreProgramPrioritasRequest;
 use App\Domains\Wilayah\ProgramPrioritas\Requests\UpdateProgramPrioritasRequest;
 use App\Domains\Wilayah\ProgramPrioritas\UseCases\GetScopedProgramPrioritasUseCase;
@@ -28,13 +29,21 @@ class KecamatanProgramPrioritasController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListProgramPrioritasRequest $request): Response
     {
         $this->authorize('viewAny', ProgramPrioritas::class);
-        $items = $this->listScopedProgramPrioritasUseCase->execute(ScopeLevel::KECAMATAN->value);
+        $items = $this->listScopedProgramPrioritasUseCase
+            ->execute(ScopeLevel::KECAMATAN->value, $request->perPage())
+            ->through(fn (ProgramPrioritas $item) => $this->serializeProgramPrioritas($item));
 
         return Inertia::render('Kecamatan/ProgramPrioritas/Index', [
-            'programPrioritas' => $items->values()->map(fn (ProgramPrioritas $item) => $this->serializeProgramPrioritas($item)),
+            'programPrioritas' => $items,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -126,3 +135,4 @@ class KecamatanProgramPrioritasController extends Controller
         ];
     }
 }
+

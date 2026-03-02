@@ -31,7 +31,7 @@ class PilotProjectNaskahPelaporanPrintController extends Controller
     {
         $this->authorize('viewAny', PilotProjectNaskahPelaporanReport::class);
 
-        $reports = $this->listUseCase->execute($level)
+        $reports = $this->listUseCase->executeAll($level)
             ->load(['attachments' => fn ($query) => $query->orderBy('category')->orderBy('id')])
             ->values();
 

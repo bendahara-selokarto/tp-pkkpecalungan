@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Koperasi\Repositories;
 
 use App\Domains\Wilayah\Koperasi\DTOs\KoperasiData;
 use App\Domains\Wilayah\Koperasi\Models\Koperasi;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class KoperasiRepository implements KoperasiRepositoryInterface
@@ -21,6 +22,16 @@ class KoperasiRepository implements KoperasiRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return Koperasi::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

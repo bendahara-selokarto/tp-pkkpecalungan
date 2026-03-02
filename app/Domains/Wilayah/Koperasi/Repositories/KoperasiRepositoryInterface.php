@@ -4,11 +4,14 @@ namespace App\Domains\Wilayah\Koperasi\Repositories;
 
 use App\Domains\Wilayah\Koperasi\DTOs\KoperasiData;
 use App\Domains\Wilayah\Koperasi\Models\Koperasi;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface KoperasiRepositoryInterface
 {
     public function store(KoperasiData $data): Koperasi;
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 

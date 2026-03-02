@@ -4,6 +4,7 @@ namespace App\Http\Controllers\SuperAdmin;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\User\ListUsersRequest;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
 use App\Domains\Wilayah\Models\Area;
@@ -30,10 +31,10 @@ class UserManagementController extends Controller
         $this->authorizeResource(User::class, 'user');
     }
 
-    public function index(): Response
+    public function index(ListUsersRequest $request): Response
     {
         $users = $this->listUsersForManagementUseCase
-            ->execute(10)
+            ->execute($request->perPage())
             ->through(fn (User $user) => [
                 'id' => $user->id,
                 'name' => $user->name,
@@ -54,6 +55,12 @@ class UserManagementController extends Controller
 
         return Inertia::render('SuperAdmin/Users/Index', [
             'users' => $users,
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 

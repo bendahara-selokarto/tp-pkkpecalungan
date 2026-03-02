@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Posyandu\Actions\UpdatePosyanduAction;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
 use App\Domains\Wilayah\Posyandu\Repositories\PosyanduRepositoryInterface;
 use App\Domains\Wilayah\Posyandu\Requests\StorePosyanduRequest;
+use App\Domains\Wilayah\Posyandu\Requests\ListPosyanduRequest;
 use App\Domains\Wilayah\Posyandu\Requests\UpdatePosyanduRequest;
 use App\Domains\Wilayah\Posyandu\UseCases\GetScopedPosyanduUseCase;
 use App\Domains\Wilayah\Posyandu\UseCases\ListScopedPosyanduUseCase;
@@ -28,13 +29,13 @@ class KecamatanPosyanduController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListPosyanduRequest $request): Response
     {
         $this->authorize('viewAny', Posyandu::class);
-        $items = $this->listScopedPosyanduUseCase->execute(ScopeLevel::KECAMATAN->value);
+        $items = $this->listScopedPosyanduUseCase->execute(ScopeLevel::KECAMATAN->value, $request->perPage());
 
         return Inertia::render('Kecamatan/Posyandu/Index', [
-            'posyanduItems' => $items->values()->map(fn (Posyandu $item) => [
+            'posyanduItems' => $items->through(fn (Posyandu $item) => [
                 'id' => $item->id,
                 'nama_posyandu' => $item->nama_posyandu,
                 'nama_pengelola' => $item->nama_pengelola,
@@ -49,6 +50,12 @@ class KecamatanPosyanduController extends Controller
                 'jumlah_petugas_p' => $item->jumlah_petugas_p,
                 'keterangan' => $item->keterangan,
             ]),
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -133,7 +140,6 @@ class KecamatanPosyanduController extends Controller
         return redirect()->route('kecamatan.posyandu.index')->with('success', 'Data posyandu berhasil dihapus');
     }
 }
-
 
 
 

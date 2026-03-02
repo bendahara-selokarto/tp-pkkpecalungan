@@ -7,6 +7,7 @@ use App\Domains\Wilayah\KejarPaket\Actions\UpdateKejarPaketAction;
 use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
 use App\Domains\Wilayah\KejarPaket\Repositories\KejarPaketRepositoryInterface;
 use App\Domains\Wilayah\KejarPaket\Requests\StoreKejarPaketRequest;
+use App\Domains\Wilayah\KejarPaket\Requests\ListKejarPaketRequest;
 use App\Domains\Wilayah\KejarPaket\Requests\UpdateKejarPaketRequest;
 use App\Domains\Wilayah\KejarPaket\UseCases\GetScopedKejarPaketUseCase;
 use App\Domains\Wilayah\KejarPaket\UseCases\ListScopedKejarPaketUseCase;
@@ -28,13 +29,13 @@ class KecamatanKejarPaketController extends Controller
         $this->middleware('scope.role:kecamatan');
     }
 
-    public function index(): Response
+    public function index(ListKejarPaketRequest $request): Response
     {
         $this->authorize('viewAny', KejarPaket::class);
-        $items = $this->listScopedKejarPaketUseCase->execute(ScopeLevel::KECAMATAN->value);
+        $items = $this->listScopedKejarPaketUseCase->execute(ScopeLevel::KECAMATAN->value, $request->perPage());
 
         return Inertia::render('Kecamatan/KejarPaket/Index', [
-            'kejarPaketItems' => $items->values()->map(fn (KejarPaket $item) => [
+            'kejarPaketItems' => $items->through(fn (KejarPaket $item) => [
                 'id' => $item->id,
                 'nama_kejar_paket' => $item->nama_kejar_paket,
                 'jenis_kejar_paket' => $item->jenis_kejar_paket,
@@ -43,6 +44,12 @@ class KecamatanKejarPaketController extends Controller
                 'jumlah_pengajar_l' => $item->jumlah_pengajar_l,
                 'jumlah_pengajar_p' => $item->jumlah_pengajar_p,
             ]),
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -115,7 +122,6 @@ class KecamatanKejarPaketController extends Controller
         return redirect()->route('kecamatan.kejar-paket.index')->with('success', 'Data kejar paket berhasil dihapus');
     }
 }
-
 
 
 

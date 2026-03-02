@@ -1,6 +1,7 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
+import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import ResponsiveDataTable from '@/admin-one/components/ResponsiveDataTable.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
@@ -14,12 +15,23 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  filters: {
+    type: Object,
+    default: () => ({}),
+  },
+  pagination: {
+    type: Object,
+    default: () => ({
+      perPageOptions: [10, 25, 50],
+    }),
+  },
 })
 
 const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus user ini?'
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 const isResponsiveTableV2Enabled = computed(() => import.meta.env.VITE_UI_RESPONSIVE_TABLE_V2 !== 'false')
+const perPage = computed(() => props.filters.per_page ?? 10)
 
 const userTableColumns = [
   { key: 'name', label: 'Nama', mobileLabel: 'Nama' },
@@ -53,6 +65,16 @@ const cancelDelete = () => {
   deletingId.value = null
 }
 
+const updatePerPage = (event) => {
+  const selectedPerPage = Number(event.target.value)
+
+  router.get('/super-admin/users', { per_page: selectedPerPage }, {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
+
 </script>
 
 <template>
@@ -62,12 +84,26 @@ const cancelDelete = () => {
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar User</h3>
-        <Link
-          href="/super-admin/users/create"
-          class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-        >
-          + Tambah User
-        </Link>
+        <div class="flex items-center gap-2">
+          <label class="text-xs text-gray-600 dark:text-gray-300">
+            Per halaman
+            <select
+              :value="perPage"
+              class="ml-2 rounded-md border border-gray-300 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              @change="updatePerPage"
+            >
+              <option v-for="option in pagination.perPageOptions" :key="`per-page-${option}`" :value="option">
+                {{ option }}
+              </option>
+            </select>
+          </label>
+          <Link
+            href="/super-admin/users/create"
+            class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+          >
+            + Tambah User
+          </Link>
+        </div>
       </div>
 
       <ResponsiveDataTable
@@ -159,24 +195,7 @@ const cancelDelete = () => {
         </table>
       </div>
 
-      <div class="mt-5 flex flex-wrap items-center gap-2">
-        <template v-for="(link, index) in users.links" :key="`page-${index}`">
-          <span
-            v-if="!link.url"
-            class="inline-flex min-h-[44px] items-center rounded-md border border-gray-200 px-4 py-2 text-xs text-gray-400 dark:border-slate-700 dark:text-gray-500"
-            v-html="link.label"
-          />
-          <Link
-            v-else
-            :href="link.url"
-            class="inline-flex min-h-[44px] items-center rounded-md border px-4 py-2 text-xs"
-            :class="link.active
-              ? 'border-emerald-600 bg-emerald-600 text-white'
-              : 'border-gray-200 text-gray-700 hover:bg-gray-100 dark:border-slate-700 dark:text-gray-300 dark:hover:bg-slate-800'"
-            v-html="link.label"
-          />
-        </template>
-      </div>
+      <PaginationBar :links="users.links" :from="users.from" :to="users.to" :total="users.total" />
     </CardBox>
 
     <ConfirmActionModal

@@ -7,6 +7,7 @@ use App\Domains\Wilayah\WarungPkk\Actions\UpdateWarungPkkAction;
 use App\Domains\Wilayah\WarungPkk\Models\WarungPkk;
 use App\Domains\Wilayah\WarungPkk\Repositories\WarungPkkRepositoryInterface;
 use App\Domains\Wilayah\WarungPkk\Requests\StoreWarungPkkRequest;
+use App\Domains\Wilayah\WarungPkk\Requests\ListWarungPkkRequest;
 use App\Domains\Wilayah\WarungPkk\Requests\UpdateWarungPkkRequest;
 use App\Domains\Wilayah\WarungPkk\UseCases\GetScopedWarungPkkUseCase;
 use App\Domains\Wilayah\WarungPkk\UseCases\ListScopedWarungPkkUseCase;
@@ -28,13 +29,13 @@ class DesaWarungPkkController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListWarungPkkRequest $request): Response
     {
         $this->authorize('viewAny', WarungPkk::class);
-        $items = $this->listScopedWarungPkkUseCase->execute(ScopeLevel::DESA->value);
+        $items = $this->listScopedWarungPkkUseCase->execute(ScopeLevel::DESA->value, $request->perPage());
 
         return Inertia::render('Desa/WarungPkk/Index', [
-            'warungPkkItems' => $items->values()->map(fn (WarungPkk $item) => [
+            'warungPkkItems' => $items->through(fn (WarungPkk $item) => [
                 'id' => $item->id,
                 'nama_warung_pkk' => $item->nama_warung_pkk,
                 'nama_pengelola' => $item->nama_pengelola,
@@ -42,6 +43,12 @@ class DesaWarungPkkController extends Controller
                 'kategori' => $item->kategori,
                 'volume' => $item->volume,
             ]),
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -112,5 +119,4 @@ class DesaWarungPkkController extends Controller
         return redirect()->route('desa.warung-pkk.index')->with('success', 'Data aset (sarana) desa/kelurahan berhasil dihapus');
     }
 }
-
 

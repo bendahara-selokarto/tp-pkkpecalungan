@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\PilotProjectKeluargaSehat\Repositories;
 
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Models\PilotProjectKeluargaSehatReport;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 interface PilotProjectKeluargaSehatRepositoryInterface
@@ -13,6 +14,8 @@ interface PilotProjectKeluargaSehatRepositoryInterface
         PilotProjectKeluargaSehatReport $report,
         array $payload
     ): PilotProjectKeluargaSehatReport;
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
 
     public function getByLevelAndArea(string $level, int $areaId): Collection;
 
@@ -35,4 +38,3 @@ interface PilotProjectKeluargaSehatRepositoryInterface
 
     public function deleteReport(PilotProjectKeluargaSehatReport $report): void;
 }
-

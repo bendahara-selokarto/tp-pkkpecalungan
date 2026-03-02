@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\ProgramPrioritas\Repositories;
 
 use App\Domains\Wilayah\ProgramPrioritas\DTOs\ProgramPrioritasData;
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
@@ -52,6 +53,21 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
             ->get();
     }
 
+    public function paginateByLevelAndArea(
+        string $level,
+        int $areaId,
+        int $perPage,
+        ?int $creatorIdFilter = null
+    ): LengthAwarePaginator {
+        return ProgramPrioritas::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
+    }
+
     public function find(int $id): ProgramPrioritas
     {
         return ProgramPrioritas::findOrFail($id);
@@ -95,7 +111,6 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
         $programPrioritas->delete();
     }
 }
-
 
 
 

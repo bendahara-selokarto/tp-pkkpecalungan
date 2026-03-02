@@ -8,6 +8,7 @@ use App\Domains\Wilayah\SimulasiPenyuluhan\Actions\UpdateSimulasiPenyuluhanActio
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanRepositoryInterface;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Requests\StoreSimulasiPenyuluhanRequest;
+use App\Domains\Wilayah\SimulasiPenyuluhan\Requests\ListSimulasiPenyuluhanRequest;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Requests\UpdateSimulasiPenyuluhanRequest;
 use App\Domains\Wilayah\SimulasiPenyuluhan\UseCases\GetScopedSimulasiPenyuluhanUseCase;
 use App\Domains\Wilayah\SimulasiPenyuluhan\UseCases\ListScopedSimulasiPenyuluhanUseCase;
@@ -28,13 +29,13 @@ class DesaSimulasiPenyuluhanController extends Controller
         $this->middleware('scope.role:desa');
     }
 
-    public function index(): Response
+    public function index(ListSimulasiPenyuluhanRequest $request): Response
     {
         $this->authorize('viewAny', SimulasiPenyuluhan::class);
-        $items = $this->listScopedSimulasiPenyuluhanUseCase->execute(ScopeLevel::DESA->value);
+        $items = $this->listScopedSimulasiPenyuluhanUseCase->execute(ScopeLevel::DESA->value, $request->perPage());
 
         return Inertia::render('Desa/SimulasiPenyuluhan/Index', [
-            'simulasiPenyuluhanItems' => $items->values()->map(fn (SimulasiPenyuluhan $item) => [
+            'simulasiPenyuluhanItems' => $items->through(fn (SimulasiPenyuluhan $item) => [
                 'id' => $item->id,
                 'nama_kegiatan' => $item->nama_kegiatan,
                 'jenis_simulasi_penyuluhan' => $item->jenis_simulasi_penyuluhan,
@@ -44,6 +45,12 @@ class DesaSimulasiPenyuluhanController extends Controller
                 'jumlah_kader_p' => $item->jumlah_kader_p,
                 'keterangan' => $item->keterangan,
             ]),
+            'pagination' => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => [
+                'per_page' => $request->perPage(),
+            ],
         ]);
     }
 
@@ -118,5 +125,4 @@ class DesaSimulasiPenyuluhanController extends Controller
         return redirect()->route('desa.simulasi-penyuluhan.index')->with('success', 'Data isian kelompok simulasi dan penyuluhan berhasil dihapus');
     }
 }
-
 

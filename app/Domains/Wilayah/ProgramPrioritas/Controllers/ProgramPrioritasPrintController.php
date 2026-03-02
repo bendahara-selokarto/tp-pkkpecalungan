@@ -32,7 +32,7 @@ class ProgramPrioritasPrintController extends Controller
         $this->authorize('viewAny', ProgramPrioritas::class);
 
         $items = $this->listScopedProgramPrioritasUseCase
-            ->execute($level)
+            ->executeAll($level)
             ->sortBy('id')
             ->values();
 

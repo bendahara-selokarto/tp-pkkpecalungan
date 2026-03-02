@@ -4,6 +4,8 @@ namespace App\Domains\Wilayah\Koperasi\UseCases;
 
 use App\Domains\Wilayah\Koperasi\Repositories\KoperasiRepositoryInterface;
 use App\Domains\Wilayah\Koperasi\Services\KoperasiScopeService;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class ListScopedKoperasiUseCase
 {
@@ -13,13 +15,17 @@ class ListScopedKoperasiUseCase
     ) {
     }
 
-    public function execute(string $level)
+    public function execute(string $level, int $perPage): LengthAwarePaginator
+    {
+        $areaId = $this->koperasiScopeService->requireUserAreaId();
+
+        return $this->koperasiRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+    }
+
+    public function executeAll(string $level): Collection
     {
         $areaId = $this->koperasiScopeService->requireUserAreaId();
 
         return $this->koperasiRepository->getByLevelAndArea($level, $areaId);
     }
 }
-
-
-

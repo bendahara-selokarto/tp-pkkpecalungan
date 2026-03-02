@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\KejarPaket\Repositories;
 
 use App\Domains\Wilayah\KejarPaket\DTOs\KejarPaketData;
 use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 class KejarPaketRepository implements KejarPaketRepositoryInterface
@@ -21,6 +22,16 @@ class KejarPaketRepository implements KejarPaketRepositoryInterface
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return KejarPaket::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function getByLevelAndArea(string $level, int $areaId): Collection

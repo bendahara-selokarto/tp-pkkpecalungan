@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\PilotProjectKeluargaSehat\Repositories;
 
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Models\PilotProjectKeluargaSehatReport;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Models\PilotProjectKeluargaSehatValue;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -31,6 +32,17 @@ class PilotProjectKeluargaSehatRepository implements PilotProjectKeluargaSehatRe
             ->withCount('values')
             ->latest('id')
             ->get();
+    }
+
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    {
+        return PilotProjectKeluargaSehatReport::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->withCount('values')
+            ->latest('id')
+            ->paginate($perPage)
+            ->withQueryString();
     }
 
     public function findReport(int $id): PilotProjectKeluargaSehatReport
