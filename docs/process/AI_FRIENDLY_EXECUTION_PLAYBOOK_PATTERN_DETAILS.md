@@ -459,3 +459,30 @@ GUARDRAIL: max_route_correction=1
 VALIDATION: sync(single-path,playbook,todo,adr)
 STATUS: active
 ```
+
+### P-024 - TODO Generator Canonicalization
+- Tanggal: 2026-03-02
+- Status: active
+- Konteks: pembuatan TODO concern manual rawan drift pada format judul, kode unik, metadata tanggal, dan nama file.
+- Trigger:
+  - user/AI perlu membuat TODO concern baru.
+  - ditemukan drift format TODO terhadap kontrak `AGENTS.md`.
+- Langkah eksekusi:
+  1) jalankan `scripts/generate_todo.ps1` dengan input wajib `-Code` dan `-Title`.
+  2) gunakan `-Date` bila perlu tanggal spesifik; default hari ini.
+  3) gunakan `-RelatedAdr` bila concern terkait keputusan arsitektur.
+  4) verifikasi hasil file berada di `docs/process/TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
+- Guardrail:
+  - `Code` wajib `^[A-Z0-9]{4,8}$`.
+  - generator wajib bersumber dari `docs/process/TEMPLATE_TODO_CONCERN.md`.
+  - jika file sudah ada, wajib eksplisit `-Force` untuk overwrite.
+- Validasi minimum:
+  - dry-run menghasilkan path output sesuai kontrak.
+  - file hasil generate berisi judul `# TODO <KODE_UNIK> <Judul Ringkas>`.
+  - metadata `Tanggal` dan `Related ADR` terisi.
+- Bukti efisiensi/akurasi:
+  - mengurangi variasi format TODO antar concern dan mempercepat bootstrap dokumen eksekusi.
+- Risiko:
+  - judul dengan kata sangat umum bisa menghasilkan ringkasan nama file kurang deskriptif.
+- Catatan reuse lintas domain/project:
+  - bisa dipakai lintas project Laravel/Inertia selama pola dokumentasi TODO mengikuti kontrak serupa.

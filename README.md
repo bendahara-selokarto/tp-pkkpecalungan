@@ -17,6 +17,11 @@ Indeks dokumentasi ada di `docs/README.md`.
 - Keputusan arsitektur lintas concern: `docs/adr/ADR_*.md`.
 - TODO adalah jalur eksekusi, ADR adalah jejak keputusan + trade-off.
 
+Generate TODO concern baru (standar):
+```powershell
+powershell -File scripts/generate_todo.ps1 -Code PGM26A1 -Title "Mitigasi Gap Pagination" -Date 2026-03-02 -RelatedAdr -
+```
+
 ## 1. Tujuan Proyek
 
 Aplikasi ini dipakai untuk manajemen data PKK berbasis wilayah.

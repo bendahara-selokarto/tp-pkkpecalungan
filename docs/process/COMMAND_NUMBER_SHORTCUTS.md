@@ -22,3 +22,4 @@ Cara pakai:
 11. Update `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md` + `docs/domain/DOMAIN_CONTRACT_MATRIX.md` jika kontrak berubah.
 12. Sebutkan saya harus cek di menu UI bagian mana.
 13. Eksekusi todo `[file]` sampai end-to-end, commit by concern, jalankan test, dan sinkronkan dokumen kontrak.
+14. Generate TODO concern baru via `powershell -File scripts/generate_todo.ps1 -Code <KODE> -Title "<Judul>"`.
