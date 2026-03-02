@@ -1,6 +1,6 @@
 # TODO MVS26A1 Monitoring Visibility Semua Modul
 Tanggal: 2026-02-27  
-Status: `in-progress`
+Status: `done` (`state:rolling-monitoring`, `state:global-visibility-gate`)
 
 ## Konteks
 - Dokumen acuan utama: `docs/process/MONITORING_VISIBILITY_MODUL.md`.
@@ -109,11 +109,13 @@ Status: `in-progress`
 - [x] Tambah gate test kontrak global:
   - `tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php`.
 
-## Bukti Validasi (2026-02-27)
+## Bukti Validasi
 - [x] `php artisan test`
   - hasil: `PASS` (`925` tests, `5750` assertions).
 - [x] `php artisan test tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
   - hasil: `PASS` (`28` tests, `322` assertions).
+- [x] `php artisan test tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php` (run ulang 2026-03-02)
+  - hasil: `PASS` (`33` tests, `349` assertions).
 
 ## Risiko Residual
 - Drift kontrak jika perubahan modul tidak memutakhirkan baseline inventory di dokumen ini.
@@ -126,7 +128,11 @@ Status: `in-progress`
 - [x] Gate global default untuk perubahan visibility lintas modul adalah `php artisan test`.
 
 ## Output Wajib Saat Update Berikutnya
-- [ ] Catat slug modul yang berubah (add/remove/change-mode).
-- [ ] Catat role terdampak dan mode sebelum/sesudah.
-- [ ] Lampirkan hasil validasi terbaru.
-- [ ] Sinkronkan dokumen canonical/process terkait concern yang sama.
+- [x] Catat slug modul yang berubah (add/remove/change-mode).
+  - catatan 2026-03-02: tidak ada perubahan slug (`0 add`, `0 remove`, `0 change-mode`).
+- [x] Catat role terdampak dan mode sebelum/sesudah.
+  - catatan 2026-03-02: tidak ada role terdampak; mode akses tetap (`before = after`).
+- [x] Lampirkan hasil validasi terbaru.
+  - catatan 2026-03-02: validasi targeted visibility lulus (`33` tests, `349` assertions).
+- [x] Sinkronkan dokumen canonical/process terkait concern yang sama.
+  - catatan 2026-03-02: sinkron status parent-child concern dilakukan pada `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.

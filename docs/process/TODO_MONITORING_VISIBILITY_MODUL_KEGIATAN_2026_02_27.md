@@ -1,6 +1,6 @@
 # TODO MVK26A1 Monitoring Visibility Modul Kegiatan
 Tanggal: 2026-02-27  
-Status: `in-progress`
+Status: `done` (`state:child-spec`, `state:rolling-monitoring`)
 
 ## Konteks
 - Status concern: `active` sebagai sub-scope modul kegiatan; baseline lintas semua modul dilanjutkan di `docs/process/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`.
@@ -55,9 +55,11 @@ Status: `in-progress`
 - [x] Jalankan test visibilitas menu/middleware/payload untuk `activities`.
 - [x] Jalankan test policy kegiatan + kontrak frontend menu guard.
 
-## Bukti Validasi (2026-02-27)
+## Bukti Validasi
 - [x] `php artisan test tests/Feature/DesaActivityTest.php tests/Feature/KecamatanActivityTest.php tests/Feature/KecamatanDesaActivityTest.php tests/Feature/ActivityPrintTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Policies/ActivityPolicyTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
   - hasil: `PASS` (`55` tests, `371` assertions).
+- [x] `php artisan test tests/Feature/DesaActivityTest.php tests/Feature/KecamatanActivityTest.php tests/Feature/KecamatanDesaActivityTest.php tests/Feature/ActivityPrintTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Policies/ActivityPolicyTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php` (run ulang 2026-03-02)
+  - hasil: `PASS` (`67` tests, `471` assertions).
 
 ## Risiko Residual
 - Drift dokumen jika perubahan visibility dilakukan tanpa update log monitoring concern ini.
@@ -70,6 +72,9 @@ Status: `in-progress`
 - [x] Modul `desa-activities` tetap diposisikan sebagai monitoring kecamatan, bukan jalur mutasi data sumber untuk role pokja.
 
 ## Output Wajib Saat Update Berikutnya
-- [ ] Catat diff mode sebelum/sesudah untuk role terdampak.
-- [ ] Lampirkan perintah validasi dan hasil run terbaru.
-- [ ] Sinkronkan dokumen canonical/process jika kontrak role-scope berubah.
+- [x] Catat diff mode sebelum/sesudah untuk role terdampak.
+  - catatan 2026-03-02: tidak ada perubahan mode role pada `activities` maupun `desa-activities` (`before = after`).
+- [x] Lampirkan perintah validasi dan hasil run terbaru.
+  - catatan 2026-03-02: validasi targeted modul kegiatan lulus (`67` tests, `471` assertions).
+- [x] Sinkronkan dokumen canonical/process jika kontrak role-scope berubah.
+  - catatan 2026-03-02: tidak ada perubahan kontrak role-scope; sinkronisasi status concern dilakukan pada registry `TTM25R1`.
