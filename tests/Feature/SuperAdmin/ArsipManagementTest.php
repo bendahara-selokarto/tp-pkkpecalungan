@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -118,5 +119,69 @@ class ArsipManagementTest extends TestCase
         $this->actingAs($staleUser)
             ->get(route('super-admin.arsip.index'))
             ->assertStatus(403);
+    }
+
+    public function test_super_admin_dapat_mengubah_per_page_arsip_management_ke_nilai_valid(): void
+    {
+        $superAdmin = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $superAdmin->assignRole('super-admin');
+
+        ArsipDocument::factory()
+            ->count(30)
+            ->state([
+                'is_global' => true,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatan->id,
+                'created_by' => $superAdmin->id,
+                'updated_by' => $superAdmin->id,
+            ])
+            ->create();
+
+        $response = $this->actingAs($superAdmin)
+            ->get(route('super-admin.arsip.index', ['per_page' => 25]));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('SuperAdmin/Arsip/Index')
+                ->where('filters.per_page', 25)
+                ->where('documents.per_page', 25)
+                ->has('documents.data', 25);
+        });
+    }
+
+    public function test_super_admin_per_page_invalid_arsip_management_fallback_ke_default(): void
+    {
+        $superAdmin = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $superAdmin->assignRole('super-admin');
+
+        ArsipDocument::factory()
+            ->count(15)
+            ->state([
+                'is_global' => true,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatan->id,
+                'created_by' => $superAdmin->id,
+                'updated_by' => $superAdmin->id,
+            ])
+            ->create();
+
+        $response = $this->actingAs($superAdmin)
+            ->get(route('super-admin.arsip.index', ['per_page' => 999]));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('SuperAdmin/Arsip/Index')
+                ->where('filters.per_page', 10)
+                ->where('documents.per_page', 10)
+                ->has('documents.data', 10);
+        });
     }
 }

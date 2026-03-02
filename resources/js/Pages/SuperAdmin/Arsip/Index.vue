@@ -83,7 +83,11 @@ const confirmDelete = () => {
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/super-admin/arsip', { per_page: selectedPerPage }, {
+  router.get('/super-admin/arsip', {
+    ...props.filters,
+    page: 1,
+    per_page: selectedPerPage,
+  }, {
     preserveScroll: true,
     preserveState: true,
     replace: true,

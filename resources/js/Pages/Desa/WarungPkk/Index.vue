@@ -10,8 +10,18 @@ import { computed, ref } from 'vue'
 
 const props = defineProps({
   warungPkkItems: {
-    type: Array,
+    type: Object,
     required: true,
+  },
+  filters: {
+    type: Object,
+    default: () => ({}),
+  },
+  pagination: {
+    type: Object,
+    default: () => ({
+      perPageOptions: [10, 25, 50],
+    }),
   },
 })
 
@@ -21,7 +31,11 @@ const perPage = computed(() => props.filters.per_page ?? 10)
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/desa/warung-pkk', { per_page: selectedPerPage }, {
+  router.get('/desa/warung-pkk', {
+    ...props.filters,
+    page: 1,
+    per_page: selectedPerPage,
+  }, {
     preserveScroll: true,
     preserveState: true,
     replace: true,
@@ -168,7 +182,6 @@ const cancelDelete = () => {
     />
   </SectionMain>
 </template>
-
 
 
 

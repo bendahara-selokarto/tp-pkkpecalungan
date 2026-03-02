@@ -33,7 +33,7 @@ Related ADR: `-`
 ## Target Hasil
 - [x] Seluruh modul dalam scope mitigasi berpindah dari list `Collection` ke kontrak pagination canonical.
 - [x] Kontrak request list `per_page` seragam lintas concern target.
-- [ ] UI list concern target memakai komponen pagination reusable dan mempertahankan query aktif.
+- [x] UI list concern target memakai komponen pagination reusable dan mempertahankan query aktif.
 - [x] Drift status dokumen concern pagination ditutup lewat doc-hardening pass.
 
 ## Langkah Eksekusi
@@ -42,15 +42,15 @@ Related ADR: `-`
   - [x] tambah request list untuk modul yang belum punya (`per_page` whitelist + fallback);
   - [x] ubah repository list ke `paginate($perPage)->withQueryString()`;
   - [x] ubah use case/controller agar mengirim metadata paginator + `filters` + `pagination.perPageOptions`.
-- [ ] P3. Frontend hardening:
-  - [ ] ubah props list dari `Array` ke payload paginator;
-  - [ ] tambahkan selector `Per halaman` dan `PaginationBar`;
-  - [ ] pastikan `router.get` menjaga query filter aktif.
+- [x] P3. Frontend hardening:
+  - [x] ubah props list dari `Array` ke payload paginator;
+  - [x] tambahkan selector `Per halaman` dan `PaginationBar`;
+  - [x] pastikan `router.get` menjaga query filter aktif.
 - [x] P4. Super admin pagination normalization:
   - [x] hilangkan hardcode `execute(10)` dengan request normalisasi `per_page`;
   - [x] sinkronkan UI super admin untuk konsumsi query `per_page`.
-- [ ] P5. Test hardening:
-  - [ ] tambah feature test pagination sukses + invalid `per_page` fallback;
+- [x] P5. Test hardening:
+  - [x] tambah feature test pagination sukses + invalid `per_page` fallback;
   - [x] tambah guard anti data leak saat page/per_page berubah.
 - [x] P6. Doc-hardening pass:
   - [x] sinkronkan status `TODO_UI_PAGINATION_E2E_2026_02_24.md`;
@@ -59,8 +59,8 @@ Related ADR: `-`
 ## Validasi
 - [x] L1: targeted test concern pagination per modul yang diubah.
 - [x] L2: regression test lintas concern list wilayah + super admin.
-- [ ] L3: `php artisan test`.
-- [x] L4: `npm run build`.
+- [x] L3: `php artisan test`.
+- [ ] L4: `npm run build`.
 - [ ] L5: smoke test manual (pindah halaman, ubah per-page, back/forward browser, filter persistence).
 
 ## Risiko
@@ -86,7 +86,7 @@ Related ADR: `-`
 - Backend lintas modul target sudah memakai jalur `paginateByLevelAndArea + execute(level, perPage)` serta `executeAll(level)` untuk kebutuhan print.
 - Normalisasi request `per_page` (`10,25,50` + fallback) sudah ditambahkan untuk seluruh modul target dan super-admin (`users`, `arsip`).
 - UI super-admin (`Users`, `Arsip`) sudah memakai kontrol `per_page` + `PaginationBar`.
-- UI list modul wilayah/pilot masih menggunakan pola array lama; metadata pagination sudah dikirim backend sebagai tahap transisi.
+- UI list modul wilayah + pilot kini sudah sinkron ke payload paginator (props `Object`) dan query `per_page` menjaga filter aktif (`...props.filters` + reset `page=1`).
 - Validasi otomatis yang sudah dijalankan:
   - `php artisan test --filter Koperasi`
   - `php artisan test --filter KejarPaket`
@@ -98,4 +98,19 @@ Related ADR: `-`
   - `php artisan test --filter PilotProjectNaskahPelaporan`
   - `php artisan test --filter UserManagementIndexPagination`
   - `php artisan test --filter ArsipManagement`
-  - `npm run build`
+
+## Progress Update 2026-03-02 (Lanjutan Eksekusi Manto)
+- Hardening frontend concern target selesai:
+  - `Desa/Kecamatan` untuk `Koperasi`, `KejarPaket`, `Posyandu`, `WarungPkk`.
+  - `Desa/Kecamatan` untuk `ProgramPrioritas`, `SimulasiPenyuluhan` (query persistence).
+  - `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan`.
+  - `SuperAdmin/Users`, `SuperAdmin/Arsip` (query persistence).
+- Hardening test concern target selesai:
+  - tambah test pagination sukses + invalid fallback untuk `super-admin users`.
+  - tambah test pagination sukses + invalid fallback untuk `super-admin arsip`.
+- Validasi otomatis tambahan:
+  - `php artisan test --filter PaginationNormalizationWilayahTest` (`PASS`, `32` tests).
+  - `php artisan test --filter UserManagementIndexPaginationTest` (`PASS`, `5` tests).
+  - `php artisan test --filter ArsipManagementTest` (`PASS`, `5` tests).
+  - `php artisan test` (`PASS`, `1030` tests, `6866` assertions).
+  - `npm run build` (`BLOCKED`: missing optional dependency `@rollup/rollup-linux-x64-gnu` pada environment saat ini).

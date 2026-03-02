@@ -33,7 +33,11 @@ const perPage = computed(() => props.filters.per_page ?? 10)
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/desa/simulasi-penyuluhan', { per_page: selectedPerPage }, {
+  router.get('/desa/simulasi-penyuluhan', {
+    ...props.filters,
+    page: 1,
+    per_page: selectedPerPage,
+  }, {
     preserveScroll: true,
     preserveState: true,
     replace: true,
@@ -184,7 +188,6 @@ const cancelDelete = () => {
     />
   </SectionMain>
 </template>
-
 
 
 

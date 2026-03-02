@@ -1237,3 +1237,37 @@ Keputusan:
 
 Status:
 - `PASS`.
+
+## Mitigasi Gap Pagination (`PGM26A1`) - Lanjutan Eksekusi: 2026-03-02
+
+Ruang lingkup:
+- Menuntaskan hardening frontend pagination untuk modul target wilayah, pilot project, dan super-admin.
+- Menambah hardening test untuk `per_page` valid/invalid fallback pada concern super-admin.
+
+Artefak:
+- `resources/js/Pages/Desa/{Koperasi,KejarPaket,Posyandu,ProgramPrioritas,SimulasiPenyuluhan,WarungPkk}/Index.vue`
+- `resources/js/Pages/Kecamatan/{Koperasi,KejarPaket,Posyandu,ProgramPrioritas,SimulasiPenyuluhan,WarungPkk}/Index.vue`
+- `resources/js/Pages/{PilotProjectKeluargaSehat,PilotProjectNaskahPelaporan}/Index.vue`
+- `resources/js/Pages/SuperAdmin/{Users,Arsip}/Index.vue`
+- `tests/Feature/SuperAdmin/UserManagementIndexPaginationTest.php`
+- `tests/Feature/SuperAdmin/ArsipManagementTest.php`
+- `docs/process/TODO_PGM26A1_MITIGASI_GAP_PAGINATION_2026_03_02.md`
+
+Perintah validasi:
+- `php artisan test --filter PaginationNormalizationWilayahTest`
+  - hasil: `PASS` (`32` tests, `576` assertions).
+- `php artisan test --filter UserManagementIndexPaginationTest`
+  - hasil: `PASS` (`5` tests, `61` assertions).
+- `php artisan test --filter ArsipManagementTest`
+  - hasil: `PASS` (`5` tests, `52` assertions).
+- `php artisan test`
+  - hasil: `PASS` (`1030` tests, `6866` assertions).
+- `npm run build`
+  - hasil: `BLOCKED` (dependency opsional `@rollup/rollup-linux-x64-gnu` belum tersedia pada environment).
+
+Keputusan:
+- Kontrak frontend concern target dikunci ke payload paginator (`Object`) + query persistence (`...props.filters`, reset `page=1`).
+- Concern `PGM26A1` tetap `in-progress` sampai validasi build + smoke test manual terselesaikan.
+
+Status:
+- `PARTIAL` (`implementation+tests-done`, `build-validation-blocked-by-environment`).

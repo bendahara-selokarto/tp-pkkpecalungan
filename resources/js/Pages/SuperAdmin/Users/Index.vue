@@ -68,7 +68,11 @@ const cancelDelete = () => {
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/super-admin/users', { per_page: selectedPerPage }, {
+  router.get('/super-admin/users', {
+    ...props.filters,
+    page: 1,
+    per_page: selectedPerPage,
+  }, {
     preserveScroll: true,
     preserveState: true,
     replace: true,

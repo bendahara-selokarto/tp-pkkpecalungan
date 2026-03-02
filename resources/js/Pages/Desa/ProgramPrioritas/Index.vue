@@ -36,7 +36,11 @@ const perPage = computed(() => props.filters.per_page ?? 10)
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/desa/program-prioritas', { per_page: selectedPerPage }, {
+  router.get('/desa/program-prioritas', {
+    ...props.filters,
+    page: 1,
+    per_page: selectedPerPage,
+  }, {
     preserveScroll: true,
     preserveState: true,
     replace: true,
@@ -211,6 +215,5 @@ const formatDana = (item) => {
     />
   </SectionMain>
 </template>
-
 
 
