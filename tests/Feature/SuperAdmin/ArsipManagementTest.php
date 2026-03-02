@@ -89,6 +89,56 @@ class ArsipManagementTest extends TestCase
         Storage::disk('public')->assertMissing($storedPath);
     }
 
+    public function test_super_admin_dapat_mengelola_arsip_global_milik_super_admin_lain(): void
+    {
+        Storage::fake('public');
+
+        $creator = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $creator->assignRole('super-admin');
+
+        $operator = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $operator->assignRole('super-admin');
+
+        $document = ArsipDocument::factory()->create([
+            'title' => 'Dokumen Global Lama',
+            'description' => 'Dokumen global milik super-admin creator.',
+            'is_global' => true,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+            'created_by' => $creator->id,
+            'updated_by' => $creator->id,
+        ]);
+
+        Storage::disk('public')->put($document->file_path, 'global-file');
+
+        $this->actingAs($operator)
+            ->put(route('super-admin.arsip.update', $document), [
+                'title' => 'Dokumen Global Diperbarui Operator',
+                'description' => 'Perubahan oleh super-admin lain.',
+            ])
+            ->assertRedirect(route('super-admin.arsip.index'))
+            ->assertSessionHas('success');
+
+        $document->refresh();
+
+        $this->assertSame('Dokumen Global Diperbarui Operator', $document->title);
+        $this->assertSame($operator->id, $document->updated_by);
+
+        $this->actingAs($operator)
+            ->delete(route('super-admin.arsip.destroy', $document))
+            ->assertRedirect(route('super-admin.arsip.index'))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseMissing('arsip_documents', ['id' => $document->id]);
+        Storage::disk('public')->assertMissing($document->file_path);
+    }
+
     public function test_non_super_admin_ditolak_mengakses_management_arsip(): void
     {
         $desa = Area::create([

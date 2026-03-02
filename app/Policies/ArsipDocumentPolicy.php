@@ -51,12 +51,20 @@ class ArsipDocumentPolicy
 
     public function update(User $authUser, ArsipDocument $arsipDocument): bool
     {
-        return (int) $arsipDocument->created_by === (int) $authUser->id;
+        if ((int) $arsipDocument->created_by === (int) $authUser->id) {
+            return true;
+        }
+
+        return $this->canManageGlobalArsip($authUser, $arsipDocument);
     }
 
     public function delete(User $authUser, ArsipDocument $arsipDocument): bool
     {
-        return (int) $arsipDocument->created_by === (int) $authUser->id;
+        if ((int) $arsipDocument->created_by === (int) $authUser->id) {
+            return true;
+        }
+
+        return $this->canManageGlobalArsip($authUser, $arsipDocument);
     }
 
     private function canMonitorDesaArsip(User $authUser, ArsipDocument $arsipDocument): bool
@@ -82,5 +90,10 @@ class ArsipDocumentPolicy
         }
 
         return $arsipDocument->creator?->scope === 'desa';
+    }
+
+    private function canManageGlobalArsip(User $authUser, ArsipDocument $arsipDocument): bool
+    {
+        return (bool) $arsipDocument->is_global && $authUser->hasRole('super-admin');
     }
 }

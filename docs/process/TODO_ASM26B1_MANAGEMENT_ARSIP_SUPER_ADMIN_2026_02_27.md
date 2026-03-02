@@ -1,7 +1,7 @@
 # TODO ASM26B1 Management Arsip Super Admin 2026-02-27
 
 Tanggal: 2026-02-27  
-Status: `in-progress`
+Status: `done`
 
 ## Konteks
 - Baseline saat ini: menu `Arsip` sudah tersedia untuk daftar/unduh dokumen statis.
@@ -28,42 +28,45 @@ Status: `in-progress`
   - jalur monitoring desa untuk arsip kecamatan mengikuti pola dual-scope concern `activities`.
 
 ## Target Hasil
-- [ ] Panel management arsip tersedia pada area `super-admin`.
-- [ ] Super-admin dapat tambah/ubah/hapus/atur visibilitas dokumen arsip.
-- [ ] Halaman `Arsip` user umum hanya menampilkan dokumen publik.
-- [ ] Download dokumen memiliki guard keamanan (path traversal, file existence, dan otorisasi).
-- [ ] Menu super-admin menampilkan entry `Management Arsip` sejajar concern administratif lain.
+- [x] Panel management arsip tersedia pada area `super-admin`.
+- [x] Super-admin dapat tambah/ubah/hapus dokumen arsip global, termasuk lintas akun `super-admin`.
+- [x] Halaman `Arsip` user mengikuti kontrak `ARS26B2` (global + private milik sendiri, monitoring read-only via jalur sekretaris kecamatan).
+- [x] Download dokumen memiliki guard keamanan (path traversal, file existence, dan otorisasi).
+- [x] Menu super-admin menampilkan entry `Management Arsip` sejajar concern administratif lain.
 
 ## Rencana Eksekusi
-- [ ] Tetapkan model dan skema metadata arsip (`arsip_documents`) beserta field status publikasi.
-- [ ] Tambah repository interface + repository arsip management (query scoped by visibility).
-- [ ] Tambah use case/action:
-  - [ ] list arsip publik (frontend umum),
-  - [ ] list arsip management (super-admin),
-  - [ ] create/update/delete/publish.
-- [ ] Tambah controller dan route:
-  - [ ] route publik `arsip` (read/download),
-  - [ ] route `super-admin/arsip/*` untuk management.
-- [ ] Tambah request validation upload dokumen + normalisasi payload metadata.
-- [ ] Tambah policy/authorization untuk operasi arsip.
-- [ ] Update UI:
-  - [ ] halaman management arsip super-admin,
-  - [ ] update menu super-admin,
-  - [ ] penyesuaian halaman arsip publik agar konsumsi metadata arsip terkelola.
-- [ ] Migrasikan/seed baseline dokumen referensi awal dari `docs/referensi` ke metadata arsip (jika disetujui implementasi).
+- [x] Tetapkan model dan skema metadata arsip (`arsip_documents`) beserta field status visibilitas (`is_global`).
+- [x] Tambah repository interface + repository arsip management (query scoped by visibility).
+- [x] Tambah use case/action:
+  - [x] list arsip user (`/arsip`) dan monitoring (`desa-arsip`),
+  - [x] list arsip management (super-admin),
+  - [x] create/update/delete.
+- [x] Tambah controller dan route:
+  - [x] route publik `arsip` (read/download + owner mutation),
+  - [x] route `super-admin/arsip/*` untuk management.
+- [x] Tambah request validation upload dokumen + normalisasi payload metadata.
+- [x] Tambah policy/authorization untuk operasi arsip, termasuk hardening mutasi arsip global lintas akun `super-admin`.
+- [x] Update UI:
+  - [x] halaman management arsip super-admin,
+  - [x] update menu super-admin,
+  - [x] penyesuaian halaman arsip publik agar konsumsi metadata arsip terkelola.
+- [x] Keputusan: migrasi/seed baseline dokumen referensi awal dari `docs/referensi` tidak dieksekusi di concern ini dan dipertahankan sebagai opsi rollout terpisah.
 
 ## Validasi (Matrix Minimum)
-- [ ] Feature test jalur sukses management arsip oleh `super-admin`.
-- [ ] Feature test tolak akses management arsip oleh non `super-admin`.
-- [ ] Feature test tolak akses saat metadata role-area stale (untuk user non super-admin yang mencoba path management).
-- [ ] Unit test policy arsip (`view`, `create`, `update`, `delete`, `publish`).
-- [ ] Unit/feature test repository/use case anti data leak (dokumen non publik tidak muncul di list publik).
-- [ ] Jalankan `php artisan test`.
+- [x] Feature test jalur sukses management arsip oleh `super-admin`.
+- [x] Feature test tolak akses management arsip oleh non `super-admin`.
+- [x] Feature test tolak akses saat metadata role-area stale (untuk user non super-admin yang mencoba path management).
+- [x] Unit test policy arsip (`view`, `create`, `update`, `delete`).
+- [x] Unit/feature test repository/use case anti data leak (dokumen private tidak muncul untuk user non-owner pada jalur `/arsip`).
+- [x] Jalankan `php artisan test --filter ArsipManagementTest`.
+- [x] Jalankan `php artisan test --filter ArsipTest`.
+- [x] Jalankan `php artisan test --filter ArsipDocumentPolicyTest`.
+- [x] Jalankan `php artisan test`.
 
 ## Audit Dashboard Trigger
-- [ ] Audit dampak terhadap KPI/chart/progress dashboard.
-- [ ] Keputusan awal: management arsip adalah concern utilitas dokumen statis, bukan input domain KPI dashboard.
-- [ ] Jika tetap `N/A`, tulis justifikasi final eksplisit pada laporan implementasi.
+- [x] Audit dampak terhadap KPI/chart/progress dashboard.
+- [x] Keputusan: management arsip adalah concern utilitas dokumen, bukan input domain KPI dashboard.
+- [x] Justifikasi final `N/A` dashboard dikunci pada concern ini.
 
 ## Risiko
 - Transisi dari arsip statis ke arsip terkelola berisiko mismatch daftar dokumen bila migrasi metadata tidak lengkap.
@@ -78,3 +81,8 @@ Status: `in-progress`
 ## Keputusan
 - Dokumen ini ditetapkan sebagai acuan rencana concern `management arsip`.
 - TODO baseline sebelumnya (`TODO_ARS26A1_MENU_ARSIP_DOKUMEN_STATIS_2026_02_27.md`) diperlakukan sebagai baseline historis implementasi fase awal menu arsip statis.
+
+## Sinkronisasi 2026-03-02
+- Gap otorisasi ditutup: `super-admin` kini dapat `update/delete` arsip `global` lintas akun `super-admin` pada jalur `/super-admin/arsip`.
+- Jalur `/arsip` user tetap owner-only untuk mutasi private, sehingga boundary `management` vs `user-route` tidak drift.
+- Sinkronisasi concern dilakukan ke registry SOT `TTM25R1` dengan status concern `C-ARSIP-MGMT` menjadi `done`.

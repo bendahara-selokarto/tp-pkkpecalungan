@@ -1358,3 +1358,35 @@ Keputusan:
 
 Status:
 - `PASS` (`registry-sync-completed`).
+
+## Hardening ASM26B1 Management Arsip Super Admin: 2026-03-02
+
+Ruang lingkup:
+- Menutup gap otorisasi lintas akun `super-admin` pada operasi `update/delete` arsip `global` di jalur `/super-admin/arsip`.
+- Menjaga kontrak jalur `/arsip` user tetap owner-only untuk mutasi arsip private.
+- Menyinkronkan status concern `ASM26B1` pada dokumen TODO dan registry SOT.
+
+Artefak:
+- `app/Policies/ArsipDocumentPolicy.php`
+- `tests/Feature/SuperAdmin/ArsipManagementTest.php`
+- `tests/Unit/Policies/ArsipDocumentPolicyTest.php`
+- `docs/process/TODO_ASM26B1_MANAGEMENT_ARSIP_SUPER_ADMIN_2026_02_27.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+
+Perintah validasi:
+- `php artisan test --filter ArsipManagementTest`
+  - hasil: `PASS` (`7` tests, `108` assertions).
+- `php artisan test --filter ArsipTest`
+  - hasil: `PASS` (`11` tests, `53` assertions; termasuk `KecamatanDesaArsipTest` pada filter ini).
+- `php artisan test --filter ArsipDocumentPolicyTest`
+  - hasil: `PASS` (`5` tests, `12` assertions).
+- `php artisan test`
+  - hasil: `PASS` (`1035` tests, `6974` assertions).
+
+Keputusan:
+- Policy `update/delete` arsip kini mengizinkan `super-admin` untuk dokumen `is_global=true` meskipun bukan creator.
+- Boundary otorisasi tetap aman: jalur user `/arsip` tetap memaksa owner-only untuk mutasi private.
+- Concern `C-ARSIP-MGMT` disinkronkan ke status `done`.
+
+Status:
+- `PASS`.

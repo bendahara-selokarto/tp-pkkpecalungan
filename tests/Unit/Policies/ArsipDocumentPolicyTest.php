@@ -135,6 +135,34 @@ class ArsipDocumentPolicyTest extends TestCase
     }
 
     #[Test]
+    public function super_admin_dapat_update_delete_arsip_global_milik_super_admin_lain(): void
+    {
+        $creator = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+        ]);
+        $creator->assignRole('super-admin');
+
+        $operator = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatanB->id,
+        ]);
+        $operator->assignRole('super-admin');
+
+        $document = ArsipDocument::factory()->create([
+            'is_global' => true,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $creator->id,
+        ]);
+
+        $policy = app(ArsipDocumentPolicy::class);
+
+        $this->assertTrue($policy->update($operator, $document));
+        $this->assertTrue($policy->delete($operator, $document));
+    }
+
+    #[Test]
     public function sekretaris_kecamatan_dapat_melihat_arsip_desa_di_wilayahnya_saja(): void
     {
         $sekretaris = User::factory()->create([
