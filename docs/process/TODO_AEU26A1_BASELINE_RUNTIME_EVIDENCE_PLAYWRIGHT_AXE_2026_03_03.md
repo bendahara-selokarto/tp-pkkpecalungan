@@ -27,6 +27,7 @@ Related ADR: `-`
 ## Target Hasil
 - [x] Baseline Playwright + Axe terpasang dan dapat dijalankan.
 - [x] Evidence runtime L3 awal tersedia untuk login page + smoke auth shell.
+- [x] Baseline terautentikasi diperluas untuk jalur dashboard/super-admin + a11y shell.
 
 ## Langkah Eksekusi
 - [x] Analisis scoped dependency + side effect.
@@ -34,17 +35,18 @@ Related ADR: `-`
 - [x] Sinkronisasi dokumen concern terkait (README runtime evidence).
 
 ## Validasi
-- [x] L1: `npm run test:e2e:smoke` (`2 passed`, `2 skipped` karena kredensial belum diset).
-- [x] L2: `npm run test:e2e:a11y` (`2 passed`).
+- [x] L1: `npm run test:e2e` (`4 passed`, `4 skipped` karena kredensial belum diset).
+- [x] L2: `npm run test:e2e:smoke` + `npm run test:e2e:a11y` (baseline login lulus; scenario auth siap saat kredensial tersedia).
 - [x] L3: tidak wajib `php artisan test` (perubahan concern frontend tooling E2E runtime).
 
 ## Risiko
 - Risiko 1: smoke terautentikasi dapat ter-skip jika kredensial E2E tidak disediakan.
-- Risiko 2: coverage baseline baru mencakup login + shell, belum mencakup semua flow CRUD.
+- Risiko 2: coverage baseline baru mencakup login + shell dashboard/super-admin, belum mencakup seluruh flow CRUD lintas modul.
 
 ## Keputusan
 - [x] K1: baseline runtime memakai Playwright dengan dua project viewport (`desktop`, `mobile`).
 - [x] K2: a11y baseline memakai Axe pada login page dengan gate `serious|critical`.
+- [x] K3: skenario terautentikasi mencakup guard runtime JS + navigasi shell + logout + a11y shell.
 
 ## Keputusan Arsitektur (Jika Ada)
 - [x] Tidak membuat ADR baru (tidak ada perubahan boundary arsitektur lintas concern).

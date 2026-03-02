@@ -60,6 +60,43 @@ test.describe('authenticated runtime smoke', () => {
     await expect(page).toHaveURL(/\/(dashboard|super-admin\/users)(\?.*)?$/);
     await expect(page.getByRole('button', { name: 'Keluar' })).toBeVisible();
     await expect(page.getByText('Terjadi gangguan antarmuka karena error JavaScript.')).toBeHidden();
+
+    if (page.url().includes('/dashboard')) {
+      await expect(page.getByRole('heading', { name: 'Dashboard' })).toBeVisible();
+      await expect(page.getByRole('button', { name: 'Terapkan Filter Chart' })).toBeVisible();
+      await page.getByRole('button', { name: 'Terapkan Filter Chart' }).click();
+      await expect(page).toHaveURL(/\/dashboard(\?.*)?$/);
+      const pdfLink = page.getByRole('link', { name: 'Cetak Chart PDF' });
+      await expect(pdfLink).toBeVisible();
+      await expect(pdfLink).toHaveAttribute('href', /\/dashboard\/charts\/report\/pdf(\?.*)?$/);
+    }
+
+    if (page.url().includes('/super-admin/users')) {
+      await expect(page.getByRole('link', { name: 'Manajemen User' })).toBeVisible();
+      await page.getByRole('link', { name: 'Manajemen User' }).click();
+      await expect(page).toHaveURL(/\/super-admin\/users(\?.*)?$/);
+    }
+
+    await page.getByRole('button', { name: 'Keluar' }).click();
+    await expect(page).toHaveURL(/\/login$/);
     expect(runtimeErrors).toEqual([]);
+  });
+
+  test('@a11y authenticated app shell has no serious or critical axe violations', async ({ page }) => {
+    await page.goto('/login');
+    await page.locator('#email').fill(e2eEmail);
+    await page.locator('#password').fill(e2ePassword);
+    await page.locator('button[type="submit"]').click();
+    await expect(page).toHaveURL(/\/(dashboard|super-admin\/users)(\?.*)?$/);
+
+    const accessibilityScan = await new AxeBuilder({ page })
+      .disableRules(['color-contrast'])
+      .analyze();
+
+    const seriousViolations = accessibilityScan.violations.filter((violation) =>
+      ['serious', 'critical'].includes(String(violation.impact ?? ''))
+    );
+
+    expect(seriousViolations).toEqual([]);
   });
 });
