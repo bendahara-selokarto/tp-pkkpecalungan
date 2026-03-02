@@ -80,6 +80,8 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
 - [x] `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
 - [x] `php artisan test`
+- [x] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php` (run ulang 2026-03-02)
+  - hasil: `PASS` (`26` tests, `280` assertions).
 
 ## Risiko
 - Risiko eskalasi privilege jika kombinasi role/modul tidak divalidasi ketat.
@@ -97,9 +99,27 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Snapshot matrix sebelum perubahan write massal.
 
 ## Output Final
-- [ ] Ringkasan perubahan + alasan + dampak.
-- [ ] Daftar file terdampak per layer (route/request/use case/repository/model/ui/test/docs).
-- [ ] Hasil validasi + residual risk + opsi lanjutan.
+- [x] Ringkasan perubahan + alasan + dampak.
+  - Tahap 1: matrix akses read-only super-admin untuk observability keputusan akses tanpa mutasi.
+  - Tahap 2: write override pilot `catatan-keluarga` + audit trail untuk validasi jalur mutasi terkontrol.
+  - Tahap 3 batch 1: rollout override `activities` dengan validasi kompatibilitas `module x role x scope`.
+  - Dampak: perubahan akses runtime tidak lagi wajib patch hardcoded untuk modul rollout terkelola; authority backend tetap dijaga via middleware + resolver + policy.
+- [x] Daftar file terdampak per layer (route/request/use case/repository/model/ui/test/docs).
+  - `route`: `routes/web.php`.
+  - `request`: `app/Http/Requests/SuperAdmin/UpdatePilotCatatanKeluargaOverrideRequest.php`, `app/Http/Requests/SuperAdmin/RollbackPilotCatatanKeluargaOverrideRequest.php`.
+  - `controller/use case/action`: `app/Http/Controllers/SuperAdmin/AccessControlManagementController.php`, `app/UseCases/SuperAdmin/ListAccessControlMatrixUseCase.php`, `app/Domains/Wilayah/AccessControl/Actions/UpsertPilotCatatanKeluargaOverrideAction.php`, `app/Domains/Wilayah/AccessControl/Actions/RollbackPilotCatatanKeluargaOverrideAction.php`.
+  - `repository/model/config`: `app/Domains/Wilayah/AccessControl/Repositories/ModuleAccessOverrideRepositoryInterface.php`, `app/Domains/Wilayah/AccessControl/Repositories/ModuleAccessOverrideRepository.php`, `app/Domains/Wilayah/AccessControl/Models/ModuleAccessOverride.php`, `app/Domains/Wilayah/AccessControl/Models/ModuleAccessOverrideAudit.php`, `database/migrations/2026_02_28_160000_create_module_access_overrides_tables.php`, `config/access_control.php`.
+  - `service enforcement`: `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`, `app/Http/Middleware/EnsureModuleVisibility.php`.
+  - `ui`: `resources/js/Pages/SuperAdmin/AccessControl/Index.vue`, `resources/js/Layouts/DashboardLayout.vue`.
+  - `test`: `tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`, `tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`, `tests/Unit/Services/RoleMenuVisibilityServiceTest.php`, `tests/Feature/MenuVisibilityPayloadTest.php`.
+  - `docs/adr`: `docs/process/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`, `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`, `docs/process/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md`, `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`.
+- [x] Hasil validasi + residual risk + opsi lanjutan.
+  - Validasi terbaru 2026-03-02: targeted suite concern akses modular `PASS` (`26` tests, `280` assertions).
+  - Residual risk: validasi desain matrix bersama stakeholder domain belum dijalankan pada concern parent.
+  - Opsi lanjutan:
+    1) jalankan sesi validasi stakeholder matrix untuk menutup item langkah eksekusi yang tersisa,
+    2) jika disetujui, lanjut batch rollout modul berikutnya dengan pola validasi yang sama,
+    3) jika belum disetujui, pertahankan rollout saat ini (`catatan-keluarga`, `activities`) dan gunakan fallback hardcoded bila diperlukan.
 
 ## Progress Tahap 1 (2026-02-28)
 - Tahap 1 read-only selesai diimplementasikan dengan route/controller/use case/UI/table filter.
