@@ -47,6 +47,8 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`
 - Tahap 3 rollout batch modul `activities`:
   - `docs/process/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md`
+- Tahap 4 closure end-to-end parent concern:
+  - `docs/process/TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md`
 
 ## Target Hasil
 - [x] Observasi kontrak akses existing selesai dan tervalidasi scoped.
@@ -159,3 +161,12 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `hold`: pertahankan rollout saat ini (`catatan-keluarga`, `activities`) tanpa modul baru,
   - `adjust`: ubah daftar modul rollout dan ulang targeted suite sebelum aktivasi.
 - Status blocker eksternal tetap: sesi validasi stakeholder belum dieksekusi, sehingga status concern parent tetap `in-progress` (`state:awaiting-stakeholder-validation`).
+
+## Progress Update 2026-03-02 (Planner Sync: Gap E2E Closure)
+
+- Child concern penutupan gap end-to-end ditetapkan:
+  - `docs/process/TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md`
+- Tujuan child concern:
+  - mengunci keputusan stakeholder `go/hold/adjust`,
+  - mengeksekusi rollout batch modul lanjutan dengan regression gate,
+  - menyiapkan kriteria close parent concern `ACL26M1` ke status `done`.
