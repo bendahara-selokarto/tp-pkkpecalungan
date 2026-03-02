@@ -184,4 +184,66 @@ class ArsipManagementTest extends TestCase
                 ->has('documents.data', 10);
         });
     }
+
+    public function test_link_pagination_arsip_management_mempertahankan_query_per_page_saat_navigasi_halaman(): void
+    {
+        $superAdmin = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $superAdmin->assignRole('super-admin');
+
+        ArsipDocument::factory()
+            ->count(30)
+            ->state([
+                'is_global' => true,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatan->id,
+                'created_by' => $superAdmin->id,
+                'updated_by' => $superAdmin->id,
+            ])
+            ->create();
+
+        $pageOneResponse = $this->actingAs($superAdmin)
+            ->get(route('super-admin.arsip.index', ['per_page' => 25]));
+
+        $pageOneResponse->assertOk();
+        $pageOneResponse->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('SuperAdmin/Arsip/Index')
+                ->where('filters.per_page', 25)
+                ->where('documents.current_page', 1)
+                ->where('documents.next_page_url', static function (mixed $url): bool {
+                    if (! is_string($url)) {
+                        return false;
+                    }
+
+                    return str_contains($url, 'page=2')
+                        && str_contains($url, 'per_page=25');
+                });
+        });
+
+        $pageTwoResponse = $this->actingAs($superAdmin)
+            ->get(route('super-admin.arsip.index', ['page' => 2, 'per_page' => 25]));
+
+        $pageTwoResponse->assertOk();
+        $pageTwoResponse->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('SuperAdmin/Arsip/Index')
+                ->where('filters.per_page', 25)
+                ->where('documents.current_page', 2)
+                ->has('documents.data', 5);
+        });
+
+        $backToPageOneResponse = $this->actingAs($superAdmin)
+            ->get(route('super-admin.arsip.index', ['page' => 1, 'per_page' => 25]));
+
+        $backToPageOneResponse->assertOk();
+        $backToPageOneResponse->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('SuperAdmin/Arsip/Index')
+                ->where('filters.per_page', 25)
+                ->where('documents.current_page', 1);
+        });
+    }
 }

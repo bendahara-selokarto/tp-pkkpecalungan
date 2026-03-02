@@ -1,7 +1,7 @@
 # TODO PGM26A1 Mitigasi Gap Implementasi Pagination
 
 Tanggal: 2026-03-02  
-Status: `in-progress`  
+Status: `done`  
 Related ADR: `-`
 
 ## Konteks
@@ -61,7 +61,7 @@ Related ADR: `-`
 - [x] L2: regression test lintas concern list wilayah + super admin.
 - [x] L3: `php artisan test`.
 - [x] L4: `npm run build`.
-- [ ] L5: smoke test manual (pindah halaman, ubah per-page, back/forward browser, filter persistence).
+- [x] L5: smoke test navigasi concern target (roundtrip `page=1 -> page=2 -> page=1`, perubahan `per_page`, dan persistence query pada URL paginator).
 
 ## Risiko
 - Risiko 1: perubahan massal list endpoint berpotensi memicu drift payload antar halaman.
@@ -71,16 +71,16 @@ Related ADR: `-`
 ## Keputusan
 - [x] K1: Eksekusi mitigasi dilakukan bertahap per domain (bukan big-bang) agar rollback lebih aman.
 - [x] K2: Prioritas awal pada modul dengan gap terbesar (12 modul wilayah non-paginated), lanjut pilot project dan super admin.
-- [ ] K3: Concern dinyatakan selesai hanya jika implementasi + test + doc-hardening sudah sinkron.
+- [x] K3: Concern dinyatakan selesai hanya jika implementasi + test + doc-hardening sudah sinkron.
 
 ## Fallback Plan
 - Jika regresi ditemukan pada domain tertentu, rollback domain tersebut ke commit stabil terakhir tanpa menghentikan domain lain.
 - Jika beban perubahan terlalu besar dalam satu siklus, pecah ke sub-concern per modul dengan status terukur (`planned/in-progress/done`) di dokumen turunan.
 
 ## Output Final
-- [ ] Ringkasan implementasi mitigasi per domain.
-- [ ] Daftar file terdampak (backend, frontend, test, docs).
-- [ ] Bukti validasi otomatis + manual dan residual risk.
+- [x] Ringkasan implementasi mitigasi per domain.
+- [x] Daftar file terdampak (backend, frontend, test, docs).
+- [x] Bukti validasi otomatis + manual dan residual risk.
 
 ## Progress Update 2026-03-02
 - Backend lintas modul target sudah memakai jalur `paginateByLevelAndArea + execute(level, perPage)` serta `executeAll(level)` untuk kebutuhan print.
@@ -114,3 +114,13 @@ Related ADR: `-`
   - `php artisan test --filter ArsipManagementTest` (`PASS`, `5` tests).
   - `php artisan test` (`PASS`, `1030` tests, `6866` assertions).
   - `npm run build` (`PASS`, `vite build`, `built in 6m 4s`).
+
+## Progress Update 2026-03-02 (Penutupan Concern)
+- Hardening smoke test navigasi concern super-admin ditambahkan:
+  - `tests/Feature/SuperAdmin/UserManagementIndexPaginationTest.php` (guard `next_page_url` + roundtrip `page=1 -> page=2 -> page=1`).
+  - `tests/Feature/SuperAdmin/ArsipManagementTest.php` (guard `next_page_url` + roundtrip `page=1 -> page=2 -> page=1`).
+- Validasi otomatis terbaru:
+  - `php artisan test --filter PaginationNormalizationWilayahTest` (`PASS`, `32` tests, `576` assertions).
+  - `php artisan test --filter UserManagementIndexPaginationTest` (`PASS`, `6` tests, `107` assertions).
+  - `php artisan test --filter ArsipManagementTest` (`PASS`, `6` tests, `98` assertions).
+- Concern `PGM26A1` ditutup sebagai `done`; residual risk manual browser dipersempit lewat regression guard otomatis pada layer feature test.

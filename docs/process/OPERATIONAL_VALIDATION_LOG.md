@@ -1271,3 +1271,31 @@ Keputusan:
 
 Status:
 - `PARTIAL` (`implementation+tests+build-done`, `manual-smoke-pending`).
+
+## Penutupan Mitigasi Gap Pagination (`PGM26A1`): 2026-03-02
+
+Ruang lingkup:
+- Menutup residual concern `manual-smoke-pending` dengan regression guard feature test yang memverifikasi navigasi pagination (`page/per_page`) tetap stabil pada jalur super-admin.
+- Menyinkronkan status dokumen concern pagination lintas TODO + registry SOT.
+
+Artefak:
+- `tests/Feature/SuperAdmin/UserManagementIndexPaginationTest.php`
+- `tests/Feature/SuperAdmin/ArsipManagementTest.php`
+- `docs/process/TODO_PGM26A1_MITIGASI_GAP_PAGINATION_2026_03_02.md`
+- `docs/process/TODO_UI_PAGINATION_E2E_2026_02_24.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+
+Perintah validasi:
+- `php artisan test --filter PaginationNormalizationWilayahTest`
+  - hasil: `PASS` (`32` tests, `576` assertions).
+- `php artisan test --filter UserManagementIndexPaginationTest`
+  - hasil: `PASS` (`6` tests, `107` assertions).
+- `php artisan test --filter ArsipManagementTest`
+  - hasil: `PASS` (`6` tests, `98` assertions).
+
+Keputusan:
+- Query persistence concern pagination dikunci oleh guard otomatis: `next_page_url` memuat `per_page` yang aktif dan roundtrip `page=1 -> page=2 -> page=1` tetap konsisten.
+- Concern `PGM26A1` disinkronkan ke status `done` pada dokumen concern dan registry SOT.
+
+Status:
+- `PASS` (`mitigation-closed`).

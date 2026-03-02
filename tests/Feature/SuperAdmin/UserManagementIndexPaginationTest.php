@@ -121,6 +121,68 @@ class UserManagementIndexPaginationTest extends TestCase
         });
     }
 
+    public function test_link_pagination_user_management_mempertahankan_query_per_page_saat_navigasi_halaman(): void
+    {
+        $superAdmin = User::factory()->create(['name' => 'Super Admin']);
+        $superAdmin->assignRole('super-admin');
+
+        $kecamatan = Area::create([
+            'name' => 'Pecalungan',
+            'level' => ScopeLevel::KECAMATAN->value,
+        ]);
+
+        for ($i = 1; $i <= 35; $i++) {
+            $user = User::factory()->create([
+                'name' => sprintf('Managed User %02d', $i),
+                'scope' => ScopeLevel::KECAMATAN->value,
+                'area_id' => $kecamatan->id,
+            ]);
+            $user->assignRole('admin-kecamatan');
+        }
+
+        $pageOneResponse = $this->actingAs($superAdmin)
+            ->get(route('super-admin.users.index', ['per_page' => 25]));
+
+        $pageOneResponse->assertOk();
+        $pageOneResponse->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('SuperAdmin/Users/Index')
+                ->where('filters.per_page', 25)
+                ->where('users.current_page', 1)
+                ->where('users.next_page_url', static function (mixed $url): bool {
+                    if (! is_string($url)) {
+                        return false;
+                    }
+
+                    return str_contains($url, 'page=2')
+                        && str_contains($url, 'per_page=25');
+                });
+        });
+
+        $pageTwoResponse = $this->actingAs($superAdmin)
+            ->get(route('super-admin.users.index', ['page' => 2, 'per_page' => 25]));
+
+        $pageTwoResponse->assertOk();
+        $pageTwoResponse->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('SuperAdmin/Users/Index')
+                ->where('filters.per_page', 25)
+                ->where('users.current_page', 2)
+                ->has('users.data', 11);
+        });
+
+        $backToPageOneResponse = $this->actingAs($superAdmin)
+            ->get(route('super-admin.users.index', ['page' => 1, 'per_page' => 25]));
+
+        $backToPageOneResponse->assertOk();
+        $backToPageOneResponse->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('SuperAdmin/Users/Index')
+                ->where('filters.per_page', 25)
+                ->where('users.current_page', 1);
+        });
+    }
+
     public function test_index_memetakan_scope_dan_area_null_untuk_user_tanpa_area_id(): void
     {
         $superAdmin = User::factory()->create();
