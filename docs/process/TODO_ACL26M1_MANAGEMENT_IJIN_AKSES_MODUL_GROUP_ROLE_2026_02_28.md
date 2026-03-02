@@ -148,3 +148,14 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - fallback global ke hardcoded tetap tersedia via flag konfigurasi.
 - [x] Agenda validasi stakeholder dijadwalkan pada siklus review mingguan berikutnya (`2026-03-09`).
 - [ ] Eksekusi sesi validasi stakeholder matrix dan catat keputusan final (go/hold/adjust) pada concern ini.
+
+## Progress Update 2026-03-02 (Mitigasi 1: Stakeholder Readiness Pack)
+
+- Revalidasi evidence teknis concern akses modular dijalankan ulang:
+  - `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php`
+  - hasil: `PASS` (`26` tests, `280` assertions).
+- Paket keputusan stakeholder dikunci dengan opsi final:
+  - `go`: lanjut batch rollout modul berikutnya dengan pola validasi ACL26A2,
+  - `hold`: pertahankan rollout saat ini (`catatan-keluarga`, `activities`) tanpa modul baru,
+  - `adjust`: ubah daftar modul rollout dan ulang targeted suite sebelum aktivasi.
+- Status blocker eksternal tetap: sesi validasi stakeholder belum dieksekusi, sehingga status concern parent tetap `in-progress` (`state:awaiting-stakeholder-validation`).
