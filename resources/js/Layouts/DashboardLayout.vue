@@ -326,7 +326,7 @@ const primaryHref = computed(() =>
   hasRole('super-admin') ? '/super-admin/users' : '/dashboard',
 )
 
-const layoutAsidePadding = computed(() => (isAsideDesktopCollapsed.value ? '' : 'xl:pl-64'))
+const layoutAsidePadding = computed(() => (isAsideDesktopCollapsed.value ? 'xl:pl-20' : 'xl:pl-64'))
 
 const toggleCollapse = () => {
   isAsideDesktopCollapsed.value = !isAsideDesktopCollapsed.value
@@ -488,7 +488,7 @@ onBeforeUnmount(() => {
     <aside :class="[
       isAsideMobileExpanded ? 'translate-x-0' : '-translate-x-full',
       isAsideLgActive ? 'lg:translate-x-0' : 'lg:-translate-x-full',
-      isAsideDesktopCollapsed ? 'xl:-translate-x-full' : 'xl:translate-x-0',
+      'xl:translate-x-0',
       isAsideDesktopCollapsed ? 'xl:w-20' : 'xl:w-64',
     ]" class="fixed inset-y-0 left-0 z-40 w-72 transform border-r border-slate-200 bg-white transition-all duration-200 ease-in-out dark:border-slate-700 dark:bg-slate-800">
       <button
