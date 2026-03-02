@@ -59,6 +59,7 @@ Gunakan status:
 | `P-022` | Self-Reflective Routing | User meminta jalur reflektif atau task berisiko salah klasifikasi concern pada routing awal | Jalur eksekusi tetap deterministik tetapi punya checkpoint refleksi terkontrol sebelum patch besar | Re-check concern+boundary+validation ladder + sinkronisasi single-path doc/playbook/TODO/ADR concern | `active` |
 | `P-023` | Doc-Only Fast Lane Validation | Perubahan hanya dokumentasi process/domain/adr tanpa runtime change | Siklus validasi lebih cepat tanpa menurunkan guardrail sinkronisasi kontrak | L1 audit scoped (`rg`/link/status) + skip L3 bila tidak ada dampak runtime | `active` |
 | `P-024` | TODO Generator Canonicalization | User/AI perlu membuat TODO concern baru dengan format konsisten | Nama file + judul + metadata TODO selalu sesuai kontrak AGENTS | Dry-run generator + verifikasi output file terhadap template canonical | `active` |
+| `P-025` | UI/UX Auditability Gate via Code | Concern UI/UX membutuhkan status "auditable" yang bisa direplay lintas sesi | Jalur audit UI/UX memiliki evidence terstruktur (test + log concern) dan gap tooling terlihat eksplisit | L1 frontend contract, L2 feature regression concern, L3 runtime browser evidence jika tooling tersedia; jika belum, status `partial` + TODO follow-up | `active` |
 
 ## 3) Protocol Update Pattern
 

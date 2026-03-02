@@ -92,6 +92,7 @@ Aturan anti-ambiguity:
 | Seeder/migrasi legacy | Pre-release upgrade track | `database/migrations/*`, `database/seeders/*` | `migrate:fresh --seed` + regression impacted area |
 | Dokumen pedoman autentik | Contract sync doc | `docs/domain/*_MAPPING.md`, `docs/process/TODO_AUTENTIK_*` | Validasi header tabel sampai merge cell (`rowspan/colspan`) |
 | Normalisasi label/copy UI | Copywriting hardening | `resources/js/**/*`, `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md` | Smoke UI + test feature terdampak |
+| Audit UI/UX via code | UI/UX auditability gate | `tests/Unit/Frontend/*`, `tests/Feature/*`, `docs/process/TODO_*`, `docs/adr/ADR_0004_UI_UX_AUDITABILITY_GATE.md` | Frontend contract test + regression feature concern + evidence log concern |
 | Audit/risk assessment | Arsitektur & risiko | `docs/process/*RISK*`, `docs/security/*` | Evidence command + keputusan mitigasi |
 | Keputusan arsitektur lintas concern | ADR governance | `docs/adr/ADR_*.md`, `docs/process/TODO_*` | ADR terhubung ke TODO concern + validasi concern terdampak |
 
@@ -124,6 +125,12 @@ Urutan validasi:
 3. Regression concern terdekat.
 4. Full suite (`php artisan test`) bila perubahan lintas domain, akses/policy/scope, dashboard agregat, atau migrasi/seeder canonical.
 5. Khusus `doc-only` process/domain/adr: boleh selesai di step 1 + log operasional, jika tidak ada perubahan runtime/backend contract.
+
+Ladder tambahan concern `UI/UX auditability gate`:
+1. L1: frontend contract assertion concern (`tests/Unit/Frontend/*` atau setara) + audit scoped query/payload.
+2. L2: regression feature concern UI (auth/scope/filter/pagination/runtime endpoint terkait).
+3. L3: runtime browser evidence (E2E/accessibility/visual/performance) jika tooling tersedia.
+4. Jika L3 belum tersedia, status concern wajib eksplisit `partial` dengan gap evidence + TODO follow-up.
 
 Kriteria selesai:
 - Semua gate concern terpenuhi.
