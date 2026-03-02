@@ -66,3 +66,23 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 - [x] Seluruh file `docs/process/TODO*.md` dipindai untuk judul + status + marker.
 - [x] Concern overlap diidentifikasi dan dipetakan ke satu SOT per concern.
 - [x] Konflik concern dashboard/sidebar/role ownership ditutup lewat registry ini.
+
+## Kriteria Exit Rolling
+
+- Ubah status concern ini ke `done` jika:
+  - selama 2 siklus review berurutan tidak ada concern baru yang memicu konflik SOT,
+  - seluruh concern `in-progress` pada registry sudah punya owner, target validasi, dan marker SOT aktif yang konsisten.
+- Pertahankan status `in-progress` hanya jika:
+  - ada concern baru lintas dokumen yang belum punya satu SOT tegas, atau
+  - ditemukan drift antara status concern di registry dengan status dokumen SOT aktual.
+
+## Cadence Review (Mulai 2026-03-02)
+
+- Frekuensi: mingguan, setiap Senin.
+- Scope review minimal:
+  - cek perubahan status concern pada seluruh `docs/process/TODO_*.md`,
+  - cek referensi `Source of Truth` masih menunjuk dokumen concern aktif,
+  - catat hasil sinkronisasi di sesi concern terkait.
+- Milestone review aktif:
+  - [ ] Review R1: 2026-03-09.
+  - [ ] Review R2: 2026-03-16.

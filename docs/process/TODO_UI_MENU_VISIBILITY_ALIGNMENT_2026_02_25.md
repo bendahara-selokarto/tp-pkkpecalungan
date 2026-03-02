@@ -90,3 +90,24 @@ Status: `in-progress` (`state:experimental-ui-only`, `state:non-final`, `state:r
 - [x] Concern ini bersifat UI-only eksperimental (tanpa E2E/backend change).
 - [x] Keputusan pada TODO ini bersifat sementara dan dapat direvisi cepat selama fase eksperimen.
 - [x] Otorisasi akses tetap backend-first; UI hanya representasi visibility.
+
+## Kriteria Exit Eksperimental
+
+- Ubah status concern ini ke `done` jika:
+  - struktur sidebar final lintas role sudah stabil pada 2 siklus review berurutan,
+  - tidak ada perubahan label/grouping mayor pada concern sidebar selama 2 siklus review,
+  - hasil smoke UI desktop + mobile konsisten tanpa isu regressi kritikal.
+- Ubah status concern ini ke `historical` jika:
+  - concern digantikan SOT baru untuk sidebar UI, atau
+  - eksperimen dihentikan dan keputusan final dipindahkan ke concern lain.
+
+## Cadence Review (Mulai 2026-03-02)
+
+- Frekuensi: mingguan, setiap Senin.
+- Scope review minimal:
+  - audit perubahan grouping/label sidebar pada `resources/js`,
+  - verifikasi guard `UI-only` tetap tidak menyentuh policy/middleware/backend visibility,
+  - sinkronkan marker terbaru jika ada revisi eksperimen.
+- Milestone review aktif:
+  - [ ] Review R3: 2026-03-09.
+  - [ ] Review R4: 2026-03-16.
