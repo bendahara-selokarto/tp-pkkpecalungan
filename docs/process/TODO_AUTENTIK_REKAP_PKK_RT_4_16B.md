@@ -1,4 +1,6 @@
 # TODO Autentik Rekap PKK RT 4.16b
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Dokumen autentik baru ditetapkan: `d:\pedoman\181.pdf`.

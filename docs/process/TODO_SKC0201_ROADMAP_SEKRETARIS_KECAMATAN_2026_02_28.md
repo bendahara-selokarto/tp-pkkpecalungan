@@ -1,4 +1,6 @@
 # TODO SKC0201 Roadmap Concern Sekretaris Kecamatan
+Tanggal: 2026-02-28  
+Status: `in-progress`
 
 ## Konteks
 - Baseline pattern sudah dikunci pada commit `339275e` (concern `activities`):

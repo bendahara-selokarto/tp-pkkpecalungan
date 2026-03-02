@@ -1,4 +1,6 @@
 # TODO Implementasi Autentik Buku Kegiatan (2026-02-24)
+Tanggal: 2026-02-24  
+Status: `done`
 
 ## Konteks
 - Sumber autentik: `docs/referensi/excel/Buku Wajib Pokja I.xlsx`, sheet `Buku Kegiatan`.

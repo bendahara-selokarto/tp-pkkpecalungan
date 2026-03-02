@@ -1,4 +1,6 @@
 # TODO Autentik Catatan TP PKK 4.17c
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Dokumen resmi yang dibaca melalui screenshot: `LAMPIRAN 4.17c`.

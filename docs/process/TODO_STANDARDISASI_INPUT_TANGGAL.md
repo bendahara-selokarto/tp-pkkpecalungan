@@ -1,4 +1,6 @@
 # TODO Standardisasi Input Tanggal
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Project masih pre-release.

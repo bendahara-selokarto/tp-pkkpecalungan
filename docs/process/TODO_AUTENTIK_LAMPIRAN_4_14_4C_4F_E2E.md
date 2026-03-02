@@ -1,4 +1,6 @@
 # TODO Autentik Lampiran 4.14.4c-4.14.4f E2E
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Bukti visual autentik untuk `Lampiran 4.14.4c`, `4.14.4d`, `4.14.4e`, `4.14.4f` sudah tervalidasi sampai level merge header.

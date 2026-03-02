@@ -1,4 +1,6 @@
 # TODO ARS26A1 Menu Arsip Dokumen Statis
+Tanggal: 2026-02-27  
+Status: `done`
 
 ## Konteks
 - Menambahkan menu `Arsip` sejajar `Dashboard` untuk menyediakan daftar dokumen statis yang dapat diunduh.

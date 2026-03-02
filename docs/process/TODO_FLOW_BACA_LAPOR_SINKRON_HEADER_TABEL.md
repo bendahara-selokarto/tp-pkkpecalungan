@@ -1,4 +1,6 @@
 # TODO Flow Baca-Lapor-Sinkron Header Tabel Dokumen
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Beberapa lampiran pedoman memiliki header tabel kompleks (multi-row, merge row/col).

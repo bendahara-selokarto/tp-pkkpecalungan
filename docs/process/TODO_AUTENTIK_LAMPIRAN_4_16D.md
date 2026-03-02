@@ -1,4 +1,6 @@
 # TODO Autentik Lampiran 4.16d
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Dokumen resmi baru ditetapkan: `d:\pedoman\185.pdf`.

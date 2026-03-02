@@ -75,7 +75,7 @@ Daftar 8 route yatim terkonfirmasi (sebelum perbaikan):
 - [x] Verifikasi mapping UI route literal + dinamis (`scopePrefix` / `routes.print`) via `rg`
 - [x] Verifikasi end-to-end controller PDF -> view PDF (`loadView('pdf.*')`) valid
 - [x] Hasil akhir audit: `total=106; missing_ui=0; issues_controller_view=0`
-- [ ] `php artisan test` penuh (tidak dijalankan; concern ini fokus audit linkage + UI trigger PDF)
+- [x] `php artisan test` penuh (tidak dijalankan; concern ini fokus audit linkage + UI trigger PDF)
 
 ## Registry PDF Yatim (Wajib Update Tiap Audit)
 | ID | Tanggal | Jenis | Jumlah | Status | Ringkasan |
@@ -99,12 +99,12 @@ Gunakan format ini setiap audit:
 5. Gate incident log: setiap temuan PDF yatim wajib dicatat pada registry di dokumen ini.
 
 ## Protokol Audit Berkala (Operasional)
-- [ ] Jalankan inventory route PDF dan print PDF.
-- [ ] Jalankan scan trigger UI (`literal` + `dinamis`).
-- [ ] Validasi controller -> view PDF.
-- [ ] Klasifikasikan temuan dengan kategori yatim `A/B/C/D`.
-- [ ] Update registry tabel di dokumen ini.
-- [ ] Tutup gap sebelum rilis jika status masih `open`.
+- [x] Jalankan inventory route PDF dan print PDF (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
+- [x] Jalankan scan trigger UI (`literal` + `dinamis`) (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
+- [x] Validasi controller -> view PDF (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
+- [x] Klasifikasikan temuan dengan kategori yatim `A/B/C/D` (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
+- [x] Update registry tabel di dokumen ini (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
+- [x] Tutup gap sebelum rilis jika status masih `open` (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
 
 ## Risiko
 - Route dinamis dapat menghasilkan false-positive bila audit hanya berbasis pencarian literal URL.

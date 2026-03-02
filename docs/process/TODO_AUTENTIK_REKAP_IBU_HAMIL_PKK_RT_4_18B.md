@@ -1,4 +1,6 @@
 # TODO Autentik Rekap Ibu Hamil PKK RT 4.18b
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Dokumen resmi yang dibaca melalui screenshot: `LAMPIRAN 4.18b`.

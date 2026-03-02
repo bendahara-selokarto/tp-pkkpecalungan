@@ -1,4 +1,6 @@
 # TODO Autentik Lampiran 4.9a-4.14.4b E2E
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Validasi visual autentik untuk lampiran `4.9a`, `4.9b`, `4.10`, `4.11`, `4.12`, `4.13`, `4.14.1a`, `4.14.1b`, `4.14.2a`, `4.14.2b`, `4.14.4b` sudah tersedia.

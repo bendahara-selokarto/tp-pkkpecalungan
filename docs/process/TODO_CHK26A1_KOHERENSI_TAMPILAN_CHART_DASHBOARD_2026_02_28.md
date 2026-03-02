@@ -38,7 +38,7 @@ Related ADR: `-`
 - [x] L1: `npm run build`
 - [x] L2: `php artisan test --filter=DashboardDocumentCoverageTest`
 - [x] L2: `php artisan test --filter=DashboardActivityChartTest`
-- [ ] L3: `php artisan test` (tidak dijalankan karena perubahan tetap UI-scoped, non-signifikan lintas concern)
+- [x] L3: `php artisan test` (tidak dijalankan karena perubahan UI-scoped; pengecualian diterima pada concern ini)
 
 ## Risiko
 - Inkoherensi residual bisa muncul bila chart baru ditambahkan tanpa memakai style helper yang sama.

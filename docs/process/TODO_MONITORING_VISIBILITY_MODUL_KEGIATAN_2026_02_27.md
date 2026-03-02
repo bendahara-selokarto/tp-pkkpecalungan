@@ -1,4 +1,6 @@
 # TODO Monitoring Visibility Modul Kegiatan (2026-02-27)
+Tanggal: 2026-02-27  
+Status: `in-progress`
 
 ## Konteks
 - Status concern: `active` sebagai sub-scope modul kegiatan; baseline lintas semua modul dilanjutkan di `docs/process/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`.

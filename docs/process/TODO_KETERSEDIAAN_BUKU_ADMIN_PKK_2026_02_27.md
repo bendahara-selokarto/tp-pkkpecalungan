@@ -1,4 +1,6 @@
 # TODO Ketersediaan Buku Administrasi PKK (2026-02-27)
+Tanggal: 2026-02-27  
+Status: `in-progress`
 
 ## Konteks
 - Concern aktif: memastikan seluruh buku administrasi PKK tersedia, tervalidasi autentik, dan ditempatkan pada penanggung jawab yang tepat.

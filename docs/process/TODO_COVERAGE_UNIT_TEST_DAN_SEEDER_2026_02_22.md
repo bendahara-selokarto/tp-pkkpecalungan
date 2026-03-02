@@ -1,4 +1,6 @@
 # TODO Coverage Unit Test dan Seeder (2026-02-22)
+Tanggal: 2026-02-22  
+Status: `done`
 
 ## Konteks
 - Requirement: semua unit disertakan test, dan semua isian/domain disertai seeder.

@@ -34,7 +34,7 @@ Related ADR: `docs/adr/ADR_0001_DOCUMENTATION_GOVERNANCE_TODO_ADR.md`
 ## Validasi
 - [x] L1: scoped `rg` untuk memastikan keyword/rujukan TODO + ADR muncul pada dokumen target.
 - [x] L2: scoped `git diff` memastikan perubahan hanya di file concern.
-- [ ] L3: `php artisan test` jika perubahan signifikan (tidak dijalankan karena perubahan dokumentasi saja).
+- [x] L3: `php artisan test` jika perubahan signifikan (tidak dijalankan karena concern ini dokumentasi saja).
 
 ## Risiko
 - Overhead dokumentasi meningkat pada concern kecil jika ADR dipakai tanpa seleksi trigger.

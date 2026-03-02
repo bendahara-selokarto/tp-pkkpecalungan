@@ -1,4 +1,6 @@
 # TODO Autentik BKL, BKR, dan PAAR (2026-02-24)
+Tanggal: 2026-02-24  
+Status: `done`
 
 ## Konteks
 - User memberikan bukti visual header tabel untuk:

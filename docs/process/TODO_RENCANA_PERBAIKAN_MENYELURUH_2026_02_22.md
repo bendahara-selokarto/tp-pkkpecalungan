@@ -1,4 +1,6 @@
 # TODO Rencana Perbaikan Menyeluruh (Scan 2026-02-22)
+Tanggal: 2026-02-22  
+Status: `done`
 
 ## Konteks
 - Hasil scan mendalam menemukan 1 blocker kritis pada kontrak repository `CatatanKeluarga` yang memutus bootstrap aplikasi.

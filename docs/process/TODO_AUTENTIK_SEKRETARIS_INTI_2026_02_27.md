@@ -1,4 +1,6 @@
 # TODO AUTENTIK SEKRETARIS INTI 2026-02-27
+Tanggal: 2026-02-27  
+Status: `in-progress`
 
 ## Konteks
 - Concern utama: menutup blocker Sprint 1 untuk buku sekretaris inti:

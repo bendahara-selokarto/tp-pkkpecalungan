@@ -1,4 +1,5 @@
 # TODO Pembuatan User Guide Natural Humanis (2026-02-24)
+Tanggal: 2026-02-24  
 Status: `done`
 
 ## Konteks

@@ -1,4 +1,6 @@
 # TODO Kontrak Domain Laporan Tahunan PKK 2025
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - User menyediakan dokumen contoh domain: `docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx`.

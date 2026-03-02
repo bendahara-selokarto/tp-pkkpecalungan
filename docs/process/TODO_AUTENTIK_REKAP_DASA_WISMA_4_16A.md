@@ -1,4 +1,6 @@
 # TODO Autentik Rekap Dasa Wisma 4.16a
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Dokumen autentik baru ditetapkan: `d:\pedoman\179.pdf`.

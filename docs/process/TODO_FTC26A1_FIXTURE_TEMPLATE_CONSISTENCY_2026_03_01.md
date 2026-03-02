@@ -25,8 +25,8 @@ Status: `done` (`isolated-regression-fix`)
 - [x] Tidak ada fail residual terkait fixture/template consistency.
 
 ## Risiko
-- [ ] Risiko false-fix jika hanya mengubah expected test tanpa verifikasi kontrak dokumen canonical.
-- [ ] Risiko regresi report print lain jika template dipindahkan tanpa mapping.
+- Risiko false-fix jika hanya mengubah expected test tanpa verifikasi kontrak dokumen canonical.
+- Risiko regresi report print lain jika template dipindahkan tanpa mapping.
 
 ## Keputusan Dikunci
 - [x] Concern `fixture/template consistency` dipisah sebagai jalur tunggal tersendiri.

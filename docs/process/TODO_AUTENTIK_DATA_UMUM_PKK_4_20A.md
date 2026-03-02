@@ -1,4 +1,6 @@
 # TODO Autentik Data Umum PKK 4.20a
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Dokumen autentik yang dibaca: `docs/referensi/213.pdf` (Lampiran `4.20a`) dan screenshot header tabel dari user pada sesi validasi 2026-02-22.

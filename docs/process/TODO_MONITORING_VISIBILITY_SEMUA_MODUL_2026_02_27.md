@@ -1,4 +1,6 @@
 # TODO Monitoring Visibility Semua Modul (2026-02-27)
+Tanggal: 2026-02-27  
+Status: `in-progress`
 
 ## Konteks
 - Dokumen acuan utama: `docs/process/MONITORING_VISIBILITY_MODUL.md`.

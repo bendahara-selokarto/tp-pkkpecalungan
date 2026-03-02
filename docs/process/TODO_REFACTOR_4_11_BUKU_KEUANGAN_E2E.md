@@ -1,4 +1,6 @@
 # TODO Refactor 4.11 Buku Keuangan E2E
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Keluhan operasional: menu `Buku Keuangan` menampilkan domain `Bantuan`.

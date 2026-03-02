@@ -1,4 +1,6 @@
 # TODO Normalisasi Database (2026-02-24)
+Tanggal: 2026-02-24  
+Status: `done`
 
 ## Konteks
 - Diperlukan concern khusus untuk menjaga normalisasi database agar konsisten lintas domain.

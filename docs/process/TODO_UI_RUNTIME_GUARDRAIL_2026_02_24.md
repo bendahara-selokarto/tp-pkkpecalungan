@@ -1,4 +1,6 @@
 # TODO UI Runtime Guardrail (2026-02-24)
+Tanggal: 2026-02-24  
+Status: `done`
 
 ## Konteks
 - Beberapa interaksi utama UI (sidebar, mode siang/malam, dropdown) bergantung pada JavaScript runtime.

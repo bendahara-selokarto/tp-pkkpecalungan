@@ -1,4 +1,6 @@
 # TODO Autentik Rekap Ibu Hamil TP PKK Kecamatan 4.19b
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Dokumen autentik yang dibaca: `docs/referensi/207.pdf` (Lampiran `4.19b`) dan screenshot header tabel dari user pada sesi validasi 2026-02-22.

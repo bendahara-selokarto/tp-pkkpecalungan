@@ -1,4 +1,6 @@
 # TODO Autentik Buku Wajib Pokja I dan Buku Bantu (2026-02-24)
+Tanggal: 2026-02-24  
+Status: `done`
 
 ## Konteks
 - User menetapkan dua dokumen Excel sebagai format autentik:

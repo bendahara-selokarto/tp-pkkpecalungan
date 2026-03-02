@@ -1,4 +1,6 @@
 # TODO Autentik Catatan PKK RW 4.16c
+Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
+Status: `done`
 
 ## Konteks
 - Dokumen resmi baru ditetapkan: `d:\pedoman\183.pdf`.

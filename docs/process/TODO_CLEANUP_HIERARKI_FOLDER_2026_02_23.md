@@ -1,4 +1,6 @@
 # TODO Cleanup Hirarki Folder (2026-02-23)
+Tanggal: 2026-02-23  
+Status: `done`
 
 ## Konteks
 - Root project masih memuat artefak utilitas dan report yang tidak berada pada hirarki folder terstruktur.
