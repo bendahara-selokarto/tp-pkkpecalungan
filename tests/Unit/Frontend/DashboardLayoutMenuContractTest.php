@@ -68,4 +68,14 @@ class DashboardLayoutMenuContractTest extends TestCase
         $this->assertStringContainsString('const persistSidebarCollapsedPreference = (collapsed) => {', $content);
         $this->assertStringContainsString('localStorage.setItem(sidebarCollapsedKey, collapsed ? \'1\' : \'0\')', $content);
     }
+
+    public function test_dashboard_layout_menyembunyikan_menu_domain_untuk_super_admin(): void
+    {
+        $content = $this->readDashboardLayout();
+
+        $this->assertStringContainsString(
+            '<div v-if="!isProfilePage && !hasRole(\'super-admin\')" class="space-y-1">',
+            $content
+        );
+    }
 }

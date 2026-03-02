@@ -635,7 +635,7 @@ onBeforeUnmount(() => {
             </Link>
           </div>
 
-          <div v-if="!isProfilePage" class="space-y-1">
+          <div v-if="!isProfilePage && !hasRole('super-admin')" class="space-y-1">
             <p v-show="!isAsideDesktopCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Menu Domain</p>
 
             <template v-if="isDesaScope">
