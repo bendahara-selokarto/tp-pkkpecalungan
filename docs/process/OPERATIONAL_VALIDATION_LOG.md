@@ -1327,3 +1327,34 @@ Keputusan:
 
 Status:
 - `PASS` (`batch-completed`, `concern-still-in-progress`).
+
+## Sinkronisasi Registry SOT (`TTM25R1`) - 2026-03-02
+
+Ruang lingkup:
+- Menutup drift registry SOT terhadap TODO concern berstatus `in-progress` yang belum terpetakan di tabel concern.
+- Menetapkan parent-child SOT untuk concern availability/auth buku dan monitoring visibility lintas modul.
+
+Artefak:
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+
+Perubahan sinkronisasi:
+- Menambah concern baru:
+  - `C-BUKU-ADMIN` -> SOT `TODO_KETERSEDIAAN_BUKU_ADMIN_PKK_2026_02_27.md`.
+  - `C-MODULE-VISIBILITY` -> SOT `TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`.
+  - `C-SEKCAM-ROADMAP` -> SOT `TODO_SKC0201_ROADMAP_SEKRETARIS_KECAMATAN_2026_02_28.md`.
+- Menetapkan relasi child-spec:
+  - `TODO_AUTENTIK_SEKRETARIS_INTI_2026_02_27.md` sebagai child concern `C-BUKU-ADMIN`.
+  - `TODO_MONITORING_VISIBILITY_MODUL_KEGIATAN_2026_02_27.md` sebagai child concern `C-MODULE-VISIBILITY`.
+
+Perintah validasi:
+- `rg -n '^Status:\\s*`(planned|in-progress|done)`' docs/process -g 'TODO_*.md'`
+  - hasil: `PASS` (daftar status concern aktif terdeteksi).
+- `rg -n 'C-BUKU-ADMIN|C-MODULE-VISIBILITY|C-SEKCAM-ROADMAP' docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+  - hasil: `PASS` (baris concern baru terdeteksi).
+
+Keputusan:
+- Registry `TTM25R1` tetap berstatus `in-progress` karena concern aktif lintas domain masih berjalan.
+- SOT concern aktif kini eksplisit untuk seluruh TODO utama yang berstatus `in-progress` pada scope registry.
+
+Status:
+- `PASS` (`registry-sync-completed`).
