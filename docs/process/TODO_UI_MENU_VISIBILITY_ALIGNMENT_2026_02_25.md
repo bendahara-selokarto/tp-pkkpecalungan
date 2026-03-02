@@ -1,7 +1,7 @@
 # TODO UVM25R1 UI Menu Visibility Alignment 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `in-progress` (`state:experimental-ui-only`, `state:non-final`, `state:rolling`)
+Status: `done` (`state:experimental-ui-closed-by-owner-approval`)
 
 ## Force Latest Marker
 
@@ -154,8 +154,8 @@ Target output batch:
   - verifikasi guard `UI-only` tetap tidak menyentuh policy/middleware/backend visibility,
   - sinkronkan marker terbaru jika ada revisi eksperimen.
 - Milestone review aktif:
-  - [ ] Review R3: 2026-03-09.
-  - [ ] Review R4: 2026-03-16.
+  - [x] Review R3: 2026-03-09 (ditutup lebih awal via persetujuan owner 2026-03-02).
+  - [x] Review R4: 2026-03-16 (ditutup lebih awal via persetujuan owner 2026-03-02).
 
 ## Progress Update 2026-03-02 (Mitigasi 4: Guard Validasi Sidebar PDF)
 
@@ -176,3 +176,8 @@ Target output batch:
   - `php artisan test tests/Unit/Frontend/DashboardLayoutMenuContractTest.php tests/Unit/Frontend/NavigationSemanticContractTest.php tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php` (`PASS`, `12` tests, `50` assertions).
 - Dampak:
   - checklist `P6` ditutup karena coverage aktif-state/collapse sudah memiliki guard deterministik bersama guard duplikasi/gating/build.
+
+## Progress Update 2026-03-02 (Owner Final Approval)
+
+- Concern `UVM25R1` ditutup ke `done` berdasarkan persetujuan owner untuk finalisasi lebih awal tanpa menunggu dua siklus cadence.
+- Seluruh checklist eksekusi aktif concern ini sudah tertutup; residual guard dipertahankan melalui kontrak test frontend (`DashboardLayoutMenuContractTest`, `NavigationSemanticContractTest`, `ResponsiveTableRolloutContractTest`, `DashboardResponsiveInteractionContractTest`).

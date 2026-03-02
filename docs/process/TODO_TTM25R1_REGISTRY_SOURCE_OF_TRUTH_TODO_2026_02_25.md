@@ -1,7 +1,7 @@
 # TODO TTM25R1 Registry Source of Truth TODO 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `in-progress` (`state:truth-registry`, `state:deterministic-routing`)
+Status: `done` (`state:truth-registry-closed-by-owner-approval`)
 
 ## Force Latest Marker
 
@@ -22,7 +22,7 @@ Status: `in-progress` (`state:truth-registry`, `state:deterministic-routing`)
 | --- | --- | --- | --- | --- | --- |
 | `C-DASH-CHART` | Koherensi chart/filter lintas role pasca Apex | `docs/process/TODO_DCF25R1_KOHERENSI_CHART_FILTER_LINTAS_ROLE_2026_02_25.md` | `done` | `TODO_DKB25R1`, `TODO_DUC23R1`, `TODO_DRA23R1`, `TODO_DRM24R1`, `TODO_DRL24R1`, `TODO_SCENARIO_KECAMATAN_SECTION4_POKJA_I_2026_02_23.md` | Untuk `pie/bar`, `section1_month`, dan query chart: hanya ikuti `DCF25R1` (status registry disinkronkan 2026-03-01). |
 | `C-DASH-BASELINE` | Koherensi baseline dashboard sekretaris kecamatan | `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md` | `done` | `TODO_REFACTOR_DASHBOARD_*`, `TODO_UI_DASHBOARD_CHART_*` | Baseline visual lintas role tetap refer ke `DKB25R1`; concern chart aktif dipindah ke `DCF25R1`. |
-| `C-SIDEBAR-UI` | Penataan menu/sidebar UI eksperimen | `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md` | `in-progress` (`state:rolling-ui-exp`) | `TODO_UI_VISIBILITY_BY_PENANGGUNGJAWAB.md`, `TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md` | Untuk urutan/group/label sidebar: hanya ikuti `UVM25R1` marker `VIS-UI-EXP-2026-02-25-R2` (UI-only, non-E2E). |
+| `C-SIDEBAR-UI` | Penataan menu/sidebar UI eksperimen | `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md` | `done` (`state:experimental-ui-closed-by-owner-approval`) | `TODO_UI_VISIBILITY_BY_PENANGGUNGJAWAB.md`, `TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md` | Concern sidebar UI-only ditutup berdasarkan persetujuan owner setelah seluruh guard aktif (coverage PDF, anti-duplikasi, active-state, persistensi collapse) tervalidasi. |
 | `C-ARSIP-MGMT` | Management arsip oleh super-admin | `docs/process/TODO_ASM26B1_MANAGEMENT_ARSIP_SUPER_ADMIN_2026_02_27.md` | `done` | `TODO_ARS26A1_MENU_ARSIP_DOKUMEN_STATIS_2026_02_27.md` (`historical-baseline`), `TODO_ARS26B2_HARDENING_AKSES_ARSIP_GLOBAL_PRIBADI_2026_02_28.md` (`child-spec`) | Untuk akses/management arsip gunakan `ASM26B1`; `ARS26A1` baseline historis, `ARS26B2` mengunci kontrak akses global/pribadi/monitoring (sinkronisasi status 2026-03-02). |
 | `C-ROLE-OWNERSHIP` | Ownership modul role runtime | `docs/process/TODO_AUDIT_MODUL_ROLE_OWNERSHIP_2026_02_25.md` | `done` | `TODO_IMPLEMENTASI_ROLE_OWNERSHIP_POKJA_DESA_ONLY_2026_02_25.md`, `TODO_IMPLEMENTASI_ROLE_OWNERSHIP_NON_RW_RO_2026_02_25.md`, `TODO_IMPLEMENTASI_ROLE_OWNERSHIP_DEPRECATE_DATA_PELATIHAN_KADER_2026_02_25.md` | Audit modul adalah parent concern; tiga TODO implementasi diperlakukan child concern eksekusi. |
 | `C-AUTENTIK-49A-4144B` | Sinkron autentik E2E lampiran 4.9a-4.14.4b | `docs/process/TODO_AUTENTIK_LAMPIRAN_4_9A_4_14_4B_E2E.md` | `done` | `TODO_AUTENTIK_DATA_UMUM_PKK_4_20A.md`, `TODO_AUTENTIK_DATA_UMUM_PKK_4_20B.md`, `TODO_AUTENTIK_DATA_KEGIATAN_PKK_4_23_4_24.md`, dll terkait subset lampiran | Jika terjadi konflik mapping/header subset, acuan final concern ini mengikuti dokumen E2E payung. |
@@ -103,8 +103,8 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
   - cek referensi `Source of Truth` masih menunjuk dokumen concern aktif,
   - catat hasil sinkronisasi di sesi concern terkait.
 - Milestone review aktif:
-  - [ ] Review R1: 2026-03-09.
-  - [ ] Review R2: 2026-03-16.
+  - [x] Review R1: 2026-03-09 (ditutup lebih awal via persetujuan owner 2026-03-02).
+  - [x] Review R2: 2026-03-16 (ditutup lebih awal via persetujuan owner 2026-03-02).
 
 ## Mitigasi 5 (Cadence Readiness 2026-03-02)
 
@@ -126,6 +126,14 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 - [x] Paket validasi gabungan concern aktif dijalankan untuk memastikan stabilitas baseline sebelum review R1:
   - `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/KecamatanDesaActivityTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php tests/Unit/Frontend/NavigationSemanticContractTest.php`
   - hasil: `PASS` (`49` tests, `425` assertions).
-- [x] Status concern `TTM25R1` tetap `in-progress` sampai milestone cadence:
+- [x] Status concern `TTM25R1` pada snapshot final saat itu tetap `in-progress` sampai milestone cadence:
   - `R1`: 2026-03-09,
   - `R2`: 2026-03-16.
+
+## Closure Update 2026-03-02 (Owner Final Approval)
+
+- Owner menyetujui penutupan final tanpa menunggu cadence review mingguan (`R1/R2`) karena seluruh concern aktif sudah `done` dan tidak ada drift SOT/checklist tersisa.
+- Dampak closure:
+  - concern `C-SIDEBAR-UI` disinkronkan ke `done`,
+  - registry `TTM25R1` ditutup ke `done`,
+  - milestone review `R1/R2` ditandai selesai sebagai administrasi closure berdasarkan approval owner.
