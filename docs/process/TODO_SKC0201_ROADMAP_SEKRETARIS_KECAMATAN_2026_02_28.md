@@ -1,6 +1,6 @@
 # TODO SKC0201 Roadmap Concern Sekretaris Kecamatan
 Tanggal: 2026-02-28  
-Status: `in-progress` (`state:wave-delivery`, `state:wave-2-pending`)
+Status: `done` (`state:wave-delivery-closed`)
 
 ## Konteks
 - Baseline pattern sudah dikunci pada commit `339275e` (concern `activities`):
@@ -60,8 +60,8 @@ Catatan implementasi gelombang 1:
 
 ### C. Implementasi Concern Gelombang 2 (Pokja Read-Only untuk Sekretaris Kecamatan)
 - [x] Audit concern pokja (`pokja-i..iv`) yang perlu pola monitoring lintas desa untuk sekretaris kecamatan.
-- [ ] Untuk concern yang disetujui, terapkan pola list monitoring tanpa membuka akses mutasi.
-- [ ] Sinkronkan payload visibilitas agar UI hanya menampilkan aksi sesuai mode.
+- [x] Untuk concern yang disetujui, terapkan pola list monitoring tanpa membuka akses mutasi.
+- [x] Sinkronkan payload visibilitas agar UI hanya menampilkan aksi sesuai mode.
 
 ### D. Validasi Wajib per Concern
 - [x] Feature test mode `kecamatan`: hanya data sesuai kontrak concern.
@@ -136,3 +136,13 @@ Keputusan final terkunci:
 - Revalidasi targeted yang dijalankan:
   - `php artisan test tests/Feature/KecamatanDesaActivityTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Feature/MenuVisibilityPayloadTest.php`
   - hasil: `PASS` (`16` tests, `174` assertions).
+
+## Progress Update 2026-03-02 (Closure Wave-2)
+
+- Keputusan wave-2 dikunci: tidak ada concern pokja baru yang disetujui untuk membuka jalur monitoring lintas desa tambahan pada sesi ini.
+- Implikasi eksekusi:
+  - checklist implementasi wave-2 ditutup sebagai `no-op terkontrol` (tanpa perlu patch route/payload baru),
+  - guard read-only concern gelombang 1 (`activities`, `arsip`) tetap menjadi baseline operasional sekretaris kecamatan.
+- Revalidasi closure:
+  - `php artisan test tests/Feature/KecamatanDesaActivityTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/KecamatanActivityTest.php tests/Feature/ArsipTest.php tests/Unit/Policies/ArsipDocumentPolicyTest.php`
+  - hasil: `PASS` (`36` tests, `264` assertions).
