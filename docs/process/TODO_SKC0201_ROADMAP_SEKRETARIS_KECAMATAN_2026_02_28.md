@@ -59,7 +59,7 @@ Catatan implementasi gelombang 1:
 - Concern `sekretaris-tpk` non-`activities` saat ini berjalan sebagai Tipe A; implementasi difokuskan pada filter mode `kecamatan` (data milik sendiri) untuk role `kecamatan-sekretaris`.
 
 ### C. Implementasi Concern Gelombang 2 (Pokja Read-Only untuk Sekretaris Kecamatan)
-- [ ] Audit concern pokja (`pokja-i..iv`) yang perlu pola monitoring lintas desa untuk sekretaris kecamatan.
+- [x] Audit concern pokja (`pokja-i..iv`) yang perlu pola monitoring lintas desa untuk sekretaris kecamatan.
 - [ ] Untuk concern yang disetujui, terapkan pola list monitoring tanpa membuka akses mutasi.
 - [ ] Sinkronkan payload visibilitas agar UI hanya menampilkan aksi sesuai mode.
 
@@ -124,3 +124,15 @@ Keputusan final terkunci:
   - Run terbaru 2026-03-02: `PASS` (`47` tests, `297` assertions) untuk paket targeted concern sekretaris kecamatan.
 - [x] Status keputusan K1-K4 (tetap/berubah) setelah concern dieksekusi.
   - Status: `tetap`; K1-K4 masih valid tanpa perubahan kontrak.
+
+## Progress Update 2026-03-02 (Mitigasi 2: Audit Wave-2 Pokja)
+
+- Audit baseline wave-2 selesai dengan evidence:
+  - `php artisan route:list --path=kecamatan/desa- --except-vendor` -> route monitoring desa yang tersedia saat ini hanya `desa-activities` dan `desa-arsip` (`5` route).
+  - scoped scan `routes/web.php` + controller/test menunjukkan concern `pokja-i..iv` sudah punya route kecamatan reguler, tetapi belum punya jalur monitoring lintas desa terdedikasi (`kecamatan/desa-*`) di luar dua concern gelombang 1.
+- Implikasi audit:
+  - checklist implementasi wave-2 tetap `pending` karena belum ada concern pokja yang disetujui untuk dibuka sebagai monitoring lintas desa pada sesi ini;
+  - guard `read-only` gelombang 1 tetap tervalidasi (tidak ada perluasan mutasi).
+- Revalidasi targeted yang dijalankan:
+  - `php artisan test tests/Feature/KecamatanDesaActivityTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Feature/MenuVisibilityPayloadTest.php`
+  - hasil: `PASS` (`16` tests, `174` assertions).
