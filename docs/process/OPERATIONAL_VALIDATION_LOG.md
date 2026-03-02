@@ -1457,3 +1457,30 @@ Keputusan:
 
 Status:
 - `PASS` (`final-mitigation-snapshot-locked`).
+
+## Validasi Restructure Artefak Perencanaan (`RPA2601`): 2026-03-02
+
+Ruang lingkup:
+- Memastikan restruktur artefak planning (index planning + referensi single-path + shortcut command) benar-benar operasional dan sinkron dengan registry concern aktif.
+
+Artefak:
+- `docs/process/PLANNING_ARTIFACT_INDEX.md`
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+- `docs/process/COMMAND_NUMBER_SHORTCUTS.md`
+- `docs/process/TODO_RPA2601_VALIDASI_RESTRUCTURE_ARTEFAK_PERENCANAAN_2026_03_02.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+
+Perintah validasi:
+- `rg -n '^Status:\s*`in-progress`' docs/process -g 'TODO_*.md'`
+  - hasil: `PASS` (`5` concern aktif terdeteksi: `ACL26M1`, `SKC0201`, `UVM25R1`, `UXR26A1`, `TTM25R1`).
+- `rg -n "PLANNING_ARTIFACT_INDEX" docs/process/AI_SINGLE_PATH_ARCHITECTURE.md docs/process/COMMAND_NUMBER_SHORTCUTS.md`
+  - hasil: `PASS` (referensi indeks planning + shortcut restruktur tersedia).
+- `rg -n "ACL26M1|SKC0201|UVM25R1|UXR26A1|TTM25R1" docs/process/PLANNING_ARTIFACT_INDEX.md docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+  - hasil: `PASS` (snapshot concern aktif konsisten antara index planning dan registry SOT).
+
+Keputusan:
+- Restruktur artefak perencanaan dinyatakan berhasil pada level operasional `doc-only`.
+- Source of truth status concern aktif tetap `TTM25R1`; `PLANNING_ARTIFACT_INDEX` dikunci sebagai peta navigasi planning.
+
+Status:
+- `PASS` (`planning-restructure-validated`).
