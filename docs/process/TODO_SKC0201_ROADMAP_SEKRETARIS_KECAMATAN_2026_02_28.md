@@ -1,6 +1,6 @@
 # TODO SKC0201 Roadmap Concern Sekretaris Kecamatan
 Tanggal: 2026-02-28  
-Status: `in-progress`
+Status: `in-progress` (`state:wave-delivery`, `state:wave-2-pending`)
 
 ## Konteks
 - Baseline pattern sudah dikunci pada commit `339275e` (concern `activities`):
@@ -32,6 +32,9 @@ Status: `in-progress`
 - Validasi selesai:
   - targeted feature tests concern lintas modul sekretaris kecamatan,
   - full suite `php artisan test` (hijau).
+- Revalidasi targeted concern (2026-03-02):
+  - `php artisan test tests/Feature/KecamatanActivityTest.php tests/Feature/KecamatanDesaActivityTest.php tests/Feature/ArsipTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Unit/Policies/ArsipDocumentPolicyTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php`
+  - hasil: `PASS` (`47` tests, `297` assertions).
 
 ## Rencana Eksekusi
 
@@ -99,7 +102,25 @@ Keputusan final terkunci:
 - K4: Minimum validasi: targeted feature tests concern terdampak + full suite `php artisan test`.
 
 ## Output Setiap Eksekusi Concern
-- [ ] Ringkasan perubahan (backend, frontend, middleware, test).
-- [ ] Daftar file terdampak dan alasan.
-- [ ] Hasil validasi test.
-- [ ] Status keputusan K1-K4 (tetap/berubah) setelah concern dieksekusi.
+- [x] Ringkasan perubahan (backend, frontend, middleware, test).
+  - Backend concern `kecamatan-sekretaris` untuk gelombang 1 dikunci pada pola dual-scope `kecamatan` (data milik sendiri) + `desa monitoring` (`read-only`) untuk domain `activities` dan `arsip`.
+  - Frontend concern gelombang 1 mengunci pola toggle `Kecamatan` vs `Desa (Monitoring)` agar tidak drift dari kontrak backend.
+  - Middleware/module visibility mempertahankan guard monitoring `read-only` dan anti bypass mutasi.
+  - Test concern gelombang 1 menjaga anti data leak lintas kecamatan + konsistensi payload visibilitas.
+- [x] Daftar file terdampak dan alasan.
+  - Concern pelaksanaan gelombang 1 diturunkan ke concern domain implementasi:
+    - `docs/process/TODO_ARS26B2_HARDENING_AKSES_ARSIP_GLOBAL_PRIBADI_2026_02_28.md` (hardening pola dual-scope arsip),
+    - `docs/process/TODO_ASM26B1_MANAGEMENT_ARSIP_SUPER_ADMIN_2026_02_27.md` (boundary management arsip + monitoring sekretaris kecamatan),
+    - `docs/process/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md` (stabilisasi akses modul `activities` lintas role/scope).
+  - Evidence validasi concern sekretaris kecamatan dieksekusi pada:
+    - `tests/Feature/KecamatanActivityTest.php`,
+    - `tests/Feature/KecamatanDesaActivityTest.php`,
+    - `tests/Feature/ArsipTest.php`,
+    - `tests/Feature/KecamatanDesaArsipTest.php`,
+    - `tests/Unit/Policies/ArsipDocumentPolicyTest.php`,
+    - `tests/Feature/ModuleVisibilityMiddlewareTest.php`,
+    - `tests/Feature/MenuVisibilityPayloadTest.php`.
+- [x] Hasil validasi test.
+  - Run terbaru 2026-03-02: `PASS` (`47` tests, `297` assertions) untuk paket targeted concern sekretaris kecamatan.
+- [x] Status keputusan K1-K4 (tetap/berubah) setelah concern dieksekusi.
+  - Status: `tetap`; K1-K4 masih valid tanpa perubahan kontrak.
