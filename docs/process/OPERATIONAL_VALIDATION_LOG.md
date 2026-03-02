@@ -1428,3 +1428,32 @@ Keputusan:
 
 Status:
 - `PASS` (`concern-closed-with-source-scan-decision`).
+
+## Mitigasi Final Concern Aktif (`ACL26M1` + `SKC0201` + `UVM25R1` + `UXR26A1` + `TTM25R1`): 2026-03-02
+
+Ruang lingkup:
+- Mengunci baseline akhir sesi untuk seluruh concern yang masih `in-progress` agar tidak terjadi drift status SOT sebelum cadence review mingguan.
+- Menjalankan satu paket validasi lintas concern untuk memastikan stabilitas kontrak akses, monitoring kecamatan, dan guard frontend UI.
+
+Artefak:
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
+- `docs/process/TODO_SKC0201_ROADMAP_SEKRETARIS_KECAMATAN_2026_02_28.md`
+- `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+- `docs/process/TODO_UXR26A1_REFACTOR_RESPONSIVE_UX_LAYOUT_2026_03_01.md`
+
+Perintah validasi:
+- `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/KecamatanDesaActivityTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php tests/Unit/Frontend/NavigationSemanticContractTest.php`
+  - hasil: `PASS` (`49` tests, `425` assertions).
+
+Keputusan:
+- Snapshot concern aktif dikunci: `ACL26M1`, `SKC0201`, `UVM25R1`, `UXR26A1`, `TTM25R1`.
+- Tidak ada drift status concern baru pada registry SOT.
+- Concern tetap `in-progress` karena blocker yang tersisa bersifat non-kode:
+  - validasi stakeholder matrix (`ACL26M1`),
+  - keputusan rollout wave-2 pokja (`SKC0201`),
+  - smoke manual UI desktop/mobile (`UVM25R1`, `UXR26A1`),
+  - penutupan cadence `R1/R2` (`TTM25R1`).
+
+Status:
+- `PASS` (`final-mitigation-snapshot-locked`).

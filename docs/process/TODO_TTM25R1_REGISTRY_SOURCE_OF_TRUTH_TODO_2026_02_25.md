@@ -113,3 +113,19 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
   - `rg -n 'Source of Truth|child-spec|Status Concern' docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
 - [x] Kriteria close review dipertegas:
   - R1/R2 boleh ditandai selesai meski tanpa perubahan status concern jika tidak ditemukan drift SOT/status/checklist lintas dokumen.
+
+## Mitigasi Final (Snapshot Lock 2026-03-02)
+
+- [x] Snapshot final concern `in-progress` dikunci ulang:
+  - `ACL26M1` (`awaiting-stakeholder-validation`),
+  - `SKC0201` (`wave-2-pending`),
+  - `UVM25R1` (`rolling-ui-exp`),
+  - `UXR26A1` (`responsive-ux-refactor`),
+  - `TTM25R1` (`truth-registry`).
+- [x] Drift SOT/status/checklist lintas concern aktif diverifikasi tidak bertambah pada sesi ini.
+- [x] Paket validasi gabungan concern aktif dijalankan untuk memastikan stabilitas baseline sebelum review R1:
+  - `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/KecamatanDesaActivityTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php tests/Unit/Frontend/NavigationSemanticContractTest.php`
+  - hasil: `PASS` (`49` tests, `425` assertions).
+- [x] Status concern `TTM25R1` tetap `in-progress` sampai milestone cadence:
+  - `R1`: 2026-03-09,
+  - `R2`: 2026-03-16.
