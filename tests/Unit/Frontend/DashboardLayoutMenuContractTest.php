@@ -58,4 +58,14 @@ class DashboardLayoutMenuContractTest extends TestCase
         $this->assertStringNotContainsString('href: `/${scope}/pilot-project-naskah-pelaporan`, label: \'Naskah Pelaporan Pilot Project Pokja IV\', uiVisibility: \'disabled\'', $content);
         $this->assertStringNotContainsString('href: `/${scope}/pilot-project-keluarga-sehat`, label: \'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana\', uiVisibility: \'disabled\'', $content);
     }
+
+    public function test_dashboard_layout_mengunci_active_state_item_dan_persistensi_collapse_sidebar(): void
+    {
+        $content = $this->readDashboardLayout();
+
+        $this->assertStringContainsString('const isItemActive = (item) => !isExternalItem(item) && isActive(item.href)', $content);
+        $this->assertStringContainsString('const sidebarCollapsedKey = \'admin-one-sidebar-collapsed\'', $content);
+        $this->assertStringContainsString('const persistSidebarCollapsedPreference = (collapsed) => {', $content);
+        $this->assertStringContainsString('localStorage.setItem(sidebarCollapsedKey, collapsed ? \'1\' : \'0\')', $content);
+    }
 }

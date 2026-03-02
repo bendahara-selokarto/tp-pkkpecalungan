@@ -81,6 +81,7 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 - [x] Concern `C-SEKCAM-ROADMAP` disinkronkan ke state `wave-2-pending` setelah output gelombang 1 dikunci dan paket validasi targeted dijalankan ulang pada 2026-03-02.
 - [x] Drift status concern `C-PDF-AUDIT` ditutup: status registry diselaraskan ke `done` mengikuti SOT `PDF26A1`; follow-up operasional tetap di `PDF26A2`.
 - [x] Concern `C-SIDEBAR-UI` disinkronkan dengan hardening mitigasi batch PDF sidebar (`UVM25R1`): guard coverage menu PDF wajib + anti-duplikasi + guard `uiVisibility` ditambahkan pada unit test frontend (sinkronisasi 2026-03-02).
+- [x] Concern `C-SIDEBAR-UI` disinkronkan dengan guard active-state + persistensi collapse sidebar (`UVM25R1`): kontrak `isItemActive` dan `localStorage` collapse key dikunci pada test frontend (sinkronisasi 2026-03-02).
 - [x] Concern `C-UI-RESPONSIVE` disinkronkan dengan mitigasi navigasi semantik (`UXR26A1`): trigger dropdown navbar/aside dipaksa elemen semantik dan dikunci lewat test kontrak frontend (sinkronisasi 2026-03-02).
 - [x] Concern `C-UI-RESPONSIVE` disinkronkan dengan batch aksesibilitas modal + standardisasi state list (`UXR26A1`): guard fokus/escape modal dan state `loading|error|disabled` pada `ResponsiveDataTable` ditutup lewat test kontrak frontend (sinkronisasi 2026-03-02).
 

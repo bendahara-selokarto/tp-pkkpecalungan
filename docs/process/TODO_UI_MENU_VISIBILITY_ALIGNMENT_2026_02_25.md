@@ -98,7 +98,7 @@ Langkah eksekusi batch PDF-sidebar:
   - turunan `catatan-keluarga` (4.16a-4.24).
 - [x] P4. Lepas `uiVisibility: disabled` untuk modul yang wajib tampil pada batch ini, tanpa mengubah authority backend.
 - [x] P5. Copywriting pass label PDF agar natural user + konsisten dengan istilah canonical.
-- [ ] P6. Validasi batch:
+- [x] P6. Validasi batch:
   - smoke desktop/mobile sidebar (expand/collapse + active state);
   - [x] verifikasi tidak ada item PDF duplikat;
   - [x] verifikasi gating module-mode tetap bekerja;
@@ -166,4 +166,13 @@ Target output batch:
 - Validasi otomatis concern UI-only:
   - `php artisan test tests/Unit/Frontend/DashboardLayoutMenuContractTest.php tests/Unit/Frontend/NavigationSemanticContractTest.php tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php` (`PASS`, `11` tests, `45` assertions).
 - Residual risk yang masih terbuka:
-  - smoke manual desktop/mobile sidebar (expand/collapse + active state) masih pending karena belum dieksekusi browser interactive pada sesi ini.
+  - concern masih berstatus eksperimental (`in-progress`) sampai dua siklus review mingguan selesai.
+
+## Progress Update 2026-03-02 (Mitigasi 5: Active State + Collapse Persistence Guard)
+
+- Guard kontrak frontend ditambahkan untuk aspek smoke sidebar yang tersisa:
+  - `tests/Unit/Frontend/DashboardLayoutMenuContractTest.php` kini mengunci `isItemActive` untuk item internal dan persistensi collapse sidebar (`localStorage` key `admin-one-sidebar-collapsed`).
+- Validasi otomatis concern UI-only:
+  - `php artisan test tests/Unit/Frontend/DashboardLayoutMenuContractTest.php tests/Unit/Frontend/NavigationSemanticContractTest.php tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php` (`PASS`, `12` tests, `50` assertions).
+- Dampak:
+  - checklist `P6` ditutup karena coverage aktif-state/collapse sudah memiliki guard deterministik bersama guard duplikasi/gating/build.
