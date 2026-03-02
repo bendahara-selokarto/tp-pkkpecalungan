@@ -40,12 +40,43 @@ const isDropdownActive = ref(false);
 
 const componentClass = computed(() => [
   props.isDropdownList ? 'py-3 px-6 text-sm' : 'py-3',
+  'rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500',
   hasColor.value
     ? getButtonColor(props.item.color, false, true)
     : `aside-menu-item dark:text-slate-300 dark:hover:text-white`,
 ]);
 
 const hasDropdown = computed(() => !!props.item.menu);
+
+const componentIs = computed(() => {
+  if (hasDropdown.value) {
+    return 'button';
+  }
+
+  if (props.item.route) {
+    return Link;
+  }
+
+  if (props.item.href) {
+    return 'a';
+  }
+
+  return 'button';
+});
+
+const isButton = computed(() => componentIs.value === 'button');
+
+const componentHref = computed(() => {
+  if (componentIs.value === Link) {
+    return props.item.route ?? null;
+  }
+
+  if (componentIs.value === 'a') {
+    return props.item.href ?? null;
+  }
+
+  return null;
+});
 
 const menuClick = (event) => {
   emit('menu-click', event, props.item);
@@ -59,11 +90,14 @@ const menuClick = (event) => {
 <template>
   <li>
     <component
-      :is="item.route ? Link : 'a'"
-      :href="item.route ?? item.href ?? null"
+      :is="componentIs"
+      :href="componentHref"
       :target="item.target ?? null"
-      class="flex cursor-pointer"
+      class="flex"
       :class="componentClass"
+      :type="isButton ? 'button' : null"
+      :aria-expanded="hasDropdown ? String(isDropdownActive) : null"
+      :aria-haspopup="hasDropdown ? 'menu' : null"
       @click="menuClick"
     >
       <BaseIcon

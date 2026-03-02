@@ -18,7 +18,7 @@ Status: `in-progress` (`state:responsive-ux-refactor`)
 - [x] `R2` Tetapkan kontrak komponen `ResponsiveDataTable` (desktop table + mobile card/label-aware).
 - [x] `R3` Terapkan metadata kolom/label mobile agar tidak bergantung pada header tersembunyi.
 - [x] `R4` Standarkan ukuran komponen interaktif mobile (`min-h-[44px]`) pada tombol, pagination, checkbox/radio wrapper.
-- [ ] `R5` Refactor elemen klik non-semantic menjadi `button`/`Link` pada area navigasi dan dropdown.
+- [x] `R5` Refactor elemen klik non-semantic menjadi `button`/`Link` pada area navigasi dan dropdown.
 - [ ] `R6` Tambahkan guard aksesibilitas modal (fokus awal, fokus kembali, escape handling konsisten).
 - [ ] `R7` Standarkan komponen state (`loading`, `empty`, `error`, `disabled`) untuk list/form.
 - [ ] `R8` Jalankan rollout bertahap per modul agar tidak memicu behavior drift lintas domain.
@@ -40,7 +40,7 @@ Status: `in-progress` (`state:responsive-ux-refactor`)
 - [x] `M3` Terapkan komponen tunggal `ResponsiveDataTable` dengan metadata kolom wajib (`key`, `label`, `mobileLabel`).
 - [x] `M4` Tambahkan guard CI/lint agar tabel baru tanpa metadata responsif tidak lolos review.
 - [x] `M5` Standarkan utility sentuh mobile minimum `min-h-[44px]` pada aksi primer/sekunder/destruktif.
-- [ ] `M6` Refactor elemen klik non-semantic ke `button`/`a` dan pastikan state fokus terlihat.
+- [x] `M6` Refactor elemen klik non-semantic ke `button`/`a` dan pastikan state fokus terlihat.
 - [ ] `M7` Terapkan guard modal aksesibel: initial focus, focus trap, restore focus, dan `Escape` close.
 - [x] `M8` Batasi scope PR concern ini hanya pada layer UI; perubahan backend/domain ditolak dan dipisah concern.
 - [ ] `M9` Simpan jalur rollback per batch (commit kecil + fallback komponen lama) untuk minimalkan blast radius.
@@ -76,3 +76,11 @@ Status: `in-progress` (`state:responsive-ux-refactor`)
   - `php artisan test tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php` (`PASS`, `5` tests, `19` assertions).
   - `php artisan test --filter ArsipManagementTest` (`PASS`, `6` tests, `98` assertions).
   - `cmd /c npm run build` (`PASS`, `vite build`, built in 11.49s).
+
+## Progress Update 2026-03-02 (Batch Navigasi Semantik)
+- Refactor komponen navigasi `admin-one` agar trigger dropdown tidak lagi memakai elemen non-semantic:
+  - `resources/js/admin-one/components/NavBarItem.vue`: dropdown trigger dipaksa `button`; fallback non-link juga `button`; tambah `aria-expanded` + `aria-haspopup`.
+  - `resources/js/admin-one/components/AsideMenuItem.vue`: dropdown trigger dipaksa `button`; link tetap `Link`/`a` hanya jika punya destination; tambah `aria-expanded` + `aria-haspopup`.
+- State fokus keyboard distandarkan dengan kelas `focus-visible:outline-*` pada trigger navbar/aside.
+- Guard kontrak ditambahkan:
+  - `tests/Unit/Frontend/NavigationSemanticContractTest.php` untuk mencegah regresi fallback non-semantic pada navigasi/dropdown.

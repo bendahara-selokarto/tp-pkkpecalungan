@@ -18,6 +18,10 @@ const props = defineProps({
 const emit = defineEmits(['menu-click']);
 
 const is = computed(() => {
+  if (props.item.menu) {
+    return 'button';
+  }
+
   if (props.item.href) {
     return 'a';
   }
@@ -26,7 +30,21 @@ const is = computed(() => {
     return Link;
   }
 
-  return 'div';
+  return 'button';
+});
+
+const isButton = computed(() => is.value === 'button');
+
+const componentHref = computed(() => {
+  if (is.value === Link) {
+    return props.item.route ?? null;
+  }
+
+  if (is.value === 'a') {
+    return props.item.href ?? null;
+  }
+
+  return null;
 });
 
 const componentClass = computed(() => {
@@ -93,10 +111,13 @@ const darkModeStore = useDarkModeStore();
     :is="is"
     v-else
     ref="root"
-    class="relative block cursor-pointer items-center lg:flex"
+    class="relative block items-center rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-500 lg:flex"
     :class="componentClass"
-    :href="item.route ?? item.href ?? null"
+    :href="componentHref"
     :target="item.target ?? null"
+    :type="isButton ? 'button' : null"
+    :aria-expanded="item.menu ? String(isDropdownActive) : null"
+    :aria-haspopup="item.menu ? 'menu' : null"
     @click="menuClick"
   >
     <div
