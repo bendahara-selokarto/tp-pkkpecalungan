@@ -23,3 +23,4 @@ Cara pakai:
 12. Sebutkan saya harus cek di menu UI bagian mana.
 13. Eksekusi todo `[file]` sampai end-to-end, commit by concern, jalankan test, dan sinkronkan dokumen kontrak.
 14. Generate TODO concern baru via `powershell -File scripts/generate_todo.ps1 -Code <KODE> -Title "<Judul>"`.
+15. Restruktur artefak perencanaan: sinkronkan `TTM25R1` + `OPERATIONAL_VALIDATION_LOG` + `PLANNING_ARTIFACT_INDEX` dengan patch minimal.

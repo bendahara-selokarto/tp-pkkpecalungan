@@ -170,6 +170,7 @@ Mitigasi:
 
 - `AGENTS.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+- `docs/process/PLANNING_ARTIFACT_INDEX.md`
 - `docs/adr/README.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 - `docs/security/AUTH_COHERENCE_MATRIX.md`
