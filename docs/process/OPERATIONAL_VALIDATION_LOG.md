@@ -1263,11 +1263,11 @@ Perintah validasi:
 - `php artisan test`
   - hasil: `PASS` (`1030` tests, `6866` assertions).
 - `npm run build`
-  - hasil: `BLOCKED` (dependency opsional `@rollup/rollup-linux-x64-gnu` belum tersedia pada environment).
+  - hasil: `PASS` (`vite build`, `built in 6m 4s`).
 
 Keputusan:
 - Kontrak frontend concern target dikunci ke payload paginator (`Object`) + query persistence (`...props.filters`, reset `page=1`).
-- Concern `PGM26A1` tetap `in-progress` sampai validasi build + smoke test manual terselesaikan.
+- Concern `PGM26A1` tetap `in-progress` sampai smoke test manual terselesaikan.
 
 Status:
-- `PARTIAL` (`implementation+tests-done`, `build-validation-blocked-by-environment`).
+- `PARTIAL` (`implementation+tests+build-done`, `manual-smoke-pending`).

@@ -60,7 +60,7 @@ Related ADR: `-`
 - [x] L1: targeted test concern pagination per modul yang diubah.
 - [x] L2: regression test lintas concern list wilayah + super admin.
 - [x] L3: `php artisan test`.
-- [ ] L4: `npm run build`.
+- [x] L4: `npm run build`.
 - [ ] L5: smoke test manual (pindah halaman, ubah per-page, back/forward browser, filter persistence).
 
 ## Risiko
@@ -113,4 +113,4 @@ Related ADR: `-`
   - `php artisan test --filter UserManagementIndexPaginationTest` (`PASS`, `5` tests).
   - `php artisan test --filter ArsipManagementTest` (`PASS`, `5` tests).
   - `php artisan test` (`PASS`, `1030` tests, `6866` assertions).
-  - `npm run build` (`BLOCKED`: missing optional dependency `@rollup/rollup-linux-x64-gnu` pada environment saat ini).
+  - `npm run build` (`PASS`, `vite build`, `built in 6m 4s`).
