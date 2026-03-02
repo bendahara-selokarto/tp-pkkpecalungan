@@ -1,7 +1,7 @@
 # TODO FTC26A1 Fixture Template Consistency 2026-03-01
 
 Tanggal: 2026-03-01  
-Status: `active` (`isolated-regression-fix`)
+Status: `done` (`isolated-regression-fix`)
 
 ## Konteks
 - Setelah hardening memory-limit test gate, blocker residual bergeser ke concern fixture/template consistency.
@@ -16,13 +16,13 @@ Status: `active` (`isolated-regression-fix`)
 - [x] `F1` Inventarisasi daftar kegagalan residual (`template .docx` hilang + mismatch token fixture).
 - [x] `F2` Tetapkan mapping file/template canonical yang hilang atau berubah.
 - [x] `F3` Sinkronkan fixture token dengan kontrak judul yang aktif.
-- [ ] `F4` Jalankan targeted feature tests yang terdampak.
-- [ ] `F5` Catat hasil penutupan di `OPERATIONAL_VALIDATION_LOG.md`.
+- [x] `F4` Jalankan targeted feature tests yang terdampak.
+- [x] `F5` Catat hasil penutupan di `OPERATIONAL_VALIDATION_LOG.md`.
 
 ## Validasi
-- [ ] `php artisan test --filter=LaporanTahunanPkkReportPrintTest`
-- [ ] `php artisan test --filter=PdfBaselineFixtureComplianceTest`
-- [ ] Tidak ada fail residual terkait fixture/template consistency.
+- [x] `php artisan test --filter=LaporanTahunanPkkReportPrintTest`
+- [x] `php artisan test --filter=PdfBaselineFixtureComplianceTest`
+- [x] Tidak ada fail residual terkait fixture/template consistency.
 
 ## Risiko
 - [ ] Risiko false-fix jika hanya mengubah expected test tanpa verifikasi kontrak dokumen canonical.

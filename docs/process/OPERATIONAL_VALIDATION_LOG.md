@@ -1174,3 +1174,26 @@ Keputusan:
 
 Status:
 - `PARTIAL` (`implementation-done`, `test-execution-blocked-by-environment`).
+
+## Penutupan Concern Fixture/Template Consistency (F4-F5): 2026-03-02
+
+Ruang lingkup:
+- Menjalankan ulang targeted feature tests concern `FTC26A1` pada environment dengan runtime PHP aktif.
+- Menutup residual blocker yang sebelumnya berstatus `BLOCKED`.
+
+Artefak:
+- `docs/process/TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+
+Perintah validasi:
+- `php artisan test --filter=LaporanTahunanPkkReportPrintTest`
+  - hasil: `PASS` (`3` tests, `18` assertions).
+- `php artisan test --filter=PdfBaselineFixtureComplianceTest`
+  - hasil: `PASS` (`20` tests, `503` assertions).
+
+Keputusan:
+- F4-F5 concern `FTC26A1` dinyatakan selesai.
+- Tidak ada fail residual terkait fixture/template consistency pada jalur targeted tests concern ini.
+
+Status:
+- `PASS`.
