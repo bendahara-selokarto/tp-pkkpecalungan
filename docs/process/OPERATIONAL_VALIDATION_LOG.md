@@ -1390,3 +1390,41 @@ Keputusan:
 
 Status:
 - `PASS`.
+
+## Penutupan Concern Ketersediaan Buku Admin PKK (`KBA26A1`): 2026-03-02
+
+Ruang lingkup:
+- Menutup blocker autentikasi child concern `AUTENTIK_SEKRETARIS_INTI` untuk tiga buku sekretaris inti:
+  - `buku-notulen-rapat`
+  - `buku-daftar-hadir`
+  - `buku-tamu`
+- Menyinkronkan status concern parent-child + registry SOT agar tidak drift.
+
+Artefak:
+- `docs/domain/BUKU_SEKRETARIS_INTI_AUTH_MAPPING.md`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md`
+- `docs/process/TODO_AUTENTIK_SEKRETARIS_INTI_2026_02_27.md`
+- `docs/process/TODO_KETERSEDIAAN_BUKU_ADMIN_PKK_2026_02_27.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/referensi/_screenshots/rakernas-x-secretariat-core/rakernas_x_page_20.png`
+- `docs/referensi/_screenshots/rakernas-x-secretariat-core/rakernas_x_page_24.png`
+- `docs/referensi/_screenshots/rakernas-x-secretariat-core/rakernas_x_page_26.png`
+
+Perintah validasi:
+- `python -c "... scan keyword NOTULEN|DAFTAR HADIR|BUKU TAMU pada docs/referensi/Rakernas X.pdf ..."`
+  - hasil: `NOTULEN NO_MATCH`, `DAFTAR HADIR NO_MATCH`, `BUKU TAMU NO_MATCH`.
+- `python -c "... scan daftar sheet workbook docs/referensi/excel/BUKU BANTU.xlsx ..."`
+  - hasil: token `NOTULEN/DAFTAR HADIR/BUKU TAMU` `NO_MATCH`.
+- `python -c "... render screenshot halaman Rakernas X (20,24,26) menggunakan pypdfium2 ..."`
+  - hasil: `PASS` (file screenshot valid tersimpan).
+- `php artisan test tests/Feature/BukuNotulenRapatReportPrintTest.php tests/Feature/BukuDaftarHadirReportPrintTest.php tests/Feature/BukuTamuReportPrintTest.php`
+  - hasil: `PASS` (`12` tests, `39` assertions).
+
+Keputusan:
+- Tiga buku sekretaris inti dikunci sebagai `unverified-local-extension` karena template tabel primer resmi belum tersedia pada sumber primer aktif.
+- Kontrak baseline header internal tetap berlaku dan dijaga oleh test header report.
+- Concern `KBA26A1` dan child concern `AUTENTIK_SEKRETARIS_INTI` disinkronkan ke status `done`.
+
+Status:
+- `PASS` (`concern-closed-with-source-scan-decision`).

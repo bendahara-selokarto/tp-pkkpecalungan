@@ -69,10 +69,10 @@ Gunakan status autentikasi:
 |---|---|---|---|---|---|
 | Sekretaris | Buku Daftar Anggota Tim Penggerak PKK | Sekretaris Desa/Kelurahan | available | partial | Label diselaraskan dengan lampiran autentik |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Desa/Kelurahan | available | verified | Jaga konsistensi format output |
-| Sekretaris | Buku Notulen Rapat | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
-| Sekretaris | Buku Daftar Hadir | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
+| Sekretaris | Buku Notulen Rapat | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; ekstensi lokal (`unverified-local-extension`) sampai template primer resmi tersedia |
+| Sekretaris | Buku Daftar Hadir | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; ekstensi lokal (`unverified-local-extension`) sampai template primer resmi tersedia |
 | Sekretaris | Buku Inventaris | Sekretaris Desa/Kelurahan | available | verified | Pertahankan kontrak autentik aktif |
-| Sekretaris | Buku Tamu | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
+| Sekretaris | Buku Tamu | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; ekstensi lokal (`unverified-local-extension`) sampai template primer resmi tersedia |
 | Sekretaris | Buku Program Kerja TP PKK | Sekretaris Desa/Kelurahan | partial | partial | Konsolidasikan domain program kerja |
 | Sekretaris | Rekap Data Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Desa/Kelurahan | available | verified | Pertahankan chain rekap berjenjang |
 | Pokja I | Buku Rencana Kerja Pokja I | Pokja I Desa | partial | partial | Tegaskan pemisahan rencana vs kegiatan |
@@ -100,9 +100,9 @@ Gunakan status autentikasi:
 |---|---|---|---|---|---|
 | Sekretaris | Buku Daftar Anggota Tim Penggerak PKK Kecamatan | Sekretaris Kecamatan | available | partial | Label diselaraskan dengan lampiran autentik |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Kecamatan | available | verified | Konsisten antar level |
-| Sekretaris | Buku Notulen Rapat | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
-| Sekretaris | Buku Daftar Hadir | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
-| Sekretaris | Buku Tamu | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
+| Sekretaris | Buku Notulen Rapat | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; ekstensi lokal (`unverified-local-extension`) sampai template primer resmi tersedia |
+| Sekretaris | Buku Daftar Hadir | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; ekstensi lokal (`unverified-local-extension`) sampai template primer resmi tersedia |
+| Sekretaris | Buku Tamu | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; ekstensi lokal (`unverified-local-extension`) sampai template primer resmi tersedia |
 | Sekretaris | Buku Program Kerja TP PKK Kecamatan | Sekretaris Kecamatan | partial | partial | Konsolidasi kontrak program kerja |
 | Sekretaris | Buku Inventaris | Sekretaris Kecamatan | available | verified | Pertahankan validasi autentik |
 | Sekretaris | Rekapitulasi Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Kecamatan | available | verified | Pertahankan rekap lintas desa |

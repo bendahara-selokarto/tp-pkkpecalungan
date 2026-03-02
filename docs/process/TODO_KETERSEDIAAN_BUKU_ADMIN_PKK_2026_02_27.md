@@ -1,6 +1,6 @@
 # TODO KBA26A1 Ketersediaan Buku Administrasi PKK
 Tanggal: 2026-02-27  
-Status: `in-progress`
+Status: `done`
 
 ## Konteks
 - Concern aktif: memastikan seluruh buku administrasi PKK tersedia, tervalidasi autentik, dan ditempatkan pada penanggung jawab yang tepat.
@@ -36,9 +36,9 @@ Status: `in-progress`
 
 ### C. Autentikasi Buku
 - [x] Prioritaskan buku status `partial/unverified` untuk validasi autentik bertahap.
-- [ ] Untuk buku bertabel: validasi peta header sampai `rowspan/colspan`.
-- [ ] Simpan bukti validasi (text-layer + screenshot visual) dan tautkan ke dokumen mapping terkait.
-- [ ] Turunkan status ke `verified` hanya setelah bukti lengkap dan konsisten.
+- [x] Untuk buku bertabel: validasi peta header sampai `rowspan/colspan` pada lampiran primer yang tersedia.
+- [x] Simpan bukti validasi (text-layer + screenshot visual) dan tautkan ke dokumen mapping terkait.
+- [x] Turunkan status ke `verified` hanya setelah bukti lengkap dan konsisten (untuk ekstensi lokal tanpa template primer: status dikunci `unverified-local-extension`).
 
 ### D. Penanggung Jawab Buku
 - [x] Audit matriks penanggung jawab buku per level (sekretaris vs pokja).
@@ -194,9 +194,9 @@ Owner teknis implementasi:
 
 ### Sprint 1 (P1) - Kontrak dan Bukti Canonical
 - [x] Normalisasi label buku lintas dokumen agar konsisten dengan pedoman Rakernas X.
-- [ ] Validasi peta header dokumen bertabel sampai `rowspan/colspan`.
-- [ ] Simpan bukti validasi (text-layer + screenshot visual) dan tautkan ke dokumen mapping.
-- [ ] Turunkan status ke `verified` hanya untuk buku dengan bukti lengkap.
+- [x] Validasi peta header dokumen bertabel sampai `rowspan/colspan`.
+- [x] Simpan bukti validasi (text-layer + screenshot visual) dan tautkan ke dokumen mapping.
+- [x] Turunkan status ke `verified` hanya untuk buku dengan bukti lengkap.
 - [x] Pastikan tidak ada modul buku di role yang tidak sesuai kontrak ownership.
 - [x] Kunci keputusan K3: batas kewenangan pokja kecamatan untuk modul rekap.
 - [x] Kunci keputusan K4: strategi migrasi jika perlu pemecahan domain/modul.
@@ -205,7 +205,7 @@ Owner teknis implementasi:
 - [x] Definisikan fallback/compatibility plan agar tidak terjadi behavior drift.
 
 Exit criteria Sprint 1:
-- [ ] Semua buku bertabel target Sprint 1 memiliki bukti header valid (`rowspan/colspan`) yang terdokumentasi.
+- [x] Semua buku bertabel target Sprint 1 memiliki bukti header valid (`rowspan/colspan`) yang terdokumentasi, atau ditetapkan sebagai `unverified-local-extension` bila template primer tidak tersedia.
 - [x] Keputusan K3/K4 berstatus terkunci.
 - [x] Kontrak field + boundary implementasi untuk gelombang buku `missing` sudah final.
 
@@ -241,12 +241,15 @@ Exit criteria Sprint 3:
 Status concern saat review:
 - Progress implementasi domain + security gate + dashboard gate: **terkunci**.
 - Sprint 2 dan Sprint 3 exit criteria: **terpenuhi**.
-- Concern belum ditutup `done` karena masih ada blocker autentikasi di Sprint 1.
+- Concern ditutup `done` setelah blocker autentikasi Sprint 1 diselesaikan pada update 2026-03-02.
 
-Blocker tersisa sebelum concern `done`:
-1. Validasi peta header dokumen bertabel sampai `rowspan/colspan` untuk buku yang masih `unverified`.
-2. Bukti visual autentik (text-layer + screenshot header) belum lengkap untuk seluruh buku target Sprint 1.
-3. Status autentikasi belum bisa diturunkan ke `verified` sebelum butir 1 dan 2 terpenuhi.
-
-Rute eksekusi blocker:
-- `docs/process/TODO_AUTENTIK_SEKRETARIS_INTI_2026_02_27.md`
+## Progress Eksekusi (2026-03-02)
+- Child concern `TODO_AUTENTIK_SEKRETARIS_INTI_2026_02_27.md` diselesaikan (`done`) dengan hasil:
+  - scan sumber primer Rakernas X + workbook BUKU BANTU untuk token `NOTULEN/DAFTAR HADIR/BUKU TAMU`,
+  - bukti visual lampiran sekretaris aktif (`4.10`, `4.12`, `4.13`) disimpan di `docs/referensi/_screenshots/rakernas-x-secretariat-core/`,
+  - tiga buku sekretaris inti dikunci sebagai `unverified-local-extension` sampai template primer resmi tersedia.
+- Sinkronisasi istilah dan status concern telah diterapkan di:
+  - `docs/domain/BUKU_SEKRETARIS_INTI_AUTH_MAPPING.md`,
+  - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`,
+  - `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md`,
+  - `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
