@@ -99,3 +99,14 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 - Milestone review aktif:
   - [ ] Review R1: 2026-03-09.
   - [ ] Review R2: 2026-03-16.
+
+## Mitigasi 5 (Cadence Readiness 2026-03-02)
+
+- [x] Pra-review snapshot concern `in-progress` dikunci untuk baseline sebelum R1.
+  - hasil baseline 2026-03-02: `ACL26M1`, `SKC0201`, `UVM25R1`, `UXR26A1`, `TTM25R1`.
+- [x] Paket command review mingguan dikunci agar R1/R2 berjalan deterministik:
+  - `rg -n '^Status:\\s*`in-progress`' docs/process -g 'TODO_*.md'`
+  - `rg -n '^\\s*- \\[ \\]' docs/process/TODO_*.md`
+  - `rg -n 'Source of Truth|child-spec|Status Concern' docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- [x] Kriteria close review dipertegas:
+  - R1/R2 boleh ditandai selesai meski tanpa perubahan status concern jika tidak ditemukan drift SOT/status/checklist lintas dokumen.
