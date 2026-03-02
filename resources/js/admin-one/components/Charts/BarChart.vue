@@ -10,7 +10,16 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  emptyText: {
+    type: String,
+    default: 'Belum ada data untuk filter yang dipilih.',
+  },
 })
+
+const CHART_AXIS_LABEL_COLOR = '#64748b'
+const CHART_AXIS_LABEL_FONT_SIZE = '11px'
+const CHART_GRID_BORDER_COLOR = '#e2e8f0'
+const CHART_GRID_STROKE_DASH = 4
 
 const labels = computed(() => {
   const rawLabels = props.data?.labels
@@ -52,8 +61,8 @@ const chartSeries = computed(() => [{
 }])
 
 const labelStyles = computed(() => ({
-  colors: labels.value.map(() => '#475569'),
-  fontSize: '11px',
+  colors: labels.value.map(() => CHART_AXIS_LABEL_COLOR),
+  fontSize: CHART_AXIS_LABEL_FONT_SIZE,
 }))
 
 const chartOptions = computed(() => ({
@@ -90,8 +99,8 @@ const chartOptions = computed(() => ({
     opacity: 1,
   },
   grid: {
-    borderColor: '#e2e8f0',
-    strokeDashArray: 4,
+    borderColor: CHART_GRID_BORDER_COLOR,
+    strokeDashArray: CHART_GRID_STROKE_DASH,
     xaxis: {
       lines: {
         show: false,
@@ -119,7 +128,7 @@ const chartOptions = computed(() => ({
     },
   },
   noData: {
-    text: 'Belum ada data',
+    text: props.emptyText,
     align: 'center',
     verticalAlign: 'middle',
   },

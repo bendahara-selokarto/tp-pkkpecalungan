@@ -20,7 +20,11 @@ class DashboardCoverageMenuSyncTest extends TestCase
         'bantuans',
         'bkl',
         'bkr',
+        'buku-daftar-hadir',
+        'buku-tamu',
+        'buku-notulen-rapat',
         'desa-activities',
+        'desa-arsip',
         'laporan-tahunan-pkk',
         'pilot-project-keluarga-sehat',
         'pilot-project-naskah-pelaporan',
@@ -60,6 +64,28 @@ class DashboardCoverageMenuSyncTest extends TestCase
             ->all();
 
         $this->assertSame($expectedUntrackedMenuSlugs, $untrackedMenuSlugs);
+    }
+
+    public function test_group_dashboard_utama_memiliki_minimal_satu_slug_coverage(): void
+    {
+        $trackedCoverageSlugs = collect($this->dashboardCoverageRepository()->trackedModuleSlugs())
+            ->unique()
+            ->values();
+        $roleMenuVisibilityService = $this->app->make(RoleMenuVisibilityService::class);
+
+        foreach (['sekretaris-tpk', 'pokja-i', 'pokja-ii', 'pokja-iii', 'pokja-iv'] as $group) {
+            $groupModules = collect($roleMenuVisibilityService->modulesForGroup($group))->unique()->values();
+            $coveredModules = $groupModules->intersect($trackedCoverageSlugs)->values()->all();
+
+            $this->assertNotSame(
+                [],
+                $coveredModules,
+                sprintf(
+                    'Group %s harus memiliki minimal satu module yang ikut coverage dashboard.',
+                    $group
+                )
+            );
+        }
     }
 
     private function dashboardCoverageRepository(): DashboardDocumentCoverageRepositoryInterface

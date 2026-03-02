@@ -67,12 +67,12 @@ Gunakan status autentikasi:
 ### A. Level Desa/Kelurahan
 | Kelompok | Nama Buku | Penanggung Jawab | Status Ketersediaan | Status Autentikasi | Catatan Tindak Lanjut |
 |---|---|---|---|---|---|
-| Sekretaris | Buku Daftar Anggota TP PKK | Sekretaris Desa/Kelurahan | available | partial | Sinkronkan label dengan lampiran autentik |
+| Sekretaris | Buku Daftar Anggota Tim Penggerak PKK | Sekretaris Desa/Kelurahan | available | partial | Label diselaraskan dengan lampiran autentik |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Desa/Kelurahan | available | verified | Jaga konsistensi format output |
-| Sekretaris | Buku Notulen Rapat | Sekretaris Desa/Kelurahan | missing | unverified | Buat modul dedicated + matriks field |
-| Sekretaris | Buku Daftar Hadir | Sekretaris Desa/Kelurahan | missing | unverified | Buat modul dedicated + relasi kegiatan |
+| Sekretaris | Buku Notulen Rapat | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
+| Sekretaris | Buku Daftar Hadir | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Inventaris | Sekretaris Desa/Kelurahan | available | verified | Pertahankan kontrak autentik aktif |
-| Sekretaris | Buku Tamu | Sekretaris Desa/Kelurahan | missing | unverified | Definisikan kontrak data tamu |
+| Sekretaris | Buku Tamu | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Program Kerja TP PKK | Sekretaris Desa/Kelurahan | partial | partial | Konsolidasikan domain program kerja |
 | Sekretaris | Rekap Data Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Desa/Kelurahan | available | verified | Pertahankan chain rekap berjenjang |
 | Pokja I | Buku Rencana Kerja Pokja I | Pokja I Desa | partial | partial | Tegaskan pemisahan rencana vs kegiatan |
@@ -98,9 +98,11 @@ Gunakan status autentikasi:
 ### B. Level Kecamatan
 | Kelompok | Nama Buku | Penanggung Jawab | Status Ketersediaan | Status Autentikasi | Catatan Tindak Lanjut |
 |---|---|---|---|---|---|
-| Sekretaris | Buku Daftar Anggota TP PKK Kecamatan | Sekretaris Kecamatan | available | partial | Sinkronkan nomenklatur kecamatan |
+| Sekretaris | Buku Daftar Anggota Tim Penggerak PKK Kecamatan | Sekretaris Kecamatan | available | partial | Label diselaraskan dengan lampiran autentik |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Kecamatan | available | verified | Konsisten antar level |
-| Sekretaris | Buku Notulen Rapat | Sekretaris Kecamatan | missing | unverified | Implementasi modul notulen |
+| Sekretaris | Buku Notulen Rapat | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
+| Sekretaris | Buku Daftar Hadir | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
+| Sekretaris | Buku Tamu | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; finalisasi kontrak field autentik |
 | Sekretaris | Buku Program Kerja TP PKK Kecamatan | Sekretaris Kecamatan | partial | partial | Konsolidasi kontrak program kerja |
 | Sekretaris | Buku Inventaris | Sekretaris Kecamatan | available | verified | Pertahankan validasi autentik |
 | Sekretaris | Rekapitulasi Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Kecamatan | available | verified | Pertahankan rekap lintas desa |
@@ -141,15 +143,24 @@ Kontrol akses minimal:
 1. Desa: `scope.role:desa`.
 2. Kecamatan: `scope.role:kecamatan`.
 3. Konsistensi role-scope-area wajib tervalidasi backend.
+4. Untuk modul shared lintas group (contoh: `Buku Kegiatan`/`activities`), list/detail role `desa-pokja-i` s.d. `desa-pokja-iv` dan `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv` wajib terfilter kombinasi `role group + level + area`; untuk sekretaris, `desa-sekretaris` tetap by area sesuai level, sedangkan `kecamatan-sekretaris` pada mode `kecamatan` dibatasi ke data milik sendiri (`created_by` user login) dan mode `desa` dipakai sebagai monitoring seluruh desa dalam wilayah kecamatan sendiri.
+5. Frontend wajib merender item menu hanya dari slug yang ada pada `auth.user.moduleModes`; item menu tanpa mode backend dianggap tidak valid dan tidak boleh ditampilkan.
+6. Modul `Buku Kegiatan` (`activities`) wajib tersedia untuk seluruh role operasional pada scope validnya masing-masing (sekretaris desa/kecamatan, pokja I-IV desa/kecamatan, role admin kompatibilitas, dan `super-admin`) dengan mode akses mengikuti kontrak backend.
+
+Keputusan operasional terkunci (2026-02-27):
+1. Pokja kecamatan pada concern rekap lintas desa diposisikan sebagai monitoring/evaluasi (`read-only`) dan bukan jalur mutasi data sumber.
+2. Mutasi data sumber tetap terjadi di level desa sesuai ownership pokja terkait.
+3. Enforcement backend mengikuti guard `RoleMenuVisibilityService` + middleware visibilitas modul + policy/scope service.
+4. Jika modul perlu dipecah domain, migrasi wajib bertahap (parallel compatibility -> adapter transisi -> cutover route/menu -> cleanup setelah parity test).
 
 ---
 
 ## VI. Rencana Implementasi Gap (Checklist Kerja)
 ### A. Ketersediaan Buku
-- [ ] Tambah modul `buku-notulen-rapat` desa/kecamatan.
-- [ ] Tambah modul `buku-daftar-hadir` desa/kecamatan.
-- [ ] Tambah modul `buku-tamu` desa/kecamatan.
-- [ ] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap.
+- [x] Tambah modul `buku-notulen-rapat` desa/kecamatan.
+- [x] Tambah modul `buku-daftar-hadir` desa/kecamatan.
+- [x] Tambah modul `buku-tamu` desa/kecamatan.
+- [x] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap (ownership `sekretaris-tpk`, tidak berada pada group `pokja-iv`).
 
 ### B. Autentikasi Buku
 - [ ] Lengkapi validasi autentik untuk buku berstatus `partial`.
@@ -157,9 +168,9 @@ Kontrol akses minimal:
 - [ ] Sinkronkan kontrak field per buku dengan hasil baca autentik final.
 
 ### C. Penanggung Jawab Buku
-- [ ] Audit seluruh modul agar ownership sesuai sekretaris/pokja.
-- [ ] Audit mode akses pokja kecamatan agar sesuai kebijakan monitoring.
-- [ ] Tambah test untuk mismatch role-area-level pada modul gap baru.
+- [x] Audit seluruh modul agar ownership sesuai sekretaris/pokja.
+- [x] Audit mode akses pokja kecamatan agar sesuai kebijakan monitoring.
+- [x] Tambah test untuk mismatch role-area-level pada modul gap baru.
 
 ---
 

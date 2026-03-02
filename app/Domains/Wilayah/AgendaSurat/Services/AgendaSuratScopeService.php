@@ -51,4 +51,9 @@ class AgendaSuratScopeService
 
         return $agendaSurat;
     }
+    public function resolveCreatorIdFilterForList(string $level): ?int
+    {
+        return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
+    }
 }
+

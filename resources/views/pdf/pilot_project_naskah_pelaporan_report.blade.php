@@ -165,7 +165,8 @@
 
         return 'data:' . $mime . ';base64,' . base64_encode($binary);
     };
-    $logoDataUri = $inlinePublicImageData('images/pkk-logo.png');
+    $canRenderPng = function_exists('imagecreatefrompng');
+    $logoDataUri = $canRenderPng ? $inlinePublicImageData('images/pkk-logo.png') : null;
     $scopeInstitution = (string) match ((string) $level) {
         'desa' => 'DESA',
         'kecamatan' => 'KECAMATAN',
@@ -186,6 +187,10 @@
         $extension = strtolower((string) pathinfo($path, PATHINFO_EXTENSION));
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
         if (! in_array($extension, $allowedExtensions, true)) {
+            return null;
+        }
+
+        if ($extension === 'png' && ! function_exists('imagecreatefrompng')) {
             return null;
         }
 
@@ -233,6 +238,10 @@
                 'webp' => 'image/webp',
                 default => 'application/octet-stream',
             };
+        }
+
+        if ($resolvedMimeType === 'image/png' && ! function_exists('imagecreatefrompng')) {
+            return null;
         }
 
         return 'data:' . $resolvedMimeType . ';base64,' . base64_encode($binary);

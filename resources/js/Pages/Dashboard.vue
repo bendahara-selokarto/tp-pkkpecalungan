@@ -2,17 +2,13 @@
 import { computed, ref, watch } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
 import CardBox from '@/admin-one/components/CardBox.vue'
-import CardBoxWidget from '@/admin-one/components/CardBoxWidget.vue'
 import BarChart from '@/admin-one/components/Charts/BarChart.vue'
+import BaseButton from '@/admin-one/components/BaseButton.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import {
-  mdiBookOpenVariant,
-  mdiChartBar,
   mdiChartTimelineVariant,
-  mdiClipboardList,
-  mdiFileDocumentCheck,
-  mdiFileDocumentMinus,
+  mdiPrinter,
 } from '@mdi/js'
 
 const props = defineProps({
@@ -87,13 +83,13 @@ const SECTION_GROUP_OPTIONS = [
 ]
 
 const MODE_OPTIONS = [
-  { value: 'all', label: 'Semua Level' },
-  { value: 'by-level', label: 'Per Level' },
+  { value: 'all', label: 'Semua Data' },
+  { value: 'by-level', label: 'Per Tingkat Wilayah' },
   { value: 'by-sub-level', label: 'Per Wilayah Turunan' },
 ]
 
 const LEVEL_OPTIONS = [
-  { value: 'all', label: 'Semua Level' },
+  { value: 'all', label: 'Semua Tingkat' },
   { value: 'desa', label: 'Desa' },
   { value: 'kecamatan', label: 'Kecamatan' },
 ]
@@ -113,8 +109,14 @@ const SECTION1_MONTH_OPTIONS = [
   { value: '11', label: 'November' },
   { value: '12', label: 'Desember' },
 ]
-const BY_DESA_PIE_MAX_ITEMS = 8
 const CHART_EMPTY_STATE_TEXT = 'Belum ada data untuk filter yang dipilih.'
+const CHART_AXIS_LABEL_COLOR = '#64748b'
+const CHART_AXIS_LABEL_FONT_SIZE = '11px'
+const CHART_GRID_BORDER_COLOR = '#e2e8f0'
+const CHART_GRID_STROKE_DASH = 4
+const CHART_TOOLTIP_THEME = 'light'
+const CHART_BAR_BORDER_RADIUS = 4
+const CHART_PIE_COLORS = ['#06b6d4', '#f97316', '#ef4444', '#22c55e', '#a855f7', '#eab308', '#0f766e', '#db2777', '#1d4ed8', '#65a30d']
 
 const USER_SECTION_LABELS = {
   'sekretaris-section-1': 'Ringkasan Tugas Sekretaris',
@@ -153,6 +155,12 @@ const selectedSubLevel = ref(normalizeToken(currentQuery.get('sub_level'), 'all'
 const selectedSection1Month = ref(resolveOptionValue(currentQuery.get('section1_month'), SECTION1_MONTH_OPTIONS, 'all'))
 const selectedSection2Group = ref(resolveOptionValue(currentQuery.get('section2_group'), SECTION_GROUP_OPTIONS, 'all'))
 const selectedSection3Group = ref(resolveOptionValue(currentQuery.get('section3_group'), SECTION_GROUP_OPTIONS, 'all'))
+const dashboardChartPdfUrl = computed(() => {
+  const params = parseQuery(page.url)
+  const query = params.toString()
+
+  return query === '' ? '/dashboard/charts/report/pdf' : `/dashboard/charts/report/pdf?${query}`
+})
 
 const dynamicBlocks = computed(() =>
   Array.isArray(props.dashboardBlocks)
@@ -186,9 +194,6 @@ const hasSekretarisSections = computed(() =>
     || sekretarisSection3Blocks.value.length > 0
     || sekretarisSection4Blocks.value.length > 0
   ),
-)
-const shouldShowGlobalDashboardFilters = computed(() =>
-  !isDesaPokjaUser.value && !hasSekretarisSections.value,
 )
 
 const expandedBlockKeys = ref({})
@@ -241,26 +246,18 @@ const filteredSekretarisSection3Blocks = computed(() =>
 )
 
 const resolveSectionLabel = (sectionKey, blocks, fallback) => {
+  const firstBlock = blocks[0]
+  const sectionLabel = firstBlock?.section?.label
+
+  if (typeof sectionLabel === 'string' && sectionLabel.trim() !== '') {
+    return sectionLabel
+  }
+
   if (typeof USER_SECTION_LABELS[sectionKey] === 'string') {
     return USER_SECTION_LABELS[sectionKey]
   }
 
-  const firstBlock = blocks[0]
-  const label = firstBlock?.section?.label
-
-  return typeof label === 'string' && label.trim() !== '' ? label : fallback
-}
-
-const resolveSectionDescription = (sectionKey) => {
-  if (sectionKey === 'sekretaris-section-1') {
-    return 'Ringkasan sekretaris ditampilkan tanpa filter pokja.'
-  }
-
-  if (sectionKey === 'sekretaris-section-4') {
-    return 'Rincian Pokja I per desa mengikuti pilihan filter pokja pada ringkasan desa.'
-  }
-
-  return 'Gunakan filter pokja untuk fokus ke Pokja I-IV atau tampilkan semua pokja.'
+  return fallback
 }
 
 const resolveSectionFilter = (blocks, fallbackQueryKey) => {
@@ -295,23 +292,23 @@ const dashboardSections = computed(() => {
     }]
   }
 
-  const section1 = {
+  const sections = [{
     key: 'sekretaris-section-1',
     label: resolveSectionLabel('sekretaris-section-1', sekretarisSection1Blocks.value, 'Ringkasan Tugas Sekretaris'),
     filter: null,
     blocks: sekretarisSection1Blocks.value,
+  }]
+
+  if (sekretarisSection2Blocks.value.length > 0) {
+    sections.push({
+      key: 'sekretaris-section-2',
+      label: resolveSectionLabel('sekretaris-section-2', sekretarisSection2Blocks.value, 'Ringkasan Pokja di Level Anda'),
+      filter: resolveSectionFilter(sekretarisSection2Blocks.value, 'section2_group'),
+      blocks: filteredSekretarisSection2Blocks.value,
+    })
   }
 
-  const section2 = {
-    key: 'sekretaris-section-2',
-    label: resolveSectionLabel('sekretaris-section-2', sekretarisSection2Blocks.value, 'Ringkasan Pokja di Level Anda'),
-    filter: resolveSectionFilter(sekretarisSection2Blocks.value, 'section2_group'),
-    blocks: filteredSekretarisSection2Blocks.value,
-  }
-
-  const sections = [section1, section2]
-
-  if (hasSekretarisLowerSection.value) {
+  if (sekretarisSection3Blocks.value.length > 0) {
     sections.push({
       key: 'sekretaris-section-3',
       label: resolveSectionLabel('sekretaris-section-3', sekretarisSection3Blocks.value, 'Ringkasan Pokja per Desa'),
@@ -332,7 +329,19 @@ const dashboardSections = computed(() => {
   return sections
 })
 
-const visibleDashboardSections = computed(() => dashboardSections.value)
+const visibleDashboardSections = computed(() => {
+  const sections = dashboardSections.value
+
+  if (!Array.isArray(sections) || sections.length === 0) {
+    return []
+  }
+
+  // Product decision: keep dashboard in single-section mode to reduce cognitive load.
+  const firstNonEmptySection = sections.find((section) =>
+    Array.isArray(section?.blocks) && section.blocks.length > 0)
+
+  return [firstNonEmptySection ?? sections[0]]
+})
 const visibleDashboardBlocks = computed(() =>
   visibleDashboardSections.value.flatMap((section) =>
     Array.isArray(section?.blocks) ? section.blocks : []),
@@ -393,24 +402,18 @@ const applyFilters = () => {
   })
 }
 
-const onModeChange = () => {
-  if (!isByLevelMode.value) {
-    selectedLevel.value = 'all'
-  }
-
-  if (!isBySubLevelMode.value) {
-    selectedSubLevel.value = 'all'
-  }
-
-  applyFilters()
-}
-
-const onLevelChange = () => {
-  applyFilters()
-}
-
-const onSubLevelApply = () => {
+const applyChartFilters = () => {
+  selectedSection1Month.value = resolveOptionValue(selectedSection1Month.value, SECTION1_MONTH_OPTIONS, 'all')
   selectedSubLevel.value = normalizeToken(selectedSubLevel.value, 'all')
+  if (!hasMonthFilterAwareBlocks.value) {
+    selectedSection1Month.value = 'all'
+  }
+
+  if (hasSekretarisSections.value) {
+    applySekretarisSectionFilters()
+    return
+  }
+
   applyFilters()
 }
 
@@ -429,29 +432,16 @@ const applySekretarisSectionFilters = () => {
   })
 }
 
-const onSection2GroupChange = () => {
-  selectedSection2Group.value = resolveOptionValue(selectedSection2Group.value, SECTION_GROUP_OPTIONS, 'all')
-  applySekretarisSectionFilters()
-}
-
-const onSection1MonthChange = () => {
-  selectedSection1Month.value = resolveOptionValue(selectedSection1Month.value, SECTION1_MONTH_OPTIONS, 'all')
-  if (!hasMonthFilterAwareBlocks.value) {
-    selectedSection1Month.value = 'all'
+const onChartFilterModeChange = () => {
+  if (!isByLevelMode.value) {
+    selectedLevel.value = 'all'
   }
 
-  if (hasSekretarisSections.value) {
-    applySekretarisSectionFilters()
-    return
+  if (!isBySubLevelMode.value) {
+    selectedSubLevel.value = 'all'
   }
-
-  applyFilters()
 }
 
-const onSection3GroupChange = () => {
-  selectedSection3Group.value = resolveOptionValue(selectedSection3Group.value, SECTION_GROUP_OPTIONS, 'all')
-  applySekretarisSectionFilters()
-}
 
 watch(
   isDesaPokjaUser,
@@ -594,6 +584,19 @@ const availableSubLevelOptions = computed(() => {
 })
 
 const toNumber = (value) => Number(value ?? 0)
+const buildAxisLabelStyles = (labels) => ({
+  colors: (labels ?? []).map(() => CHART_AXIS_LABEL_COLOR),
+  fontSize: CHART_AXIS_LABEL_FONT_SIZE,
+})
+const buildChartNoData = () => ({
+  text: CHART_EMPTY_STATE_TEXT,
+  align: 'center',
+  verticalAlign: 'middle',
+})
+const buildCartesianGrid = () => ({
+  borderColor: CHART_GRID_BORDER_COLOR,
+  strokeDashArray: CHART_GRID_STROKE_DASH,
+})
 const formatPieAbsoluteValue = (_value, options) => {
   const seriesIndex = toNumber(options?.seriesIndex)
   const seriesValue = toNumber(options?.w?.config?.series?.[seriesIndex] ?? 0)
@@ -654,141 +657,77 @@ const resolveBlockAccessModeLabel = (block) => {
 }
 
 const blockSummaryLabel = (block) => `Data dari ${sourceModulesLabel(block)} | Cakupan ${sourceAreaTypeLabel(block)}`
+const formatSummaryValue = (value) => toNumber(value).toLocaleString('id-ID')
+const summaryToneClasses = (tone) => {
+  if (tone === 'info') {
+    return {
+      box: 'border border-cyan-200 dark:border-cyan-900/50',
+      label: 'text-[11px] uppercase tracking-wide text-cyan-700 dark:text-cyan-300',
+      value: 'mt-1 text-lg font-semibold text-cyan-700 dark:text-cyan-300',
+    }
+  }
 
-const buildBlockStats = (block) => {
-  const groupLabel = String(block?.group_label ?? 'Dashboard').trim()
+  if (tone === 'success') {
+    return {
+      box: 'border border-emerald-200 dark:border-emerald-900/50',
+      label: 'text-[11px] uppercase tracking-wide text-emerald-700 dark:text-emerald-300',
+      value: 'mt-1 text-lg font-semibold text-emerald-700 dark:text-emerald-300',
+    }
+  }
+
+  if (tone === 'warning') {
+    return {
+      box: 'border border-amber-200 dark:border-amber-900/50',
+      label: 'text-[11px] uppercase tracking-wide text-amber-700 dark:text-amber-300',
+      value: 'mt-1 text-lg font-semibold text-amber-700 dark:text-amber-300',
+    }
+  }
+
+  if (tone === 'muted') {
+    return {
+      box: 'border border-slate-300 dark:border-slate-700',
+      label: 'text-[11px] uppercase tracking-wide text-slate-600 dark:text-slate-300',
+      value: 'mt-1 text-lg font-semibold text-slate-700 dark:text-slate-200',
+    }
+  }
+
+  return {
+    box: 'border border-slate-200 dark:border-slate-700',
+    label: 'text-[11px] uppercase tracking-wide text-slate-500 dark:text-slate-400',
+    value: 'mt-1 text-lg font-semibold text-slate-800 dark:text-slate-100',
+  }
+}
+const countActiveCoverageItems = (block) => {
+  const values = block?.charts?.coverage_per_module?.values
+  if (!Array.isArray(values)) {
+    return 0
+  }
+
+  return values.filter((value) => toNumber(value) > 0).length
+}
+const buildDashboardSummaryTiles = (block) => {
+  const totalBooks = toNumber(block?.kind === 'documents' ? block?.stats?.total_buku_tracked : block?.stats?.books_total)
+  const filledBooks = toNumber(block?.kind === 'documents' ? block?.stats?.buku_terisi : block?.stats?.books_filled)
+  const unfilledBooks = Math.max(totalBooks - filledBooks, 0)
 
   if (block?.kind === 'activity') {
-    const stats = block?.stats ?? {}
-    const activityStats = [
-      {
-        key: 'activity-total',
-        icon: mdiClipboardList,
-        label: 'Total Kegiatan',
-        number: toNumber(stats.total),
-        color: 'text-blue-500',
-      },
-      {
-        key: 'activity-this-month',
-        icon: mdiChartTimelineVariant,
-        label: 'Kegiatan Bulan Ini',
-        number: toNumber(stats.this_month),
-        color: 'text-indigo-500',
-      },
+    return [
+      { key: 'total-kegiatan', label: 'Total Kegiatan', value: formatSummaryValue(block?.stats?.total), tone: 'default' },
+      { key: 'kegiatan-bulan-ini', label: 'Bulan Ini', value: formatSummaryValue(block?.stats?.this_month), tone: 'default' },
+      { key: 'jumlah-buku', label: 'Jumlah Buku', value: formatSummaryValue(totalBooks), tone: 'info' },
+      { key: 'buku-terisi', label: 'Buku Terisi', value: formatSummaryValue(filledBooks), tone: 'success' },
+      { key: 'buku-belum-terisi', label: 'Buku Belum Terisi', value: formatSummaryValue(unfilledBooks), tone: 'warning' },
     ]
-
-    if (shouldShowActivityByDesaChart(block)) {
-      const { syncedTotalBookValues, syncedFilledBookValues } = resolveActivityByDesaMetrics(block)
-      const totalBooks = syncedTotalBookValues.reduce((total, value) => total + toNumber(value), 0)
-      const filledBooks = syncedFilledBookValues.reduce((total, value) => total + toNumber(value), 0)
-
-      activityStats.push(
-        {
-          key: 'activity-total-book',
-          icon: mdiBookOpenVariant,
-          label: 'Jumlah Buku',
-          number: totalBooks,
-          color: 'text-cyan-500',
-        },
-        {
-          key: 'activity-filled-book',
-          icon: mdiFileDocumentCheck,
-          label: 'Buku Terisi',
-          number: filledBooks,
-          color: 'text-emerald-500',
-        },
-      )
-    }
-
-    return activityStats
   }
-
-  const stats = block?.stats ?? {}
 
   return [
-    {
-      key: 'documents-total-book',
-      icon: mdiBookOpenVariant,
-      label: `Total Buku ${groupLabel}`,
-      number: toNumber(stats.total_buku_tracked),
-      color: 'text-cyan-500',
-    },
-    {
-      key: 'documents-filled',
-      icon: mdiFileDocumentCheck,
-      label: `Buku Terisi ${groupLabel}`,
-      number: toNumber(stats.buku_terisi),
-      color: 'text-emerald-500',
-    },
-    {
-      key: 'documents-empty',
-      icon: mdiFileDocumentMinus,
-      label: `Buku Belum Terisi ${groupLabel}`,
-      number: toNumber(stats.buku_belum_terisi),
-      color: 'text-rose-500',
-    },
-    {
-      key: 'documents-total-entry',
-      icon: mdiChartBar,
-      label: `Total Entri ${groupLabel}`,
-      number: toNumber(stats.total_entri_buku),
-      color: 'text-violet-500',
-    },
+    { key: 'total-buku', label: 'Total Buku', value: formatSummaryValue(totalBooks), tone: 'default' },
+    { key: 'total-entri', label: 'Total Entri', value: formatSummaryValue(block?.stats?.total_entri_buku), tone: 'default' },
+    { key: 'modul-aktif', label: 'Modul Aktif', value: formatSummaryValue(countActiveCoverageItems(block)), tone: 'info' },
+    { key: 'buku-terisi', label: 'Buku Terisi', value: formatSummaryValue(filledBooks), tone: 'success' },
+    { key: 'buku-belum-terisi', label: 'Buku Belum Terisi', value: formatSummaryValue(unfilledBooks), tone: 'muted' },
   ]
 }
-
-const resolveDocumentCoverageItems = (block) => {
-  const rawItems = block?.charts?.coverage_per_module?.items
-  if (Array.isArray(rawItems) && rawItems.length > 0) {
-    return rawItems.map((item, index) => ({
-      label: String(item?.label ?? humanizeLabel(item?.slug ?? `Modul ${index + 1}`)),
-      total: toNumber(item?.resolved_total ?? item?.total ?? 0),
-    }))
-  }
-
-  const labels = block?.charts?.coverage_per_module?.labels ?? []
-  const values = block?.charts?.coverage_per_module?.values ?? []
-
-  return labels.map((label, index) => ({
-    label: humanizeLabel(label),
-    total: toNumber(values[index] ?? 0),
-  }))
-}
-
-const resolveCoverageDimension = (block) =>
-  normalizeToken(block?.charts?.coverage_per_module?.dimension, 'module')
-
-const resolveCoverageChartHeading = (block) =>
-  (resolveCoverageDimension(block) === 'desa' ? 'Cakupan Per Desa' : 'Cakupan Per Modul')
-
-const resolveCoverageListHeading = (block) =>
-  (resolveCoverageDimension(block) === 'desa' ? 'Nilai Per Desa' : 'Nilai Per Modul')
-
-const resolveCoverageItemDetail = (item) => {
-  const perModule = item?.per_module
-  if (!perModule || typeof perModule !== 'object') {
-    return ''
-  }
-
-  const entries = Object.entries(perModule)
-    .filter(([, count]) => toNumber(count) > 0)
-    .map(([slug, count]) => `${humanizeLabel(slug)}: ${toNumber(count)}`)
-
-  return entries.join(' | ')
-}
-
-const buildDocumentCoverageChartData = (block) => {
-  const items = resolveDocumentCoverageItems(block)
-
-  return buildSingleDataset(
-    items.map((item) => item.label),
-    items.map((item) => item.total),
-    '#10b981',
-  )
-}
-
-const hasDocumentCoverageData = (block) =>
-  resolveDocumentCoverageItems(block).some((item) => item.total > 0)
 
 const buildActivityMonthlyMultiAxisSeries = (block) => {
   const values = (block?.charts?.monthly?.values ?? []).map((value) => toNumber(value))
@@ -814,10 +753,7 @@ const buildActivityMonthlyMultiAxisSeries = (block) => {
 
 const buildActivityMonthlyMultiAxisOptions = (block) => {
   const labels = block?.charts?.monthly?.labels ?? []
-  const axisLabelStyles = {
-    colors: labels.map(() => '#64748b'),
-    fontSize: '11px',
-  }
+  const axisLabelStyles = buildAxisLabelStyles(labels)
 
   return {
     chart: {
@@ -834,16 +770,16 @@ const buildActivityMonthlyMultiAxisOptions = (block) => {
         horizontal: false,
         distributed: false,
         columnWidth: '55%',
-        borderRadius: 4,
+        borderRadius: CHART_BAR_BORDER_RADIUS,
       },
     },
     colors: ['#0ea5e9', '#6366f1'],
     dataLabels: {
       enabled: false,
     },
-    grid: {
-      borderColor: '#e2e8f0',
-      strokeDashArray: 4,
+    grid: buildCartesianGrid(),
+    tooltip: {
+      theme: CHART_TOOLTIP_THEME,
     },
     legend: {
       show: true,
@@ -885,11 +821,7 @@ const buildActivityMonthlyMultiAxisOptions = (block) => {
         },
       },
     ],
-    noData: {
-      text: CHART_EMPTY_STATE_TEXT,
-      align: 'center',
-      verticalAlign: 'middle',
-    },
+    noData: buildChartNoData(),
   }
 }
 
@@ -910,14 +842,8 @@ const hasByDesaActivityMetrics = (block) => {
 
 const shouldShowActivityByDesaChart = (block) =>
   hasByDesaActivityMetrics(block)
-const shouldUsePieForActivityByDesa = (block) => {
-  const { labels } = resolveActivityByDesaMetrics(block)
-  return labels.length > 0 && labels.length <= BY_DESA_PIE_MAX_ITEMS
-}
-const activityByDesaChartModeLabel = (block) =>
-  (shouldUsePieForActivityByDesa(block)
-    ? 'Grafik pai dipakai saat jumlah desa ringkas agar komposisi cepat terbaca.'
-    : 'Grafik batang dipakai saat jumlah desa lebih banyak agar label tetap terbaca.')
+const activityByDesaChartModeLabel = () =>
+  'Grafik pai ditampilkan di sisi kiri, dan grafik batang ditampilkan di sisi kanan.'
 
 const resolveActivityByDesaMetrics = (block) => {
   const labels = block?.charts?.by_desa?.labels ?? []
@@ -956,7 +882,7 @@ const buildActivityByDesaKegiatanOptions = (block) => {
       },
     },
     labels,
-    colors: ['#06b6d4', '#f97316', '#ef4444', '#22c55e', '#a855f7', '#eab308', '#0f766e', '#db2777', '#1d4ed8', '#65a30d'],
+    colors: CHART_PIE_COLORS,
     dataLabels: {
       enabled: true,
       formatter: formatPieAbsoluteValue,
@@ -965,19 +891,12 @@ const buildActivityByDesaKegiatanOptions = (block) => {
       show: true,
       position: 'bottom',
     },
-    noData: {
-      text: CHART_EMPTY_STATE_TEXT,
-      align: 'center',
-      verticalAlign: 'middle',
+    tooltip: {
+      theme: CHART_TOOLTIP_THEME,
     },
+    noData: buildChartNoData(),
   }
 }
-const buildActivityByDesaKegiatanBarData = (block) => {
-  const { labels, syncedActivityValues } = resolveActivityByDesaMetrics(block)
-
-  return buildSingleDataset(labels, syncedActivityValues, '#06b6d4')
-}
-
 const buildActivityByDesaBookCoverageSeries = (block) => {
   const { syncedTotalBookValues, syncedFilledBookValues } = resolveActivityByDesaMetrics(block)
 
@@ -997,10 +916,7 @@ const buildActivityByDesaBookCoverageSeries = (block) => {
 
 const buildActivityByDesaBookCoverageOptions = (block) => {
   const { labels } = resolveActivityByDesaMetrics(block)
-  const axisLabelStyles = {
-    colors: labels.map(() => '#64748b'),
-    fontSize: '11px',
-  }
+  const axisLabelStyles = buildAxisLabelStyles(labels)
 
   return {
     chart: {
@@ -1016,7 +932,7 @@ const buildActivityByDesaBookCoverageOptions = (block) => {
       bar: {
         horizontal: false,
         columnWidth: '45%',
-        borderRadius: 4,
+        borderRadius: CHART_BAR_BORDER_RADIUS,
       },
     },
     colors: ['#7e22ce', '#16a34a'],
@@ -1027,6 +943,10 @@ const buildActivityByDesaBookCoverageOptions = (block) => {
       show: true,
       position: 'top',
       horizontalAlign: 'left',
+    },
+    grid: buildCartesianGrid(),
+    tooltip: {
+      theme: CHART_TOOLTIP_THEME,
     },
     xaxis: {
       categories: labels,
@@ -1046,15 +966,11 @@ const buildActivityByDesaBookCoverageOptions = (block) => {
       },
       labels: {
         style: {
-          colors: ['#7e22ce'],
+          colors: [CHART_AXIS_LABEL_COLOR],
         },
       },
     },
-    noData: {
-      text: CHART_EMPTY_STATE_TEXT,
-      align: 'center',
-      verticalAlign: 'middle',
-    },
+    noData: buildChartNoData(),
   }
 }
 
@@ -1065,18 +981,43 @@ const hasActivityByDesaBookCoverageData = (block) =>
   ['books_total', 'books_filled'].some((metricKey) =>
     (block?.charts?.by_desa?.[metricKey] ?? []).some((value) => toNumber(value) > 0))
 
-const buildActivityLevelChartData = (block) => {
-  const labels = block?.charts?.level?.labels ?? ['Desa', 'Kecamatan']
-  const values = (block?.charts?.level?.values ?? [0, 0]).map((value) => toNumber(value))
+const resolveBookComparisonMetrics = (block) => {
+  if (block?.kind === 'documents') {
+    return {
+      totalBooks: toNumber(block?.stats?.total_buku_tracked),
+      filledBooks: toNumber(block?.stats?.buku_terisi),
+    }
+  }
 
-  return buildSingleDataset(labels, values, ['#06b6d4', '#6366f1'])
+  const chartValues = Array.isArray(block?.charts?.book_comparison?.values)
+    ? block.charts.book_comparison.values
+    : []
+  if (chartValues.length >= 2) {
+    return {
+      totalBooks: toNumber(chartValues[0] ?? 0),
+      filledBooks: toNumber(chartValues[1] ?? 0),
+    }
+  }
+
+  return {
+    totalBooks: toNumber(block?.stats?.books_total),
+    filledBooks: toNumber(block?.stats?.books_filled),
+  }
 }
+const buildBookComparisonChartData = (block) => {
+  const { totalBooks, filledBooks } = resolveBookComparisonMetrics(block)
 
-// Legacy fallback while dynamic blocks are still rolling out.
-const activityStats = computed(() => props.dashboardStats.activity ?? {
-  total: props.dashboardStats.total ?? 0,
-  this_month: props.dashboardStats.this_month ?? 0,
-})
+  return buildSingleDataset(
+    ['Jumlah Buku', 'Buku Terisi'],
+    [totalBooks, filledBooks],
+    ['#7e22ce', '#16a34a'],
+  )
+}
+const hasBookComparisonData = (block) => {
+  const { totalBooks, filledBooks } = resolveBookComparisonMetrics(block)
+
+  return totalBooks > 0 || filledBooks > 0
+}
 
 const documentStats = computed(() => props.dashboardStats.documents ?? {
   total_buku_tracked: 0,
@@ -1121,184 +1062,37 @@ const legacyCoveragePerLampiranChartData = computed(() => buildSingleDataset(
   '#0ea5e9',
 ))
 
-const legacyLevelDistributionChartData = computed(() => buildSingleDataset(
-  documentCharts.value.level_distribution?.labels ?? ['Desa', 'Kecamatan'],
-  (documentCharts.value.level_distribution?.values ?? [0, 0]).map((value) => toNumber(value)),
-  ['#f59e0b', '#6366f1'],
+const legacyBookComparisonChartData = computed(() => buildSingleDataset(
+  ['Jumlah Buku', 'Buku Terisi'],
+  [toNumber(documentStats.value.total_buku_tracked), toNumber(documentStats.value.buku_terisi)],
+  ['#7e22ce', '#16a34a'],
 ))
 
-const legacyLampiranCoverageItems = computed(() => {
-  const rawItems = documentCharts.value.coverage_per_lampiran?.items
-  if (Array.isArray(rawItems) && rawItems.length > 0) {
-    return rawItems.map((item) => ({
-      label: String(item?.lampiran_group ?? '-'),
-      total: toNumber(item?.total ?? 0),
-    }))
-  }
-
-  const labels = documentCharts.value.coverage_per_lampiran?.labels ?? []
-  const values = documentCharts.value.coverage_per_lampiran?.values ?? []
-
-  return labels.map((label, index) => ({
-    label: String(label),
-    total: toNumber(values[index] ?? 0),
-  }))
-})
-
-const legacyLevelDistributionItems = computed(() => {
-  const labels = documentCharts.value.level_distribution?.labels ?? ['Desa', 'Kecamatan']
-  const values = documentCharts.value.level_distribution?.values ?? [0, 0]
-
-  return labels.map((label, index) => ({
-    label: String(label),
-    total: toNumber(values[index] ?? 0),
-  }))
-})
-
 const hasLegacyLampiranCoverageData = computed(() =>
-  legacyLampiranCoverageItems.value.some((item) => item.total > 0),
+  (documentCharts.value.coverage_per_lampiran?.values ?? []).some((value) => toNumber(value) > 0),
 )
 
-const hasLegacyLevelDistributionData = computed(() =>
-  legacyLevelDistributionItems.value.some((item) => item.total > 0),
+const hasLegacyBookComparisonData = computed(() =>
+  toNumber(documentStats.value.total_buku_tracked) > 0 || toNumber(documentStats.value.buku_terisi) > 0,
 )
 </script>
 
 <template>
   <SectionMain class="!pt-2">
-    <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Dashboard" main />
-
-    <CardBox v-if="shouldShowGlobalDashboardFilters" class="mb-6">
-      <div class="grid grid-cols-1 gap-4 lg:grid-cols-4">
-        <div>
-          <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-            Cara Tampil
-          </label>
-          <select
-            v-model="selectedMode"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-            @change="onModeChange"
-          >
-            <option v-for="modeOption in MODE_OPTIONS" :key="modeOption.value" :value="modeOption.value">
-              {{ modeOption.label }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-            Cakupan Wilayah
-          </label>
-          <select
-            v-model="selectedLevel"
-            :disabled="!isByLevelMode"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-            @change="onLevelChange"
-          >
-            <option v-for="levelOption in LEVEL_OPTIONS" :key="levelOption.value" :value="levelOption.value">
-              {{ levelOption.label }}
-            </option>
-          </select>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-            Wilayah Turunan
-          </label>
-          <select
-            v-if="availableSubLevelOptions.length > 1"
-            v-model="selectedSubLevel"
-            :disabled="!isBySubLevelMode"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-            @change="onSubLevelApply"
-          >
-            <option
-              v-for="subLevelOption in availableSubLevelOptions"
-              :key="`sub-level-${subLevelOption.value}`"
-              :value="subLevelOption.value"
-            >
-              {{ subLevelOption.label }}
-            </option>
-          </select>
-          <input
-            v-else
-            v-model="selectedSubLevel"
-            :disabled="!isBySubLevelMode"
-            type="text"
-            class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-            placeholder="contoh: desa-gombong"
-            @keyup.enter="onSubLevelApply"
-            @blur="onSubLevelApply"
-          >
-          <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-            Pilih nama desa agar fokus wilayah lebih jelas.
-          </p>
-        </div>
-
-        <div class="flex items-end">
-          <button
-            type="button"
-            class="w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-            @click="applyFilters"
-          >
-            Tampilkan Data
-          </button>
-        </div>
-      </div>
-      <p class="mt-3 text-xs text-slate-500 dark:text-slate-300">
-        Pilihan ini tersimpan di URL agar tampilan mudah dibuka ulang atau dibagikan.
-      </p>
-    </CardBox>
+    <SectionTitleLineWithButton :icon="mdiChartTimelineVariant" title="Dashboard" main>
+      <BaseButton
+        :icon="mdiPrinter"
+        label="Cetak Chart PDF"
+        color="info"
+        :href="dashboardChartPdfUrl"
+        target="_blank"
+        small
+      />
+    </SectionTitleLineWithButton>
 
     <template v-if="hasDynamicBlocks">
       <div class="space-y-8">
         <div v-for="section in visibleDashboardSections" :key="section.key" class="space-y-4">
-          <CardBox v-if="hasSekretarisSections">
-            <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-              <div>
-                <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ section.label }}</h3>
-                <p class="mt-1 text-xs text-slate-500 dark:text-slate-300">
-                  {{ resolveSectionDescription(section.key) }}
-                </p>
-              </div>
-              <div v-if="section.filter" class="lg:ml-auto lg:w-64">
-                <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                  Pilih Pokja
-                </label>
-
-                <select
-                  v-if="section.filter.queryKey === 'section2_group'"
-                  v-model="selectedSection2Group"
-                  class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-                  @change="onSection2GroupChange"
-                >
-                  <option
-                    v-for="option in section.filter.options"
-                    :key="`${section.key}-${option.value}`"
-                    :value="option.value"
-                  >
-                    {{ option.label }}
-                  </option>
-                </select>
-
-                <select
-                  v-else-if="section.filter.queryKey === 'section3_group'"
-                  v-model="selectedSection3Group"
-                  class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-                  @change="onSection3GroupChange"
-                >
-                  <option
-                    v-for="option in section.filter.options"
-                    :key="`${section.key}-${option.value}`"
-                    :value="option.value"
-                  >
-                    {{ option.label }}
-                  </option>
-                </select>
-              </div>
-            </div>
-          </CardBox>
-
           <CardBox v-for="block in section.blocks" :key="block.key">
             <div class="flex flex-wrap items-start justify-between gap-3">
               <div class="min-w-0">
@@ -1313,7 +1107,7 @@ const hasLegacyLevelDistributionData = computed(() =>
               <div class="ml-auto flex items-center gap-2">
                 <button
                   type="button"
-                  class="rounded-md border border-slate-300 px-2 py-1 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                  class="inline-flex min-h-[44px] items-center rounded-md border border-slate-300 px-4 py-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
                   @click="toggleBlockExpanded(block.key)"
                 >
                   {{ isBlockExpanded(block.key) ? 'Sembunyikan Grafik' : 'Tampilkan Grafik' }}
@@ -1321,50 +1115,119 @@ const hasLegacyLevelDistributionData = computed(() =>
               </div>
             </div>
 
-            <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-              <CardBoxWidget
-                v-for="statItem in buildBlockStats(block)"
-                :key="`${block.key}-${statItem.key}`"
-                :icon="statItem.icon"
-                :number="statItem.number"
-                :label="statItem.label"
-                :color="statItem.color"
-              />
+            <div class="mt-4 grid gap-3 md:grid-cols-3 xl:grid-cols-5">
+              <div
+                v-for="tile in buildDashboardSummaryTiles(block)"
+                :key="`${block.key}-${tile.key}`"
+                class="rounded px-3 py-2"
+                :class="summaryToneClasses(tile.tone).box"
+              >
+                <p :class="summaryToneClasses(tile.tone).label">{{ tile.label }}</p>
+                <p :class="summaryToneClasses(tile.tone).value">{{ tile.value }}</p>
+              </div>
+            </div>
+
+            <div class="mt-4 grid grid-cols-1 gap-3 rounded border border-slate-200 p-3 md:grid-cols-2 xl:grid-cols-5 dark:border-slate-700">
+              <div>
+                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                  Cara Tampil
+                </label>
+                <select
+                  v-model="selectedMode"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
+                  @change="onChartFilterModeChange"
+                >
+                  <option v-for="modeOption in MODE_OPTIONS" :key="`block-${block.key}-${modeOption.value}`" :value="modeOption.value">
+                    {{ modeOption.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                  Tingkat
+                </label>
+                <select
+                  v-model="selectedLevel"
+                  :disabled="!isByLevelMode"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                >
+                  <option v-for="levelOption in LEVEL_OPTIONS" :key="`block-level-${block.key}-${levelOption.value}`" :value="levelOption.value">
+                    {{ levelOption.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                  Wilayah Turunan
+                </label>
+                <select
+                  v-if="availableSubLevelOptions.length > 1"
+                  v-model="selectedSubLevel"
+                  :disabled="!isBySubLevelMode"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                >
+                  <option
+                    v-for="subLevelOption in availableSubLevelOptions"
+                    :key="`block-sub-level-${block.key}-${subLevelOption.value}`"
+                    :value="subLevelOption.value"
+                  >
+                    {{ subLevelOption.label }}
+                  </option>
+                </select>
+                <input
+                  v-else
+                  v-model="selectedSubLevel"
+                  :disabled="!isBySubLevelMode"
+                  type="text"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                  placeholder="Ketik nama wilayah"
+                >
+              </div>
+
+              <div>
+                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                  Bulan
+                </label>
+                <select
+                  v-model="selectedSection1Month"
+                  :disabled="!blockSupportsMonthFilter(block)"
+                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                >
+                  <option
+                    v-for="monthOption in SECTION1_MONTH_OPTIONS"
+                    :key="`block-month-${block.key}-${monthOption.value}`"
+                    :value="monthOption.value"
+                  >
+                    {{ monthOption.label }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="flex items-end">
+                <button
+                  type="button"
+                  class="min-h-[44px] w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                  @click="applyChartFilters"
+                >
+                  Terapkan Filter Chart
+                </button>
+              </div>
             </div>
 
             <template v-if="isBlockExpanded(block.key) && block.kind === 'documents'">
-              <div class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+              <div class="mt-6">
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    {{ resolveCoverageChartHeading(block) }}
+                    Jumlah Buku vs Buku Terisi
                   </h4>
                   <div class="h-80">
-                    <BarChart :data="buildDocumentCoverageChartData(block)" horizontal />
+                    <BarChart :data="buildBookComparisonChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
                   </div>
-                  <p v-if="!hasDocumentCoverageData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
+                  <p v-if="!hasBookComparisonData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
                     Belum ada data untuk filter yang dipilih.
                   </p>
-                </div>
-
-                <div>
-                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    {{ resolveCoverageListHeading(block) }}
-                  </h4>
-                  <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-                    <div
-                      v-for="item in resolveDocumentCoverageItems(block)"
-                      :key="`${block.key}-${item.label}`"
-                      class="rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
-                    >
-                      <div class="flex items-center justify-between gap-2">
-                        <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
-                        <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
-                      </div>
-                      <p v-if="resolveCoverageItemDetail(item)" class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                        {{ resolveCoverageItemDetail(item) }}
-                      </p>
-                    </div>
-                  </div>
                 </div>
               </div>
             </template>
@@ -1372,31 +1235,13 @@ const hasLegacyLevelDistributionData = computed(() =>
             <template v-else-if="isBlockExpanded(block.key)">
               <template v-if="shouldShowActivityByDesaChart(block)">
                 <div class="mt-6">
-                  <div class="mb-2 grid grid-cols-1 gap-2 lg:grid-cols-2 lg:items-end">
+                  <div class="mb-2">
                     <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                       Kegiatan per Desa
                     </h4>
-                    <div v-if="blockSupportsMonthFilter(block)" class="lg:ml-auto lg:w-56">
-                      <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                        Bulan
-                      </label>
-                      <select
-                        v-model="selectedSection1Month"
-                        class="w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-                        @change="onSection1MonthChange"
-                      >
-                        <option
-                          v-for="monthOption in SECTION1_MONTH_OPTIONS"
-                          :key="`section1-month-${monthOption.value}`"
-                          :value="monthOption.value"
-                        >
-                          {{ monthOption.label }}
-                        </option>
-                      </select>
-                    </div>
                   </div>
                   <p class="mb-2 text-[11px] text-slate-500 dark:text-slate-400">
-                    {{ activityByDesaChartModeLabel(block) }}
+                    {{ activityByDesaChartModeLabel() }}
                   </p>
                   <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
                     <div>
@@ -1405,17 +1250,11 @@ const hasLegacyLevelDistributionData = computed(() =>
                       </h5>
                       <div class="h-72">
                         <apexchart
-                          v-if="shouldUsePieForActivityByDesa(block)"
                           type="pie"
                           width="100%"
                           height="100%"
                           :options="buildActivityByDesaKegiatanOptions(block)"
                           :series="buildActivityByDesaKegiatanSeries(block)"
-                        />
-                        <BarChart
-                          v-else
-                          :data="buildActivityByDesaKegiatanBarData(block)"
-                          horizontal
                         />
                       </div>
                       <p
@@ -1471,97 +1310,64 @@ const hasLegacyLevelDistributionData = computed(() =>
 
                 <div>
                   <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Distribusi Level
+                    Jumlah Buku vs Buku Terisi
                   </h4>
                   <div class="h-72">
-                    <BarChart :data="buildActivityLevelChartData(block)" />
+                    <BarChart :data="buildBookComparisonChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
                   </div>
+                  <p v-if="!hasBookComparisonData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
+                    Belum ada data untuk filter yang dipilih.
+                  </p>
                 </div>
               </div>
             </template>
           </CardBox>
 
-          <CardBox
+          <p
             v-if="hasSekretarisSections && section.blocks.length === 0"
-            class="border border-dashed border-slate-300 dark:border-slate-600"
+            class="text-xs text-slate-500 dark:text-slate-300"
           >
-            <p class="text-xs text-slate-500 dark:text-slate-300">
-              Belum ada data untuk pokja yang dipilih.
-            </p>
-          </CardBox>
+            Belum ada data untuk pokja yang dipilih.
+          </p>
         </div>
       </div>
     </template>
 
     <template v-else-if="showLegacyFallback">
-      <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <CardBoxWidget :icon="mdiClipboardList" :number="activityStats.total" label="Total Kegiatan" color="text-blue-500" />
-        <CardBoxWidget :icon="mdiChartTimelineVariant" :number="activityStats.this_month" label="Kegiatan Bulan Ini" color="text-indigo-500" />
-      </div>
-
-      <div class="mb-6 grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
-        <CardBoxWidget :icon="mdiBookOpenVariant" :number="documentStats.total_buku_tracked" label="Total Buku" color="text-cyan-500" />
-        <CardBoxWidget :icon="mdiFileDocumentCheck" :number="documentStats.buku_terisi" label="Buku Terisi" color="text-emerald-500" />
-        <CardBoxWidget :icon="mdiFileDocumentMinus" :number="documentStats.buku_belum_terisi" label="Buku Kosong" color="text-rose-500" />
-        <CardBoxWidget :icon="mdiChartBar" :number="documentStats.total_entri_buku" label="Total Entri Buku" color="text-violet-500" />
-      </div>
-
       <div class="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
         <CardBox>
           <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Buku</h3>
           <div class="h-96">
-            <BarChart :data="legacyCoveragePerBukuChartData" horizontal />
+            <BarChart :data="legacyCoveragePerBukuChartData" :empty-text="CHART_EMPTY_STATE_TEXT" horizontal />
           </div>
         </CardBox>
         <CardBox>
           <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Lampiran</h3>
           <div class="h-96">
-            <BarChart :data="legacyCoveragePerLampiranChartData" />
+            <BarChart :data="legacyCoveragePerLampiranChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
           </div>
           <p v-if="!hasLegacyLampiranCoverageData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
-            Belum ada data terhitung pada cakupan per lampiran untuk scope ini.
+            Belum ada data terhitung pada cakupan per lampiran untuk wilayah ini.
           </p>
-          <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <div
-              v-for="item in legacyLampiranCoverageItems"
-              :key="`lampiran-${item.label}`"
-              class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
-            >
-              <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
-              <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
-            </div>
-          </div>
         </CardBox>
       </div>
 
       <div class="mb-6">
         <CardBox>
-          <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Distribusi Level Data Dokumen</h3>
+          <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Jumlah Buku vs Buku Terisi</h3>
           <div class="h-72">
-            <BarChart :data="legacyLevelDistributionChartData" />
+            <BarChart :data="legacyBookComparisonChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
           </div>
-          <p v-if="!hasLegacyLevelDistributionData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
-            Belum ada data terhitung pada distribusi level dokumen untuk scope ini.
+          <p v-if="!hasLegacyBookComparisonData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
+            Belum ada data buku terhitung untuk wilayah ini.
           </p>
-          <div class="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2">
-            <div
-              v-for="item in legacyLevelDistributionItems"
-              :key="`level-${item.label}`"
-              class="flex items-center justify-between rounded-md border border-slate-200 px-3 py-2 text-xs dark:border-slate-700"
-            >
-              <span class="font-medium text-slate-600 dark:text-slate-300">{{ item.label }}</span>
-              <span class="font-semibold text-slate-800 dark:text-slate-100">{{ item.total }}</span>
-            </div>
-          </div>
         </CardBox>
       </div>
     </template>
 
-    <CardBox v-else class="border border-dashed border-slate-300 dark:border-slate-600">
-      <p class="text-sm text-slate-600 dark:text-slate-300">
-        Belum ada blok dashboard yang bisa ditampilkan untuk akses akun ini.
-      </p>
-    </CardBox>
+    <p v-else class="text-sm text-slate-600 dark:text-slate-300">
+      Belum ada blok dashboard yang bisa ditampilkan untuk akses akun ini.
+    </p>
 
   </SectionMain>
 </template>

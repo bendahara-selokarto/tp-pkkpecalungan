@@ -11,9 +11,9 @@ interface KaderKhususRepositoryInterface
 {
     public function store(KaderKhususData $data): KaderKhusus;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection;
 
     public function find(int $id): KaderKhusus;
 
@@ -21,3 +21,4 @@ interface KaderKhususRepositoryInterface
 
     public function delete(KaderKhusus $kaderKhusus): void;
 }
+

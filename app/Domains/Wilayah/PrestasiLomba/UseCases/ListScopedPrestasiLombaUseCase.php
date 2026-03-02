@@ -17,15 +17,21 @@ class ListScopedPrestasiLombaUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->prestasiLombaScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->prestasiLombaScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->prestasiLombaRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->prestasiLombaRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->prestasiLombaScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->prestasiLombaScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->prestasiLombaRepository->getByLevelAndArea($level, $areaId);
+        return $this->prestasiLombaRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+

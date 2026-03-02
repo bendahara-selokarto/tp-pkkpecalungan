@@ -40,6 +40,7 @@ Sumber acuan:
 | Sekretaris TPK | Buku Keuangan | `/{scope}/buku-keuangan` |
 | Sekretaris TPK | Buku Inventaris | `/{scope}/inventaris` |
 | Sekretaris TPK | Buku Kegiatan | `/{scope}/activities` |
+| Sekretaris TPK | Buku Program Kerja TP PKK | `/{scope}/program-prioritas` |
 | Sekretaris TPK | Buku Anggota Pokja | `/{scope}/anggota-pokja` |
 | Sekretaris TPK | Prestasi Lomba | `/{scope}/prestasi-lomba` |
 | Pokja I | Buku Kegiatan | `/{scope}/activities` |
@@ -62,7 +63,6 @@ Sumber acuan:
 | Pokja IV | Data Isian Posyandu oleh TP PKK | `/{scope}/posyandu` |
 | Pokja IV | Kelompok Simulasi dan Penyuluhan | `/{scope}/simulasi-penyuluhan` |
 | Pokja IV | Catatan Keluarga | `/{scope}/catatan-keluarga` |
-| Pokja IV | Program Prioritas | `/{scope}/program-prioritas` |
 | Pokja IV | Naskah Pelaporan Pilot Project | `/{scope}/pilot-project-naskah-pelaporan` |
 | Pokja IV | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | `/{scope}/pilot-project-keluarga-sehat` |
 | Referensi | Pedoman Domain Rakernas X | eksternal/lokal |

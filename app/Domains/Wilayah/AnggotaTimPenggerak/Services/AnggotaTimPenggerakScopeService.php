@@ -51,5 +51,9 @@ class AnggotaTimPenggerakScopeService
 
         return $anggotaTimPenggerak;
     }
+    public function resolveCreatorIdFilterForList(string $level): ?int
+    {
+        return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
+    }
 }
 

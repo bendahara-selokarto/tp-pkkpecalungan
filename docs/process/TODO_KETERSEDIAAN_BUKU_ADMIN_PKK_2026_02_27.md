@@ -88,23 +88,27 @@
 - Snapshot kontrak domain/lampiran: `docs/domain/DOMAIN_CONTRACT_MATRIX.md`.
 
 ### Daftar Buku yang Berubah Status (Update Dokumen)
-- `Buku Kegiatan Pokja I` (Desa): `partial` -> `verified`.
-- `Buku Kegiatan Pokja III` (Desa): `partial` -> `verified`.
-- Alasan perubahan: bukti autentik header 4.13 (`text-layer + visual`) dan baseline compliance PDF sudah lengkap/konsisten.
+- Buku Notulen Rapat:
+  - Level desa/kelurahan: `missing -> available` (autentikasi tetap `unverified`).
+  - Level kecamatan: `missing -> available` (autentikasi tetap `unverified`).
+- Buku Daftar Hadir:
+  - Level desa/kelurahan: `missing -> available` (autentikasi tetap `unverified`).
+  - Level kecamatan: `missing -> available` (autentikasi tetap `unverified`).
+- Buku Tamu:
+  - Level desa/kelurahan: `missing -> available` (autentikasi tetap `unverified`).
+  - Level kecamatan: `missing -> available` (autentikasi tetap `unverified`).
+- Bukti implementasi: route resource aktif, domain module aktif, policy aktif, menu visibility aktif, dan test concern modul tersedia.
 
 ### Temuan Audit Baseline
 - Modul inti buku sekretaris/pokja desa-kecamatan sudah tersedia pada route utama (`resource` + `report/pdf`).
-- Buku yang belum tersedia sebagai modul dedicated masih konsisten dengan baseline `missing`:
-  - Buku Notulen Rapat
-  - Buku Daftar Hadir
-  - Buku Tamu
+- Gelombang 1 sekretaris inti (`buku-notulen-rapat`, `buku-daftar-hadir`, `buku-tamu`) sudah tersedia sebagai modul dedicated.
 - Status interpretasi Rakernas X sudah terkunci pada dokumen canonical + matrix domain.
 
 ### Prioritas Implementasi Gap (K1 Dikunci)
 - Gelombang 1 (sekretaris inti):
-  - `buku-notulen-rapat`
-  - `buku-daftar-hadir`
-  - `buku-tamu`
+  - `buku-notulen-rapat` (`done`)
+  - `buku-daftar-hadir` (`done`)
+  - `buku-tamu` (`done`)
 - Gelombang 2 (pokja pendukung):
   - `buku-evaluasi-program` per pokja (I-IV) dengan kontrak data minimum.
   - penguatan buku rencana kerja pokja agar tidak overlap dengan domain kegiatan.
@@ -123,110 +127,120 @@ Owner teknis implementasi:
   4. Kontrak field/report sinkron dengan bukti autentik.
 
 ### Dampak ke Gelombang Berikutnya
-- Eksekusi berikut wajib fokus ke definisi kontrak field minimum Gelombang 1 sebelum coding.
+- Pemetaan `buku-program-kerja` telah dikunci pada ownership `sekretaris-tpk` agar tidak overlap dengan domain `pokja-iv`.
+- Test matrix mismatch `role-scope-area` untuk `program-prioritas` telah ditambah (desa + kecamatan) dan lolos regresi suite.
+- Validasi print/report untuk `buku-notulen-rapat`, `buku-daftar-hadir`, dan `buku-tamu` telah ditambah dan lolos pada scope desa/kecamatan.
+- Guard ownership modul buku sekretaris terhadap role pokja telah dikunci lewat test unit mapping + middleware feature.
+- Kontrak dashboard role-aware kini aktif untuk section sekretaris:
+  - section 1 (ringkasan sekretaris),
+  - section 2 (ringkasan pokja level aktif, filter `section2_group`),
+  - section 3 (ringkasan pokja per desa untuk scope kecamatan, filter `section3_group`),
+  - section 4 (rincian Pokja I per desa saat `section3_group=pokja-i`).
+- Sinkronisasi query URL ke `sources.filter_context` pada blok dashboard sekretaris telah divalidasi lewat feature test.
+- Sinkronisasi menu-vs-dashboard pada level group dikunci dengan unit test agar setiap group utama punya minimal satu slug coverage.
+- Role-menu mapping kini menolak `scope` mismatch untuk role non-super-admin di service boundary (anti bypass scope gate).
+- Guard query modul `activities` kini dikunci pada kombinasi `role group + level + area` khusus role `desa-pokja-i` s.d. `desa-pokja-iv` dan `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv`, sehingga `pokja-i` hanya melihat detail/list kegiatan dari group-nya pada area yang sama; `kecamatan-sekretaris` pada mode kecamatan dibatasi ke data milik sendiri (`created_by` user login), sementara mode monitoring desa tetap menampilkan seluruh desa dalam wilayah kecamatan sendiri.
+- Guard anti-bocor antar-pokja pada modul `activities` telah ditambah lewat feature test index + detail (satu area, role berbeda).
+- Kontrak ketersediaan `Buku Kegiatan` (`activities`) kini dikunci untuk seluruh role operasional pada scope validnya, termasuk `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv`; sinkronisasi backend visibility + middleware + payload menu tervalidasi test.
+- Kontrak anti mismatch menu-vs-otorisasi dikunci: sidebar frontend hanya boleh menampilkan item dengan slug yang tersedia di `auth.user.moduleModes`; guard ini dikunci lewat unit test kontrak frontend.
+- Guard header kolom PDF untuk `buku-notulen-rapat`, `buku-daftar-hadir`, dan `buku-tamu` sudah dikunci lewat feature test khusus.
+- Baseline mapping autentik internal untuk 3 buku sekretaris inti sudah dikunci pada:
+  - `docs/domain/BUKU_SEKRETARIS_INTI_AUTH_MAPPING.md`
+  - sinkronisasi catatan canonical pada `docs/domain/DOMAIN_CONTRACT_MATRIX.md`.
 - Setelah kontrak field terkunci, lanjut implementasi per buku dengan boundary:
   - route + request + action/use case + repository + policy + test.
 
-## Progress Eksekusi Lanjutan (2026-02-27)
+### Keputusan Operasional Terkunci (K3/K4)
+- K3 (monitoring vs mutasi pokja kecamatan):
+  - Modul rekap lintas desa pada level kecamatan diposisikan sebagai monitoring/evaluasi (`read-only`) untuk pokja kecamatan.
+  - Mutasi data sumber tetap dilakukan di level desa sesuai ownership pokja masing-masing.
+  - Enforcement backend dikunci melalui `RoleMenuVisibilityService` + `EnsureModuleVisibility` + matrix test role-scope-area.
+- K4 (strategi migrasi pemecahan domain/modul):
+  - Fase 1: tambah modul target baru secara paralel tanpa memutus modul lama (read path tetap kompatibel).
+  - Fase 2: tambah adapter normalisasi request/repository agar payload lama tetap diterima selama masa transisi.
+  - Fase 3: migrasi route/menu bertahap, pertahankan alias report/print lama sampai test regresi concern hijau penuh.
+  - Fase 4: hapus coupling lama hanya setelah parity test + audit data leak lintas scope dinyatakan aman.
 
-### Keputusan Tambahan yang Dikunci
-- `K3` dikunci: untuk buku rekap level kecamatan, pokja kecamatan berada pada mode monitoring (`read-only`) dan tidak menjadi aktor mutasi data sumber.
-- `K4` dikunci: strategi migrasi modul baru mengikuti pola `dedicated module` tanpa coupling ke tabel legacy (`kecamatans`, `desas`, `user_assignments`) dan tanpa dual-write ke modul lama.
+### Kontrak Field Minimum Gelombang 2 (Siap Coding)
+| Domain Target | Level | Field Minimum (di luar invariant `level`, `area_id`, `created_by`) | Owner Teknis |
+| --- | --- | --- | --- |
+| `evaluasi-program-pokja-i` | desa/kecamatan | `period_year`, `period_semester`, `program`, `indikator`, `target`, `realisasi`, `capaian_persen`, `evaluation_note`, `tindak_lanjut` | Backend Domain Wilayah |
+| `evaluasi-program-pokja-ii` | desa/kecamatan | `period_year`, `period_semester`, `program`, `indikator`, `target`, `realisasi`, `capaian_persen`, `evaluation_note`, `tindak_lanjut` | Backend Domain Wilayah |
+| `evaluasi-program-pokja-iii` | desa/kecamatan | `period_year`, `period_semester`, `program`, `indikator`, `target`, `realisasi`, `capaian_persen`, `evaluation_note`, `tindak_lanjut` | Backend Domain Wilayah |
+| `evaluasi-program-pokja-iv` | desa/kecamatan | `period_year`, `period_semester`, `program`, `indikator`, `target`, `realisasi`, `capaian_persen`, `evaluation_note`, `tindak_lanjut` | Backend Domain Wilayah |
+| Penguatan `program-prioritas` (Buku Program Kerja) | desa/kecamatan | `program`, `prioritas_program`, `kegiatan`, `sasaran_target`, `jadwal_bulan_1..12`, `sumber_dana_*`, `keterangan` | Backend Domain Wilayah |
 
-### Kontrak Field Minimum Gelombang 1
-Referensi kontrak canonical:
-- `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md` (Bagian IX).
+### Boundary Implementasi Gelombang 2 (Mandatory)
+- Route + middleware: `scope.role:{desa|kecamatan}` + `module.visibility`.
+- Request: validasi canonical token periode + normalisasi boolean jadwal/sumber dana.
+- UseCase/Action: hanya memuat business flow evaluasi/rencana kerja, tanpa query langsung controller.
+- Repository Interface + Repository: seluruh query domain lewat boundary repository scoped `areas`.
+- Policy + Scope Service: enforce ownership pokja/sekretaris sesuai level dan area.
+- Inertia page mapping: frontend consume payload backend tanpa authority akses.
+- Test matrix minimum:
+  - feature success role/scope valid,
+  - feature reject role tidak valid,
+  - feature reject mismatch role-area-level,
+  - unit policy/scope service,
+  - anti data leak repository/use case.
 
-Ringkasan field minimum:
-- `buku-notulen-rapat`: `tanggal_rapat`, `waktu_mulai`, `waktu_selesai`, `tempat`, `agenda`, `pimpinan_rapat`, `peserta_hadir`, `ringkasan_pembahasan`, `keputusan`, `tindak_lanjut`, `notulis`, `keterangan`.
-- `buku-daftar-hadir`: `tanggal_kegiatan`, `nama_kegiatan`, `tempat`, `nama_peserta`, `jabatan`, `instansi_atau_kelompok`, `nomor_kontak`, `status_kehadiran`, `tanda_tangan`, `keterangan`.
-- `buku-tamu`: `tanggal_kunjungan`, `nama_tamu`, `instansi_atau_asal`, `keperluan`, `diterima_oleh`, `nomor_kontak`, `waktu_datang`, `waktu_pulang`, `keterangan`.
+## Rencana Sprint Mingguan (Eksekusi)
 
-### Boundary Implementasi (Locked)
-- Route: prefix scope (`desa`/`kecamatan`) + middleware `scope.role:{desa|kecamatan}` + `module.visibility`.
-- Request: validasi field wajib + normalisasi tanggal/waktu ke format canonical.
-- Action/Use Case: simpan flow bisnis, tanpa logika domain di controller.
-- Repository Interface + Repository: query scoped by `level`, `area_id`, `created_by`.
-- Policy + Scope Service: enforce role/scope/area consistency + mode `read-only` vs `read-write`.
-- Tests minimum: sukses role valid, tolak role tidak valid, tolak mismatch role-area-level, anti data leak repository.
+### Sprint 1 (P1) - Kontrak dan Bukti Canonical
+- [x] Normalisasi label buku lintas dokumen agar konsisten dengan pedoman Rakernas X.
+- [ ] Validasi peta header dokumen bertabel sampai `rowspan/colspan`.
+- [ ] Simpan bukti validasi (text-layer + screenshot visual) dan tautkan ke dokumen mapping.
+- [ ] Turunkan status ke `verified` hanya untuk buku dengan bukti lengkap.
+- [x] Pastikan tidak ada modul buku di role yang tidak sesuai kontrak ownership.
+- [x] Kunci keputusan K3: batas kewenangan pokja kecamatan untuk modul rekap.
+- [x] Kunci keputusan K4: strategi migrasi jika perlu pemecahan domain/modul.
+- [x] Definisikan kontrak field minimum per buku sebelum coding.
+- [x] Definisikan boundary implementasi per buku: route, request, use case/action, repository, policy, test.
+- [x] Definisikan fallback/compatibility plan agar tidak terjadi behavior drift.
 
-### Fallback/Compatibility Plan (Locked)
-- Tidak ada dual-write ke modul buku lain; modul gelombang 1 berdiri sebagai domain dedicated.
-- Jika perlu integrasi dashboard, gunakan agregasi read-only dari repository modul baru.
-- Jika kontrak autentik final berubah, lakukan migrasi additive (nullable column) lalu isi data via backfill terkontrol; dilarang destructive rewrite tanpa rencana rollback.
+Exit criteria Sprint 1:
+- [ ] Semua buku bertabel target Sprint 1 memiliki bukti header valid (`rowspan/colspan`) yang terdokumentasi.
+- [x] Keputusan K3/K4 berstatus terkunci.
+- [x] Kontrak field + boundary implementasi untuk gelombang buku `missing` sudah final.
 
-### Update Normalisasi Label Lintas Dokumen (2026-02-27)
-File terdampak:
-- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+### Sprint 2 (P2) - Quality Gate dan Replikasi Role
+- [x] Tambah/rapikan test matrix mismatch `role-scope-area` pada buku baru/diubah.
+- [x] Jalankan regresi feature akses lintas scope dan anti data leak.
+- [x] Jalankan validasi print/report pada buku dengan status autentik yang berubah.
+- [x] Tetapkan kontrak section role dashboard baru (section aktif, source level, query key filter).
+- [x] Sinkronkan mapping role ke group-mode di `RoleMenuVisibilityService` tanpa bypass scope gate.
+- [x] Sinkronkan query URL dengan `sources.filter_context` untuk role yang direplikasi.
+- [x] Tambah test sinkronisasi menu-vs-dashboard jika ada slug/group baru.
 
-Keputusan yang dikunci:
-- Slug canonical buku bantuan diselaraskan ke route aktif: `bantuans` (sebelumnya drift `bantuan`).
-- Label canonical backlog gelombang 1 ditambahkan eksplisit:
-  - `buku-notulen-rapat` -> Buku Notulen Rapat
-  - `buku-daftar-hadir` -> Buku Daftar Hadir
-  - `buku-tamu` -> Buku Tamu
+Exit criteria Sprint 2:
+- [x] Seluruh test gate concern buku + dashboard role replication lulus.
+- [x] Tidak ada temuan data leak lintas scope pada validasi regresi.
+- [x] Kontrak dashboard role baru terdokumentasi dan tervalidasi test.
 
-### Update Validasi Gate (2026-02-27)
-Perintah validasi yang dijalankan:
-- `php artisan test tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/KecamatanReportReverseAreaMismatchTest.php tests/Feature/StructuredDomainReportPrintTest.php`
+### Sprint 3 (P3) - Delivery Backlog Modul Missing
+- [x] Implementasi modul `buku-notulen-rapat` untuk desa/kecamatan.
+- [x] Implementasi modul `buku-daftar-hadir` untuk desa/kecamatan.
+- [x] Implementasi modul `buku-tamu` untuk desa/kecamatan.
+- [x] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap domain.
+- [x] Lakukan review akhir checklist concern sebelum status `done`.
 
-Ringkasan hasil:
-- `42` test lulus, `167` assertion, tanpa kegagalan.
-- Cakupan tervalidasi:
-  - guard `module.visibility` (read-only/read-write + anti bypass),
-  - payload menu role-scope,
-  - matrix role-menu-mode,
-  - mismatch role-area-level pada route report kecamatan,
-  - smoke print/report domain terstruktur.
+Exit criteria Sprint 3:
+- [x] Tidak ada buku tanpa status ketersediaan dan autentikasi.
+- [x] Tidak ada buku tanpa penanggung jawab eksplisit.
+- [x] Tidak ada konflik interpretasi Rakernas X yang belum diputuskan.
+- [x] Backlog implementasi buku `missing` memiliki urutan prioritas dan owner teknis yang final.
 
-Catatan status print/report:
-- Pada batch ini ada perubahan status autentik terbatas (`partial` -> `verified`) pada buku kegiatan Pokja I dan Pokja III; validasi print/report dipakai sebagai regression guard agar tidak ada behavior drift setelah penurunan status.
+## Review Akhir Checklist (2026-02-27)
 
-### Batch Autentikasi `partial/unverified` per Buku (2026-02-27, Opsi 1)
+Status concern saat review:
+- Progress implementasi domain + security gate + dashboard gate: **terkunci**.
+- Sprint 2 dan Sprint 3 exit criteria: **terpenuhi**.
+- Concern belum ditutup `done` karena masih ada blocker autentikasi di Sprint 1.
 
-Kode bukti:
-- `B1`: `docs/process/TODO_IMPLEMENTASI_AUTENTIK_BUKU_KEGIATAN_2026_02_24.md`
-- `B2`: `docs/process/TODO_AUTENTIK_LAMPIRAN_4_9A_4_14_4B_E2E.md`
-- `B3`: `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`
-- `B4`: `docs/process/TODO_IMPLEMENTASI_AUTENTIK_BUKU_PROGRAM_KERJA_2026_02_24.md`
-- `B5`: `docs/process/TODO_AUTENTIK_DATA_KEGIATAN_PKK_4_23_4_24.md` + `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md`
-- `B6`: `tests/Feature/ModuleVisibilityMiddlewareTest.php` + `tests/Feature/MenuVisibilityPayloadTest.php`
+Blocker tersisa sebelum concern `done`:
+1. Validasi peta header dokumen bertabel sampai `rowspan/colspan` untuk buku yang masih `unverified`.
+2. Bukti visual autentik (text-layer + screenshot header) belum lengkap untuk seluruh buku target Sprint 1.
+3. Status autentikasi belum bisa diturunkan ke `verified` sebelum butir 1 dan 2 terpenuhi.
 
-| Level | Buku | Prioritas | Bukti | Keputusan Batch |
-| --- | --- | --- | --- | --- |
-| Desa | Buku Daftar Anggota TP PKK | P2 | B2, B3 | hold `partial` (normalisasi istilah UI belum final) |
-| Desa | Buku Notulen Rapat | P1 | - | tetap `unverified` (modul belum ada) |
-| Desa | Buku Daftar Hadir | P1 | - | tetap `unverified` (modul belum ada) |
-| Desa | Buku Tamu | P1 | - | tetap `unverified` (modul belum ada) |
-| Desa | Buku Program Kerja TP PKK | P2 | B4 | hold `partial` (konsolidasi overlap domain belum final) |
-| Desa | Buku Rencana Kerja Pokja I | P2 | B4 | hold `partial` (bergantung finalisasi domain program kerja) |
-| Desa | Buku Kegiatan Pokja I | P1 | B1, B3 | turun ke `verified` |
-| Desa | Buku Daftar Hadir Kegiatan | P1 | - | tetap `unverified` (modul belum ada) |
-| Desa | Buku Data Kegiatan | P2 | B2, B3 | hold `partial` (normalisasi istilah lintas modul masih berjalan) |
-| Desa | Buku Evaluasi Program (Pokja I) | P3 | - | tetap `unverified` (planned, belum ada artefak autentik) |
-| Desa | Buku Rencana Kerja Pokja II | P2 | B4 | hold `partial` (bergantung finalisasi domain program kerja) |
-| Desa | Buku Kegiatan Pendidikan dan Keterampilan | P2 | B3 | hold `partial` (mapping lintas modul belum satu kontrak final) |
-| Desa | Buku Data Kelompok Belajar/Keterampilan | P2 | B3 | hold `partial` (kamus data kelompok belum final) |
-| Desa | Buku Data UP2K-PKK | P2 | B3 | hold `partial` (kontrak UP2K lintas domain belum final) |
-| Desa | Buku Evaluasi Program (Pokja II) | P3 | - | tetap `unverified` (planned, belum ada artefak autentik) |
-| Desa | Buku Data Ketahanan Pangan Keluarga | P2 | B3 | hold `partial` (indikator ketahanan belum terkunci penuh) |
-| Desa | Buku Data Rumah Sehat | P2 | B5 | hold `partial` (masih report-only agregasi) |
-| Desa | Buku Kegiatan Pokja III | P1 | B1, B3 | turun ke `verified` |
-| Desa | Buku Evaluasi Program (Pokja III) | P3 | - | tetap `unverified` (planned, belum ada artefak autentik) |
-| Desa | Buku PHBS | P2 | B5 | hold `partial` (masih report-only agregasi) |
-| Desa | Buku Perencanaan Sehat | P2 | B5 | hold `partial` (masih report-only agregasi) |
-| Kecamatan | Buku Daftar Anggota TP PKK Kecamatan | P2 | B2, B3 | hold `partial` (normalisasi istilah UI belum final) |
-| Kecamatan | Buku Notulen Rapat | P1 | - | tetap `unverified` (modul belum ada) |
-| Kecamatan | Buku Program Kerja TP PKK Kecamatan | P2 | B4 | hold `partial` (konsolidasi overlap domain belum final) |
-| Kecamatan | Buku Rekap Kegiatan Pokja I dari Desa | P2 | B1, B6 | hold `partial` (monitoring mode sudah aman, kontrak rekap khusus belum final) |
-| Kecamatan | Buku Rekap Kegiatan Pokja II dari Desa | P2 | B6 | hold `partial` (monitoring mode sudah aman, kontrak rekap khusus belum final) |
-| Kecamatan | Buku Rekap Kegiatan Pokja III dari Desa | P2 | B6 | hold `partial` (monitoring mode sudah aman, kontrak rekap khusus belum final) |
-| Kecamatan | Buku Rekap Kegiatan Pokja IV dari Desa | P2 | B6 | hold `partial` (monitoring mode sudah aman, kontrak rekap khusus belum final) |
-
-### Review Akhir Checklist (2026-02-27)
-- Review checklist sudah dijalankan.
-- Status concern tetap `in-progress`, belum `done`.
-- Alasan concern belum `done`:
-  - masih ada modul `missing` (`buku-notulen-rapat`, `buku-daftar-hadir`, `buku-tamu`),
-  - masih ada buku `planned/unverified` untuk evaluasi program pokja,
-  - beberapa domain masih `partial` karena kontrak lintas modul belum final.
+Rute eksekusi blocker:
+- `docs/process/TODO_AUTENTIK_SEKRETARIS_INTI_2026_02_27.md`

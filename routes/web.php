@@ -1,17 +1,30 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ArsipController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\UiRuntimeErrorLogController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SuperAdmin\AccessControlManagementController;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
+use App\Http\Controllers\SuperAdmin\ArsipManagementController;
 use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
 use App\Domains\Wilayah\Activities\Controllers\ActivityPrintController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanActivityController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanDesaActivityController;
+use App\Domains\Wilayah\Arsip\Controllers\KecamatanDesaArsipController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\DesaAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\KecamatanAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\AgendaSuratReportPrintController;
+use App\Domains\Wilayah\BukuDaftarHadir\Controllers\DesaBukuDaftarHadirController;
+use App\Domains\Wilayah\BukuDaftarHadir\Controllers\KecamatanBukuDaftarHadirController;
+use App\Domains\Wilayah\BukuDaftarHadir\Controllers\BukuDaftarHadirPrintController;
+use App\Domains\Wilayah\BukuTamu\Controllers\DesaBukuTamuController;
+use App\Domains\Wilayah\BukuTamu\Controllers\KecamatanBukuTamuController;
+use App\Domains\Wilayah\BukuTamu\Controllers\BukuTamuPrintController;
+use App\Domains\Wilayah\BukuNotulenRapat\Controllers\DesaBukuNotulenRapatController;
+use App\Domains\Wilayah\BukuNotulenRapat\Controllers\KecamatanBukuNotulenRapatController;
+use App\Domains\Wilayah\BukuNotulenRapat\Controllers\BukuNotulenRapatPrintController;
 use App\Domains\Wilayah\Inventaris\Controllers\DesaInventarisController;
 use App\Domains\Wilayah\Inventaris\Controllers\KecamatanInventarisController;
 use App\Domains\Wilayah\Inventaris\Controllers\InventarisReportPrintController;
@@ -110,6 +123,24 @@ Route::get('/', function () {
 Route::get('/dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+Route::get('/dashboard/charts/report/pdf', [DashboardController::class, 'printChartPdf'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard.charts.report');
+Route::get('/arsip', ArsipController::class)
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.index');
+Route::post('/arsip', [ArsipController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.store');
+Route::put('/arsip/{arsipDocument}', [ArsipController::class, 'update'])
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.update');
+Route::delete('/arsip/{arsipDocument}', [ArsipController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.destroy');
+Route::get('/arsip/download/{arsipDocument}', [ArsipController::class, 'download'])
+    ->middleware(['auth', 'verified'])
+    ->name('arsip.download');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -125,6 +156,14 @@ Route::middleware(['auth', 'role:super-admin'])
     ->name('super-admin.')
     ->group(function () {
         Route::resource('users', UserManagementController::class);
+        Route::get('access-control', [AccessControlManagementController::class, 'index'])
+            ->name('access-control.index');
+        Route::put('access-control/pilot/catatan-keluarga', [AccessControlManagementController::class, 'updatePilotCatatanKeluarga'])
+            ->name('access-control.pilot.catatan-keluarga.update');
+        Route::delete('access-control/pilot/catatan-keluarga', [AccessControlManagementController::class, 'rollbackPilotCatatanKeluarga'])
+            ->name('access-control.pilot.catatan-keluarga.rollback');
+        Route::resource('arsip', ArsipManagementController::class)
+            ->parameters(['arsip' => 'arsipDocument']);
     });
 
 Route::prefix('desa')
@@ -133,7 +172,15 @@ Route::prefix('desa')
     ->group(function () {
 
         Route::resource('activities', DesaActivityController::class);
+        Route::get('activities/{id}/attachments/{type}', [DesaActivityController::class, 'attachment'])
+            ->whereIn('type', ['image', 'document'])
+            ->name('activities.attachments.show');
         Route::resource('agenda-surat', DesaAgendaSuratController::class);
+        Route::get('agenda-surat/{id}/attachment/data-dukung', [DesaAgendaSuratController::class, 'attachment'])
+            ->name('agenda-surat.attachments.show');
+        Route::resource('buku-daftar-hadir', DesaBukuDaftarHadirController::class);
+        Route::resource('buku-tamu', DesaBukuTamuController::class);
+        Route::resource('buku-notulen-rapat', DesaBukuNotulenRapatController::class);
         Route::resource('inventaris', DesaInventarisController::class);
         Route::resource('bantuans', DesaBantuanController::class);
         Route::resource('buku-keuangan', DesaBukuKeuanganController::class);
@@ -164,6 +211,9 @@ Route::prefix('desa')
         Route::resource('laporan-tahunan-pkk', DesaLaporanTahunanPkkController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printDesa'])->name('activities.print');
         Route::get('activities/report/pdf', [ActivityPrintController::class, 'printDesaReport'])->name('activities.report');
+        Route::get('buku-notulen-rapat/report/pdf', [BukuNotulenRapatPrintController::class, 'printDesaReport'])->name('buku-notulen-rapat.report');
+        Route::get('buku-daftar-hadir/report/pdf', [BukuDaftarHadirPrintController::class, 'printDesaReport'])->name('buku-daftar-hadir.report');
+        Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printDesaReport'])->name('buku-tamu.report');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaReport'])->name('agenda-surat.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printDesaReport'])->name('inventaris.report');
@@ -220,7 +270,15 @@ Route::prefix('kecamatan')
     ->group(function () {
 
         Route::resource('activities', KecamatanActivityController::class);
+        Route::get('activities/{id}/attachments/{type}', [KecamatanActivityController::class, 'attachment'])
+            ->whereIn('type', ['image', 'document'])
+            ->name('activities.attachments.show');
         Route::resource('agenda-surat', KecamatanAgendaSuratController::class);
+        Route::get('agenda-surat/{id}/attachment/data-dukung', [KecamatanAgendaSuratController::class, 'attachment'])
+            ->name('agenda-surat.attachments.show');
+        Route::resource('buku-daftar-hadir', KecamatanBukuDaftarHadirController::class);
+        Route::resource('buku-tamu', KecamatanBukuTamuController::class);
+        Route::resource('buku-notulen-rapat', KecamatanBukuNotulenRapatController::class);
         Route::resource('inventaris', KecamatanInventarisController::class);
         Route::resource('bantuans', KecamatanBantuanController::class);
         Route::resource('buku-keuangan', KecamatanBukuKeuanganController::class);
@@ -251,6 +309,9 @@ Route::prefix('kecamatan')
         Route::resource('laporan-tahunan-pkk', KecamatanLaporanTahunanPkkController::class);
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printKecamatan'])->name('activities.print');
         Route::get('activities/report/pdf', [ActivityPrintController::class, 'printKecamatanReport'])->name('activities.report');
+        Route::get('buku-notulen-rapat/report/pdf', [BukuNotulenRapatPrintController::class, 'printKecamatanReport'])->name('buku-notulen-rapat.report');
+        Route::get('buku-daftar-hadir/report/pdf', [BukuDaftarHadirPrintController::class, 'printKecamatanReport'])->name('buku-daftar-hadir.report');
+        Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printKecamatanReport'])->name('buku-tamu.report');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanReport'])->name('agenda-surat.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printKecamatanReport'])->name('inventaris.report');
@@ -297,7 +358,11 @@ Route::prefix('kecamatan')
         Route::get('simulasi-penyuluhan/report/pdf', [SimulasiPenyuluhanPrintController::class, 'printKecamatanReport'])->name('simulasi-penyuluhan.report');
         Route::get('desa-activities', [KecamatanDesaActivityController::class, 'index'])->name('desa-activities.index');
         Route::get('desa-activities/{id}', [KecamatanDesaActivityController::class, 'show'])->name('desa-activities.show');
+        Route::get('desa-activities/{id}/attachments/{type}', [KecamatanDesaActivityController::class, 'attachment'])
+            ->whereIn('type', ['image', 'document'])
+            ->name('desa-activities.attachments.show');
         Route::get('desa-activities/{id}/print', [ActivityPrintController::class, 'printKecamatanDesa'])->name('desa-activities.print');
+        Route::get('desa-arsip', [KecamatanDesaArsipController::class, 'index'])->name('desa-arsip.index');
         Route::get('program-prioritas/report/pdf', [ProgramPrioritasPrintController::class, 'printKecamatanReport'])->name('program-prioritas.report');
         Route::get('pilot-project-keluarga-sehat/report/pdf', [PilotProjectKeluargaSehatPrintController::class, 'printKecamatanReport'])->name('pilot-project-keluarga-sehat.report');
         Route::get('pilot-project-naskah-pelaporan/report/pdf', [PilotProjectNaskahPelaporanPrintController::class, 'printKecamatanReport'])->name('pilot-project-naskah-pelaporan.report');

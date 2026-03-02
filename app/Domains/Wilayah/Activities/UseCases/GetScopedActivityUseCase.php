@@ -17,8 +17,10 @@ class GetScopedActivityUseCase
     public function execute(int $id, string $level): Activity
     {
         $activity = $this->activityRepository->find($id);
+        $user = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
+        $activity = $this->activityScopeService->authorizeSameLevelAndArea($activity, $level, $areaId);
 
-        return $this->activityScopeService->authorizeSameLevelAndArea($activity, $level, $areaId);
+        return $this->activityScopeService->authorizeRoleScopedActivity($user, $activity, $level);
     }
 }

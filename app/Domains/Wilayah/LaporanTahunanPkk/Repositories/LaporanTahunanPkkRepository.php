@@ -28,11 +28,12 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
         return $report;
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
         return LaporanTahunanPkkReport::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->withCount('entries')
             ->latest('tahun_laporan')
             ->latest('id')
@@ -40,11 +41,12 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
     {
         return LaporanTahunanPkkReport::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->withCount('entries')
             ->latest('tahun_laporan')
             ->latest('id')
@@ -210,3 +212,7 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
         }
     }
 }
+
+
+
+

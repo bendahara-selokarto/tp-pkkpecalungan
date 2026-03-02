@@ -142,4 +142,24 @@ class KecamatanProgramPrioritasTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    #[Test]
+    public function metadata_scope_stale_role_kecamatan_dengan_area_desa_ditolak(): void
+    {
+        $desa = Area::create([
+            'name' => 'Sidorejo',
+            'level' => 'desa',
+            'parent_id' => $this->kecamatanA->id,
+        ]);
+
+        $staleUser = User::factory()->create([
+            'area_id' => $desa->id,
+            'scope' => 'kecamatan',
+        ]);
+        $staleUser->assignRole('admin-kecamatan');
+
+        $response = $this->actingAs($staleUser)->get('/kecamatan/program-prioritas');
+
+        $response->assertStatus(403);
+    }
 }

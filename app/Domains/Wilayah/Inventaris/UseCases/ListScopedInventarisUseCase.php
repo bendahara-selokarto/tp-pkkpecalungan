@@ -17,15 +17,21 @@ class ListScopedInventarisUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->inventarisScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->inventarisScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->inventarisRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->inventarisRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->inventarisScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->inventarisScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->inventarisRepository->getByLevelAndArea($level, $areaId);
+        return $this->inventarisRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+

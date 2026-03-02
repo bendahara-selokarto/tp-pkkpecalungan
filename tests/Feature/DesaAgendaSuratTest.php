@@ -6,6 +6,8 @@ use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
@@ -205,13 +207,15 @@ class DesaAgendaSuratTest extends TestCase
     #[Test]
     public function admin_desa_dapat_menambah_memperbarui_dan_menghapus_agenda_surat()
     {
+        Storage::fake('public');
+
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
         $adminDesa->assignRole('admin-desa');
 
-        $this->actingAs($adminDesa)->post('/desa/agenda-surat', [
+        $createPayload = [
             'jenis_surat' => 'masuk',
             'tanggal_terima' => '2026-02-20',
             'tanggal_surat' => '2026-02-19',
@@ -222,11 +226,19 @@ class DesaAgendaSuratTest extends TestCase
             'lampiran' => '1 lembar',
             'diteruskan_kepada' => 'Ketua',
             'keterangan' => 'Segera ditindaklanjuti',
-        ])->assertStatus(302);
+            'data_dukung_upload' => UploadedFile::fake()->create('surat-masuk.pdf', 120, 'application/pdf'),
+        ];
+
+        $this->actingAs($adminDesa)->post('/desa/agenda-surat', $createPayload)->assertStatus(302);
 
         $agenda = AgendaSurat::where('nomor_surat', '010/DSA/II/2026')->firstOrFail();
+        $oldAttachmentPath = $agenda->data_dukung_path;
 
-        $this->actingAs($adminDesa)->put(route('desa.agenda-surat.update', $agenda->id), [
+        $this->assertNotNull($oldAttachmentPath);
+        Storage::disk('public')->assertExists($oldAttachmentPath);
+
+        $this->actingAs($adminDesa)->post(route('desa.agenda-surat.update', $agenda->id), [
+            '_method' => 'put',
             'jenis_surat' => 'keluar',
             'tanggal_surat' => '2026-02-21',
             'nomor_surat' => '011/DSA/II/2026',
@@ -234,7 +246,16 @@ class DesaAgendaSuratTest extends TestCase
             'perihal' => 'Laporan',
             'tembusan' => 'Arsip Desa',
             'keterangan' => 'Sudah dikirim',
+            'data_dukung_upload' => UploadedFile::fake()->create('surat-keluar.pdf', 110, 'application/pdf'),
         ])->assertStatus(302);
+
+        $agenda->refresh();
+        $newAttachmentPath = $agenda->data_dukung_path;
+
+        $this->assertNotNull($newAttachmentPath);
+        $this->assertNotSame($oldAttachmentPath, $newAttachmentPath);
+        Storage::disk('public')->assertMissing($oldAttachmentPath);
+        Storage::disk('public')->assertExists($newAttachmentPath);
 
         $this->assertDatabaseHas('agenda_surats', [
             'id' => $agenda->id,
@@ -243,12 +264,51 @@ class DesaAgendaSuratTest extends TestCase
             'nomor_surat' => '011/DSA/II/2026',
             'kepada' => 'Kecamatan',
             'tembusan' => 'Arsip Desa',
+            'data_dukung_path' => $newAttachmentPath,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.agenda-surat.destroy', $agenda->id))
             ->assertStatus(302);
 
         $this->assertDatabaseMissing('agenda_surats', ['id' => $agenda->id]);
+        Storage::disk('public')->assertMissing($newAttachmentPath);
+    }
+
+    #[Test]
+    public function admin_desa_dapat_mengakses_berkas_data_dukung_milik_desanya(): void
+    {
+        Storage::fake('public');
+
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        $agenda = AgendaSurat::create([
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2026-02-20',
+            'tanggal_surat' => '2026-02-19',
+            'nomor_surat' => '012/DSA/II/2026',
+            'asal_surat' => 'Kecamatan',
+            'dari' => 'Sekretariat Kecamatan',
+            'kepada' => null,
+            'perihal' => 'Undangan',
+            'lampiran' => null,
+            'diteruskan_kepada' => null,
+            'tembusan' => null,
+            'keterangan' => null,
+            'data_dukung_path' => 'agenda-surat/desa/'.$this->desaA->id.'/data-dukung/undangan.pdf',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+        Storage::disk('public')->put($agenda->data_dukung_path, 'dokumen-data-dukung');
+
+        $response = $this->actingAs($adminDesa)->get(route('desa.agenda-surat.attachments.show', $agenda->id));
+
+        $response->assertOk();
+        $response->assertHeader('X-Content-Type-Options', 'nosniff');
     }
 
     #[Test]

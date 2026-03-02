@@ -17,16 +17,22 @@ class ListScopedAnggotaTimPenggerakUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->anggotaTimPenggerakScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->anggotaTimPenggerakScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->anggotaTimPenggerakRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->anggotaTimPenggerakRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->anggotaTimPenggerakScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->anggotaTimPenggerakScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->anggotaTimPenggerakRepository->getByLevelAndArea($level, $areaId);
+        return $this->anggotaTimPenggerakRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+
 

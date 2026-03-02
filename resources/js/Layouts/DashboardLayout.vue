@@ -52,12 +52,45 @@ const currentModuleMode = computed(() =>
 const isCurrentModuleReadOnly = computed(() => currentModuleMode.value === 'read-only')
 
 const hasRole = (role) => roles.value.includes(role)
+const isSekretarisRole = computed(() =>
+  hasRole('desa-sekretaris')
+  || hasRole('kecamatan-sekretaris')
+  || hasRole('admin-desa')
+  || hasRole('admin-kecamatan'),
+)
 
 const isActive = (prefix) => page.url.startsWith(prefix)
 const isExternalItem = (item) => item.external === true
 const isItemActive = (item) => !isExternalItem(item) && isActive(item.href)
 const openExternal = (href) => {
   window.open(href, '_blank', 'noopener,noreferrer')
+}
+
+const resolveModuleSlugFromHref = (href) => {
+  if (typeof href !== 'string' || href.length === 0 || href.startsWith('http')) {
+    return null
+  }
+
+  const normalizedPath = href.split('?')[0]
+  const segments = normalizedPath.split('/').filter(Boolean)
+  if (segments.length < 2) {
+    return null
+  }
+
+  return segments[1]
+}
+
+const isModuleAllowedForCurrentUser = (item) => {
+  if (isExternalItem(item)) {
+    return true
+  }
+
+  const moduleSlug = resolveModuleSlugFromHref(item.href)
+  if (!moduleSlug) {
+    return true
+  }
+
+  return !!moduleModes.value[moduleSlug]
 }
 
 const buildScopedMenuGroups = (scope) => [
@@ -69,9 +102,23 @@ const buildScopedMenuGroups = (scope) => [
       { href: `/${scope}/anggota-tim-penggerak`, label: 'Daftar Anggota Tim Penggerak PKK' },
       { href: `/${scope}/kader-khusus`, label: 'Daftar Kader Tim Penggerak PKK' },
       { href: `/${scope}/agenda-surat`, label: 'Agenda Surat Masuk/Keluar' },
+      { href: `/${scope}/buku-daftar-hadir`, label: 'Buku Daftar Hadir' },
+      { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
+      { href: `/${scope}/buku-notulen-rapat`, label: 'Buku Notulen Rapat' },
       { href: `/${scope}/buku-keuangan`, label: 'Buku Keuangan' },
       { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
+      { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja TP PKK' },
+      {
+        href: `/${scope}/data-warga`,
+        label: 'Data Warga',
+        uiVisibility: 'sekretaris-only',
+      },
+      {
+        href: `/${scope}/data-kegiatan-warga`,
+        label: 'Data Kegiatan Warga',
+        uiVisibility: 'sekretaris-only',
+      },
       { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja' },
       { href: `/${scope}/prestasi-lomba`, label: 'Prestasi Lomba' },
       { href: `/${scope}/laporan-tahunan-pkk`, label: 'Laporan Tahunan Tim Penggerak PKK' },
@@ -83,8 +130,11 @@ const buildScopedMenuGroups = (scope) => [
     code: 'P1',
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-      { href: `/${scope}/data-warga`, label: 'Daftar Warga TP PKK' },
-      { href: `/${scope}/data-kegiatan-warga`, label: 'Data Kegiatan Warga' },
+      {
+        href: `/${scope}/simulasi-penyuluhan`,
+        label: 'Kelompok Simulasi dan Penyuluhan',
+        uiVisibility: 'desa-pokja-i-only',
+      },
       { href: `/${scope}/bkl`, label: 'BKL' },
       { href: `/${scope}/bkr`, label: 'BKR' },
       { href: `/${scope}/paar`, label: 'Buku PAAR' },
@@ -121,11 +171,9 @@ const buildScopedMenuGroups = (scope) => [
     items: [
       { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
       { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
-      { href: `/${scope}/simulasi-penyuluhan`, label: 'Kelompok Simulasi dan Penyuluhan' },
-      { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga' },
-      { href: `/${scope}/program-prioritas`, label: 'Program Prioritas' },
-      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },
-      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
+      { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga', uiVisibility: 'disabled' },
+      { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV', uiVisibility: 'disabled' },
+      { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana', uiVisibility: 'disabled' },
     ],
   },
 ]
@@ -139,7 +187,8 @@ const kecamatanMenuGroups = [
     label: 'Monitoring Kecamatan',
     code: 'MON',
     items: [
-      { href: '/kecamatan/desa-activities', label: 'Rekap Kegiatan Desa' },
+      { href: '/kecamatan/desa-activities', label: 'Rekap Kegiatan Desa', uiVisibility: 'disabled' },
+      { href: '/kecamatan/desa-arsip', label: 'Rekap Arsip Desa', uiVisibility: 'disabled' },
     ],
   },
 ]
@@ -148,6 +197,24 @@ const buildGroupState = (groups) => groups.reduce((state, group) => {
   state[group.key] = group.items.some((item) => isItemActive(item))
   return state
 }, {})
+
+const isMenuItemVisibleByExperimentalPlacement = (item) => {
+  const visibility = String(item?.uiVisibility ?? 'default')
+
+  if (visibility === 'disabled') {
+    return false
+  }
+
+  if (visibility === 'sekretaris-only') {
+    return isSekretarisRole.value
+  }
+
+  if (visibility === 'desa-pokja-i-only') {
+    return isDesaScope.value && hasRole('desa-pokja-i')
+  }
+
+  return true
+}
 
 const withMode = (groups) => {
   const seenInternalHrefs = new Set()
@@ -158,15 +225,21 @@ const withMode = (groups) => {
       ...group,
       mode: menuGroupModes.value[group.key],
       items: group.items.filter((item) => {
-        if (isExternalItem(item)) {
-          return true
-        }
-
-        if (seenInternalHrefs.has(item.href)) {
+        if (!isMenuItemVisibleByExperimentalPlacement(item)) {
           return false
         }
 
-        seenInternalHrefs.add(item.href)
+        if (!isModuleAllowedForCurrentUser(item)) {
+          return false
+        }
+
+        if (!isExternalItem(item) && seenInternalHrefs.has(item.href)) {
+          return false
+        }
+
+        if (!isExternalItem(item)) {
+          seenInternalHrefs.add(item.href)
+        }
         return true
       }),
     }))
@@ -366,6 +439,14 @@ onBeforeUnmount(() => {
           >
             Dashboard
           </Link>
+          <Link
+            v-if="!hasRole('super-admin')"
+            href="/arsip"
+            :class="isActive('/arsip') ? 'text-cyan-700 dark:text-cyan-300' : 'text-slate-600 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white'"
+            class="text-sm font-medium"
+          >
+            Arsip
+          </Link>
           <div class="relative">
             <button
               type="button"
@@ -456,6 +537,24 @@ onBeforeUnmount(() => {
             >
               <span v-show="!isAsideDesktopCollapsed">Manajemen User</span>
               <span v-show="isAsideDesktopCollapsed">MU</span>
+            </Link>
+            <Link
+              v-if="hasRole('super-admin')"
+              href="/super-admin/access-control"
+              :class="[isAsideDesktopCollapsed ? 'justify-center' : '', isActive('/super-admin/access-control') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
+            >
+              <span v-show="!isAsideDesktopCollapsed">Management Ijin Akses</span>
+              <span v-show="isAsideDesktopCollapsed">IA</span>
+            </Link>
+            <Link
+              v-if="hasRole('super-admin')"
+              href="/super-admin/arsip"
+              :class="[isAsideDesktopCollapsed ? 'justify-center' : '', isActive('/super-admin/arsip') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
+            >
+              <span v-show="!isAsideDesktopCollapsed">Management Arsip</span>
+              <span v-show="isAsideDesktopCollapsed">AR</span>
             </Link>
           </div>
 

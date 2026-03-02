@@ -17,15 +17,21 @@ class ListScopedBantuanUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->bantuanScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->bantuanScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bantuanRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->bantuanRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->bantuanScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->bantuanScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bantuanRepository->getByLevelAndArea($level, $areaId);
+        return $this->bantuanRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+

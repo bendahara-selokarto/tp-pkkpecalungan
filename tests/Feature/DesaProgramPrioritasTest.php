@@ -184,4 +184,18 @@ class DesaProgramPrioritasTest extends TestCase
 
         $response->assertStatus(403);
     }
+
+    #[Test]
+    public function metadata_scope_stale_role_desa_dengan_area_kecamatan_ditolak(): void
+    {
+        $staleUser = User::factory()->create([
+            'area_id' => $this->kecamatan->id,
+            'scope' => 'desa',
+        ]);
+        $staleUser->assignRole('admin-desa');
+
+        $response = $this->actingAs($staleUser)->get('/desa/program-prioritas');
+
+        $response->assertStatus(403);
+    }
 }

@@ -23,6 +23,8 @@ class Activity extends Model
         'tempat_kegiatan',
         'status',
         'tanda_tangan',
+        'image_path',
+        'document_path',
     ];
 
     public function area()

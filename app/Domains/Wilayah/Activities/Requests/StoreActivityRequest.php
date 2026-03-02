@@ -22,6 +22,8 @@ class StoreActivityRequest extends FormRequest
             'activity_date' => 'required|date_format:Y-m-d',
             'tempat_kegiatan' => 'nullable|string|max:255',
             'tanda_tangan' => 'nullable|string|max:255',
+            'image_upload' => 'nullable|file|image|max:5120',
+            'document_upload' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp|max:10240',
         ];
     }
 }

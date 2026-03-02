@@ -4,6 +4,10 @@ return [
     'module' => [
         'label' => 'Laporan Tahunan Tim Penggerak PKK',
     ],
+    'docx_template_candidates' => [
+        'docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx',
+        'resources/templates/laporan-tahunan-pkk.docx',
+    ],
     'bidang_options' => [
         'sekretariat',
         'pokja-i',
@@ -19,4 +23,3 @@ return [
         'pokja-iv' => 'Pokja IV',
     ],
 ];
-

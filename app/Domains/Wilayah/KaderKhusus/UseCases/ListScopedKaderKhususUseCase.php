@@ -17,15 +17,21 @@ class ListScopedKaderKhususUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->kaderKhususScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->kaderKhususScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->kaderKhususRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->kaderKhususRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->kaderKhususScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->kaderKhususScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->kaderKhususRepository->getByLevelAndArea($level, $areaId);
+        return $this->kaderKhususRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+

@@ -11,9 +11,9 @@ interface AnggotaTimPenggerakRepositoryInterface
 {
     public function store(AnggotaTimPenggerakData $data): AnggotaTimPenggerak;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection;
 
     public function find(int $id): AnggotaTimPenggerak;
 
@@ -21,5 +21,6 @@ interface AnggotaTimPenggerakRepositoryInterface
 
     public function delete(AnggotaTimPenggerak $anggotaTimPenggerak): void;
 }
+
 
 

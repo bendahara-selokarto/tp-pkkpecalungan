@@ -65,6 +65,43 @@ Hasil:
 Status:
 - `PASS`.
 
+## Hardening Kontrak Akses Arsip Global/Pribadi: 2026-02-28
+
+Ruang lingkup:
+- Mengunci kontrak akses arsip:
+  - arsip `global` (unggahan `super-admin`) visible semua role,
+  - arsip private non `super-admin` tetap owner-managed,
+  - monitoring arsip desa untuk kecamatan mengikuti pola dual-scope concern `activities`.
+- Menyamakan mekanisme UI monitoring arsip dengan menu kegiatan (toggle di halaman concern, bukan entry sidebar langsung).
+
+Artefak:
+- `app/Domains/Wilayah/Arsip/Repositories/ArsipDocumentRepository.php`
+- `app/Http/Controllers/ArsipController.php`
+- `app/Domains/Wilayah/Arsip/UseCases/ResolveArsipDocumentDownloadUseCase.php`
+- `resources/js/Pages/Arsip/Index.vue`
+- `resources/js/Layouts/DashboardLayout.vue`
+- `tests/Feature/ArsipTest.php`
+- `docs/process/TODO_ARS26B2_HARDENING_AKSES_ARSIP_GLOBAL_PRIBADI_2026_02_28.md`
+- `docs/process/TODO_ASM26B1_MANAGEMENT_ARSIP_SUPER_ADMIN_2026_02_27.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/process/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`
+- `docs/process/TODO_SKC0201_ROADMAP_SEKRETARIS_KECAMATAN_2026_02_28.md`
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+
+Perintah validasi:
+- `php artisan test tests/Feature/ArsipTest.php tests/Feature/KecamatanDesaArsipTest.php tests/Feature/SuperAdmin/ArsipManagementTest.php tests/Unit/Policies/ArsipDocumentPolicyTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php`
+  - hasil: `PASS` (`32` tests, `287` assertions).
+- `php artisan test`
+  - hasil: `PASS`.
+
+Keputusan:
+- Bypass `Gate::before` untuk download private arsip ditutup pada jalur `/arsip/download` dengan evaluasi policy langsung.
+- Mutasi private arsip via jalur `/arsip` dipaksa owner-only.
+- Concern `arsip` dinyatakan reuse pattern `P-020` (dual-scope kecamatan vs desa monitoring).
+
+Status:
+- `PASS`.
+
 ### R4. Verifikasi PDF Sample Desa dan Kecamatan
 
 Metode verifikasi baseline (otomatis):
@@ -968,3 +1005,172 @@ Keputusan:
 
 Status:
 - `PASS` untuk penutupan pending checklist concern aktif pada batch ini.
+
+## Siklus Monitoring Visibility Modul Kegiatan: 2026-02-27
+
+Ruang lingkup:
+- Menjalankan baseline monitoring khusus modul `activities` dan `desa-activities`.
+- Memastikan kontrak visibilitas role-scope sinkron antara backend dan menu frontend.
+
+Artefak:
+- `docs/process/MONITORING_VISIBILITY_MODUL.md`
+- `docs/process/TODO_MONITORING_VISIBILITY_MODUL_KEGIATAN_2026_02_27.md`
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `app/Http/Middleware/EnsureModuleVisibility.php`
+- `app/Domains/Wilayah/Activities/Services/ActivityScopeService.php`
+- `resources/js/Layouts/DashboardLayout.vue`
+
+Perintah validasi:
+- `php artisan test tests/Feature/DesaActivityTest.php tests/Feature/KecamatanActivityTest.php tests/Feature/KecamatanDesaActivityTest.php tests/Feature/ActivityPrintTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Policies/ActivityPolicyTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
+  - hasil: `PASS` (`55` tests, `371` assertions).
+
+Keputusan:
+- Kontrak `activities` dikunci tersedia untuk seluruh role operasional pada scope validnya.
+- Kontrak `desa-activities` dipertahankan sebagai monitoring kecamatan.
+- Gate monitoring visibility modul kegiatan ditetapkan aktif untuk setiap perubahan `add/remove/change-mode`.
+
+Status:
+- `PASS`.
+
+## Siklus Monitoring Visibility Semua Modul: 2026-02-27
+
+Ruang lingkup:
+- Menaikkan target monitoring visibility dari modul kegiatan ke seluruh modul aktif.
+- Mengunci baseline inventory slug modul dan profil visibility per role berdasarkan source of truth backend.
+
+Artefak:
+- `docs/process/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`
+- `docs/process/TODO_MONITORING_VISIBILITY_MODUL_KEGIATAN_2026_02_27.md`
+- `docs/process/MONITORING_VISIBILITY_MODUL.md`
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `app/Http/Middleware/EnsureModuleVisibility.php`
+- `resources/js/Layouts/DashboardLayout.vue`
+
+Perintah validasi:
+- `php artisan test`
+  - hasil: `PASS` (`925` tests, `5750` assertions).
+
+Keputusan:
+- Gate monitoring visibility lintas semua modul dinyatakan aktif.
+- Concern kegiatan tetap dipertahankan sebagai sub-scope agar detail guard `activities` tidak hilang.
+
+Status:
+- `PASS`.
+
+## Implementasi Gate Monitoring Visibility Semua Modul: 2026-02-27
+
+Ruang lingkup:
+- Mengimplementasikan gate test kontrak global untuk memastikan inventory slug modul, profil visibility role-scope, dan keterpetaan route per slug tetap stabil.
+
+Artefak:
+- `tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php`
+- `docs/process/MONITORING_VISIBILITY_MODUL.md`
+- `docs/process/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`
+
+Perintah validasi:
+- `php artisan test tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
+  - hasil: `PASS` (`28` tests, `322` assertions).
+
+Keputusan:
+- Gate global visibility dinyatakan aktif pada level test otomatis.
+- Perubahan add/remove/change-mode modul wajib melewati test kontrak global sebelum merge.
+
+Status:
+- `PASS`.
+
+## Hardening Process Routing + Model Tier: 2026-03-01
+
+Ruang lingkup:
+- Menetapkan `Self-Reflective Routing` dan aturan tier model kompleksitas.
+
+Artefak:
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+- `docs/process/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/process/TODO_ZERO_AMBIGUITY_AI_SINGLE_PATH_2026_02_23.md`
+- `docs/adr/ADR_0003_SELF_REFLECTIVE_ROUTING.md`
+
+Perintah validasi:
+- `rg "P-022|Self-Reflective Routing|Self-Reflective Checkpoint" docs/process docs/adr` -> `PASS`.
+- `rg "low.*small model|medium.*mid model|high.*large model" docs/process docs/adr` -> `PASS`.
+
+Keputusan:
+- `P-022` tetap `active`.
+- Checkpoint refleksi maksimal satu koreksi rute utama per concern.
+- Tier model dikunci: `low -> small`, `medium -> mid`, `high -> large`.
+
+Status:
+- `PASS`.
+
+```dsl
+LOG_SCOPE: process_routing_model_tier_hardening
+PATTERN: P-022
+MODEL_TIER_MAP: low=small, medium=mid, high=large
+ROUTE_CORRECTION_LIMIT: 1
+VALIDATION: rg_pattern_sync=PASS, rg_model_tier_sync=PASS
+STATUS: PASS
+```
+
+## Optimasi Bottleneck Process Execution (Exec 1-3): 2026-03-01
+
+Ruang lingkup:
+- Menetapkan threshold agar `P-021` tidak dipakai untuk perubahan minor `doc-only`.
+- Menambahkan jalur validasi cepat `doc-only fast lane` pada single-path.
+- Memisahkan backlog residual `fixture/template consistency` ke concern SOT terisolasi.
+
+Artefak:
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/process/TODO_BTLK26A1_OPTIMASI_BOTTLENECK_PROCESS_EXECUTION_2026_03_01.md`
+- `docs/process/TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md`
+
+Perintah validasi:
+- `rg -n "P-021|P-022|P-023|Doc-Only Fast Lane Validation|Self-Reflective Routing" docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+  - hasil: `PASS`.
+- `rg -n "Fast-lane|Khusus .*process/domain/adr" docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+  - hasil: `PASS`.
+- `rg -n "C-FIXTURE-TEMPLATE|TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md" docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md docs/process/TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md`
+  - hasil: `PASS`.
+
+Keputusan:
+- `P-021` hanya untuk keputusan strategis; `doc-only` minor tidak wajib ADR.
+- `doc-only fast lane` aktif untuk validasi ringan concern dokumen.
+- Concern `fixture/template consistency` dipisah ke SOT `FTC26A1`.
+
+Status:
+- `PASS` untuk sinkronisasi dokumen concern process execution.
+
+## Implementasi Concern Fixture/Template Consistency (F1-F3): 2026-03-01
+
+Ruang lingkup:
+- Menutup akar masalah jalur print laporan tahunan agar tidak hard-fail ketika template `.docx` tidak tersedia/tidak terbaca di environment tertentu.
+- Mengunci mapping kandidat template `.docx` secara canonical di config concern.
+- Audit fixture token baseline untuk modul `4.14.2b` dan `4.14.2c` terhadap kontrak judul aktif pada view PDF.
+
+Artefak:
+- `app/Domains/Wilayah/LaporanTahunanPkk/Services/LaporanTahunanPkkDocxGenerator.php`
+- `config/laporan_tahunan_pkk.php`
+- `docs/process/TODO_FTC26A1_FIXTURE_TEMPLATE_CONSISTENCY_2026_03_01.md`
+
+Perubahan inti:
+- Generator `.docx` kini membaca daftar `docx_template_candidates` dari config concern.
+- Jika kandidat template ada tetapi gagal disalin, alur tidak langsung gagal; generator mencoba kandidat lain lalu fallback ke paket `.docx` minimal.
+- Mapping canonical template concern dikunci:
+  - `docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx`
+  - `resources/templates/laporan-tahunan-pkk.docx` (opsional jika disediakan deployment tertentu).
+- Token fixture untuk `4.14.2b` (`BUKU HATINYA PKK`) dan `4.14.2c` (`BUKU INDUSTRI RUMAH TANGGA`) diverifikasi tetap selaras dengan judul aktif view.
+
+Perintah validasi:
+- `php artisan test --filter=LaporanTahunanPkkReportPrintTest`
+  - hasil: `BLOCKED` pada environment ini (`php: command not found`).
+- `php artisan test --filter=PdfBaselineFixtureComplianceTest`
+  - hasil: `BLOCKED` pada environment ini (`php: command not found`).
+
+Keputusan:
+- F1-F3 concern `FTC26A1` dinyatakan selesai pada level implementasi kode + sinkronisasi mapping.
+- F4-F5 tetap `pending` sampai validasi test dijalankan di environment yang memiliki runtime PHP.
+
+Status:
+- `PARTIAL` (`implementation-done`, `test-execution-blocked-by-environment`).

@@ -58,6 +58,7 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.menuGroupModes.pokja-iv', 'read-only')
                 ->missing('auth.user.menuGroupModes.referensi')
                 ->where('auth.user.moduleModes.buku-keuangan', 'read-write')
+                ->where('auth.user.moduleModes.program-prioritas', 'read-write')
                 ->where('auth.user.moduleModes.data-warga', 'read-only')
             );
     }
@@ -77,9 +78,9 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->missing('auth.user.menuGroupModes.referensi')
                 ->missing('auth.user.menuGroupModes.sekretaris-tpk')
                 ->missing('auth.user.menuGroupModes.monitoring')
+                ->where('auth.user.moduleModes.activities', 'read-write')
                 ->where('auth.user.moduleModes.anggota-pokja', 'read-write')
                 ->where('auth.user.moduleModes.prestasi-lomba', 'read-write')
-                ->missing('auth.user.moduleModes.activities')
                 ->missing('auth.user.moduleModes.data-pelatihan-kader')
                 ->missing('auth.user.moduleModes.data-warga')
             );
@@ -100,6 +101,25 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
                 ->where('auth.user.moduleModes.data-warga', 'read-write')
+            );
+    }
+
+    public function test_payload_kecamatan_sekretaris_memiliki_monitoring_desa_read_only(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
+                ->where('auth.user.menuGroupModes.monitoring', 'read-only')
+                ->where('auth.user.moduleModes.activities', 'read-write')
+                ->where('auth.user.moduleModes.desa-activities', 'read-only')
+                ->where('auth.user.moduleModes.desa-arsip', 'read-only')
             );
     }
 }

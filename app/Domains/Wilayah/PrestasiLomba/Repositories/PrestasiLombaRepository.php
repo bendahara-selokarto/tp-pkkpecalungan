@@ -26,21 +26,23 @@ class PrestasiLombaRepository implements PrestasiLombaRepositoryInterface
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
         return PrestasiLomba::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
     {
         return PrestasiLomba::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('id')
             ->get();
     }
@@ -71,3 +73,7 @@ class PrestasiLombaRepository implements PrestasiLombaRepositoryInterface
         $prestasiLomba->delete();
     }
 }
+
+
+
+

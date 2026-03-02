@@ -17,6 +17,9 @@ Status: `done`
 Catatan lanjutan visual minimalis:
 - Eksekusi refactor UI minimalis direncanakan di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
 - Acuan baseline visual: dashboard role `kecamatan-sekretaris` yang sudah diperbaiki pada sesi aktif.
+- Update skenario aktif 2026-02-26: untuk concern sekretaris, rendering dikunci satu section (`sekretaris-section-1`), section lanjutan tidak dirender.
+- Update representasi 2026-02-26: tiap blok dashboard menampilkan tabel informatif (`Informasi|Nilai|Keterangan`) untuk melengkapi kartu KPI.
+- Update copywriting 2026-02-26: label user-facing dashboard ditulis dengan bahasa natural user (mengurangi istilah teknis seperti `RO/RW`, `By Level`, `Read Only`).
 - Harmonisasi koherensi UI terbaru mengikuti:
   - `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
   - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
@@ -39,16 +42,21 @@ Catatan lanjutan visual minimalis:
   - chart 1: `jumlah kegiatan per desa` tipe `pie` (filter bulan).
   - chart 2: `jumlah buku` terhadap `buku terisi` tipe `bar` (filter bulan).
   - Tambahan filter bulan: dropdown `section1_month` dengan opsi `all` + `1..12` untuk memfilter chart sesuai bulan terpilih.
-- Khusus `desa-sekretaris`: level default dikunci ke `desa`, tanpa kontrol `sub_level`, dan filter utama berbasis group (`all`, `pokja-i`, `pokja-ii`, `pokja-iii`, `pokja-iv`) dengan query key `section2_group`.
+- Khusus `desa-sekretaris`: level default dikunci ke `desa`, tanpa kontrol `sub_level`, dan filter utama menggunakan `section1_month` (`all|1..12`).
 - Khusus dashboard sekretaris:
-  - `Section 1` menampilkan domain sekretaris.
-  - `Section 2` menampilkan semua pokja pada level yang sama.
-  - `Section 3` hanya untuk scope kecamatan: menampilkan semua pokja pada level setingkat di bawahnya (desa turunan).
-  - `Section 2` dan `Section 3` memiliki filter group: `all|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
-  - Query key filter:
-    - `section2_group` untuk section 2.
-    - `section3_group` untuk section 3.
-  - Add-on skenario kecamatan: saat `section 3` memilih `pokja-i`, tampilkan `section 4` untuk rincian sumber data per desa (referensi: `docs/process/TODO_SCENARIO_KECAMATAN_SECTION4_POKJA_I_2026_02_23.md`).
+  - UI aktif disederhanakan menjadi `single section` (section utama saja).
+  - Section utama menampilkan domain sekretaris dan chart activity.
+  - Pada scope `kecamatan`, chart `jumlah kegiatan per desa` tetap tersedia dengan filter bulan `section1_month` (`all|1..12`).
+  - Section 2/3/4 menjadi jejak historis kontrak awal dan tidak dirender pada UI aktif.
+- Khusus `desa-pokja-i..iv`:
+  - Section utama menampilkan chart `kegiatan bulanan` untuk data kegiatan pokja sendiri pada area desa sendiri.
+- Chart `Distribusi Level` tidak lagi dirender pada UI dashboard aktif.
+- Pengganti chart lintas role:
+  - `sekretaris-desa`: `jumlah buku desa sendiri` vs `jumlah buku desa sendiri yang terisi`.
+  - `pokja-i..iv` level `desa` dan `kecamatan`: `jumlah buku sendiri` vs `jumlah buku sendiri yang terisi`.
+- UI aktif menampilkan card chart saja; card non-chart (ringkasan/statistik/filter) dan tabel informasi dihapus.
+- Setiap card dashboard menampilkan ringkasan angka gaya `management ijin akses` (tile mini di bagian atas card) sebelum area chart.
+- Filter chart diintegrasikan langsung di dalam card yang sama (di atas area chart) dan query filter memengaruhi data chart yang dirender.
 
 ## Kontrak UI Dinamis
 
@@ -70,12 +78,11 @@ Catatan lanjutan visual minimalis:
   - `mode` default `by-level`.
   - `level` default `desa` dan tidak ditampilkan sebagai kontrol.
   - `sub_level` tidak ditampilkan.
-  - Filter yang ditampilkan hanya `By Group`: `all|pokja-i|pokja-ii|pokja-iii|pokja-iv` (query: `section2_group`).
+  - Filter yang ditampilkan hanya `By Bulan`: `all|1..12` (query: `section1_month`).
 - Aturan section sekretaris:
   - `section-1-sekretaris`: tanpa filter pokja.
     - untuk scope `kecamatan`, tersedia filter bulan `section1_month` (`all|1..12`) khusus chart `kegiatan per desa`.
-  - `section-2-pokja-level-aktif`: wajib filter `By Group`.
-  - `section-3-pokja-level-bawah` (kecamatan saja): wajib filter `By Group`.
+  - `section-2-pokja-level-aktif` dan `section-3-pokja-level-bawah`: status historis, tidak ditampilkan pada UI aktif.
 
 ### Aturan Keterbacaan
 

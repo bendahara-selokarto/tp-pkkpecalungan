@@ -3,6 +3,9 @@
 Tanggal: 2026-02-25  
 Status: `done`
 
+Catatan supersede 2026-02-27:
+- Ownership `program-prioritas` sudah dipindah ke grup `sekretaris-tpk` (bukan `pokja-iv`) mengikuti sinkronisasi canonical terbaru pada `RoleMenuVisibilityService` dan `DOMAIN_CONTRACT_MATRIX`.
+
 ## Konteks
 
 - Diperlukan checklist menyeluruh untuk memetakan seluruh modul operasional yang ada di sistem.

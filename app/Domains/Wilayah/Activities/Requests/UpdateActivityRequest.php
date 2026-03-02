@@ -23,6 +23,8 @@ class UpdateActivityRequest extends FormRequest
             'tempat_kegiatan' => 'nullable|string|max:255',
             'status' => 'required|in:draft,published',
             'tanda_tangan' => 'nullable|string|max:255',
+            'image_upload' => 'nullable|file|image|max:5120',
+            'document_upload' => 'nullable|file|mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,jpg,jpeg,png,webp|max:10240',
         ];
     }
 }

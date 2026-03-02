@@ -24,28 +24,31 @@ class AgendaSuratRepository implements AgendaSuratRepositoryInterface
             'diteruskan_kepada' => $data->diteruskan_kepada,
             'tembusan' => $data->tembusan,
             'keterangan' => $data->keterangan,
+            'data_dukung_path' => $data->data_dukung_path,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
         return AgendaSurat::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('tanggal_surat')
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
     {
         return AgendaSurat::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('tanggal_surat')
             ->latest('id')
             ->get();
@@ -71,6 +74,7 @@ class AgendaSuratRepository implements AgendaSuratRepositoryInterface
             'diteruskan_kepada' => $data->diteruskan_kepada,
             'tembusan' => $data->tembusan,
             'keterangan' => $data->keterangan,
+            'data_dukung_path' => $data->data_dukung_path,
         ]);
 
         return $agendaSurat;
@@ -81,3 +85,7 @@ class AgendaSuratRepository implements AgendaSuratRepositoryInterface
         $agendaSurat->delete();
     }
 }
+
+
+
+

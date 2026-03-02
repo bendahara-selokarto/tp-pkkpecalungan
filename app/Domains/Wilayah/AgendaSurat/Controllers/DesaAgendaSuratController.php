@@ -9,13 +9,16 @@ use App\Domains\Wilayah\AgendaSurat\Repositories\AgendaSuratRepositoryInterface;
 use App\Domains\Wilayah\AgendaSurat\Requests\ListAgendaSuratRequest;
 use App\Domains\Wilayah\AgendaSurat\Requests\StoreAgendaSuratRequest;
 use App\Domains\Wilayah\AgendaSurat\Requests\UpdateAgendaSuratRequest;
+use App\Domains\Wilayah\AgendaSurat\Services\AgendaSuratAttachmentService;
 use App\Domains\Wilayah\AgendaSurat\UseCases\GetScopedAgendaSuratUseCase;
 use App\Domains\Wilayah\AgendaSurat\UseCases\ListScopedAgendaSuratUseCase;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DesaAgendaSuratController extends Controller
 {
@@ -24,7 +27,8 @@ class DesaAgendaSuratController extends Controller
         private readonly ListScopedAgendaSuratUseCase $listScopedAgendaSuratUseCase,
         private readonly GetScopedAgendaSuratUseCase $getScopedAgendaSuratUseCase,
         private readonly CreateScopedAgendaSuratAction $createScopedAgendaSuratAction,
-        private readonly UpdateAgendaSuratAction $updateAgendaSuratAction
+        private readonly UpdateAgendaSuratAction $updateAgendaSuratAction,
+        private readonly AgendaSuratAttachmentService $agendaSuratAttachmentService
     ) {
         $this->middleware('scope.role:desa');
     }
@@ -82,6 +86,21 @@ class DesaAgendaSuratController extends Controller
         ]);
     }
 
+    public function attachment(int $id): StreamedResponse
+    {
+        $agendaSurat = $this->getScopedAgendaSuratUseCase->execute($id, 'desa');
+        $this->authorize('view', $agendaSurat);
+
+        $path = $agendaSurat->data_dukung_path;
+        if (! is_string($path) || $path === '' || ! Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+
+        return Storage::disk('public')->response($path, basename($path), [
+            'X-Content-Type-Options' => 'nosniff',
+        ]);
+    }
+
     public function update(UpdateAgendaSuratRequest $request, int $id): RedirectResponse
     {
         $agendaSurat = $this->getScopedAgendaSuratUseCase->execute($id, 'desa');
@@ -95,6 +114,7 @@ class DesaAgendaSuratController extends Controller
     {
         $agendaSurat = $this->getScopedAgendaSuratUseCase->execute($id, 'desa');
         $this->authorize('delete', $agendaSurat);
+        $this->agendaSuratAttachmentService->deleteForAgendaSurat($agendaSurat);
         $this->agendaSuratRepository->delete($agendaSurat);
 
         return redirect()->route('desa.agenda-surat.index')->with('success', 'Agenda surat berhasil dihapus');
@@ -116,6 +136,7 @@ class DesaAgendaSuratController extends Controller
             'diteruskan_kepada' => $item->diteruskan_kepada,
             'tembusan' => $item->tembusan,
             'keterangan' => $item->keterangan,
+            'data_dukung_url' => $this->resolveAttachmentUrl($item),
         ];
     }
 
@@ -126,5 +147,16 @@ class DesaAgendaSuratController extends Controller
         }
 
         return Carbon::parse($value)->format('Y-m-d');
+    }
+
+    private function resolveAttachmentUrl(AgendaSurat $agendaSurat): ?string
+    {
+        if (! is_string($agendaSurat->data_dukung_path) || $agendaSurat->data_dukung_path === '') {
+            return null;
+        }
+
+        return route('desa.agenda-surat.attachments.show', [
+            'id' => $agendaSurat->id,
+        ]);
     }
 }

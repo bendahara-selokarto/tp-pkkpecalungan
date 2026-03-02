@@ -53,6 +53,11 @@ Gunakan status:
 | `P-016` | Triggered Doc-Hardening Pass | Ada sinyal canonical drift pada dokumentasi concern aktif | Kontrak dokumen lintas file tetap koheren dan tidak mismatch dengan implementasi | Scoped drift audit + sinkronisasi TODO/process/domain + ringkasan validasi | `active` |
 | `P-017` | Zero-Ambiguity Single Path Routing | User meminta kepastian jalur tunggal AI atau task lintas concern berisiko multi-interpretasi | Task routing deterministik (concern -> file target -> validation ladder) dan output konsisten lintas sesi | Sinkronisasi `AGENTS.md` + dokumen single-path + log hardening concern | `active` |
 | `P-018` | UI Runtime Safety Guardrail | Perubahan UI kritikal berbasis JavaScript (layout, dropdown, theme, dynamic state) | Behavior UI tetap terkontrol saat terjadi runtime error JavaScript | Guard global JS + fallback UI + build frontend | `active` |
+| `P-019` | Attachment Render Recovery via Protected Stream Route | Lampiran (foto/berkas) tidak tampil di halaman show, terutama pada setup Apache/Windows | Lampiran tetap bisa preview dan dibuka tanpa bergantung pada static `/storage` URL | Targeted feature tests concern + `php artisan route:list --name=attachments.show` | `active` |
+| `P-020` | Kecamatan Dual-Scope List Contract (`kecamatan` vs `desa monitoring`) | Daftar modul di scope kecamatan butuh mode data sendiri + mode monitoring desa | Mode `kecamatan` konsisten ke data milik sendiri, mode `desa` konsisten ke seluruh desa dalam kecamatan, dan monitoring tetap read-only | Feature test list kedua mode + payload mode visibility + middleware anti write bypass | `active` |
+| `P-021` | ADR + TODO Coupled Governance | Ada keputusan arsitektur/canonical berdampak lintas sesi atau lintas modul | Keputusan teknis punya jejak trade-off yang bisa diaudit dan eksekusi concern tetap terikat checklist validasi | ADR template terisi + TODO concern aktif + sinkronisasi status keputusan | `active` |
+| `P-022` | Self-Reflective Routing | User meminta jalur reflektif atau task berisiko salah klasifikasi concern pada routing awal | Jalur eksekusi tetap deterministik tetapi punya checkpoint refleksi terkontrol sebelum patch besar | Re-check concern+boundary+validation ladder + sinkronisasi single-path doc/playbook/TODO/ADR concern | `active` |
+| `P-023` | Doc-Only Fast Lane Validation | Perubahan hanya dokumentasi process/domain/adr tanpa runtime change | Siklus validasi lebih cepat tanpa menurunkan guardrail sinkronisasi kontrak | L1 audit scoped (`rg`/link/status) + skip L3 bila tidak ada dampak runtime | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -421,3 +426,139 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
   - Tanpa deduplikasi error, banner bisa muncul berulang untuk root cause yang sama.
 - Catatan reuse lintas domain/project:
   - Terapkan pada aplikasi SPA/Inertia yang mengandalkan layout global untuk interaksi kritikal.
+
+### P-019 - Attachment Render Recovery via Protected Stream Route
+- Tanggal: 2026-02-27
+- Status: active
+- Konteks: Pada environment Apache/Windows, URL lampiran berbasis static path (`/storage/...`) bisa gagal render (404/403) walau file ada dan symlink sudah benar.
+- Trigger:
+  - User melaporkan halaman show tidak menampilkan foto/berkas.
+  - Browser membuka error page Apache saat klik lampiran.
+- Langkah eksekusi:
+  1) Lakukan cek cepat environment: `APP_URL`, keberadaan `public/storage`, dan keberadaan file pada `storage/app/public`.
+  2) Jika issue tetap muncul, hindari ketergantungan direct static URL; tambahkan route attachment terproteksi per scope (`desa`, `kecamatan`, `kecamatan/desa-activities`).
+  3) Di controller, stream file via `Storage::disk('public')->response(...)` setelah `authorize('view', $activity)` agar akses tetap mengikuti policy/scope.
+  4) Ubah payload `image_url`/`document_url` menjadi URL route attachment terproteksi.
+  5) Di UI show, render preview inline (gambar/PDF) dan sediakan fallback tautan `Buka berkas`.
+- Guardrail:
+  - Route attachment wajib berada di belakang middleware + policy concern yang sama dengan halaman detail.
+  - Dilarang membuka file path langsung tanpa validasi akses backend.
+  - Gunakan perubahan minimal; jangan mengubah kontrak domain `areas`, role, atau scope.
+- Validasi minimum:
+  - `php artisan test tests/Feature/DesaActivityTest.php tests/Feature/KecamatanActivityTest.php tests/Feature/KecamatanDesaActivityTest.php`
+  - `php artisan route:list --name=attachments.show`
+  - Build frontend sukses (`npm run build`) jika ada perubahan renderer preview.
+- Bukti efisiensi/akurasi:
+  - Menangani kegagalan render lampiran tanpa perlu perubahan server Apache global.
+- Risiko:
+  - Route attachment menambah endpoint baru; regression auth wajib dijalankan untuk mencegah data leak.
+- Catatan reuse lintas domain/project:
+  - Jadikan pattern pertama untuk insiden lampiran tidak tampil di modul Inertia/Laravel yang menyimpan file pada disk `public`.
+
+### P-020 - Kecamatan Dual-Scope List Contract (`kecamatan` vs `desa monitoring`)
+- Tanggal: 2026-02-28
+- Status: active
+- Konteks: Role level kecamatan (khususnya `kecamatan-sekretaris`) membutuhkan dua mode daftar dalam satu concern: mode kerja level kecamatan dan mode monitoring desa.
+- Trigger:
+  - UI daftar level kecamatan menambahkan toggle cakupan (`kecamatan`/`desa`).
+  - Ada kebutuhan mencegah data campur antara daftar kerja kecamatan dan daftar monitoring desa.
+- Langkah eksekusi:
+  1) Tetapkan kontrak mode:
+     - mode `kecamatan`: list kegiatan level kecamatan milik aktor login (`created_by = user_id` untuk `kecamatan-sekretaris`).
+     - mode `desa`: list seluruh data level desa dalam parent kecamatan aktor login.
+  2) Implementasikan filter di backend (use case/repository), bukan di frontend.
+  3) Pastikan mode monitoring desa tetap `read-only` di payload visibilitas + middleware anti bypass mutasi.
+  4) Gunakan toggle UI hanya sebagai pengalih endpoint/list source, bukan authority akses data.
+- Guardrail:
+  - Jangan menyamakan mode `kecamatan` dengan semua data kecamatan by-area jika kontrak menyebut data milik sendiri.
+  - Jangan membolehkan mode monitoring desa melakukan `create/update/delete`.
+  - Pastikan boundary query tetap melalui repository dan tetap scoped ke `areas` canonical.
+- Validasi minimum:
+  - Feature test mode `kecamatan` hanya menampilkan data milik aktor.
+  - Feature test mode `desa` menampilkan data semua desa dalam kecamatan sendiri dan menolak desa luar kecamatan.
+  - Feature test payload visibilitas/middleware memastikan `desa-activities` untuk `kecamatan-sekretaris` tetap `read-only`.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada commit `339275e` untuk concern `activities` (`kecamatan/activities` + `kecamatan/desa-activities`) beserta test kontrak dan hardening dokumentasi.
+  - Direuse pada concern `arsip` (2026-02-28) untuk toggle `Arsip Saya` vs `Desa (Monitoring)` dengan guard monitoring tetap `read-only`.
+- Risiko:
+  - Jika tidak didokumentasikan, concern lain mudah mereplikasi toggle UI tanpa konsistensi kontrak query backend.
+- Catatan reuse lintas domain/project:
+  - Gunakan sebagai template default untuk semua daftar scope kecamatan yang punya mode operasional internal + monitoring desa.
+
+### P-021 - ADR + TODO Coupled Governance
+- Tanggal: 2026-02-28
+- Status: active
+- Konteks: Hindari keputusan arsitektur hanya tersimpan di chat/TODO.
+- Trigger:
+  - Perubahan kontrak arsitektur, authorization, atau boundary repository yang berdampak lintas modul.
+  - Keputusan teknis strategis yang perlu jejak audit lintas sesi.
+  - Bukan untuk perubahan minor `doc-only`.
+- Langkah eksekusi:
+  1) Kunci rencana eksekusi concern pada TODO aktif (`docs/process/TODO_*`) dengan basis `docs/process/TEMPLATE_TODO_CONCERN.md`.
+  2) Catat keputusan arsitektur pada ADR (`docs/adr/ADR_<NOMOR4>_<RINGKASAN>.md`) dengan basis `docs/adr/ADR_TEMPLATE.md`.
+  3) Tautkan ADR ke TODO concern dan area validasi test.
+  4) Saat keputusan berubah, buat ADR baru dan tandai ADR lama sebagai `superseded`.
+- Guardrail:
+  - TODO tetap sumber rencana eksekusi; ADR sumber keputusan arsitektur.
+  - Jangan ubah status ADR ke `accepted` tanpa rencana validasi yang jelas.
+  - `doc-only` wording/checklist/link: cukup update TODO concern.
+- Validasi minimum:
+  - ADR berisi konteks, opsi, keputusan, dampak, validasi, fallback.
+  - TODO concern menyimpan checklist eksekusi dan hasil validasi terbaru.
+  - Referensi silang ADR <-> TODO konsisten.
+- Bukti efisiensi/akurasi:
+  - Menurunkan ambiguitas keputusan jangka panjang.
+- Risiko:
+  - Tambahan overhead dokumentasi jika dipakai untuk perubahan kecil yang tidak strategis.
+- Catatan reuse lintas domain/project:
+  - Cocok untuk project dengan kebutuhan audit trail.
+
+### P-023 - Doc-Only Fast Lane Validation
+- Tanggal: 2026-03-01
+- Status: active
+- Konteks: Perubahan dokumen sering tidak butuh full suite.
+- Trigger:
+  - Perubahan hanya pada `docs/**`.
+  - Tidak ada perubahan runtime/backend contract.
+- Langkah eksekusi:
+  1) Audit scoped istilah + referensi silang TODO/ADR/process.
+  2) Validasi cepat dengan `rg` token concern.
+  3) Catat hasil di `OPERATIONAL_VALIDATION_LOG.md` (`doc-only fast lane`).
+  4) Jalankan `L3` hanya jika ada sinyal drift ke runtime.
+- Guardrail:
+  - Tidak boleh dipakai jika ada perubahan kode aplikasi.
+  - Tetap wajib sinkron lintas dokumen concern saat trigger `P-016` aktif.
+  - Tetap wajib ADR jika perubahan bersifat keputusan arsitektur lintas concern.
+- Validasi minimum:
+  - `rg` token concern lintas `single-path/playbook/TODO/ADR` konsisten.
+  - Registry SOT tetap benar.
+  - Log operasional mencatat artefak + command.
+- Bukti efisiensi/akurasi:
+  - Mengurangi latency concern dokumentasi.
+- Risiko:
+  - False negative jika task salah diklasifikasikan sebagai `doc-only`.
+- Catatan reuse lintas domain/project:
+  - Cocok untuk repo dengan governance dokumen ketat.
+
+### P-022 - Self-Reflective Routing
+- Tanggal: 2026-03-01
+- Status: active
+- Konteks: mencegah salah klasifikasi concern pada routing awal.
+- Trigger: user meminta self-reflective routing atau ditemukan mismatch concern pasca scoped read.
+- Langkah: klasifikasi awal -> checkpoint refleksi -> tier model (`low/small`, `medium/mid`, `high/large`) -> koreksi rute 1x jika mismatch -> kunci keputusan di TODO/ADR.
+- Guardrail: tidak boleh loop; maksimal 1 koreksi rute utama per concern, tetap patuh `AGENTS.md`, dan tidak mengubah boundary auth/backend.
+- Validasi minimum: single-path, playbook, TODO, dan ADR concern sinkron.
+- Bukti efisiensi/akurasi: rework karena salah route awal menurun.
+- Risiko: tanpa batas koreksi, eksekusi melambat.
+- Reuse: cocok untuk governance dokumen ketat.
+
+```dsl
+PATTERN_ID: P-022
+PATTERN_NAME: SELF_REFLECTIVE_ROUTING
+TRIGGER: user_request_self_reflective|post_scoped_read_mismatch
+FLOW: classify>reflective_checkpoint>model_tier_select>route_fix_once>lock_todo_adr
+MODEL_TIER_MAP: low=small, medium=mid, high=large
+GUARDRAIL: max_route_correction=1
+VALIDATION: sync(single-path,playbook,todo,adr)
+STATUS: active
+```

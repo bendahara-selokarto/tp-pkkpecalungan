@@ -5,6 +5,8 @@ use PHPUnit\Framework\Attributes\Test;
 
 use Tests\TestCase;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
@@ -24,6 +26,11 @@ class DesaActivityTest extends TestCase
 
         // Buat role desa
         Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'desa-pokja-iii']);
+        Role::create(['name' => 'desa-pokja-iv']);
 
         // Buat Kecamatan
         $this->kecamatan = Area::create([
@@ -72,6 +79,81 @@ class DesaActivityTest extends TestCase
             'description' => 'Rapat tahunan',
             'area_id' => $this->desa->id,
         ]);
+    }
+
+    #[Test]
+    public function pengguna_desa_dapat_upload_gambar_dan_berkas_pada_kegiatan(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $user->assignRole('admin-desa');
+
+        $response = $this->actingAs($user)->post('/desa/activities', [
+            'title' => 'Kegiatan dengan Lampiran Desa',
+            'activity_date' => '2026-02-12',
+            'image_upload' => $this->fakeJpegUpload('kegiatan-desa.jpg'),
+            'document_upload' => UploadedFile::fake()->create('kegiatan-desa.pdf', 120, 'application/pdf'),
+        ]);
+
+        $response->assertStatus(302);
+
+        $activity = Activity::query()
+            ->where('title', 'Kegiatan dengan Lampiran Desa')
+            ->firstOrFail();
+
+        $this->assertNotNull($activity->image_path);
+        $this->assertNotNull($activity->document_path);
+        Storage::disk('public')->assertExists($activity->image_path);
+        Storage::disk('public')->assertExists($activity->document_path);
+    }
+
+    #[Test]
+    public function pengguna_desa_menghapus_kegiatan_juga_menghapus_file_lampiran(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $user->assignRole('admin-desa');
+
+        $imagePath = sprintf('activities/desa/%d/images/activity-image.jpg', $this->desa->id);
+        $documentPath = sprintf('activities/desa/%d/documents/activity-document.pdf', $this->desa->id);
+        Storage::disk('public')->put($imagePath, 'image-content');
+        Storage::disk('public')->put($documentPath, 'document-content');
+
+        $activity = Activity::create([
+            'title' => 'Kegiatan Hapus Lampiran Desa',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $user->id,
+            'activity_date' => '2026-02-28',
+            'status' => 'draft',
+            'image_path' => $imagePath,
+            'document_path' => $documentPath,
+        ]);
+
+        $this->actingAs($user)
+            ->delete(route('desa.activities.destroy', $activity->id))
+            ->assertStatus(302);
+
+        $this->assertDatabaseMissing('activities', [
+            'id' => $activity->id,
+        ]);
+        Storage::disk('public')->assertMissing($imagePath);
+        Storage::disk('public')->assertMissing($documentPath);
+    }
+
+    private function fakeJpegUpload(string $fileName): UploadedFile
+    {
+        $jpegBinary = base64_decode('/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////2wBDAf//////////////////////////////////////////////////////////////////////////////////////wAARCAABAAEDAREAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAVEQEBAAAAAAAAAAAAAAAAAAABAP/aAAwDAQACEAMQAAAAqgD/xAAUEAEAAAAAAAAAAAAAAAAAAAAQ/9oACAEBAAEFAm//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAEDAQE/AT//xAAUEQEAAAAAAAAAAAAAAAAAAAAQ/9oACAECAQE/AT//2Q==', true);
+
+        return UploadedFile::fake()->createWithContent($fileName, $jpegBinary === false ? '' : $jpegBinary);
     }
 
     #[Test]
@@ -304,5 +386,120 @@ class DesaActivityTest extends TestCase
         $this->assertDatabaseMissing('activities', [
             'title' => 'Kegiatan Tidak Valid',
         ]);
+    }
+
+    #[Test]
+    public function pokja_i_hanya_melihat_kegiatan_pokja_i_pada_desa_yang_sama(): void
+    {
+        $pokjaIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIUser->assignRole('desa-pokja-i');
+
+        $pokjaIIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIIUser->assignRole('desa-pokja-ii');
+
+        Activity::create([
+            'title' => 'Kegiatan Pokja I Selokarto',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Pokja II Selokarto',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($pokjaIUser)->get('/desa/activities');
+
+        $response->assertOk();
+        $response->assertSee('Kegiatan Pokja I Selokarto');
+        $response->assertDontSee('Kegiatan Pokja II Selokarto');
+    }
+
+    #[Test]
+    public function pokja_i_tidak_boleh_melihat_detail_kegiatan_pokja_lain_meski_satu_desa(): void
+    {
+        $pokjaIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIUser->assignRole('desa-pokja-i');
+
+        $pokjaIIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIIUser->assignRole('desa-pokja-ii');
+
+        $activityPokjaII = Activity::create([
+            'title' => 'Detail Pokja II',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($pokjaIUser)->get(route('desa.activities.show', $activityPokjaII->id));
+
+        $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function sekretaris_desa_tetap_melihat_semua_kegiatan_pada_area_desa_yang_sama(): void
+    {
+        $sekretarisUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $sekretarisUser->assignRole('desa-sekretaris');
+
+        $pokjaIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIUser->assignRole('desa-pokja-i');
+
+        $pokjaIIUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaIIUser->assignRole('desa-pokja-ii');
+
+        Activity::create([
+            'title' => 'Kegiatan Pokja I',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Pokja II',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $pokjaIIUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        $response = $this->actingAs($sekretarisUser)->get('/desa/activities');
+
+        $response->assertOk();
+        $response->assertSee('Kegiatan Pokja I');
+        $response->assertSee('Kegiatan Pokja II');
     }
 }

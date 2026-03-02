@@ -2,6 +2,7 @@
 
 namespace Tests\Unit\Services;
 
+use App\Domains\Wilayah\AccessControl\Models\ModuleAccessOverride;
 use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -57,7 +58,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['anggota-tim-penggerak-kader'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['laporan-tahunan-pkk'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['data-warga'] ?? null);
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['program-prioritas'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['program-prioritas'] ?? null);
     }
 
     public function test_pokja_hanya_memiliki_grup_sendiri(): void
@@ -75,26 +76,26 @@ class RoleMenuVisibilityServiceTest extends TestCase
 
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['anggota-pokja'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['prestasi-lomba'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['activities'] ?? null);
         $this->assertArrayNotHasKey('data-keluarga', $visibility['modules']);
-        $this->assertArrayNotHasKey('activities', $visibility['modules']);
-        $this->assertCount(2, $visibility['modules']);
+        $this->assertCount(3, $visibility['modules']);
     }
 
-    public function test_kecamatan_pokja_ii_hanya_memiliki_dua_modul_rw(): void
+    public function test_kecamatan_pokja_ii_memiliki_tiga_modul_rw_termasuk_buku_kegiatan(): void
     {
         $user = User::factory()->create();
         $user->assignRole('kecamatan-pokja-ii');
 
         $visibility = $this->service->resolveForScope($user, 'kecamatan');
 
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['activities'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['anggota-pokja'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['prestasi-lomba'] ?? null);
-        $this->assertArrayNotHasKey('activities', $visibility['modules']);
         $this->assertArrayNotHasKey('data-pelatihan-kader', $visibility['modules']);
         $this->assertArrayNotHasKey('taman-bacaan', $visibility['modules']);
         $this->assertArrayNotHasKey('koperasi', $visibility['modules']);
         $this->assertArrayNotHasKey('kejar-paket', $visibility['modules']);
-        $this->assertCount(2, $visibility['modules']);
+        $this->assertCount(3, $visibility['modules']);
     }
 
     public function test_admin_kecamatan_kompatibel_rw_dengan_monitoring_ro(): void
@@ -108,6 +109,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['pokja-ii'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['monitoring'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['desa-activities'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['desa-arsip'] ?? null);
     }
 
     public function test_semua_role_operasional_memiliki_menu_buku_kegiatan(): void
@@ -119,6 +121,10 @@ class RoleMenuVisibilityServiceTest extends TestCase
             ['role' => 'desa-pokja-ii', 'scope' => 'desa'],
             ['role' => 'desa-pokja-iii', 'scope' => 'desa'],
             ['role' => 'desa-pokja-iv', 'scope' => 'desa'],
+            ['role' => 'kecamatan-pokja-i', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-ii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
             ['role' => 'admin-desa', 'scope' => 'desa'],
             ['role' => 'admin-kecamatan', 'scope' => 'kecamatan'],
             ['role' => 'super-admin', 'scope' => 'desa'],
@@ -184,7 +190,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         }
     }
 
-    public function test_semua_pokja_kecamatan_hanya_memiliki_dua_menu(): void
+    public function test_semua_pokja_kecamatan_hanya_memiliki_tiga_menu(): void
     {
         $kecamatanPokjaRoles = [
             'kecamatan-pokja-i',
@@ -200,10 +206,153 @@ class RoleMenuVisibilityServiceTest extends TestCase
             $visibility = $this->service->resolveForScope($user, 'kecamatan');
 
             $this->assertSame(
-                ['anggota-pokja', 'prestasi-lomba'],
+                ['activities', 'anggota-pokja', 'prestasi-lomba'],
                 array_keys($visibility['modules']),
-                sprintf('Role %s harus hanya memiliki 2 menu modul.', $role)
+                sprintf('Role %s harus hanya memiliki 3 menu modul.', $role)
             );
         }
+    }
+
+    public function test_modul_buku_sekretaris_hanya_terpetakan_pada_group_sekretaris(): void
+    {
+        $bukuSekretarisModules = [
+            'buku-notulen-rapat',
+            'buku-daftar-hadir',
+            'buku-tamu',
+            'program-prioritas',
+        ];
+
+        $sekretarisModules = $this->service->modulesForGroup('sekretaris-tpk');
+        foreach ($bukuSekretarisModules as $moduleSlug) {
+            $this->assertContains($moduleSlug, $sekretarisModules);
+        }
+
+        foreach (['pokja-i', 'pokja-ii', 'pokja-iii', 'pokja-iv', 'monitoring'] as $group) {
+            $groupModules = $this->service->modulesForGroup($group);
+
+            foreach ($bukuSekretarisModules as $moduleSlug) {
+                $this->assertNotContains(
+                    $moduleSlug,
+                    $groupModules,
+                    sprintf('Module %s tidak boleh dipetakan ke group %s.', $moduleSlug, $group)
+                );
+            }
+        }
+    }
+
+    public function test_role_pokja_tidak_mendapat_modul_buku_sekretaris(): void
+    {
+        $bukuSekretarisModules = [
+            'buku-notulen-rapat',
+            'buku-daftar-hadir',
+            'buku-tamu',
+            'program-prioritas',
+        ];
+
+        $roleScopeMatrix = [
+            ['role' => 'desa-pokja-i', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-ii', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-iii', 'scope' => 'desa'],
+            ['role' => 'desa-pokja-iv', 'scope' => 'desa'],
+            ['role' => 'kecamatan-pokja-i', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-ii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iii', 'scope' => 'kecamatan'],
+            ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
+        ];
+
+        foreach ($roleScopeMatrix as $item) {
+            $user = User::factory()->create();
+            $user->assignRole($item['role']);
+
+            $visibility = $this->service->resolveForScope($user, $item['scope']);
+
+            foreach ($bukuSekretarisModules as $moduleSlug) {
+                $this->assertArrayNotHasKey(
+                    $moduleSlug,
+                    $visibility['modules'],
+                    sprintf(
+                        'Role %s pada scope %s tidak boleh memiliki modul %s.',
+                        $item['role'],
+                        $item['scope'],
+                        $moduleSlug
+                    )
+                );
+            }
+        }
+    }
+
+    public function test_scope_mismatch_tidak_menghasilkan_group_mode_untuk_role_non_super_admin(): void
+    {
+        $desaUser = User::factory()->create();
+        $desaUser->assignRole('desa-pokja-i');
+
+        $kecamatanVisibility = $this->service->resolveForScope($desaUser, 'kecamatan');
+        $this->assertSame([], $kecamatanVisibility['groups']);
+        $this->assertSame([], $kecamatanVisibility['modules']);
+        $this->assertNull($this->service->resolveModuleModeForScope($desaUser, 'kecamatan', 'anggota-pokja'));
+
+        $kecamatanUser = User::factory()->create();
+        $kecamatanUser->assignRole('kecamatan-pokja-i');
+
+        $desaVisibility = $this->service->resolveForScope($kecamatanUser, 'desa');
+        $this->assertSame([], $desaVisibility['groups']);
+        $this->assertSame([], $desaVisibility['modules']);
+        $this->assertNull($this->service->resolveModuleModeForScope($kecamatanUser, 'desa', 'anggota-pokja'));
+    }
+
+    public function test_override_pilot_catatan_keluarga_menggantikan_hardcoded_hidden(): void
+    {
+        $actor = User::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-pokja-iv');
+
+        $this->assertNull(
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+        );
+
+        ModuleAccessOverride::query()->create([
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-iv',
+            'module_slug' => RoleMenuVisibilityService::PILOT_MODULE_SLUG,
+            'mode' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'changed_by' => $actor->id,
+        ]);
+
+        $this->assertSame(
+            RoleMenuVisibilityService::MODE_READ_ONLY,
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+        );
+    }
+
+    public function test_rollback_override_pilot_kembali_ke_fallback_hardcoded(): void
+    {
+        $actor = User::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-pokja-iv');
+
+        ModuleAccessOverride::query()->create([
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-iv',
+            'module_slug' => RoleMenuVisibilityService::PILOT_MODULE_SLUG,
+            'mode' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'changed_by' => $actor->id,
+        ]);
+
+        $this->assertSame(
+            RoleMenuVisibilityService::MODE_READ_ONLY,
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+        );
+
+        ModuleAccessOverride::query()
+            ->where('scope', 'kecamatan')
+            ->where('role_name', 'kecamatan-pokja-iv')
+            ->where('module_slug', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+            ->delete();
+
+        $this->assertNull(
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
+        );
     }
 }

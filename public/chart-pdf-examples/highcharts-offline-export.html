@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Highcharts Offline PDF Export Example</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; color: #0f172a; }
+    .wrap { max-width: 980px; margin: 0 auto; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .card { border: 1px solid #cbd5e1; border-radius: 8px; padding: 16px; }
+    .button { background: #1d4ed8; color: #fff; border: 0; padding: 8px 14px; border-radius: 6px; cursor: pointer; }
+    .hint { font-size: 12px; color: #475569; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Highcharts Offline Export</h1>
+    <p class="hint">Contoh export PDF menggunakan `chart.exportChartLocal()`.</p>
+    <div class="card">
+      <div class="toolbar">
+        <strong>Cakupan Dokumen per Lampiran</strong>
+        <button id="btnExport" class="button">Export PDF (Offline)</button>
+      </div>
+      <div id="hcContainer"></div>
+    </div>
+  </div>
+
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script src="https://code.highcharts.com/modules/offline-exporting.js"></script>
+  <script>
+    const chart = Highcharts.chart('hcContainer', {
+      chart: { type: 'column' },
+      title: { text: 'Lampiran Coverage' },
+      xAxis: { categories: ['4.9', '4.10', '4.11', '4.12', '4.13'] },
+      yAxis: { title: { text: 'Jumlah Entri' } },
+      series: [{ name: 'Total', data: [12, 8, 14, 9, 11], color: '#2563eb' }],
+      credits: { enabled: false }
+    });
+
+    document.getElementById('btnExport').addEventListener('click', () => {
+      chart.exportChartLocal({
+        type: 'application/pdf',
+        filename: 'highcharts-offline-export-example'
+      });
+    });
+  </script>
+</body>
+</html>

@@ -17,15 +17,21 @@ class ListScopedAgendaSuratUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        
         $areaId = $this->agendaSuratScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->agendaSuratScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->agendaSuratRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->agendaSuratRepository->paginateByLevelAndArea($level, $areaId, $perPage, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        
         $areaId = $this->agendaSuratScopeService->requireUserAreaId();
+        $creatorIdFilter = $this->agendaSuratScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->agendaSuratRepository->getByLevelAndArea($level, $areaId);
+        return $this->agendaSuratRepository->getByLevelAndArea($level, $areaId, $creatorIdFilter);
     }
 }
+
+

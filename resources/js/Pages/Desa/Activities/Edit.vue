@@ -21,15 +21,25 @@ const form = useForm({
   tanda_tangan: props.activity.tanda_tangan ?? '',
   activity_date: props.activity.activity_date ?? '',
   status: props.activity.status ?? 'draft',
+  image_upload: null,
+  document_upload: null,
 })
+
+const setFile = (field, event) => {
+  const [file] = event.target.files || []
+  form[field] = file || null
+}
 
 const submit = () => {
   form
     .transform((data) => ({
       ...data,
       description: data.uraian || null,
+      _method: 'put',
     }))
-    .put(`/desa/activities/${props.activity.id}`)
+    .post(`/desa/activities/${props.activity.id}`, {
+      forceFormData: true,
+    })
 }
 </script>
 
@@ -91,6 +101,49 @@ const submit = () => {
           <p v-if="form.errors.tanda_tangan" class="mt-1 text-xs text-rose-600">{{ form.errors.tanda_tangan }}</p>
         </div>
 
+        <div class="grid gap-5 md:grid-cols-2">
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Upload Gambar</label>
+            <a
+              v-if="props.activity.image_url"
+              :href="props.activity.image_url"
+              target="_blank"
+              rel="noopener"
+              class="mb-2 inline-block text-xs font-medium text-sky-600 hover:underline dark:text-sky-400"
+            >
+              Lihat gambar saat ini
+            </a>
+            <input
+              type="file"
+              accept="image/*"
+              class="block w-full text-sm text-gray-700 file:mr-4 file:rounded-md file:border-0 file:bg-emerald-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-emerald-700 hover:file:bg-emerald-100 dark:text-slate-200 dark:file:bg-emerald-900/30 dark:file:text-emerald-300"
+              @change="setFile('image_upload', $event)"
+            >
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kosongkan jika tidak ingin mengganti gambar.</p>
+            <p v-if="form.errors.image_upload" class="mt-1 text-xs text-rose-600">{{ form.errors.image_upload }}</p>
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Upload Berkas</label>
+            <a
+              v-if="props.activity.document_url"
+              :href="props.activity.document_url"
+              target="_blank"
+              rel="noopener"
+              class="mb-2 inline-block text-xs font-medium text-sky-600 hover:underline dark:text-sky-400"
+            >
+              Lihat berkas saat ini
+            </a>
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,image/*"
+              class="block w-full text-sm text-gray-700 file:mr-4 file:rounded-md file:border-0 file:bg-sky-50 file:px-3 file:py-2 file:text-sm file:font-medium file:text-sky-700 hover:file:bg-sky-100 dark:text-slate-200 dark:file:bg-sky-900/30 dark:file:text-sky-300"
+              @change="setFile('document_upload', $event)"
+            >
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Kosongkan jika tidak ingin mengganti berkas.</p>
+            <p v-if="form.errors.document_upload" class="mt-1 text-xs text-rose-600">{{ form.errors.document_upload }}</p>
+          </div>
+        </div>
+
         <div class="flex items-center justify-end gap-2">
           <Link href="/desa/activities" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
             Batal
@@ -103,4 +156,3 @@ const submit = () => {
     </CardBox>
   </SectionMain>
 </template>
-

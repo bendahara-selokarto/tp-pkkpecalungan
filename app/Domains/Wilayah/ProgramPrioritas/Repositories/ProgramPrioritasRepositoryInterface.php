@@ -10,7 +10,7 @@ interface ProgramPrioritasRepositoryInterface
 {
     public function store(ProgramPrioritasData $data): ProgramPrioritas;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection;
 
     public function find(int $id): ProgramPrioritas;
 
@@ -18,3 +18,4 @@ interface ProgramPrioritasRepositoryInterface
 
     public function delete(ProgramPrioritas $programPrioritas): void;
 }
+

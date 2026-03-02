@@ -20,6 +20,15 @@ use App\Domains\Wilayah\BukuKeuangan\Repositories\BukuKeuanganRepositoryInterfac
 use App\Domains\Wilayah\AgendaSurat\Repositories\AgendaSuratRepository;
 use App\Domains\Wilayah\AgendaSurat\Repositories\AgendaSuratRepositoryInterface;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
+use App\Domains\Wilayah\BukuDaftarHadir\Models\BukuDaftarHadir;
+use App\Domains\Wilayah\BukuDaftarHadir\Repositories\BukuDaftarHadirRepository;
+use App\Domains\Wilayah\BukuDaftarHadir\Repositories\BukuDaftarHadirRepositoryInterface;
+use App\Domains\Wilayah\BukuTamu\Models\BukuTamu;
+use App\Domains\Wilayah\BukuTamu\Repositories\BukuTamuRepository;
+use App\Domains\Wilayah\BukuTamu\Repositories\BukuTamuRepositoryInterface;
+use App\Domains\Wilayah\BukuNotulenRapat\Models\BukuNotulenRapat;
+use App\Domains\Wilayah\BukuNotulenRapat\Repositories\BukuNotulenRapatRepository;
+use App\Domains\Wilayah\BukuNotulenRapat\Repositories\BukuNotulenRapatRepositoryInterface;
 use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepository;
 use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
@@ -92,10 +101,15 @@ use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNas
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepository;
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepositoryInterface;
+use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
+use App\Domains\Wilayah\Arsip\Repositories\ArsipDocumentRepository;
+use App\Domains\Wilayah\Arsip\Repositories\ArsipDocumentRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepository;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepository;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryInterface;
+use App\Domains\Wilayah\AccessControl\Repositories\ModuleAccessOverrideRepository;
+use App\Domains\Wilayah\AccessControl\Repositories\ModuleAccessOverrideRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Observers\InvalidateDashboardDocumentCacheObserver;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
@@ -105,6 +119,9 @@ use App\Policies\AnggotaTimPenggerakPolicy;
 use App\Policies\BantuanPolicy;
 use App\Policies\BukuKeuanganPolicy;
 use App\Policies\AgendaSuratPolicy;
+use App\Policies\BukuDaftarHadirPolicy;
+use App\Policies\BukuTamuPolicy;
+use App\Policies\BukuNotulenRapatPolicy;
 use App\Policies\InventarisPolicy;
 use App\Policies\KaderKhususPolicy;
 use App\Policies\PrestasiLombaPolicy;
@@ -127,6 +144,7 @@ use App\Policies\SimulasiPenyuluhanPolicy;
 use App\Policies\PilotProjectKeluargaSehatPolicy;
 use App\Policies\PilotProjectNaskahPelaporanPolicy;
 use App\Policies\LaporanTahunanPkkPolicy;
+use App\Policies\ArsipDocumentPolicy;
 use App\Policies\UserPolicy;
 use App\Repositories\SuperAdmin\UserManagementRepository;
 use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
@@ -179,6 +197,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             AgendaSuratRepositoryInterface::class,
             AgendaSuratRepository::class
+        );
+
+        $this->app->bind(
+            BukuNotulenRapatRepositoryInterface::class,
+            BukuNotulenRapatRepository::class
+        );
+
+        $this->app->bind(
+            BukuDaftarHadirRepositoryInterface::class,
+            BukuDaftarHadirRepository::class
+        );
+
+        $this->app->bind(
+            BukuTamuRepositoryInterface::class,
+            BukuTamuRepository::class
         );
 
         $this->app->bind(
@@ -315,6 +348,16 @@ class AppServiceProvider extends ServiceProvider
             DashboardGroupCoverageRepositoryInterface::class,
             DashboardGroupCoverageRepository::class
         );
+
+        $this->app->bind(
+            ArsipDocumentRepositoryInterface::class,
+            ArsipDocumentRepository::class
+        );
+
+        $this->app->bind(
+            ModuleAccessOverrideRepositoryInterface::class,
+            ModuleAccessOverrideRepository::class
+        );
     }
 
     /**
@@ -329,6 +372,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(BukuKeuangan::class, BukuKeuanganPolicy::class);
         Gate::policy(Inventaris::class, InventarisPolicy::class);
         Gate::policy(AgendaSurat::class, AgendaSuratPolicy::class);
+        Gate::policy(BukuDaftarHadir::class, BukuDaftarHadirPolicy::class);
+        Gate::policy(BukuTamu::class, BukuTamuPolicy::class);
+        Gate::policy(BukuNotulenRapat::class, BukuNotulenRapatPolicy::class);
         Gate::policy(AnggotaPokja::class, AnggotaPokjaPolicy::class);
         Gate::policy(AnggotaTimPenggerak::class, AnggotaTimPenggerakPolicy::class);
         Gate::policy(KaderKhusus::class, KaderKhususPolicy::class);
@@ -352,6 +398,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(PilotProjectKeluargaSehatReport::class, PilotProjectKeluargaSehatPolicy::class);
         Gate::policy(PilotProjectNaskahPelaporanReport::class, PilotProjectNaskahPelaporanPolicy::class);
         Gate::policy(LaporanTahunanPkkReport::class, LaporanTahunanPkkPolicy::class);
+        Gate::policy(ArsipDocument::class, ArsipDocumentPolicy::class);
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin') ? true : null;
@@ -386,6 +433,9 @@ class AppServiceProvider extends ServiceProvider
             Activity::class,
             AgendaSurat::class,
             AnggotaTimPenggerak::class,
+            BukuDaftarHadir::class,
+            BukuTamu::class,
+            BukuNotulenRapat::class,
             BukuKeuangan::class,
             DataIndustriRumahTangga::class,
             DataKegiatanWarga::class,

@@ -25,7 +25,13 @@ class DashboardDocumentCoverageTest extends TestCase
         Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'desa-pokja-iii']);
+        Role::create(['name' => 'desa-pokja-iv']);
         Role::create(['name' => 'kecamatan-pokja-i']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
+        Role::create(['name' => 'kecamatan-pokja-iii']);
+        Role::create(['name' => 'kecamatan-pokja-iv']);
     }
 
     public function test_dashboard_coverage_dokumen_pengguna_desa_hanya_menghitung_data_desanya_sendiri(): void
@@ -173,7 +179,7 @@ class DashboardDocumentCoverageTest extends TestCase
         });
     }
 
-    public function test_dashboard_desa_sekretaris_menghasilkan_section_1_dan_section_2_tanpa_section_3(): void
+    public function test_dashboard_desa_sekretaris_menghasilkan_section_1_dan_2_sesuai_kontrak_filter(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -201,17 +207,29 @@ class DashboardDocumentCoverageTest extends TestCase
                     $section3 = $collected
                         ->where('section.key', 'sekretaris-section-3')
                         ->first();
+                    $section4 = $collected
+                        ->where('section.key', 'sekretaris-section-4')
+                        ->first();
 
                     return is_array($section1)
                         && is_array($section2)
-                        && $section3 === null
+                        && ($section2['section']['filter']['query_key'] ?? null) === 'section2_group'
+                        && ($section2['section']['source_level'] ?? null) === 'desa'
+                        && ($section2['sources']['filter_context']['mode'] ?? null) === 'by-level'
                         && ($section2['sources']['filter_context']['level'] ?? null) === 'desa'
-                        && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'all';
+                        && $section4 === null
+                        && ($section1['section']['source_level'] ?? null) === 'desa'
+                        && collect($collected->where('section.key', 'sekretaris-section-2')->pluck('group')->all())->sort()->values()->all() === [
+                            'pokja-i',
+                            'pokja-ii',
+                            'pokja-iii',
+                            'pokja-iv',
+                        ];
                 });
         });
     }
 
-    public function test_dashboard_kecamatan_sekretaris_menghasilkan_section_2_dan_section_3_dengan_konteks_group(): void
+    public function test_dashboard_kecamatan_sekretaris_menghasilkan_section_1_2_3_dan_filter_context_sinkron_dengan_query(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -254,15 +272,20 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ($section1['charts']['by_desa']['values'] ?? null) === [1]
                         && ($section1['charts']['by_desa']['books_total'] ?? null) === [19]
                         && ($section1['charts']['by_desa']['books_filled'] ?? null) === [1]
-                        && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
+                        && ($section2['group'] ?? null) === 'pokja-i'
+                        && ($section2['section']['filter']['query_key'] ?? null) === 'section2_group'
                         && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'pokja-i'
-                        && ($section3['sources']['filter_context']['level'] ?? null) === 'desa'
-                        && ($section3['sources']['filter_context']['section3_group'] ?? null) === 'pokja-ii';
+                        && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
+                        && ($section3['group'] ?? null) === 'pokja-ii'
+                        && ($section3['section']['filter']['query_key'] ?? null) === 'section3_group'
+                        && ($section3['sources']['source_area_type'] ?? null) === 'desa-turunan'
+                        && ($section3['sources']['filter_context']['section3_group'] ?? null) === 'pokja-ii'
+                        && ($section3['sources']['filter_context']['level'] ?? null) === 'desa';
                 });
         });
     }
 
-    public function test_dashboard_kecamatan_sekretaris_section_4_muncul_saat_filter_section_3_pokja_i_dan_anti_data_leak(): void
+    public function test_dashboard_kecamatan_sekretaris_menampilkan_section_4_saat_section3_group_pokja_i(): void
     {
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -291,30 +314,36 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->component('Dashboard')
                 ->where('dashboardBlocks', function ($blocks): bool {
                     $collected = collect($blocks);
+                    $section1 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-1');
+                    $section2 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-2');
+                    $section3 = $collected
+                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-3');
                     $section4 = $collected
                         ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
 
-                    if (! is_array($section4)) {
-                        return false;
-                    }
+                    $section3Items = collect($section3['charts']['coverage_per_module']['items'] ?? []);
+                    $section4Items = collect($section4['charts']['coverage_per_module']['items'] ?? []);
+                    $section3Labels = $section3Items->pluck('label')->all();
+                    $section4Labels = $section4Items->pluck('label')->all();
 
-                    $items = collect($section4['charts']['coverage_per_module']['items'] ?? []);
-                    $labels = $items->pluck('label')->all();
-                    $totalsByLabel = $items->mapWithKeys(
-                        static fn (array $item): array => [(string) ($item['label'] ?? '-') => (int) ($item['total'] ?? 0)]
-                    );
-
-                    return ($section4['group'] ?? null) === 'pokja-i'
+                    return is_array($section1)
+                        && is_array($section2)
+                        && is_array($section3)
+                        && is_array($section4)
+                        && ($section3['group'] ?? null) === 'pokja-i'
+                        && ($section3['sources']['filter_context']['section3_group'] ?? null) === 'pokja-i'
+                        && ($section4['group'] ?? null) === 'pokja-i'
                         && ($section4['section']['depends_on'] ?? null) === 'section3_group:pokja-i'
-                        && ($section4['sources']['source_scope'] ?? null) === 'kecamatan'
                         && ($section4['sources']['source_area_type'] ?? null) === 'desa-turunan'
-                        && ($section4['sources']['source_modules'] ?? null) === ['data-warga', 'data-kegiatan-warga', 'bkl', 'bkr', 'paar']
                         && ($section4['sources']['filter_context']['section3_group'] ?? null) === 'pokja-i'
-                        && in_array('Gombong', $labels, true)
-                        && in_array('Bandung', $labels, true)
-                        && ! in_array('Sidomukti', $labels, true)
-                        && ($totalsByLabel['Gombong'] ?? null) === 1
-                        && ($totalsByLabel['Bandung'] ?? null) === 1;
+                        && in_array('Gombong', $section3Labels, true)
+                        && in_array('Bandung', $section3Labels, true)
+                        && ! in_array('Sidomukti', $section3Labels, true)
+                        && in_array('Gombong', $section4Labels, true)
+                        && in_array('Bandung', $section4Labels, true)
+                        && ! in_array('Sidomukti', $section4Labels, true);
                 });
         });
     }
@@ -331,6 +360,12 @@ class DashboardDocumentCoverageTest extends TestCase
         $user->assignRole('desa-pokja-i');
 
         $this->createActivity($user, 'desa', $desa->id, 'Aktivitas Pokja I');
+        $pokjaLainUser = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $pokjaLainUser->assignRole('desa-pokja-ii');
+        $this->createActivity($pokjaLainUser, 'desa', $desa->id, 'Aktivitas Pokja II');
         $this->createDataWarga($user, 'desa', $desa->id, 'Kepala Pokja I');
 
         $response = $this->actingAs($user)->get(route('dashboard'));
@@ -351,7 +386,10 @@ class DashboardDocumentCoverageTest extends TestCase
                     return count($groups) === 1
                         && $groups === ['pokja-i']
                         && is_array($block)
+                        && ($block['kind'] ?? null) === 'activity'
+                        && ($block['stats']['total'] ?? null) === 1
                         && ($block['section'] ?? null) === null
+                        && ($block['sources']['source_group'] ?? null) === 'pokja-i'
                         && ($block['sources']['source_scope'] ?? null) === 'desa';
                 });
         });
@@ -400,6 +438,9 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ($block['group'] ?? null) === 'pokja-i'
                         && ($block['charts']['coverage_per_module']['dimension'] ?? null) === 'desa'
                         && ($block['sources']['source_area_type'] ?? null) === 'desa-turunan'
+                        && ($block['sources']['filter_context']['mode'] ?? null) === 'by-level'
+                        && ($block['sources']['filter_context']['level'] ?? null) === 'desa'
+                        && ($block['sources']['filter_context']['sub_level'] ?? null) === 'all'
                         && in_array('Gombong', $labels, true)
                         && in_array('Bandung', $labels, true)
                         && ! in_array('Sidomukti', $labels, true)
@@ -409,7 +450,44 @@ class DashboardDocumentCoverageTest extends TestCase
         });
     }
 
-    public function test_dashboard_query_filter_mengubah_filter_context_dan_mode_sub_level_tetap_stabil(): void
+    public function test_dashboard_role_desa_pokja_iv_menggunakan_blok_activity_bulanan_pokja_sendiri(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $user->assignRole('desa-pokja-iv');
+
+        $this->createActivity($user, 'desa', $desa->id, 'Aktivitas Pokja IV');
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardBlocks', function ($blocks): bool {
+                    $block = collect($blocks)->first();
+                    if (! is_array($block)) {
+                        return false;
+                    }
+
+                    $monthlyValues = $block['charts']['monthly']['values'] ?? [];
+
+                    return ($block['group'] ?? null) === 'pokja-iv'
+                        && ($block['kind'] ?? null) === 'activity'
+                        && ($block['sources']['source_group'] ?? null) === 'pokja-iv'
+                        && ($block['section'] ?? null) === null
+                        && is_array($monthlyValues)
+                        && array_sum($monthlyValues) === 1;
+                });
+        });
+    }
+
+    public function test_dashboard_role_kecamatan_pokja_mengunci_filter_context_ke_level_desa_untuk_breakdown_per_desa(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -452,8 +530,9 @@ class DashboardDocumentCoverageTest extends TestCase
                     $first = collect($blocks)->first();
 
                     return is_array($first)
-                        && ($first['sources']['filter_context']['mode'] ?? null) === 'by-sub-level'
-                        && ($first['sources']['filter_context']['sub_level'] ?? null) === 'desa-gombong';
+                        && ($first['sources']['filter_context']['mode'] ?? null) === 'by-level'
+                        && ($first['sources']['filter_context']['level'] ?? null) === 'desa'
+                        && ($first['sources']['filter_context']['sub_level'] ?? null) === 'all';
                 });
         });
     }
