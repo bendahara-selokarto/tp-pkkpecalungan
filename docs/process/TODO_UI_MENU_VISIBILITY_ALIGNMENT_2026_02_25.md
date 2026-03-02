@@ -102,12 +102,13 @@ Langkah eksekusi batch PDF-sidebar:
   - smoke desktop/mobile sidebar (expand/collapse + active state);
   - [x] verifikasi tidak ada item PDF duplikat;
   - [x] verifikasi gating module-mode tetap bekerja;
-  - [x] `npm run build`.
+  - [x] `npm run build`;
+  - [x] guard unit frontend untuk coverage menu PDF wajib + anti duplikasi + UI-only visibility.
 
 Target output batch:
 - [x] Daftar final semua menu PDF di sidebar (desa + kecamatan + super-admin jika relevan).
 - [x] Daftar route PDF yang dikecualikan beserta alasan teknis.
-- [ ] Bukti validasi UI-only dan residual risk.
+- [x] Bukti validasi UI-only dan residual risk.
 
 ## Validasi (UI Only)
 
@@ -155,3 +156,14 @@ Target output batch:
 - Milestone review aktif:
   - [ ] Review R3: 2026-03-09.
   - [ ] Review R4: 2026-03-16.
+
+## Progress Update 2026-03-02 (Mitigasi 4: Guard Validasi Sidebar PDF)
+
+- Tambah hardening test pada `tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`:
+  - coverage menu PDF statis wajib tetap ada (`bantuans`, `anggota-tim-penggerak-kader`, `agenda-surat/ekspedisi`, dan turunan `catatan-keluarga` 4.24),
+  - guard anti duplikasi sidebar internal (`seenInternalHrefs`),
+  - guard `uiVisibility` untuk `catatan-keluarga` + dua modul `pilot-project` tidak kembali ke `disabled`.
+- Validasi otomatis concern UI-only:
+  - `php artisan test tests/Unit/Frontend/DashboardLayoutMenuContractTest.php tests/Unit/Frontend/NavigationSemanticContractTest.php tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php` (`PASS`, `11` tests, `45` assertions).
+- Residual risk yang masih terbuka:
+  - smoke manual desktop/mobile sidebar (expand/collapse + active state) masih pending karena belum dieksekusi browser interactive pada sesi ini.

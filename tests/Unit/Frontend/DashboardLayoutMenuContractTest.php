@@ -6,12 +6,19 @@ use Tests\TestCase;
 
 class DashboardLayoutMenuContractTest extends TestCase
 {
-    public function test_dashboard_layout_menyaring_item_menu_berdasarkan_module_modes_backend(): void
+    private function readDashboardLayout(): string
     {
         $layoutPath = base_path('resources/js/Layouts/DashboardLayout.vue');
         $content = file_get_contents($layoutPath);
 
         $this->assertNotFalse($content, 'File DashboardLayout.vue tidak dapat dibaca.');
+
+        return $content;
+    }
+
+    public function test_dashboard_layout_menyaring_item_menu_berdasarkan_module_modes_backend(): void
+    {
+        $content = $this->readDashboardLayout();
         $this->assertStringContainsString(
             'const isModuleAllowedForCurrentUser = (item) => {',
             $content
@@ -21,5 +28,34 @@ class DashboardLayoutMenuContractTest extends TestCase
             $content
         );
     }
-}
 
+    public function test_dashboard_layout_mengunci_coverage_menu_pdf_statis_wajib(): void
+    {
+        $content = $this->readDashboardLayout();
+
+        $this->assertStringContainsString('/${scope}/bantuans/report/pdf', $content);
+        $this->assertStringContainsString('/${scope}/anggota-tim-penggerak-kader/report/pdf', $content);
+        $this->assertStringContainsString('/${scope}/agenda-surat/ekspedisi/report/pdf', $content);
+        $this->assertStringContainsString('/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf', $content);
+    }
+
+    public function test_dashboard_layout_mengunci_guard_anti_duplikasi_sidebar_internal(): void
+    {
+        $content = $this->readDashboardLayout();
+
+        $this->assertStringContainsString('const seenInternalHrefs = new Set()', $content);
+        $this->assertStringContainsString('if (!isExternalItem(item) && seenInternalHrefs.has(item.href)) {', $content);
+    }
+
+    public function test_dashboard_layout_tidak_mematikan_ui_visibility_pdf_catatan_dan_pilot_project(): void
+    {
+        $content = $this->readDashboardLayout();
+
+        $this->assertStringContainsString('{ href: `/${scope}/catatan-keluarga`, label: \'Catatan Keluarga\' }', $content);
+        $this->assertStringContainsString('{ href: `/${scope}/pilot-project-naskah-pelaporan`, label: \'Naskah Pelaporan Pilot Project Pokja IV\' }', $content);
+        $this->assertStringContainsString('{ href: `/${scope}/pilot-project-keluarga-sehat`, label: \'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana\' }', $content);
+        $this->assertStringNotContainsString('href: `/${scope}/catatan-keluarga`, label: \'Catatan Keluarga\', uiVisibility: \'disabled\'', $content);
+        $this->assertStringNotContainsString('href: `/${scope}/pilot-project-naskah-pelaporan`, label: \'Naskah Pelaporan Pilot Project Pokja IV\', uiVisibility: \'disabled\'', $content);
+        $this->assertStringNotContainsString('href: `/${scope}/pilot-project-keluarga-sehat`, label: \'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana\', uiVisibility: \'disabled\'', $content);
+    }
+}
