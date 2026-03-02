@@ -34,13 +34,13 @@ const shouldRender = computed(() => Array.isArray(props.links) && props.links.le
       <template v-for="(link, index) in links" :key="`page-${index}`">
         <span
           v-if="!link.url"
-          class="rounded-md border border-gray-200 px-3 py-1.5 text-xs text-gray-400 dark:border-slate-700 dark:text-gray-500"
+          class="inline-flex min-h-[44px] items-center justify-center rounded-md border border-gray-200 px-3 py-2 text-xs text-gray-400 dark:border-slate-700 dark:text-gray-500"
           v-html="link.label"
         />
         <Link
           v-else
           :href="link.url"
-          class="rounded-md border px-3 py-1.5 text-xs"
+          class="inline-flex min-h-[44px] items-center justify-center rounded-md border px-3 py-2 text-xs"
           :class="link.active
             ? 'border-emerald-600 bg-emerald-600 text-white'
             : 'border-gray-200 text-gray-700 hover:bg-gray-100 dark:border-slate-700 dark:text-gray-300 dark:hover:bg-slate-800'"

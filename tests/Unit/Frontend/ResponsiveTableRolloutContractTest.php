@@ -15,6 +15,7 @@ class ResponsiveTableRolloutContractTest extends TestCase
         return [
             'super-admin-users' => ['path' => 'resources/js/Pages/SuperAdmin/Users/Index.vue'],
             'arsip-index' => ['path' => 'resources/js/Pages/Arsip/Index.vue'],
+            'super-admin-arsip' => ['path' => 'resources/js/Pages/SuperAdmin/Arsip/Index.vue'],
         ];
     }
 

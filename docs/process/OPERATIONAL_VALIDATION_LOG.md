@@ -1299,3 +1299,31 @@ Keputusan:
 
 Status:
 - `PASS` (`mitigation-closed`).
+
+## Refactor Responsive UX Layout (`UXR26A1`) - Batch SuperAdmin Arsip: 2026-03-02
+
+Ruang lingkup:
+- Melanjutkan rollout concern `UXR26A1` pada halaman prioritas `SuperAdmin/Arsip/Index` dengan kontrak `ResponsiveDataTable`.
+- Menstandarkan target sentuh minimum `44px` untuk interaksi pagination dan aksi utama/sekunder pada batch aktif.
+
+Artefak:
+- `resources/js/Pages/SuperAdmin/Arsip/Index.vue`
+- `resources/js/admin-one/components/PaginationBar.vue`
+- `tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php`
+- `docs/process/TODO_UXR26A1_REFACTOR_RESPONSIVE_UX_LAYOUT_2026_03_01.md`
+
+Perintah validasi:
+- `php artisan test tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php`
+  - hasil: `PASS` (`5` tests, `19` assertions).
+- `php artisan test --filter ArsipManagementTest`
+  - hasil: `PASS` (`6` tests, `98` assertions).
+- `cmd /c npm run build`
+  - hasil: `PASS` (`vite build`, built in `11.49s`).
+
+Keputusan:
+- Rollout `ResponsiveDataTable` diperluas ke jalur super-admin arsip dengan fallback legacy tetap aktif lewat feature flag `VITE_UI_RESPONSIVE_TABLE_V2`.
+- Utility sentuh minimum `min-h-[44px]` dikunci di `PaginationBar` agar konsisten lintas halaman yang memakai komponen reusable.
+- Concern `UXR26A1` tetap `in-progress`; batch berikutnya fokus `R5-R7` (semantic click elements, modal accessibility guard, state standardization).
+
+Status:
+- `PASS` (`batch-completed`, `concern-still-in-progress`).

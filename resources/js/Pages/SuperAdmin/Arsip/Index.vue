@@ -2,6 +2,7 @@
 import CardBox from '@/admin-one/components/CardBox.vue'
 import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import PaginationBar from '@/admin-one/components/PaginationBar.vue'
+import ResponsiveDataTable from '@/admin-one/components/ResponsiveDataTable.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { Link, router } from '@inertiajs/vue3'
@@ -27,7 +28,18 @@ const props = defineProps({
 
 const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
+const isResponsiveTableV2Enabled = computed(() => import.meta.env.VITE_UI_RESPONSIVE_TABLE_V2 !== 'false')
 const perPage = computed(() => props.filters.per_page ?? 10)
+const arsipManagementTableColumns = [
+  { key: 'title', label: 'Judul', mobileLabel: 'Judul Dokumen' },
+  { key: 'file', label: 'File', mobileLabel: 'Nama File' },
+  { key: 'type', label: 'Tipe', mobileLabel: 'Tipe Arsip' },
+  { key: 'creator_name', label: 'Pengunggah', mobileLabel: 'Pengunggah' },
+  { key: 'size', label: 'Ukuran', mobileLabel: 'Ukuran File' },
+  { key: 'download_count', label: 'Diunduh', mobileLabel: 'Jumlah Unduh' },
+  { key: 'updated_at', label: 'Diperbarui', mobileLabel: 'Terakhir Diperbarui' },
+  { key: 'actions', label: 'Aksi', mobileLabel: 'Aksi', headerClass: 'w-44' },
+]
 
 const formatBytes = (sizeInBytes) => {
   const size = Number(sizeInBytes)
@@ -100,14 +112,14 @@ const updatePerPage = (event) => {
     <SectionTitleLineWithButton :icon="mdiArchiveEdit" title="Management Arsip" main />
 
     <CardBox>
-      <div class="mb-4 flex items-center justify-between gap-4">
+      <div class="mb-4 flex flex-wrap items-center justify-between gap-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Dokumen Arsip</h3>
-        <div class="flex items-center gap-2">
-          <label class="text-xs text-gray-600 dark:text-gray-300">
+        <div class="flex flex-wrap items-center gap-2">
+          <label class="inline-flex min-h-[44px] items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
             Per halaman
             <select
               :value="perPage"
-              class="ml-2 rounded-md border border-gray-300 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+              class="min-h-[44px] rounded-md border border-gray-300 px-3 py-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
               @change="updatePerPage"
             >
               <option v-for="option in pagination.perPageOptions" :key="`per-page-${option}`" :value="option">
@@ -117,14 +129,74 @@ const updatePerPage = (event) => {
           </label>
           <Link
             href="/super-admin/arsip/create"
-            class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+            class="inline-flex min-h-[44px] items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
             + Tambah Dokumen
           </Link>
         </div>
       </div>
 
-      <div class="overflow-x-auto">
+      <ResponsiveDataTable
+        v-if="isResponsiveTableV2Enabled"
+        :columns="arsipManagementTableColumns"
+        :rows="documents.data"
+        row-key="id"
+        min-width-class="min-w-[960px]"
+        empty-text="Belum ada dokumen arsip yang dikelola."
+      >
+        <template #cell-title="{ row }">
+          <div class="text-left">
+            <p class="font-medium text-gray-900 dark:text-gray-100">{{ row.title }}</p>
+            <p v-if="row.description" class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              {{ row.description }}
+            </p>
+          </div>
+        </template>
+        <template #cell-file="{ row }">
+          <p class="text-left text-gray-700 dark:text-gray-300">{{ row.original_name }}</p>
+        </template>
+        <template #cell-type="{ row }">
+          <span
+            class="inline-flex min-h-[44px] items-center rounded border px-3 py-2 text-xs font-semibold"
+            :class="row.is_global
+              ? 'border-emerald-200 text-emerald-700 dark:border-emerald-900/50 dark:text-emerald-300'
+              : 'border-amber-200 text-amber-700 dark:border-amber-900/50 dark:text-amber-300'"
+          >
+            {{ row.is_global ? 'Global' : 'Pribadi' }}
+          </span>
+        </template>
+        <template #cell-creator_name="{ row }">
+          {{ row.creator_name || '-' }}
+        </template>
+        <template #cell-size="{ row }">
+          {{ formatBytes(row.size_bytes) }}
+        </template>
+        <template #cell-download_count="{ row }">
+          {{ row.download_count }}
+        </template>
+        <template #cell-updated_at="{ row }">
+          {{ formatDateTime(row.updated_at) }}
+        </template>
+        <template #cell-actions="{ row }">
+          <div class="flex flex-wrap items-center justify-end gap-2 lg:justify-start">
+            <Link
+              :href="`/super-admin/arsip/${row.id}/edit`"
+              class="inline-flex min-h-[44px] items-center rounded-md border border-amber-200 px-4 py-2 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
+            >
+              Edit
+            </Link>
+            <button
+              type="button"
+              class="inline-flex min-h-[44px] items-center rounded-md border border-rose-200 px-4 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
+              @click="openDeleteModal(row.id)"
+            >
+              Hapus
+            </button>
+          </div>
+        </template>
+      </ResponsiveDataTable>
+
+      <div v-else class="overflow-x-auto">
         <table class="w-full min-w-[960px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
@@ -153,7 +225,7 @@ const updatePerPage = (event) => {
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ document.original_name }}</td>
               <td class="px-3 py-3">
                 <span
-                  class="inline-flex rounded border px-2 py-1 text-xs font-semibold"
+                  class="inline-flex min-h-[44px] items-center rounded border px-3 py-2 text-xs font-semibold"
                   :class="document.is_global
                     ? 'border-emerald-200 text-emerald-700 dark:border-emerald-900/50 dark:text-emerald-300'
                     : 'border-amber-200 text-amber-700 dark:border-amber-900/50 dark:text-amber-300'"
@@ -169,13 +241,13 @@ const updatePerPage = (event) => {
                 <div class="flex items-center gap-2">
                   <Link
                     :href="`/super-admin/arsip/${document.id}/edit`"
-                    class="inline-flex rounded-md border border-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
+                    class="inline-flex min-h-[44px] items-center rounded-md border border-amber-200 px-4 py-2 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
                   >
                     Edit
                   </Link>
                   <button
                     type="button"
-                    class="inline-flex rounded-md border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
+                    class="inline-flex min-h-[44px] items-center rounded-md border border-rose-200 px-4 py-2 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
                     @click="openDeleteModal(document.id)"
                   >
                     Hapus
