@@ -1,7 +1,7 @@
 # TODO UXR26A1 Refactor Responsive UX Layout 2026-03-01
 
 Tanggal: 2026-03-01  
-Status: `in-progress` (`state:responsive-ux-refactor`)
+Status: `done` (`state:responsive-ux-closed`)
 
 ## Konteks
 - Audit UI/UX menemukan isu struktural lintas halaman: tabel mobile kehilangan konteks kolom, target sentuh kecil, dan interaksi navigasi belum konsisten untuk aksesibilitas.
@@ -24,15 +24,15 @@ Status: `in-progress` (`state:responsive-ux-refactor`)
 - [x] `R8` Jalankan rollout bertahap per modul agar tidak memicu behavior drift lintas domain.
 
 ## Validasi
-- [ ] Uji manual breakpoint `360/390/768/1024/1280` untuk halaman prioritas.
-- [ ] Tidak ada kehilangan konteks kolom saat mobile pada halaman index yang direfactor.
-- [ ] Aksi utama/sekunder tetap dapat dipicu dengan keyboard (`Tab`, `Enter`, `Space`, `Escape`).
-- [ ] `php artisan test` tetap hijau setelah batch refactor yang signifikan.
+- [x] Uji manual breakpoint `360/390/768/1024/1280` untuk halaman prioritas.
+- [x] Tidak ada kehilangan konteks kolom saat mobile pada halaman index yang direfactor.
+- [x] Aksi utama/sekunder tetap dapat dipicu dengan keyboard (`Tab`, `Enter`, `Space`, `Escape`).
+- [x] `php artisan test` tetap hijau setelah batch refactor yang signifikan.
 
 ## Risiko
-- [ ] Risiko regresi visual lintas modul karena banyak halaman memakai pola tabel yang sama.
-- [ ] Risiko ketidakkonsistenan jika refactor dilakukan parsial tanpa kontrak komponen tunggal.
-- [ ] Risiko scope creep bila refactor UI bercampur perubahan domain/backend.
+- [x] Risiko regresi visual lintas modul karena banyak halaman memakai pola tabel yang sama.
+- [x] Risiko ketidakkonsistenan jika refactor dilakukan parsial tanpa kontrak komponen tunggal.
+- [x] Risiko scope creep bila refactor UI bercampur perubahan domain/backend.
 
 ## Mitigasi per Risiko
 - [x] `M1` Rollout bertahap per batch halaman prioritas (`Dashboard` -> `SuperAdmin Users` -> `Arsip` -> CRUD lain).
@@ -48,12 +48,12 @@ Status: `in-progress` (`state:responsive-ux-refactor`)
 - [x] `M11` Sinkronkan status concern dashboard pada registry SOT sebelum concern UI batch dinyatakan selesai.
 
 ## Exit Criteria Mitigasi
-- [ ] Semua halaman batch aktif lolos uji breakpoint `360/390/768/1024/1280` tanpa layout break.
-- [ ] Tabel mobile batch aktif tetap terbaca dengan label kolom yang jelas.
-- [ ] Komponen interaktif utama batch aktif memenuhi minimum target sentuh 44px.
-- [ ] Kontrol filter utama Dashboard (`Cara Tampil`, `Cakupan Wilayah`, `Wilayah Turunan`, `Tampilkan Data`) memenuhi minimum target sentuh 44px.
-- [ ] Navigasi dan modal batch aktif usable penuh via keyboard (`Tab`, `Enter`, `Space`, `Escape`).
-- [ ] Tidak ada perubahan route/use case/repository/policy pada PR refactor concern ini.
+- [x] Semua halaman batch aktif lolos uji breakpoint `360/390/768/1024/1280` tanpa layout break.
+- [x] Tabel mobile batch aktif tetap terbaca dengan label kolom yang jelas.
+- [x] Komponen interaktif utama batch aktif memenuhi minimum target sentuh 44px.
+- [x] Kontrol filter utama Dashboard (`Cara Tampil`, `Cakupan Wilayah`, `Wilayah Turunan`, `Tampilkan Data`) memenuhi minimum target sentuh 44px.
+- [x] Navigasi dan modal batch aktif usable penuh via keyboard (`Tab`, `Enter`, `Space`, `Escape`).
+- [x] Tidak ada perubahan route/use case/repository/policy pada PR refactor concern ini.
 
 ## Keputusan Dikunci
 - [x] Refactor difokuskan ke layer UI dan aksesibilitas tanpa mengubah kontrak domain backend.
@@ -95,3 +95,9 @@ Status: `in-progress` (`state:responsive-ux-refactor`)
 - Validasi otomatis batch:
   - `php artisan test tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php tests/Unit/Frontend/NavigationSemanticContractTest.php tests/Unit/Frontend/ModalAccessibilityContractTest.php tests/Unit/Frontend/ResponsiveTableStateContractTest.php` (`PASS`, `10` tests, `46` assertions).
   - `cmd /c npm run build` (`PASS`, `vite build`, built in 17.38s).
+
+## Progress Update 2026-03-02 (Closure Concern)
+- Revalidasi suite penuh pasca batch UXR:
+  - `php artisan test`
+  - hasil: `PASS` (`1047` tests, `7033` assertions).
+- Concern `UXR26A1` ditutup ke `done`; residual guard tetap dijaga oleh kontrak frontend (`ResponsiveTableRollout`, `DashboardResponsiveInteraction`, `NavigationSemantic`, `ModalAccessibility`, `ResponsiveTableState`).

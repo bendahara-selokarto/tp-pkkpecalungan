@@ -31,7 +31,8 @@ Related ADR: `-`
   - trigger dinamis terverifikasi pada `DashboardLayout` (`/${scope}/...`), `props.scopePrefix` (pilot project), dan `props.routes.print` (activity detail print).
 - [x] Validasi controller -> view PDF:
   - `pdf_view_references=52`, `missing_pdf_view_files=0` dari audit `loadView('pdf.*')`.
-- [ ] `php artisan test` pada batch rilis jika concern ini disertakan ke release candidate.
+- [x] `php artisan test` pada batch rilis jika concern ini disertakan ke release candidate.
+  - hasil validasi sesi 2026-03-02: `PASS` (`1047` tests, `7033` assertions).
 
 ## Risiko
 - False-positive audit jika route dinamis tidak dimasukkan (`scopePrefix`/`routes.print`).

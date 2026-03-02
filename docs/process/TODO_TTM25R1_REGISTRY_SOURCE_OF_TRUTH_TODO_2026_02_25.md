@@ -32,7 +32,7 @@ Status: `in-progress` (`state:truth-registry`, `state:deterministic-routing`)
 | `C-BUKU-ADMIN` | Ketersediaan dan autentik buku administrasi PKK | `docs/process/TODO_KETERSEDIAAN_BUKU_ADMIN_PKK_2026_02_27.md` | `done` | `docs/process/TODO_AUTENTIK_SEKRETARIS_INTI_2026_02_27.md` (`child-spec:done`) | Concern ketersediaan buku ditutup setelah child concern autentik sekretaris inti dikunci (status `unverified-local-extension` untuk ekstensi lokal tanpa template primer resmi, sinkronisasi 2026-03-02). |
 | `C-UI-RUNTIME` | Guardrail runtime UI | `docs/process/TODO_UI_RUNTIME_GUARDRAIL_2026_02_24.md` | `done` | - | Concern tunggal, tidak overlap aktif. |
 | `C-UI-PAGINATION` | Pagination UI E2E | `docs/process/TODO_PGM26A1_MITIGASI_GAP_PAGINATION_2026_03_02.md` | `done` (`mitigation-closed-2026-03-02`) | `docs/process/TODO_UI_PAGINATION_E2E_2026_02_24.md` (`historical-baseline:done`) | Concern pagination ditutup di `PGM26A1`; `UIP26A1` dipertahankan sebagai baseline historis fase awal E2E. |
-| `C-UI-RESPONSIVE` | Refactor responsive UX layout lintas halaman | `docs/process/TODO_UXR26A1_REFACTOR_RESPONSIVE_UX_LAYOUT_2026_03_01.md` | `in-progress` (`state:responsive-ux-refactor`) | `TODO_REFACTOR_DASHBOARD_*`, `TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md` (`related-concern`) | Untuk struktur responsif tabel, target sentuh mobile, dan aksesibilitas interaksi: ikuti `UXR26A1` sebagai jalur utama. |
+| `C-UI-RESPONSIVE` | Refactor responsive UX layout lintas halaman | `docs/process/TODO_UXR26A1_REFACTOR_RESPONSIVE_UX_LAYOUT_2026_03_01.md` | `done` (`state:responsive-ux-closed`) | `TODO_REFACTOR_DASHBOARD_*`, `TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md` (`related-concern`) | Concern ditutup setelah rollout bertahap Dashboard/SuperAdmin/Arsip + hardening semantik navigasi + guard modal aksesibel + standardisasi state list tervalidasi dengan full suite hijau. |
 | `C-USER-GUIDE` | User guide natural humanis | `docs/process/TODO_USER_GUIDE_NATURAL_HUMANIS_2026_02_24.md` | `done` | - | Concern tunggal, tidak overlap aktif. |
 | `C-DATABASE-NORMALISASI` | Normalisasi database & legacy reduction | `docs/process/TODO_NORMALISASI_DATABASE_2026_02_24.md` | `done` | `TODO_CLEANUP_HIERARKI_FOLDER_2026_02_23.md`, `TODO_COVERAGE_UNIT_TEST_DAN_SEEDER_2026_02_22.md` | Untuk keputusan struktur data legacy gunakan TODO normalisasi sebagai acuan utama. |
 | `C-ACCESS-CONTROL` | Management ijin akses modul-group role oleh super-admin | `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md` | `done` (`state:phased-rollout-closed`) | `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md` (`decision-record`), `TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md` (`child-spec:done`), `TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md` (`child-spec:done`), `TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md` (`child-spec:done`), `TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md` (`child-spec:done`) | Concern ACL ditutup setelah keputusan stakeholder `go`, rollout batch 2 `agenda-surat`, regression gate ACL hijau, dan fallback rollback/hardcoded tetap tersedia. |
@@ -84,6 +84,7 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 - [x] Concern `C-SIDEBAR-UI` disinkronkan dengan guard active-state + persistensi collapse sidebar (`UVM25R1`): kontrak `isItemActive` dan `localStorage` collapse key dikunci pada test frontend (sinkronisasi 2026-03-02).
 - [x] Concern `C-UI-RESPONSIVE` disinkronkan dengan mitigasi navigasi semantik (`UXR26A1`): trigger dropdown navbar/aside dipaksa elemen semantik dan dikunci lewat test kontrak frontend (sinkronisasi 2026-03-02).
 - [x] Concern `C-UI-RESPONSIVE` disinkronkan dengan batch aksesibilitas modal + standardisasi state list (`UXR26A1`): guard fokus/escape modal dan state `loading|error|disabled` pada `ResponsiveDataTable` ditutup lewat test kontrak frontend (sinkronisasi 2026-03-02).
+- [x] Concern `C-UI-RESPONSIVE` ditutup ke `done` setelah revalidasi full suite pasca hardening (`PASS`, `1047` tests, `7033` assertions) pada 2026-03-02.
 
 ## Kriteria Exit Rolling
 
@@ -120,7 +121,6 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 
 - [x] Snapshot final concern `in-progress` dikunci ulang:
   - `UVM25R1` (`rolling-ui-exp`),
-  - `UXR26A1` (`responsive-ux-refactor`),
   - `TTM25R1` (`truth-registry`).
 - [x] Drift SOT/status/checklist lintas concern aktif diverifikasi tidak bertambah pada sesi ini.
 - [x] Paket validasi gabungan concern aktif dijalankan untuk memastikan stabilitas baseline sebelum review R1:
