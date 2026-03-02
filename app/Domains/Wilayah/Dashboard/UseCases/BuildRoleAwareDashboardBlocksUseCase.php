@@ -76,7 +76,6 @@ class BuildRoleAwareDashboardBlocksUseCase
 
         if ($this->shouldUseSekretarisSections($groupModes)) {
             return $this->buildSekretarisSectionBlocks(
-                $user,
                 $effectiveScope,
                 $groupModes,
                 $activityData,
@@ -574,7 +573,6 @@ class BuildRoleAwareDashboardBlocksUseCase
      * @return array<int, array<string, mixed>>
      */
     private function buildSekretarisSectionBlocks(
-        User $user,
         string $effectiveScope,
         array $groupModes,
         array $activityData,
@@ -593,10 +591,6 @@ class BuildRoleAwareDashboardBlocksUseCase
             $dashboardContext['section2_group'] ?? null,
             $availablePokjaGroups
         );
-        $selectedSection3Group = $this->resolveSelectedPokjaGroup(
-            $dashboardContext['section3_group'] ?? null,
-            $availablePokjaGroups
-        );
 
         $blocks[] = $this->buildActivityBlock(
             $effectiveScope,
@@ -609,7 +603,7 @@ class BuildRoleAwareDashboardBlocksUseCase
                 'sub_level' => 'all',
                 'section1_month' => $dashboardContext['section1_month'] ?? 'all',
                 'section2_group' => $selectedSection2Group ?? 'all',
-                'section3_group' => $selectedSection3Group ?? 'all',
+                'section3_group' => 'all',
             ],
             $this->buildSectionMeta(self::SECTION_SEKRETARIS_1, $effectiveScope)
         );
@@ -647,75 +641,11 @@ class BuildRoleAwareDashboardBlocksUseCase
                     'sub_level' => 'all',
                     'section1_month' => $dashboardContext['section1_month'] ?? 'all',
                     'section2_group' => $selectedSection2Group ?? 'all',
-                    'section3_group' => $selectedSection3Group ?? 'all',
+                    'section3_group' => 'all',
                 ],
                 $this->buildSectionMeta(self::SECTION_SEKRETARIS_2, $effectiveScope),
                 ''
             );
-        }
-
-        if ($effectiveScope !== ScopeLevel::KECAMATAN->value) {
-            return $blocks;
-        }
-
-        $section3Groups = $selectedSection3Group === null
-            ? $availablePokjaGroups
-            : [$selectedSection3Group];
-
-        foreach ($section3Groups as $groupKey) {
-            $modules = $this->roleMenuVisibilityService->modulesForGroup($groupKey);
-            if ($modules === []) {
-                continue;
-            }
-
-            $groupMode = (string) ($groupModes[$groupKey] ?? RoleMenuVisibilityService::MODE_READ_ONLY);
-            $section3Block = $this->buildKecamatanPokjaByDesaBlock(
-                $user,
-                $groupKey,
-                $groupMode,
-                $effectiveScope,
-                $modules,
-                [
-                    'mode' => 'by-level',
-                    'level' => ScopeLevel::DESA->value,
-                    'sub_level' => 'all',
-                    'section1_month' => $dashboardContext['section1_month'] ?? 'all',
-                    'section2_group' => $selectedSection2Group ?? 'all',
-                    'section3_group' => $selectedSection3Group ?? 'all',
-                ]
-            );
-
-            if (! is_array($section3Block)) {
-                continue;
-            }
-
-            $blocks[] = $this->attachSection(
-                $section3Block,
-                $this->buildSectionMeta(self::SECTION_SEKRETARIS_3, $effectiveScope)
-            );
-        }
-
-        if (
-            $this->shouldRenderSekretarisSection4(
-                $effectiveScope,
-                $availablePokjaGroups,
-                ['section3_group' => $selectedSection3Group ?? 'all']
-            )
-        ) {
-            $section4Block = $this->buildSekretarisSection4Block(
-                $user,
-                $effectiveScope,
-                (string) ($groupModes['pokja-i'] ?? RoleMenuVisibilityService::MODE_READ_ONLY),
-                [
-                    'section1_month' => $dashboardContext['section1_month'] ?? 'all',
-                    'section2_group' => $selectedSection2Group ?? 'all',
-                    'section3_group' => $selectedSection3Group ?? 'all',
-                ]
-            );
-
-            if (is_array($section4Block)) {
-                $blocks[] = $section4Block;
-            }
         }
 
         return $blocks;

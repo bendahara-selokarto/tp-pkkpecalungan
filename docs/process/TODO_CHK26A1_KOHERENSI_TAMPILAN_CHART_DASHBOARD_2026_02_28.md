@@ -56,3 +56,56 @@ Related ADR: `-`
 - [x] Ringkasan apa yang diubah dan kenapa.
 - [x] Daftar file terdampak.
 - [x] Hasil validasi + residual risk.
+
+## Progress Update 2026-03-02 (Section Simplification Lock)
+- Konfirmasi owner: domain Pokja tetap `I-IV` (tidak ada `V`).
+- Representasi section dashboard disederhanakan:
+  - section aktif disisakan `sekretaris-section-1` dan `sekretaris-section-2`,
+  - `sekretaris-section-3` dan `sekretaris-section-4` dinonaktifkan dari alur build block.
+- Scope tetap dikunci:
+  - role pokja hanya menampilkan cakupan group miliknya sendiri,
+  - sekretaris desa tetap scoped ke desa sendiri,
+  - sekretaris kecamatan tetap scoped ke kecamatan sendiri (dengan agregasi desa turunan tetap pada chart aktivitas section 1).
+- Validasi:
+  - `php artisan test tests/Feature/DashboardDocumentCoverageTest.php`
+  - `php artisan test tests/Feature/DashboardActivityChartTest.php`
+  - `php artisan test tests/Unit/Dashboard/DashboardGroupCoverageRepositoryTest.php`
+  - hasil: `PASS`.
+
+## Kontrak Aturan Dashboard Final (Lock 2026-03-02)
+
+### A. Aturan Section
+- Semua role dashboard hanya memakai `section 1` dan `section 2`.
+- `section 3` dan `section 4` tidak dipakai pada build block aktif.
+- Domain Pokja tetap `I-IV` (tidak ada `V`).
+
+### B. Aturan Cakupan Data per Role
+- `kecamatan-pokja`: hanya data Pokja miliknya sendiri.
+- `desa-pokja`: hanya data Pokja miliknya sendiri.
+- `desa-sekretaris`: hanya data desanya sendiri.
+- `kecamatan-sekretaris`:
+  - mencakup agregasi desa dalam kecamatannya sendiri,
+  - tetap menampilkan 2 section dengan cakupan kecamatannya sendiri.
+
+### C. Aturan Filter per Role
+- Role desa (`desa-pokja`, `desa-sekretaris`): hanya filter `bulan`.
+- Role pokja kecamatan (`kecamatan-pokja`): hanya filter `bulan`.
+- Role sekretaris kecamatan (`kecamatan-sekretaris`): filter `bulan` + `level`.
+
+### D. Aturan Visual Chart
+- Chart kegiatan menggunakan `pie` dan wajib responsif terhadap filter aktif.
+- Perbandingan `Jumlah Buku` vs `Buku Terisi` menggunakan chart `bar`.
+- Warna bar dikunci kontras tinggi untuk keterbacaan:
+  - `Jumlah Buku`: biru tegas (`#1d4ed8`)
+  - `Buku Terisi`: ungu tegas (`#7e22ce`)
+
+### E. Aturan Interaktivitas Ringkasan
+- Kartu ringkasan (`Total Kegiatan`, `Bulan Ini`, `Jumlah Buku`, `Buku Terisi`, `Buku Belum Terisi`) wajib interaktif terhadap:
+  - user aktif (role/scope),
+  - filter aktif (minimal bulan; dan level jika role mendukung).
+- Nilai ringkasan harus mengikuti dataset chart aktif, bukan angka statis yang terlepas dari filter.
+
+### F. Guardrail Implementasi
+- Frontend hanya render/consume; authority akses tetap backend (`Policy` + `Scope Service`).
+- Perubahan visual/filter tidak boleh mengubah kontrak canonical `role/scope/area`.
+- Jika ada penambahan menu/domain baru, wajib audit ulang KPI/chart coverage dashboard dan tulis justifikasi bila tidak ditampilkan.

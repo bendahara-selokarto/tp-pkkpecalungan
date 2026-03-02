@@ -229,7 +229,7 @@ class DashboardDocumentCoverageTest extends TestCase
         });
     }
 
-    public function test_dashboard_kecamatan_sekretaris_menghasilkan_section_1_2_3_dan_filter_context_sinkron_dengan_query(): void
+    public function test_dashboard_kecamatan_sekretaris_hanya_menghasilkan_section_1_dan_2_dan_filter_context_sinkron_dengan_query(): void
     {
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -265,7 +265,7 @@ class DashboardDocumentCoverageTest extends TestCase
 
                     return is_array($section1)
                         && is_array($section2)
-                        && is_array($section3)
+                        && $section3 === null
                         && $section4 === null
                         && ($section1['section']['source_level'] ?? null) === 'kecamatan'
                         && ($section1['charts']['by_desa']['labels'] ?? null) === ['Gombong']
@@ -276,16 +276,12 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ($section2['section']['filter']['query_key'] ?? null) === 'section2_group'
                         && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'pokja-i'
                         && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
-                        && ($section3['group'] ?? null) === 'pokja-ii'
-                        && ($section3['section']['filter']['query_key'] ?? null) === 'section3_group'
-                        && ($section3['sources']['source_area_type'] ?? null) === 'desa-turunan'
-                        && ($section3['sources']['filter_context']['section3_group'] ?? null) === 'pokja-ii'
-                        && ($section3['sources']['filter_context']['level'] ?? null) === 'desa';
+                        && ($section2['sources']['filter_context']['section3_group'] ?? null) === 'all';
                 });
         });
     }
 
-    public function test_dashboard_kecamatan_sekretaris_menampilkan_section_4_saat_section3_group_pokja_i(): void
+    public function test_dashboard_kecamatan_sekretaris_mengabaikan_section3_group_dan_tetap_hanya_section_1_dan_2(): void
     {
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -323,27 +319,11 @@ class DashboardDocumentCoverageTest extends TestCase
                     $section4 = $collected
                         ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
 
-                    $section3Items = collect($section3['charts']['coverage_per_module']['items'] ?? []);
-                    $section4Items = collect($section4['charts']['coverage_per_module']['items'] ?? []);
-                    $section3Labels = $section3Items->pluck('label')->all();
-                    $section4Labels = $section4Items->pluck('label')->all();
-
                     return is_array($section1)
                         && is_array($section2)
-                        && is_array($section3)
-                        && is_array($section4)
-                        && ($section3['group'] ?? null) === 'pokja-i'
-                        && ($section3['sources']['filter_context']['section3_group'] ?? null) === 'pokja-i'
-                        && ($section4['group'] ?? null) === 'pokja-i'
-                        && ($section4['section']['depends_on'] ?? null) === 'section3_group:pokja-i'
-                        && ($section4['sources']['source_area_type'] ?? null) === 'desa-turunan'
-                        && ($section4['sources']['filter_context']['section3_group'] ?? null) === 'pokja-i'
-                        && in_array('Gombong', $section3Labels, true)
-                        && in_array('Bandung', $section3Labels, true)
-                        && ! in_array('Sidomukti', $section3Labels, true)
-                        && in_array('Gombong', $section4Labels, true)
-                        && in_array('Bandung', $section4Labels, true)
-                        && ! in_array('Sidomukti', $section4Labels, true);
+                        && $section3 === null
+                        && $section4 === null
+                        && ($section2['sources']['filter_context']['section3_group'] ?? null) === 'all';
                 });
         });
     }

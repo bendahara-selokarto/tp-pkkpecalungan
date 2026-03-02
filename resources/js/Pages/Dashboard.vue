@@ -68,12 +68,45 @@ const isDesaPokjaUser = computed(() =>
   authUser.value?.scope === 'desa'
   && authRoles.value.some((role) => role.startsWith('desa-pokja-')),
 )
+const isDesaScopeUser = computed(() => authUser.value?.scope === 'desa')
+const isKecamatanPokjaUser = computed(() =>
+  authUser.value?.scope === 'kecamatan'
+  && authRoles.value.some((role) => role.startsWith('kecamatan-pokja-')),
+)
+const isKecamatanSekretarisUser = computed(() =>
+  authRoles.value.includes('kecamatan-sekretaris')
+  || authRoles.value.includes('admin-kecamatan'),
+)
 const isSekretarisUser = computed(() =>
   authRoles.value.includes('desa-sekretaris')
   || authRoles.value.includes('kecamatan-sekretaris')
   || authRoles.value.includes('admin-desa')
   || authRoles.value.includes('admin-kecamatan'),
 )
+const useMonthOnlyFilters = computed(() =>
+  isDesaScopeUser.value || isKecamatanPokjaUser.value,
+)
+const useMonthAndLevelFilters = computed(() =>
+  isKecamatanSekretarisUser.value,
+)
+const showModeFilter = computed(() =>
+  !useMonthOnlyFilters.value && !useMonthAndLevelFilters.value,
+)
+const showLevelFilter = computed(() =>
+  useMonthAndLevelFilters.value || showModeFilter.value,
+)
+const showSubLevelFilter = computed(() => showModeFilter.value)
+const filterGridClassName = computed(() => {
+  if (useMonthOnlyFilters.value) {
+    return 'md:grid-cols-2 xl:grid-cols-2'
+  }
+
+  if (useMonthAndLevelFilters.value) {
+    return 'md:grid-cols-2 xl:grid-cols-3'
+  }
+
+  return 'md:grid-cols-2 xl:grid-cols-5'
+})
 const SECTION_GROUP_OPTIONS = [
   { value: 'all', label: 'Semua Pokja' },
   { value: 'pokja-i', label: 'Pokja I' },
@@ -117,6 +150,8 @@ const CHART_GRID_STROKE_DASH = 4
 const CHART_TOOLTIP_THEME = 'light'
 const CHART_BAR_BORDER_RADIUS = 4
 const CHART_PIE_COLORS = ['#06b6d4', '#f97316', '#ef4444', '#22c55e', '#a855f7', '#eab308', '#0f766e', '#db2777', '#1d4ed8', '#65a30d']
+const CHART_BOOK_TOTAL_COLOR = '#1d4ed8'
+const CHART_BOOK_FILLED_COLOR = '#7e22ce'
 
 const USER_SECTION_LABELS = {
   'sekretaris-section-1': 'Ringkasan Tugas Sekretaris',
@@ -348,10 +383,16 @@ const visibleDashboardBlocks = computed(() =>
 )
 const blockSupportsMonthFilter = (block) =>
   block?.kind === 'activity'
-  && ['labels', 'values', 'books_total', 'books_filled'].some((metricKey) => {
-    const values = block?.charts?.by_desa?.[metricKey]
-    return Array.isArray(values) && values.length > 0
-  })
+  && (
+    ['labels', 'values', 'books_total', 'books_filled'].some((metricKey) => {
+      const values = block?.charts?.by_desa?.[metricKey]
+      return Array.isArray(values) && values.length > 0
+    })
+    || ['labels', 'values'].some((metricKey) => {
+      const values = block?.charts?.monthly?.[metricKey]
+      return Array.isArray(values) && values.length > 0
+    })
+  )
 const hasMonthFilterAwareBlocks = computed(() =>
   visibleDashboardBlocks.value.some((block) => blockSupportsMonthFilter(block)),
 )
@@ -370,6 +411,13 @@ watch(
 const sekretarisDefaultLevel = computed(() =>
   authUser.value?.scope === 'kecamatan' ? 'kecamatan' : 'desa',
 )
+const resolveSekretarisLevelFilter = () => {
+  if (isKecamatanSekretarisUser.value) {
+    return resolveOptionValue(selectedLevel.value, LEVEL_OPTIONS, 'all')
+  }
+
+  return sekretarisDefaultLevel.value
+}
 
 watch(
   () => page.url,
@@ -387,12 +435,29 @@ watch(
 const isByLevelMode = computed(() => selectedMode.value === 'by-level')
 const isBySubLevelMode = computed(() => selectedMode.value === 'by-sub-level')
 
-const buildGlobalFilterQuery = () => ({
-  mode: selectedMode.value,
-  level: isByLevelMode.value ? selectedLevel.value : 'all',
-  sub_level: isBySubLevelMode.value ? selectedSubLevel.value : 'all',
-  section1_month: normalizedSection1Month.value,
-})
+const buildGlobalFilterQuery = () => {
+  if (useMonthOnlyFilters.value) {
+    return {
+      section1_month: normalizedSection1Month.value,
+    }
+  }
+
+  if (useMonthAndLevelFilters.value) {
+    return {
+      mode: 'by-level',
+      level: resolveSekretarisLevelFilter(),
+      sub_level: 'all',
+      section1_month: normalizedSection1Month.value,
+    }
+  }
+
+  return {
+    mode: selectedMode.value,
+    level: isByLevelMode.value ? selectedLevel.value : 'all',
+    sub_level: isBySubLevelMode.value ? selectedSubLevel.value : 'all',
+    section1_month: normalizedSection1Month.value,
+  }
+}
 
 const applyFilters = () => {
   router.get('/dashboard', buildGlobalFilterQuery(), {
@@ -420,7 +485,7 @@ const applyChartFilters = () => {
 const applySekretarisSectionFilters = () => {
   router.get('/dashboard', {
     mode: 'by-level',
-    level: sekretarisDefaultLevel.value,
+    level: resolveSekretarisLevelFilter(),
     sub_level: 'all',
     section1_month: normalizedSection1Month.value,
     section2_group: selectedSection2Group.value,
@@ -476,7 +541,7 @@ watch(
     const params = parseQuery(url)
     const expectedQuery = {
       mode: 'by-level',
-      level: sekretarisDefaultLevel.value,
+      level: resolveSekretarisLevelFilter(),
       sub_level: 'all',
       section1_month: normalizedSection1Month.value,
       section2_group: selectedSection2Group.value,
@@ -705,15 +770,54 @@ const countActiveCoverageItems = (block) => {
 
   return values.filter((value) => toNumber(value) > 0).length
 }
+const sumNumericValues = (values) =>
+  Array.isArray(values)
+    ? values.reduce((total, value) => total + toNumber(value), 0)
+    : 0
+const resolveActivitySummaryMetrics = (block) => {
+  const metrics = resolveBookComparisonMetrics(block)
+  const summary = {
+    totalKegiatan: toNumber(block?.stats?.total),
+    bulanIni: toNumber(block?.stats?.this_month),
+    totalBooks: metrics.totalBooks,
+    filledBooks: metrics.filledBooks,
+  }
+
+  if (hasByDesaActivityMetrics(block)) {
+    const byDesaMetrics = resolveActivityByDesaMetrics(block)
+    summary.totalKegiatan = sumNumericValues(byDesaMetrics.syncedActivityValues)
+
+    const byDesaTotalBooks = sumNumericValues(byDesaMetrics.syncedTotalBookValues)
+    const byDesaFilledBooks = sumNumericValues(byDesaMetrics.syncedFilledBookValues)
+    if (byDesaTotalBooks > 0 || byDesaFilledBooks > 0) {
+      summary.totalBooks = byDesaTotalBooks
+      summary.filledBooks = byDesaFilledBooks
+    }
+  } else {
+    const monthlyValues = block?.charts?.monthly?.values
+    const monthlyTotal = sumNumericValues(monthlyValues)
+    if (monthlyTotal > 0 && blockSupportsMonthFilter(block)) {
+      summary.totalKegiatan = monthlyTotal
+    }
+  }
+
+  if (normalizedSection1Month.value !== 'all' && blockSupportsMonthFilter(block)) {
+    summary.bulanIni = summary.totalKegiatan
+  }
+
+  return summary
+}
 const buildDashboardSummaryTiles = (block) => {
-  const totalBooks = toNumber(block?.kind === 'documents' ? block?.stats?.total_buku_tracked : block?.stats?.books_total)
-  const filledBooks = toNumber(block?.kind === 'documents' ? block?.stats?.buku_terisi : block?.stats?.books_filled)
+  const totalBooks = toNumber(block?.kind === 'documents' ? block?.stats?.total_buku_tracked : resolveActivitySummaryMetrics(block).totalBooks)
+  const filledBooks = toNumber(block?.kind === 'documents' ? block?.stats?.buku_terisi : resolveActivitySummaryMetrics(block).filledBooks)
   const unfilledBooks = Math.max(totalBooks - filledBooks, 0)
 
   if (block?.kind === 'activity') {
+    const activitySummary = resolveActivitySummaryMetrics(block)
+
     return [
-      { key: 'total-kegiatan', label: 'Total Kegiatan', value: formatSummaryValue(block?.stats?.total), tone: 'default' },
-      { key: 'kegiatan-bulan-ini', label: 'Bulan Ini', value: formatSummaryValue(block?.stats?.this_month), tone: 'default' },
+      { key: 'total-kegiatan', label: 'Total Kegiatan', value: formatSummaryValue(activitySummary.totalKegiatan), tone: 'default' },
+      { key: 'kegiatan-bulan-ini', label: 'Bulan Ini', value: formatSummaryValue(activitySummary.bulanIni), tone: 'default' },
       { key: 'jumlah-buku', label: 'Jumlah Buku', value: formatSummaryValue(totalBooks), tone: 'info' },
       { key: 'buku-terisi', label: 'Buku Terisi', value: formatSummaryValue(filledBooks), tone: 'success' },
       { key: 'buku-belum-terisi', label: 'Buku Belum Terisi', value: formatSummaryValue(unfilledBooks), tone: 'warning' },
@@ -731,33 +835,16 @@ const buildDashboardSummaryTiles = (block) => {
 
 const buildActivityMonthlyMultiAxisSeries = (block) => {
   const values = (block?.charts?.monthly?.values ?? []).map((value) => toNumber(value))
-  const cumulativeValues = values.reduce((result, value, index) => {
-    const previous = index > 0 ? result[index - 1] : 0
-    result.push(previous + value)
-    return result
-  }, [])
 
-  return [
-    {
-      name: 'Jumlah Kegiatan',
-      type: 'bar',
-      data: values,
-    },
-    {
-      name: 'Akumulasi 6 Bulan',
-      type: 'bar',
-      data: cumulativeValues,
-    },
-  ]
+  return values
 }
 
 const buildActivityMonthlyMultiAxisOptions = (block) => {
   const labels = block?.charts?.monthly?.labels ?? []
-  const axisLabelStyles = buildAxisLabelStyles(labels)
 
   return {
     chart: {
-      type: 'bar',
+      type: 'pie',
       toolbar: {
         show: false,
       },
@@ -765,62 +852,19 @@ const buildActivityMonthlyMultiAxisOptions = (block) => {
         enabled: true,
       },
     },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        distributed: false,
-        columnWidth: '55%',
-        borderRadius: CHART_BAR_BORDER_RADIUS,
-      },
-    },
-    colors: ['#0ea5e9', '#6366f1'],
+    labels,
+    colors: CHART_PIE_COLORS,
     dataLabels: {
-      enabled: false,
-    },
-    grid: buildCartesianGrid(),
-    tooltip: {
-      theme: CHART_TOOLTIP_THEME,
+      enabled: true,
+      formatter: formatPieAbsoluteValue,
     },
     legend: {
       show: true,
-      position: 'top',
-      horizontalAlign: 'left',
+      position: 'bottom',
     },
-    xaxis: {
-      categories: labels,
-      labels: {
-        style: axisLabelStyles,
-      },
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
+    tooltip: {
+      theme: CHART_TOOLTIP_THEME,
     },
-    yaxis: [
-      {
-        title: {
-          text: 'Jumlah Kegiatan',
-        },
-        labels: {
-          style: {
-            colors: ['#0ea5e9'],
-          },
-        },
-      },
-      {
-        opposite: true,
-        title: {
-          text: 'Akumulasi',
-        },
-        labels: {
-          style: {
-            colors: ['#6366f1'],
-          },
-        },
-      },
-    ],
     noData: buildChartNoData(),
   }
 }
@@ -935,7 +979,7 @@ const buildActivityByDesaBookCoverageOptions = (block) => {
         borderRadius: CHART_BAR_BORDER_RADIUS,
       },
     },
-    colors: ['#7e22ce', '#16a34a'],
+    colors: [CHART_BOOK_TOTAL_COLOR, CHART_BOOK_FILLED_COLOR],
     dataLabels: {
       enabled: false,
     },
@@ -1010,7 +1054,7 @@ const buildBookComparisonChartData = (block) => {
   return buildSingleDataset(
     ['Jumlah Buku', 'Buku Terisi'],
     [totalBooks, filledBooks],
-    ['#7e22ce', '#16a34a'],
+    [CHART_BOOK_TOTAL_COLOR, CHART_BOOK_FILLED_COLOR],
   )
 }
 const hasBookComparisonData = (block) => {
@@ -1065,7 +1109,7 @@ const legacyCoveragePerLampiranChartData = computed(() => buildSingleDataset(
 const legacyBookComparisonChartData = computed(() => buildSingleDataset(
   ['Jumlah Buku', 'Buku Terisi'],
   [toNumber(documentStats.value.total_buku_tracked), toNumber(documentStats.value.buku_terisi)],
-  ['#7e22ce', '#16a34a'],
+  [CHART_BOOK_TOTAL_COLOR, CHART_BOOK_FILLED_COLOR],
 ))
 
 const hasLegacyLampiranCoverageData = computed(() =>
@@ -1127,8 +1171,11 @@ const hasLegacyBookComparisonData = computed(() =>
               </div>
             </div>
 
-            <div class="mt-4 grid grid-cols-1 gap-3 rounded border border-slate-200 p-3 md:grid-cols-2 xl:grid-cols-5 dark:border-slate-700">
-              <div>
+            <div
+              class="mt-4 grid grid-cols-1 gap-3 rounded border border-slate-200 p-3 dark:border-slate-700"
+              :class="filterGridClassName"
+            >
+              <div v-if="showModeFilter">
                 <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                   Cara Tampil
                 </label>
@@ -1143,13 +1190,13 @@ const hasLegacyBookComparisonData = computed(() =>
                 </select>
               </div>
 
-              <div>
+              <div v-if="showLevelFilter">
                 <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                   Tingkat
                 </label>
                 <select
                   v-model="selectedLevel"
-                  :disabled="!isByLevelMode"
+                  :disabled="showModeFilter && !isByLevelMode"
                   class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
                 >
                   <option v-for="levelOption in LEVEL_OPTIONS" :key="`block-level-${block.key}-${levelOption.value}`" :value="levelOption.value">
@@ -1158,7 +1205,7 @@ const hasLegacyBookComparisonData = computed(() =>
                 </select>
               </div>
 
-              <div>
+              <div v-if="showSubLevelFilter">
                 <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                   Wilayah Turunan
                 </label>
@@ -1296,7 +1343,7 @@ const hasLegacyBookComparisonData = computed(() =>
                   </h4>
                   <div class="h-72">
                     <apexchart
-                      type="bar"
+                      type="pie"
                       width="100%"
                       height="100%"
                       :options="buildActivityMonthlyMultiAxisOptions(block)"

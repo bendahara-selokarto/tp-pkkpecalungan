@@ -25,7 +25,7 @@ class DashboardActivityChartService
     {
         $baseQuery = $this->buildScopedQuery($user);
 
-        $monthly = $this->buildMonthlyChart((clone $baseQuery));
+        $monthly = $this->buildMonthlyChart((clone $baseQuery), $section1Month);
         $status = $this->buildStatusChart((clone $baseQuery));
         $level = $this->buildLevelChart((clone $baseQuery));
         $byDesa = $this->buildByDesaChart($user, (clone $baseQuery), $section1Month);
@@ -67,8 +67,21 @@ class DashboardActivityChartService
         return $this->activityRepository->queryScopedByUser($user);
     }
 
-    private function buildMonthlyChart(Builder $query): array
+    private function buildMonthlyChart(Builder $query, ?int $section1Month = null): array
     {
+        if ($section1Month !== null) {
+            $month = Carbon::create(null, $section1Month, 1);
+
+            return [
+                'labels' => [$month->translatedFormat('F')],
+                'values' => [
+                    $query
+                        ->whereMonth('activity_date', $section1Month)
+                        ->count(),
+                ],
+            ];
+        }
+
         $startMonth = Carbon::now()->startOfMonth()->subMonths(5);
         $labels = [];
         $keys = [];
