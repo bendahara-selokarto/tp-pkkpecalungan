@@ -1,4 +1,4 @@
-# TODO Implementasi Autentik Buku Kegiatan (2026-02-24)
+# TODO IKG26A1 Implementasi Autentik Buku Kegiatan
 Tanggal: 2026-02-24  
 Status: `done`
 

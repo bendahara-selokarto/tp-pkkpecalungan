@@ -1,4 +1,4 @@
-# TODO Implementasi Autentik Buku Bantu Lanjutan (2026-02-24)
+# TODO IBL26A1 Implementasi Autentik Buku Bantu Lanjutan
 Tanggal: 2026-02-24  
 Status: `done`
 

@@ -1,7 +1,7 @@
 # TODO UVM25R1 UI Menu Visibility Alignment 2026-02-25
 
 Tanggal: 2026-02-25  
-Status: `active` (`experimental-ui-only`, non-final, rolling)
+Status: `in-progress` (`state:experimental-ui-only`, `state:non-final`, `state:rolling`)
 
 ## Force Latest Marker
 
@@ -90,4 +90,3 @@ Status: `active` (`experimental-ui-only`, non-final, rolling)
 - [x] Concern ini bersifat UI-only eksperimental (tanpa E2E/backend change).
 - [x] Keputusan pada TODO ini bersifat sementara dan dapat direvisi cepat selama fase eksperimen.
 - [x] Otorisasi akses tetap backend-first; UI hanya representasi visibility.
-

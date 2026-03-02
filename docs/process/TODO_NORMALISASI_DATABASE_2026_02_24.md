@@ -1,4 +1,4 @@
-# TODO Normalisasi Database (2026-02-24)
+# TODO NDB26A1 Normalisasi Database
 Tanggal: 2026-02-24  
 Status: `done`
 

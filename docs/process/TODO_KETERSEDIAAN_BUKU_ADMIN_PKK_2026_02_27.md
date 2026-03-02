@@ -1,4 +1,4 @@
-# TODO Ketersediaan Buku Administrasi PKK (2026-02-27)
+# TODO KBA26A1 Ketersediaan Buku Administrasi PKK
 Tanggal: 2026-02-27  
 Status: `in-progress`
 

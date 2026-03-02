@@ -40,6 +40,7 @@ Aturan anti-ambiguity:
 - Untuk concern ganda, acuan final adalah referensi user terakhir dan referensi lama ditandai `superseded`.
 - Resolver ambiguity TODO wajib memakai registry SOT: `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
 - TODO baru wajib berkode unik; ADR baru wajib bernomor 4 digit + status eksplisit.
+- Status utama TODO harus konsisten (`planned`, `in-progress`, `done`); state tambahan ditaruh sebagai keterangan.
 
 ## 3. Jalur Tunggal Eksekusi (Mandatory)
 

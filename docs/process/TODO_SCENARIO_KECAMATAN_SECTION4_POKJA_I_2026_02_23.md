@@ -1,7 +1,7 @@
-# TODO Skenario Kecamatan Section 4 Pokja I 2026-02-23
+# TODO SKS23A1 Skenario Kecamatan Section 4 Pokja I 2026-02-23
 
 Tanggal: 2026-02-23  
-Status: `superseded-2026-02-26`
+Status: `done` (`state:superseded-2026-02-26`)
 
 Catatan superseded (2026-02-26):
 - Skenario aktif dashboard sekretaris diubah menjadi satu section saja (`sekretaris-section-1`).

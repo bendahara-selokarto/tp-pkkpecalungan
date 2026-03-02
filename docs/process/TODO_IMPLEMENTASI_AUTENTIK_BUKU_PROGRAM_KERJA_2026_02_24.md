@@ -1,4 +1,4 @@
-# TODO Implementasi Autentik Buku Program Kerja (2026-02-24)
+# TODO IPK26A1 Implementasi Autentik Buku Program Kerja
 Tanggal: 2026-02-24  
 Status: `done`
 

@@ -1,7 +1,7 @@
 # TODO UXR26A1 Refactor Responsive UX Layout 2026-03-01
 
 Tanggal: 2026-03-01  
-Status: `active` (`responsive-ux-refactor`)
+Status: `in-progress` (`state:responsive-ux-refactor`)
 
 ## Konteks
 - Audit UI/UX menemukan isu struktural lintas halaman: tabel mobile kehilangan konteks kolom, target sentuh kecil, dan interaksi navigasi belum konsisten untuk aksesibilitas.

@@ -1,7 +1,7 @@
 # TODO UVPJ23R1 UI Visibility by Penanggung Jawab
 
 Tanggal: 2026-02-23  
-Status: `implemented` (`historical-e2e`, sinkronisasi concern sidebar aktif ada di `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`)
+Status: `done` (`state:historical-e2e`, sinkronisasi concern sidebar aktif ada di `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`)
 
 ## Marker Keterbaruan
 

@@ -1,4 +1,4 @@
-# TODO Autentik Catatan TP PKK 4.17d
+# TODO ACT417D Autentik Catatan TP PKK 4.17d
 Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)  
 Status: `done`
 

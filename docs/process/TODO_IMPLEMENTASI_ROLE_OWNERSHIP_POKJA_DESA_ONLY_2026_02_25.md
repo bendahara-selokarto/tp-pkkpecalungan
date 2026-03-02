@@ -1,4 +1,4 @@
-# TODO Implementasi Role Ownership Pokja Desa-Only 2026-02-25
+# TODO ROP26A1 Implementasi Role Ownership Pokja Desa Only
 
 Tanggal: 2026-02-25  
 Status: `done`

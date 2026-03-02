@@ -1,7 +1,7 @@
-# TODO UI Pagination E2E 2026-02-24
+# TODO UIP26A1 UI Pagination E2E 2026-02-24
 
 Tanggal: 2026-02-24  
-Status: `done`
+Status: `done` (`state:historical-baseline`, concern aktif ada di `docs/process/TODO_PGM26A1_MITIGASI_GAP_PAGINATION_2026_03_02.md`)
 
 ## Progress
 

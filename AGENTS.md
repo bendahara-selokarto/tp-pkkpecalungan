@@ -229,6 +229,8 @@ Aturan markdown operasional:
   - Format judul: `# ADR <NOMOR4> <Judul Ringkas>`.
   - Format nama file: `ADR_<NOMOR4>_<RINGKASAN>.md`.
   - Status ADR wajib salah satu: `proposed`, `accepted`, `superseded`, `deprecated`.
+- Status utama TODO wajib salah satu: `planned`, `in-progress`, `done`.
+- State tambahan (contoh: `historical`, `superseded`, `rolling`) wajib ditulis sebagai keterangan setelah status utama, bukan mengganti status utama.
 - Gunakan format checklist `- [ ]` untuk task dan `- [x]` untuk task selesai.
 - Setiap TODO wajib memuat: konteks, target hasil, langkah eksekusi, validasi, risiko, keputusan.
 - Jika concern memiliki dampak arsitektur, TODO wajib menautkan ADR terkait.

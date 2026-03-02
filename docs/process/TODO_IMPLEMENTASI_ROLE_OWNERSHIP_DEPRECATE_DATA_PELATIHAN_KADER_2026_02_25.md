@@ -1,4 +1,4 @@
-# TODO Implementasi Deprecate Ownership Data Pelatihan Kader 2026-02-25
+# TODO ROD26A1 Implementasi Deprecate Ownership Data Pelatihan Kader
 
 Tanggal: 2026-02-25  
 Status: `done`
