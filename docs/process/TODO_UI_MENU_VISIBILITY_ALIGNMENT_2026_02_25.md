@@ -65,6 +65,50 @@ Status: `in-progress` (`state:experimental-ui-only`, `state:non-final`, `state:r
 - [x] Tambahkan guard UI agar group kosong tidak tampil membingungkan.
 - [x] Sinkronkan dokumentasi terkait jika ada perubahan istilah canonical di UI.
 
+## Rencana Batch 2026-03-02 (Iwan): Semua Output PDF Menjadi Menu Sidebar
+
+Tujuan batch:
+- Seluruh route output PDF statis (`*/report/pdf`) punya entry menu di sidebar sesuai scope/role.
+- Tetap `UI-only` (tanpa ubah policy/middleware/backend visibility payload).
+
+Baseline inventaris (hasil audit route + sidebar):
+- Total route statis `report/pdf`: `52` path unik (lintas scope).
+- Gap base module PDF yang belum punya entry sidebar:
+  - `bantuans`
+  - `anggota-tim-penggerak-kader`
+- Gap sub-report PDF yang belum punya entry sidebar langsung:
+  - `agenda-surat/ekspedisi/report/pdf`
+  - `bantuans/keuangan/report/pdf`
+  - seluruh turunan `catatan-keluarga/*/report/pdf` (4.16a-4.24).
+- Gap visibilitas UI:
+  - item `catatan-keluarga`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` masih `uiVisibility: disabled` padahal punya output PDF.
+
+Constraint:
+- Route dinamis berbasis ID (`activities/{id}/print`, `desa-activities/{id}/print`) tidak dapat dijadikan entry sidebar langsung tanpa konteks record; route ini dikecualikan dari target "menu PDF statis".
+
+Langkah eksekusi batch PDF-sidebar:
+- [x] P0. Kunci inventory route PDF statis + peta gap menu sidebar.
+- [x] P1. Tetapkan IA sidebar PDF:
+  - opsi default: tambah group `Laporan PDF` per scope (`desa`, `kecamatan`) dengan link langsung ke route `report/pdf`;
+  - fallback: taruh submenu PDF pada group domain asal bila jumlah item terlalu padat.
+- [x] P2. Definisikan mapping menu PDF terpusat (slug, label natural user, href per scope, parent-group).
+- [x] P3. Ekspos semua output PDF statis ke sidebar, termasuk:
+  - module-level PDF (`bantuans`, `anggota-tim-penggerak-kader`);
+  - sub-report (`agenda-surat/ekspedisi`, `bantuans/keuangan`);
+  - turunan `catatan-keluarga` (4.16a-4.24).
+- [x] P4. Lepas `uiVisibility: disabled` untuk modul yang wajib tampil pada batch ini, tanpa mengubah authority backend.
+- [x] P5. Copywriting pass label PDF agar natural user + konsisten dengan istilah canonical.
+- [ ] P6. Validasi batch:
+  - smoke desktop/mobile sidebar (expand/collapse + active state);
+  - [x] verifikasi tidak ada item PDF duplikat;
+  - [x] verifikasi gating module-mode tetap bekerja;
+  - [x] `npm run build`.
+
+Target output batch:
+- [x] Daftar final semua menu PDF di sidebar (desa + kecamatan + super-admin jika relevan).
+- [x] Daftar route PDF yang dikecualikan beserta alasan teknis.
+- [ ] Bukti validasi UI-only dan residual risk.
+
 ## Validasi (UI Only)
 
 - [x] Smoke check desktop (`lg/xl`): group menu tampil sesuai role (audit komposisi render UI).
