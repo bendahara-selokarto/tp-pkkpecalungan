@@ -4,9 +4,15 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "test:e2e": "playwright test -c playwright.config.mjs",
+        "test:e2e:smoke": "playwright test -c playwright.config.mjs --grep @smoke",
+        "test:e2e:a11y": "playwright test -c playwright.config.mjs --grep @a11y",
+        "test:e2e:install": "playwright install chromium"
     },
     "devDependencies": {
+        "@axe-core/playwright": "^4.10.2",
+        "@playwright/test": "^1.53.2",
         "@tailwindcss/forms": "^0.5.2",
         "@tailwindcss/postcss": "^4.1.12",
         "@tailwindcss/vite": "^4.0.0",

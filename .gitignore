@@ -26,3 +26,5 @@ Thumbs.db
 docs/referensi/
 /reports/*
 !/reports/.gitkeep
+/playwright-report/
+/test-results/

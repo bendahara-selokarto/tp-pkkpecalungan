@@ -220,3 +220,31 @@ Minimal test yang wajib ada:
 4. Unit test policy/scope service untuk `view` dan `update`/`delete`.
 5. Jika query scoped kompleks, test repository/use case untuk memastikan data luar scope tidak bocor.
 6. Jalankan `php artisan test` sebelum finalisasi.
+
+## 15. Runtime Evidence UI/UX (Playwright + Axe)
+
+Baseline audit runtime UI/UX tersedia melalui Playwright (smoke) dan Axe (aksesibilitas).
+
+Prasyarat:
+- Dependensi terpasang:
+  - `npm install`
+  - `npm run test:e2e:install`
+- Base URL aplikasi:
+  - default: `http://127.0.0.1:8000`
+  - override: set `E2E_BASE_URL`
+- Opsional auto-start web server dari Playwright:
+  - set `E2E_WEB_SERVER_COMMAND`, contoh:
+    - `php artisan serve --host=127.0.0.1 --port=8000`
+
+Kredensial login (opsional untuk smoke terautentikasi):
+- `E2E_EMAIL`
+- `E2E_PASSWORD`
+
+Perintah:
+- `npm run test:e2e`
+- `npm run test:e2e:smoke`
+- `npm run test:e2e:a11y`
+
+Catatan:
+- Test login page (`@smoke`, `@a11y`) selalu jalan tanpa kredensial.
+- Test smoke terautentikasi otomatis `skip` jika `E2E_EMAIL`/`E2E_PASSWORD` belum diisi.
