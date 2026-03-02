@@ -19,9 +19,9 @@ Status: `in-progress` (`state:responsive-ux-refactor`)
 - [x] `R3` Terapkan metadata kolom/label mobile agar tidak bergantung pada header tersembunyi.
 - [x] `R4` Standarkan ukuran komponen interaktif mobile (`min-h-[44px]`) pada tombol, pagination, checkbox/radio wrapper.
 - [x] `R5` Refactor elemen klik non-semantic menjadi `button`/`Link` pada area navigasi dan dropdown.
-- [ ] `R6` Tambahkan guard aksesibilitas modal (fokus awal, fokus kembali, escape handling konsisten).
-- [ ] `R7` Standarkan komponen state (`loading`, `empty`, `error`, `disabled`) untuk list/form.
-- [ ] `R8` Jalankan rollout bertahap per modul agar tidak memicu behavior drift lintas domain.
+- [x] `R6` Tambahkan guard aksesibilitas modal (fokus awal, fokus kembali, escape handling konsisten).
+- [x] `R7` Standarkan komponen state (`loading`, `empty`, `error`, `disabled`) untuk list/form.
+- [x] `R8` Jalankan rollout bertahap per modul agar tidak memicu behavior drift lintas domain.
 
 ## Validasi
 - [ ] Uji manual breakpoint `360/390/768/1024/1280` untuk halaman prioritas.
@@ -41,11 +41,11 @@ Status: `in-progress` (`state:responsive-ux-refactor`)
 - [x] `M4` Tambahkan guard CI/lint agar tabel baru tanpa metadata responsif tidak lolos review.
 - [x] `M5` Standarkan utility sentuh mobile minimum `min-h-[44px]` pada aksi primer/sekunder/destruktif.
 - [x] `M6` Refactor elemen klik non-semantic ke `button`/`a` dan pastikan state fokus terlihat.
-- [ ] `M7` Terapkan guard modal aksesibel: initial focus, focus trap, restore focus, dan `Escape` close.
+- [x] `M7` Terapkan guard modal aksesibel: initial focus, focus trap, restore focus, dan `Escape` close.
 - [x] `M8` Batasi scope PR concern ini hanya pada layer UI; perubahan backend/domain ditolak dan dipisah concern.
-- [ ] `M9` Simpan jalur rollback per batch (commit kecil + fallback komponen lama) untuk minimalkan blast radius.
+- [x] `M9` Simpan jalur rollback per batch (commit kecil + fallback komponen lama) untuk minimalkan blast radius.
 - [x] `M10` Hardening khusus Dashboard: semua kontrol filter utama (`mode`, `level`, `sub_level`, CTA) wajib memenuhi target sentuh minimum 44px.
-- [ ] `M11` Sinkronkan status concern dashboard pada registry SOT sebelum concern UI batch dinyatakan selesai.
+- [x] `M11` Sinkronkan status concern dashboard pada registry SOT sebelum concern UI batch dinyatakan selesai.
 
 ## Exit Criteria Mitigasi
 - [ ] Semua halaman batch aktif lolos uji breakpoint `360/390/768/1024/1280` tanpa layout break.
@@ -84,3 +84,14 @@ Status: `in-progress` (`state:responsive-ux-refactor`)
 - State fokus keyboard distandarkan dengan kelas `focus-visible:outline-*` pada trigger navbar/aside.
 - Guard kontrak ditambahkan:
   - `tests/Unit/Frontend/NavigationSemanticContractTest.php` untuk mencegah regresi fallback non-semantic pada navigasi/dropdown.
+
+## Progress Update 2026-03-02 (Batch Modal Accessibility + State Standardization)
+- Guard modal aksesibel dikunci pada komponen shared:
+  - `resources/js/admin-one/components/CardBoxModal.vue` mempertahankan initial focus, focus trap `Tab`, restore focus saat close, dan close `Escape`.
+  - kontrak dicek pada `tests/Unit/Frontend/ModalAccessibilityContractTest.php`.
+- Standarisasi state list ditambahkan pada komponen tunggal:
+  - `resources/js/admin-one/components/ResponsiveDataTable.vue` kini memiliki state `loading|error|disabled|ready` dengan pesan standar.
+  - kontrak dicek pada `tests/Unit/Frontend/ResponsiveTableStateContractTest.php`.
+- Validasi otomatis batch:
+  - `php artisan test tests/Unit/Frontend/ResponsiveTableRolloutContractTest.php tests/Unit/Frontend/DashboardResponsiveInteractionContractTest.php tests/Unit/Frontend/NavigationSemanticContractTest.php tests/Unit/Frontend/ModalAccessibilityContractTest.php tests/Unit/Frontend/ResponsiveTableStateContractTest.php` (`PASS`, `10` tests, `46` assertions).
+  - `cmd /c npm run build` (`PASS`, `vite build`, built in 17.38s).

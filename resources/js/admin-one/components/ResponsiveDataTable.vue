@@ -22,6 +22,22 @@ const props = defineProps({
     type: String,
     default: 'Belum ada data.',
   },
+  state: {
+    type: String,
+    default: 'ready',
+  },
+  loadingText: {
+    type: String,
+    default: 'Memuat data...',
+  },
+  errorText: {
+    type: String,
+    default: 'Terjadi kendala saat memuat data.',
+  },
+  disabledText: {
+    type: String,
+    default: 'Tampilan data dinonaktifkan sementara.',
+  },
 })
 
 const resolvedColumns = computed(() =>
@@ -46,9 +62,43 @@ const resolveRowKey = (row, index) => {
 
   return `${index}`
 }
+
+const normalizedState = computed(() => {
+  const value = String(props.state ?? 'ready').trim().toLowerCase()
+
+  if (['loading', 'error', 'disabled'].includes(value)) {
+    return value
+  }
+
+  return 'ready'
+})
+
+const stateMessage = computed(() => {
+  if (normalizedState.value === 'loading') {
+    return props.loadingText
+  }
+
+  if (normalizedState.value === 'error') {
+    return props.errorText
+  }
+
+  if (normalizedState.value === 'disabled') {
+    return props.disabledText
+  }
+
+  return props.emptyText
+})
 </script>
 
 <template>
+  <div
+    v-if="normalizedState !== 'ready'"
+    class="rounded-lg border border-dashed border-slate-300 px-4 py-8 text-center text-sm text-slate-500 dark:border-slate-600 dark:text-slate-300"
+  >
+    {{ stateMessage }}
+  </div>
+
+  <template v-else>
   <div class="space-y-3 lg:hidden">
     <div
       v-for="(row, index) in rows"
@@ -76,7 +126,7 @@ const resolveRowKey = (row, index) => {
       v-if="rows.length === 0"
       class="rounded-lg border border-dashed border-slate-300 px-4 py-5 text-center text-sm text-slate-500 dark:border-slate-600 dark:text-slate-300"
     >
-      {{ emptyText }}
+      {{ stateMessage }}
     </div>
   </div>
 
@@ -116,10 +166,11 @@ const resolveRowKey = (row, index) => {
             :colspan="resolvedColumns.length"
             class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400"
           >
-            {{ emptyText }}
+            {{ stateMessage }}
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+  </template>
 </template>
