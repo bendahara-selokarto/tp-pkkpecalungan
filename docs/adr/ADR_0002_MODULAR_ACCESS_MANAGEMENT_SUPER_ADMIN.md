@@ -76,3 +76,4 @@ Superseded by: `-`
 - 2026-02-28: `proposed` -> `accepted` | disetujui implementasi Opsi B bertahap per concern modul, dimulai observasi + finalisasi markdown.
 - 2026-02-28: tahap 1 read-only matrix selesai (`ACL26S1`).
 - 2026-02-28: tahap 2 pilot write `catatan-keluarga` selesai (`ACL26C1`) dengan update, rollback, audit trail, dan fallback flag.
+- 2026-03-02: tahap 3 batch 1 rollout `activities` selesai (`ACL26A2`); endpoint override digeneralisasi ke payload `module` dengan validasi role-scope-module dan resolver rollout terkelola (`catatan-keluarga`, `activities`).

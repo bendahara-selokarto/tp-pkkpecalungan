@@ -92,13 +92,14 @@ const modeBadgeClass = (mode) => {
   return 'border-slate-300 text-slate-700 dark:border-slate-700 dark:text-slate-300'
 }
 
-const pilotActionKey = ref(null)
+const overrideActionKey = ref(null)
 
-const isPilotActionLoading = (row, action) => pilotActionKey.value === `${row.id}:${action}`
+const isOverrideActionLoading = (row, action) => overrideActionKey.value === `${row.id}:${action}`
 
-const setPilotMode = (row, mode) => {
-  pilotActionKey.value = `${row.id}:${mode}`
-  router.put('/super-admin/access-control/pilot/catatan-keluarga', {
+const setOverrideMode = (row, mode) => {
+  overrideActionKey.value = `${row.id}:${mode}`
+  router.put('/super-admin/access-control/override', {
+    module: row.module,
     scope: row.scope,
     role: row.role,
     mode,
@@ -106,22 +107,23 @@ const setPilotMode = (row, mode) => {
     preserveScroll: true,
     preserveState: true,
     onFinish: () => {
-      pilotActionKey.value = null
+      overrideActionKey.value = null
     },
   })
 }
 
-const rollbackPilotMode = (row) => {
-  pilotActionKey.value = `${row.id}:rollback`
-  router.delete('/super-admin/access-control/pilot/catatan-keluarga', {
+const rollbackOverrideMode = (row) => {
+  overrideActionKey.value = `${row.id}:rollback`
+  router.delete('/super-admin/access-control/override', {
     data: {
+      module: row.module,
       scope: row.scope,
       role: row.role,
     },
     preserveScroll: true,
     preserveState: true,
     onFinish: () => {
-      pilotActionKey.value = null
+      overrideActionKey.value = null
     },
   })
 }
@@ -135,7 +137,7 @@ const rollbackPilotMode = (row) => {
       <div class="mb-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Matriks Akses Modul dan Group Role</h3>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
-          Halaman ini read-only untuk observasi keputusan desain sebelum aktivasi perubahan ijin akses.
+          Kontrol override aktif terbatas pada modul rollout terkelola, sementara authority akses tetap ditegakkan backend.
         </p>
       </div>
 
@@ -240,7 +242,7 @@ const rollbackPilotMode = (row) => {
               <th class="px-3 py-3 font-semibold">Group Role</th>
               <th class="px-3 py-3 font-semibold">Modul</th>
               <th class="px-3 py-3 font-semibold">Mode Efektif</th>
-              <th class="px-3 py-3 font-semibold">Kontrol Pilot</th>
+              <th class="px-3 py-3 font-semibold">Kontrol Override</th>
             </tr>
           </thead>
           <tbody>
@@ -268,11 +270,11 @@ const rollbackPilotMode = (row) => {
                 </span>
               </td>
               <td class="px-3 py-3">
-                <div v-if="row.pilot_manageable" class="space-y-2">
+                <div v-if="row.override_manageable" class="space-y-2">
                   <p class="text-xs text-slate-500 dark:text-slate-400">
-                    Baseline: {{ row.pilot_baseline_mode_label }}
-                    <span v-if="row.pilot_override_active" class="font-semibold text-emerald-700 dark:text-emerald-300">
-                      (override aktif: {{ row.pilot_override_mode }})
+                    Baseline: {{ row.override_baseline_mode_label }}
+                    <span v-if="row.override_active" class="font-semibold text-emerald-700 dark:text-emerald-300">
+                      (override aktif: {{ row.override_mode }})
                     </span>
                   </p>
                   <div class="flex flex-wrap gap-2">
@@ -282,8 +284,8 @@ const rollbackPilotMode = (row) => {
                       :class="row.mode === 'read-only'
                         ? 'border-amber-400 bg-amber-100 text-amber-800 dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-200'
                         : 'border-amber-200 text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20'"
-                      :disabled="isPilotActionLoading(row, 'read-only')"
-                      @click="setPilotMode(row, 'read-only')"
+                      :disabled="isOverrideActionLoading(row, 'read-only')"
+                      @click="setOverrideMode(row, 'read-only')"
                     >
                       Set Baca
                     </button>
@@ -293,8 +295,8 @@ const rollbackPilotMode = (row) => {
                       :class="row.mode === 'read-write'
                         ? 'border-emerald-400 bg-emerald-100 text-emerald-800 dark:border-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-200'
                         : 'border-emerald-200 text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/20'"
-                      :disabled="isPilotActionLoading(row, 'read-write')"
-                      @click="setPilotMode(row, 'read-write')"
+                      :disabled="isOverrideActionLoading(row, 'read-write')"
+                      @click="setOverrideMode(row, 'read-write')"
                     >
                       Set Baca-Tulis
                     </button>
@@ -304,17 +306,17 @@ const rollbackPilotMode = (row) => {
                       :class="row.mode === 'hidden'
                         ? 'border-slate-400 bg-slate-100 text-slate-800 dark:border-slate-600 dark:bg-slate-700/60 dark:text-slate-100'
                         : 'border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800'"
-                      :disabled="isPilotActionLoading(row, 'hidden')"
-                      @click="setPilotMode(row, 'hidden')"
+                      :disabled="isOverrideActionLoading(row, 'hidden')"
+                      @click="setOverrideMode(row, 'hidden')"
                     >
                       Set Tidak Tampil
                     </button>
                     <button
-                      v-if="row.pilot_override_active"
+                      v-if="row.override_active"
                       type="button"
                       class="inline-flex rounded border border-rose-200 px-2.5 py-1 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
-                      :disabled="isPilotActionLoading(row, 'rollback')"
-                      @click="rollbackPilotMode(row)"
+                      :disabled="isOverrideActionLoading(row, 'rollback')"
+                      @click="rollbackOverrideMode(row)"
                     >
                       Rollback
                     </button>

@@ -20,6 +20,7 @@ class AccessControlManagementWritePilotTest extends TestCase
 
         Role::create(['name' => 'super-admin']);
         Role::create(['name' => 'kecamatan-pokja-iv']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
         Role::create(['name' => 'admin-desa']);
 
         $this->kecamatan = Area::create([
@@ -47,7 +48,8 @@ class AccessControlManagementWritePilotTest extends TestCase
             ->assertStatus(403);
 
         $this->actingAs($superAdmin)
-            ->put(route('super-admin.access-control.pilot.catatan-keluarga.update'), [
+            ->put(route('super-admin.access-control.override.update'), [
+                'module' => 'catatan-keluarga',
                 'scope' => 'kecamatan',
                 'role' => 'kecamatan-pokja-iv',
                 'mode' => 'read-only',
@@ -80,7 +82,8 @@ class AccessControlManagementWritePilotTest extends TestCase
             ->assertOk();
 
         $this->actingAs($superAdmin)
-            ->delete(route('super-admin.access-control.pilot.catatan-keluarga.rollback'), [
+            ->delete(route('super-admin.access-control.override.rollback'), [
+                'module' => 'catatan-keluarga',
                 'scope' => 'kecamatan',
                 'role' => 'kecamatan-pokja-iv',
             ])
@@ -121,7 +124,8 @@ class AccessControlManagementWritePilotTest extends TestCase
         $nonSuperAdmin->assignRole('admin-desa');
 
         $this->actingAs($nonSuperAdmin)
-            ->put(route('super-admin.access-control.pilot.catatan-keluarga.update'), [
+            ->put(route('super-admin.access-control.override.update'), [
+                'module' => 'catatan-keluarga',
                 'scope' => 'kecamatan',
                 'role' => 'kecamatan-pokja-iv',
                 'mode' => 'read-only',
@@ -141,7 +145,8 @@ class AccessControlManagementWritePilotTest extends TestCase
         $superAdmin->assignRole('super-admin');
 
         $this->actingAs($superAdmin)
-            ->put(route('super-admin.access-control.pilot.catatan-keluarga.update'), [
+            ->put(route('super-admin.access-control.override.update'), [
+                'module' => 'catatan-keluarga',
                 'scope' => 'desa',
                 'role' => 'kecamatan-pokja-iv',
                 'mode' => 'read-only',
@@ -150,5 +155,81 @@ class AccessControlManagementWritePilotTest extends TestCase
 
         $this->assertDatabaseCount('module_access_overrides', 0);
         $this->assertDatabaseCount('module_access_override_audits', 0);
+    }
+
+    public function test_super_admin_dapat_update_dan_rollback_override_rollout_activities(): void
+    {
+        $superAdmin = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $superAdmin->assignRole('super-admin');
+
+        $kecamatanPokjaIi = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $kecamatanPokjaIi->assignRole('kecamatan-pokja-ii');
+
+        $this->actingAs($kecamatanPokjaIi)
+            ->get('/kecamatan/activities')
+            ->assertOk();
+
+        $this->actingAs($superAdmin)
+            ->put(route('super-admin.access-control.override.update'), [
+                'module' => 'activities',
+                'scope' => 'kecamatan',
+                'role' => 'kecamatan-pokja-ii',
+                'mode' => 'hidden',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('module_access_overrides', [
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-ii',
+            'module_slug' => 'activities',
+            'mode' => 'hidden',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        $this->assertDatabaseHas('module_access_override_audits', [
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-ii',
+            'module_slug' => 'activities',
+            'before_mode' => 'read-write',
+            'after_mode' => 'hidden',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        $this->actingAs($kecamatanPokjaIi)
+            ->get('/kecamatan/activities')
+            ->assertStatus(403);
+
+        $this->actingAs($superAdmin)
+            ->delete(route('super-admin.access-control.override.rollback'), [
+                'module' => 'activities',
+                'scope' => 'kecamatan',
+                'role' => 'kecamatan-pokja-ii',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseMissing('module_access_overrides', [
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-ii',
+            'module_slug' => 'activities',
+        ]);
+
+        $this->assertDatabaseHas('module_access_override_audits', [
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-ii',
+            'module_slug' => 'activities',
+            'before_mode' => 'hidden',
+            'after_mode' => 'read-write',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        $this->actingAs($kecamatanPokjaIi)
+            ->get('/kecamatan/activities')
+            ->assertOk();
     }
 }

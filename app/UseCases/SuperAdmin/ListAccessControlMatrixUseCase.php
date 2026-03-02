@@ -45,11 +45,11 @@ class ListAccessControlMatrixUseCase
      *         module_label: string,
      *         mode: string,
      *         mode_label: string,
-     *         pilot_manageable: bool,
-     *         pilot_override_active: bool,
-     *         pilot_override_mode: string|null,
-     *         pilot_baseline_mode: string,
-     *         pilot_baseline_mode_label: string|null
+     *         override_manageable: bool,
+     *         override_active: bool,
+     *         override_mode: string|null,
+     *         override_baseline_mode: string,
+     *         override_baseline_mode_label: string|null
      *     }>,
      *     summary: array{
      *         total_rows: int,
@@ -67,8 +67,13 @@ class ListAccessControlMatrixUseCase
         $modeFilter = $this->normalizeFilter($filters['mode'] ?? null);
 
         $roleScopePairs = $this->roleScopePairs();
-        $pilotOverrides = $this->moduleAccessOverrideRepository->listModesForModule(RoleMenuVisibilityService::PILOT_MODULE_SLUG);
-        $rows = $this->buildRows($roleScopePairs, $pilotOverrides);
+        $overrideModules = $this->roleMenuVisibilityService->overrideManageableModules();
+        $overrideModesByModule = [];
+        foreach ($overrideModules as $moduleSlug) {
+            $overrideModesByModule[$moduleSlug] = $this->moduleAccessOverrideRepository->listModesForModule($moduleSlug);
+        }
+
+        $rows = $this->buildRows($roleScopePairs, $overrideModules, $overrideModesByModule);
         $filteredRows = $this->filterRows($rows, $scopeFilter, $roleFilter, $modeFilter);
 
         return [
@@ -116,10 +121,11 @@ class ListAccessControlMatrixUseCase
 
     /**
      * @param list<array{scope: string, role: string}> $roleScopePairs
-     * @param array<string, string> $pilotOverrides
+     * @param list<string> $overrideModules
+     * @param array<string, array<string, string>> $overrideModesByModule
      * @return Collection<int, array<string, mixed>>
      */
-    private function buildRows(array $roleScopePairs, array $pilotOverrides): Collection
+    private function buildRows(array $roleScopePairs, array $overrideModules, array $overrideModesByModule): Collection
     {
         $rows = collect();
 
@@ -135,9 +141,11 @@ class ListAccessControlMatrixUseCase
 
                 foreach ($this->roleMenuVisibilityService->modulesForGroup($group) as $module) {
                     $mode = $this->resolveEffectiveMode($groupMode, $overrides, $module);
-                    $isPilotRow = $module === RoleMenuVisibilityService::PILOT_MODULE_SLUG;
-                    $pilotOverrideMode = $pilotOverrides[$this->pilotOverrideKey($scope, $role)] ?? null;
-                    $baselineMode = $isPilotRow
+                    $isOverrideManageable = in_array($module, $overrideModules, true)
+                        && $role !== 'super-admin'
+                        && $this->roleMenuVisibilityService->isModuleAssignableForRoleScope($module, $role, $scope);
+                    $overrideMode = $overrideModesByModule[$module][$this->overrideModeKey($scope, $role)] ?? null;
+                    $baselineMode = $isOverrideManageable
                         ? $this->roleMenuVisibilityService->resolveBaselineModuleModeForRoleScope($role, $scope, $module)
                         : null;
 
@@ -153,13 +161,13 @@ class ListAccessControlMatrixUseCase
                         'module_label' => $this->moduleLabel($module),
                         'mode' => $mode,
                         'mode_label' => self::MODE_LABELS[$mode] ?? ucfirst(str_replace('-', ' ', $mode)),
-                        'pilot_manageable' => $isPilotRow && $role !== 'super-admin',
-                        'pilot_override_active' => $isPilotRow && is_string($pilotOverrideMode),
-                        'pilot_override_mode' => $isPilotRow ? $pilotOverrideMode : null,
-                        'pilot_baseline_mode' => $isPilotRow && is_string($baselineMode)
+                        'override_manageable' => $isOverrideManageable,
+                        'override_active' => $isOverrideManageable && is_string($overrideMode),
+                        'override_mode' => $isOverrideManageable ? $overrideMode : null,
+                        'override_baseline_mode' => $isOverrideManageable && is_string($baselineMode)
                             ? $baselineMode
                             : RoleMenuVisibilityService::MODE_HIDDEN,
-                        'pilot_baseline_mode_label' => $isPilotRow
+                        'override_baseline_mode_label' => $isOverrideManageable
                             ? (self::MODE_LABELS[$baselineMode ?? RoleMenuVisibilityService::MODE_HIDDEN] ?? '-')
                             : null,
                     ]);
@@ -280,7 +288,7 @@ class ListAccessControlMatrixUseCase
         return ucfirst(str_replace('-', ' ', $module));
     }
 
-    private function pilotOverrideKey(string $scope, string $role): string
+    private function overrideModeKey(string $scope, string $role): string
     {
         return sprintf('%s|%s', $scope, $role);
     }

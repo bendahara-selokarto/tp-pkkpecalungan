@@ -1197,3 +1197,43 @@ Keputusan:
 
 Status:
 - `PASS`.
+
+## Rollout Access Control Batch 1 (`activities`): 2026-03-02
+
+Ruang lingkup:
+- Melanjutkan concern `ACL26M1` dari pilot single-module ke rollout batch pertama modul berikutnya (`activities`).
+- Menjaga fallback hardcoded tetap aktif sambil menggeneralisasi endpoint override untuk payload `module`.
+
+Artefak:
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `app/UseCases/SuperAdmin/ListAccessControlMatrixUseCase.php`
+- `app/Http/Controllers/SuperAdmin/AccessControlManagementController.php`
+- `app/Http/Requests/SuperAdmin/UpdatePilotCatatanKeluargaOverrideRequest.php`
+- `app/Http/Requests/SuperAdmin/RollbackPilotCatatanKeluargaOverrideRequest.php`
+- `routes/web.php`
+- `resources/js/Pages/SuperAdmin/AccessControl/Index.vue`
+- `docs/process/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md`
+
+Perintah validasi:
+- `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`
+  - hasil: `PASS` (`4` tests, `43` assertions).
+- `php artisan test tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`
+  - hasil: `PASS` (`4` tests, `26` assertions).
+- `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+  - hasil: `PASS` (`14` tests, `137` assertions).
+- `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
+  - hasil: `PASS` (`4` tests, `74` assertions).
+- `php artisan test tests/Feature/ModuleVisibilityMiddlewareTest.php`
+  - hasil: `PASS` (`11` tests, `33` assertions).
+- `php artisan test`
+  - hasil: `PASS` (`994` tests, `6226` assertions).
+- `npm run build`
+  - hasil: `PASS`.
+
+Keputusan:
+- Rollout override modul `activities` dinyatakan aktif sebagai batch pertama Tahap 3.
+- Override hanya berlaku untuk modul rollout terkelola (`catatan-keluarga`, `activities`); override modul di luar daftar diabaikan resolver.
+- Validasi role-scope-module dikunci pada layer request + action untuk mencegah kombinasi tidak kompatibel.
+
+Status:
+- `PASS`.

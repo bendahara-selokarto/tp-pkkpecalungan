@@ -158,10 +158,10 @@ Route::middleware(['auth', 'role:super-admin'])
         Route::resource('users', UserManagementController::class);
         Route::get('access-control', [AccessControlManagementController::class, 'index'])
             ->name('access-control.index');
-        Route::put('access-control/pilot/catatan-keluarga', [AccessControlManagementController::class, 'updatePilotCatatanKeluarga'])
-            ->name('access-control.pilot.catatan-keluarga.update');
-        Route::delete('access-control/pilot/catatan-keluarga', [AccessControlManagementController::class, 'rollbackPilotCatatanKeluarga'])
-            ->name('access-control.pilot.catatan-keluarga.rollback');
+        Route::put('access-control/override', [AccessControlManagementController::class, 'updateOverride'])
+            ->name('access-control.override.update');
+        Route::delete('access-control/override', [AccessControlManagementController::class, 'rollbackOverride'])
+            ->name('access-control.override.rollback');
         Route::resource('arsip', ArsipManagementController::class)
             ->parameters(['arsip' => 'arsipDocument']);
     });

@@ -16,6 +16,14 @@ class RoleMenuVisibilityService
     public const MODE_HIDDEN = 'hidden';
 
     /**
+     * @var list<string>
+     */
+    private const DEFAULT_ROLLOUT_OVERRIDE_MODULES = [
+        self::PILOT_MODULE_SLUG,
+        'activities',
+    ];
+
+    /**
      * @var array<string, list<string>>
      */
     private const GROUP_MODULES = [
@@ -282,7 +290,7 @@ class RoleMenuVisibilityService
             return $overrides;
         }
 
-        return $this->appendPilotOverride($overrides, $scope, $role);
+        return $this->appendRolloutOverrides($overrides, $scope, $role);
     }
 
     public function resolveModuleModeForRoleScope(string $role, string $scope, string $moduleSlug): ?string
@@ -311,6 +319,61 @@ class RoleMenuVisibilityService
     public function modulesForGroup(string $group): array
     {
         return self::GROUP_MODULES[$group] ?? [];
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function overrideManageableModules(): array
+    {
+        $configured = config('access_control.rollout_override.modules', self::DEFAULT_ROLLOUT_OVERRIDE_MODULES);
+        if (! is_array($configured)) {
+            return [];
+        }
+
+        $knownModules = [];
+        foreach (self::GROUP_MODULES as $modules) {
+            foreach ($modules as $module) {
+                $knownModules[$module] = true;
+            }
+        }
+
+        $manageable = [];
+        foreach ($configured as $module) {
+            if (! is_string($module)) {
+                continue;
+            }
+
+            $slug = trim($module);
+            if ($slug === '' || ! array_key_exists($slug, $knownModules)) {
+                continue;
+            }
+
+            $manageable[$slug] = true;
+        }
+
+        return array_keys($manageable);
+    }
+
+    public function isOverrideManageableModule(string $moduleSlug): bool
+    {
+        return in_array($moduleSlug, $this->overrideManageableModules(), true);
+    }
+
+    public function isModuleAssignableForRoleScope(string $moduleSlug, string $role, string $scope): bool
+    {
+        $groupModes = $this->resolveGroupModesForRoles([$role], $scope);
+        if ($groupModes === []) {
+            return false;
+        }
+
+        foreach (array_keys($groupModes) as $group) {
+            if (in_array($moduleSlug, self::GROUP_MODULES[$group] ?? [], true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function userCanResolveScope(User $user, string $scope): bool
@@ -414,13 +477,15 @@ class RoleMenuVisibilityService
      */
     private function applyRoleModuleModeOverridesForRoles(array $roleNames, string $scope, array $moduleModes): array
     {
-        $pilotOverrides = $this->pilotOverridesByScopeRoles($scope, $roleNames);
+        $rolloutOverrides = $this->rolloutOverridesByScopeRoles($scope, $roleNames);
 
         foreach ($roleNames as $roleName) {
             $overrides = self::ROLE_MODULE_MODE_OVERRIDES[$roleName] ?? [];
 
-            if (array_key_exists($roleName, $pilotOverrides)) {
-                $overrides[self::PILOT_MODULE_SLUG] = $this->normalizeOverrideModeForResolver($pilotOverrides[$roleName]);
+            if (array_key_exists($roleName, $rolloutOverrides)) {
+                foreach ($rolloutOverrides[$roleName] as $moduleSlug => $mode) {
+                    $overrides[$moduleSlug] = $this->normalizeOverrideModeForResolver($mode);
+                }
             }
 
             $moduleModes = $this->applyRoleModuleModeOverridesMap($overrides, $moduleModes);
@@ -431,19 +496,29 @@ class RoleMenuVisibilityService
 
     /**
      * @param list<string> $roleNames
-     * @return array<string, string>
+     * @return array<string, array<string, string>>
      */
-    private function pilotOverridesByScopeRoles(string $scope, array $roleNames): array
+    private function rolloutOverridesByScopeRoles(string $scope, array $roleNames): array
     {
-        if ($roleNames === [] || ! $this->isPilotOverrideEnabled()) {
+        if ($roleNames === [] || ! $this->isRolloutOverrideEnabled()) {
             return [];
         }
 
-        return $this->moduleAccessOverrideRepository->listModesForScopeRolesAndModule(
-            $scope,
-            $roleNames,
-            self::PILOT_MODULE_SLUG
-        );
+        $overridesByRole = [];
+
+        foreach ($this->overrideManageableModules() as $moduleSlug) {
+            $modes = $this->moduleAccessOverrideRepository->listModesForScopeRolesAndModule(
+                $scope,
+                $roleNames,
+                $moduleSlug
+            );
+
+            foreach ($modes as $roleName => $mode) {
+                $overridesByRole[$roleName][$moduleSlug] = $mode;
+            }
+        }
+
+        return $overridesByRole;
     }
 
     /**
@@ -487,24 +562,26 @@ class RoleMenuVisibilityService
      * @param array<string, string|null> $overrides
      * @return array<string, string|null>
      */
-    private function appendPilotOverride(array $overrides, string $scope, string $role): array
+    private function appendRolloutOverrides(array $overrides, string $scope, string $role): array
     {
-        if (! $this->isPilotOverrideEnabled()) {
+        if (! $this->isRolloutOverrideEnabled()) {
             return $overrides;
         }
 
-        $pilotMode = $this->moduleAccessOverrideRepository->findMode($scope, $role, self::PILOT_MODULE_SLUG);
-        if (! is_string($pilotMode)) {
-            return $overrides;
-        }
+        foreach ($this->overrideManageableModules() as $moduleSlug) {
+            $mode = $this->moduleAccessOverrideRepository->findMode($scope, $role, $moduleSlug);
+            if (! is_string($mode)) {
+                continue;
+            }
 
-        $overrides[self::PILOT_MODULE_SLUG] = $this->normalizeOverrideModeForResolver($pilotMode);
+            $overrides[$moduleSlug] = $this->normalizeOverrideModeForResolver($mode);
+        }
 
         return $overrides;
     }
 
-    private function isPilotOverrideEnabled(): bool
+    private function isRolloutOverrideEnabled(): bool
     {
-        return (bool) config('access_control.pilot_override.enabled', true);
+        return (bool) config('access_control.rollout_override.enabled', config('access_control.pilot_override.enabled', true));
     }
 }

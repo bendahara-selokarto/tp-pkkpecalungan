@@ -62,8 +62,8 @@ Parent Concern: `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROL
   - action `upsert` dan `rollback` pilot `catatan-keluarga`,
   - resolver `RoleMenuVisibilityService` membaca override aktif terlebih dahulu, lalu fallback hardcoded.
 - Super-admin:
-  - endpoint update pilot: `PUT /super-admin/access-control/pilot/catatan-keluarga`,
-  - endpoint rollback pilot: `DELETE /super-admin/access-control/pilot/catatan-keluarga`,
+  - endpoint update override: `PUT /super-admin/access-control/override` (payload wajib menyertakan `module=catatan-keluarga`),
+  - endpoint rollback override: `DELETE /super-admin/access-control/override` (payload wajib menyertakan `module=catatan-keluarga`),
   - kontrol write pada UI matrix baris `catatan-keluarga`.
 - Fallback:
-  - flag konfigurasi `ACCESS_CONTROL_PILOT_OVERRIDE_ENABLED` (default aktif) untuk menonaktifkan pembacaan override secara global jika diperlukan.
+  - flag konfigurasi `ACCESS_CONTROL_PILOT_OVERRIDE_ENABLED` (kompatibilitas legacy) dan `ACCESS_CONTROL_ROLLOUT_OVERRIDE_ENABLED` untuk menonaktifkan pembacaan override secara global jika diperlukan.

@@ -47,6 +47,34 @@ class AccessControlManagementReadOnlyTest extends TestCase
             });
     }
 
+    public function test_matrix_menandai_modul_rollout_activities_sebagai_override_manageable(): void
+    {
+        $superAdmin = User::factory()->create();
+        $superAdmin->assignRole('super-admin');
+
+        $this->actingAs($superAdmin)
+            ->get(route('super-admin.access-control.index', [
+                'scope' => 'kecamatan',
+                'role' => 'kecamatan-pokja-ii',
+            ]))
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page): void {
+                $page
+                    ->component('SuperAdmin/AccessControl/Index')
+                    ->where('rows', function (mixed $rows): bool {
+                        $target = collect($rows)->first(function (mixed $row): bool {
+                            return is_array($row)
+                                && ($row['scope'] ?? null) === 'kecamatan'
+                                && ($row['role'] ?? null) === 'kecamatan-pokja-ii'
+                                && ($row['module'] ?? null) === 'activities';
+                        });
+
+                        return is_array($target)
+                            && ($target['override_manageable'] ?? null) === true;
+                    });
+            });
+    }
+
     public function test_filter_scope_dan_mode_berjalan_pada_matrix(): void
     {
         $superAdmin = User::factory()->create();

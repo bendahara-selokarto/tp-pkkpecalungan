@@ -45,6 +45,8 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `docs/process/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`
 - Tahap 2 pilot modul `catatan-keluarga`:
   - `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`
+- Tahap 3 rollout batch modul `activities`:
+  - `docs/process/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md`
 
 ## Target Hasil
 - [x] Observasi kontrak akses existing selesai dan tervalidasi scoped.
@@ -60,8 +62,8 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Implementasi Tahap 1 read-only matrix super-admin.
 - [ ] Validasi desain matrix bersama stakeholder domain.
 - [x] Implementasi Tahap 2 write override modul `catatan-keluarga`.
-- [ ] Rollout modul berikutnya per concern terpisah.
-- [ ] Sinkronisasi dokumen domain/process/ADR pada setiap batch concern.
+- [x] Rollout modul berikutnya per concern terpisah.
+- [x] Sinkronisasi dokumen domain/process/ADR pada setiap batch concern.
 
 ## Test Matrix Minimum (Concern Ini)
 - [x] Feature test super-admin dapat melihat matrix akses read-only.
@@ -108,3 +110,9 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - Tahap 2 pilot write modul `catatan-keluarga` sudah aktif untuk update + rollback dari UI super-admin.
 - Audit trail perubahan mode sudah tercatat (`before_mode`, `after_mode`, `changed_by`, `changed_at`).
 - Resolver runtime sudah memprioritaskan override pilot saat aktif dan fallback ke hardcoded saat rollback.
+
+## Progress Tahap 3 Batch 1 (2026-03-02)
+- Batch rollout modul berikutnya (`activities`) selesai diimplementasikan sebagai concern terpisah (`ACL26A2`).
+- Endpoint override digeneralisasi menjadi `PUT/DELETE /super-admin/access-control/override` dengan payload `module`.
+- Validasi role-scope-module ditambahkan untuk mencegah kombinasi override yang tidak kompatibel.
+- Resolver runtime kini membaca override hanya dari daftar modul rollout terkelola (`catatan-keluarga`, `activities`) dengan fallback hardcoded tetap aktif.

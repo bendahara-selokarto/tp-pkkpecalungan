@@ -19,24 +19,24 @@ class RollbackPilotCatatanKeluargaOverrideAction
     /**
      * @return array{before_mode: string, after_mode: string, rolled_back: bool}
      */
-    public function execute(string $scope, string $roleName, User $actor): array
+    public function execute(string $scope, string $roleName, string $moduleSlug, User $actor): array
     {
-        $this->ensureCompatibleScopeRole($scope, $roleName);
+        $this->ensureCompatibleScopeRole($scope, $roleName, $moduleSlug);
 
-        $beforeMode = $this->resolveEffectiveMode($scope, $roleName);
+        $beforeMode = $this->resolveEffectiveMode($scope, $roleName, $moduleSlug);
         $deleted = $this->moduleAccessOverrideRepository->deleteMode(
             $scope,
             $roleName,
-            RoleMenuVisibilityService::PILOT_MODULE_SLUG
+            $moduleSlug
         );
 
-        $afterMode = $this->resolveEffectiveMode($scope, $roleName);
+        $afterMode = $this->resolveEffectiveMode($scope, $roleName, $moduleSlug);
 
         $this->moduleAccessOverrideRepository->storeAudit(
             null,
             $scope,
             $roleName,
-            RoleMenuVisibilityService::PILOT_MODULE_SLUG,
+            $moduleSlug,
             $beforeMode,
             $afterMode,
             (int) $actor->id
@@ -49,19 +49,26 @@ class RollbackPilotCatatanKeluargaOverrideAction
         ];
     }
 
-    private function ensureCompatibleScopeRole(string $scope, string $roleName): void
+    private function ensureCompatibleScopeRole(string $scope, string $roleName, string $moduleSlug): void
     {
         if ($roleName === 'super-admin' || ! RoleScopeMatrix::isRoleCompatibleWithScope($roleName, $scope)) {
             throw new InvalidArgumentException('Kombinasi role dan scope tidak valid untuk rollback pilot.');
         }
+
+        if (! $this->roleMenuVisibilityService->isOverrideManageableModule($moduleSlug)) {
+            throw new InvalidArgumentException('Modul tidak termasuk rollout override.');
+        }
+
+        if (! $this->roleMenuVisibilityService->isModuleAssignableForRoleScope($moduleSlug, $roleName, $scope)) {
+            throw new InvalidArgumentException('Modul tidak kompatibel untuk role dan scope ini.');
+        }
     }
 
-    private function resolveEffectiveMode(string $scope, string $roleName): string
+    private function resolveEffectiveMode(string $scope, string $roleName, string $moduleSlug): string
     {
         $mode = $this->roleMenuVisibilityService
-            ->resolveModuleModeForRoleScope($roleName, $scope, RoleMenuVisibilityService::PILOT_MODULE_SLUG);
+            ->resolveModuleModeForRoleScope($roleName, $scope, $moduleSlug);
 
         return is_string($mode) ? $mode : RoleMenuVisibilityService::MODE_HIDDEN;
     }
 }
-

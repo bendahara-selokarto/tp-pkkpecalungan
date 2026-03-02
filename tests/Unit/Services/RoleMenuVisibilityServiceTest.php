@@ -355,4 +355,50 @@ class RoleMenuVisibilityServiceTest extends TestCase
             $this->service->resolveModuleModeForScope($user, 'kecamatan', RoleMenuVisibilityService::PILOT_MODULE_SLUG)
         );
     }
+
+    public function test_override_rollout_activities_diterapkan_ke_mode_efektif(): void
+    {
+        $actor = User::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-pokja-ii');
+
+        $this->assertSame(
+            RoleMenuVisibilityService::MODE_READ_WRITE,
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', 'activities')
+        );
+
+        ModuleAccessOverride::query()->create([
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-ii',
+            'module_slug' => 'activities',
+            'mode' => RoleMenuVisibilityService::MODE_HIDDEN,
+            'changed_by' => $actor->id,
+        ]);
+
+        $this->assertNull(
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', 'activities')
+        );
+    }
+
+    public function test_override_non_rollout_diabaikan_oleh_resolver(): void
+    {
+        $actor = User::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-pokja-ii');
+
+        ModuleAccessOverride::query()->create([
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-pokja-ii',
+            'module_slug' => 'buku-keuangan',
+            'mode' => RoleMenuVisibilityService::MODE_HIDDEN,
+            'changed_by' => $actor->id,
+        ]);
+
+        $this->assertArrayNotHasKey(
+            'buku-keuangan',
+            $this->service->resolveForScope($user, 'kecamatan')['modules']
+        );
+    }
 }
