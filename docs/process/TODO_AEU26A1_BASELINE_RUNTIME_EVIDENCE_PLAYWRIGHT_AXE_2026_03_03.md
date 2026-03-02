@@ -59,3 +59,7 @@ Related ADR: `-`
 - [x] Ringkasan apa yang diubah dan kenapa.
 - [x] Daftar file terdampak.
 - [x] Hasil validasi + residual risk.
+
+## Follow-up Planner
+- Roadmap ekspansi coverage dan CI gate dilanjutkan pada:
+  - `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md`
