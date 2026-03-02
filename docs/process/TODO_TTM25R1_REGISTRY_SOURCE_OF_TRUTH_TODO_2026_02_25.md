@@ -35,7 +35,7 @@ Status: `in-progress` (`state:truth-registry`, `state:deterministic-routing`)
 | `C-UI-RESPONSIVE` | Refactor responsive UX layout lintas halaman | `docs/process/TODO_UXR26A1_REFACTOR_RESPONSIVE_UX_LAYOUT_2026_03_01.md` | `in-progress` (`state:responsive-ux-refactor`) | `TODO_REFACTOR_DASHBOARD_*`, `TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md` (`related-concern`) | Untuk struktur responsif tabel, target sentuh mobile, dan aksesibilitas interaksi: ikuti `UXR26A1` sebagai jalur utama. |
 | `C-USER-GUIDE` | User guide natural humanis | `docs/process/TODO_USER_GUIDE_NATURAL_HUMANIS_2026_02_24.md` | `done` | - | Concern tunggal, tidak overlap aktif. |
 | `C-DATABASE-NORMALISASI` | Normalisasi database & legacy reduction | `docs/process/TODO_NORMALISASI_DATABASE_2026_02_24.md` | `done` | `TODO_CLEANUP_HIERARKI_FOLDER_2026_02_23.md`, `TODO_COVERAGE_UNIT_TEST_DAN_SEEDER_2026_02_22.md` | Untuk keputusan struktur data legacy gunakan TODO normalisasi sebagai acuan utama. |
-| `C-ACCESS-CONTROL` | Management ijin akses modul-group role oleh super-admin | `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md` | `in-progress` (`state:phased-rollout`, `state:awaiting-stakeholder-validation`) | `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md` (`decision-record`), `TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md` (`child-spec:done`), `TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md` (`child-spec:done`), `TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md` (`child-spec:done`), `TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md` (`child-spec:in-progress`) | Implementasi akses modular wajib bertahap: read-only matrix -> pilot write per modul -> rollout batch -> closure E2E; fallback hardcoded tetap aktif, dan penutupan parent concern kini mengikuti child concern `ACL26E2` untuk keputusan stakeholder + rollout batch lanjutan. |
+| `C-ACCESS-CONTROL` | Management ijin akses modul-group role oleh super-admin | `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md` | `done` (`state:phased-rollout-closed`) | `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md` (`decision-record`), `TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md` (`child-spec:done`), `TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md` (`child-spec:done`), `TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md` (`child-spec:done`), `TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md` (`child-spec:done`) | Concern ACL ditutup setelah keputusan stakeholder `go`, rollout batch 2 `agenda-surat`, regression gate ACL hijau, dan fallback rollback/hardcoded tetap tersedia. |
 | `C-MODULE-VISIBILITY` | Monitoring visibility lintas semua modul | `docs/process/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md` | `done` (`state:rolling-monitoring`, `state:global-visibility-gate`) | `docs/process/TODO_MONITORING_VISIBILITY_MODUL_KEGIATAN_2026_02_27.md` (`child-spec:done`) | Monitoring lintas semua modul dikunci di concern global; sub-scope `activities` dipertahankan untuk detail guard domain kegiatan (sinkronisasi status 2026-03-02). |
 | `C-SEKCAM-ROADMAP` | Roadmap concern sekretaris kecamatan | `docs/process/TODO_SKC0201_ROADMAP_SEKRETARIS_KECAMATAN_2026_02_28.md` | `in-progress` (`state:wave-delivery`, `state:wave-2-pending`) | - | Roadmap ini menjadi SOT urutan gelombang concern `kecamatan-sekretaris`; output gelombang 1 sudah dikunci dengan revalidasi targeted 2026-03-02, sementara gelombang 2 pokja masih `pending`. |
 | `C-PROCESS-EXECUTION` | Jalur eksekusi AI zero ambiguity + self-reflective routing | `docs/process/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md` | `done` | `TODO_ZERO_AMBIGUITY_AI_SINGLE_PATH_2026_02_23.md` (`historical-baseline`), `TODO_FLOW_BACA_LAPOR_SINKRON_HEADER_TABEL.md` (`child-spec`), `TODO_BTLK26A1_OPTIMASI_BOTTLENECK_PROCESS_EXECUTION_2026_03_01.md` (`child-spec:done`), `docs/adr/ADR_0003_SELF_REFLECTIVE_ROUTING.md` (`decision-record`) | Eksekusi AI concern process wajib mengikuti single-path aktif dengan checkpoint refleksi terkontrol sebelum patch besar. |
@@ -77,7 +77,7 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 - [x] Sinkronisasi hasil audit sesi dicatat pada `docs/process/OPERATIONAL_VALIDATION_LOG.md`.
 - [x] Concern `C-MODULE-VISIBILITY` disinkronkan ke status `done` (`rolling-monitoring`) setelah mitigasi ringan output wajib + validasi targeted 2026-03-02.
 - [x] Child concern `PDF26A2` disinkronkan ke `done` untuk siklus audit PDF 2026-03-02; registry insiden diperbarui pada `PDF26A1`.
-- [x] Concern `C-ACCESS-CONTROL` dipertegas pada state `awaiting-stakeholder-validation` untuk mengunci blocker eksternal tanpa membuka scope teknis baru (sinkronisasi 2026-03-02).
+- [x] Concern `C-ACCESS-CONTROL` ditutup ke `done` setelah closure `ACL26E2` (`go`, rollout batch 2 `agenda-surat`, regression gate + full suite hijau) pada 2026-03-02.
 - [x] Concern `C-SEKCAM-ROADMAP` disinkronkan ke state `wave-2-pending` setelah output gelombang 1 dikunci dan paket validasi targeted dijalankan ulang pada 2026-03-02.
 - [x] Drift status concern `C-PDF-AUDIT` ditutup: status registry diselaraskan ke `done` mengikuti SOT `PDF26A1`; follow-up operasional tetap di `PDF26A2`.
 - [x] Concern `C-SIDEBAR-UI` disinkronkan dengan hardening mitigasi batch PDF sidebar (`UVM25R1`): guard coverage menu PDF wajib + anti-duplikasi + guard `uiVisibility` ditambahkan pada unit test frontend (sinkronisasi 2026-03-02).
@@ -106,7 +106,7 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 ## Mitigasi 5 (Cadence Readiness 2026-03-02)
 
 - [x] Pra-review snapshot concern `in-progress` dikunci untuk baseline sebelum R1.
-  - hasil baseline 2026-03-02: `ACL26M1`, `SKC0201`, `UVM25R1`, `UXR26A1`, `TTM25R1`.
+  - hasil baseline 2026-03-02: `SKC0201`, `UVM25R1`, `UXR26A1`, `TTM25R1`.
 - [x] Paket command review mingguan dikunci agar R1/R2 berjalan deterministik:
   - `rg -n '^Status:\\s*`in-progress`' docs/process -g 'TODO_*.md'`
   - `rg -n '^\\s*- \\[ \\]' docs/process/TODO_*.md`
@@ -117,7 +117,6 @@ Dokumen di bawah ini tidak boleh lagi dipakai sebagai acuan final bila concern s
 ## Mitigasi Final (Snapshot Lock 2026-03-02)
 
 - [x] Snapshot final concern `in-progress` dikunci ulang:
-  - `ACL26M1` (`awaiting-stakeholder-validation`),
   - `SKC0201` (`wave-2-pending`),
   - `UVM25R1` (`rolling-ui-exp`),
   - `UXR26A1` (`responsive-ux-refactor`),

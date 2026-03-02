@@ -1,7 +1,7 @@
 # TODO ACL26E2 Penutupan Gap End To End Management Ijin Akses
 
 Tanggal: 2026-03-02  
-Status: `in-progress` (`state:e2e-closure-plan`)
+Status: `done` (`state:e2e-closure-complete`)
 Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 
 ## Aturan Pakai
@@ -39,25 +39,25 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - Dampak keputusan arsitektur: `tidak` (tetap dalam boundary ADR 0002).
 
 ## Target Hasil
-- [ ] Tersusun roadmap eksekusi penutupan gap E2E per batch modul.
-- [ ] Keputusan stakeholder matrix terdokumentasi dan tersinkron ke parent concern.
-- [ ] Eksekusi batch lanjutan (minimal 1 batch) tervalidasi end-to-end.
-- [ ] Kriteria close parent concern `ACL26M1` terdefinisi dan dapat diuji.
+- [x] Tersusun roadmap eksekusi penutupan gap E2E per batch modul.
+- [x] Keputusan stakeholder matrix terdokumentasi dan tersinkron ke parent concern.
+- [x] Eksekusi batch lanjutan (minimal 1 batch) tervalidasi end-to-end.
+- [x] Kriteria close parent concern `ACL26M1` terdefinisi dan dapat diuji.
 
 ## Langkah Eksekusi
 - [x] Analisis scoped dependency + side effect.
-- [x] Patch minimal pada boundary arsitektur (planning docs only).
+- [x] Patch minimal pada boundary arsitektur (code + docs concern ACL).
 - [x] Sinkronisasi dokumen concern terkait (parent + registry).
-- [ ] L1. Kunci daftar kandidat modul rollout batch 2 dari matrix runtime (`read-only|read-write|hidden`) beserta alasan prioritas.
-- [ ] L2. Jalankan sesi stakeholder decision (`go/hold/adjust`) dan catat keputusan final di concern ini + parent.
-- [ ] L3. Eksekusi rollout batch 2 pada modul yang disetujui.
-- [ ] L4. Jalankan regression suite ACL dan visibility pasca rollout batch 2.
-- [ ] L5. Evaluasi kebutuhan batch 3; jika tidak ada gap residual, tutup parent concern.
+- [x] L1. Kunci daftar kandidat modul rollout batch 2 dari matrix runtime (`read-only|read-write|hidden`) beserta alasan prioritas.
+- [x] L2. Jalankan sesi stakeholder decision (`go/hold/adjust`) dan catat keputusan final di concern ini + parent.
+- [x] L3. Eksekusi rollout batch 2 pada modul yang disetujui.
+- [x] L4. Jalankan regression suite ACL dan visibility pasca rollout batch 2.
+- [x] L5. Evaluasi kebutuhan batch 3; jika tidak ada gap residual, tutup parent concern.
 
 ## Validasi
-- [ ] L1: `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`.
-- [ ] L2: `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php`.
-- [ ] L3: `php artisan test` setelah batch rollout modul lanjutan.
+- [x] L1: `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`.
+- [x] L2: `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php`.
+- [x] L3: `php artisan test` setelah batch rollout modul lanjutan.
 
 ## Risiko
 - Salah konfigurasi kombinasi `module x role x scope` dapat memblokir akses role kompatibel.
@@ -67,7 +67,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 ## Keputusan
 - [x] K1: Penutupan gap E2E dijalankan sebagai child concern terpisah dari parent governance.
 - [x] K2: Rollout modul lanjutan wajib berbasis batch kecil + regression gate.
-- [ ] K3: Keputusan stakeholder final (`go/hold/adjust`) dan dampak modul lanjutan.
+- [x] K3: Keputusan stakeholder final (`go/hold/adjust`) dan dampak modul lanjutan.
 
 ## Keputusan Arsitektur (Jika Ada)
 - [x] ADR baru tidak diperlukan pada tahap planning ini (masih dalam ADR 0002).
@@ -79,6 +79,19 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - Fallback level 3: hold batch rollout lanjutan dan pertahankan modul terkelola saat ini (`catatan-keluarga`, `activities`) sampai keputusan stakeholder final.
 
 ## Output Final
-- [ ] Ringkasan apa yang diubah dan kenapa.
-- [ ] Daftar file terdampak.
-- [ ] Hasil validasi + residual risk.
+- [x] Ringkasan apa yang diubah dan kenapa.
+- [x] Daftar file terdampak.
+- [x] Hasil validasi + residual risk.
+
+## Progress Update 2026-03-02 (Closure Execution)
+- Keputusan stakeholder final dicatat: `go` (lanjut rollout batch kecil dengan gate regresi).
+- Batch 2 dieksekusi pada modul `agenda-surat`:
+  - modul ditambahkan ke daftar rollout override terkelola (`config/access_control.php`, `RoleMenuVisibilityService`),
+  - validasi update/rollback override modul `agenda-surat` ditambahkan pada feature test super-admin.
+- Validasi pasca rollout:
+  - `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php`
+  - hasil: `PASS` (`40` tests, `325` assertions).
+  - `php artisan test`
+  - hasil: `PASS` (`1043` tests, `7009` assertions).
+- Evaluasi batch 3:
+  - tidak ada gap teknis residual pada concern ACL; fallback rollback per kombinasi dan fallback global hardcoded tetap aktif.

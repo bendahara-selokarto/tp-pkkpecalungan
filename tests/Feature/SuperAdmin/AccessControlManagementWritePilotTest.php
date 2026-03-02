@@ -19,6 +19,7 @@ class AccessControlManagementWritePilotTest extends TestCase
         parent::setUp();
 
         Role::create(['name' => 'super-admin']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'kecamatan-pokja-iv']);
         Role::create(['name' => 'kecamatan-pokja-ii']);
         Role::create(['name' => 'admin-desa']);
@@ -230,6 +231,82 @@ class AccessControlManagementWritePilotTest extends TestCase
 
         $this->actingAs($kecamatanPokjaIi)
             ->get('/kecamatan/activities')
+            ->assertOk();
+    }
+
+    public function test_super_admin_dapat_update_dan_rollback_override_rollout_agenda_surat(): void
+    {
+        $superAdmin = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $superAdmin->assignRole('super-admin');
+
+        $kecamatanSekretaris = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $kecamatanSekretaris->assignRole('kecamatan-sekretaris');
+
+        $this->actingAs($kecamatanSekretaris)
+            ->get('/kecamatan/agenda-surat')
+            ->assertOk();
+
+        $this->actingAs($superAdmin)
+            ->put(route('super-admin.access-control.override.update'), [
+                'module' => 'agenda-surat',
+                'scope' => 'kecamatan',
+                'role' => 'kecamatan-sekretaris',
+                'mode' => 'hidden',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseHas('module_access_overrides', [
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-sekretaris',
+            'module_slug' => 'agenda-surat',
+            'mode' => 'hidden',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        $this->assertDatabaseHas('module_access_override_audits', [
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-sekretaris',
+            'module_slug' => 'agenda-surat',
+            'before_mode' => 'read-write',
+            'after_mode' => 'hidden',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        $this->actingAs($kecamatanSekretaris)
+            ->get('/kecamatan/agenda-surat')
+            ->assertStatus(403);
+
+        $this->actingAs($superAdmin)
+            ->delete(route('super-admin.access-control.override.rollback'), [
+                'module' => 'agenda-surat',
+                'scope' => 'kecamatan',
+                'role' => 'kecamatan-sekretaris',
+            ])
+            ->assertRedirect();
+
+        $this->assertDatabaseMissing('module_access_overrides', [
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-sekretaris',
+            'module_slug' => 'agenda-surat',
+        ]);
+
+        $this->assertDatabaseHas('module_access_override_audits', [
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-sekretaris',
+            'module_slug' => 'agenda-surat',
+            'before_mode' => 'hidden',
+            'after_mode' => 'read-write',
+            'changed_by' => $superAdmin->id,
+        ]);
+
+        $this->actingAs($kecamatanSekretaris)
+            ->get('/kecamatan/agenda-surat')
             ->assertOk();
     }
 }

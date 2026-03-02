@@ -21,6 +21,7 @@ class RoleMenuVisibilityService
     private const DEFAULT_ROLLOUT_OVERRIDE_MODULES = [
         self::PILOT_MODULE_SLUG,
         'activities',
+        'agenda-surat',
     ];
 
     /**

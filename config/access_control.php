@@ -9,6 +9,7 @@ return [
         'modules' => [
             'catatan-keluarga',
             'activities',
+            'agenda-surat',
         ],
     ],
 ];

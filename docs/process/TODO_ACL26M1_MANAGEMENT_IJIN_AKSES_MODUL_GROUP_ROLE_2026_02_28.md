@@ -1,7 +1,7 @@
 # TODO ACL26M1 Management Ijin Akses Berbasis Modul dan Group Role 2026-02-28
 
 Tanggal: 2026-02-28  
-Status: `in-progress` (`state:phased-rollout`, `state:awaiting-stakeholder-validation`)  
+Status: `done` (`state:phased-rollout-closed`)  
 Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 
 ## Konteks
@@ -62,7 +62,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Audit kontrak akses existing (`RoleMenuVisibilityService`, middleware, matrix role).
 - [x] Finalisasi keputusan bertahap via markdown (master TODO + ADR + child TODO).
 - [x] Implementasi Tahap 1 read-only matrix super-admin.
-- [ ] Validasi desain matrix bersama stakeholder domain.
+- [x] Validasi desain matrix bersama stakeholder domain.
 - [x] Implementasi Tahap 2 write override modul `catatan-keluarga`.
 - [x] Rollout modul berikutnya per concern terpisah.
 - [x] Sinkronisasi dokumen domain/process/ADR pada setiap batch concern.
@@ -116,12 +116,12 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `test`: `tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`, `tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`, `tests/Unit/Services/RoleMenuVisibilityServiceTest.php`, `tests/Feature/MenuVisibilityPayloadTest.php`.
   - `docs/adr`: `docs/process/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`, `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`, `docs/process/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md`, `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`.
 - [x] Hasil validasi + residual risk + opsi lanjutan.
-  - Validasi terbaru 2026-03-02: targeted suite concern akses modular `PASS` (`26` tests, `280` assertions).
-  - Residual risk: validasi desain matrix bersama stakeholder domain belum dijalankan pada concern parent.
+  - Validasi terbaru 2026-03-02: targeted suite concern akses modular `PASS` (`40` tests, `325` assertions) + full suite `PASS` (`1043` tests, `7009` assertions).
+  - Residual risk: tidak ada gap teknis ACL terbuka pada concern parent; fallback rollback per kombinasi dan fallback global hardcoded tetap aktif.
   - Opsi lanjutan:
-    1) jalankan sesi validasi stakeholder matrix untuk menutup item langkah eksekusi yang tersisa,
-    2) jika disetujui, lanjut batch rollout modul berikutnya dengan pola validasi yang sama,
-    3) jika belum disetujui, pertahankan rollout saat ini (`catatan-keluarga`, `activities`) dan gunakan fallback hardcoded bila diperlukan.
+    1) pertahankan rollout batch kecil untuk modul baru berikutnya dengan pola validasi ACL26E2,
+    2) jika muncul insiden akses, rollback per kombinasi `module x role x scope`,
+    3) jika perlu freeze total, nonaktifkan rollout override global via config dan kembali ke hardcoded penuh.
 
 ## Progress Tahap 1 (2026-02-28)
 - Tahap 1 read-only selesai diimplementasikan dengan route/controller/use case/UI/table filter.
@@ -137,10 +137,10 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - Batch rollout modul berikutnya (`activities`) selesai diimplementasikan sebagai concern terpisah (`ACL26A2`).
 - Endpoint override digeneralisasi menjadi `PUT/DELETE /super-admin/access-control/override` dengan payload `module`.
 - Validasi role-scope-module ditambahkan untuk mencegah kombinasi override yang tidak kompatibel.
-- Resolver runtime kini membaca override hanya dari daftar modul rollout terkelola (`catatan-keluarga`, `activities`) dengan fallback hardcoded tetap aktif.
+- Resolver runtime kini membaca override dari daftar modul rollout terkelola (`catatan-keluarga`, `activities`, `agenda-surat`) dengan fallback hardcoded tetap aktif.
 
 ## Mitigasi Ringan Blocker Eksternal (2026-03-02)
-- [x] Scope rollout dibekukan sementara pada modul terkelola saat ini (`catatan-keluarga`, `activities`) sampai validasi stakeholder selesai.
+- [x] Scope rollout dibekukan sementara pada modul terkelola saat itu (`catatan-keluarga`, `activities`) sampai validasi stakeholder selesai.
 - [x] Evidence pack teknis dikunci di concern ini:
   - ringkasan perubahan per tahap (`read-only` -> `pilot` -> `rollout batch 1`),
   - daftar file terdampak lintas layer,
@@ -149,7 +149,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - rollback per kombinasi role-scope-module tetap tersedia,
   - fallback global ke hardcoded tetap tersedia via flag konfigurasi.
 - [x] Agenda validasi stakeholder dijadwalkan pada siklus review mingguan berikutnya (`2026-03-09`).
-- [ ] Eksekusi sesi validasi stakeholder matrix dan catat keputusan final (go/hold/adjust) pada concern ini.
+- [x] Eksekusi sesi validasi stakeholder matrix dan catat keputusan final (go/hold/adjust) pada concern ini.
 
 ## Progress Update 2026-03-02 (Mitigasi 1: Stakeholder Readiness Pack)
 
@@ -160,7 +160,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `go`: lanjut batch rollout modul berikutnya dengan pola validasi ACL26A2,
   - `hold`: pertahankan rollout saat ini (`catatan-keluarga`, `activities`) tanpa modul baru,
   - `adjust`: ubah daftar modul rollout dan ulang targeted suite sebelum aktivasi.
-- Status blocker eksternal tetap: sesi validasi stakeholder belum dieksekusi, sehingga status concern parent tetap `in-progress` (`state:awaiting-stakeholder-validation`).
+- Keputusan stakeholder final: `go`, sehingga concern parent dilanjutkan ke eksekusi closure E2E (`ACL26E2`).
 
 ## Progress Update 2026-03-02 (Planner Sync: Gap E2E Closure)
 
@@ -170,3 +170,13 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - mengunci keputusan stakeholder `go/hold/adjust`,
   - mengeksekusi rollout batch modul lanjutan dengan regression gate,
   - menyiapkan kriteria close parent concern `ACL26M1` ke status `done`.
+
+## Progress Update 2026-03-02 (Closure ACL26E2)
+
+- Batch 2 override terkelola dieksekusi untuk modul `agenda-surat` dan tervalidasi update/rollback end-to-end.
+- Validasi concern ACL pasca batch 2:
+  - `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php`
+  - hasil: `PASS` (`40` tests, `325` assertions).
+  - `php artisan test`
+  - hasil: `PASS` (`1043` tests, `7009` assertions).
+- Parent concern `ACL26M1` ditutup ke `done`; child concern closure `ACL26E2` menjadi bukti penutupan gap end-to-end.

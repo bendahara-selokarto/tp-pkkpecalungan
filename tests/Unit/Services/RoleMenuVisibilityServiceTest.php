@@ -401,4 +401,37 @@ class RoleMenuVisibilityServiceTest extends TestCase
             $this->service->resolveForScope($user, 'kecamatan')['modules']
         );
     }
+
+    public function test_rollout_modules_mencakup_agenda_surat(): void
+    {
+        $this->assertSame(
+            ['catatan-keluarga', 'activities', 'agenda-surat'],
+            $this->service->overrideManageableModules()
+        );
+    }
+
+    public function test_override_rollout_agenda_surat_diterapkan_ke_mode_efektif(): void
+    {
+        $actor = User::factory()->create();
+
+        $user = User::factory()->create();
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->assertSame(
+            RoleMenuVisibilityService::MODE_READ_WRITE,
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', 'agenda-surat')
+        );
+
+        ModuleAccessOverride::query()->create([
+            'scope' => 'kecamatan',
+            'role_name' => 'kecamatan-sekretaris',
+            'module_slug' => 'agenda-surat',
+            'mode' => RoleMenuVisibilityService::MODE_HIDDEN,
+            'changed_by' => $actor->id,
+        ]);
+
+        $this->assertNull(
+            $this->service->resolveModuleModeForScope($user, 'kecamatan', 'agenda-surat')
+        );
+    }
 }
