@@ -237,8 +237,15 @@ Prasyarat:
     - `php artisan serve --host=127.0.0.1 --port=8000`
 
 Kredensial login (opsional untuk smoke terautentikasi):
-- `E2E_EMAIL`
-- `E2E_PASSWORD`
+- `E2E_DESA_EMAIL`
+- `E2E_DESA_PASSWORD`
+- `E2E_KECAMATAN_EMAIL`
+- `E2E_KECAMATAN_PASSWORD`
+- `E2E_SUPERADMIN_EMAIL`
+- `E2E_SUPERADMIN_PASSWORD`
+
+Fallback kompatibilitas lama:
+- `E2E_EMAIL` + `E2E_PASSWORD` tetap dibaca untuk role `super-admin` jika env khusus super-admin belum diisi.
 
 Perintah:
 - `npm run test:e2e`
@@ -247,4 +254,4 @@ Perintah:
 
 Catatan:
 - Test login page (`@smoke`, `@a11y`) selalu jalan tanpa kredensial.
-- Test smoke terautentikasi otomatis `skip` jika `E2E_EMAIL`/`E2E_PASSWORD` belum diisi.
+- Test smoke/a11y terautentikasi per role otomatis `skip` jika pasangan kredensial role terkait belum diisi.
