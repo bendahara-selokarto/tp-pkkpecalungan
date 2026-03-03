@@ -119,6 +119,11 @@ jobs:
         continue-on-error: true
         run: npm run test:e2e:perf:summary
 
+      - name: Evaluate UI performance trend (non-blocking)
+        if: always()
+        continue-on-error: true
+        run: npm run test:e2e:perf:trend
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4

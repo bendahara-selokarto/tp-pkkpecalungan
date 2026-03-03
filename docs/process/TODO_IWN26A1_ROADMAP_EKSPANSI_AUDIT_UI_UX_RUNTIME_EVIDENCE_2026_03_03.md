@@ -1,7 +1,7 @@
 # TODO IWN26A1 Roadmap Ekspansi Audit UI UX Runtime Evidence
 
 Tanggal: 2026-03-03  
-Status: `in-progress` (`batch:P1-P2-P3-P4-P5-P6-P8-implemented`)
+Status: `in-progress` (`batch:P1-P2-P3-P4-P5-P6-P8-P9-implemented`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -53,6 +53,10 @@ Related ADR: `-`
   - stabilisasi lane `@visual` dashboard dengan masking area chart dinamis,
   - persist evidence `@perf` ke `reports/ui-runtime/perf/latest`,
   - generate ringkasan `summary.json` + `summary.md` + `history/perf-history.jsonl`.
+- [x] `P9` Evaluasi tren performa lintas run:
+  - jalankan audit tren pada 3 run terakhir,
+  - flag degradasi beruntun jika metrik memburuk >=15%,
+  - sediakan mode strict opsional via `PERF_TREND_ENFORCE=1`.
 - [ ] `P7` Sinkronisasi TODO concern UI aktif agar setiap concern menyertakan evidence runtime.
 
 ## Validasi
@@ -64,6 +68,7 @@ Related ADR: `-`
   - `npm run test:e2e:visual` (`6 passed`) untuk baseline visual prioritas;
   - `npm run test:e2e:perf` (`3 passed`, `3 skipped`) untuk baseline performance budget desktop;
   - `npm run test:e2e:perf:summary` (`entries=3`, `status=within-budget`) menghasilkan artefak audit `reports/ui-runtime/perf/*`;
+  - `npm run test:e2e:perf:trend` menghasilkan evaluasi tren ke `reports/ui-runtime/perf/trend-evaluation.{json,md}`;
   - `php artisan test --filter=DashboardLayoutMenuContractTest` (`PASS`).
 
 ## Risiko

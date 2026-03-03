@@ -11,6 +11,7 @@
         "test:e2e:visual": "playwright test -c playwright.config.mjs e2e/visual-ui.spec.js",
         "test:e2e:perf": "playwright test -c playwright.config.mjs e2e/perf-ui.spec.js",
         "test:e2e:perf:summary": "node scripts/ui-runtime/summarize-perf-baseline.mjs",
+        "test:e2e:perf:trend": "node scripts/ui-runtime/evaluate-perf-trend.mjs",
         "test:e2e:install": "playwright install chromium"
     },
     "devDependencies": {

@@ -265,6 +265,7 @@ Perintah:
 - `npm run test:e2e:visual`
 - `npm run test:e2e:perf`
 - `npm run test:e2e:perf:summary`
+- `npm run test:e2e:perf:trend`
 - Audit a11y mendalam (PowerShell):
   - `$env:E2E_A11Y_EXCLUDE_NPROGRESS='0'; $env:E2E_A11Y_DISABLE_COLOR_CONTRAST='0'; npm run test:e2e:a11y`
 
@@ -276,3 +277,4 @@ Catatan:
 - Lane `@visual` menyediakan baseline visual untuk `login`, `dashboard`, dan `super-admin/users` lintas project Playwright; dijalankan sebagai candidate gate non-blocking.
 - Lane `@perf` menyediakan baseline performance budget (navigation timing + FCP) untuk `login`, `dashboard`, dan `super-admin/users` pada desktop; dijalankan sebagai candidate gate non-blocking.
 - Ringkasan evidence performa disimpan ke `reports/ui-runtime/perf/{summary.json,summary.md,history/perf-history.jsonl}` untuk audit lintas run.
+- Evaluasi tren performa menyimpan hasil ke `reports/ui-runtime/perf/{trend-evaluation.json,trend-evaluation.md}` dan mem-flag degradasi jika 3 run terakhir memburuk beruntun (>=15%).
