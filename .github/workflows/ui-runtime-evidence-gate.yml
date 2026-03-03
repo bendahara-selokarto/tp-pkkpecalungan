@@ -21,7 +21,7 @@ on:
       - '.github/workflows/ui-runtime-evidence-gate.yml'
   workflow_dispatch:
   schedule:
-    - cron: '0 18 * * *'
+    - cron: '0 6,18 * * *'
 
 permissions:
   contents: read

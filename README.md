@@ -280,4 +280,4 @@ Catatan:
 - Evaluasi tren performa menyimpan hasil ke `reports/ui-runtime/perf/{trend-evaluation.json,trend-evaluation.md}` dan mem-flag degradasi jika 3 run terakhir memburuk beruntun (>=15%).
 - CI menyimpan history perf lintas run via cache; trend gate mode strict (`PERF_TREND_ENFORCE=1`) dieksekusi untuk `main` agar degradasi beruntun dapat memblokir merge ke baseline utama.
 - Selama history belum mencapai 3 run, evaluator memberi status `warmup` (bukan `ok`) agar fase pematangan data tetap terbaca eksplisit di audit CI.
-- Workflow runtime evidence juga dijalankan terjadwal harian (cron) agar history trend tetap terakumulasi walau tanpa push baru.
+- Workflow runtime evidence dijalankan terjadwal 2x sehari (cron) agar history trend cepat terakumulasi walau tanpa push baru.
