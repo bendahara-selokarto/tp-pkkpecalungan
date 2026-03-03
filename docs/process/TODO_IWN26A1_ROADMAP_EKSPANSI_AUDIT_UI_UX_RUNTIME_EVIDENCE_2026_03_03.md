@@ -1,7 +1,7 @@
 # TODO IWN26A1 Roadmap Ekspansi Audit UI UX Runtime Evidence
 
 Tanggal: 2026-03-03  
-Status: `in-progress` (`batch:P1-P2-P3-P4-P6-implemented`)
+Status: `in-progress` (`batch:P1-P2-P3-P4-P5-P6-implemented`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -43,7 +43,8 @@ Related ADR: `-`
   - catatan: lane CRUD dijalankan pada project desktop (`chromium-desktop`), sementara project mobile `skip` by design untuk menjaga stabilitas baseline gate.
 - [x] `P4` Tambah baseline visual regression untuk halaman prioritas (`login`, `dashboard`, `super-admin/users`).
   - catatan: lane visual dijalankan sebagai candidate gate non-blocking di workflow runtime evidence.
-- [ ] `P5` Tambah baseline performance audit (Lighthouse CI) untuk halaman prioritas.
+- [x] `P5` Tambah baseline performance audit (Lighthouse CI) untuk halaman prioritas.
+  - catatan: fase awal diwujudkan sebagai lane `@perf` berbasis budget runtime timing (candidate gate non-blocking); migrasi ke Lighthouse CI penuh tetap dapat dilanjutkan sebagai iterasi lanjutan.
 - [x] `P6` Integrasi gate CI bertahap:
   - gate wajib `@smoke` + `@a11y`,
   - lane tambahan `a11y deep audit` non-blocking (tanpa exclude `#nprogress` dan dengan `color-contrast` aktif),
@@ -56,6 +57,8 @@ Related ADR: `-`
 - [x] L3: dry-run lokal setara CI untuk lane smoke/a11y berhasil:
   - `npm run test:e2e:smoke` (`11 passed`, `3 skipped`) pada mode `E2E_REQUIRE_AUTH=1`;
   - `npm run test:e2e:a11y` (`8 passed`) pada mode `E2E_REQUIRE_AUTH_A11Y=1`;
+  - `npm run test:e2e:visual` (`6 passed`) untuk baseline visual prioritas;
+  - `npm run test:e2e:perf` (`3 passed`, `3 skipped`) untuk baseline performance budget desktop;
   - `php artisan test --filter=DashboardLayoutMenuContractTest` (`PASS`).
 
 ## Risiko

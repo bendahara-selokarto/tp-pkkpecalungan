@@ -110,6 +110,10 @@ jobs:
         continue-on-error: true
         run: npm run test:e2e:visual
 
+      - name: Run UI performance baseline audit (non-blocking)
+        continue-on-error: true
+        run: npm run test:e2e:perf
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
