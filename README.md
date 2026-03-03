@@ -278,3 +278,4 @@ Catatan:
 - Lane `@perf` menyediakan baseline performance budget (navigation timing + FCP) untuk `login`, `dashboard`, dan `super-admin/users` pada desktop; dijalankan sebagai candidate gate non-blocking.
 - Ringkasan evidence performa disimpan ke `reports/ui-runtime/perf/{summary.json,summary.md,history/perf-history.jsonl}` untuk audit lintas run.
 - Evaluasi tren performa menyimpan hasil ke `reports/ui-runtime/perf/{trend-evaluation.json,trend-evaluation.md}` dan mem-flag degradasi jika 3 run terakhir memburuk beruntun (>=15%).
+- CI menyimpan history perf lintas run via cache; trend gate mode strict (`PERF_TREND_ENFORCE=1`) dieksekusi untuk `main` agar degradasi beruntun dapat memblokir merge ke baseline utama.

@@ -52,6 +52,7 @@ jobs:
       E2E_KECAMATAN_PASSWORD: password123
       E2E_SUPERADMIN_EMAIL: e2e.superadmin@pkk.local
       E2E_SUPERADMIN_PASSWORD: password123
+      PERF_HISTORY_CACHE_KEY: ui-perf-history-${{ github.ref_name }}-${{ github.run_id }}
 
     steps:
       - name: Checkout repository
@@ -69,6 +70,15 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
+
+      - name: Restore UI performance history cache
+        uses: actions/cache/restore@v4
+        with:
+          path: reports/ui-runtime/perf/history
+          key: ${{ env.PERF_HISTORY_CACHE_KEY }}
+          restore-keys: |
+            ui-perf-history-${{ github.ref_name }}-
+            ui-perf-history-main-
 
       - name: Install PHP dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
@@ -123,6 +133,19 @@ jobs:
         if: always()
         continue-on-error: true
         run: npm run test:e2e:perf:trend
+
+      - name: Enforce UI performance trend gate (main only)
+        if: always() && github.ref == 'refs/heads/main'
+        env:
+          PERF_TREND_ENFORCE: '1'
+        run: npm run test:e2e:perf:trend
+
+      - name: Save UI performance history cache
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: reports/ui-runtime/perf/history
+          key: ${{ env.PERF_HISTORY_CACHE_KEY }}
 
       - name: Upload Playwright report
         if: always()

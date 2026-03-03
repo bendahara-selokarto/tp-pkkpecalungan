@@ -1,7 +1,7 @@
 # TODO IWN26A1 Roadmap Ekspansi Audit UI UX Runtime Evidence
 
 Tanggal: 2026-03-03  
-Status: `in-progress` (`batch:P1-P2-P3-P4-P5-P6-P8-P9-implemented`)
+Status: `in-progress` (`batch:P1-P2-P3-P4-P5-P6-P8-P9-P10-implemented`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -57,6 +57,10 @@ Related ADR: `-`
   - jalankan audit tren pada 3 run terakhir,
   - flag degradasi beruntun jika metrik memburuk >=15%,
   - sediakan mode strict opsional via `PERF_TREND_ENFORCE=1`.
+- [x] `P10` Semi-blocking governance untuk baseline utama:
+  - persist `perf-history.jsonl` lintas run CI melalui cache,
+  - jalankan trend check non-blocking untuk observabilitas semua run,
+  - jalankan trend check strict di branch `main` sebagai guard baseline utama.
 - [ ] `P7` Sinkronisasi TODO concern UI aktif agar setiap concern menyertakan evidence runtime.
 
 ## Validasi
@@ -69,6 +73,7 @@ Related ADR: `-`
   - `npm run test:e2e:perf` (`3 passed`, `3 skipped`) untuk baseline performance budget desktop;
   - `npm run test:e2e:perf:summary` (`entries=3`, `status=within-budget`) menghasilkan artefak audit `reports/ui-runtime/perf/*`;
   - `npm run test:e2e:perf:trend` menghasilkan evaluasi tren ke `reports/ui-runtime/perf/trend-evaluation.{json,md}`;
+  - workflow `ui-runtime-evidence-gate` menyimpan history trend lintas run dan mengeksekusi strict-trend gate pada `main`.
   - `php artisan test --filter=DashboardLayoutMenuContractTest` (`PASS`).
 
 ## Risiko
