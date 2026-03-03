@@ -99,6 +99,13 @@ jobs:
       - name: Run UI accessibility gate
         run: npm run test:e2e:a11y
 
+      - name: Run UI accessibility deep audit (non-blocking)
+        continue-on-error: true
+        env:
+          E2E_A11Y_EXCLUDE_NPROGRESS: '0'
+          E2E_A11Y_DISABLE_COLOR_CONTRAST: '0'
+        run: npm run test:e2e:a11y
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4

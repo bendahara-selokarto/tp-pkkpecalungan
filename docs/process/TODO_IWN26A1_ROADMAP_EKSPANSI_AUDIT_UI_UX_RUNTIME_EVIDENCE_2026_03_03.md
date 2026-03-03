@@ -44,6 +44,7 @@ Related ADR: `-`
 - [ ] `P5` Tambah baseline performance audit (Lighthouse CI) untuk halaman prioritas.
 - [x] `P6` Integrasi gate CI bertahap:
   - gate wajib `@smoke` + `@a11y`,
+  - lane tambahan `a11y deep audit` non-blocking (tanpa exclude `#nprogress` dan dengan `color-contrast` aktif),
   - gate kandidat `visual` + `performance`.
 - [ ] `P7` Sinkronisasi TODO concern UI aktif agar setiap concern menyertakan evidence runtime.
 

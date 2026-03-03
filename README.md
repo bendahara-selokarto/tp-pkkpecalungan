@@ -245,6 +245,8 @@ Kredensial login (opsional untuk smoke terautentikasi):
 - `E2E_SUPERADMIN_PASSWORD`
 - `E2E_REQUIRE_AUTH=1` untuk memaksa lane auth tidak boleh `skip`.
 - `E2E_REQUIRE_AUTH_A11Y=1` untuk memaksa lane a11y terautentikasi (default env lokal tetap `0`; gate CI runtime-evidence menetapkan `1`).
+- `E2E_A11Y_EXCLUDE_NPROGRESS=0` untuk ikut mengaudit elemen progress bar runtime (`#nprogress`).
+- `E2E_A11Y_DISABLE_COLOR_CONTRAST=0` untuk mengaktifkan rule `color-contrast` pada scan Axe.
 
 Provisioning akun deterministik untuk CI:
 - Jalankan seeder `Database\\Seeders\\E2ERuntimeUserSeeder`.
@@ -260,7 +262,10 @@ Perintah:
 - `npm run test:e2e`
 - `npm run test:e2e:smoke`
 - `npm run test:e2e:a11y`
+- Audit a11y mendalam (PowerShell):
+  - `$env:E2E_A11Y_EXCLUDE_NPROGRESS='0'; $env:E2E_A11Y_DISABLE_COLOR_CONTRAST='0'; npm run test:e2e:a11y`
 
 Catatan:
 - Test login page (`@smoke`, `@a11y`) selalu jalan tanpa kredensial.
 - Test smoke/a11y terautentikasi per role otomatis `skip` jika pasangan kredensial role terkait belum diisi.
+- CI runtime evidence menjalankan lane tambahan `a11y deep audit` (non-blocking) untuk mendeteksi potensi blind spot.

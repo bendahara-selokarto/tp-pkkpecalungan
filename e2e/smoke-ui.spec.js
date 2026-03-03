@@ -4,7 +4,22 @@ import { expect, test } from '@playwright/test';
 const normalizeCredential = (value) => String(value ?? '').trim();
 const requireAuthRuntime = process.env.E2E_REQUIRE_AUTH === '1';
 const requireAuthA11yRuntime = process.env.E2E_REQUIRE_AUTH_A11Y === '1';
-const a11yExcludedSelectors = ['#nprogress'];
+const excludeNprogressInA11y = process.env.E2E_A11Y_EXCLUDE_NPROGRESS !== '0';
+const disableColorContrastRule = process.env.E2E_A11Y_DISABLE_COLOR_CONTRAST !== '0';
+
+const buildA11yScan = async (page) => {
+  let builder = new AxeBuilder({ page });
+
+  if (excludeNprogressInA11y) {
+    builder = builder.exclude('#nprogress');
+  }
+
+  if (disableColorContrastRule) {
+    builder = builder.disableRules(['color-contrast']);
+  }
+
+  return builder.analyze();
+};
 
 const roleCredentials = {
   desa: {
@@ -82,10 +97,7 @@ test('@smoke login page renders form controls', async ({ page }) => {
 test('@a11y login page has no serious or critical axe violations', async ({ page }) => {
   await page.goto('/login');
 
-  const accessibilityScan = await new AxeBuilder({ page })
-    .exclude(a11yExcludedSelectors.join(', '))
-    .disableRules(['color-contrast'])
-    .analyze();
+  const accessibilityScan = await buildA11yScan(page);
 
   const seriousViolations = accessibilityScan.violations.filter((violation) =>
     ['serious', 'critical'].includes(String(violation.impact ?? ''))
@@ -166,10 +178,7 @@ for (const roleConfig of roleMatrix) {
       await expect(page).toHaveURL(roleConfig.expectedPath);
       await roleConfig.shellAssertion(page);
 
-      const accessibilityScan = await new AxeBuilder({ page })
-        .exclude(a11yExcludedSelectors.join(', '))
-        .disableRules(['color-contrast'])
-        .analyze();
+      const accessibilityScan = await buildA11yScan(page);
 
       const seriousViolations = accessibilityScan.violations.filter((violation) =>
         ['serious', 'critical'].includes(String(violation.impact ?? ''))
