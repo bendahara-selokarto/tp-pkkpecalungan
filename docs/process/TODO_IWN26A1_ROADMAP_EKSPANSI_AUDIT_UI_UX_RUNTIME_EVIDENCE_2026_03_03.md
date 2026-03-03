@@ -1,7 +1,7 @@
 # TODO IWN26A1 Roadmap Ekspansi Audit UI UX Runtime Evidence
 
 Tanggal: 2026-03-03  
-Status: `in-progress` (`batch:P1-P2-P3-P4-P5-P6-P8-P9-P10-P11-implemented`)
+Status: `in-progress` (`batch:P1-P2-P3-P4-P5-P6-P8-P9-P10-P11-P12-implemented`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -64,6 +64,9 @@ Related ADR: `-`
 - [x] `P11` Klarifikasi status evaluasi trend:
   - bedakan `warmup` (history belum cukup) dari `ok`,
   - tampilkan ringkasan status trend ke `GITHUB_STEP_SUMMARY` untuk audit cepat.
+- [x] `P12` Akselerasi kematangan history trend:
+  - aktifkan eksekusi terjadwal harian untuk workflow runtime evidence,
+  - pastikan history trend tetap bertambah meski tidak ada push/manual trigger.
 - [ ] `P7` Sinkronisasi TODO concern UI aktif agar setiap concern menyertakan evidence runtime.
 
 ## Validasi
@@ -78,6 +81,7 @@ Related ADR: `-`
   - `npm run test:e2e:perf:trend` menghasilkan evaluasi tren ke `reports/ui-runtime/perf/trend-evaluation.{json,md}`;
   - workflow `ui-runtime-evidence-gate` menyimpan history trend lintas run dan mengeksekusi strict-trend gate pada `main`.
   - evaluator trend menandai fase `warmup` saat history < 3 run (eksplisit pada artefak + step summary CI).
+  - workflow runtime evidence memiliki schedule harian untuk menjaga kontinuitas history.
   - `php artisan test --filter=DashboardLayoutMenuContractTest` (`PASS`).
 
 ## Risiko

@@ -20,6 +20,8 @@ on:
       - 'package-lock.json'
       - '.github/workflows/ui-runtime-evidence-gate.yml'
   workflow_dispatch:
+  schedule:
+    - cron: '0 18 * * *'
 
 permissions:
   contents: read
