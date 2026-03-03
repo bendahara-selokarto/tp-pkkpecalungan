@@ -69,6 +69,7 @@ const renderMarkdown = (result) => {
     `Window size: ${result.windowSize}`,
     `Status: ${result.status}`,
     `Warmup: ${result.isWarmup ? 'yes' : 'no'}`,
+    `Warmup remaining runs: ${result.warmupRemainingRuns}`,
     '',
     '## Metric Checks',
   ];
@@ -92,6 +93,15 @@ const renderMarkdown = (result) => {
     for (const metric of result.flaggedMetrics) {
       lines.push(`- sustained degradation flagged on ${metric}`);
     }
+  }
+
+  lines.push('', '## Next Action');
+  if (result.isWarmup) {
+    lines.push(`- collect at least ${result.warmupRemainingRuns} additional run(s) to activate full trend evaluation`);
+  } else if (result.flaggedMetrics.length > 0) {
+    lines.push('- investigate flagged metrics before promoting changes to baseline');
+  } else {
+    lines.push('- trend is stable; continue routine monitoring');
   }
 
   return `${lines.join('\n')}\n`;
@@ -121,6 +131,7 @@ const main = () => {
     historySize: history.length,
     windowSize: WINDOW_SIZE,
     isWarmup: !hasWindow,
+    warmupRemainingRuns: hasWindow ? 0 : Math.max(WINDOW_SIZE - history.length, 0),
     recentRunAts: recent.map((summary) => summary?.runAt ?? ''),
     checks,
     flaggedMetrics,
@@ -143,6 +154,7 @@ const main = () => {
       `- status: \`${result.status}\``,
       `- history: \`${result.historySize}\` run`,
       `- window: \`${result.windowSize}\` run`,
+      `- warmup remaining: \`${result.warmupRemainingRuns}\` run`,
       `- flagged metrics: \`${flaggedMetrics.length}\``,
     ];
 

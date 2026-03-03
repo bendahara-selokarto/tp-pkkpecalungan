@@ -281,3 +281,4 @@ Catatan:
 - CI menyimpan history perf lintas run via cache; trend gate mode strict (`PERF_TREND_ENFORCE=1`) dieksekusi untuk `main` agar degradasi beruntun dapat memblokir merge ke baseline utama.
 - Selama history belum mencapai 3 run, evaluator memberi status `warmup` (bukan `ok`) agar fase pematangan data tetap terbaca eksplisit di audit CI.
 - Workflow runtime evidence dijalankan terjadwal 2x sehari (cron) agar history trend cepat terakumulasi walau tanpa push baru.
+- Artefak trend menyertakan `warmupRemainingRuns` + rekomendasi `Next Action` agar tindak lanjut audit operasional lebih cepat.
