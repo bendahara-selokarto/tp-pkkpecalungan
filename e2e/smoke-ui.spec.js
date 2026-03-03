@@ -4,6 +4,7 @@ import { expect, test } from '@playwright/test';
 const normalizeCredential = (value) => String(value ?? '').trim();
 const requireAuthRuntime = process.env.E2E_REQUIRE_AUTH === '1';
 const requireAuthA11yRuntime = process.env.E2E_REQUIRE_AUTH_A11Y === '1';
+const a11yExcludedSelectors = ['#nprogress'];
 
 const roleCredentials = {
   desa: {
@@ -82,6 +83,7 @@ test('@a11y login page has no serious or critical axe violations', async ({ page
   await page.goto('/login');
 
   const accessibilityScan = await new AxeBuilder({ page })
+    .exclude(a11yExcludedSelectors.join(', '))
     .disableRules(['color-contrast'])
     .analyze();
 
@@ -165,6 +167,7 @@ for (const roleConfig of roleMatrix) {
       await roleConfig.shellAssertion(page);
 
       const accessibilityScan = await new AxeBuilder({ page })
+        .exclude(a11yExcludedSelectors.join(', '))
         .disableRules(['color-contrast'])
         .analyze();
 

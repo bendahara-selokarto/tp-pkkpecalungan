@@ -169,6 +169,15 @@ const normalizeToken = (value, fallback = 'all') => {
   return token === '' ? fallback : token
 }
 
+const chartFilterControlId = (blockKey, field) => {
+  const normalizedBlockKey = String(blockKey ?? 'default')
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+
+  return `dashboard-${field}-${normalizedBlockKey === '' ? 'default' : normalizedBlockKey}`
+}
+
 const parseQuery = (url) => {
   const raw = String(url ?? '')
   const query = raw.includes('?') ? raw.split('?')[1] : ''
@@ -1176,11 +1185,16 @@ const hasLegacyBookComparisonData = computed(() =>
               :class="filterGridClassName"
             >
               <div v-if="showModeFilter">
-                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                <label
+                  :for="chartFilterControlId(block.key, 'mode')"
+                  class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
+                >
                   Cara Tampil
                 </label>
                 <select
+                  :id="chartFilterControlId(block.key, 'mode')"
                   v-model="selectedMode"
+                  aria-label="Cara tampil chart"
                   class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
                   @change="onChartFilterModeChange"
                 >
@@ -1191,11 +1205,16 @@ const hasLegacyBookComparisonData = computed(() =>
               </div>
 
               <div v-if="showLevelFilter">
-                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                <label
+                  :for="chartFilterControlId(block.key, 'level')"
+                  class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
+                >
                   Tingkat
                 </label>
                 <select
+                  :id="chartFilterControlId(block.key, 'level')"
                   v-model="selectedLevel"
+                  aria-label="Tingkat wilayah chart"
                   :disabled="showModeFilter && !isByLevelMode"
                   class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
                 >
@@ -1206,12 +1225,17 @@ const hasLegacyBookComparisonData = computed(() =>
               </div>
 
               <div v-if="showSubLevelFilter">
-                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                <label
+                  :for="chartFilterControlId(block.key, 'sub-level')"
+                  class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
+                >
                   Wilayah Turunan
                 </label>
                 <select
+                  :id="chartFilterControlId(block.key, 'sub-level')"
                   v-if="availableSubLevelOptions.length > 1"
                   v-model="selectedSubLevel"
+                  aria-label="Wilayah turunan chart"
                   :disabled="!isBySubLevelMode"
                   class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
                 >
@@ -1224,8 +1248,10 @@ const hasLegacyBookComparisonData = computed(() =>
                   </option>
                 </select>
                 <input
+                  :id="chartFilterControlId(block.key, 'sub-level')"
                   v-else
                   v-model="selectedSubLevel"
+                  aria-label="Wilayah turunan chart"
                   :disabled="!isBySubLevelMode"
                   type="text"
                   class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
@@ -1234,11 +1260,16 @@ const hasLegacyBookComparisonData = computed(() =>
               </div>
 
               <div>
-                <label class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                <label
+                  :for="chartFilterControlId(block.key, 'month')"
+                  class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
+                >
                   Bulan
                 </label>
                 <select
+                  :id="chartFilterControlId(block.key, 'month')"
                   v-model="selectedSection1Month"
+                  aria-label="Bulan chart"
                   :disabled="!blockSupportsMonthFilter(block)"
                   class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
                 >

@@ -244,7 +244,7 @@ Kredensial login (opsional untuk smoke terautentikasi):
 - `E2E_SUPERADMIN_EMAIL`
 - `E2E_SUPERADMIN_PASSWORD`
 - `E2E_REQUIRE_AUTH=1` untuk memaksa lane auth tidak boleh `skip`.
-- `E2E_REQUIRE_AUTH_A11Y=1` untuk memaksa lane a11y terautentikasi (default `0` agar bisa rollout bertahap).
+- `E2E_REQUIRE_AUTH_A11Y=1` untuk memaksa lane a11y terautentikasi (default env lokal tetap `0`; gate CI runtime-evidence menetapkan `1`).
 
 Provisioning akun deterministik untuk CI:
 - Jalankan seeder `Database\\Seeders\\E2ERuntimeUserSeeder`.

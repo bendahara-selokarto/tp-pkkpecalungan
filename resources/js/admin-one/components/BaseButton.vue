@@ -7,6 +7,7 @@ import { useDarkModeStore } from '@/admin-one/stores/darkMode'
 
 const props = defineProps({
   label: [String, Number],
+  ariaLabel: String,
   icon: String,
   iconSize: [String, Number],
   href: String,
@@ -50,6 +51,17 @@ const computedType = computed(() => {
 })
 
 const labelClass = computed(() => (props.small && props.icon ? 'px-1' : 'px-2'))
+const computedAriaLabel = computed(() => {
+  if (typeof props.ariaLabel === 'string' && props.ariaLabel.trim() !== '') {
+    return props.ariaLabel.trim()
+  }
+
+  if (typeof props.label === 'string' && props.label.trim() !== '') {
+    return props.label.trim()
+  }
+
+  return null
+})
 
 const componentClass = computed(() => {
   const base = [
@@ -86,6 +98,7 @@ const componentClass = computed(() => {
   <component
     :is="is"
     :class="componentClass"
+    :aria-label="computedAriaLabel"
     :href="href"
     :type="computedType"
     :to="to"
