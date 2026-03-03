@@ -1,4 +1,6 @@
 import { expect, test } from '@playwright/test';
+import fs from 'node:fs';
+import path from 'node:path';
 
 const normalizeCredential = (value) => String(value ?? '').trim();
 
@@ -60,6 +62,25 @@ const assertPerformanceBudget = (snapshot) => {
   }
 };
 
+const writePerfEvidence = (testInfo, fileName, snapshot) => {
+  const outputDir = path.join(process.cwd(), 'reports', 'ui-runtime', 'perf', 'latest');
+  fs.mkdirSync(outputDir, { recursive: true });
+
+  const payload = {
+    recordedAt: new Date().toISOString(),
+    project: testInfo.project.name,
+    browser: testInfo.project.use?.browserName ?? 'chromium',
+    fileName,
+    snapshot,
+  };
+
+  fs.writeFileSync(
+    path.join(outputDir, `${testInfo.project.name}-${fileName}`),
+    JSON.stringify(payload, null, 2),
+    'utf8',
+  );
+};
+
 test.describe('runtime performance baseline', () => {
   test.describe.configure({ mode: 'serial' });
 
@@ -74,6 +95,7 @@ test.describe('runtime performance baseline', () => {
       body: Buffer.from(JSON.stringify(snapshot, null, 2), 'utf8'),
       contentType: 'application/json',
     });
+    writePerfEvidence(testInfo, 'perf-login.json', snapshot);
   });
 
   test('@perf dashboard page baseline budget (desa)', async ({ page }, testInfo) => {
@@ -88,6 +110,7 @@ test.describe('runtime performance baseline', () => {
       body: Buffer.from(JSON.stringify(snapshot, null, 2), 'utf8'),
       contentType: 'application/json',
     });
+    writePerfEvidence(testInfo, 'perf-dashboard-desa.json', snapshot);
   });
 
   test('@perf super-admin users page baseline budget', async ({ page }, testInfo) => {
@@ -102,5 +125,6 @@ test.describe('runtime performance baseline', () => {
       body: Buffer.from(JSON.stringify(snapshot, null, 2), 'utf8'),
       contentType: 'application/json',
     });
+    writePerfEvidence(testInfo, 'perf-superadmin-users.json', snapshot);
   });
 });

@@ -264,6 +264,7 @@ Perintah:
 - `npm run test:e2e:a11y`
 - `npm run test:e2e:visual`
 - `npm run test:e2e:perf`
+- `npm run test:e2e:perf:summary`
 - Audit a11y mendalam (PowerShell):
   - `$env:E2E_A11Y_EXCLUDE_NPROGRESS='0'; $env:E2E_A11Y_DISABLE_COLOR_CONTRAST='0'; npm run test:e2e:a11y`
 
@@ -274,3 +275,4 @@ Catatan:
 - Lane `@smoke` kini mencakup CRUD prioritas (`activities`, `agenda-surat`, `arsip`) pada `chromium-desktop`; project mobile untuk lane CRUD di-`skip` by design agar baseline tetap stabil.
 - Lane `@visual` menyediakan baseline visual untuk `login`, `dashboard`, dan `super-admin/users` lintas project Playwright; dijalankan sebagai candidate gate non-blocking.
 - Lane `@perf` menyediakan baseline performance budget (navigation timing + FCP) untuk `login`, `dashboard`, dan `super-admin/users` pada desktop; dijalankan sebagai candidate gate non-blocking.
+- Ringkasan evidence performa disimpan ke `reports/ui-runtime/perf/{summary.json,summary.md,history/perf-history.jsonl}` untuk audit lintas run.

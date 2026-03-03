@@ -114,6 +114,11 @@ jobs:
         continue-on-error: true
         run: npm run test:e2e:perf
 
+      - name: Summarize UI performance evidence (non-blocking)
+        if: always()
+        continue-on-error: true
+        run: npm run test:e2e:perf:summary
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4
@@ -122,4 +127,5 @@ jobs:
           path: |
             playwright-report
             test-results
+            reports/ui-runtime
           if-no-files-found: ignore

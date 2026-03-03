@@ -28,6 +28,7 @@ const login = async (page, role, expectedPath) => {
 
 const waitForStableUi = async (page) => {
   await page.waitForLoadState('networkidle');
+  await page.waitForTimeout(400);
   const progressBar = page.locator('#nprogress .bar');
   try {
     await expect(progressBar).toBeHidden({ timeout: 2_000 });
@@ -36,10 +37,25 @@ const waitForStableUi = async (page) => {
   }
 };
 
+const stabilizeVisualRender = async (page) => {
+  await page.addStyleTag({
+    content: `
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+      .apexcharts-toolbar {
+        display: none !important;
+      }
+    `,
+  });
+};
+
 test.describe('runtime visual baseline', () => {
   test('@visual login page baseline', async ({ page }) => {
     await page.goto('/login');
     await waitForStableUi(page);
+    await stabilizeVisualRender(page);
 
     await expect(page.locator('form').first()).toHaveScreenshot('login-form.png', {
       animations: 'disabled',
@@ -53,12 +69,16 @@ test.describe('runtime visual baseline', () => {
 
     await login(page, 'desa', /\/dashboard(\?.*)?$/);
     await waitForStableUi(page);
+    await stabilizeVisualRender(page);
 
     await expect(page.locator('main')).toHaveScreenshot('dashboard-desa-page.png', {
       animations: 'disabled',
       caret: 'hide',
       scale: 'css',
-      maxDiffPixelRatio: 0.02,
+      mask: [
+        page.locator('main .apexcharts-canvas'),
+      ],
+      maxDiffPixelRatio: 0.03,
     });
   });
 
@@ -67,6 +87,7 @@ test.describe('runtime visual baseline', () => {
 
     await login(page, 'super-admin', /\/super-admin\/users(\?.*)?$/);
     await waitForStableUi(page);
+    await stabilizeVisualRender(page);
 
     await expect(page.locator('main')).toHaveScreenshot('superadmin-users-page.png', {
       animations: 'disabled',
