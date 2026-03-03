@@ -68,6 +68,7 @@ const renderMarkdown = (result) => {
     `Run at: ${result.runAt}`,
     `Window size: ${result.windowSize}`,
     `Status: ${result.status}`,
+    `Warmup: ${result.isWarmup ? 'yes' : 'no'}`,
     '',
     '## Metric Checks',
   ];
@@ -119,16 +120,38 @@ const main = () => {
     runAt: new Date().toISOString(),
     historySize: history.length,
     windowSize: WINDOW_SIZE,
+    isWarmup: !hasWindow,
     recentRunAts: recent.map((summary) => summary?.runAt ?? ''),
     checks,
     flaggedMetrics,
-    status: flaggedMetrics.length > 0 ? 'degradation-flagged' : 'ok',
+    status: !hasWindow
+      ? 'warmup'
+      : flaggedMetrics.length > 0
+        ? 'degradation-flagged'
+        : 'ok',
   };
 
   fs.writeFileSync(trendJsonPath, JSON.stringify(result, null, 2), 'utf8');
   fs.writeFileSync(trendMdPath, renderMarkdown(result), 'utf8');
 
   console.log(`[perf-trend] history=${history.length} status=${result.status} flagged=${flaggedMetrics.length}`);
+
+  const stepSummaryPath = process.env.GITHUB_STEP_SUMMARY;
+  if (typeof stepSummaryPath === 'string' && stepSummaryPath.trim() !== '') {
+    const summaryLines = [
+      '### UI Runtime Performance Trend',
+      `- status: \`${result.status}\``,
+      `- history: \`${result.historySize}\` run`,
+      `- window: \`${result.windowSize}\` run`,
+      `- flagged metrics: \`${flaggedMetrics.length}\``,
+    ];
+
+    if (result.isWarmup) {
+      summaryLines.push('- note: warmup mode aktif karena history belum mencapai window evaluasi.');
+    }
+
+    fs.appendFileSync(stepSummaryPath, `${summaryLines.join('\n')}\n`, 'utf8');
+  }
 
   // Optional strict mode for future promotion to blocking gate.
   if (process.env.PERF_TREND_ENFORCE === '1' && flaggedMetrics.length > 0) {
