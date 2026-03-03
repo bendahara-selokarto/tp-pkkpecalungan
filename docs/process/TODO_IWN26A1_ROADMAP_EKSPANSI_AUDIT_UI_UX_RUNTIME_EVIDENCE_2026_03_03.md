@@ -1,7 +1,7 @@
 # TODO IWN26A1 Roadmap Ekspansi Audit UI UX Runtime Evidence
 
 Tanggal: 2026-03-03  
-Status: `in-progress` (`batch:P1-P2-P6-implemented`)
+Status: `in-progress` (`batch:P1-P2-P3-P6-implemented`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -36,10 +36,11 @@ Related ADR: `-`
   - dashboard role `kecamatan`,
   - shell `super-admin` (`users`, `access-control`, `arsip`).
   - catatan: lane `a11y` authenticated strict-mode (`E2E_REQUIRE_AUTH_A11Y=1`) sudah hijau untuk role `desa`, `kecamatan`, dan `super-admin`.
-- [ ] `P3` Tambah smoke CRUD prioritas (minimal create+filter+pagination+delete guard):
+- [x] `P3` Tambah smoke CRUD prioritas (minimal create+filter+pagination+delete guard):
   - `activities`,
   - `agenda-surat`,
   - `arsip`.
+  - catatan: lane CRUD dijalankan pada project desktop (`chromium-desktop`), sementara project mobile `skip` by design untuk menjaga stabilitas baseline gate.
 - [ ] `P4` Tambah baseline visual regression untuk halaman prioritas (`login`, `dashboard`, `super-admin/users`).
 - [ ] `P5` Tambah baseline performance audit (Lighthouse CI) untuk halaman prioritas.
 - [x] `P6` Integrasi gate CI bertahap:
@@ -52,7 +53,7 @@ Related ADR: `-`
 - [x] L1: roadmap tervalidasi terhadap kontrak `AI_SINGLE_PATH_ARCHITECTURE` lane UI/UX auditability.
 - [x] L2: baseline matrix role dan secret mapping terdokumentasi + terimplementasi di workflow.
 - [x] L3: dry-run lokal setara CI untuk lane smoke/a11y berhasil:
-  - `npm run test:e2e:smoke` (`8 passed`) pada mode `E2E_REQUIRE_AUTH=1`;
+  - `npm run test:e2e:smoke` (`11 passed`, `3 skipped`) pada mode `E2E_REQUIRE_AUTH=1`;
   - `npm run test:e2e:a11y` (`8 passed`) pada mode `E2E_REQUIRE_AUTH_A11Y=1`;
   - `php artisan test --filter=DashboardLayoutMenuContractTest` (`PASS`).
 

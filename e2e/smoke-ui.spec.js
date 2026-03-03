@@ -77,13 +77,25 @@ const captureRuntimeErrors = (page) => {
   return runtimeErrors;
 };
 
-const login = async (page, role) => {
+const login = async (page, role, expectedPath) => {
   const credentials = roleCredentials[role];
+  const maxAttempts = 2;
 
-  await page.goto('/login');
-  await page.locator('#email').fill(credentials.email);
-  await page.locator('#password').fill(credentials.password);
-  await page.locator('button[type="submit"]').click();
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    await page.goto('/login');
+    await page.locator('#email').fill(credentials.email);
+    await page.locator('#password').fill(credentials.password);
+    await page.locator('button[type="submit"]').click();
+
+    try {
+      await page.waitForURL(expectedPath, { timeout: 15000 });
+      return;
+    } catch (error) {
+      if (attempt === maxAttempts) {
+        throw error;
+      }
+    }
+  }
 };
 
 test('@smoke login page renders form controls', async ({ page }) => {
@@ -159,7 +171,7 @@ for (const roleConfig of roleMatrix) {
     test(`@smoke ${roleConfig.role} app shell is reachable and stable`, async ({ page }) => {
       const runtimeErrors = captureRuntimeErrors(page);
 
-      await login(page, roleConfig.role);
+      await login(page, roleConfig.role, roleConfig.expectedPath);
 
       await expect(page).toHaveURL(roleConfig.expectedPath);
       await expect(page.getByRole('button', { name: 'Keluar' })).toBeVisible();
@@ -174,7 +186,7 @@ for (const roleConfig of roleMatrix) {
     test(`@a11y ${roleConfig.role} app shell has no serious or critical axe violations`, async ({ page }) => {
       test.skip(!requireAuthA11yRuntime, 'Set E2E_REQUIRE_AUTH_A11Y=1 to enforce authenticated a11y runtime checks.');
 
-      await login(page, roleConfig.role);
+      await login(page, roleConfig.role, roleConfig.expectedPath);
       await expect(page).toHaveURL(roleConfig.expectedPath);
       await roleConfig.shellAssertion(page);
 

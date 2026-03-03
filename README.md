@@ -269,3 +269,4 @@ Catatan:
 - Test login page (`@smoke`, `@a11y`) selalu jalan tanpa kredensial.
 - Test smoke/a11y terautentikasi per role otomatis `skip` jika pasangan kredensial role terkait belum diisi.
 - CI runtime evidence menjalankan lane tambahan `a11y deep audit` (non-blocking) untuk mendeteksi potensi blind spot.
+- Lane `@smoke` kini mencakup CRUD prioritas (`activities`, `agenda-surat`, `arsip`) pada `chromium-desktop`; project mobile untuk lane CRUD di-`skip` by design agar baseline tetap stabil.
