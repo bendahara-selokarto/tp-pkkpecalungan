@@ -106,6 +106,10 @@ jobs:
           E2E_A11Y_DISABLE_COLOR_CONTRAST: '0'
         run: npm run test:e2e:a11y
 
+      - name: Run UI visual baseline audit (non-blocking)
+        continue-on-error: true
+        run: npm run test:e2e:visual
+
       - name: Upload Playwright report
         if: always()
         uses: actions/upload-artifact@v4

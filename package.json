@@ -8,6 +8,7 @@
         "test:e2e": "playwright test -c playwright.config.mjs",
         "test:e2e:smoke": "playwright test -c playwright.config.mjs --grep @smoke",
         "test:e2e:a11y": "playwright test -c playwright.config.mjs --grep @a11y",
+        "test:e2e:visual": "playwright test -c playwright.config.mjs e2e/visual-ui.spec.js",
         "test:e2e:install": "playwright install chromium"
     },
     "devDependencies": {

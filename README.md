@@ -262,6 +262,7 @@ Perintah:
 - `npm run test:e2e`
 - `npm run test:e2e:smoke`
 - `npm run test:e2e:a11y`
+- `npm run test:e2e:visual`
 - Audit a11y mendalam (PowerShell):
   - `$env:E2E_A11Y_EXCLUDE_NPROGRESS='0'; $env:E2E_A11Y_DISABLE_COLOR_CONTRAST='0'; npm run test:e2e:a11y`
 
@@ -270,3 +271,4 @@ Catatan:
 - Test smoke/a11y terautentikasi per role otomatis `skip` jika pasangan kredensial role terkait belum diisi.
 - CI runtime evidence menjalankan lane tambahan `a11y deep audit` (non-blocking) untuk mendeteksi potensi blind spot.
 - Lane `@smoke` kini mencakup CRUD prioritas (`activities`, `agenda-surat`, `arsip`) pada `chromium-desktop`; project mobile untuk lane CRUD di-`skip` by design agar baseline tetap stabil.
+- Lane `@visual` menyediakan baseline visual untuk `login`, `dashboard`, dan `super-admin/users` lintas project Playwright; dijalankan sebagai candidate gate non-blocking.

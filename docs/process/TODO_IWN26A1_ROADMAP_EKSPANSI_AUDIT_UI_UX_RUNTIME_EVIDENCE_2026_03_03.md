@@ -1,7 +1,7 @@
 # TODO IWN26A1 Roadmap Ekspansi Audit UI UX Runtime Evidence
 
 Tanggal: 2026-03-03  
-Status: `in-progress` (`batch:P1-P2-P3-P6-implemented`)
+Status: `in-progress` (`batch:P1-P2-P3-P4-P6-implemented`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -41,7 +41,8 @@ Related ADR: `-`
   - `agenda-surat`,
   - `arsip`.
   - catatan: lane CRUD dijalankan pada project desktop (`chromium-desktop`), sementara project mobile `skip` by design untuk menjaga stabilitas baseline gate.
-- [ ] `P4` Tambah baseline visual regression untuk halaman prioritas (`login`, `dashboard`, `super-admin/users`).
+- [x] `P4` Tambah baseline visual regression untuk halaman prioritas (`login`, `dashboard`, `super-admin/users`).
+  - catatan: lane visual dijalankan sebagai candidate gate non-blocking di workflow runtime evidence.
 - [ ] `P5` Tambah baseline performance audit (Lighthouse CI) untuk halaman prioritas.
 - [x] `P6` Integrasi gate CI bertahap:
   - gate wajib `@smoke` + `@a11y`,
