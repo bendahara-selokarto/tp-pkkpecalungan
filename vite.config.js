@@ -83,11 +83,11 @@ export default defineConfig({
                     }
 
                     const packageName = getNodeModulePackageName(id);
-                    if (!packageName) {
-                        return 'vendor';
+                    if (packageName && ['axios', 'lodash-es', 'qs'].includes(packageName)) {
+                        return `vendor-${packageName.replace(/[^a-z0-9-]/gi, '').toLowerCase()}`;
                     }
 
-                    return `vendor-${packageName.replace(/[^a-z0-9-]/gi, '').toLowerCase()}`;
+                    return 'vendor-misc';
                 },
             },
         },

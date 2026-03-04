@@ -32,7 +32,7 @@ let renderSequence = 0
 const chartLoaders = {
   bar: () => import('apexcharts/bar'),
   pie: () => import('apexcharts/pie'),
-  fallback: () => import('apexcharts/client'),
+  fallback: () => import('apexcharts/core'),
 }
 
 const resolveChartClass = async (chartType) => {
