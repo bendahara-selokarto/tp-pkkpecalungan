@@ -172,10 +172,10 @@ Mapping grup sidebar:
 | Grup Sidebar | Slug Modul |
 | --- | --- |
 | Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-daftar-hadir`, `buku-tamu`, `buku-notulen-rapat`, `buku-keuangan`, `inventaris`, `activities`, `program-prioritas`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
-| Pokja I | `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`, `paar` |
-| Pokja II | `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
-| Pokja III | `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |
-| Pokja IV | `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` |
+| Pokja I | `activities`, `inventaris`, `buku-tamu`, `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`, `paar` |
+| Pokja II | `activities`, `inventaris`, `buku-tamu`, `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
+| Pokja III | `activities`, `inventaris`, `buku-tamu`, `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |
+| Pokja IV | `activities`, `inventaris`, `buku-tamu`, `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` |
 
 Implementasi aktif:
 - `resources/js/Layouts/DashboardLayout.vue`
@@ -205,6 +205,9 @@ Catatan:
 - Pengecualian akses modul `inventaris`:
   - `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv` memiliki mode `read-write` via override modul backend.
   - `kecamatan-pokja-i..iv` tetap tidak memiliki akses `inventaris` (tidak muncul di `moduleModes` scope `kecamatan`).
+- Pengecualian akses modul `buku-tamu`:
+  - `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv` memiliki mode `read-write` via override modul backend.
+  - `kecamatan-pokja-i..iv` tetap tidak memiliki akses `buku-tamu` (tidak muncul di `moduleModes` scope `kecamatan`).
 
 ## Dashboard Representation Contract (Role-Aware)
 

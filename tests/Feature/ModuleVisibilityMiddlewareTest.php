@@ -173,6 +173,49 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         }
     }
 
+    public function test_semua_pokja_desa_memiliki_akses_rw_modul_buku_tamu(): void
+    {
+        foreach (['desa-pokja-i', 'desa-pokja-ii', 'desa-pokja-iii', 'desa-pokja-iv'] as $role) {
+            $user = User::factory()->create([
+                'scope' => 'desa',
+                'area_id' => $this->desa->id,
+            ]);
+            $user->assignRole($role);
+
+            $this->actingAs($user)->get('/desa/buku-tamu')->assertOk();
+            $response = $this->actingAs($user)->post('/desa/buku-tamu', [
+                'visit_date' => '2026-03-04',
+                'guest_name' => 'Tamu '.$role,
+                'purpose' => 'Uji akses RW buku tamu',
+                'institution' => 'TP PKK Desa',
+                'description' => 'Validasi akses role pokja.',
+            ]);
+
+            $response->assertStatus(302);
+            $this->assertDatabaseHas('buku_tamus', [
+                'guest_name' => 'Tamu '.$role,
+                'level' => 'desa',
+                'area_id' => $this->desa->id,
+                'created_by' => $user->id,
+            ]);
+        }
+    }
+
+    public function test_semua_pokja_kecamatan_tetap_tidak_memiliki_akses_buku_tamu(): void
+    {
+        foreach (['kecamatan-pokja-i', 'kecamatan-pokja-ii', 'kecamatan-pokja-iii', 'kecamatan-pokja-iv'] as $role) {
+            $user = User::factory()->create([
+                'scope' => 'kecamatan',
+                'area_id' => $this->kecamatan->id,
+            ]);
+            $user->assignRole($role);
+
+            $this->actingAs($user)->get('/kecamatan/buku-tamu')->assertForbidden();
+            $this->actingAs($user)->get('/kecamatan/buku-tamu/create')->assertForbidden();
+            $this->actingAs($user)->post('/kecamatan/buku-tamu', [])->assertForbidden();
+        }
+    }
+
     public function test_kecamatan_pokja_i_dapat_akses_dan_menulis_buku_kegiatan_scope_kecamatan(): void
     {
         $user = User::factory()->create([
@@ -266,7 +309,6 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->actingAs($desaPokja);
         $this->get('/desa/buku-notulen-rapat')->assertForbidden();
         $this->get('/desa/buku-daftar-hadir')->assertForbidden();
-        $this->get('/desa/buku-tamu')->assertForbidden();
 
         $kecamatanPokja = User::factory()->create([
             'scope' => 'kecamatan',

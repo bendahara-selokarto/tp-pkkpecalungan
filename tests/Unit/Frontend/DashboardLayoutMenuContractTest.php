@@ -61,6 +61,28 @@ class DashboardLayoutMenuContractTest extends TestCase
         );
     }
 
+    public function test_dashboard_layout_memasang_menu_buku_tamu_di_semua_group_pokja(): void
+    {
+        $content = $this->readDashboardLayout();
+
+        $this->assertMatchesRegularExpression(
+            "/key: 'pokja-i'.*?\\{ href: `\\/\\$\\{scope\\}\\/buku-tamu`, label: 'Buku Tamu' \\}/s",
+            $content
+        );
+        $this->assertMatchesRegularExpression(
+            "/key: 'pokja-ii'.*?\\{ href: `\\/\\$\\{scope\\}\\/buku-tamu`, label: 'Buku Tamu' \\}/s",
+            $content
+        );
+        $this->assertMatchesRegularExpression(
+            "/key: 'pokja-iii'.*?\\{ href: `\\/\\$\\{scope\\}\\/buku-tamu`, label: 'Buku Tamu' \\}/s",
+            $content
+        );
+        $this->assertMatchesRegularExpression(
+            "/key: 'pokja-iv'.*?\\{ href: `\\/\\$\\{scope\\}\\/buku-tamu`, label: 'Buku Tamu' \\}/s",
+            $content
+        );
+    }
+
     public function test_dashboard_layout_mengunci_guard_anti_duplikasi_sidebar_internal(): void
     {
         $content = $this->readDashboardLayout();

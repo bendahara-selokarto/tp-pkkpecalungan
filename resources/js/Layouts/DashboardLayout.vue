@@ -198,6 +198,7 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
+        { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
         {
           href: `/${scope}/simulasi-penyuluhan`,
           label: 'Kelompok Simulasi dan Penyuluhan',
@@ -215,6 +216,7 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
+        { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
         { href: `/${scope}/data-pelatihan-kader`, label: 'Data Pelatihan Kader' },
         { href: `/${scope}/taman-bacaan`, label: 'Data Taman Bacaan/Perpustakaan' },
         { href: `/${scope}/koperasi`, label: 'Data Koperasi' },
@@ -228,6 +230,7 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
+        { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
         { href: `/${scope}/data-keluarga`, label: 'Data Keluarga' },
         { href: `/${scope}/data-industri-rumah-tangga`, label: 'Buku Industri Rumah Tangga' },
         { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku HATINYA PKK' },
@@ -241,6 +244,7 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
+        { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
         { href: `/${scope}/posyandu`, label: 'Data Isian Posyandu oleh TP PKK' },
         { href: `/${scope}/catatan-keluarga`, label: 'Catatan Keluarga' },
         { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },

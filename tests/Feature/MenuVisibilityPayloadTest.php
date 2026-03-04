@@ -86,7 +86,7 @@ class MenuVisibilityPayloadTest extends TestCase
             );
     }
 
-    public function test_payload_desa_pokja_memuat_inventaris_rw(): void
+    public function test_payload_desa_pokja_memuat_inventaris_dan_buku_tamu_rw(): void
     {
         $user = User::factory()->create([
             'scope' => 'desa',
@@ -99,6 +99,7 @@ class MenuVisibilityPayloadTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
                 ->where('auth.user.moduleModes.inventaris', 'read-write')
+                ->where('auth.user.moduleModes.buku-tamu', 'read-write')
             );
     }
 

@@ -1523,3 +1523,42 @@ Keputusan:
 
 Status:
 - `PASS` (`inventaris-rw-desa-pokja-locked`).
+
+## Siklus Monitoring Visibility Modul Buku Tamu untuk Pokja Desa (`IWN26B2`): 2026-03-04
+
+Ruang lingkup:
+- Menambahkan akses `read-write` modul `buku-tamu` untuk role `desa-pokja-i..iv`.
+- Menjaga scope `kecamatan-pokja-i..iv` tetap tanpa akses `buku-tamu`.
+- Menyelaraskan visibilitas menu sidebar Pokja I-IV dengan kontrak backend (`moduleModes`).
+
+Perubahan kontrak:
+- Role terdampak:
+  - `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv` -> `buku-tamu: read-write`.
+  - `kecamatan-pokja-i..iv` -> tetap `hidden` (tidak ada di `moduleModes`).
+- Modul terdampak:
+  - `buku-tamu`.
+- Mode sebelum -> sesudah:
+  - `desa-pokja-i..iv`: `hidden` -> `read-write`.
+  - `kecamatan-pokja-i..iv`: `hidden` -> `hidden` (tetap).
+
+Artefak:
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `resources/js/Layouts/DashboardLayout.vue`
+- `tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+- `tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php`
+- `tests/Feature/MenuVisibilityPayloadTest.php`
+- `tests/Feature/ModuleVisibilityMiddlewareTest.php`
+- `tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+
+Perintah validasi:
+- `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
+  - hasil: `PASS` (`49` tests, `449` assertions).
+
+Keputusan:
+- Grant RW `buku-tamu` dikunci pada role pokja scope `desa` via role-module override backend.
+- Scope `kecamatan` tidak menerima grant baru untuk `buku-tamu`.
+- Sidebar Pokja I-IV menampilkan menu `Buku Tamu` secara kondisional berdasarkan `moduleModes.buku-tamu`.
+
+Status:
+- `PASS` (`buku-tamu-rw-desa-pokja-locked`).
