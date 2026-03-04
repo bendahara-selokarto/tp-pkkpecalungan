@@ -3,6 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "build:analyze": "VITE_ANALYZE=true vite build",
         "build": "vite build",
         "dev": "vite",
         "test:e2e": "playwright test -c playwright.config.mjs",
@@ -26,6 +27,7 @@
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.0.0",
         "postcss": "^8.4.31",
+        "rollup-plugin-visualizer": "^7.0.1",
         "tailwindcss": "^4.1.12",
         "vite": "^7.0.7"
     },
@@ -36,7 +38,6 @@
         "axios": "^1.11.0",
         "numeral": "^2.0.6",
         "pinia": "^3.0.1",
-        "vue": "^3.5.28",
-        "vue3-apexcharts": "^1.10.0"
+        "vue": "^3.5.28"
     }
 }

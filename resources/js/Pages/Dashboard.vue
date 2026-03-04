@@ -1,8 +1,7 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, ref, watch } from 'vue'
 import { router, usePage } from '@inertiajs/vue3'
 import CardBox from '@/admin-one/components/CardBox.vue'
-import BarChart from '@/admin-one/components/Charts/BarChart.vue'
 import BaseButton from '@/admin-one/components/BaseButton.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
@@ -53,6 +52,9 @@ const props = defineProps({
     }),
   },
 })
+
+const BarChart = defineAsyncComponent(() => import('@/admin-one/components/Charts/BarChart.vue'))
+const ApexChart = defineAsyncComponent(() => import('@/admin-one/components/Charts/ApexChart.vue'))
 
 const page = usePage()
 const authUser = computed(() => page.props?.auth?.user ?? null)
@@ -1327,7 +1329,7 @@ const hasLegacyBookComparisonData = computed(() =>
                         Jumlah Kegiatan per Desa
                       </h5>
                       <div class="h-72">
-                        <apexchart
+                        <ApexChart
                           type="pie"
                           width="100%"
                           height="100%"
@@ -1348,7 +1350,7 @@ const hasLegacyBookComparisonData = computed(() =>
                         Jumlah Buku vs Buku Terisi
                       </h5>
                       <div class="h-72">
-                        <apexchart
+                        <ApexChart
                           type="bar"
                           width="100%"
                           height="100%"
@@ -1373,7 +1375,7 @@ const hasLegacyBookComparisonData = computed(() =>
                     Kegiatan Bulanan
                   </h4>
                   <div class="h-72">
-                    <apexchart
+                    <ApexChart
                       type="pie"
                       width="100%"
                       height="100%"

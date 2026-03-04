@@ -1,5 +1,7 @@
 <script setup>
-import { computed } from 'vue'
+import { computed, defineAsyncComponent } from 'vue'
+
+const ApexChart = defineAsyncComponent(() => import('@/admin-one/components/Charts/ApexChart.vue'))
 
 const props = defineProps({
   data: {
@@ -137,6 +139,6 @@ const chartOptions = computed(() => ({
 
 <template>
   <div class="h-full w-full">
-    <apexchart type="bar" width="100%" height="100%" :options="chartOptions" :series="chartSeries" />
+    <ApexChart type="bar" width="100%" height="100%" :options="chartOptions" :series="chartSeries" />
   </div>
 </template>

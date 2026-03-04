@@ -6,9 +6,6 @@ import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createPinia } from 'pinia';
 import { createApp, h } from 'vue';
-import VueApexCharts from 'vue3-apexcharts';
-import DashboardLayout from '@/Layouts/DashboardLayout.vue';
-import LayoutGuest from '@/admin-one/layouts/LayoutGuest.vue';
 import { useDarkModeStore } from '@/admin-one/stores/darkMode';
 
 window.Alpine = Alpine;
@@ -16,6 +13,7 @@ Alpine.start();
 
 const appName = import.meta.env.VITE_APP_NAME || 'Akaraya PKK';
 const pinia = createPinia();
+const pages = import.meta.glob('./Pages/**/*.vue');
 const runtimeErrorEventName = 'ui-runtime-error';
 let runtimeErrorReportCount = 0;
 const runtimeErrorReportLimit = 5;
@@ -85,11 +83,16 @@ createInertiaApp({
     resolve: async (name) => {
         const page = await resolvePageComponent(
             `./Pages/${name}.vue`,
-            import.meta.glob('./Pages/**/*.vue'),
+            pages,
         );
 
-        page.default.layout = page.default.layout
-            || (name.startsWith('Auth/') ? LayoutGuest : DashboardLayout);
+        if (!page.default.layout) {
+            const layoutModule = name.startsWith('Auth/')
+                ? await import('@/admin-one/layouts/LayoutGuest.vue')
+                : await import('@/Layouts/DashboardLayout.vue');
+
+            page.default.layout = layoutModule.default;
+        }
 
         return page;
     },
@@ -103,7 +106,6 @@ createInertiaApp({
         app
             .use(plugin)
             .use(pinia)
-            .use(VueApexCharts)
             .mount(el);
     },
     progress: {
