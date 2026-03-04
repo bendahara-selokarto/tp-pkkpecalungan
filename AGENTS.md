@@ -134,6 +134,12 @@ Flow pembacaan dokumen (wajib, terutama header tabel):
 - Diff-first: prioritaskan patch kecil dibanding regenerasi file panjang.
 - Response compression: ringkas, padat, tanpa pengulangan konteks.
 - State-aware: jangan ulang informasi yang sudah dikonfirmasi pada sesi yang sama.
+- Saat menjalankan `php artisan test` full, defaultkan output ringkas (`--compact`) untuk laporan chat; jika butuh detail penuh, arahkan output ke file log lalu laporkan ringkasan inti (pass/fail + error utama).
+- Test tiering: saat iterasi gunakan test terarah pada file/fitur terdampak terlebih dahulu; jalankan full test untuk perubahan signifikan atau saat diwajibkan oleh quality gate/matrix.
+- Fail-fast saat debugging: gunakan `php artisan test --stop-on-failure --compact` untuk mempercepat siklus perbaikan awal.
+- Scoped command policy: untuk pencarian kode gunakan `rg` berbasis path/concern, hindari scan global tanpa kebutuhan validasi.
+- Diff-size guard: jika perubahan besar, pecah patch per concern agar review, validasi, dan rollback lebih efisien.
+- Validation by impact: perubahan kecil cukup targeted test; perubahan lintas domain/auth/repository wajib full test + verifikasi authorization.
 - Jangan ubah file non-target.
 
 ## 5. Forbidden Patterns
