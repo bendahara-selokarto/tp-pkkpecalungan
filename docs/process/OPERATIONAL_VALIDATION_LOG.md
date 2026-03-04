@@ -1484,3 +1484,42 @@ Keputusan:
 
 Status:
 - `PASS` (`planning-restructure-validated`).
+
+## Siklus Monitoring Visibility Modul Inventaris untuk Pokja Desa (`IWN26B1`): 2026-03-04
+
+Ruang lingkup:
+- Menambahkan akses `read-write` modul `inventaris` untuk role `desa-pokja-i..iv`.
+- Menjaga scope `kecamatan-pokja-i..iv` tetap tanpa akses `inventaris`.
+- Menjaga authority akses di backend (`module.visibility` + resolver role-scope).
+
+Perubahan kontrak:
+- Role terdampak:
+  - `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv` -> `inventaris: read-write`.
+  - `kecamatan-pokja-i..iv` -> tetap `hidden` (tidak ada di `moduleModes`).
+- Modul terdampak:
+  - `inventaris`.
+- Mode sebelum -> sesudah:
+  - `desa-pokja-i..iv`: `hidden` -> `read-write`.
+  - `kecamatan-pokja-i..iv`: `hidden` -> `hidden` (tetap).
+
+Artefak:
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+- `tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php`
+- `tests/Feature/MenuVisibilityPayloadTest.php`
+- `tests/Feature/ModuleVisibilityMiddlewareTest.php`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+
+Perintah validasi:
+- `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php`
+  - hasil: `PASS` (`38` tests, `389` assertions).
+- `php artisan test`
+  - hasil: `PASS` (`1052` tests, `7075` assertions).
+
+Keputusan:
+- Grant RW `inventaris` dikunci pada role pokja scope `desa` via role-module override backend.
+- Scope `kecamatan` tidak menerima grant baru untuk `inventaris`.
+- Sinkronisasi dokumen canonical ditambahkan pada `DOMAIN_CONTRACT_MATRIX` (catatan pengecualian akses inventaris).
+
+Status:
+- `PASS` (`inventaris-rw-desa-pokja-locked`).

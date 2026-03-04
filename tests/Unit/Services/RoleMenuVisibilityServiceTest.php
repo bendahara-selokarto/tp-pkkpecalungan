@@ -98,6 +98,35 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertCount(3, $visibility['modules']);
     }
 
+    public function test_inventaris_rw_hanya_untuk_semua_pokja_scope_desa(): void
+    {
+        foreach (['desa-pokja-i', 'desa-pokja-ii', 'desa-pokja-iii', 'desa-pokja-iv'] as $role) {
+            $user = User::factory()->create();
+            $user->assignRole($role);
+
+            $visibility = $this->service->resolveForScope($user, 'desa');
+
+            $this->assertSame(
+                RoleMenuVisibilityService::MODE_READ_WRITE,
+                $visibility['modules']['inventaris'] ?? null,
+                sprintf('Role %s pada scope desa wajib RW pada inventaris.', $role)
+            );
+        }
+
+        foreach (['kecamatan-pokja-i', 'kecamatan-pokja-ii', 'kecamatan-pokja-iii', 'kecamatan-pokja-iv'] as $role) {
+            $user = User::factory()->create();
+            $user->assignRole($role);
+
+            $visibility = $this->service->resolveForScope($user, 'kecamatan');
+
+            $this->assertArrayNotHasKey(
+                'inventaris',
+                $visibility['modules'],
+                sprintf('Role %s pada scope kecamatan tidak boleh memiliki inventaris.', $role)
+            );
+        }
+    }
+
     public function test_admin_kecamatan_kompatibel_rw_dengan_monitoring_ro(): void
     {
         $user = User::factory()->create();

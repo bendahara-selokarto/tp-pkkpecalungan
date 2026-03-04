@@ -172,6 +172,18 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
      * @var array<string, array<string, string|null>>
      */
     private const BASELINE_ROLE_MODULE_OVERRIDES = [
+        'desa-pokja-i' => [
+            'inventaris' => RoleMenuVisibilityService::MODE_READ_WRITE,
+        ],
+        'desa-pokja-ii' => [
+            'inventaris' => RoleMenuVisibilityService::MODE_READ_WRITE,
+        ],
+        'desa-pokja-iii' => [
+            'inventaris' => RoleMenuVisibilityService::MODE_READ_WRITE,
+        ],
+        'desa-pokja-iv' => [
+            'inventaris' => RoleMenuVisibilityService::MODE_READ_WRITE,
+        ],
         'kecamatan-pokja-i' => [
             'data-warga' => null,
             'data-kegiatan-warga' => null,

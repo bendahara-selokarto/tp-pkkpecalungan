@@ -183,6 +183,19 @@ class RoleMenuVisibilityService
      * @var array<string, array<string, string|null>>
      */
     private const ROLE_MODULE_MODE_OVERRIDES = [
+        // Grant khusus: inventaris RW untuk seluruh pokja pada scope desa.
+        'desa-pokja-i' => [
+            'inventaris' => self::MODE_READ_WRITE,
+        ],
+        'desa-pokja-ii' => [
+            'inventaris' => self::MODE_READ_WRITE,
+        ],
+        'desa-pokja-iii' => [
+            'inventaris' => self::MODE_READ_WRITE,
+        ],
+        'desa-pokja-iv' => [
+            'inventaris' => self::MODE_READ_WRITE,
+        ],
         // Modul pokja tertentu diturunkan menjadi read-only untuk role kecamatan pokja.
         'kecamatan-pokja-i' => [
             'data-warga' => null,

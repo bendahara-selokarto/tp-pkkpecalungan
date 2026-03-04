@@ -86,6 +86,22 @@ class MenuVisibilityPayloadTest extends TestCase
             );
     }
 
+    public function test_payload_desa_pokja_memuat_inventaris_rw(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desa->id,
+        ]);
+        $user->assignRole('desa-pokja-i');
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
+                ->where('auth.user.moduleModes.inventaris', 'read-write')
+            );
+    }
+
     public function test_payload_multi_role_menggunakan_union_dengan_prioritas_rw(): void
     {
         $user = User::factory()->create([

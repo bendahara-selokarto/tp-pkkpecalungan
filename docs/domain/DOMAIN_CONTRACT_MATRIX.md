@@ -202,6 +202,9 @@ Kontrak mode:
 Catatan:
 - `super-admin` bypass policy dan tidak dibatasi matrix ini.
 - Role legacy (`admin-*`) dipertahankan sementara untuk kompatibilitas sampai migrasi role legacy selesai.
+- Pengecualian akses modul `inventaris`:
+  - `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv` memiliki mode `read-write` via override modul backend.
+  - `kecamatan-pokja-i..iv` tetap tidak memiliki akses `inventaris` (tidak muncul di `moduleModes` scope `kecamatan`).
 
 ## Dashboard Representation Contract (Role-Aware)
 

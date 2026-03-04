@@ -24,8 +24,13 @@ class ModuleVisibilityMiddlewareTest extends TestCase
             'desa-sekretaris',
             'kecamatan-sekretaris',
             'desa-pokja-i',
+            'desa-pokja-ii',
+            'desa-pokja-iii',
             'desa-pokja-iv',
             'kecamatan-pokja-i',
+            'kecamatan-pokja-ii',
+            'kecamatan-pokja-iii',
+            'kecamatan-pokja-iv',
         ] as $roleName) {
             Role::create(['name' => $roleName]);
         }
@@ -121,6 +126,51 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->actingAs($user);
 
         $this->get('/kecamatan/desa-activities')->assertForbidden();
+    }
+
+    public function test_semua_pokja_desa_memiliki_akses_rw_modul_inventaris(): void
+    {
+        foreach (['desa-pokja-i', 'desa-pokja-ii', 'desa-pokja-iii', 'desa-pokja-iv'] as $role) {
+            $user = User::factory()->create([
+                'scope' => 'desa',
+                'area_id' => $this->desa->id,
+            ]);
+            $user->assignRole($role);
+
+            $response = $this->actingAs($user)->post('/desa/inventaris', [
+                'name' => 'Inventaris '.$role,
+                'asal_barang' => 'Bantuan Desa',
+                'tanggal_penerimaan' => '2026-03-04',
+                'tempat_penyimpanan' => 'Gudang',
+                'keterangan' => 'Uji akses RW inventaris',
+                'quantity' => 1,
+                'unit' => 'unit',
+                'condition' => 'baik',
+            ]);
+
+            $response->assertStatus(302);
+            $this->assertDatabaseHas('inventaris', [
+                'name' => 'Inventaris '.$role,
+                'level' => 'desa',
+                'area_id' => $this->desa->id,
+                'created_by' => $user->id,
+            ]);
+        }
+    }
+
+    public function test_semua_pokja_kecamatan_tetap_tidak_memiliki_akses_inventaris(): void
+    {
+        foreach (['kecamatan-pokja-i', 'kecamatan-pokja-ii', 'kecamatan-pokja-iii', 'kecamatan-pokja-iv'] as $role) {
+            $user = User::factory()->create([
+                'scope' => 'kecamatan',
+                'area_id' => $this->kecamatan->id,
+            ]);
+            $user->assignRole($role);
+
+            $this->actingAs($user)->get('/kecamatan/inventaris')->assertForbidden();
+            $this->actingAs($user)->get('/kecamatan/inventaris/create')->assertForbidden();
+            $this->actingAs($user)->post('/kecamatan/inventaris', [])->assertForbidden();
+        }
     }
 
     public function test_kecamatan_pokja_i_dapat_akses_dan_menulis_buku_kegiatan_scope_kecamatan(): void
