@@ -39,6 +39,28 @@ class DashboardLayoutMenuContractTest extends TestCase
         $this->assertStringContainsString('/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf', $content);
     }
 
+    public function test_dashboard_layout_memasang_menu_inventaris_di_semua_group_pokja(): void
+    {
+        $content = $this->readDashboardLayout();
+
+        $this->assertMatchesRegularExpression(
+            "/key: 'pokja-i'.*?\\{ href: `\\/\\$\\{scope\\}\\/inventaris`, label: 'Buku Inventaris' \\}/s",
+            $content
+        );
+        $this->assertMatchesRegularExpression(
+            "/key: 'pokja-ii'.*?\\{ href: `\\/\\$\\{scope\\}\\/inventaris`, label: 'Buku Inventaris' \\}/s",
+            $content
+        );
+        $this->assertMatchesRegularExpression(
+            "/key: 'pokja-iii'.*?\\{ href: `\\/\\$\\{scope\\}\\/inventaris`, label: 'Buku Inventaris' \\}/s",
+            $content
+        );
+        $this->assertMatchesRegularExpression(
+            "/key: 'pokja-iv'.*?\\{ href: `\\/\\$\\{scope\\}\\/inventaris`, label: 'Buku Inventaris' \\}/s",
+            $content
+        );
+    }
+
     public function test_dashboard_layout_mengunci_guard_anti_duplikasi_sidebar_internal(): void
     {
         $content = $this->readDashboardLayout();
