@@ -58,6 +58,58 @@ const destroyChart = () => {
   chart = null
 }
 
+// Indonesian locale for ApexCharts. only strings that differ from the
+// library defaults are defined here; the rest fall back to English.
+// see https://apexcharts.com/docs/localization/
+const INDONESIAN_LOCALE = {
+  name: 'id',
+  options: {
+    months: [
+      'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember',
+    ],
+    shortMonths: [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'Mei',
+      'Jun',
+      'Jul',
+      'Agt',
+      'Sep',
+      'Okt',
+      'Nov',
+      'Des',
+    ],
+    days: ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'],
+    shortDays: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+    toolbar: {
+      exportToSVG: 'Ekspor ke SVG',
+      exportToPNG: 'Ekspor ke PNG',
+      export: 'Ekspor',
+      selection: 'Pilihan',
+      zoomIn: 'Perbesar',
+      zoomOut: 'Perkecil',
+      pan: 'Geser',
+      reset: 'Atur ulang zoom',
+    },
+    noData: {
+      text: 'Tidak ada data untuk ditampilkan',
+    },
+  },
+};
+
 const buildChartConfig = () => ({
   ...(props.options ?? {}),
   chart: {
@@ -65,6 +117,9 @@ const buildChartConfig = () => ({
     type: props.type || props.options?.chart?.type || 'line',
     width: props.width,
     height: props.height,
+    // always register indonesian locale and make it the default
+    locales: [INDONESIAN_LOCALE],
+    defaultLocale: 'id',
   },
   series: props.series ?? [],
 })
