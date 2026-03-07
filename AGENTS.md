@@ -64,6 +64,7 @@ Legacy artifacts (historical; non-canonical):
 - `role`, `scope`, `area_id` user harus konsisten.
 - `area_id` user harus cocok levelnya dengan scope.
 - Default orientasi output PDF adalah `landscape`; `portrait` hanya jika diminta eksplisit.
+- Default ukuran kertas output PDF adalah `F4` (`215mm x 330mm`); `A4` hanya jika ada kebutuhan dokumen eksternal atau diminta eksplisit.
 - Untuk dokumen autentik bertabel, hasil pembacaan wajib mencapai peta header tabel sampai tingkat penggabungan sel (`rowspan`/`colspan`) sebelum sinkronisasi kontrak/implementasi.
 - Metode pembacaan dokumen autentik saat ini (`text-layer -> verifikasi visual manual -> laporkan/konfirmasi -> sinkronkan`) ditetapkan sebagai kontrak baku/default karena paling presisi sejauh ini.
 - Metode baku ini hanya boleh diganti jika ada metode baru yang terukur lebih akurat dan sudah didokumentasikan pada playbook + AGENTS di sesi yang sama.
