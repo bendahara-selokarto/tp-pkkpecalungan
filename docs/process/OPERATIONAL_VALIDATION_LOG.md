@@ -1911,3 +1911,44 @@ Keputusan:
 Status:
 
 - `PASS` (`rgm26a1-noop-revalidated-e2e`).
+
+## Cleanup Pasca Migrate Fresh (`MFC26A1`): 2026-03-07
+
+Ruang lingkup:
+
+- Menutup concern cleanup pasca `migrate:fresh` secara bertahap (wave 1-4).
+- Menyederhanakan baseline migration tanpa mengubah kontrak domain aktif.
+- Mengunci keputusan retain sementara untuk compatibility role legacy dan fallback dashboard.
+
+Artefak terdampak:
+
+- `database/migrations/2026_02_21_050000_create_agenda_surats_table.php`
+- `database/migrations/2026_02_20_200000_create_program_prioritas_table.php`
+- `database/migrations/2026_02_22_130000_create_pilot_project_naskah_pelaporan_reports_table.php`
+- `database/migrations/2026_02_28_000000_add_data_dukung_path_to_agenda_surats_table.php` (deleted)
+- `database/migrations/2026_02_24_180000_add_jadwal_bulanan_columns_to_program_prioritas_table.php` (deleted)
+- `database/migrations/2026_02_22_132000_add_penutup_to_pilot_project_naskah_pelaporan_reports_table.php` (deleted)
+- `database/migrations/2026_02_22_133000_add_head_surat_fields_to_pilot_project_naskah_pelaporan_reports_table.php` (deleted)
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- `docs/process/TODO_MFC26A1_CLEANUP_PASCA_MIGRATE_FRESH_2026_03_07.md`
+
+Perintah validasi:
+
+- `php artisan migrate:fresh --seed`
+  - hasil: `PASS`.
+- `php artisan test tests/Feature/DesaAgendaSuratTest.php tests/Feature/KecamatanAgendaSuratTest.php tests/Feature/DesaProgramPrioritasTest.php tests/Feature/KecamatanProgramPrioritasTest.php tests/Feature/DesaPilotProjectNaskahPelaporanTest.php tests/Feature/KecamatanPilotProjectNaskahPelaporanTest.php tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Unit/Dashboard/DashboardCoverageMenuSyncTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php --compact`
+  - hasil: `PASS` (`80` tests, `615` assertions).
+- `php artisan test --compact`
+  - hasil: `PASS` (`1057` tests, `7110` assertions).
+- `npm run build`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Migration transisi `add_*` yang redundant ditutup via squash ke baseline `create_*`.
+- Compatibility role legacy (`admin-desa` / `admin-kecamatan`) dipertahankan sementara karena usage masih aktif lintas app/seeder/test.
+- Fallback payload dashboard (`dashboardStats` / `dashboardCharts`) dipertahankan sementara karena masih dikonsumsi aktif.
+
+Status:
+
+- `PASS` (`mfc26a1-cleanup-closed-with-retain-decisions`).

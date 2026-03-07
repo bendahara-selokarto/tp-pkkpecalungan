@@ -52,3 +52,9 @@ Ringkasan hasil:
 - Route report aktif (2026-02-21): `56`.
 - Baseline PDF compliance (2026-02-21): `20` test pass.
 - Catatan: `DV-003` tetap `open` sampai sumber canonical lampiran `4.14.5` tersedia.
+
+## Review Deviation `MFC26A1` (2026-03-07)
+
+- Scope review: squash migration `agenda-surat`, `program-prioritas`, `pilot-project-naskah-pelaporan` + audit compatibility/fallback.
+- Hasil review: tidak ditemukan deviasi domain baru terhadap pedoman utama; perubahan bersifat simplifikasi baseline migration teknis.
+- Keputusan: tidak menambah entri `DV-*` baru pada siklus ini.

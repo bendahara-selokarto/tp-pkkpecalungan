@@ -14,6 +14,18 @@ return new class extends Migration
             $table->string('prioritas_program');
             $table->text('kegiatan');
             $table->text('sasaran_target');
+            $table->boolean('jadwal_bulan_1')->default(false);
+            $table->boolean('jadwal_bulan_2')->default(false);
+            $table->boolean('jadwal_bulan_3')->default(false);
+            $table->boolean('jadwal_bulan_4')->default(false);
+            $table->boolean('jadwal_bulan_5')->default(false);
+            $table->boolean('jadwal_bulan_6')->default(false);
+            $table->boolean('jadwal_bulan_7')->default(false);
+            $table->boolean('jadwal_bulan_8')->default(false);
+            $table->boolean('jadwal_bulan_9')->default(false);
+            $table->boolean('jadwal_bulan_10')->default(false);
+            $table->boolean('jadwal_bulan_11')->default(false);
+            $table->boolean('jadwal_bulan_12')->default(false);
             $table->boolean('jadwal_i')->default(false);
             $table->boolean('jadwal_ii')->default(false);
             $table->boolean('jadwal_iii')->default(false);

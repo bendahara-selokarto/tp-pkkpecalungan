@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('diteruskan_kepada')->nullable();
             $table->string('tembusan')->nullable();
             $table->text('keterangan')->nullable();
+            $table->string('data_dukung_path')->nullable();
             $table->enum('level', ['desa', 'kecamatan']);
             $table->foreignId('area_id')->constrained('areas')->cascadeOnDelete();
             $table->foreignId('created_by')->constrained('users')->cascadeOnDelete();

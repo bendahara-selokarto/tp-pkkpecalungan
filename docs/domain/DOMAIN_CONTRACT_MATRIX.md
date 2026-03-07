@@ -77,8 +77,7 @@ Label berikut dikunci sebagai istilah canonical lintas domain/process. Kolom sta
 - Migration kontrak field:
   - `database/migrations/2026_02_20_120000_create_anggota_tim_penggeraks_table.php`
   - `database/migrations/2026_02_20_210000_create_kader_khusus_table.php`
-  - `database/migrations/2026_02_21_050000_create_agenda_surats_table.php`
-  - `database/migrations/2026_02_28_000000_add_data_dukung_path_to_agenda_surats_table.php`
+  - `database/migrations/2026_02_21_050000_create_agenda_surats_table.php` (termasuk `data_dukung_path` pasca squash migration 2026-03-07)
   - `database/migrations/2026_02_27_120000_create_buku_notulen_rapats_table.php`
   - `database/migrations/2026_02_27_130000_create_buku_daftar_hadirs_table.php`
   - `database/migrations/2026_02_27_140000_create_buku_tamus_table.php`
@@ -101,8 +100,7 @@ Label berikut dikunci sebagai istilah canonical lintas domain/process. Kolom sta
   - `database/migrations/2026_02_21_025000_create_posyandus_table.php`
   - `database/migrations/2026_02_20_230000_create_simulasi_penyuluhans_table.php`
   - `database/migrations/2026_02_24_230000_create_paars_table.php`
-  - `database/migrations/2026_02_20_200000_create_program_prioritas_table.php`
-  - `database/migrations/2026_02_24_180000_add_jadwal_bulanan_columns_to_program_prioritas_table.php`
+  - `database/migrations/2026_02_20_200000_create_program_prioritas_table.php` (termasuk `jadwal_bulan_1..12` pasca squash migration 2026-03-07)
 - Catatan keluarga rekap source:
   - `app/Domains/Wilayah/CatatanKeluarga/Repositories/CatatanKeluargaRepository.php`
   - `docs/domain/CATATAN_KELUARGA_19_TO_10_MAPPING.md`
