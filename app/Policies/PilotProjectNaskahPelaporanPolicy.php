@@ -10,8 +10,7 @@ class PilotProjectNaskahPelaporanPolicy
 {
     public function __construct(
         private readonly PilotProjectNaskahPelaporanScopeService $scopeService
-    ) {
-    }
+    ) {}
 
     public function viewAny(User $user): bool
     {
@@ -30,7 +29,7 @@ class PilotProjectNaskahPelaporanPolicy
 
     public function update(User $user, PilotProjectNaskahPelaporanReport $report): bool
     {
-        return $this->view($user, $report);
+        return $this->scopeService->canUpdate($user, $report);
     }
 
     public function delete(User $user, PilotProjectNaskahPelaporanReport $report): bool

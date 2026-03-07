@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 class PilotProjectKeluargaSehatReport extends Model
 {
@@ -25,6 +26,7 @@ class PilotProjectKeluargaSehatReport extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
     protected function casts(): array
@@ -32,7 +34,19 @@ class PilotProjectKeluargaSehatReport extends Model
         return [
             'tahun_awal' => 'integer',
             'tahun_akhir' => 'integer',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $report): void {
+            if (is_numeric($report->tahun_anggaran)) {
+                return;
+            }
+
+            $report->tahun_anggaran = (int) Carbon::now()->format('Y');
+        });
     }
 
     public function values(): HasMany
@@ -50,4 +64,3 @@ class PilotProjectKeluargaSehatReport extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-

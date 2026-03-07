@@ -9,12 +9,10 @@ class DeletePilotProjectKeluargaSehatAction
 {
     public function __construct(
         private readonly PilotProjectKeluargaSehatRepositoryInterface $repository
-    ) {
-    }
+    ) {}
 
     public function execute(PilotProjectKeluargaSehatReport $report): void
     {
         $this->repository->deleteReport($report);
     }
 }
-

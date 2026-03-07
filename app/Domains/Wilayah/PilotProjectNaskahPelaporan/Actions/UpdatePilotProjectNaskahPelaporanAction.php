@@ -11,8 +11,7 @@ class UpdatePilotProjectNaskahPelaporanAction
     public function __construct(
         private readonly PilotProjectNaskahPelaporanRepositoryInterface $repository,
         private readonly PilotProjectNaskahPelaporanAttachmentService $attachmentService
-    ) {
-    }
+    ) {}
 
     public function execute(PilotProjectNaskahPelaporanReport $report, array $payload): PilotProjectNaskahPelaporanReport
     {
@@ -34,6 +33,7 @@ class UpdatePilotProjectNaskahPelaporanAction
             'pelaksanaan_4' => (string) ($payload['pelaksanaan_4'] ?? $report->pelaksanaan_4),
             'pelaksanaan_5' => (string) ($payload['pelaksanaan_5'] ?? $report->pelaksanaan_5),
             'penutup' => (string) ($payload['penutup'] ?? $report->penutup),
+            'tahun_anggaran' => (int) $report->tahun_anggaran,
         ]);
 
         $removeIds = collect($payload['remove_attachment_ids'] ?? [])

@@ -40,6 +40,7 @@ class KecamatanPilotProjectNaskahPelaporanController extends Controller
             ->through(fn (PilotProjectNaskahPelaporanReport $report) => [
                 'id' => $report->id,
                 'judul_laporan' => $report->judul_laporan,
+                'tahun_anggaran' => $report->tahun_anggaran,
                 'attachments_count' => $report->attachments_count ?? 0,
                 'updated_at' => $report->updated_at?->toDateTimeString(),
             ]);
@@ -53,6 +54,7 @@ class KecamatanPilotProjectNaskahPelaporanController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -150,6 +152,7 @@ class KecamatanPilotProjectNaskahPelaporanController extends Controller
             'pelaksanaan_4' => $report->pelaksanaan_4,
             'pelaksanaan_5' => $report->pelaksanaan_5,
             'penutup' => $report->penutup,
+            'tahun_anggaran' => $report->tahun_anggaran,
             'attachments' => $report->attachments->map(function (PilotProjectNaskahPelaporanAttachment $attachment): array {
                 return [
                     'id' => $attachment->id,
@@ -171,4 +174,3 @@ class KecamatanPilotProjectNaskahPelaporanController extends Controller
         return trim(sprintf('Tim Penggerak PKK %s %s', $scopeTitle, $areaName));
     }
 }
-

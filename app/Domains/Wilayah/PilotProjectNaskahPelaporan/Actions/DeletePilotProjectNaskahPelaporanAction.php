@@ -11,8 +11,7 @@ class DeletePilotProjectNaskahPelaporanAction
     public function __construct(
         private readonly PilotProjectNaskahPelaporanRepositoryInterface $repository,
         private readonly PilotProjectNaskahPelaporanAttachmentService $attachmentService
-    ) {
-    }
+    ) {}
 
     public function execute(PilotProjectNaskahPelaporanReport $report): void
     {

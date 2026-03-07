@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\PilotProjectKeluargaSehat\Services;
 
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Models\PilotProjectKeluargaSehatReport;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,9 +11,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class PilotProjectKeluargaSehatScopeService
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
-    ) {
-    }
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function canAccessLevel(User $user, string $level): bool
     {
@@ -30,7 +31,8 @@ class PilotProjectKeluargaSehatScopeService
             return false;
         }
 
-        return (int) $report->area_id === (int) $user->area_id;
+        return (int) $report->area_id === (int) $user->area_id
+            && (int) $report->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, PilotProjectKeluargaSehatReport $report): bool
@@ -43,16 +45,20 @@ class PilotProjectKeluargaSehatScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(
+    public function authorizeSameLevelAreaAndBudgetYear(
         PilotProjectKeluargaSehatReport $report,
         string $level,
-        int $areaId
+        int $areaId,
+        int $tahunAnggaran
     ): PilotProjectKeluargaSehatReport {
-        if ($report->level !== $level || (int) $report->area_id !== $areaId) {
+        if (
+            $report->level !== $level
+            || (int) $report->area_id !== $areaId
+            || (int) $report->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
         return $report;
     }
 }
-

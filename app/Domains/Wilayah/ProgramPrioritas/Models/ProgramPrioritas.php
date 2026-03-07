@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\ProgramPrioritas\Models;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class ProgramPrioritas extends Model
 {
@@ -39,6 +40,7 @@ class ProgramPrioritas extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
     protected function casts(): array
@@ -64,7 +66,19 @@ class ProgramPrioritas extends Model
             'sumber_dana_apbd' => 'boolean',
             'sumber_dana_swd' => 'boolean',
             'sumber_dana_bant' => 'boolean',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $programPrioritas): void {
+            if (is_numeric($programPrioritas->tahun_anggaran)) {
+                return;
+            }
+
+            $programPrioritas->tahun_anggaran = (int) Carbon::now()->format('Y');
+        });
     }
 
     public function area()

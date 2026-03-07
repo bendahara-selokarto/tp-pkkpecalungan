@@ -90,6 +90,7 @@
         <div class="meta">
             {{ $areaLabel }}: {{ $areaName }}<br>
             Judul laporan: {{ data_get($report, 'judul_laporan', '-') }}<br>
+            Tahun anggaran: {{ $budgetYearLabel ?? '-' }}<br>
             Periode: {{ $tahunAwal }} - {{ $tahunAkhir }}<br>
             Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
             Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
@@ -187,6 +188,7 @@
         <div class="title">LAPORAN PILOT PROJECT KELUARGA SEHAT {{ $levelLabel }}</div>
         <div class="meta">
             {{ $areaLabel }}: {{ $areaName }}<br>
+            Tahun anggaran: {{ $budgetYearLabel ?? '-' }}<br>
             Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
             Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
         </div>

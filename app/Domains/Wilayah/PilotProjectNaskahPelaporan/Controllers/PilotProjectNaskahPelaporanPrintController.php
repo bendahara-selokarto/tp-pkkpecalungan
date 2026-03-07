@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\PilotProjectNaskahPelaporan\Controllers;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanReport;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\UseCases\ListScopedPilotProjectNaskahPelaporanUseCase;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,9 @@ class PilotProjectNaskahPelaporanPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedPilotProjectNaskahPelaporanUseCase $listUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -40,6 +41,7 @@ class PilotProjectNaskahPelaporanPrintController extends Controller
             'reports' => $reports,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'printedBy' => $user,
             'printedAt' => now(),
             'categoryLabels' => config('pilot_project_naskah_pelaporan.attachment_categories', []),

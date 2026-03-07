@@ -2,6 +2,4 @@
 
 namespace App\Domains\Wilayah\PilotProjectNaskahPelaporan\Requests;
 
-class StorePilotProjectNaskahPelaporanRequest extends PilotProjectNaskahPelaporanUpsertRequest
-{
-}
+class StorePilotProjectNaskahPelaporanRequest extends PilotProjectNaskahPelaporanUpsertRequest {}

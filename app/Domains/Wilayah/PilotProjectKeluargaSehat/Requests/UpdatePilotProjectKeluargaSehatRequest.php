@@ -2,6 +2,4 @@
 
 namespace App\Domains\Wilayah\PilotProjectKeluargaSehat\Requests;
 
-class UpdatePilotProjectKeluargaSehatRequest extends PilotProjectKeluargaSehatUpsertRequest
-{
-}
+class UpdatePilotProjectKeluargaSehatRequest extends PilotProjectKeluargaSehatUpsertRequest {}

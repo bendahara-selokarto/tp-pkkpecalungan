@@ -9,8 +9,7 @@ class UpdatePilotProjectKeluargaSehatAction
 {
     public function __construct(
         private readonly PilotProjectKeluargaSehatRepositoryInterface $repository
-    ) {
-    }
+    ) {}
 
     public function execute(PilotProjectKeluargaSehatReport $report, array $payload): PilotProjectKeluargaSehatReport
     {
@@ -24,6 +23,7 @@ class UpdatePilotProjectKeluargaSehatAction
             'penutup' => $payload['penutup'] ?? null,
             'tahun_awal' => (int) ($payload['tahun_awal'] ?? $report->tahun_awal),
             'tahun_akhir' => (int) ($payload['tahun_akhir'] ?? $report->tahun_akhir),
+            'tahun_anggaran' => (int) $report->tahun_anggaran,
         ]);
 
         if (is_array($payload['values'] ?? null)) {
@@ -32,11 +32,11 @@ class UpdatePilotProjectKeluargaSehatAction
                 $payload['values'],
                 $updated->level,
                 (int) $updated->area_id,
-                (int) $updated->created_by
+                (int) $updated->created_by,
+                (int) $updated->tahun_anggaran
             );
         }
 
         return $updated->fresh(['values']) ?? $updated->load('values');
     }
 }
-

@@ -17,8 +17,12 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -54,6 +58,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -145,6 +150,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -159,6 +165,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
         $invalidUser = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $invalidUser->assignRole('admin-desa');
 
@@ -173,6 +180,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -190,6 +198,53 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'pelaksanaan_5' => 'Pelaksanaan 5',
             'penutup' => 'Penutup contoh',
         ])->assertSessionHasErrors(['surat_tanggal']);
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_naskah_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        PilotProjectNaskahPelaporanReport::create([
+            'judul_laporan' => 'Naskah Tahun Aktif',
+            'dasar_pelaksanaan' => 'A',
+            'pendahuluan' => 'B',
+            'pelaksanaan_1' => '1',
+            'pelaksanaan_2' => '2',
+            'pelaksanaan_3' => '3',
+            'pelaksanaan_4' => '4',
+            'pelaksanaan_5' => '5',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        PilotProjectNaskahPelaporanReport::create([
+            'judul_laporan' => 'Naskah Tahun Lama',
+            'dasar_pelaksanaan' => 'A',
+            'pendahuluan' => 'B',
+            'pelaksanaan_1' => '1',
+            'pelaksanaan_2' => '2',
+            'pelaksanaan_3' => '3',
+            'pelaksanaan_4' => '4',
+            'pelaksanaan_5' => '5',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/pilot-project-naskah-pelaporan');
+
+        $response->assertOk();
+        $response->assertSee('Naskah Tahun Aktif');
+        $response->assertDontSee('Naskah Tahun Lama');
     }
 
     private function fakeJpegUpload(string $fileName): UploadedFile

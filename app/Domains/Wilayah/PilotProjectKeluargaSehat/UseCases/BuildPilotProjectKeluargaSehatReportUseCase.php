@@ -6,8 +6,7 @@ class BuildPilotProjectKeluargaSehatReportUseCase
 {
     public function __construct(
         private readonly GetScopedPilotProjectKeluargaSehatUseCase $getScopedUseCase
-    ) {
-    }
+    ) {}
 
     public function execute(int $id, string $level): array
     {
@@ -21,4 +20,3 @@ class BuildPilotProjectKeluargaSehatReportUseCase
         ];
     }
 }
-

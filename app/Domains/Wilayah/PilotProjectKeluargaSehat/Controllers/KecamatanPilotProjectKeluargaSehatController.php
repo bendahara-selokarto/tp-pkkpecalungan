@@ -40,6 +40,7 @@ class KecamatanPilotProjectKeluargaSehatController extends Controller
                 'judul_laporan' => $report->judul_laporan,
                 'tahun_awal' => $report->tahun_awal,
                 'tahun_akhir' => $report->tahun_akhir,
+                'tahun_anggaran' => $report->tahun_anggaran,
                 'values_count' => $report->values_count ?? 0,
                 'updated_at' => $report->updated_at?->toDateTimeString(),
             ]);
@@ -53,6 +54,7 @@ class KecamatanPilotProjectKeluargaSehatController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -140,6 +142,7 @@ class KecamatanPilotProjectKeluargaSehatController extends Controller
             'penutup' => $report->penutup,
             'tahun_awal' => $report->tahun_awal,
             'tahun_akhir' => $report->tahun_akhir,
+            'tahun_anggaran' => $report->tahun_anggaran,
             'values' => $report->values
                 ->sortBy('sort_order')
                 ->values()
@@ -159,4 +162,3 @@ class KecamatanPilotProjectKeluargaSehatController extends Controller
         ];
     }
 }
-

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 class PilotProjectNaskahPelaporanReport extends Model
 {
@@ -33,11 +34,27 @@ class PilotProjectNaskahPelaporanReport extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
-    protected $casts = [
-        'surat_tanggal' => 'date',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'surat_tanggal' => 'date',
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $report): void {
+            if (is_numeric($report->tahun_anggaran)) {
+                return;
+            }
+
+            $report->tahun_anggaran = (int) Carbon::now()->format('Y');
+        });
+    }
 
     public function attachments(): HasMany
     {

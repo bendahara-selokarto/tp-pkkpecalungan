@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\PilotProjectKeluargaSehat\Controllers;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\Models\PilotProjectKeluargaSehatReport;
 use App\Domains\Wilayah\PilotProjectKeluargaSehat\UseCases\ListScopedPilotProjectKeluargaSehatUseCase;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,9 @@ class PilotProjectKeluargaSehatPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedPilotProjectKeluargaSehatUseCase $listUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -40,6 +41,7 @@ class PilotProjectKeluargaSehatPrintController extends Controller
             'reports' => $reports,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'printedBy' => $user,
             'printedAt' => now(),
             'sections' => config('pilot_project_keluarga_sehat.sections', []),
@@ -48,4 +50,3 @@ class PilotProjectKeluargaSehatPrintController extends Controller
         return $pdf->stream("pilot-project-keluarga-sehat-{$level}-report.pdf");
     }
 }
-

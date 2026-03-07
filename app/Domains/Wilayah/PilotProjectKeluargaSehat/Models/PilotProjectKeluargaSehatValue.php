@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 class PilotProjectKeluargaSehatValue extends Model
 {
@@ -26,6 +27,7 @@ class PilotProjectKeluargaSehatValue extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
     protected function casts(): array
@@ -35,7 +37,19 @@ class PilotProjectKeluargaSehatValue extends Model
             'semester' => 'integer',
             'value' => 'integer',
             'sort_order' => 'integer',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $value): void {
+            if (is_numeric($value->tahun_anggaran)) {
+                return;
+            }
+
+            $value->tahun_anggaran = (int) Carbon::now()->format('Y');
+        });
     }
 
     public function report(): BelongsTo

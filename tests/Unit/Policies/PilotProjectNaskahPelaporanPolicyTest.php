@@ -15,6 +15,8 @@ class PilotProjectNaskahPelaporanPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     #[Test]
     public function admin_desa_hanya_boleh_melihat_naskah_di_desanya_sendiri(): void
     {
@@ -24,7 +26,7 @@ class PilotProjectNaskahPelaporanPolicyTest extends TestCase
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-desa');
 
         $milikSendiri = PilotProjectNaskahPelaporanReport::create([
@@ -39,6 +41,7 @@ class PilotProjectNaskahPelaporanPolicyTest extends TestCase
             'level' => 'desa',
             'area_id' => $desaA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $milikDesaLain = PilotProjectNaskahPelaporanReport::create([
@@ -53,6 +56,7 @@ class PilotProjectNaskahPelaporanPolicyTest extends TestCase
             'level' => 'desa',
             'area_id' => $desaB->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $policy = app(PilotProjectNaskahPelaporanPolicy::class);
@@ -69,7 +73,7 @@ class PilotProjectNaskahPelaporanPolicyTest extends TestCase
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id]);
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-kecamatan');
 
         $laporanLuar = PilotProjectNaskahPelaporanReport::create([
@@ -84,10 +88,46 @@ class PilotProjectNaskahPelaporanPolicyTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $kecamatanB->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $policy = app(PilotProjectNaskahPelaporanPolicy::class);
 
         $this->assertFalse($policy->update($user, $laporanLuar));
+    }
+
+    #[Test]
+    public function admin_desa_tidak_boleh_melihat_naskah_tahun_anggaran_lain_di_area_yang_sama(): void
+    {
+        Role::create(['name' => 'admin-desa']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $naskahTahunLama = PilotProjectNaskahPelaporanReport::create([
+            'judul_laporan' => 'Naskah Tahun Lama',
+            'dasar_pelaksanaan' => 'A',
+            'pendahuluan' => 'A',
+            'pelaksanaan_1' => '1',
+            'pelaksanaan_2' => '2',
+            'pelaksanaan_3' => '3',
+            'pelaksanaan_4' => '4',
+            'pelaksanaan_5' => '5',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $policy = app(PilotProjectNaskahPelaporanPolicy::class);
+
+        $this->assertFalse($policy->view($user, $naskahTahunLama));
     }
 }

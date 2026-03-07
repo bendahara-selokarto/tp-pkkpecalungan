@@ -258,6 +258,7 @@
             : $dotFill($dotLength);
         $fromInput = trim((string) data_get($report, 'surat_dari', ''));
         $fromValue = $fromInput !== '' ? $fromInput : $fromAutoValue;
+        $budgetYearValue = $budgetYearLabel ?? '-';
 
         $halValue = trim((string) data_get($report, 'surat_hal', ''));
         if ($halValue === '') {
@@ -303,6 +304,12 @@
             </tr>
         </table>
         <div class="letterhead-separator"></div>
+        <div class="meta">
+            {{ $areaLabel }}: {{ $areaName }}<br>
+            Tahun anggaran: {{ $budgetYearValue }}<br>
+            Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
+            Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+        </div>
 
         <table class="surat-table">
             <tr>

@@ -1,12 +1,12 @@
 <?php
 
 namespace Tests\Feature;
-use PHPUnit\Framework\Attributes\Test;
 
 use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -14,8 +14,12 @@ class DesaProgramPrioritasTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -49,6 +53,7 @@ class DesaProgramPrioritasTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -69,6 +74,7 @@ class DesaProgramPrioritasTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         ProgramPrioritas::create([
@@ -88,6 +94,7 @@ class DesaProgramPrioritasTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/program-prioritas');
@@ -103,6 +110,7 @@ class DesaProgramPrioritasTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -177,6 +185,7 @@ class DesaProgramPrioritasTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -191,11 +200,69 @@ class DesaProgramPrioritasTest extends TestCase
         $staleUser = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $staleUser->assignRole('admin-desa');
 
         $response = $this->actingAs($staleUser)->get('/desa/program-prioritas');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_program_prioritas_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        ProgramPrioritas::create([
+            'program' => 'Program Tahun Aktif',
+            'prioritas_program' => 'Prioritas Utama',
+            'kegiatan' => 'Kegiatan Aktif',
+            'sasaran_target' => 'Warga Aktif',
+            'jadwal_i' => true,
+            'jadwal_ii' => false,
+            'jadwal_iii' => false,
+            'jadwal_iv' => false,
+            'sumber_dana_pusat' => true,
+            'sumber_dana_apbd' => false,
+            'sumber_dana_swd' => false,
+            'sumber_dana_bant' => false,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        ProgramPrioritas::create([
+            'program' => 'Program Tahun Lama',
+            'prioritas_program' => 'Prioritas Lama',
+            'kegiatan' => 'Kegiatan Lama',
+            'sasaran_target' => 'Warga Lama',
+            'jadwal_i' => true,
+            'jadwal_ii' => false,
+            'jadwal_iii' => false,
+            'jadwal_iv' => false,
+            'sumber_dana_pusat' => false,
+            'sumber_dana_apbd' => true,
+            'sumber_dana_swd' => false,
+            'sumber_dana_bant' => false,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/program-prioritas');
+
+        $response->assertOk();
+        $response->assertSee('Program Tahun Aktif');
+        $response->assertDontSee('Program Tahun Lama');
     }
 }

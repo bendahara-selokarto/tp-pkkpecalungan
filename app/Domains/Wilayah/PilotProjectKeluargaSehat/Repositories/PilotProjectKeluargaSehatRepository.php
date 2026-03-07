@@ -24,21 +24,23 @@ class PilotProjectKeluargaSehatRepository implements PilotProjectKeluargaSehatRe
         return $report;
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection
     {
         return PilotProjectKeluargaSehatReport::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->withCount('values')
             ->latest('id')
             ->get();
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator
     {
         return PilotProjectKeluargaSehatReport::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->withCount('values')
             ->latest('id')
             ->paginate($perPage)
@@ -55,12 +57,14 @@ class PilotProjectKeluargaSehatRepository implements PilotProjectKeluargaSehatRe
     public function findReportByScopeAndPeriod(
         string $level,
         int $areaId,
+        int $tahunAnggaran,
         int $tahunAwal,
         int $tahunAkhir
     ): ?PilotProjectKeluargaSehatReport {
         return PilotProjectKeluargaSehatReport::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->where('tahun_awal', $tahunAwal)
             ->where('tahun_akhir', $tahunAkhir)
             ->first();
@@ -71,9 +75,10 @@ class PilotProjectKeluargaSehatRepository implements PilotProjectKeluargaSehatRe
         array $values,
         string $level,
         int $areaId,
-        int $createdBy
+        int $createdBy,
+        int $tahunAnggaran
     ): void {
-        DB::transaction(function () use ($report, $values, $level, $areaId, $createdBy): void {
+        DB::transaction(function () use ($report, $values, $level, $areaId, $createdBy, $tahunAnggaran): void {
             $report->values()->delete();
 
             if ($values === []) {
@@ -82,7 +87,7 @@ class PilotProjectKeluargaSehatRepository implements PilotProjectKeluargaSehatRe
 
             $now = now();
             $rows = collect($values)
-                ->map(static function (array $item) use ($report, $level, $areaId, $createdBy, $now): array {
+                ->map(static function (array $item) use ($report, $level, $areaId, $createdBy, $tahunAnggaran, $now): array {
                     return [
                         'report_id' => $report->id,
                         'section' => (string) ($item['section'] ?? 'pilot_project'),
@@ -98,6 +103,7 @@ class PilotProjectKeluargaSehatRepository implements PilotProjectKeluargaSehatRe
                         'level' => $level,
                         'area_id' => $areaId,
                         'created_by' => $createdBy,
+                        'tahun_anggaran' => $tahunAnggaran,
                         'created_at' => $now,
                         'updated_at' => $now,
                     ];

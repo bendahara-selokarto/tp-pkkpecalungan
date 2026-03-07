@@ -48,6 +48,7 @@ class PilotProjectNaskahPelaporanAttachmentService
                     'level' => $level,
                     'area_id' => $areaId,
                     'created_by' => $createdBy,
+                    'tahun_anggaran' => (int) $report->tahun_anggaran,
                     'created_at' => $now,
                     'updated_at' => $now,
                 ];

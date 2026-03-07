@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `in-progress` (`state:wave2-data-warga-catatan-bundle-implemented`)
+Status: `in-progress` (`state:wave3-program-prioritas-pilot-project-slice-implemented`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -108,6 +108,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - untuk concern dokumen secretary books (`AgendaSurat`, `BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`), backfill memakai tahun dari kolom tanggal dokumen masing-masing,
     - jika concern wave berikutnya belum punya sumber tahun yang cukup presisi, pakai tahun anggaran baseline yang dikunci eksplisit saat wave concern tersebut dieksekusi.
   - [ ] Siapkan aturan transisi untuk unique constraint, seed, dan fixture test.
+    - [x] Slice `PilotProjectKeluargaSehat` kini memperluas unique constraint scope-periode menjadi `level + area_id + tahun_anggaran + tahun_awal + tahun_akhir`.
 - [ ] Fase 5 - Rollout validation waves.
   - [x] Wave 1 dikunci: `Profile` + `ActiveBudgetYearContextService` + `AgendaSurat`.
   - [ ] Wave 2: concern CRUD mayoritas yang pattern query-nya homogen (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`, dll).
@@ -121,6 +122,8 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - [x] Bundle dependensi wave-2 terimplementasi: `DataWarga`, `DataKegiatanWarga`, `CatatanKeluarga`.
     - [ ] Concern homogen wave-2 yang masih pending: concern sejenis lain di luar slice yang sudah terkunci.
   - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
+    - [x] Slice wave-3 terimplementasi: `ProgramPrioritas`, `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan`.
+    - [ ] Concern kompleks wave-3 yang masih pending: `LaporanTahunanPkk`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat.
   - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
 - [ ] Sinkronisasi dokumen concern terkait (trigger hardening aktif).
   - [x] TODO concern + ADR.
@@ -142,6 +145,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] feature/policy/report tests `BKL`, `BKR`, `Posyandu`, dan `DataPelatihanKader` untuk anti data leak lintas tahun.
   - [x] feature/policy/report tests `Bantuan`, `PrestasiLomba`, `AnggotaPokja`, dan `BukuKeuangan` untuk anti data leak lintas tahun.
   - [x] feature/policy/report tests `DataWarga`, `DataKegiatanWarga`, dan agregat `CatatanKeluarga` untuk anti data leak lintas tahun.
+  - [x] feature/policy/report tests `ProgramPrioritas`, `PilotProjectKeluargaSehat`, dan `PilotProjectNaskahPelaporan` untuk anti data leak lintas tahun.
 - [x] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
 
 ### Matrix Implementasi Wave-1
@@ -217,6 +221,14 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] PDF `BukuTamu`, `BukuDaftarHadir`, dan `BukuNotulenRapat` menampilkan metadata tahun anggaran aktif.
 - [x] Targeted regression wave-2 slice lulus: `46 passed`.
 - [x] Full suite setelah rollout slice wave-2 lulus: `1071 passed`.
+
+## Hasil Implementasi Wave-3 (Slice Program Prioritas + Pilot Project)
+- [x] `ProgramPrioritas` kini menyimpan `tahun_anggaran` dan seluruh read/write/list/report path sudah terisolasi per tahun aktif.
+- [x] `PilotProjectKeluargaSehat` kini menyimpan `tahun_anggaran` pada report dan value rows; query scope-period backend serta unique constraint schema sudah sadar tahun anggaran.
+- [x] `PilotProjectNaskahPelaporan` kini menyimpan `tahun_anggaran` pada report dan attachment rows; list/detail/update/report path sudah terisolasi per tahun aktif.
+- [x] PDF `ProgramPrioritas`, `PilotProjectKeluargaSehat`, dan `PilotProjectNaskahPelaporan` menampilkan metadata tahun anggaran aktif.
+- [x] Targeted regression slice `ProgramPrioritas + PilotProject`: `70 passed`.
+- [x] Full suite setelah rollout slice ini lulus: `1136 passed`.
 
 ## Hasil Implementasi Wave-2 (Slice CRUD Homogen Lanjutan)
 - [x] `Inventaris` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.

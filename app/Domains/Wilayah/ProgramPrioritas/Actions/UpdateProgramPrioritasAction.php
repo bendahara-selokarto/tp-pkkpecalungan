@@ -10,8 +10,7 @@ class UpdateProgramPrioritasAction
 {
     public function __construct(
         private readonly ProgramPrioritasRepositoryInterface $programPrioritasRepository
-    ) {
-    }
+    ) {}
 
     public function execute(ProgramPrioritas $programPrioritas, array $payload): ProgramPrioritas
     {
@@ -20,6 +19,7 @@ class UpdateProgramPrioritasAction
             'level' => $programPrioritas->level,
             'area_id' => $programPrioritas->area_id,
             'created_by' => $programPrioritas->created_by,
+            'tahun_anggaran' => $programPrioritas->tahun_anggaran,
         ]);
 
         return $this->programPrioritasRepository->update($programPrioritas, $data);

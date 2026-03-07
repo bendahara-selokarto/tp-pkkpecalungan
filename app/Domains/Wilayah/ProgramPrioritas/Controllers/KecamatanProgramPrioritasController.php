@@ -43,6 +43,7 @@ class KecamatanProgramPrioritasController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -132,7 +133,7 @@ class KecamatanProgramPrioritasController extends Controller
             'sumber_dana_swd' => (bool) $item->sumber_dana_swd,
             'sumber_dana_bant' => (bool) $item->sumber_dana_bant,
             'keterangan' => $item->keterangan,
+            'tahun_anggaran' => $item->tahun_anggaran,
         ];
     }
 }
-

@@ -6,12 +6,16 @@ use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
 class PilotProjectNaskahPelaporanAttachment extends Model
 {
     public const CATEGORY_6A_PHOTO = '6a_photo';
+
     public const CATEGORY_6B_PHOTO = '6b_photo';
+
     public const CATEGORY_6D_DOCUMENT = '6d_document';
+
     public const CATEGORY_6E_PHOTO = '6e_photo';
 
     protected $table = 'pilot_project_naskah_pelaporan_attachments';
@@ -26,13 +30,26 @@ class PilotProjectNaskahPelaporanAttachment extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
     protected function casts(): array
     {
         return [
             'file_size' => 'integer',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $attachment): void {
+            if (is_numeric($attachment->tahun_anggaran)) {
+                return;
+            }
+
+            $attachment->tahun_anggaran = (int) Carbon::now()->format('Y');
+        });
     }
 
     public function report(): BelongsTo

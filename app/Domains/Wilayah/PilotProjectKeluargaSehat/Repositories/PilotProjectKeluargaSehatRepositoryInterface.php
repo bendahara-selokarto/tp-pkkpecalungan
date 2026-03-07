@@ -15,15 +15,16 @@ interface PilotProjectKeluargaSehatRepositoryInterface
         array $payload
     ): PilotProjectKeluargaSehatReport;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection;
 
     public function findReport(int $id): PilotProjectKeluargaSehatReport;
 
     public function findReportByScopeAndPeriod(
         string $level,
         int $areaId,
+        int $tahunAnggaran,
         int $tahunAwal,
         int $tahunAkhir
     ): ?PilotProjectKeluargaSehatReport;
@@ -33,7 +34,8 @@ interface PilotProjectKeluargaSehatRepositoryInterface
         array $values,
         string $level,
         int $areaId,
-        int $createdBy
+        int $createdBy,
+        int $tahunAnggaran
     ): void;
 
     public function deleteReport(PilotProjectKeluargaSehatReport $report): void;

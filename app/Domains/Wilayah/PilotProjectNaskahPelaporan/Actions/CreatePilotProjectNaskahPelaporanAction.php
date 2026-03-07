@@ -6,20 +6,22 @@ use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPel
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNaskahPelaporanRepositoryInterface;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Services\PilotProjectNaskahPelaporanAttachmentService;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Services\PilotProjectNaskahPelaporanScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 
 class CreatePilotProjectNaskahPelaporanAction
 {
     public function __construct(
         private readonly PilotProjectNaskahPelaporanRepositoryInterface $repository,
         private readonly PilotProjectNaskahPelaporanScopeService $scopeService,
-        private readonly PilotProjectNaskahPelaporanAttachmentService $attachmentService
-    ) {
-    }
+        private readonly PilotProjectNaskahPelaporanAttachmentService $attachmentService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function execute(array $payload, string $level): PilotProjectNaskahPelaporanReport
     {
         $areaId = $this->scopeService->requireUserAreaId();
         $createdBy = (int) auth()->id();
+        $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
         $report = $this->repository->storeReport([
             'judul_laporan' => (string) ($payload['judul_laporan'] ?? config('pilot_project_naskah_pelaporan.module.label')),
@@ -42,6 +44,7 @@ class CreatePilotProjectNaskahPelaporanAction
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => $createdBy,
+            'tahun_anggaran' => $tahunAnggaran,
         ]);
 
         $rows = $this->attachmentService->buildAttachmentRows($report, $payload, $level, $areaId, $createdBy);

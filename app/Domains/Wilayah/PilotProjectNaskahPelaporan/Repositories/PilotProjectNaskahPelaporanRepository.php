@@ -2,7 +2,6 @@
 
 namespace App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories;
 
-use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanAttachment;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanReport;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -23,21 +22,23 @@ class PilotProjectNaskahPelaporanRepository implements PilotProjectNaskahPelapor
         return $report;
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection
     {
         return PilotProjectNaskahPelaporanReport::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->withCount('attachments')
             ->latest('id')
             ->get();
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator
     {
         return PilotProjectNaskahPelaporanReport::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->withCount('attachments')
             ->latest('id')
             ->paginate($perPage)

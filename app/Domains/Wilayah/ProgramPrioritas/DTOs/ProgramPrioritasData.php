@@ -33,8 +33,8 @@ class ProgramPrioritasData
         public string $level,
         public int $area_id,
         public int $created_by,
-    ) {
-    }
+        public int $tahun_anggaran,
+    ) {}
 
     public static function fromArray(array $data): self
     {
@@ -74,6 +74,7 @@ class ProgramPrioritasData
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],
+            (int) $data['tahun_anggaran'],
         );
     }
 

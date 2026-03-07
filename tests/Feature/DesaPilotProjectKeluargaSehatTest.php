@@ -14,8 +14,12 @@ class DesaPilotProjectKeluargaSehatTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -49,6 +53,7 @@ class DesaPilotProjectKeluargaSehatTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -149,6 +154,7 @@ class DesaPilotProjectKeluargaSehatTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -163,11 +169,49 @@ class DesaPilotProjectKeluargaSehatTest extends TestCase
         $invalidUser = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $invalidUser->assignRole('admin-desa');
 
         $response = $this->actingAs($invalidUser)->get('/desa/pilot-project-keluarga-sehat');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_laporan_pilot_project_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        PilotProjectKeluargaSehatReport::create([
+            'judul_laporan' => 'Laporan Tahun Aktif',
+            'tahun_awal' => 2021,
+            'tahun_akhir' => 2021,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        PilotProjectKeluargaSehatReport::create([
+            'judul_laporan' => 'Laporan Tahun Lama',
+            'tahun_awal' => 2021,
+            'tahun_akhir' => 2021,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/pilot-project-keluarga-sehat');
+
+        $response->assertOk();
+        $response->assertSee('Laporan Tahun Aktif');
+        $response->assertDontSee('Laporan Tahun Lama');
     }
 }
