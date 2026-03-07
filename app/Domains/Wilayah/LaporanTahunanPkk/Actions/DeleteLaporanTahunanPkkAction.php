@@ -9,12 +9,10 @@ class DeleteLaporanTahunanPkkAction
 {
     public function __construct(
         private readonly LaporanTahunanPkkRepositoryInterface $repository
-    ) {
-    }
+    ) {}
 
     public function execute(LaporanTahunanPkkReport $report): void
     {
         $this->repository->deleteReport($report);
     }
 }
-

@@ -11,12 +11,12 @@ class CreateLaporanTahunanPkkAction
     public function __construct(
         private readonly LaporanTahunanPkkRepositoryInterface $repository,
         private readonly LaporanTahunanPkkScopeService $scopeService
-    ) {
-    }
+    ) {}
 
     public function execute(array $payload, string $level): LaporanTahunanPkkReport
     {
         $areaId = $this->scopeService->requireUserAreaId();
+        $tahunAnggaran = $this->scopeService->requireActiveBudgetYear();
         $createdBy = (int) auth()->id();
         $tahunLaporan = (int) ($payload['tahun_laporan'] ?? now()->year);
 
@@ -34,6 +34,7 @@ class CreateLaporanTahunanPkkAction
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => $createdBy,
+            'tahun_anggaran' => $tahunAnggaran,
         ]);
 
         $this->repository->replaceManualEntries(
@@ -41,10 +42,10 @@ class CreateLaporanTahunanPkkAction
             is_array($payload['manual_entries'] ?? null) ? $payload['manual_entries'] : [],
             $level,
             $areaId,
+            $tahunAnggaran,
             $createdBy
         );
 
         return $report->fresh(['entries']) ?? $report->load('entries');
     }
 }
-

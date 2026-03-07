@@ -15,7 +15,10 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2025;
+
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
 
     protected function setUp(): void
@@ -35,6 +38,7 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -44,6 +48,7 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         LaporanTahunanPkkReport::create([
@@ -52,6 +57,7 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/laporan-tahunan-pkk');
@@ -63,7 +69,8 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
                 ->has('reports.data', 1)
                 ->where('reports.data.0.judul_laporan', 'Laporan Kecamatan A')
                 ->where('reports.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -73,16 +80,18 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
         for ($index = 1; $index <= 11; $index++) {
             LaporanTahunanPkkReport::create([
-                'judul_laporan' => 'Laporan Kecamatan ' . $index,
+                'judul_laporan' => 'Laporan Kecamatan '.$index,
                 'tahun_laporan' => 2010 + $index,
                 'level' => 'kecamatan',
                 'area_id' => $this->kecamatanA->id,
                 'created_by' => $adminKecamatan->id,
+                'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             ]);
         }
 
@@ -92,6 +101,7 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/laporan-tahunan-pkk?page=2&per_page=10');
@@ -105,7 +115,8 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
                 ->where('reports.current_page', 2)
                 ->where('reports.per_page', 10)
                 ->where('reports.total', 11)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -115,6 +126,7 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -124,6 +136,7 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/laporan-tahunan-pkk?per_page=999');
@@ -133,6 +146,7 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
             $page
                 ->component('LaporanTahunanPkk/Index')
                 ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR)
                 ->where('reports.per_page', 10);
         });
     }
@@ -143,6 +157,7 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -182,6 +197,7 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
             'judul_laporan' => 'Laporan Kecamatan A Revisi',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
     }
 
@@ -197,11 +213,47 @@ class KecamatanLaporanTahunanPkkTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/laporan-tahunan-pkk');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_kecamatan_hanya_melihat_laporan_pada_tahun_anggaran_aktif(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        LaporanTahunanPkkReport::create([
+            'judul_laporan' => 'Laporan Tahun Aktif',
+            'tahun_laporan' => 2025,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        LaporanTahunanPkkReport::create([
+            'judul_laporan' => 'Laporan Tahun Lama',
+            'tahun_laporan' => 2025,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/laporan-tahunan-pkk');
+
+        $response->assertOk();
+        $response->assertSee('Laporan Tahun Aktif');
+        $response->assertDontSee('Laporan Tahun Lama');
     }
 }

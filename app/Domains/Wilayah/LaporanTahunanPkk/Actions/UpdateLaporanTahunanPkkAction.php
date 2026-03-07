@@ -9,8 +9,7 @@ class UpdateLaporanTahunanPkkAction
 {
     public function __construct(
         private readonly LaporanTahunanPkkRepositoryInterface $repository
-    ) {
-    }
+    ) {}
 
     public function execute(LaporanTahunanPkkReport $report, array $payload): LaporanTahunanPkkReport
     {
@@ -33,6 +32,7 @@ class UpdateLaporanTahunanPkkAction
                 $payload['manual_entries'],
                 (string) $updated->level,
                 (int) $updated->area_id,
+                (int) $updated->tahun_anggaran,
                 (int) $updated->created_by
             );
         }
@@ -40,4 +40,3 @@ class UpdateLaporanTahunanPkkAction
         return $updated->fresh(['entries']) ?? $updated->load('entries');
     }
 }
-

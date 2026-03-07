@@ -22,7 +22,7 @@ class LaporanTahunanPkkDocxGenerator
     ): string {
         $tmpPath = $this->prepareWorkingDocx();
 
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         if ($zip->open($tmpPath) !== true) {
             @unlink($tmpPath);
             throw new RuntimeException('Gagal membuka arsip .docx.');
@@ -182,7 +182,7 @@ class LaporanTahunanPkkDocxGenerator
 
     private function createMinimalDocxPackage(string $path): void
     {
-        $zip = new ZipArchive();
+        $zip = new ZipArchive;
         if ($zip->open($path, ZipArchive::OVERWRITE) !== true) {
             throw new RuntimeException('Gagal membuat arsip .docx fallback.');
         }
@@ -222,6 +222,7 @@ XML);
         $lines = preg_split('/\R/u', $text) ?: [];
         if ($lines === []) {
             $this->appendParagraph($dom, $parent, '-', false, 'left');
+
             return;
         }
 

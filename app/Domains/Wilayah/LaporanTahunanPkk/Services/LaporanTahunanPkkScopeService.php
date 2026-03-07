@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\LaporanTahunanPkk\Services;
 
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,9 +11,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class LaporanTahunanPkkScopeService
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
-    ) {
-    }
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function canAccessLevel(User $user, string $level): bool
     {
@@ -30,7 +31,8 @@ class LaporanTahunanPkkScopeService
             return false;
         }
 
-        return (int) $report->area_id === (int) $user->area_id;
+        return (int) $report->area_id === (int) $user->area_id
+            && (int) $report->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, LaporanTahunanPkkReport $report): bool
@@ -46,17 +48,27 @@ class LaporanTahunanPkkScopeService
     public function authorizeSameLevelAndArea(
         LaporanTahunanPkkReport $report,
         string $level,
-        int $areaId
+        int $areaId,
+        int $tahunAnggaran
     ): LaporanTahunanPkkReport {
-        if ($report->level !== $level || (int) $report->area_id !== $areaId) {
+        if (
+            $report->level !== $level
+            || (int) $report->area_id !== $areaId
+            || (int) $report->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
         return $report;
     }
+
+    public function requireActiveBudgetYear(): int
+    {
+        return $this->activeBudgetYearContextService->requireForAuthenticatedUser();
+    }
+
     public function resolveCreatorIdFilterForList(string $level): ?int
     {
         return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
     }
 }
-

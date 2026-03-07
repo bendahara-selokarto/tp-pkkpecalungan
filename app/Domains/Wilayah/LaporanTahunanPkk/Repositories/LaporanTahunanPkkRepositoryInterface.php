@@ -15,9 +15,9 @@ interface LaporanTahunanPkkRepositoryInterface
         array $payload
     ): LaporanTahunanPkkReport;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection;
 
     public function findReport(int $id): LaporanTahunanPkkReport;
 
@@ -26,15 +26,16 @@ interface LaporanTahunanPkkRepositoryInterface
         array $entries,
         string $level,
         int $areaId,
+        int $tahunAnggaran,
         int $createdBy
     ): void;
 
     public function getAutoEntriesByLevelAreaAndYear(
         string $level,
         int $areaId,
-        int $year
+        int $year,
+        int $tahunAnggaran
     ): Collection;
 
     public function deleteReport(LaporanTahunanPkkReport $report): void;
 }
-

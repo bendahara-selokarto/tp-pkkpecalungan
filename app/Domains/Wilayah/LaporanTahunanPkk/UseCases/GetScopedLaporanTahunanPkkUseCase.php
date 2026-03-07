@@ -11,15 +11,14 @@ class GetScopedLaporanTahunanPkkUseCase
     public function __construct(
         private readonly LaporanTahunanPkkRepositoryInterface $repository,
         private readonly LaporanTahunanPkkScopeService $scopeService
-    ) {
-    }
+    ) {}
 
     public function execute(int $id, string $level): LaporanTahunanPkkReport
     {
         $report = $this->repository->findReport($id);
         $areaId = $this->scopeService->requireUserAreaId();
+        $tahunAnggaran = $this->scopeService->requireActiveBudgetYear();
 
-        return $this->scopeService->authorizeSameLevelAndArea($report, $level, $areaId);
+        return $this->scopeService->authorizeSameLevelAndArea($report, $level, $areaId, $tahunAnggaran);
     }
 }
-

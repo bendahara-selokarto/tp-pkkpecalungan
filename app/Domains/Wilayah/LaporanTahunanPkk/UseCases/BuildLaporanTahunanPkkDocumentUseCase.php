@@ -9,8 +9,7 @@ class BuildLaporanTahunanPkkDocumentUseCase
 {
     public function __construct(
         private readonly LaporanTahunanPkkRepositoryInterface $repository
-    ) {
-    }
+    ) {}
 
     public function execute(LaporanTahunanPkkReport $report): array
     {
@@ -26,7 +25,8 @@ class BuildLaporanTahunanPkkDocumentUseCase
         $autoEntries = $this->repository->getAutoEntriesByLevelAreaAndYear(
             $report->level,
             (int) $report->area_id,
-            (int) $report->tahun_laporan
+            (int) $report->tahun_laporan,
+            (int) $report->tahun_anggaran
         );
 
         $entries = $autoEntries
@@ -61,4 +61,3 @@ class BuildLaporanTahunanPkkDocumentUseCase
         ];
     }
 }
-

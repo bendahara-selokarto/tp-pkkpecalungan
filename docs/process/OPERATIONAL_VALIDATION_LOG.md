@@ -30,7 +30,7 @@ Aturan:
 
 ### Refactor Tahun Anggaran (`TAG26A1`) - 2026-03-07
 
-- Status concern: `in-progress` (`state:wave3-program-prioritas-pilot-project-slice-implemented`).
+- Status concern: `in-progress` (`state:wave3-laporan-tahunan-pkk-slice-implemented`).
 - Fokus concern:
   - menambahkan `tahun_anggaran` sebagai context transversal administrasi TP PKK,
   - menjaga concern existing tetap utuh sambil meretrofit schema/query per wave.
@@ -48,7 +48,9 @@ Aturan:
   - slice data keluarga wave-2 (`DataKeluarga`): `DONE`,
   - bundle dependensi wave-2 (`DataWarga`, `DataWargaAnggota`, `DataKegiatanWarga`, `CatatanKeluarga`): `DONE`,
   - slice wave-3 `ProgramPrioritas`, `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan`: `DONE`,
+  - slice wave-3 `LaporanTahunanPkk`: `DONE`,
   - unique constraint `PilotProjectKeluargaSehat` diperluas ke `tahun_anggaran + periode`: `DONE`,
+  - unique constraint `LaporanTahunanPkk` diperluas ke `tahun_anggaran + tahun_laporan`: `DONE`,
   - ADR `0005` status `accepted`: `DONE`,
   - targeted concern tests wave-1 (`Profile`, `AgendaSurat`, policy, dashboard coverage terkait): `43 passed`,
   - targeted concern tests wave-2 slice (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, policy, report terkait): `46 passed`,
@@ -61,8 +63,10 @@ Aturan:
   - targeted concern tests wave-2 bundle dependensi `DataWarga`, `DataKegiatanWarga`, `CatatanKeluarga` (feature + policy): `49 passed`,
   - targeted report tests wave-2 bundle dependensi `DataWarga`, `DataKegiatanWarga`, `CatatanKeluarga`: `39 passed`,
   - targeted concern tests wave-3 slice `ProgramPrioritas`, `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan` (feature + policy + report + aggregate check): `70 passed`,
+  - targeted concern tests wave-3 slice `LaporanTahunanPkk` (feature + policy + report + auto-entry `AgendaSurat`): `23 passed`,
   - full suite `php artisan test --compact`: `1130 passed`,
   - full suite setelah slice wave-3 `ProgramPrioritas + PilotProject`: `1136 passed`,
+  - full suite setelah slice wave-3 `LaporanTahunanPkk`: `1143 passed`,
   - runtime wave-1 implemented: `DONE`,
   - runtime wave-2 secretary books slice implemented: `DONE`,
   - runtime wave-2 homogeneous CRUD slice implemented: `DONE`,
@@ -72,7 +76,8 @@ Aturan:
   - runtime wave-2 community/outreach slice implemented: `DONE`,
   - runtime wave-2 data keluarga slice implemented: `DONE`,
   - runtime wave-2 bundle dependensi `DataWarga` / `DataKegiatanWarga` / `CatatanKeluarga` implemented: `DONE`.
-  - runtime wave-3 `ProgramPrioritas` / `PilotProjectKeluargaSehat` / `PilotProjectNaskahPelaporan` implemented: `DONE`.
+  - runtime wave-3 `ProgramPrioritas` / `PilotProjectKeluargaSehat` / `PilotProjectNaskahPelaporan` implemented: `DONE`,
+  - runtime wave-3 `LaporanTahunanPkk` implemented: `DONE`.
 
 ### Hardening Struktur Folder (`SFC26A1`) - 2026-03-07
 
@@ -114,4 +119,3 @@ Aturan:
 1. Untuk validasi concern aktif, tambahkan ringkasan singkat di file index ini.
 2. Untuk detail command output panjang, append ke file arsip periodik aktif.
 3. Saat pergantian periode, buat file arsip baru di `docs/process/logs/` dan update tabel arsip.
-

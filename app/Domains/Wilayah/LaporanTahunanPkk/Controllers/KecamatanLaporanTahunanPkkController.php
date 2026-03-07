@@ -41,6 +41,7 @@ class KecamatanLaporanTahunanPkkController extends Controller
                 'id' => $report->id,
                 'judul_laporan' => $report->judul_laporan,
                 'tahun_laporan' => $report->tahun_laporan,
+                'tahun_anggaran' => $report->tahun_anggaran,
                 'entries_count' => $report->entries_count ?? 0,
                 'updated_at' => $report->updated_at?->toDateTimeString(),
             ]);
@@ -54,6 +55,7 @@ class KecamatanLaporanTahunanPkkController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) ($request->user()->active_budget_year ?? now()->year),
             ],
         ]);
     }
@@ -66,7 +68,7 @@ class KecamatanLaporanTahunanPkkController extends Controller
             'scopeLabel' => 'Kecamatan',
             'scopePrefix' => '/kecamatan/laporan-tahunan-pkk',
             'defaultTitle' => config('laporan_tahunan_pkk.module.label'),
-            'defaultYear' => now()->year,
+            'defaultYear' => (int) (request()->user()?->active_budget_year ?? now()->year),
             'defaultCompiledBy' => $this->defaultCompiledBy('Kecamatan'),
             'defaultSignerRole' => $this->defaultSignerRole('Kecamatan'),
             'bidangOptions' => config('laporan_tahunan_pkk.bidang_options', []),
@@ -144,6 +146,7 @@ class KecamatanLaporanTahunanPkkController extends Controller
             'id' => $report->id,
             'judul_laporan' => $report->judul_laporan,
             'tahun_laporan' => $report->tahun_laporan,
+            'tahun_anggaran' => $report->tahun_anggaran,
             'pendahuluan' => $report->pendahuluan,
             'keberhasilan' => $report->keberhasilan,
             'hambatan' => $report->hambatan,
@@ -158,6 +161,7 @@ class KecamatanLaporanTahunanPkkController extends Controller
                     'bidang' => $entry->bidang,
                     'activity_date' => $entry->activity_date?->toDateString(),
                     'description' => $entry->description,
+                    'tahun_anggaran' => $entry->tahun_anggaran,
                 ])
                 ->values(),
         ];

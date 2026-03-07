@@ -11,6 +11,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterface
 {
@@ -28,11 +29,12 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
         return $report;
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
         return LaporanTahunanPkkReport::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->withCount('entries')
             ->latest('tahun_laporan')
@@ -41,11 +43,12 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection
     {
         return LaporanTahunanPkkReport::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->withCount('entries')
             ->latest('tahun_laporan')
@@ -65,9 +68,10 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
         array $entries,
         string $level,
         int $areaId,
+        int $tahunAnggaran,
         int $createdBy
     ): void {
-        DB::transaction(function () use ($report, $entries, $level, $areaId, $createdBy): void {
+        DB::transaction(function () use ($report, $entries, $level, $areaId, $tahunAnggaran, $createdBy): void {
             $report->entries()->delete();
 
             if ($entries === []) {
@@ -76,7 +80,7 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
 
             $rows = collect($entries)
                 ->filter(static fn ($item): bool => is_array($item))
-                ->map(static function (array $item) use ($report, $level, $areaId, $createdBy): array {
+                ->map(static function (array $item) use ($report, $level, $areaId, $tahunAnggaran, $createdBy): array {
                     return [
                         'report_id' => $report->id,
                         'bidang' => (string) ($item['bidang'] ?? 'sekretariat'),
@@ -86,6 +90,7 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
                         'level' => $level,
                         'area_id' => $areaId,
                         'created_by' => $createdBy,
+                        'tahun_anggaran' => $tahunAnggaran,
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
@@ -105,12 +110,19 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
     public function getAutoEntriesByLevelAreaAndYear(
         string $level,
         int $areaId,
-        int $year
+        int $year,
+        int $tahunAnggaran
     ): Collection {
-        $activityItems = Activity::query()
+        $activityQuery = Activity::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
-            ->whereYear('activity_date', $year)
+            ->whereYear('activity_date', $year);
+
+        if (Schema::hasColumn('activities', 'tahun_anggaran')) {
+            $activityQuery->where('tahun_anggaran', $tahunAnggaran);
+        }
+
+        $activityItems = $activityQuery
             ->get()
             ->map(fn (Activity $item): array => [
                 'bidang' => $this->inferBidang(
@@ -129,6 +141,7 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
         $agendaItems = AgendaSurat::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->whereYear('tanggal_surat', $year)
             ->get()
             ->map(fn (AgendaSurat $item): array => [
@@ -212,7 +225,3 @@ class LaporanTahunanPkkRepository implements LaporanTahunanPkkRepositoryInterfac
         }
     }
 }
-
-
-
-

@@ -16,8 +16,7 @@ class LaporanTahunanPkkPrintController extends Controller
         private readonly GetScopedLaporanTahunanPkkUseCase $getUseCase,
         private readonly BuildLaporanTahunanPkkDocumentUseCase $buildDocumentUseCase,
         private readonly LaporanTahunanPkkDocxGenerator $docxGenerator
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(int $id): Response
     {

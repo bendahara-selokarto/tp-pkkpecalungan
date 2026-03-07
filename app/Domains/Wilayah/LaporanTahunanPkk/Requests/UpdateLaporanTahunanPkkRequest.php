@@ -11,6 +11,7 @@ class UpdateLaporanTahunanPkkRequest extends LaporanTahunanPkkUpsertRequest
         $user = $this->user();
         $level = (string) $this->segment(1);
         $areaId = is_numeric($user?->area_id) ? (int) $user->area_id : 0;
+        $tahunAnggaran = is_numeric($user?->active_budget_year) ? (int) $user->active_budget_year : (int) now()->format('Y');
         $id = (int) ($this->route('laporan_tahunan_pkk') ?? 0);
 
         $rules = parent::rules();
@@ -20,7 +21,10 @@ class UpdateLaporanTahunanPkkRequest extends LaporanTahunanPkkUpsertRequest
             'min:2000',
             'max:2100',
             Rule::unique('laporan_tahunan_pkk_reports', 'tahun_laporan')
-                ->where(fn ($query) => $query->where('level', $level)->where('area_id', $areaId))
+                ->where(fn ($query) => $query
+                    ->where('level', $level)
+                    ->where('area_id', $areaId)
+                    ->where('tahun_anggaran', $tahunAnggaran))
                 ->ignore($id),
         ];
 

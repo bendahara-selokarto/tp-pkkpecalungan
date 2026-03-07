@@ -90,4 +90,3 @@ abstract class LaporanTahunanPkkUpsertRequest extends FormRequest
         return $normalized === '' ? null : $normalized;
     }
 }
-

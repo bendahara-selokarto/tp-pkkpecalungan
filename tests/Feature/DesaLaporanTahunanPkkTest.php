@@ -16,8 +16,12 @@ class DesaLaporanTahunanPkkTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2025;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -51,6 +55,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -60,6 +65,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         LaporanTahunanPkkReport::create([
@@ -68,6 +74,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/laporan-tahunan-pkk');
@@ -79,7 +86,8 @@ class DesaLaporanTahunanPkkTest extends TestCase
                 ->has('reports.data', 1)
                 ->where('reports.data.0.judul_laporan', 'Laporan Desa A')
                 ->where('reports.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -89,16 +97,18 @@ class DesaLaporanTahunanPkkTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
         for ($index = 1; $index <= 12; $index++) {
             LaporanTahunanPkkReport::create([
-                'judul_laporan' => 'Laporan Desa ' . $index,
+                'judul_laporan' => 'Laporan Desa '.$index,
                 'tahun_laporan' => 2010 + $index,
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
+                'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             ]);
         }
 
@@ -108,6 +118,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/laporan-tahunan-pkk?page=2&per_page=10');
@@ -121,7 +132,8 @@ class DesaLaporanTahunanPkkTest extends TestCase
                 ->where('reports.current_page', 2)
                 ->where('reports.per_page', 10)
                 ->where('reports.total', 12)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -131,6 +143,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -140,6 +153,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/laporan-tahunan-pkk?per_page=999');
@@ -149,6 +163,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
             $page
                 ->component('LaporanTahunanPkk/Index')
                 ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR)
                 ->where('reports.per_page', 10);
         });
     }
@@ -159,6 +174,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -192,12 +208,14 @@ class DesaLaporanTahunanPkkTest extends TestCase
             'judul_laporan' => 'Laporan Tahunan Desa A',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->assertDatabaseHas('laporan_tahunan_pkk_entries', [
             'report_id' => $report->id,
             'bidang' => 'sekretariat',
             'description' => 'Rapat koordinasi tahunan',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->put(route('desa.laporan-tahunan-pkk.update', $report->id), [
@@ -246,6 +264,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -260,6 +279,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
         $invalidUser = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $invalidUser->assignRole('admin-desa');
 
@@ -274,6 +294,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -283,6 +304,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         LaporanTahunanPkkEntry::create([
@@ -294,6 +316,7 @@ class DesaLaporanTahunanPkkTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->put(route('desa.laporan-tahunan-pkk.update', $report->id), [
@@ -317,6 +340,83 @@ class DesaLaporanTahunanPkkTest extends TestCase
             'report_id' => $report->id,
             'description' => 'Data baru',
             'bidang' => 'pokja-ii',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_laporan_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        LaporanTahunanPkkReport::create([
+            'judul_laporan' => 'Laporan Tahun Aktif',
+            'tahun_laporan' => 2025,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        LaporanTahunanPkkReport::create([
+            'judul_laporan' => 'Laporan Tahun Lama',
+            'tahun_laporan' => 2025,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/laporan-tahunan-pkk');
+
+        $response->assertOk();
+        $response->assertSee('Laporan Tahun Aktif');
+        $response->assertDontSee('Laporan Tahun Lama');
+    }
+
+    #[Test]
+    public function admin_desa_dapat_membuat_tahun_laporan_yang_sama_di_tahun_anggaran_berbeda(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        $payload = [
+            'judul_laporan' => 'Laporan Tahunan Multi Anggaran',
+            'tahun_laporan' => 2025,
+            'manual_entries' => [
+                [
+                    'bidang' => 'sekretariat',
+                    'activity_date' => '2025-02-10',
+                    'description' => 'Rapat koordinasi tahunan',
+                ],
+            ],
+        ];
+
+        $this->actingAs($adminDesa)->post('/desa/laporan-tahunan-pkk', $payload)->assertStatus(302);
+
+        $adminDesa->forceFill(['active_budget_year' => self::ACTIVE_BUDGET_YEAR + 1])->save();
+
+        $this->actingAs($adminDesa)->post('/desa/laporan-tahunan-pkk', $payload)->assertStatus(302);
+
+        $this->assertDatabaseCount('laporan_tahunan_pkk_reports', 2);
+        $this->assertDatabaseHas('laporan_tahunan_pkk_reports', [
+            'judul_laporan' => 'Laporan Tahunan Multi Anggaran',
+            'tahun_laporan' => 2025,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $this->assertDatabaseHas('laporan_tahunan_pkk_reports', [
+            'judul_laporan' => 'Laporan Tahunan Multi Anggaran',
+            'tahun_laporan' => 2025,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR + 1,
         ]);
     }
 }

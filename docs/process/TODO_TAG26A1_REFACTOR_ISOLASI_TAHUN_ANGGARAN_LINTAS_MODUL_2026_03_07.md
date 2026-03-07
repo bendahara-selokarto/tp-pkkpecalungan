@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `in-progress` (`state:wave3-program-prioritas-pilot-project-slice-implemented`)
+Status: `in-progress` (`state:wave3-laporan-tahunan-pkk-slice-implemented`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -129,7 +129,8 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - [ ] Concern homogen wave-2 yang masih pending: concern sejenis lain di luar slice yang sudah terkunci.
   - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
     - [x] Slice wave-3 terimplementasi: `ProgramPrioritas`, `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan`.
-    - [ ] Concern kompleks wave-3 yang masih pending: `LaporanTahunanPkk`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat.
+    - [x] Slice wave-3 terimplementasi: `LaporanTahunanPkk`.
+    - [ ] Concern kompleks wave-3 yang masih pending: `Activities`, monitoring kecamatan/desa, dashboard/report agregat.
   - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
 - [ ] Sinkronisasi dokumen concern terkait (trigger hardening aktif).
   - [x] TODO concern + ADR.
@@ -153,6 +154,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] feature/policy/report tests `Bantuan`, `PrestasiLomba`, `AnggotaPokja`, dan `BukuKeuangan` untuk anti data leak lintas tahun.
   - [x] feature/policy/report tests `DataWarga`, `DataKegiatanWarga`, dan agregat `CatatanKeluarga` untuk anti data leak lintas tahun.
   - [x] feature/policy/report tests `ProgramPrioritas`, `PilotProjectKeluargaSehat`, dan `PilotProjectNaskahPelaporan` untuk anti data leak lintas tahun.
+  - [x] feature/policy/report tests `LaporanTahunanPkk` untuk anti data leak lintas tahun anggaran, termasuk auto-entry `AgendaSurat`.
 - [x] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
 
 ### Matrix Implementasi Wave-1
@@ -247,6 +249,14 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Targeted regression slice `ProgramPrioritas + PilotProject`: `70 passed`.
 - [x] Full suite setelah rollout slice ini lulus: `1136 passed`.
 
+## Hasil Implementasi Wave-3 (Slice Laporan Tahunan PKK)
+
+- [x] `LaporanTahunanPkk` kini menyimpan `tahun_anggaran` pada report dan manual entry rows; seluruh list/detail/create/update/delete/print path sudah terisolasi per tahun aktif.
+- [x] Unique constraint schema `LaporanTahunanPkk` diperluas menjadi `level + area_id + tahun_anggaran + tahun_laporan`, sehingga `tahun_laporan` yang sama dapat hidup di tahun anggaran berbeda.
+- [x] Auto-entry `AgendaSurat` pada generator `LaporanTahunanPkk` kini mengikuti `tahun_anggaran` aktif; jalur `Activity` tetap masih memakai tanggal kegiatan sebagai dependency terkontrol sampai slice `Activities` di-wave berikutnya.
+- [x] Targeted regression slice `LaporanTahunanPkk` (feature + policy + report): `23 passed`.
+- [x] Full suite setelah rollout slice ini lulus: `1143 passed`.
+
 ## Hasil Implementasi Wave-2 (Slice CRUD Homogen Lanjutan)
 
 - [x] `Inventaris` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
@@ -321,4 +331,3 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Targeted regression bundle dependensi ini lulus: `49 passed`.
 - [x] Targeted regression report bundle ini lulus: `39 passed`.
 - [x] Full suite setelah rollout bundle dependensi `DataWarga` / `DataKegiatanWarga` / `CatatanKeluarga` lulus: `1130 passed`.
-
