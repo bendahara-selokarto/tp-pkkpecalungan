@@ -18,6 +18,7 @@ class SimulasiPenyuluhan extends Model
         'jumlah_kader_l',
         'jumlah_kader_p',
         'keterangan',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -30,7 +31,19 @@ class SimulasiPenyuluhan extends Model
             'jumlah_sosialisasi' => 'integer',
             'jumlah_kader_l' => 'integer',
             'jumlah_kader_p' => 'integer',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (SimulasiPenyuluhan $simulasiPenyuluhan): void {
+            if (is_numeric($simulasiPenyuluhan->tahun_anggaran)) {
+                return;
+            }
+
+            $simulasiPenyuluhan->tahun_anggaran = (int) now()->format('Y');
+        });
     }
 
     public function area()

@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `in-progress` (`state:wave2-family-service-and-administration-slices-implemented`)
+Status: `in-progress` (`state:wave2-community-outreach-slice-implemented`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -116,6 +116,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - [x] Slice pendidikan/usaha wave-2 terimplementasi: `Koperasi`, `WarungPkk`, `TamanBacaan`, `KejarPaket`.
     - [x] Slice layanan keluarga wave-2 terimplementasi: `BKL`, `BKR`, `Posyandu`, `DataPelatihanKader`.
     - [x] Slice administrasi operasional wave-2 terimplementasi: `Bantuan`, `PrestasiLomba`, `AnggotaPokja`, `BukuKeuangan`.
+    - [x] Slice komunitas/penyuluhan wave-2 terimplementasi: `DataIndustriRumahTangga`, `DataPemanfaatanTanahPekaranganHatinyaPkk`, `Paar`, `SimulasiPenyuluhan`.
     - [ ] Concern homogen wave-2 yang masih pending: concern sejenis lain di luar slice yang sudah terkunci.
   - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
   - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
@@ -250,3 +251,14 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Backfill development untuk slice ini dikunci: `Bantuan` memakai tahun dari `received_date`, `PrestasiLomba` memakai `tahun`, `BukuKeuangan` memakai tahun dari `transaction_date`, dan `AnggotaPokja` memakai baseline eksplisit `2026`.
 - [x] Targeted regression tambahan wave-2 slice lulus: `58 passed`.
 - [x] Full suite setelah rollout slice administrasi operasional lulus: `1114 passed`.
+
+## Hasil Implementasi Wave-2 (Slice Komunitas dan Penyuluhan)
+- [x] `DataIndustriRumahTangga` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `DataPemanfaatanTanahPekaranganHatinyaPkk` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `Paar` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `SimulasiPenyuluhan` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] PDF `DataIndustriRumahTangga`, `DataPemanfaatanTanahPekaranganHatinyaPkk`, `Paar`, dan `SimulasiPenyuluhan` menampilkan metadata tahun anggaran aktif.
+- [x] Backfill development untuk slice ini dikunci: seluruh concern pada slice ini memakai baseline eksplisit `2026` karena belum ada sumber tahun domain yang lebih presisi.
+- [x] Unique constraint `Paar` diperluas dari `level + area_id + indikator` menjadi `level + area_id + tahun_anggaran + indikator` agar indikator yang sama bisa hidup lintas tahun tanpa bentrok.
+- [x] Targeted regression tambahan wave-2 slice lulus: `68 passed`.
+- [x] Full suite setelah rollout slice komunitas/penyuluhan lulus: `1119 passed`.

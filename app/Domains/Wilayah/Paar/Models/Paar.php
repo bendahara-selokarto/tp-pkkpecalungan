@@ -26,6 +26,7 @@ class Paar extends Model
         'indikator',
         'jumlah',
         'keterangan',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -35,7 +36,19 @@ class Paar extends Model
     {
         return [
             'jumlah' => 'integer',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Paar $paar): void {
+            if (is_numeric($paar->tahun_anggaran)) {
+                return;
+            }
+
+            $paar->tahun_anggaran = (int) now()->format('Y');
+        });
     }
 
     public static function indicatorLabel(string $key): string

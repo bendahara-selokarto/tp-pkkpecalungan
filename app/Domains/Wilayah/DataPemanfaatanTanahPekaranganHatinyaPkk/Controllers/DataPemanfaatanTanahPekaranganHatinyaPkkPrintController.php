@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Controlle
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPemanfaatanTanahPekaranganHatinyaPkk;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\UseCases\ListScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,9 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase $listScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -37,10 +38,12 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $budgetYearLabel = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.data_pemanfaatan_tanah_pekarangan_hatinya_pkk_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $budgetYearLabel,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);
@@ -48,6 +51,3 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkPrintController extends Controller
         return $pdf->stream("data-pemanfaatan-tanah-pekarangan-hatinya-pkk-{$level}-report.pdf");
     }
 }
-
-
-

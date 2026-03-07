@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\DataIndustriRumahTangga\Services;
 
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,9 +11,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class DataIndustriRumahTanggaScopeService
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
-    ) {
-    }
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function canAccessLevel(User $user, string $level): bool
     {
@@ -30,7 +31,8 @@ class DataIndustriRumahTanggaScopeService
             return false;
         }
 
-        return (int) $dataIndustriRumahTangga->area_id === (int) $user->area_id;
+        return (int) $dataIndustriRumahTangga->area_id === (int) $user->area_id
+            && (int) $dataIndustriRumahTangga->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, DataIndustriRumahTangga $dataIndustriRumahTangga): bool
@@ -43,16 +45,16 @@ class DataIndustriRumahTanggaScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(DataIndustriRumahTangga $dataIndustriRumahTangga, string $level, int $areaId): DataIndustriRumahTangga
+    public function authorizeSameLevelAreaAndBudgetYear(DataIndustriRumahTangga $dataIndustriRumahTangga, string $level, int $areaId, int $tahunAnggaran): DataIndustriRumahTangga
     {
-        if ($dataIndustriRumahTangga->level !== $level || (int) $dataIndustriRumahTangga->area_id !== $areaId) {
+        if (
+            $dataIndustriRumahTangga->level !== $level
+            || (int) $dataIndustriRumahTangga->area_id !== $areaId
+            || (int) $dataIndustriRumahTangga->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
         return $dataIndustriRumahTangga;
     }
 }
-
-
-
-

@@ -22,6 +22,3 @@ class UpdateDataPemanfaatanTanahPekaranganHatinyaPkkRequest extends FormRequest
         ];
     }
 }
-
-
-

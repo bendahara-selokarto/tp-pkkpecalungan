@@ -10,8 +10,7 @@ class UpdateSimulasiPenyuluhanAction
 {
     public function __construct(
         private readonly SimulasiPenyuluhanRepositoryInterface $simulasiPenyuluhanRepository
-    ) {
-    }
+    ) {}
 
     public function execute(SimulasiPenyuluhan $simulasiPenyuluhan, array $payload): SimulasiPenyuluhan
     {
@@ -23,6 +22,7 @@ class UpdateSimulasiPenyuluhanAction
             'jumlah_kader_l' => $payload['jumlah_kader_l'],
             'jumlah_kader_p' => $payload['jumlah_kader_p'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $simulasiPenyuluhan->tahun_anggaran,
             'level' => $simulasiPenyuluhan->level,
             'area_id' => $simulasiPenyuluhan->area_id,
             'created_by' => $simulasiPenyuluhan->created_by,

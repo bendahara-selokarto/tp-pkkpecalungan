@@ -6,6 +6,7 @@ use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -14,8 +15,12 @@ class DesaSimulasiPenyuluhanTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -141,5 +146,54 @@ class DesaSimulasiPenyuluhanTest extends TestCase
 
         $response->assertStatus(403);
     }
-}
 
+    #[Test]
+    public function admin_desa_hanya_melihat_simulasi_penyuluhan_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        SimulasiPenyuluhan::create([
+            'nama_kegiatan' => 'Penyuluhan Kesehatan Ibu',
+            'jenis_simulasi_penyuluhan' => 'Penyuluhan',
+            'jumlah_kelompok' => 3,
+            'jumlah_sosialisasi' => 5,
+            'jumlah_kader_l' => 2,
+            'jumlah_kader_p' => 8,
+            'keterangan' => 'Rutin bulanan',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        SimulasiPenyuluhan::create([
+            'nama_kegiatan' => 'Simulasi Lama',
+            'jenis_simulasi_penyuluhan' => 'Simulasi',
+            'jumlah_kelompok' => 2,
+            'jumlah_sosialisasi' => 1,
+            'jumlah_kader_l' => 4,
+            'jumlah_kader_p' => 6,
+            'keterangan' => 'Arsip',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/simulasi-penyuluhan');
+
+        $response->assertOk();
+        $response->assertDontSee('Simulasi Lama');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/SimulasiPenyuluhan/Index')
+                ->has('simulasiPenyuluhanItems.data', 1)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
+        });
+    }
+}

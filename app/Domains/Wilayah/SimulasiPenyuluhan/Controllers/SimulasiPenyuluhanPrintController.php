@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\SimulasiPenyuluhan\Controllers;
 
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\SimulasiPenyuluhan\UseCases\ListScopedSimulasiPenyuluhanUseCase;
 use App\Http\Controllers\Controller;
@@ -13,9 +14,9 @@ class SimulasiPenyuluhanPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedSimulasiPenyuluhanUseCase $listScopedSimulasiPenyuluhanUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -37,10 +38,12 @@ class SimulasiPenyuluhanPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $budgetYearLabel = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.simulasi_penyuluhan_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $budgetYearLabel,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

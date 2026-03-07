@@ -10,8 +10,7 @@ class UpdatePaarAction
 {
     public function __construct(
         private readonly PaarRepositoryInterface $paarRepository
-    ) {
-    }
+    ) {}
 
     public function execute(Paar $paar, array $payload): Paar
     {
@@ -19,6 +18,7 @@ class UpdatePaarAction
             'indikator' => $paar->indikator,
             'jumlah' => $payload['jumlah'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $paar->tahun_anggaran,
             'level' => $paar->level,
             'area_id' => (int) $paar->area_id,
             'created_by' => (int) $paar->created_by,

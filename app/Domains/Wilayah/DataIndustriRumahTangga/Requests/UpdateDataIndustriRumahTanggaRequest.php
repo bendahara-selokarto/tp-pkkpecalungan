@@ -22,7 +22,3 @@ class UpdateDataIndustriRumahTanggaRequest extends FormRequest
         ];
     }
 }
-
-
-
-

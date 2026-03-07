@@ -11,9 +11,9 @@ interface DataIndustriRumahTanggaRepositoryInterface
 {
     public function store(DataIndustriRumahTanggaData $data): DataIndustriRumahTangga;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection;
 
     public function find(int $id): DataIndustriRumahTangga;
 
@@ -21,6 +21,3 @@ interface DataIndustriRumahTanggaRepositoryInterface
 
     public function delete(DataIndustriRumahTangga $dataIndustriRumahTangga): void;
 }
-
-
-

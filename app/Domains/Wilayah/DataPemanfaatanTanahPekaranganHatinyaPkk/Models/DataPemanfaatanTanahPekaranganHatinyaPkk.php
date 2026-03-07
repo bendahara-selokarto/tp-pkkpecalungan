@@ -23,10 +23,29 @@ class DataPemanfaatanTanahPekaranganHatinyaPkk extends Model
         'kategori_pemanfaatan_lahan',
         'komoditi',
         'jumlah_komoditi',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (DataPemanfaatanTanahPekaranganHatinyaPkk $item): void {
+            if (is_numeric($item->tahun_anggaran)) {
+                return;
+            }
+
+            $item->tahun_anggaran = (int) now()->format('Y');
+        });
+    }
 
     public static function kategoriPemanfaatanLahanOptions(): array
     {
@@ -43,6 +62,3 @@ class DataPemanfaatanTanahPekaranganHatinyaPkk extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-
-
-

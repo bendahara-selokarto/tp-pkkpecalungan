@@ -39,6 +39,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
                 'kategori_pemanfaatan_lahan' => $item->kategori_pemanfaatan_lahan,
                 'komoditi' => $item->komoditi,
                 'jumlah_komoditi' => $item->jumlah_komoditi,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ]);
 
         return Inertia::render('Kecamatan/DataPemanfaatanTanahPekaranganHatinyaPkk/Index', [
@@ -48,6 +49,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -80,6 +82,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
                 'kategori_pemanfaatan_lahan' => $dataPemanfaatanTanahPekaranganHatinyaPkk->kategori_pemanfaatan_lahan,
                 'komoditi' => $dataPemanfaatanTanahPekaranganHatinyaPkk->komoditi,
                 'jumlah_komoditi' => $dataPemanfaatanTanahPekaranganHatinyaPkk->jumlah_komoditi,
+                'tahun_anggaran' => $dataPemanfaatanTanahPekaranganHatinyaPkk->tahun_anggaran,
             ],
         ]);
     }
@@ -95,6 +98,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
                 'kategori_pemanfaatan_lahan' => $dataPemanfaatanTanahPekaranganHatinyaPkk->kategori_pemanfaatan_lahan,
                 'komoditi' => $dataPemanfaatanTanahPekaranganHatinyaPkk->komoditi,
                 'jumlah_komoditi' => $dataPemanfaatanTanahPekaranganHatinyaPkk->jumlah_komoditi,
+                'tahun_anggaran' => $dataPemanfaatanTanahPekaranganHatinyaPkk->tahun_anggaran,
             ],
             'kategoriPemanfaatanLahanOptions' => DataPemanfaatanTanahPekaranganHatinyaPkk::kategoriPemanfaatanLahanOptions(),
         ]);

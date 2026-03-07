@@ -15,8 +15,12 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -96,8 +100,8 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
         for ($index = 1; $index <= 12; $index++) {
             DataPemanfaatanTanahPekaranganHatinyaPkk::create([
                 'kategori_pemanfaatan_lahan' => 'Peternakan',
-                'komoditi' => 'Komoditi ' . $index,
-                'jumlah_komoditi' => $index . ' unit',
+                'komoditi' => 'Komoditi '.$index,
+                'jumlah_komoditi' => $index.' unit',
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
@@ -218,5 +222,46 @@ class DesaDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
 
         $response->assertStatus(403);
     }
-}
 
+    #[Test]
+    public function admin_desa_hanya_melihat_data_hatinya_pkk_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'warung_hidup',
+            'komoditi' => 'Cabai',
+            'jumlah_komoditi' => '18 rumpun',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        DataPemanfaatanTanahPekaranganHatinyaPkk::create([
+            'kategori_pemanfaatan_lahan' => 'toga',
+            'komoditi' => 'Jahe Lama',
+            'jumlah_komoditi' => '12 rumpun',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk');
+
+        $response->assertOk();
+        $response->assertDontSee('Jahe Lama');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataPemanfaatanTanahPekaranganHatinyaPkk/Index')
+                ->has('dataPemanfaatanTanahPekaranganHatinyaPkkItems.data', 1)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
+        });
+    }
+}

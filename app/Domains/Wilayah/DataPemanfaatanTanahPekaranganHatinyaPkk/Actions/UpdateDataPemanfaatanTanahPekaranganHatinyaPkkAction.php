@@ -10,8 +10,7 @@ class UpdateDataPemanfaatanTanahPekaranganHatinyaPkkAction
 {
     public function __construct(
         private readonly DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface $dataPemanfaatanTanahPekaranganHatinyaPkkRepository
-    ) {
-    }
+    ) {}
 
     public function execute(DataPemanfaatanTanahPekaranganHatinyaPkk $dataPemanfaatanTanahPekaranganHatinyaPkk, array $payload): DataPemanfaatanTanahPekaranganHatinyaPkk
     {
@@ -19,6 +18,7 @@ class UpdateDataPemanfaatanTanahPekaranganHatinyaPkkAction
             'kategori_pemanfaatan_lahan' => $payload['kategori_pemanfaatan_lahan'],
             'komoditi' => $payload['komoditi'],
             'jumlah_komoditi' => $payload['jumlah_komoditi'],
+            'tahun_anggaran' => $dataPemanfaatanTanahPekaranganHatinyaPkk->tahun_anggaran,
             'level' => $dataPemanfaatanTanahPekaranganHatinyaPkk->level,
             'area_id' => $dataPemanfaatanTanahPekaranganHatinyaPkk->area_id,
             'created_by' => $dataPemanfaatanTanahPekaranganHatinyaPkk->created_by,
@@ -27,6 +27,3 @@ class UpdateDataPemanfaatanTanahPekaranganHatinyaPkkAction
         return $this->dataPemanfaatanTanahPekaranganHatinyaPkkRepository->update($dataPemanfaatanTanahPekaranganHatinyaPkk, $data);
     }
 }
-
-
-

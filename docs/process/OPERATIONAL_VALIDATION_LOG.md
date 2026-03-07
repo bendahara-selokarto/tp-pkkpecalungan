@@ -27,7 +27,7 @@ Aturan:
   - `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md` (`in-progress`)
 
 ### Refactor Tahun Anggaran (`TAG26A1`) - 2026-03-07
-- Status concern: `in-progress` (`state:wave2-family-service-and-administration-slices-implemented`).
+- Status concern: `in-progress` (`state:wave2-community-outreach-slice-implemented`).
 - Fokus concern:
   - menambahkan `tahun_anggaran` sebagai context transversal administrasi TP PKK,
   - menjaga concern existing tetap utuh sambil meretrofit schema/query per wave.
@@ -41,6 +41,7 @@ Aturan:
   - slice pendidikan/usaha wave-2 (`Koperasi`, `WarungPkk`, `TamanBacaan`, `KejarPaket`): `DONE`,
   - slice layanan keluarga wave-2 (`BKL`, `BKR`, `Posyandu`, `DataPelatihanKader`): `DONE`,
   - slice administrasi operasional wave-2 (`Bantuan`, `PrestasiLomba`, `AnggotaPokja`, `BukuKeuangan`): `DONE`,
+  - slice komunitas/penyuluhan wave-2 (`DataIndustriRumahTangga`, `DataPemanfaatanTanahPekaranganHatinyaPkk`, `Paar`, `SimulasiPenyuluhan`): `DONE`,
   - ADR `0005` status `accepted`: `DONE`,
   - targeted concern tests wave-1 (`Profile`, `AgendaSurat`, policy, dashboard coverage terkait): `43 passed`,
   - targeted concern tests wave-2 slice (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, policy, report terkait): `46 passed`,
@@ -48,13 +49,15 @@ Aturan:
   - targeted concern tests wave-2 slice pendidikan/usaha (`Koperasi`, `WarungPkk`, `TamanBacaan`, `KejarPaket`, policy, report terkait): `68 passed`,
   - full suite setelah slice layanan keluarga: `1112 passed`,
   - targeted concern tests wave-2 slice administrasi operasional (`Bantuan`, `PrestasiLomba`, `AnggotaPokja`, `BukuKeuangan`, policy, report terkait): `58 passed`,
-  - full suite `php artisan test --compact`: `1114 passed`,
+  - targeted concern tests wave-2 slice komunitas/penyuluhan (`DataIndustriRumahTangga`, `DataPemanfaatanTanahPekaranganHatinyaPkk`, `Paar`, `SimulasiPenyuluhan`, policy, report terkait): `68 passed`,
+  - full suite `php artisan test --compact`: `1119 passed`,
   - runtime wave-1 implemented: `DONE`,
   - runtime wave-2 secretary books slice implemented: `DONE`,
   - runtime wave-2 homogeneous CRUD slice implemented: `DONE`,
   - runtime wave-2 education/usaha slice implemented: `DONE`,
   - runtime wave-2 family service slice implemented: `DONE`,
-  - runtime wave-2 administration slice implemented: `DONE`.
+  - runtime wave-2 administration slice implemented: `DONE`,
+  - runtime wave-2 community/outreach slice implemented: `DONE`.
 
 ### Hardening Struktur Folder (`SFC26A1`) - 2026-03-07
 - Status concern: `done` (`state:structure-hardened`) (arsip concern ada di `docs/process/archive/2026_03/`).

@@ -44,6 +44,7 @@ class DesaPaarController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -115,6 +116,7 @@ class DesaPaarController extends Controller
             'indikator_label' => Paar::indicatorLabel((string) $paar->indikator),
             'jumlah' => (int) $paar->jumlah,
             'keterangan' => $paar->keterangan,
+            'tahun_anggaran' => (int) $paar->tahun_anggaran,
         ];
     }
 }

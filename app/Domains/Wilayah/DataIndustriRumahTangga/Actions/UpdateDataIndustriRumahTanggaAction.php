@@ -10,8 +10,7 @@ class UpdateDataIndustriRumahTanggaAction
 {
     public function __construct(
         private readonly DataIndustriRumahTanggaRepositoryInterface $dataIndustriRumahTanggaRepository
-    ) {
-    }
+    ) {}
 
     public function execute(DataIndustriRumahTangga $dataIndustriRumahTangga, array $payload): DataIndustriRumahTangga
     {
@@ -19,6 +18,7 @@ class UpdateDataIndustriRumahTanggaAction
             'kategori_jenis_industri' => $payload['kategori_jenis_industri'],
             'komoditi' => $payload['komoditi'],
             'jumlah_komoditi' => $payload['jumlah_komoditi'],
+            'tahun_anggaran' => $dataIndustriRumahTangga->tahun_anggaran,
             'level' => $dataIndustriRumahTangga->level,
             'area_id' => $dataIndustriRumahTangga->area_id,
             'created_by' => $dataIndustriRumahTangga->created_by,
@@ -27,7 +27,3 @@ class UpdateDataIndustriRumahTanggaAction
         return $this->dataIndustriRumahTanggaRepository->update($dataIndustriRumahTangga, $data);
     }
 }
-
-
-
-

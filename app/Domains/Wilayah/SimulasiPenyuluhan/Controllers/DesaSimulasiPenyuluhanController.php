@@ -7,8 +7,8 @@ use App\Domains\Wilayah\SimulasiPenyuluhan\Actions\CreateScopedSimulasiPenyuluha
 use App\Domains\Wilayah\SimulasiPenyuluhan\Actions\UpdateSimulasiPenyuluhanAction;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanRepositoryInterface;
-use App\Domains\Wilayah\SimulasiPenyuluhan\Requests\StoreSimulasiPenyuluhanRequest;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Requests\ListSimulasiPenyuluhanRequest;
+use App\Domains\Wilayah\SimulasiPenyuluhan\Requests\StoreSimulasiPenyuluhanRequest;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Requests\UpdateSimulasiPenyuluhanRequest;
 use App\Domains\Wilayah\SimulasiPenyuluhan\UseCases\GetScopedSimulasiPenyuluhanUseCase;
 use App\Domains\Wilayah\SimulasiPenyuluhan\UseCases\ListScopedSimulasiPenyuluhanUseCase;
@@ -44,12 +44,14 @@ class DesaSimulasiPenyuluhanController extends Controller
                 'jumlah_kader_l' => $item->jumlah_kader_l,
                 'jumlah_kader_p' => $item->jumlah_kader_p,
                 'keterangan' => $item->keterangan,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ]),
             'pagination' => [
                 'perPageOptions' => [10, 25, 50],
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -84,6 +86,7 @@ class DesaSimulasiPenyuluhanController extends Controller
                 'jumlah_kader_l' => $simulasiPenyuluhan->jumlah_kader_l,
                 'jumlah_kader_p' => $simulasiPenyuluhan->jumlah_kader_p,
                 'keterangan' => $simulasiPenyuluhan->keterangan,
+                'tahun_anggaran' => $simulasiPenyuluhan->tahun_anggaran,
             ],
         ]);
     }
@@ -103,6 +106,7 @@ class DesaSimulasiPenyuluhanController extends Controller
                 'jumlah_kader_l' => $simulasiPenyuluhan->jumlah_kader_l,
                 'jumlah_kader_p' => $simulasiPenyuluhan->jumlah_kader_p,
                 'keterangan' => $simulasiPenyuluhan->keterangan,
+                'tahun_anggaran' => $simulasiPenyuluhan->tahun_anggaran,
             ],
         ]);
     }
@@ -125,4 +129,3 @@ class DesaSimulasiPenyuluhanController extends Controller
         return redirect()->route('desa.simulasi-penyuluhan.index')->with('success', 'Data isian kelompok simulasi dan penyuluhan berhasil dihapus');
     }
 }
-

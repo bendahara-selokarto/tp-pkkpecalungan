@@ -22,6 +22,3 @@ class StoreDataPemanfaatanTanahPekaranganHatinyaPkkRequest extends FormRequest
         ];
     }
 }
-
-
-

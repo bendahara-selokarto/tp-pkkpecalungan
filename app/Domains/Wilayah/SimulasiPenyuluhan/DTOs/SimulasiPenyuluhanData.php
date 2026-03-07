@@ -12,11 +12,11 @@ class SimulasiPenyuluhanData
         public int $jumlah_kader_l,
         public int $jumlah_kader_p,
         public ?string $keterangan,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {
@@ -28,6 +28,7 @@ class SimulasiPenyuluhanData
             (int) $data['jumlah_kader_l'],
             (int) $data['jumlah_kader_p'],
             $data['keterangan'] ?? null,
+            (int) $data['tahun_anggaran'],
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],

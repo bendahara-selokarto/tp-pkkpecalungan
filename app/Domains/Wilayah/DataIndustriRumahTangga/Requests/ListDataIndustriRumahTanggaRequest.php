@@ -38,7 +38,7 @@ class ListDataIndustriRumahTanggaRequest extends FormRequest
     {
         return [
             'page' => ['nullable', 'integer', 'min:1'],
-            'per_page' => ['nullable', 'integer', 'in:' . implode(',', self::ALLOWED_PER_PAGE)],
+            'per_page' => ['nullable', 'integer', 'in:'.implode(',', self::ALLOWED_PER_PAGE)],
         ];
     }
 

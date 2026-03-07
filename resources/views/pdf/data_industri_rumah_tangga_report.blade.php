@@ -23,6 +23,7 @@
     <div class="title">BUKU INDUSTRI RUMAH TANGGA {{ $levelLabel }}</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
+        Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
@@ -53,7 +54,6 @@
     </table>
 </body>
 </html>
-
 
 
 

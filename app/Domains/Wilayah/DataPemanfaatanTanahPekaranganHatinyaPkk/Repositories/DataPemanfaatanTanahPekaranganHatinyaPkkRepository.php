@@ -15,27 +15,30 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkRepository implements DataPemanfaa
             'kategori_pemanfaatan_lahan' => $data->kategori_pemanfaatan_lahan,
             'komoditi' => $data->komoditi,
             'jumlah_komoditi' => $data->jumlah_komoditi,
+            'tahun_anggaran' => $data->tahun_anggaran,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator
     {
         return DataPemanfaatanTanahPekaranganHatinyaPkk::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection
     {
         return DataPemanfaatanTanahPekaranganHatinyaPkk::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->get();
     }
@@ -51,6 +54,7 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkRepository implements DataPemanfaa
             'kategori_pemanfaatan_lahan' => $data->kategori_pemanfaatan_lahan,
             'komoditi' => $data->komoditi,
             'jumlah_komoditi' => $data->jumlah_komoditi,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 
         return $dataPemanfaatanTanahPekaranganHatinyaPkk;
@@ -61,5 +65,3 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkRepository implements DataPemanfaa
         $dataPemanfaatanTanahPekaranganHatinyaPkk->delete();
     }
 }
-
-

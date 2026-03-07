@@ -2,6 +2,7 @@
 
 namespace App\Domains\Wilayah\SimulasiPenyuluhan\Actions;
 
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\SimulasiPenyuluhan\DTOs\SimulasiPenyuluhanData;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Repositories\SimulasiPenyuluhanRepositoryInterface;
@@ -11,9 +12,9 @@ class CreateScopedSimulasiPenyuluhanAction
 {
     public function __construct(
         private readonly SimulasiPenyuluhanRepositoryInterface $simulasiPenyuluhanRepository,
-        private readonly SimulasiPenyuluhanScopeService $simulasiPenyuluhanScopeService
-    ) {
-    }
+        private readonly SimulasiPenyuluhanScopeService $simulasiPenyuluhanScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function execute(array $payload, string $level): SimulasiPenyuluhan
     {
@@ -25,9 +26,10 @@ class CreateScopedSimulasiPenyuluhanAction
             'jumlah_kader_l' => $payload['jumlah_kader_l'],
             'jumlah_kader_p' => $payload['jumlah_kader_p'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'level' => $level,
             'area_id' => $this->simulasiPenyuluhanScopeService->requireUserAreaId(),
-            'created_by' => auth()->id(),
+            'created_by' => (int) auth()->id(),
         ]);
 
         return $this->simulasiPenyuluhanRepository->store($data);

@@ -39,6 +39,7 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
                 'kategori_jenis_industri' => $item->kategori_jenis_industri,
                 'komoditi' => $item->komoditi,
                 'jumlah_komoditi' => $item->jumlah_komoditi,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ]);
 
         return Inertia::render('Kecamatan/DataIndustriRumahTangga/Index', [
@@ -48,6 +49,7 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -80,6 +82,7 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
                 'kategori_jenis_industri' => $dataIndustriRumahTangga->kategori_jenis_industri,
                 'komoditi' => $dataIndustriRumahTangga->komoditi,
                 'jumlah_komoditi' => $dataIndustriRumahTangga->jumlah_komoditi,
+                'tahun_anggaran' => $dataIndustriRumahTangga->tahun_anggaran,
             ],
         ]);
     }
@@ -95,6 +98,7 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
                 'kategori_jenis_industri' => $dataIndustriRumahTangga->kategori_jenis_industri,
                 'komoditi' => $dataIndustriRumahTangga->komoditi,
                 'jumlah_komoditi' => $dataIndustriRumahTangga->jumlah_komoditi,
+                'tahun_anggaran' => $dataIndustriRumahTangga->tahun_anggaran,
             ],
             'kategoriJenisIndustriOptions' => DataIndustriRumahTangga::kategoriJenisIndustriOptions(),
         ]);
@@ -118,4 +122,3 @@ class KecamatanDataIndustriRumahTanggaController extends Controller
         return redirect()->route('kecamatan.data-industri-rumah-tangga.index')->with('success', 'Buku Industri Rumah Tangga berhasil dihapus');
     }
 }
-

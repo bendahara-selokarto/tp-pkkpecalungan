@@ -15,8 +15,12 @@ class DesaPaarTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -97,7 +101,7 @@ class DesaPaarTest extends TestCase
             Paar::create([
                 'indikator' => $indikator,
                 'jumlah' => $index + 1,
-                'keterangan' => 'Data ' . $index,
+                'keterangan' => 'Data '.$index,
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
@@ -204,5 +208,86 @@ class DesaPaarTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/desa/paar');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_data_paar_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        Paar::create([
+            'indikator' => 'akte_kelahiran',
+            'jumlah' => 12,
+            'keterangan' => 'Data tahun aktif',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        Paar::create([
+            'indikator' => 'kia',
+            'jumlah' => 8,
+            'keterangan' => 'Data tahun lalu',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/paar');
+
+        $response->assertOk();
+        $response->assertDontSee('Data tahun lalu');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/Paar/Index')
+                ->has('paarItems.data', 1)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
+        });
+    }
+
+    #[Test]
+    public function admin_desa_dapat_menyimpan_indikator_paar_yang_sama_pada_tahun_anggaran_berbeda(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        $this->actingAs($adminDesa)->post('/desa/paar', [
+            'indikator' => 'akte_kelahiran',
+            'jumlah' => 10,
+            'keterangan' => 'Tahun aktif',
+        ])->assertStatus(302);
+
+        $adminDesa->forceFill([
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR - 1,
+        ])->save();
+
+        $this->actingAs($adminDesa)->post('/desa/paar', [
+            'indikator' => 'akte_kelahiran',
+            'jumlah' => 7,
+            'keterangan' => 'Tahun sebelumnya',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseCount('paars', 2);
+        $this->assertDatabaseHas('paars', [
+            'indikator' => 'akte_kelahiran',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+            'jumlah' => 10,
+        ]);
+        $this->assertDatabaseHas('paars', [
+            'indikator' => 'akte_kelahiran',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'jumlah' => 7,
+        ]);
     }
 }

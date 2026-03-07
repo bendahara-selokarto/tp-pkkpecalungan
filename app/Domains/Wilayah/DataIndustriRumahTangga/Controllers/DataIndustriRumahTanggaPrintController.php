@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\DataIndustriRumahTangga\Controllers;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
 use App\Domains\Wilayah\DataIndustriRumahTangga\UseCases\ListScopedDataIndustriRumahTanggaUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,9 @@ class DataIndustriRumahTanggaPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedDataIndustriRumahTanggaUseCase $listScopedDataIndustriRumahTanggaUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -37,10 +38,12 @@ class DataIndustriRumahTanggaPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $budgetYearLabel = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.data_industri_rumah_tangga_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $budgetYearLabel,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);
@@ -48,7 +51,3 @@ class DataIndustriRumahTanggaPrintController extends Controller
         return $pdf->stream("data-industri-rumah-tangga-{$level}-report.pdf");
     }
 }
-
-
-
-

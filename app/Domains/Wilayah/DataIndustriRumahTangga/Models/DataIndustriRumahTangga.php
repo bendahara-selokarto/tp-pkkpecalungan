@@ -22,10 +22,29 @@ class DataIndustriRumahTangga extends Model
         'kategori_jenis_industri',
         'komoditi',
         'jumlah_komoditi',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (DataIndustriRumahTangga $dataIndustriRumahTangga): void {
+            if (is_numeric($dataIndustriRumahTangga->tahun_anggaran)) {
+                return;
+            }
+
+            $dataIndustriRumahTangga->tahun_anggaran = (int) now()->format('Y');
+        });
+    }
 
     public static function kategoriJenisIndustriOptions(): array
     {
@@ -42,7 +61,3 @@ class DataIndustriRumahTangga extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-
-
-
-

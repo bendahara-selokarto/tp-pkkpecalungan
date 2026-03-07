@@ -6,14 +6,15 @@ use App\Domains\Wilayah\DataIndustriRumahTangga\DTOs\DataIndustriRumahTanggaData
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Repositories\DataIndustriRumahTanggaRepositoryInterface;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Services\DataIndustriRumahTanggaScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 
 class CreateScopedDataIndustriRumahTanggaAction
 {
     public function __construct(
         private readonly DataIndustriRumahTanggaRepositoryInterface $dataIndustriRumahTanggaRepository,
-        private readonly DataIndustriRumahTanggaScopeService $dataIndustriRumahTanggaScopeService
-    ) {
-    }
+        private readonly DataIndustriRumahTanggaScopeService $dataIndustriRumahTanggaScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function execute(array $payload, string $level): DataIndustriRumahTangga
     {
@@ -21,6 +22,7 @@ class CreateScopedDataIndustriRumahTanggaAction
             'kategori_jenis_industri' => $payload['kategori_jenis_industri'],
             'komoditi' => $payload['komoditi'],
             'jumlah_komoditi' => $payload['jumlah_komoditi'],
+            'tahun_anggaran' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'level' => $level,
             'area_id' => $this->dataIndustriRumahTanggaScopeService->requireUserAreaId(),
             'created_by' => (int) auth()->id(),
@@ -29,7 +31,3 @@ class CreateScopedDataIndustriRumahTanggaAction
         return $this->dataIndustriRumahTanggaRepository->store($data);
     }
 }
-
-
-
-

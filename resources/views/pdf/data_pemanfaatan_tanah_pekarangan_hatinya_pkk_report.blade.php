@@ -27,7 +27,7 @@
     <div class="lampiran">LAMPIRAN 4.14.2b</div>
     <div class="title">BUKU HATINYA PKK</div>
     <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }}
+        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }} | Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}
     </div>
 
     <table>
@@ -70,6 +70,5 @@
     </div>
 </body>
 </html>
-
 
 

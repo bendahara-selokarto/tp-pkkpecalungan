@@ -11,9 +11,9 @@ interface DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface
 {
     public function store(DataPemanfaatanTanahPekaranganHatinyaPkkData $data): DataPemanfaatanTanahPekaranganHatinyaPkk;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection;
 
     public function find(int $id): DataPemanfaatanTanahPekaranganHatinyaPkk;
 
@@ -21,5 +21,3 @@ interface DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface
 
     public function delete(DataPemanfaatanTanahPekaranganHatinyaPkk $dataPemanfaatanTanahPekaranganHatinyaPkk): void;
 }
-
-

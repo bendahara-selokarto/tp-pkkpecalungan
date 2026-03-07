@@ -20,7 +20,8 @@
     <div class="title">BUKU PAAR</div>
     <div class="meta">
         DESA : {{ $level === 'desa' ? $areaName : '-' }}<br>
-        KEC : {{ $level === 'kecamatan' ? $areaName : '-' }}
+        KEC : {{ $level === 'kecamatan' ? $areaName : '-' }}<br>
+        Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}
     </div>
 
     @php
