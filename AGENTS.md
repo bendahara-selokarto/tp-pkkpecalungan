@@ -9,17 +9,20 @@ Dokumen keputusan arsitektur ada di `docs/adr/` (`ADR_*` + `README.md`).
 ## Peran AI
 
 Alias role aktif:
+
 - `khotib`: `Technical Auditor`
 - `iwan`: `Project Planner`
 - `santoso`: `LLM Optimization Engineer`
 - `manto`: `Technical Implementer`
 
 Aturan switch:
+
 - Untuk mempermudah switch role, cukup panggil nama alias.
 
 ## 0. Priority
 
 Jika konflik dokumen:
+
 1. `AGENTS.md` (aturan teknis, arsitektur, eksekusi agent)
 2. `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` (routing operasional AI deterministik)
 3. `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` (terminologi/kontrak domain canonical aktif)
@@ -27,32 +30,39 @@ Jika konflik dokumen:
 5. `README.md`
 
 Aturan koherensi domain:
+
 - Jika ada perbedaan istilah, label, atau kontrak domain antara dokumen internal dan pedoman utama, utamakan `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`.
 - Aspek teknis implementasi (arsitektur, policy/scope, quality gate, test matrix) tetap mengikuti `AGENTS.md`.
 
 ## 1. Fast Context
 
 Stack:
+
 - Laravel 12
 - Inertia + Vue 3
 - Tailwind
 - Vite
 
 Architecture:
+
 - `Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`
 
 Authorization:
+
 - `Policy -> Scope Service`
 
 Code placement contract:
+
 - concern domain wilayah baru default di `app/Domains/Wilayah/<Concern>/<Layer>`.
 - concern lintas-domain/platform boleh di `app/*` global dengan justifikasi jelas pada TODO concern.
 - acuan detail: `docs/process/CODE_PLACEMENT_POLICY.md`.
 
 Domain canonical:
+
 - `areas` adalah single source of truth wilayah.
 
 Legacy artifacts (historical; non-canonical):
+
 - `kecamatans`, `desas`, `user_assignments` tidak lagi menjadi jalur write/read aktif.
 - Dilarang menambah coupling baru ke artefak legacy tersebut.
 
@@ -81,9 +91,11 @@ Legacy artifacts (historical; non-canonical):
 7. Copywriting pass (triggered): jika ada pemicu copy UI, wajib lakukan hardening teks user-facing sebelum final report.
 
 Rute operasional detail wajib mengikuti:
+
 - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
 
 Trigger doc-hardening pass:
+
 - Perubahan kontrak canonical (`role/scope/area`, query filter, representasi dashboard, metadata sumber).
 - Perubahan lintas lebih dari satu dokumen rencana/proses untuk fitur yang sama.
 - Ditemukan istilah ambigu atau istilah lama yang berpotensi drift kontrak (contoh: token query generik pada multi-section).
@@ -91,29 +103,34 @@ Trigger doc-hardening pass:
 - Ada perubahan status/isi ADR yang belum tersinkron ke TODO concern atau dokumen process/domain terkait.
 
 Langkah minimal doc-hardening pass:
+
 1. Audit drift istilah/kontrak pada dokumen yang terdampak (scoped grep + diff).
 2. Normalisasi istilah canonical lintas TODO/process/domain matrix/playbook/ADR.
 3. Sinkronkan checklist status/keputusan (TODO + ADR) agar sesuai implementasi aktual.
 4. Laporkan hasil hardening: file terdampak, keputusan yang dikunci, dan validasi yang dijalankan.
 
 Trigger ADR pass:
+
 - Perubahan boundary arsitektur utama (`Controller -> UseCase/Action -> Repository -> Model`).
 - Perubahan enforcement authorization backend (`Policy`, `Scope Service`, middleware akses).
 - Keputusan teknis strategis dengan opsi trade-off yang perlu jejak audit lintas sesi.
 
 Langkah minimal ADR pass:
+
 1. Tulis/ubah ADR di `docs/adr/ADR_<NOMOR4>_<RINGKASAN>.md`.
 2. Tautkan ADR ke TODO concern aktif pada `docs/process/TODO_*`.
 3. Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern.
 4. Laporkan alasan keputusan + dampak + fallback plan pada final report.
 
 Trigger copywriting pass:
+
 - Ditemukan label UI teknis/internal yang tampil ke user akhir (contoh: token query key, istilah section teknis, slug mentah).
 - Ada empty-state/error/help text yang ambigu atau tidak memberi arahan tindakan.
 - Ada perubahan UI lintas section/halaman yang menambah teks user-facing baru.
 - Ada mismatch nada bahasa antar komponen pada concern yang sama (campuran istilah teknis dan bahasa natural user).
 
 Langkah minimal copywriting pass:
+
 1. Audit teks user-facing pada file UI concern aktif (judul, label filter, CTA, helper text, empty-state, error text).
 2. Ubah ke kalimat natural user tanpa mengubah kontrak backend/query.
 3. Jaga konsistensi istilah lintas section pada halaman yang sama.
@@ -169,6 +186,7 @@ Flow pembacaan dokumen (wajib, terutama header tabel):
 ## 7. New Menu/Domain Protocol (Mandatory)
 
 Urutan eksekusi untuk modul/menu baru:
+
 1. Tetapkan kontrak: nama domain, scope target, role aktif, boundary data.
 2. Route + middleware: gunakan `scope.role:{desa|kecamatan}`.
 3. Request: validasi + normalisasi input (tanggal UI ke format canonical).
@@ -182,6 +200,7 @@ Urutan eksekusi untuk modul/menu baru:
    - Jika tidak relevan ditampilkan, wajib tulis justifikasi eksplisit pada dokumen perubahan.
 
 Aturan konsistensi generasi kode:
+
 - Gunakan enum (`ScopeLevel`) untuk scope/level di PHP, hindari literal berulang.
 - Untuk flow yang bergantung wilayah, `area_id` harus jadi acuan canonical level.
 - Jangan jadikan frontend sebagai authority akses.
@@ -190,6 +209,7 @@ Aturan konsistensi generasi kode:
 ## 8. Minimum Test Matrix (Mandatory)
 
 Untuk modul/menu baru, minimal harus ada:
+
 1. Feature test jalur sukses untuk role/scope valid.
 2. Feature test tolak role tidak valid.
 3. Feature test tolak mismatch role-area level (stale metadata scenario).
@@ -212,10 +232,12 @@ Untuk modul/menu baru, minimal harus ada:
 ## 11. Temporary Pre-Release Upgrade Policy (Aktif)
 
 Status saat ini:
+
 - Aplikasi belum release; reset data development diperbolehkan.
 - AI boleh melakukan upgrade/refactor dependency legacy secara terkontrol.
 
 Aturan eksekusi:
+
 - `php artisan migrate:fresh` diperbolehkan untuk pekerjaan refactor struktur data.
 - Saat memakai `migrate:fresh`, laporkan eksplisit bahwa seluruh data lokal ter-reset.
 - Upgrade legacy wajib mengarah ke pengurangan coupling ke tabel legacy, bukan menambah debt baru.
@@ -225,6 +247,7 @@ Aturan eksekusi:
   3) rollback/fallback plan minimal level teknis.
 
 Guardrail tetap:
+
 - Otorisasi backend tidak boleh melemah.
 - `areas` tetap canonical wilayah.
 - Konsistensi `role` vs `scope` vs `areas.level` tidak boleh drift.
@@ -232,6 +255,7 @@ Guardrail tetap:
 ## 12. Markdown Documentation Rules (Upgrade)
 
 Aturan markdown operasional:
+
 - Semua rencana aksi lintas-file wajib dibuat dalam dokumen TODO terpisah di `docs/process/`.
 - Penamaan TODO baru wajib memakai kode unik singkat tepat setelah kata `TODO` pada judul dokumen.
   - Format judul: `# TODO <KODE_UNIK> <Judul Ringkas>`.
