@@ -10,8 +10,7 @@ class UpdateDataKeluargaAction
 {
     public function __construct(
         private readonly DataKeluargaRepositoryInterface $dataKeluargaRepository
-    ) {
-    }
+    ) {}
 
     public function execute(DataKeluarga $dataKeluarga, array $payload): DataKeluarga
     {
@@ -19,6 +18,7 @@ class UpdateDataKeluargaAction
             'kategori_keluarga' => $payload['kategori_keluarga'],
             'jumlah_keluarga' => $payload['jumlah_keluarga'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $dataKeluarga->tahun_anggaran,
             'level' => $dataKeluarga->level,
             'area_id' => $dataKeluarga->area_id,
             'created_by' => $dataKeluarga->created_by,
@@ -27,4 +27,3 @@ class UpdateDataKeluargaAction
         return $this->dataKeluargaRepository->update($dataKeluarga, $data);
     }
 }
-

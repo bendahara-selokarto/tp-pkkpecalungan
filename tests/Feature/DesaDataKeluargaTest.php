@@ -15,8 +15,12 @@ class DesaDataKeluargaTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -95,9 +99,9 @@ class DesaDataKeluargaTest extends TestCase
 
         for ($index = 1; $index <= 12; $index++) {
             DataKeluarga::create([
-                'kategori_keluarga' => 'Kategori ' . $index,
+                'kategori_keluarga' => 'Kategori '.$index,
                 'jumlah_keluarga' => $index,
-                'keterangan' => 'Keterangan ' . $index,
+                'keterangan' => 'Keterangan '.$index,
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
@@ -218,5 +222,47 @@ class DesaDataKeluargaTest extends TestCase
         $response = $this->actingAs($userStale)->get('/desa/data-keluarga');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_data_keluarga_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        DataKeluarga::create([
+            'kategori_keluarga' => 'Sejahtera I',
+            'jumlah_keluarga' => 20,
+            'keterangan' => 'Tahun aktif',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        DataKeluarga::create([
+            'kategori_keluarga' => 'Sejahtera II',
+            'jumlah_keluarga' => 15,
+            'keterangan' => 'Tahun lalu',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/data-keluarga');
+
+        $response->assertOk();
+        $response->assertDontSee('Tahun lalu');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataKeluarga/Index')
+                ->has('dataKeluargaItems.data', 1)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
+        });
     }
 }

@@ -8,11 +8,11 @@ class DataKeluargaData
         public string $kategori_keluarga,
         public int $jumlah_keluarga,
         public ?string $keterangan,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {
@@ -20,10 +20,10 @@ class DataKeluargaData
             $data['kategori_keluarga'],
             (int) $data['jumlah_keluarga'],
             $data['keterangan'] ?? null,
+            (int) $data['tahun_anggaran'],
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],
         );
     }
 }
-

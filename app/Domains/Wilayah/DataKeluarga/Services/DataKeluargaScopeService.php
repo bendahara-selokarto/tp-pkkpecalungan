@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\DataKeluarga\Services;
 
 use App\Domains\Wilayah\DataKeluarga\Models\DataKeluarga;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,9 +11,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class DataKeluargaScopeService
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
-    ) {
-    }
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function canAccessLevel(User $user, string $level): bool
     {
@@ -30,7 +31,8 @@ class DataKeluargaScopeService
             return false;
         }
 
-        return (int) $dataKeluarga->area_id === (int) $user->area_id;
+        return (int) $dataKeluarga->area_id === (int) $user->area_id
+            && (int) $dataKeluarga->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, DataKeluarga $dataKeluarga): bool
@@ -43,13 +45,16 @@ class DataKeluargaScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(DataKeluarga $dataKeluarga, string $level, int $areaId): DataKeluarga
+    public function authorizeSameLevelAreaAndBudgetYear(DataKeluarga $dataKeluarga, string $level, int $areaId, int $tahunAnggaran): DataKeluarga
     {
-        if ($dataKeluarga->level !== $level || (int) $dataKeluarga->area_id !== $areaId) {
+        if (
+            $dataKeluarga->level !== $level
+            || (int) $dataKeluarga->area_id !== $areaId
+            || (int) $dataKeluarga->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
         return $dataKeluarga;
     }
 }
-

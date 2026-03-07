@@ -22,4 +22,3 @@ class UpdateDataKeluargaRequest extends FormRequest
         ];
     }
 }
-

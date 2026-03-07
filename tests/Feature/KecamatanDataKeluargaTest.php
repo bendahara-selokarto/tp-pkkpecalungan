@@ -15,7 +15,10 @@ class KecamatanDataKeluargaTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
 
     protected function setUp(): void
@@ -87,9 +90,9 @@ class KecamatanDataKeluargaTest extends TestCase
 
         for ($index = 1; $index <= 11; $index++) {
             DataKeluarga::create([
-                'kategori_keluarga' => 'Kategori Kec ' . $index,
+                'kategori_keluarga' => 'Kategori Kec '.$index,
                 'jumlah_keluarga' => $index,
-                'keterangan' => 'Keterangan ' . $index,
+                'keterangan' => 'Keterangan '.$index,
                 'level' => 'kecamatan',
                 'area_id' => $this->kecamatanA->id,
                 'created_by' => $adminKecamatan->id,
@@ -209,6 +212,32 @@ class KecamatanDataKeluargaTest extends TestCase
         $userStale->assignRole('admin-kecamatan');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/data-keluarga');
+
+        $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_data_keluarga_tahun_anggaran_lain(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $dataKeluargaArsip = DataKeluarga::create([
+            'kategori_keluarga' => 'Pra Sejahtera',
+            'jumlah_keluarga' => 18,
+            'keterangan' => 'Arsip',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.data-keluarga.show', $dataKeluargaArsip->id));
 
         $response->assertStatus(403);
     }

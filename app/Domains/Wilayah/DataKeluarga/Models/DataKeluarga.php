@@ -22,6 +22,7 @@ class DataKeluarga extends Model
         'kategori_keluarga',
         'jumlah_keluarga',
         'keterangan',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -31,7 +32,17 @@ class DataKeluarga extends Model
     {
         return [
             'jumlah_keluarga' => 'integer',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $dataKeluarga): void {
+            if (! is_int($dataKeluarga->tahun_anggaran) || $dataKeluarga->tahun_anggaran <= 0) {
+                $dataKeluarga->tahun_anggaran = (int) now()->format('Y');
+            }
+        });
     }
 
     public static function kategoriOptions(): array
@@ -49,4 +60,3 @@ class DataKeluarga extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-

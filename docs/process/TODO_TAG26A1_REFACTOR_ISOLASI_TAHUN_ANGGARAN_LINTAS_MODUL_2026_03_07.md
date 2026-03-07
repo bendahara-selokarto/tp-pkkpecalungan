@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `in-progress` (`state:wave2-community-outreach-slice-implemented`)
+Status: `in-progress` (`state:wave2-data-keluarga-slice-implemented`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -117,6 +117,8 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - [x] Slice layanan keluarga wave-2 terimplementasi: `BKL`, `BKR`, `Posyandu`, `DataPelatihanKader`.
     - [x] Slice administrasi operasional wave-2 terimplementasi: `Bantuan`, `PrestasiLomba`, `AnggotaPokja`, `BukuKeuangan`.
     - [x] Slice komunitas/penyuluhan wave-2 terimplementasi: `DataIndustriRumahTangga`, `DataPemanfaatanTanahPekaranganHatinyaPkk`, `Paar`, `SimulasiPenyuluhan`.
+    - [x] Slice data keluarga wave-2 terimplementasi: `DataKeluarga`.
+    - [ ] `DataWarga` dan `DataKegiatanWarga` ditahan sampai `CatatanKeluarga` ikut year-aware agar tidak terjadi data leak agregat lintas tahun.
     - [ ] Concern homogen wave-2 yang masih pending: concern sejenis lain di luar slice yang sudah terkunci.
   - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
   - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
@@ -262,3 +264,11 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Unique constraint `Paar` diperluas dari `level + area_id + indikator` menjadi `level + area_id + tahun_anggaran + indikator` agar indikator yang sama bisa hidup lintas tahun tanpa bentrok.
 - [x] Targeted regression tambahan wave-2 slice lulus: `68 passed`.
 - [x] Full suite setelah rollout slice komunitas/penyuluhan lulus: `1119 passed`.
+
+## Hasil Implementasi Wave-2 (Slice Data Keluarga)
+- [x] `DataKeluarga` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] PDF `DataKeluarga` menampilkan metadata tahun anggaran aktif.
+- [x] Backfill development untuk slice ini dikunci: `DataKeluarga` memakai baseline eksplisit `2026` karena belum ada sumber tahun domain yang lebih presisi.
+- [x] Targeted regression tambahan slice `DataKeluarga` lulus: `21 passed`.
+- [x] Full suite setelah rollout slice `DataKeluarga` lulus: `1122 passed`.
+- [x] Keputusan dependency lock: `DataWarga` dan `DataKegiatanWarga` tidak dilanjutkan pada patch yang sama karena `CatatanKeluarga` masih membaca keduanya langsung dan harus di-retrofit bersama pada wave berikutnya.

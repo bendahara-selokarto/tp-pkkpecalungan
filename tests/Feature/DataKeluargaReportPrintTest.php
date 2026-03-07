@@ -12,11 +12,15 @@ use Tests\TestCase;
 
 class DataKeluargaReportPrintTest extends TestCase
 {
-    use RefreshDatabase;
     use AssertsPdfReportHeaders;
+    use RefreshDatabase;
+
+    private const ACTIVE_BUDGET_YEAR = 2026;
 
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
+
     protected Area $desaA;
 
     protected function setUp(): void
@@ -43,13 +47,18 @@ class DataKeluargaReportPrintTest extends TestCase
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_data_keluarga_desanya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desaA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         DataKeluarga::create([
             'kategori_keluarga' => 'Sejahtera I',
             'jumlah_keluarga' => 25,
             'keterangan' => 'Rekap desa',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $user->id,
@@ -63,13 +72,18 @@ class DataKeluargaReportPrintTest extends TestCase
 
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_data_keluarga_kecamatannya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-kecamatan');
 
         DataKeluarga::create([
             'kategori_keluarga' => 'Sejahtera II',
             'jumlah_keluarga' => 40,
             'keterangan' => 'Rekap kecamatan',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $user->id,
@@ -83,7 +97,11 @@ class DataKeluargaReportPrintTest extends TestCase
 
     public function test_laporan_pdf_data_keluarga_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->kecamatanB->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         $response = $this->actingAs($user)->get(route('desa.data-keluarga.report'));

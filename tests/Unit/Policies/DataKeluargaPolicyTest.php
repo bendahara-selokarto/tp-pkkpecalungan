@@ -15,6 +15,8 @@ class DataKeluargaPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     #[Test]
     public function admin_desa_hanya_boleh_melihat_data_keluarga_pada_desanya_sendiri(): void
     {
@@ -24,13 +26,18 @@ class DataKeluargaPolicyTest extends TestCase
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desaA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         $milikSendiri = DataKeluarga::create([
             'kategori_keluarga' => 'Sejahtera I',
             'jumlah_keluarga' => 10,
             'keterangan' => 'Data sendiri',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             'level' => 'desa',
             'area_id' => $desaA->id,
             'created_by' => $user->id,
@@ -40,6 +47,7 @@ class DataKeluargaPolicyTest extends TestCase
             'kategori_keluarga' => 'Sejahtera II',
             'jumlah_keluarga' => 12,
             'keterangan' => 'Data desa lain',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             'level' => 'desa',
             'area_id' => $desaB->id,
             'created_by' => $user->id,
@@ -59,13 +67,18 @@ class DataKeluargaPolicyTest extends TestCase
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id]);
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatanA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-kecamatan');
 
         $dataKeluargaLuar = DataKeluarga::create([
             'kategori_keluarga' => 'Pra Sejahtera',
             'jumlah_keluarga' => 9,
             'keterangan' => 'Data luar',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             'level' => 'kecamatan',
             'area_id' => $kecamatanB->id,
             'created_by' => $user->id,
@@ -74,5 +87,35 @@ class DataKeluargaPolicyTest extends TestCase
         $policy = app(DataKeluargaPolicy::class);
 
         $this->assertFalse($policy->update($user, $dataKeluargaLuar));
+    }
+
+    #[Test]
+    public function admin_desa_tidak_boleh_melihat_data_keluarga_pada_tahun_anggaran_lain_di_areanya_sendiri(): void
+    {
+        Role::create(['name' => 'admin-desa']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $arsip = DataKeluarga::create([
+            'kategori_keluarga' => 'Sejahtera I',
+            'jumlah_keluarga' => 10,
+            'keterangan' => 'Arsip',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+        ]);
+
+        $policy = app(DataKeluargaPolicy::class);
+
+        $this->assertFalse($policy->view($user, $arsip));
     }
 }

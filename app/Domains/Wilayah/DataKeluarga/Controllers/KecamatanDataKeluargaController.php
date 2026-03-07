@@ -39,6 +39,7 @@ class KecamatanDataKeluargaController extends Controller
                 'kategori_keluarga' => $item->kategori_keluarga,
                 'jumlah_keluarga' => $item->jumlah_keluarga,
                 'keterangan' => $item->keterangan,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ]);
 
         return Inertia::render('Kecamatan/DataKeluarga/Index', [
@@ -48,6 +49,7 @@ class KecamatanDataKeluargaController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -80,6 +82,7 @@ class KecamatanDataKeluargaController extends Controller
                 'kategori_keluarga' => $dataKeluarga->kategori_keluarga,
                 'jumlah_keluarga' => $dataKeluarga->jumlah_keluarga,
                 'keterangan' => $dataKeluarga->keterangan,
+                'tahun_anggaran' => $dataKeluarga->tahun_anggaran,
             ],
         ]);
     }
@@ -95,6 +98,7 @@ class KecamatanDataKeluargaController extends Controller
                 'kategori_keluarga' => $dataKeluarga->kategori_keluarga,
                 'jumlah_keluarga' => $dataKeluarga->jumlah_keluarga,
                 'keterangan' => $dataKeluarga->keterangan,
+                'tahun_anggaran' => $dataKeluarga->tahun_anggaran,
             ],
             'kategoriOptions' => DataKeluarga::kategoriOptions(),
         ]);

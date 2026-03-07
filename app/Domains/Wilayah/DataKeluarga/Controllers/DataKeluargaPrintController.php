@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\DataKeluarga\Controllers;
 use App\Domains\Wilayah\DataKeluarga\Models\DataKeluarga;
 use App\Domains\Wilayah\DataKeluarga\UseCases\ListScopedDataKeluargaUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,9 @@ class DataKeluargaPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedDataKeluargaUseCase $listScopedDataKeluargaUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -37,10 +38,12 @@ class DataKeluargaPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $budgetYearLabel = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.data_keluarga_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $budgetYearLabel,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);
@@ -48,4 +51,3 @@ class DataKeluargaPrintController extends Controller
         return $pdf->stream("data-keluarga-{$level}-report.pdf");
     }
 }
-
