@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\DataWarga\Services;
 
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,9 +11,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class DataWargaScopeService
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
-    ) {
-    }
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function canAccessLevel(User $user, string $level): bool
     {
@@ -30,7 +31,8 @@ class DataWargaScopeService
             return false;
         }
 
-        return (int) $dataWarga->area_id === (int) $user->area_id;
+        return (int) $dataWarga->area_id === (int) $user->area_id
+            && (int) $dataWarga->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, DataWarga $dataWarga): bool
@@ -43,9 +45,13 @@ class DataWargaScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(DataWarga $dataWarga, string $level, int $areaId): DataWarga
+    public function authorizeSameLevelAreaAndBudgetYear(DataWarga $dataWarga, string $level, int $areaId, int $tahunAnggaran): DataWarga
     {
-        if ($dataWarga->level !== $level || (int) $dataWarga->area_id !== $areaId) {
+        if (
+            $dataWarga->level !== $level
+            || (int) $dataWarga->area_id !== $areaId
+            || (int) $dataWarga->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 

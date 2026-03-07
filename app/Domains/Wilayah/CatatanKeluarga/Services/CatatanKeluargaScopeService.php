@@ -9,8 +9,7 @@ class CatatanKeluargaScopeService
 {
     public function __construct(
         private readonly UserAreaContextService $userAreaContextService
-    ) {
-    }
+    ) {}
 
     public function canAccessLevel(User $user, string $level): bool
     {
@@ -27,4 +26,3 @@ class CatatanKeluargaScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 }
-

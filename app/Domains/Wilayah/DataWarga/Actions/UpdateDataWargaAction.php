@@ -13,8 +13,7 @@ class UpdateDataWargaAction
     public function __construct(
         private readonly DataWargaRepositoryInterface $dataWargaRepository,
         private readonly DataWargaAnggotaRepositoryInterface $dataWargaAnggotaRepository
-    ) {
-    }
+    ) {}
 
     public function execute(DataWarga $dataWarga, array $payload): DataWarga
     {
@@ -27,6 +26,7 @@ class UpdateDataWargaAction
             'jumlah_warga_laki_laki' => $payload['jumlah_warga_laki_laki'],
             'jumlah_warga_perempuan' => $payload['jumlah_warga_perempuan'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $dataWarga->tahun_anggaran,
             'level' => $dataWarga->level,
             'area_id' => $dataWarga->area_id,
             'created_by' => $dataWarga->created_by,
@@ -41,7 +41,8 @@ class UpdateDataWargaAction
                     is_array($payload['anggota']) ? $payload['anggota'] : [],
                     $updated->level,
                     $updated->area_id,
-                    $updated->created_by
+                    $updated->created_by,
+                    $updated->tahun_anggaran
                 );
             }
 
@@ -51,7 +52,7 @@ class UpdateDataWargaAction
 
     private function mergeSummaryFromAnggota(array $payload): array
     {
-        if (!array_key_exists('anggota', $payload) || !is_array($payload['anggota'])) {
+        if (! array_key_exists('anggota', $payload) || ! is_array($payload['anggota'])) {
             return $payload;
         }
 

@@ -24,6 +24,7 @@ class DataKegiatanWarga extends Model
         'kegiatan',
         'aktivitas',
         'keterangan',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -33,7 +34,17 @@ class DataKegiatanWarga extends Model
     {
         return [
             'aktivitas' => 'boolean',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $dataKegiatanWarga): void {
+            if (! is_int($dataKegiatanWarga->tahun_anggaran) || $dataKegiatanWarga->tahun_anggaran <= 0) {
+                $dataKegiatanWarga->tahun_anggaran = (int) now()->format('Y');
+            }
+        });
     }
 
     public static function kegiatanOptions(): array

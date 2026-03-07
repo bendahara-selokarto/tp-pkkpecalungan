@@ -32,7 +32,7 @@
     <div class="lampiran">LAMPIRAN 4.14.1b</div>
     <div class="title">KEGIATAN WARGA</div>
     <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }}
+        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }} | Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}
     </div>
 
     <table>
@@ -69,4 +69,3 @@
     </div>
 </body>
 </html>
-

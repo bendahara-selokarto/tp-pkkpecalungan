@@ -16,8 +16,12 @@ class DesaDataWargaTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -102,8 +106,8 @@ class DesaDataWargaTest extends TestCase
 
         for ($index = 1; $index <= 12; $index++) {
             DataWarga::create([
-                'dasawisma' => 'Mawar ' . str_pad((string) $index, 2, '0', STR_PAD_LEFT),
-                'nama_kepala_keluarga' => 'Kepala Desa ' . $index,
+                'dasawisma' => 'Mawar '.str_pad((string) $index, 2, '0', STR_PAD_LEFT),
+                'nama_kepala_keluarga' => 'Kepala Desa '.$index,
                 'alamat' => 'RT 01 RW 01',
                 'jumlah_warga_laki_laki' => 1,
                 'jumlah_warga_perempuan' => 1,
@@ -179,6 +183,7 @@ class DesaDataWargaTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -206,6 +211,7 @@ class DesaDataWargaTest extends TestCase
             'id' => $dataWarga->id,
             'jumlah_warga_laki_laki' => 3,
             'jumlah_warga_perempuan' => 2,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.data-warga.destroy', $dataWarga->id))
@@ -220,6 +226,7 @@ class DesaDataWargaTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -260,6 +267,7 @@ class DesaDataWargaTest extends TestCase
             'nama' => 'Ana',
             'jenis_kelamin' => 'P',
             'ikut_paud' => true,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->put(route('desa.data-warga.update', $dataWarga->id), [
@@ -316,6 +324,55 @@ class DesaDataWargaTest extends TestCase
         $response = $this->actingAs($userStale)->get('/desa/data-warga');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_data_warga_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        DataWarga::create([
+            'dasawisma' => 'Mawar 01',
+            'nama_kepala_keluarga' => 'Kepala Aktif',
+            'alamat' => 'RT 01 RW 01',
+            'jumlah_warga_laki_laki' => 2,
+            'jumlah_warga_perempuan' => 2,
+            'keterangan' => 'Tahun aktif',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        DataWarga::create([
+            'dasawisma' => 'Mawar 02',
+            'nama_kepala_keluarga' => 'Kepala Lama',
+            'alamat' => 'RT 02 RW 01',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => 'Tahun lalu',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/data-warga');
+
+        $response->assertOk();
+        $response->assertDontSee('Kepala Lama');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataWarga/Index')
+                ->has('dataWargaItems.data', 1)
+                ->where('dataWargaItems.data.0.nama_kepala_keluarga', 'Kepala Aktif')
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
+        });
     }
 
     #[Test]

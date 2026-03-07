@@ -40,6 +40,7 @@ class DesaDataKegiatanWargaController extends Controller
                 'aktivitas' => $item->aktivitas,
                 'aktivitas_label' => $item->aktivitas ? 'Ya' : 'Tidak',
                 'keterangan' => $item->keterangan,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ]);
 
         return Inertia::render('Desa/DataKegiatanWarga/Index', [
@@ -49,6 +50,7 @@ class DesaDataKegiatanWargaController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -82,6 +84,7 @@ class DesaDataKegiatanWargaController extends Controller
                 'aktivitas' => $dataKegiatanWarga->aktivitas,
                 'aktivitas_label' => $dataKegiatanWarga->aktivitas ? 'Ya' : 'Tidak',
                 'keterangan' => $dataKegiatanWarga->keterangan,
+                'tahun_anggaran' => $dataKegiatanWarga->tahun_anggaran,
             ],
         ]);
     }
@@ -97,6 +100,7 @@ class DesaDataKegiatanWargaController extends Controller
                 'kegiatan' => $dataKegiatanWarga->kegiatan,
                 'aktivitas' => $dataKegiatanWarga->aktivitas,
                 'keterangan' => $dataKegiatanWarga->keterangan,
+                'tahun_anggaran' => $dataKegiatanWarga->tahun_anggaran,
             ],
             'kegiatanOptions' => DataKegiatanWarga::kegiatanOptions(),
         ]);

@@ -16,7 +16,10 @@ class KecamatanCatatanKeluargaTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
 
     protected function setUp(): void
@@ -104,12 +107,12 @@ class KecamatanCatatanKeluargaTest extends TestCase
 
         for ($index = 1; $index <= 11; $index++) {
             DataWarga::create([
-                'dasawisma' => 'Mawar ' . $index,
-                'nama_kepala_keluarga' => 'Kepala Kec ' . $index,
-                'alamat' => 'Alamat ' . $index,
+                'dasawisma' => 'Mawar '.$index,
+                'nama_kepala_keluarga' => 'Kepala Kec '.$index,
+                'alamat' => 'Alamat '.$index,
                 'jumlah_warga_laki_laki' => 1,
                 'jumlah_warga_perempuan' => 2,
-                'keterangan' => 'Keterangan ' . $index,
+                'keterangan' => 'Keterangan '.$index,
                 'level' => 'kecamatan',
                 'area_id' => $this->kecamatanA->id,
                 'created_by' => $adminKecamatan->id,
@@ -213,5 +216,65 @@ class KecamatanCatatanKeluargaTest extends TestCase
         $response = $this->actingAs($userStale)->get('/kecamatan/catatan-keluarga');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_kecamatan_hanya_melihat_catatan_keluarga_pada_tahun_anggaran_aktif(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        DataWarga::create([
+            'dasawisma' => 'Mawar Aktif',
+            'nama_kepala_keluarga' => 'Kepala Aktif',
+            'alamat' => 'Alamat Aktif',
+            'jumlah_warga_laki_laki' => 2,
+            'jumlah_warga_perempuan' => 2,
+            'keterangan' => 'Tahun aktif',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        DataWarga::create([
+            'dasawisma' => 'Mawar Lama',
+            'nama_kepala_keluarga' => 'Kepala Lama',
+            'alamat' => 'Alamat Lama',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => 'Tahun lalu',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        DataKegiatanWarga::create([
+            'kegiatan' => 'Arisan',
+            'aktivitas' => true,
+            'keterangan' => 'Tahun lalu',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/catatan-keluarga');
+
+        $response->assertOk();
+        $response->assertDontSee('Kepala Lama');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/CatatanKeluarga/Index')
+                ->has('catatanKeluargaItems.data', 1)
+                ->where('catatanKeluargaItems.data.0.nama_kepala_rumah_tangga', 'Kepala Aktif')
+                ->where('catatanKeluargaItems.data.0.arisan', 'Tidak')
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
+        });
     }
 }

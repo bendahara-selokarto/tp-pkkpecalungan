@@ -43,6 +43,7 @@ class KecamatanDataWargaController extends Controller
                 'jumlah_warga_perempuan' => $item->jumlah_warga_perempuan,
                 'total_warga' => $item->total_warga,
                 'keterangan' => $item->keterangan,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ]);
 
         return Inertia::render('Kecamatan/DataWarga/Index', [
@@ -52,6 +53,7 @@ class KecamatanDataWargaController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -86,6 +88,7 @@ class KecamatanDataWargaController extends Controller
                 'jumlah_warga_perempuan' => $dataWarga->jumlah_warga_perempuan,
                 'total_warga' => $dataWarga->total_warga,
                 'keterangan' => $dataWarga->keterangan,
+                'tahun_anggaran' => $dataWarga->tahun_anggaran,
             ],
         ]);
     }
@@ -104,6 +107,7 @@ class KecamatanDataWargaController extends Controller
                 'jumlah_warga_laki_laki' => $dataWarga->jumlah_warga_laki_laki,
                 'jumlah_warga_perempuan' => $dataWarga->jumlah_warga_perempuan,
                 'keterangan' => $dataWarga->keterangan,
+                'tahun_anggaran' => $dataWarga->tahun_anggaran,
                 'anggota' => $dataWarga->anggota->values()->map(fn ($anggota) => [
                     'nomor_urut' => $anggota->nomor_urut,
                     'nomor_registrasi' => $anggota->nomor_registrasi,

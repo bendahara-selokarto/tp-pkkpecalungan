@@ -4,24 +4,25 @@ namespace App\Domains\Wilayah\CatatanKeluarga\Controllers;
 
 use App\Domains\Wilayah\CatatanKeluarga\Models\CatatanKeluarga;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanKeluargaUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanPkkRwUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkDesaKelurahanUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkKabupatenKotaUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkKecamatanUseCase;
-use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkDesaKelurahanUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkProvinsiUseCase;
-use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanPkkRwUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIiiUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIvUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataUmumPkkKecamatanUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataUmumPkkUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapDasaWismaUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilDasaWismaUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilPkkDusunLingkunganUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilPkkRtUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilPkkRwUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapIbuHamilTpPkkKecamatanUseCase;
-use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataUmumPkkUseCase;
-use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataUmumPkkKecamatanUseCase;
-use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIiiUseCase;
-use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIvUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapPkkRtUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedRekapRwUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Illuminate\Support\Collection;
@@ -48,9 +49,9 @@ class CatatanKeluargaPrintController extends Controller
         private readonly ListScopedRekapPkkRtUseCase $listScopedRekapPkkRtUseCase,
         private readonly ListScopedCatatanPkkRwUseCase $listScopedCatatanPkkRwUseCase,
         private readonly ListScopedRekapRwUseCase $listScopedRekapRwUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -241,10 +242,12 @@ class CatatanKeluargaPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $budgetYearLabel = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.catatan_keluarga_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $budgetYearLabel,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);
@@ -267,7 +270,7 @@ class CatatanKeluargaPrintController extends Controller
             'areaName' => $user->area?->name ?? '-',
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("rekap-catatan-data-kegiatan-warga-dasa-wisma-{$level}-report.pdf");
@@ -288,7 +291,7 @@ class CatatanKeluargaPrintController extends Controller
             'areaName' => $user->area?->name ?? '-',
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("rekap-catatan-data-kegiatan-warga-pkk-rt-{$level}-report.pdf");
@@ -341,7 +344,7 @@ class CatatanKeluargaPrintController extends Controller
             'printedBy' => $user,
             'printedAt' => now(),
             'bulan' => now()->translatedFormat('F'),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("rekap-ibu-hamil-melahirkan-dasawisma-{$level}-report.pdf");
@@ -402,7 +405,7 @@ class CatatanKeluargaPrintController extends Controller
             'printedBy' => $user,
             'printedAt' => now(),
             'bulan' => now()->translatedFormat('F'),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("rekap-ibu-hamil-melahirkan-pkk-rt-{$level}-report.pdf");
@@ -468,7 +471,7 @@ class CatatanKeluargaPrintController extends Controller
             'printedBy' => $user,
             'printedAt' => now(),
             'bulan' => now()->translatedFormat('F'),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("rekap-ibu-hamil-melahirkan-pkk-rw-{$level}-report.pdf");
@@ -534,7 +537,7 @@ class CatatanKeluargaPrintController extends Controller
             'printedBy' => $user,
             'printedAt' => now(),
             'bulan' => now()->translatedFormat('F'),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("rekap-ibu-hamil-melahirkan-dusun-lingkungan-{$level}-report.pdf");
@@ -593,7 +596,7 @@ class CatatanKeluargaPrintController extends Controller
             'printedBy' => $user,
             'printedAt' => now(),
             'bulan' => now()->translatedFormat('F'),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("rekap-ibu-hamil-melahirkan-tp-pkk-kecamatan-{$level}-report.pdf");
@@ -669,7 +672,7 @@ class CatatanKeluargaPrintController extends Controller
             'tpPkkDesaKelurahanTotals' => $tpPkkDesaKelurahanTotals,
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("data-umum-pkk-{$level}-report.pdf");
@@ -743,7 +746,7 @@ class CatatanKeluargaPrintController extends Controller
             'tpPkkKecamatanTotals' => $tpPkkKecamatanTotals,
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("data-umum-pkk-kecamatan-{$level}-report.pdf");
@@ -785,7 +788,7 @@ class CatatanKeluargaPrintController extends Controller
             'totals' => $totals,
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("data-kegiatan-pkk-pokja-iii-{$level}-report.pdf");
@@ -835,7 +838,7 @@ class CatatanKeluargaPrintController extends Controller
             'totals' => $totals,
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("data-kegiatan-pkk-pokja-iv-{$level}-report.pdf");
@@ -856,7 +859,7 @@ class CatatanKeluargaPrintController extends Controller
             'areaName' => $user->area?->name ?? '-',
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("catatan-data-kegiatan-warga-pkk-rw-{$level}-report.pdf");
@@ -877,7 +880,7 @@ class CatatanKeluargaPrintController extends Controller
             'areaName' => $user->area?->name ?? '-',
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("rekap-catatan-data-kegiatan-warga-rw-{$level}-report.pdf");
@@ -906,7 +909,7 @@ class CatatanKeluargaPrintController extends Controller
             'provinsiName' => '-',
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("catatan-data-kegiatan-warga-tp-pkk-desa-kelurahan-{$level}-report.pdf");
@@ -931,7 +934,7 @@ class CatatanKeluargaPrintController extends Controller
             'provinsiName' => '-',
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("catatan-data-kegiatan-warga-tp-pkk-kecamatan-{$level}-report.pdf");
@@ -959,7 +962,7 @@ class CatatanKeluargaPrintController extends Controller
             'provinsiName' => '-',
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("catatan-data-kegiatan-warga-tp-pkk-kabupaten-kota-{$level}-report.pdf");
@@ -987,14 +990,14 @@ class CatatanKeluargaPrintController extends Controller
             'kabKotaName' => '-',
             'printedBy' => $user,
             'printedAt' => now(),
-            'tahun' => now()->format('Y'),
+            'tahun' => $this->currentBudgetYear(),
         ]);
 
         return $pdf->stream("catatan-data-kegiatan-warga-tp-pkk-provinsi-{$level}-report.pdf");
     }
 
     /**
-     * @param Collection<int, mixed> $values
+     * @param  Collection<int, mixed>  $values
      */
     private function composeMetaLabel(Collection $values): string
     {
@@ -1013,5 +1016,10 @@ class CatatanKeluargaPrintController extends Controller
         }
 
         return 'MULTI: '.$normalized->implode(', ');
+    }
+
+    private function currentBudgetYear(): int
+    {
+        return $this->activeBudgetYearContextService->requireForAuthenticatedUser();
     }
 }

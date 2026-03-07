@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\DataKegiatanWarga\Services;
 
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,9 +11,9 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class DataKegiatanWargaScopeService
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
-    ) {
-    }
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function canAccessLevel(User $user, string $level): bool
     {
@@ -30,7 +31,8 @@ class DataKegiatanWargaScopeService
             return false;
         }
 
-        return (int) $dataKegiatanWarga->area_id === (int) $user->area_id;
+        return (int) $dataKegiatanWarga->area_id === (int) $user->area_id
+            && (int) $dataKegiatanWarga->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, DataKegiatanWarga $dataKegiatanWarga): bool
@@ -43,9 +45,13 @@ class DataKegiatanWargaScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(DataKegiatanWarga $dataKegiatanWarga, string $level, int $areaId): DataKegiatanWarga
+    public function authorizeSameLevelAreaAndBudgetYear(DataKegiatanWarga $dataKegiatanWarga, string $level, int $areaId, int $tahunAnggaran): DataKegiatanWarga
     {
-        if ($dataKegiatanWarga->level !== $level || (int) $dataKegiatanWarga->area_id !== $areaId) {
+        if (
+            $dataKegiatanWarga->level !== $level
+            || (int) $dataKegiatanWarga->area_id !== $areaId
+            || (int) $dataKegiatanWarga->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 

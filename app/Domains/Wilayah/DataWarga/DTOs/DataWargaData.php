@@ -11,11 +11,11 @@ class DataWargaData
         public int $jumlah_warga_laki_laki,
         public int $jumlah_warga_perempuan,
         public ?string $keterangan,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {
@@ -26,6 +26,7 @@ class DataWargaData
             (int) $data['jumlah_warga_laki_laki'],
             (int) $data['jumlah_warga_perempuan'],
             $data['keterangan'] ?? null,
+            (int) $data['tahun_anggaran'],
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],

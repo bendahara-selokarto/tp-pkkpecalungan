@@ -11,8 +11,7 @@ class ListScopedRekapPkkRtUseCase
     public function __construct(
         private readonly CatatanKeluargaRepositoryInterface $catatanKeluargaRepository,
         private readonly CatatanKeluargaScopeService $catatanKeluargaScopeService
-    ) {
-    }
+    ) {}
 
     public function execute(string $level): Collection
     {
@@ -21,4 +20,3 @@ class ListScopedRekapPkkRtUseCase
         return $this->catatanKeluargaRepository->getRekapPkkRtByLevelAndArea($level, $areaId);
     }
 }
-

@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `in-progress` (`state:wave2-data-keluarga-slice-implemented`)
+Status: `in-progress` (`state:wave2-data-warga-catatan-bundle-implemented`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -118,7 +118,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - [x] Slice administrasi operasional wave-2 terimplementasi: `Bantuan`, `PrestasiLomba`, `AnggotaPokja`, `BukuKeuangan`.
     - [x] Slice komunitas/penyuluhan wave-2 terimplementasi: `DataIndustriRumahTangga`, `DataPemanfaatanTanahPekaranganHatinyaPkk`, `Paar`, `SimulasiPenyuluhan`.
     - [x] Slice data keluarga wave-2 terimplementasi: `DataKeluarga`.
-    - [ ] `DataWarga` dan `DataKegiatanWarga` ditahan sampai `CatatanKeluarga` ikut year-aware agar tidak terjadi data leak agregat lintas tahun.
+    - [x] Bundle dependensi wave-2 terimplementasi: `DataWarga`, `DataKegiatanWarga`, `CatatanKeluarga`.
     - [ ] Concern homogen wave-2 yang masih pending: concern sejenis lain di luar slice yang sudah terkunci.
   - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
   - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
@@ -141,6 +141,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] feature/policy/report tests `Koperasi`, `WarungPkk`, `TamanBacaan`, dan `KejarPaket` untuk anti data leak lintas tahun.
   - [x] feature/policy/report tests `BKL`, `BKR`, `Posyandu`, dan `DataPelatihanKader` untuk anti data leak lintas tahun.
   - [x] feature/policy/report tests `Bantuan`, `PrestasiLomba`, `AnggotaPokja`, dan `BukuKeuangan` untuk anti data leak lintas tahun.
+  - [x] feature/policy/report tests `DataWarga`, `DataKegiatanWarga`, dan agregat `CatatanKeluarga` untuk anti data leak lintas tahun.
 - [x] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
 
 ### Matrix Implementasi Wave-1
@@ -272,3 +273,15 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Targeted regression tambahan slice `DataKeluarga` lulus: `21 passed`.
 - [x] Full suite setelah rollout slice `DataKeluarga` lulus: `1122 passed`.
 - [x] Keputusan dependency lock: `DataWarga` dan `DataKegiatanWarga` tidak dilanjutkan pada patch yang sama karena `CatatanKeluarga` masih membaca keduanya langsung dan harus di-retrofit bersama pada wave berikutnya.
+
+## Hasil Implementasi Wave-2 (Bundle Dependensi Data Warga dan Catatan Keluarga)
+- [x] `DataWarga` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `DataWargaAnggota` kini menyimpan `tahun_anggaran` sebagai identitas child record yang konsisten dengan rumah tangga induknya.
+- [x] `DataKegiatanWarga` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `CatatanKeluarga` kini year-aware pada jalur agregat utama dengan filter backend aktif untuk `DataWarga`, `DataKegiatanWarga`, dan source concern yang sudah memiliki kolom `tahun_anggaran`.
+- [x] PDF `DataWarga`, `DataKegiatanWarga`, dan `CatatanKeluarga` menampilkan metadata tahun anggaran aktif; report turunan `CatatanKeluarga` kini memakai tahun aktif backend, bukan `now()` buta.
+- [x] Backfill development untuk bundle ini dikunci: `DataWarga`, `DataWargaAnggota`, dan `DataKegiatanWarga` memakai baseline eksplisit `2026`.
+- [x] Repository agregat `CatatanKeluarga` memakai fallback non-auth `current year` hanya untuk jalur test/direct repository invocation; runtime request tetap mengikuti user context.
+- [x] Targeted regression bundle dependensi ini lulus: `49 passed`.
+- [x] Targeted regression report bundle ini lulus: `39 passed`.
+- [x] Full suite setelah rollout bundle dependensi `DataWarga` / `DataKegiatanWarga` / `CatatanKeluarga` lulus: `1130 passed`.

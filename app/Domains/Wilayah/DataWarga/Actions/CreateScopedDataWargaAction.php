@@ -7,6 +7,7 @@ use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\DataWarga\Repositories\DataWargaAnggotaRepositoryInterface;
 use App\Domains\Wilayah\DataWarga\Repositories\DataWargaRepositoryInterface;
 use App\Domains\Wilayah\DataWarga\Services\DataWargaScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use Illuminate\Support\Facades\DB;
 
 class CreateScopedDataWargaAction
@@ -14,15 +15,16 @@ class CreateScopedDataWargaAction
     public function __construct(
         private readonly DataWargaRepositoryInterface $dataWargaRepository,
         private readonly DataWargaAnggotaRepositoryInterface $dataWargaAnggotaRepository,
-        private readonly DataWargaScopeService $dataWargaScopeService
-    ) {
-    }
+        private readonly DataWargaScopeService $dataWargaScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function execute(array $payload, string $level): DataWarga
     {
         $payload = $this->mergeSummaryFromAnggota($payload);
         $areaId = $this->dataWargaScopeService->requireUserAreaId();
         $createdBy = (int) auth()->id();
+        $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
         $data = DataWargaData::fromArray([
             'dasawisma' => $payload['dasawisma'],
@@ -31,12 +33,13 @@ class CreateScopedDataWargaAction
             'jumlah_warga_laki_laki' => $payload['jumlah_warga_laki_laki'],
             'jumlah_warga_perempuan' => $payload['jumlah_warga_perempuan'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $tahunAnggaran,
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => $createdBy,
         ]);
 
-        return DB::transaction(function () use ($data, $payload, $level, $areaId, $createdBy): DataWarga {
+        return DB::transaction(function () use ($data, $payload, $level, $areaId, $createdBy, $tahunAnggaran): DataWarga {
             $dataWarga = $this->dataWargaRepository->store($data);
 
             if (array_key_exists('anggota', $payload)) {
@@ -45,7 +48,8 @@ class CreateScopedDataWargaAction
                     is_array($payload['anggota']) ? $payload['anggota'] : [],
                     $level,
                     $areaId,
-                    $createdBy
+                    $createdBy,
+                    $tahunAnggaran
                 );
             }
 
@@ -55,7 +59,7 @@ class CreateScopedDataWargaAction
 
     private function mergeSummaryFromAnggota(array $payload): array
     {
-        if (!array_key_exists('anggota', $payload) || !is_array($payload['anggota'])) {
+        if (! array_key_exists('anggota', $payload) || ! is_array($payload['anggota'])) {
             return $payload;
         }
 

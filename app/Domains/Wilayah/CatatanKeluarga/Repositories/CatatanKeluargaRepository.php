@@ -4,8 +4,8 @@ namespace App\Domains\Wilayah\CatatanKeluarga\Repositories;
 
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
-use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
+use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPemanfaatanTanahPekaranganHatinyaPkk;
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\DataWarga\Models\DataWargaAnggota;
@@ -13,26 +13,37 @@ use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 
 class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 {
+    /**
+     * @var array<string, bool>
+     */
+    private array $budgetYearColumnCache = [];
+
+    private ?int $resolvedBudgetYear = null;
+
+    public function __construct(
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
+
     public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
     {
-        $kegiatanByNama = DataKegiatanWarga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $kegiatanByNama = $this->scopedModelQuery(DataKegiatanWarga::class, $level, $areaId)
             ->pluck('aktivitas', 'kegiatan');
 
         $activityLabel = static function (Collection $items, string $kegiatan): string {
             return (bool) $items->get($kegiatan, false) ? 'Ya' : 'Tidak';
         };
 
-        return DataWarga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        return $this->scopedModelQuery(DataWarga::class, $level, $areaId)
             ->latest('id')
             ->paginate($perPage)
             ->through(function (DataWarga $item, int $index) use ($activityLabel, $kegiatanByNama): array {
@@ -55,18 +66,14 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
     public function getByLevelAndArea(string $level, int $areaId): Collection
     {
-        $kegiatanByNama = DataKegiatanWarga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $kegiatanByNama = $this->scopedModelQuery(DataKegiatanWarga::class, $level, $areaId)
             ->pluck('aktivitas', 'kegiatan');
 
         $aktivitasLabel = static function (Collection $items, string $kegiatan): string {
             return (bool) $items->get($kegiatan, false) ? 'Ya' : 'Tidak';
         };
 
-        return DataWarga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        return $this->scopedModelQuery(DataWarga::class, $level, $areaId)
             ->latest('id')
             ->get()
             ->values()
@@ -448,9 +455,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
     public function getDataUmumPkkByLevelAndArea(string $level, int $areaId): Collection
     {
-        $households = DataWarga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $households = $this->scopedModelQuery(DataWarga::class, $level, $areaId)
             ->with('anggota')
             ->orderBy('id')
             ->get();
@@ -543,9 +548,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             }
         }
 
-        $anggotaTpPkk = AnggotaTimPenggerak::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $anggotaTpPkk = $this->scopedModelQuery(AnggotaTimPenggerak::class, $level, $areaId)
             ->get(['jenis_kelamin', 'alamat', 'jabatan', 'keterangan']);
 
         foreach ($anggotaTpPkk as $item) {
@@ -573,9 +576,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             }
         }
 
-        $kaderUmumItems = AnggotaPokja::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $kaderUmumItems = $this->scopedModelQuery(AnggotaPokja::class, $level, $areaId)
             ->get(['jenis_kelamin', 'alamat', 'keterangan']);
 
         foreach ($kaderUmumItems as $item) {
@@ -592,9 +593,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             }
         }
 
-        $kaderKhususItems = KaderKhusus::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $kaderKhususItems = $this->scopedModelQuery(KaderKhusus::class, $level, $areaId)
             ->get(['jenis_kelamin', 'alamat', 'keterangan']);
 
         foreach ($kaderKhususItems as $item) {
@@ -658,9 +657,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             $fallbackDesaLabel = sprintf('DESA %s', trim((string) $scopeArea->name));
         }
 
-        $households = DataWarga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $households = $this->scopedModelQuery(DataWarga::class, $level, $areaId)
             ->with(['anggota', 'area.parent'])
             ->orderBy('id')
             ->get();
@@ -777,9 +774,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             }
         }
 
-        $anggotaTpPkk = AnggotaTimPenggerak::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $anggotaTpPkk = $this->scopedModelQuery(AnggotaTimPenggerak::class, $level, $areaId)
             ->get(['jenis_kelamin', 'alamat', 'jabatan', 'keterangan']);
 
         foreach ($anggotaTpPkk as $item) {
@@ -809,9 +804,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             }
         }
 
-        $kaderUmumItems = AnggotaPokja::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $kaderUmumItems = $this->scopedModelQuery(AnggotaPokja::class, $level, $areaId)
             ->get(['jenis_kelamin', 'alamat', 'keterangan']);
 
         foreach ($kaderUmumItems as $item) {
@@ -830,9 +823,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             }
         }
 
-        $kaderKhususItems = KaderKhusus::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $kaderKhususItems = $this->scopedModelQuery(KaderKhusus::class, $level, $areaId)
             ->get(['jenis_kelamin', 'alamat', 'keterangan']);
 
         foreach ($kaderKhususItems as $item) {
@@ -904,9 +895,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         $jumlahKaderSandang = 0;
         $jumlahKaderTataLaksanaRumahTangga = 0;
 
-        $anggotaPokjaItems = AnggotaPokja::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $anggotaPokjaItems = $this->scopedModelQuery(AnggotaPokja::class, $level, $areaId)
             ->get(['pokja', 'jabatan', 'keterangan']);
 
         foreach ($anggotaPokjaItems as $item) {
@@ -939,9 +928,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         $jumlahTanamanKeras = 0;
         $jumlahTanamanLainnya = 0;
 
-        $pemanfaatanItems = DataPemanfaatanTanahPekaranganHatinyaPkk::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $pemanfaatanItems = $this->scopedModelQuery(DataPemanfaatanTanahPekaranganHatinyaPkk::class, $level, $areaId)
             ->get(['kategori_pemanfaatan_lahan', 'komoditi', 'jumlah_komoditi']);
 
         foreach ($pemanfaatanItems as $item) {
@@ -992,9 +979,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         $jumlahIndustriSandang = 0;
         $jumlahIndustriJasa = 0;
 
-        $industriItems = DataIndustriRumahTangga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $industriItems = $this->scopedModelQuery(DataIndustriRumahTangga::class, $level, $areaId)
             ->get(['kategori_jenis_industri', 'jumlah_komoditi']);
 
         foreach ($industriItems as $item) {
@@ -1067,9 +1052,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         $jumlahKaderPhbs = 0;
         $jumlahKaderKb = 0;
 
-        $kaderKhususItems = KaderKhusus::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $kaderKhususItems = $this->scopedModelQuery(KaderKhusus::class, $level, $areaId)
             ->get(['jenis_kader_khusus', 'keterangan']);
 
         foreach ($kaderKhususItems as $item) {
@@ -1091,18 +1074,14 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             }
         }
 
-        $posyanduItems = Posyandu::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $posyanduItems = $this->scopedModelQuery(Posyandu::class, $level, $areaId)
             ->get(['jumlah_pengunjung_l', 'jumlah_pengunjung_p']);
 
         $jumlahPosyandu = $posyanduItems->count();
         $jumlahImunisasiVaksinasiBayiBalita = (int) $posyanduItems
             ->sum(fn (Posyandu $item): int => (int) $item->jumlah_pengunjung_l + (int) $item->jumlah_pengunjung_p);
 
-        $aktivitasKegiatan = DataKegiatanWarga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $aktivitasKegiatan = $this->scopedModelQuery(DataKegiatanWarga::class, $level, $areaId)
             ->where('aktivitas', true)
             ->get(['kegiatan', 'keterangan']);
 
@@ -1171,9 +1150,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             })
             ->count();
 
-        $programPrioritasItems = ProgramPrioritas::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $programPrioritasItems = $this->scopedModelQuery(ProgramPrioritas::class, $level, $areaId)
             ->get(['program', 'prioritas_program', 'kegiatan', 'keterangan']);
 
         $programUnggulanKesehatan = 0;
@@ -1594,9 +1571,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
     private function scopedHouseholds(string $level, int $areaId): Collection
     {
-        return DataWarga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        return $this->scopedModelQuery(DataWarga::class, $level, $areaId)
             ->with(['anggota', 'area.parent'])
             ->orderBy('id')
             ->get();
@@ -1607,27 +1582,69 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
      */
     private function buildActivityFlags(string $level, int $areaId): array
     {
-        $activityByName = DataKegiatanWarga::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
+        $activityByName = $this->scopedModelQuery(DataKegiatanWarga::class, $level, $areaId)
             ->pluck('aktivitas', 'kegiatan');
 
         return [
             'up2k' => (bool) $activityByName->get('Penghayatan dan Pengamalan Pancasila', false),
-            'pemanfaatan_tanah_pekarangan' => DataPemanfaatanTanahPekaranganHatinyaPkk::query()
-                ->where('level', $level)
-                ->where('area_id', $areaId)
+            'pemanfaatan_tanah_pekarangan' => $this->scopedModelQuery(DataPemanfaatanTanahPekaranganHatinyaPkk::class, $level, $areaId)
                 ->exists(),
-            'industri_rumah_tangga' => DataIndustriRumahTangga::query()
-                ->where('level', $level)
-                ->where('area_id', $areaId)
+            'industri_rumah_tangga' => $this->scopedModelQuery(DataIndustriRumahTangga::class, $level, $areaId)
                 ->exists(),
             'kesehatan_lingkungan' => (bool) $activityByName->get('Kerja Bakti', false),
         ];
     }
 
     /**
-     * @param array{up2k: bool, pemanfaatan_tanah_pekarangan: bool, industri_rumah_tangga: bool, kesehatan_lingkungan: bool} $activityFlags
+     * @param  class-string<\Illuminate\Database\Eloquent\Model>  $modelClass
+     */
+    private function scopedModelQuery(string $modelClass, string $level, int $areaId): Builder
+    {
+        return $this->applyBudgetYearFilter($modelClass::query())
+            ->where('level', $level)
+            ->where('area_id', $areaId);
+    }
+
+    private function applyBudgetYearFilter(Builder $query): Builder
+    {
+        $table = $query->getModel()->getTable();
+
+        if (! $this->hasBudgetYearColumn($table)) {
+            return $query;
+        }
+
+        return $query->where(
+            $query->getModel()->qualifyColumn('tahun_anggaran'),
+            $this->resolveBudgetYear()
+        );
+    }
+
+    private function hasBudgetYearColumn(string $table): bool
+    {
+        if (! array_key_exists($table, $this->budgetYearColumnCache)) {
+            $this->budgetYearColumnCache[$table] = Schema::hasColumn($table, 'tahun_anggaran');
+        }
+
+        return $this->budgetYearColumnCache[$table];
+    }
+
+    private function resolveBudgetYear(): int
+    {
+        if (is_int($this->resolvedBudgetYear)) {
+            return $this->resolvedBudgetYear;
+        }
+
+        $user = auth()->user();
+
+        if ($user instanceof User) {
+            return $this->resolvedBudgetYear = $this->activeBudgetYearContextService->resolveForUser($user);
+        }
+
+        return $this->resolvedBudgetYear = (int) now()->format('Y');
+    }
+
+    /**
+     * @param  array{up2k: bool, pemanfaatan_tanah_pekarangan: bool, industri_rumah_tangga: bool, kesehatan_lingkungan: bool}  $activityFlags
      * @return array<string, int>
      */
     private function buildHouseholdMetrics(DataWarga $item, array $activityFlags): array
@@ -1671,8 +1688,8 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     }
 
     /**
-     * @param Collection<int, DataWarga> $groupItems
-     * @param array{up2k: bool, pemanfaatan_tanah_pekarangan: bool, industri_rumah_tangga: bool, kesehatan_lingkungan: bool} $activityFlags
+     * @param  Collection<int, DataWarga>  $groupItems
+     * @param  array{up2k: bool, pemanfaatan_tanah_pekarangan: bool, industri_rumah_tangga: bool, kesehatan_lingkungan: bool}  $activityFlags
      * @return array<string, int>
      */
     private function sumHouseholdMetrics(Collection $groupItems, array $activityFlags): array
@@ -1742,7 +1759,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
                 continue;
             }
 
-            [$rt,] = $this->extractRtRwPair($normalized);
+            [$rt] = $this->extractRtRwPair($normalized);
             if ($rt !== null) {
                 return $rt;
             }
@@ -1901,7 +1918,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     }
 
     /**
-     * @param Collection<int, mixed> $anggota
+     * @param  Collection<int, mixed>  $anggota
      */
     private function findIbuCandidate(Collection $anggota): ?DataWargaAnggota
     {
@@ -1925,7 +1942,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     }
 
     /**
-     * @param Collection<int, mixed> $anggota
+     * @param  Collection<int, mixed>  $anggota
      */
     private function findBayiCandidate(Collection $anggota): ?DataWargaAnggota
     {
@@ -2024,7 +2041,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     }
 
     /**
-     * @param string[] $keywords
+     * @param  string[]  $keywords
      */
     private function containsAnyKeyword(?string $value, array $keywords): bool
     {
@@ -2187,7 +2204,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             return '-';
         }
 
-        [$rt,] = $this->extractRtRwPair($normalized);
+        [$rt] = $this->extractRtRwPair($normalized);
         if ($rt !== null) {
             return $rt;
         }
@@ -2261,7 +2278,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<int, array<string, mixed>>  $items
      */
     private function countArrayItemsByValue(Collection $items, string $key, string $value): int
     {
@@ -2271,7 +2288,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<int, array<string, mixed>>  $items
      */
     private function sumArrayIntField(Collection $items, string $key): int
     {
@@ -2281,7 +2298,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<int, array<string, mixed>>  $items
      */
     private function composeArrayFieldLabel(Collection $items, string $key): string
     {
@@ -2303,7 +2320,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $items
+     * @param  Collection<int, array<string, mixed>>  $items
      */
     private function composeRtRwDusLingLabel(Collection $items): string
     {
@@ -2332,7 +2349,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
     }
 
     /**
-     * @param Collection<int, mixed> $values
+     * @param  Collection<int, mixed>  $values
      */
     private function composeScalarFieldLabel(Collection $values): string
     {

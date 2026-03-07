@@ -37,6 +37,7 @@ class DataWargaAnggota extends Model
         'ikut_paud',
         'ikut_koperasi',
         'keterangan',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -48,6 +49,7 @@ class DataWargaAnggota extends Model
             'nomor_urut' => 'integer',
             'tanggal_lahir' => 'date',
             'umur_tahun' => 'integer',
+            'tahun_anggaran' => 'integer',
             'akseptor_kb' => 'boolean',
             'aktif_posyandu' => 'boolean',
             'ikut_bkb' => 'boolean',
@@ -56,6 +58,15 @@ class DataWargaAnggota extends Model
             'ikut_paud' => 'boolean',
             'ikut_koperasi' => 'boolean',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $dataWargaAnggota): void {
+            if (! is_int($dataWargaAnggota->tahun_anggaran) || $dataWargaAnggota->tahun_anggaran <= 0) {
+                $dataWargaAnggota->tahun_anggaran = (int) now()->format('Y');
+            }
+        });
     }
 
     public function dataWarga()

@@ -17,6 +17,7 @@ class DataWarga extends Model
         'jumlah_warga_laki_laki',
         'jumlah_warga_perempuan',
         'keterangan',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -27,7 +28,17 @@ class DataWarga extends Model
         return [
             'jumlah_warga_laki_laki' => 'integer',
             'jumlah_warga_perempuan' => 'integer',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $dataWarga): void {
+            if (! is_int($dataWarga->tahun_anggaran) || $dataWarga->tahun_anggaran <= 0) {
+                $dataWarga->tahun_anggaran = (int) now()->format('Y');
+            }
+        });
     }
 
     protected $appends = [

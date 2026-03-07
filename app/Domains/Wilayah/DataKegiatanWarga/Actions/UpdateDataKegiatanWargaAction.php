@@ -10,8 +10,7 @@ class UpdateDataKegiatanWargaAction
 {
     public function __construct(
         private readonly DataKegiatanWargaRepositoryInterface $dataKegiatanWargaRepository
-    ) {
-    }
+    ) {}
 
     public function execute(DataKegiatanWarga $dataKegiatanWarga, array $payload): DataKegiatanWarga
     {
@@ -19,6 +18,7 @@ class UpdateDataKegiatanWargaAction
             'kegiatan' => $payload['kegiatan'],
             'aktivitas' => $payload['aktivitas'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $dataKegiatanWarga->tahun_anggaran,
             'level' => $dataKegiatanWarga->level,
             'area_id' => $dataKegiatanWarga->area_id,
             'created_by' => $dataKegiatanWarga->created_by,

@@ -15,8 +15,12 @@ class DesaDataKegiatanWargaTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -96,9 +100,9 @@ class DesaDataKegiatanWargaTest extends TestCase
 
         for ($index = 1; $index <= 12; $index++) {
             DataKegiatanWarga::create([
-                'kegiatan' => 'Kegiatan Desa ' . $index,
+                'kegiatan' => 'Kegiatan Desa '.$index,
                 'aktivitas' => true,
-                'keterangan' => 'Keterangan ' . $index,
+                'keterangan' => 'Keterangan '.$index,
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
@@ -164,6 +168,7 @@ class DesaDataKegiatanWargaTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -185,6 +190,7 @@ class DesaDataKegiatanWargaTest extends TestCase
             'id' => $dataKegiatanWarga->id,
             'aktivitas' => false,
             'keterangan' => 'Tidak ada kegiatan bulan ini',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.data-kegiatan-warga.destroy', $dataKegiatanWarga->id))
@@ -219,5 +225,48 @@ class DesaDataKegiatanWargaTest extends TestCase
         $response = $this->actingAs($userStale)->get('/desa/data-kegiatan-warga');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_data_kegiatan_warga_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        DataKegiatanWarga::create([
+            'kegiatan' => 'Kerja Bakti',
+            'aktivitas' => true,
+            'keterangan' => 'Tahun aktif',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        DataKegiatanWarga::create([
+            'kegiatan' => 'Arisan',
+            'aktivitas' => true,
+            'keterangan' => 'Tahun lalu',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/data-kegiatan-warga');
+
+        $response->assertOk();
+        $response->assertDontSee('Tahun lalu');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Desa/DataKegiatanWarga/Index')
+                ->has('dataKegiatanWargaItems.data', 1)
+                ->where('dataKegiatanWargaItems.data.0.kegiatan', 'Kerja Bakti')
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
+        });
     }
 }

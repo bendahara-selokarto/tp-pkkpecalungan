@@ -15,7 +15,10 @@ class KecamatanDataKegiatanWargaTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
 
     protected function setUp(): void
@@ -88,9 +91,9 @@ class KecamatanDataKegiatanWargaTest extends TestCase
 
         for ($index = 1; $index <= 11; $index++) {
             DataKegiatanWarga::create([
-                'kegiatan' => 'Kegiatan Kecamatan ' . $index,
+                'kegiatan' => 'Kegiatan Kecamatan '.$index,
                 'aktivitas' => true,
-                'keterangan' => 'Keterangan ' . $index,
+                'keterangan' => 'Keterangan '.$index,
                 'level' => 'kecamatan',
                 'area_id' => $this->kecamatanA->id,
                 'created_by' => $adminKecamatan->id,
@@ -210,6 +213,32 @@ class KecamatanDataKegiatanWargaTest extends TestCase
         $userStale->assignRole('admin-kecamatan');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/data-kegiatan-warga');
+
+        $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_data_kegiatan_warga_tahun_anggaran_lain(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $dataKegiatanTahunLalu = DataKegiatanWarga::create([
+            'kegiatan' => 'Arisan',
+            'aktivitas' => true,
+            'keterangan' => 'Tahun lalu',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.data-kegiatan-warga.show', $dataKegiatanTahunLalu->id));
 
         $response->assertStatus(403);
     }

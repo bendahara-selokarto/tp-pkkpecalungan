@@ -121,6 +121,7 @@
 
             <div class="meta">
                 Wilayah: {{ $areaName }}<br>
+                Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}<br>
                 Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
                 Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
             </div>

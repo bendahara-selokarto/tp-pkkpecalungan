@@ -7,7 +7,7 @@ use App\Domains\Wilayah\DataWarga\Models\DataWargaAnggota;
 
 class DataWargaAnggotaRepository implements DataWargaAnggotaRepositoryInterface
 {
-    public function syncForDataWarga(DataWarga $dataWarga, array $anggotaRows, string $level, int $areaId, int $createdBy): void
+    public function syncForDataWarga(DataWarga $dataWarga, array $anggotaRows, string $level, int $areaId, int $createdBy, int $tahunAnggaran): void
     {
         DataWargaAnggota::query()
             ->where('data_warga_id', $dataWarga->id)
@@ -47,6 +47,7 @@ class DataWargaAnggotaRepository implements DataWargaAnggotaRepositoryInterface
                 'ikut_paud' => $this->normalizeBoolean($row['ikut_paud'] ?? false),
                 'ikut_koperasi' => $this->normalizeBoolean($row['ikut_koperasi'] ?? false),
                 'keterangan' => $this->normalizeString($row['keterangan'] ?? null),
+                'tahun_anggaran' => $tahunAnggaran,
                 'level' => $level,
                 'area_id' => $areaId,
                 'created_by' => $createdBy,

@@ -8,11 +8,11 @@ class DataKegiatanWargaData
         public string $kegiatan,
         public bool $aktivitas,
         public ?string $keterangan,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {
@@ -20,6 +20,7 @@ class DataKegiatanWargaData
             $data['kegiatan'],
             (bool) $data['aktivitas'],
             $data['keterangan'] ?? null,
+            (int) $data['tahun_anggaran'],
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],

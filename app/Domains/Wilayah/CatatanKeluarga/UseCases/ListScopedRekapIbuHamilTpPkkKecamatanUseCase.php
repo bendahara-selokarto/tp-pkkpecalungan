@@ -11,8 +11,7 @@ class ListScopedRekapIbuHamilTpPkkKecamatanUseCase
     public function __construct(
         private readonly CatatanKeluargaRepositoryInterface $catatanKeluargaRepository,
         private readonly CatatanKeluargaScopeService $catatanKeluargaScopeService
-    ) {
-    }
+    ) {}
 
     public function execute(string $level): Collection
     {

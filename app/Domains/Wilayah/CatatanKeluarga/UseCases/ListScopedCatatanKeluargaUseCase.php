@@ -12,8 +12,7 @@ class ListScopedCatatanKeluargaUseCase
     public function __construct(
         private readonly CatatanKeluargaRepositoryInterface $catatanKeluargaRepository,
         private readonly CatatanKeluargaScopeService $catatanKeluargaScopeService
-    ) {
-    }
+    ) {}
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {

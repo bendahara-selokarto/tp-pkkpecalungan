@@ -15,6 +15,8 @@ class DataKegiatanWargaPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     #[Test]
     public function admin_desa_hanya_boleh_melihat_data_kegiatan_warga_pada_desanya_sendiri(): void
     {
@@ -74,5 +76,35 @@ class DataKegiatanWargaPolicyTest extends TestCase
         $policy = app(DataKegiatanWargaPolicy::class);
 
         $this->assertFalse($policy->update($user, $dataKegiatanWargaLuar));
+    }
+
+    #[Test]
+    public function admin_desa_tidak_boleh_melihat_data_kegiatan_warga_pada_tahun_anggaran_lain(): void
+    {
+        Role::create(['name' => 'admin-desa']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $dataKegiatanTahunLalu = DataKegiatanWarga::create([
+            'kegiatan' => 'Kerja Bakti',
+            'aktivitas' => true,
+            'keterangan' => 'Tahun lalu',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+        ]);
+
+        $policy = app(DataKegiatanWargaPolicy::class);
+
+        $this->assertFalse($policy->view($user, $dataKegiatanTahunLalu));
     }
 }

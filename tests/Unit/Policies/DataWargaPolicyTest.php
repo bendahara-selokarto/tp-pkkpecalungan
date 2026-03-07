@@ -15,6 +15,8 @@ class DataWargaPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     #[Test]
     public function admin_desa_hanya_boleh_melihat_data_warga_pada_desanya_sendiri(): void
     {
@@ -83,5 +85,38 @@ class DataWargaPolicyTest extends TestCase
         $policy = app(DataWargaPolicy::class);
 
         $this->assertFalse($policy->update($user, $dataWargaLuar));
+    }
+
+    #[Test]
+    public function admin_desa_tidak_boleh_melihat_data_warga_pada_tahun_anggaran_lain(): void
+    {
+        Role::create(['name' => 'admin-desa']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $dataWargaTahunLalu = DataWarga::create([
+            'dasawisma' => 'Mawar 03',
+            'nama_kepala_keluarga' => 'Siti Lama',
+            'alamat' => 'RT 03 RW 01',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 2,
+            'keterangan' => null,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+        ]);
+
+        $policy = app(DataWargaPolicy::class);
+
+        $this->assertFalse($policy->view($user, $dataWargaTahunLalu));
     }
 }
