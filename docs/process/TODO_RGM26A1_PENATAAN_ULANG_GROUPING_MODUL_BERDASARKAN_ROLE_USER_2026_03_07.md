@@ -1,7 +1,7 @@
 # TODO RGM26A1 Penataan Ulang Grouping Modul Berdasarkan Role User
 
 Tanggal: 2026-03-07  
-Status: `done` (`state:no-op-all-group-target-empty`)
+Status: `planned` (`state:awaiting-owner-group-target`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -75,6 +75,7 @@ Related ADR: `-`
 | 35 | desa-arsip | monitoring |  |
 
 Catatan realitas runtime saat ini:
+
 - `inventaris` dan `buku-tamu` memiliki override mode untuk `desa-pokja-i..iv` pada level role-module, meski baseline group asal ada di `sekretaris-tpk`.
 
 ## Target Hasil
@@ -169,3 +170,22 @@ Catatan realitas runtime saat ini:
   - hasil: `PASS` (`49` tests, `449` assertions).
 - Hardening minor saat validasi:
   - kontrak string test frontend diperbarui agar tidak brittle terhadap variasi label `catatan-keluarga` (`tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`), tanpa perubahan perilaku aplikasi.
+
+## Progress Update 2026-03-07 (Re-eksekusi `manto`)
+- Verifikasi input owner diulang:
+  - seluruh kolom `Group Target` masih kosong, sehingga concern tetap no-op terkontrol.
+- Validasi regresi yang dijalankan:
+  - `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php --compact`
+  - hasil: `PASS` (`49` tests, `449` assertions).
+  - `php artisan test --compact`
+  - hasil: `PASS` (`1057` tests, `7110` assertions).
+  - `npm run build`
+  - hasil: `PASS` (Vite build sukses setelah repair optional dependency melalui `npm install`).
+- Keputusan final eksekusi:
+  - tidak ada perubahan kontrak grouping/menu karena tidak ada target regroup dari owner.
+  - concern `RGM26A1` tetap `done` dengan status no-op tervalidasi end-to-end.
+
+## Progress Update 2026-03-07 (Reset untuk Input Owner Baru)
+- Status concern dikembalikan ke `planned` dengan state `awaiting-owner-group-target`.
+- Checklist gate eksekusi (`G1-G4`), keputusan (`K1-K4`), dan output final di-reset ke `- [ ]`.
+- Seluruh histori eksekusi no-op sebelumnya dipertahankan sebagai audit trail, namun tidak lagi dianggap baseline final untuk siklus perubahan berikutnya.
