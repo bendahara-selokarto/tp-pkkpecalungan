@@ -15,6 +15,8 @@ class KecamatanDataPelatihanKaderTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2024;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
 
@@ -42,6 +44,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -59,6 +62,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         DataPelatihanKader::create([
@@ -75,6 +79,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => 2023,
         ]);
 
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-pelatihan-kader');
@@ -86,7 +91,8 @@ class KecamatanDataPelatihanKaderTest extends TestCase
                 ->has('dataPelatihanKaderItems.data', 1)
                 ->where('dataPelatihanKaderItems.data.0.nomor_registrasi', 'REG-KEC-01')
                 ->where('dataPelatihanKaderItems.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -96,6 +102,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -114,6 +121,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
                 'level' => 'kecamatan',
                 'area_id' => $this->kecamatanA->id,
                 'created_by' => $adminKecamatan->id,
+                'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             ]);
         }
 
@@ -131,6 +139,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => 2025,
         ]);
 
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/data-pelatihan-kader?page=2&per_page=10');
@@ -144,7 +153,8 @@ class KecamatanDataPelatihanKaderTest extends TestCase
                 ->where('dataPelatihanKaderItems.current_page', 2)
                 ->where('dataPelatihanKaderItems.per_page', 10)
                 ->where('dataPelatihanKaderItems.total', 11)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -154,6 +164,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -180,8 +191,41 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             $page
                 ->component('Kecamatan/DataPelatihanKader/Index')
                 ->where('filters.per_page', 10)
-                ->where('dataPelatihanKaderItems.per_page', 10);
+                ->where('dataPelatihanKaderItems.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
+    }
+
+    #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_data_pelatihan_kader_tahun_anggaran_lain_di_area_sendiri(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $arsip = DataPelatihanKader::create([
+            'nomor_registrasi' => 'REG-ARSIP',
+            'nama_lengkap_kader' => 'Kader Arsip',
+            'tanggal_masuk_tp_pkk' => '2017',
+            'jabatan_fungsi' => 'Pokja III',
+            'nomor_urut_pelatihan' => 1,
+            'judul_pelatihan' => 'Pelatihan Komunikasi',
+            'jenis_kriteria_kaderisasi' => 'Lanjutan',
+            'tahun_penyelenggaraan' => self::ACTIVE_BUDGET_YEAR - 1,
+            'institusi_penyelenggara' => 'TP PKK Provinsi',
+            'status_sertifikat' => 'Bersertifikat',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.data-pelatihan-kader.show', $arsip->id))
+            ->assertStatus(403);
     }
 
     #[Test]
@@ -190,6 +234,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -207,6 +252,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => 2025,
         ]);
 
         $response = $this->actingAs($adminKecamatan)
@@ -227,6 +273,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -247,6 +294,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
         $userStale = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $userStale->assignRole('admin-kecamatan');
 

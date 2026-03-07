@@ -15,6 +15,8 @@ class DesaBklTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -50,6 +52,7 @@ class DesaBklTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -63,6 +66,7 @@ class DesaBklTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         Bkl::create([
@@ -75,6 +79,7 @@ class DesaBklTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/bkl');
@@ -86,7 +91,8 @@ class DesaBklTest extends TestCase
                 ->has('bklItems.data', 1)
                 ->where('bklItems.data.0.nama_bkl', 'BKL Mawar')
                 ->where('bklItems.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -96,6 +102,7 @@ class DesaBklTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -110,6 +117,7 @@ class DesaBklTest extends TestCase
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
+                'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             ]);
         }
 
@@ -123,6 +131,7 @@ class DesaBklTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/bkl?page=2&per_page=10');
@@ -136,8 +145,52 @@ class DesaBklTest extends TestCase
                 ->where('bklItems.current_page', 2)
                 ->where('bklItems.per_page', 10)
                 ->where('bklItems.total', 12)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
+    }
+
+    #[Test]
+    public function admin_desa_tidak_melihat_bkl_di_tahun_anggaran_lain(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        Bkl::create([
+            'desa' => 'Gombong',
+            'nama_bkl' => 'BKL Tahun Aktif',
+            'no_tgl_sk' => '01/SK/BKL/2026',
+            'nama_ketua_kelompok' => 'Siti Aminah',
+            'jumlah_anggota' => 25,
+            'kegiatan' => 'Pertemuan bulanan',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        Bkl::create([
+            'desa' => 'Gombong',
+            'nama_bkl' => 'BKL Tahun Lama',
+            'no_tgl_sk' => '99/SK/BKL/2025',
+            'nama_ketua_kelompok' => 'Rina',
+            'jumlah_anggota' => 15,
+            'kegiatan' => 'Arsip lama',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/bkl');
+
+        $response->assertOk();
+        $response->assertDontSee('BKL Tahun Lama');
+        $response->assertSee('BKL Tahun Aktif');
     }
 
     #[Test]
@@ -146,6 +199,7 @@ class DesaBklTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -173,6 +227,7 @@ class DesaBklTest extends TestCase
             'id' => $bkl->id,
             'jumlah_anggota' => 20,
             'kegiatan' => 'Penyuluhan gizi lansia dan senam',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.bkl.destroy', $bkl->id))
@@ -187,6 +242,7 @@ class DesaBklTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 

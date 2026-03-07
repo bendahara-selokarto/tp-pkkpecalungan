@@ -15,6 +15,8 @@ class DataPelatihanKaderPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2024;
+
     #[Test]
     public function admin_desa_hanya_boleh_melihat_data_pelatihan_kader_pada_desanya_sendiri(): void
     {
@@ -24,7 +26,7 @@ class DataPelatihanKaderPolicyTest extends TestCase
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-desa');
 
         $milikSendiri = DataPelatihanKader::create([
@@ -41,6 +43,7 @@ class DataPelatihanKaderPolicyTest extends TestCase
             'level' => 'desa',
             'area_id' => $desaA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $milikDesaLain = DataPelatihanKader::create([
@@ -57,12 +60,46 @@ class DataPelatihanKaderPolicyTest extends TestCase
             'level' => 'desa',
             'area_id' => $desaB->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => 2025,
         ]);
 
         $policy = app(DataPelatihanKaderPolicy::class);
 
         $this->assertTrue($policy->view($user, $milikSendiri));
         $this->assertFalse($policy->view($user, $milikDesaLain));
+    }
+
+    #[Test]
+    public function admin_desa_tidak_boleh_melihat_data_pelatihan_kader_tahun_anggaran_lain_di_area_sendiri(): void
+    {
+        Role::create(['name' => 'admin-desa']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
+        $user->assignRole('admin-desa');
+
+        $arsip = DataPelatihanKader::create([
+            'nomor_registrasi' => 'REG-ARSIP',
+            'nama_lengkap_kader' => 'Kader Arsip',
+            'tanggal_masuk_tp_pkk' => '2020',
+            'jabatan_fungsi' => 'Sekretaris',
+            'nomor_urut_pelatihan' => 1,
+            'judul_pelatihan' => 'Pelatihan Dasar',
+            'jenis_kriteria_kaderisasi' => 'Dasar',
+            'tahun_penyelenggaraan' => self::ACTIVE_BUDGET_YEAR - 1,
+            'institusi_penyelenggara' => 'TP PKK Kecamatan',
+            'status_sertifikat' => 'Bersertifikat',
+            'level' => 'desa',
+            'area_id' => $desaA->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $policy = app(DataPelatihanKaderPolicy::class);
+
+        $this->assertFalse($policy->view($user, $arsip));
     }
 
     #[Test]
@@ -73,7 +110,7 @@ class DataPelatihanKaderPolicyTest extends TestCase
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id]);
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-kecamatan');
 
         $dataLuar = DataPelatihanKader::create([
@@ -90,6 +127,7 @@ class DataPelatihanKaderPolicyTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $kecamatanB->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => 2025,
         ]);
 
         $policy = app(DataPelatihanKaderPolicy::class);

@@ -11,9 +11,9 @@ interface PosyanduRepositoryInterface
 {
     public function store(PosyanduData $data): Posyandu;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection;
 
     public function find(int $id): Posyandu;
 
@@ -21,7 +21,6 @@ interface PosyanduRepositoryInterface
 
     public function delete(Posyandu $posyandu): void;
 }
-
 
 
 

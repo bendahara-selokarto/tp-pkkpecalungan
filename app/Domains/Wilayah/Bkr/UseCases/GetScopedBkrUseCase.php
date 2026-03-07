@@ -5,12 +5,14 @@ namespace App\Domains\Wilayah\Bkr\UseCases;
 use App\Domains\Wilayah\Bkr\Models\Bkr;
 use App\Domains\Wilayah\Bkr\Repositories\BkrRepositoryInterface;
 use App\Domains\Wilayah\Bkr\Services\BkrScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 
 class GetScopedBkrUseCase
 {
     public function __construct(
         private readonly BkrRepositoryInterface $bkrRepository,
-        private readonly BkrScopeService $bkrScopeService
+        private readonly BkrScopeService $bkrScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
@@ -18,9 +20,9 @@ class GetScopedBkrUseCase
     {
         $bkr = $this->bkrRepository->find($id);
         $areaId = $this->bkrScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
-        return $this->bkrScopeService->authorizeSameLevelAndArea($bkr, $level, $areaId);
+        return $this->bkrScopeService->authorizeSameLevelAreaAndBudgetYear($bkr, $level, $areaId, $tahunAnggaran);
     }
 }
-
 

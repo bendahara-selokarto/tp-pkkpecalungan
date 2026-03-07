@@ -15,6 +15,8 @@ class KecamatanBkrTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
 
@@ -42,6 +44,7 @@ class KecamatanBkrTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -55,6 +58,7 @@ class KecamatanBkrTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         Bkr::create([
@@ -67,6 +71,7 @@ class KecamatanBkrTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/bkr');
@@ -78,7 +83,8 @@ class KecamatanBkrTest extends TestCase
                 ->has('bkrItems.data', 1)
                 ->where('bkrItems.data.0.nama_bkr', 'BKR Anyelir')
                 ->where('bkrItems.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -88,6 +94,7 @@ class KecamatanBkrTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -102,6 +109,7 @@ class KecamatanBkrTest extends TestCase
                 'level' => 'kecamatan',
                 'area_id' => $this->kecamatanA->id,
                 'created_by' => $adminKecamatan->id,
+                'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             ]);
         }
 
@@ -115,6 +123,7 @@ class KecamatanBkrTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/bkr?page=2&per_page=10');
@@ -128,8 +137,37 @@ class KecamatanBkrTest extends TestCase
                 ->where('bkrItems.current_page', 2)
                 ->where('bkrItems.per_page', 10)
                 ->where('bkrItems.total', 11)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
+    }
+
+    #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_bkr_tahun_anggaran_lain_di_area_sendiri(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $bkrTahunLain = Bkr::create([
+            'desa' => 'Gombong',
+            'nama_bkr' => 'BKR Arsip',
+            'no_tgl_sk' => '98/SK/BKR/2025',
+            'nama_ketua_kelompok' => 'Santi',
+            'jumlah_anggota' => 10,
+            'kegiatan' => 'Arsip',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.bkr.show', $bkrTahunLain->id))
+            ->assertStatus(403);
     }
 
     #[Test]
@@ -138,6 +176,7 @@ class KecamatanBkrTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -151,6 +190,7 @@ class KecamatanBkrTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)
@@ -171,6 +211,7 @@ class KecamatanBkrTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 

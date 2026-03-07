@@ -5,12 +5,14 @@ namespace App\Domains\Wilayah\Posyandu\UseCases;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
 use App\Domains\Wilayah\Posyandu\Repositories\PosyanduRepositoryInterface;
 use App\Domains\Wilayah\Posyandu\Services\PosyanduScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 
 class GetScopedPosyanduUseCase
 {
     public function __construct(
         private readonly PosyanduRepositoryInterface $posyanduRepository,
-        private readonly PosyanduScopeService $posyanduScopeService
+        private readonly PosyanduScopeService $posyanduScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
@@ -18,11 +20,11 @@ class GetScopedPosyanduUseCase
     {
         $posyandu = $this->posyanduRepository->find($id);
         $areaId = $this->posyanduScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
-        return $this->posyanduScopeService->authorizeSameLevelAndArea($posyandu, $level, $areaId);
+        return $this->posyanduScopeService->authorizeSameLevelAreaAndBudgetYear($posyandu, $level, $areaId, $tahunAnggaran);
     }
 }
-
 
 
 

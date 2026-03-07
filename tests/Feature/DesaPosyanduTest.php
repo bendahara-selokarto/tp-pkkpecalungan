@@ -14,6 +14,8 @@ class DesaPosyanduTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -49,6 +51,7 @@ class DesaPosyanduTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -68,6 +71,7 @@ class DesaPosyanduTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         Posyandu::create([
@@ -86,6 +90,7 @@ class DesaPosyanduTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/posyandu');
@@ -96,11 +101,67 @@ class DesaPosyanduTest extends TestCase
     }
 
     #[Test]
+    public function admin_desa_tidak_melihat_posyandu_di_tahun_anggaran_lain(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        Posyandu::create([
+            'nama_posyandu' => 'Posyandu Aktif',
+            'nama_pengelola' => 'Siti Aminah',
+            'nama_sekretaris' => 'Nina',
+            'jenis_posyandu' => 'Pratama',
+            'jumlah_kader' => 10,
+            'jenis_kegiatan' => 'Penimbangan',
+            'frekuensi_layanan' => 12,
+            'jumlah_pengunjung_l' => 18,
+            'jumlah_pengunjung_p' => 25,
+            'jumlah_petugas_l' => 2,
+            'jumlah_petugas_p' => 3,
+            'keterangan' => 'Layanan rutin bulanan',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        Posyandu::create([
+            'nama_posyandu' => 'Posyandu Arsip',
+            'nama_pengelola' => 'Rina',
+            'nama_sekretaris' => 'Maya',
+            'jenis_posyandu' => 'Madya',
+            'jumlah_kader' => 8,
+            'jenis_kegiatan' => 'Imunisasi',
+            'frekuensi_layanan' => 10,
+            'jumlah_pengunjung_l' => 10,
+            'jumlah_pengunjung_p' => 12,
+            'jumlah_petugas_l' => 1,
+            'jumlah_petugas_p' => 2,
+            'keterangan' => 'Arsip tahun lama',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/posyandu');
+
+        $response->assertOk();
+        $response->assertSee('Posyandu Aktif');
+        $response->assertDontSee('Posyandu Arsip');
+    }
+
+    #[Test]
     public function admin_desa_dapat_menambah_memperbarui_dan_menghapus_posyandu(): void
     {
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -144,6 +205,7 @@ class DesaPosyanduTest extends TestCase
             'jumlah_pengunjung_p' => 15,
             'jumlah_petugas_p' => 3,
             'keterangan' => 'Entry revisi',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.posyandu.destroy', $posyandu->id))
@@ -158,6 +220,7 @@ class DesaPosyanduTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -172,6 +235,7 @@ class DesaPosyanduTest extends TestCase
         $userStale = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $userStale->assignRole('admin-desa');
 

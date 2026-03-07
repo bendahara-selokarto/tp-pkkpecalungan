@@ -26,6 +26,7 @@ class UpdateDataPelatihanKaderAction
             'tahun_penyelenggaraan' => $payload['tahun_penyelenggaraan'],
             'institusi_penyelenggara' => $payload['institusi_penyelenggara'],
             'status_sertifikat' => $payload['status_sertifikat'],
+            'tahun_anggaran' => (int) ($payload['tahun_penyelenggaraan'] ?? $dataPelatihanKader->tahun_anggaran),
             'level' => $dataPelatihanKader->level,
             'area_id' => $dataPelatihanKader->area_id,
             'created_by' => $dataPelatihanKader->created_by,

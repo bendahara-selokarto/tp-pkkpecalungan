@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\Bkr\Models;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Bkr extends Model
 {
@@ -17,6 +18,7 @@ class Bkr extends Model
         'nama_ketua_kelompok',
         'jumlah_anggota',
         'kegiatan',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -26,7 +28,17 @@ class Bkr extends Model
     {
         return [
             'jumlah_anggota' => 'integer',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $bkr): void {
+            if (! is_numeric($bkr->tahun_anggaran)) {
+                $bkr->tahun_anggaran = (int) Carbon::now()->format('Y');
+            }
+        });
     }
 
     public function area()
@@ -39,4 +51,3 @@ class Bkr extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-

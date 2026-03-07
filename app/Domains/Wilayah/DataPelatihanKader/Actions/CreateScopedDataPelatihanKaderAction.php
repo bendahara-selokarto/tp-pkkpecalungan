@@ -6,12 +6,14 @@ use App\Domains\Wilayah\DataPelatihanKader\DTOs\DataPelatihanKaderData;
 use App\Domains\Wilayah\DataPelatihanKader\Models\DataPelatihanKader;
 use App\Domains\Wilayah\DataPelatihanKader\Repositories\DataPelatihanKaderRepositoryInterface;
 use App\Domains\Wilayah\DataPelatihanKader\Services\DataPelatihanKaderScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 
 class CreateScopedDataPelatihanKaderAction
 {
     public function __construct(
         private readonly DataPelatihanKaderRepositoryInterface $dataPelatihanKaderRepository,
-        private readonly DataPelatihanKaderScopeService $dataPelatihanKaderScopeService
+        private readonly DataPelatihanKaderScopeService $dataPelatihanKaderScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
@@ -28,6 +30,7 @@ class CreateScopedDataPelatihanKaderAction
             'tahun_penyelenggaraan' => $payload['tahun_penyelenggaraan'],
             'institusi_penyelenggara' => $payload['institusi_penyelenggara'],
             'status_sertifikat' => $payload['status_sertifikat'],
+            'tahun_anggaran' => (int) ($payload['tahun_penyelenggaraan'] ?? $this->activeBudgetYearContextService->requireForAuthenticatedUser()),
             'level' => $level,
             'area_id' => $this->dataPelatihanKaderScopeService->requireUserAreaId(),
             'created_by' => (int) auth()->id(),

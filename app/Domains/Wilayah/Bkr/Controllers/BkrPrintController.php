@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\Bkr\Controllers;
 use App\Domains\Wilayah\Bkr\Models\Bkr;
 use App\Domains\Wilayah\Bkr\UseCases\ListScopedBkrUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ class BkrPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedBkrUseCase $listScopedBkrUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -41,6 +43,7 @@ class BkrPrintController extends Controller
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

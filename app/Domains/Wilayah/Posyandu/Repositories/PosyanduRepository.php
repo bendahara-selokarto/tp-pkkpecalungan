@@ -24,27 +24,30 @@ class PosyanduRepository implements PosyanduRepositoryInterface
             'jumlah_petugas_l' => $data->jumlah_petugas_l,
             'jumlah_petugas_p' => $data->jumlah_petugas_p,
             'keterangan' => $data->keterangan,
+            'tahun_anggaran' => $data->tahun_anggaran,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator
     {
         return Posyandu::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection
     {
         return Posyandu::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->get();
     }
@@ -69,6 +72,7 @@ class PosyanduRepository implements PosyanduRepositoryInterface
             'jumlah_petugas_l' => $data->jumlah_petugas_l,
             'jumlah_petugas_p' => $data->jumlah_petugas_p,
             'keterangan' => $data->keterangan,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 
         return $posyandu;
@@ -79,7 +83,6 @@ class PosyanduRepository implements PosyanduRepositoryInterface
         $posyandu->delete();
     }
 }
-
 
 
 

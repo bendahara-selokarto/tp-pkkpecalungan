@@ -13,6 +13,8 @@ trait AssertsPdfReportHeaders
             'items' => collect(),
             'level' => 'desa',
             'areaName' => 'Contoh Area',
+            'area' => null,
+            'budgetYearLabel' => 2026,
             'printedBy' => (object) ['name' => 'System Test'],
             'printedAt' => now(),
         ])->render();

@@ -42,6 +42,7 @@ class KecamatanBklController extends Controller
                 'nama_ketua_kelompok' => $item->nama_ketua_kelompok,
                 'jumlah_anggota' => $item->jumlah_anggota,
                 'kegiatan' => $item->kegiatan,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ]);
 
         return Inertia::render('Kecamatan/Bkl/Index', [
@@ -51,6 +52,7 @@ class KecamatanBklController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -84,6 +86,7 @@ class KecamatanBklController extends Controller
                 'nama_ketua_kelompok' => $bkl->nama_ketua_kelompok,
                 'jumlah_anggota' => $bkl->jumlah_anggota,
                 'kegiatan' => $bkl->kegiatan,
+                'tahun_anggaran' => $bkl->tahun_anggaran,
             ],
         ]);
     }
@@ -102,6 +105,7 @@ class KecamatanBklController extends Controller
                 'nama_ketua_kelompok' => $bkl->nama_ketua_kelompok,
                 'jumlah_anggota' => $bkl->jumlah_anggota,
                 'kegiatan' => $bkl->kegiatan,
+                'tahun_anggaran' => $bkl->tahun_anggaran,
             ],
         ]);
     }

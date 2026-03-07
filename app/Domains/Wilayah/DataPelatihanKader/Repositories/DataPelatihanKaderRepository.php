@@ -22,27 +22,30 @@ class DataPelatihanKaderRepository implements DataPelatihanKaderRepositoryInterf
             'tahun_penyelenggaraan' => $data->tahun_penyelenggaraan,
             'institusi_penyelenggara' => $data->institusi_penyelenggara,
             'status_sertifikat' => $data->status_sertifikat,
+            'tahun_anggaran' => $data->tahun_anggaran,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator
     {
         return DataPelatihanKader::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection
     {
         return DataPelatihanKader::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->get();
     }
@@ -65,6 +68,7 @@ class DataPelatihanKaderRepository implements DataPelatihanKaderRepositoryInterf
             'tahun_penyelenggaraan' => $data->tahun_penyelenggaraan,
             'institusi_penyelenggara' => $data->institusi_penyelenggara,
             'status_sertifikat' => $data->status_sertifikat,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 
         return $dataPelatihanKader;

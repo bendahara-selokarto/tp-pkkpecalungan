@@ -42,6 +42,7 @@ class KecamatanDataPelatihanKaderController extends Controller
                 'judul_pelatihan' => $item->judul_pelatihan,
                 'tahun_penyelenggaraan' => $item->tahun_penyelenggaraan,
                 'status_sertifikat' => $item->status_sertifikat,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ]);
 
         return Inertia::render('Kecamatan/DataPelatihanKader/Index', [
@@ -51,6 +52,7 @@ class KecamatanDataPelatihanKaderController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -90,6 +92,7 @@ class KecamatanDataPelatihanKaderController extends Controller
                 'tahun_penyelenggaraan' => $dataPelatihanKader->tahun_penyelenggaraan,
                 'institusi_penyelenggara' => $dataPelatihanKader->institusi_penyelenggara,
                 'status_sertifikat' => $dataPelatihanKader->status_sertifikat,
+                'tahun_anggaran' => $dataPelatihanKader->tahun_anggaran,
             ],
         ]);
     }
@@ -112,6 +115,7 @@ class KecamatanDataPelatihanKaderController extends Controller
                 'tahun_penyelenggaraan' => $dataPelatihanKader->tahun_penyelenggaraan,
                 'institusi_penyelenggara' => $dataPelatihanKader->institusi_penyelenggara,
                 'status_sertifikat' => $dataPelatihanKader->status_sertifikat,
+                'tahun_anggaran' => $dataPelatihanKader->tahun_anggaran,
             ],
             'statusSertifikatOptions' => DataPelatihanKader::statusSertifikatOptions(),
         ]);

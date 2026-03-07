@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\DataPelatihanKader\Models;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class DataPelatihanKader extends Model
 {
@@ -26,6 +27,7 @@ class DataPelatihanKader extends Model
         'tahun_penyelenggaraan',
         'institusi_penyelenggara',
         'status_sertifikat',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -34,7 +36,23 @@ class DataPelatihanKader extends Model
     protected $casts = [
         'nomor_urut_pelatihan' => 'integer',
         'tahun_penyelenggaraan' => 'integer',
+        'tahun_anggaran' => 'integer',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $dataPelatihanKader): void {
+            if (! is_numeric($dataPelatihanKader->tahun_anggaran)) {
+                if (is_numeric($dataPelatihanKader->tahun_penyelenggaraan)) {
+                    $dataPelatihanKader->tahun_anggaran = (int) $dataPelatihanKader->tahun_penyelenggaraan;
+
+                    return;
+                }
+
+                $dataPelatihanKader->tahun_anggaran = (int) Carbon::now()->format('Y');
+            }
+        });
+    }
 
     public static function statusSertifikatOptions(): array
     {

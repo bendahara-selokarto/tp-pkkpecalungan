@@ -15,6 +15,8 @@ class DesaDataPelatihanKaderTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2024;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -50,6 +52,7 @@ class DesaDataPelatihanKaderTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -67,6 +70,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         DataPelatihanKader::create([
@@ -83,6 +87,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => 2025,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/data-pelatihan-kader');
@@ -94,7 +99,8 @@ class DesaDataPelatihanKaderTest extends TestCase
                 ->has('dataPelatihanKaderItems.data', 1)
                 ->where('dataPelatihanKaderItems.data.0.nomor_registrasi', 'REG-001')
                 ->where('dataPelatihanKaderItems.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -104,6 +110,7 @@ class DesaDataPelatihanKaderTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -122,6 +129,7 @@ class DesaDataPelatihanKaderTest extends TestCase
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
+                'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             ]);
         }
 
@@ -139,6 +147,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/data-pelatihan-kader?page=2&per_page=10');
@@ -152,8 +161,60 @@ class DesaDataPelatihanKaderTest extends TestCase
                 ->where('dataPelatihanKaderItems.current_page', 2)
                 ->where('dataPelatihanKaderItems.per_page', 10)
                 ->where('dataPelatihanKaderItems.total', 12)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
+    }
+
+    #[Test]
+    public function admin_desa_tidak_melihat_data_pelatihan_kader_di_tahun_anggaran_lain(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        DataPelatihanKader::create([
+            'nomor_registrasi' => 'REG-AKTIF',
+            'nama_lengkap_kader' => 'Kader Aktif',
+            'tanggal_masuk_tp_pkk' => '2020',
+            'jabatan_fungsi' => 'Sekretaris',
+            'nomor_urut_pelatihan' => 1,
+            'judul_pelatihan' => 'Pelatihan Administrasi',
+            'jenis_kriteria_kaderisasi' => 'Dasar',
+            'tahun_penyelenggaraan' => self::ACTIVE_BUDGET_YEAR,
+            'institusi_penyelenggara' => 'TP PKK Kabupaten',
+            'status_sertifikat' => 'Bersertifikat',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        DataPelatihanKader::create([
+            'nomor_registrasi' => 'REG-ARSIP',
+            'nama_lengkap_kader' => 'Kader Arsip',
+            'tanggal_masuk_tp_pkk' => '2019',
+            'jabatan_fungsi' => 'Bendahara',
+            'nomor_urut_pelatihan' => 1,
+            'judul_pelatihan' => 'Pelatihan Lama',
+            'jenis_kriteria_kaderisasi' => 'Dasar',
+            'tahun_penyelenggaraan' => self::ACTIVE_BUDGET_YEAR - 1,
+            'institusi_penyelenggara' => 'TP PKK Kabupaten',
+            'status_sertifikat' => 'Tidak',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/data-pelatihan-kader');
+
+        $response->assertOk();
+        $response->assertDontSee('REG-ARSIP');
+        $response->assertSee('REG-AKTIF');
     }
 
     #[Test]
@@ -162,6 +223,7 @@ class DesaDataPelatihanKaderTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -198,6 +260,7 @@ class DesaDataPelatihanKaderTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -233,6 +296,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'id' => $dataPelatihan->id,
             'nomor_urut_pelatihan' => 2,
             'status_sertifikat' => 'Tidak',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.data-pelatihan-kader.destroy', $dataPelatihan->id))
@@ -247,6 +311,7 @@ class DesaDataPelatihanKaderTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -261,6 +326,7 @@ class DesaDataPelatihanKaderTest extends TestCase
         $userStale = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $userStale->assignRole('admin-desa');
 

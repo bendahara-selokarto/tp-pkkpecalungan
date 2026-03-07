@@ -11,6 +11,7 @@ class BkrData
         public string $nama_ketua_kelompok,
         public int $jumlah_anggota,
         public string $kegiatan,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
@@ -26,10 +27,10 @@ class BkrData
             $data['nama_ketua_kelompok'],
             (int) $data['jumlah_anggota'],
             $data['kegiatan'],
+            (int) $data['tahun_anggaran'],
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],
         );
     }
 }
-

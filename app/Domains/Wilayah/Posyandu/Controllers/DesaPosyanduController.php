@@ -49,12 +49,14 @@ class DesaPosyanduController extends Controller
                 'jumlah_petugas_l' => $item->jumlah_petugas_l,
                 'jumlah_petugas_p' => $item->jumlah_petugas_p,
                 'keterangan' => $item->keterangan,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ]),
             'pagination' => [
                 'perPageOptions' => [10, 25, 50],
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -94,6 +96,7 @@ class DesaPosyanduController extends Controller
                 'jumlah_petugas_l' => $posyandu->jumlah_petugas_l,
                 'jumlah_petugas_p' => $posyandu->jumlah_petugas_p,
                 'keterangan' => $posyandu->keterangan,
+                'tahun_anggaran' => $posyandu->tahun_anggaran,
             ],
         ]);
     }
@@ -118,6 +121,7 @@ class DesaPosyanduController extends Controller
                 'jumlah_petugas_l' => $posyandu->jumlah_petugas_l,
                 'jumlah_petugas_p' => $posyandu->jumlah_petugas_p,
                 'keterangan' => $posyandu->keterangan,
+                'tahun_anggaran' => $posyandu->tahun_anggaran,
             ],
         ]);
     }
@@ -140,7 +144,3 @@ class DesaPosyanduController extends Controller
         return redirect()->route('desa.posyandu.index')->with('success', 'Data posyandu berhasil dihapus');
     }
 }
-
-
-
-

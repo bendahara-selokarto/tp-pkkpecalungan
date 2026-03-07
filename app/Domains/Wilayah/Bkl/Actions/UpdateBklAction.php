@@ -22,6 +22,7 @@ class UpdateBklAction
             'nama_ketua_kelompok' => $payload['nama_ketua_kelompok'],
             'jumlah_anggota' => $payload['jumlah_anggota'],
             'kegiatan' => $payload['kegiatan'],
+            'tahun_anggaran' => $bkl->tahun_anggaran,
             'level' => $bkl->level,
             'area_id' => $bkl->area_id,
             'created_by' => $bkl->created_by,

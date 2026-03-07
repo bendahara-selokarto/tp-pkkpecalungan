@@ -22,6 +22,7 @@ class UpdateBkrAction
             'nama_ketua_kelompok' => $payload['nama_ketua_kelompok'],
             'jumlah_anggota' => $payload['jumlah_anggota'],
             'kegiatan' => $payload['kegiatan'],
+            'tahun_anggaran' => $bkr->tahun_anggaran,
             'level' => $bkr->level,
             'area_id' => $bkr->area_id,
             'created_by' => $bkr->created_by,
@@ -30,4 +31,3 @@ class UpdateBkrAction
         return $this->bkrRepository->update($bkr, $data);
     }
 }
-

@@ -48,6 +48,7 @@
 
     <div class="title">DATA ISIAN POSYANDU OLEH TP PKK {{ $levelLabel }}</div>
     <div class="meta">
+        Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
@@ -193,8 +194,6 @@
     @endif
 </body>
 </html>
-
-
 
 
 

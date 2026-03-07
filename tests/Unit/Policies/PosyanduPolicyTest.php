@@ -15,6 +15,8 @@ class PosyanduPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     #[Test]
     public function admin_desa_hanya_boleh_melihat_posyandu_pada_desanya_sendiri(): void
     {
@@ -24,7 +26,7 @@ class PosyanduPolicyTest extends TestCase
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-desa');
 
         $milikSendiri = Posyandu::create([
@@ -42,6 +44,7 @@ class PosyanduPolicyTest extends TestCase
             'level' => 'desa',
             'area_id' => $desaA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $milikDesaLain = Posyandu::create([
@@ -59,12 +62,47 @@ class PosyanduPolicyTest extends TestCase
             'level' => 'desa',
             'area_id' => $desaB->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $policy = app(PosyanduPolicy::class);
 
         $this->assertTrue($policy->view($user, $milikSendiri));
         $this->assertFalse($policy->view($user, $milikDesaLain));
+    }
+
+    #[Test]
+    public function admin_desa_tidak_boleh_melihat_posyandu_tahun_anggaran_lain_di_area_sendiri(): void
+    {
+        Role::create(['name' => 'admin-desa']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
+        $user->assignRole('admin-desa');
+
+        $arsip = Posyandu::create([
+            'nama_posyandu' => 'Posyandu Arsip',
+            'nama_pengelola' => 'Siti',
+            'nama_sekretaris' => 'Nina',
+            'jenis_posyandu' => 'Pratama',
+            'jumlah_kader' => 8,
+            'jenis_kegiatan' => 'Penimbangan',
+            'frekuensi_layanan' => 12,
+            'jumlah_pengunjung_l' => 18,
+            'jumlah_pengunjung_p' => 25,
+            'jumlah_petugas_l' => 2,
+            'jumlah_petugas_p' => 3,
+            'level' => 'desa',
+            'area_id' => $desaA->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $policy = app(PosyanduPolicy::class);
+
+        $this->assertFalse($policy->view($user, $arsip));
     }
 
     #[Test]
@@ -75,7 +113,7 @@ class PosyanduPolicyTest extends TestCase
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id]);
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-kecamatan');
 
         $posyanduLuar = Posyandu::create([
@@ -93,6 +131,7 @@ class PosyanduPolicyTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $kecamatanB->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $policy = app(PosyanduPolicy::class);

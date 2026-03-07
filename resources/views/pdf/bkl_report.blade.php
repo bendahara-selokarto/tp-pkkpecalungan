@@ -20,7 +20,8 @@
 <body>
     <div class="title">REKAPITULASI DATA KELOMPOK BKL</div>
     <div class="meta">
-        KEC {{ $areaName }}
+        KEC {{ $areaName }}<br>
+        Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}
     </div>
 
     <table>

@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\DataPelatihanKader\UseCases;
 
 use App\Domains\Wilayah\DataPelatihanKader\Repositories\DataPelatihanKaderRepositoryInterface;
 use App\Domains\Wilayah\DataPelatihanKader\Services\DataPelatihanKaderScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -11,25 +12,27 @@ class ListScopedDataPelatihanKaderUseCase
 {
     public function __construct(
         private readonly DataPelatihanKaderRepositoryInterface $dataPelatihanKaderRepository,
-        private readonly DataPelatihanKaderScopeService $dataPelatihanKaderScopeService
+        private readonly DataPelatihanKaderScopeService $dataPelatihanKaderScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
         $areaId = $this->dataPelatihanKaderScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
-        return $this->dataPelatihanKaderRepository->paginateByLevelAndArea($level, $areaId, $perPage);
+        return $this->dataPelatihanKaderRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage);
     }
 
     public function executeAll(string $level): Collection
     {
         $areaId = $this->dataPelatihanKaderScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
-        return $this->dataPelatihanKaderRepository->getByLevelAndArea($level, $areaId);
+        return $this->dataPelatihanKaderRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran);
     }
 }
-
 
 
 

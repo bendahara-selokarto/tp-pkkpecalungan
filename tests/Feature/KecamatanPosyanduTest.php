@@ -14,6 +14,8 @@ class KecamatanPosyanduTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
 
@@ -41,6 +43,7 @@ class KecamatanPosyanduTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -60,6 +63,7 @@ class KecamatanPosyanduTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         Posyandu::create([
@@ -78,6 +82,7 @@ class KecamatanPosyanduTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/posyandu');
@@ -88,11 +93,46 @@ class KecamatanPosyanduTest extends TestCase
     }
 
     #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_posyandu_tahun_anggaran_lain_di_area_sendiri(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $arsip = Posyandu::create([
+            'nama_posyandu' => 'Posyandu Arsip',
+            'nama_pengelola' => 'Sari',
+            'nama_sekretaris' => 'Nia',
+            'jenis_posyandu' => 'Mandiri',
+            'jumlah_kader' => 9,
+            'jenis_kegiatan' => 'Konseling',
+            'frekuensi_layanan' => 8,
+            'jumlah_pengunjung_l' => 9,
+            'jumlah_pengunjung_p' => 11,
+            'jumlah_petugas_l' => 1,
+            'jumlah_petugas_p' => 2,
+            'keterangan' => 'Tidak boleh diakses',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.posyandu.show', $arsip->id))
+            ->assertStatus(403);
+    }
+
+    #[Test]
     public function admin_kecamatan_tidak_bisa_melihat_detail_posyandu_kecamatan_lain(): void
     {
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -112,6 +152,7 @@ class KecamatanPosyanduTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)
@@ -132,6 +173,7 @@ class KecamatanPosyanduTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -152,6 +194,7 @@ class KecamatanPosyanduTest extends TestCase
         $userStale = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $userStale->assignRole('admin-kecamatan');
 

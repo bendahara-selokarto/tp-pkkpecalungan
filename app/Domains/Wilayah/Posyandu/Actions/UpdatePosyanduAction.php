@@ -28,6 +28,7 @@ class UpdatePosyanduAction
             'jumlah_petugas_l' => $payload['jumlah_petugas_l'],
             'jumlah_petugas_p' => $payload['jumlah_petugas_p'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $posyandu->tahun_anggaran,
             'level' => $posyandu->level,
             'area_id' => $posyandu->area_id,
             'created_by' => $posyandu->created_by,
@@ -36,8 +37,3 @@ class UpdatePosyanduAction
         return $this->posyanduRepository->update($posyandu, $data);
     }
 }
-
-
-
-
-

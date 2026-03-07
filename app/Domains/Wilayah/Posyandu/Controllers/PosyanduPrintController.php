@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\Posyandu\Controllers;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
 use App\Domains\Wilayah\Posyandu\UseCases\ListScopedPosyanduUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ class PosyanduPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedPosyanduUseCase $listScopedPosyanduUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -42,6 +44,7 @@ class PosyanduPrintController extends Controller
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
             'area' => $user->area,
+            'budgetYearLabel' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'printedBy' => $user,
             'printedAt' => now(),
         ]);
@@ -49,8 +52,3 @@ class PosyanduPrintController extends Controller
         return $pdf->stream("posyandu-{$level}-report.pdf");
     }
 }
-
-
-
-
-

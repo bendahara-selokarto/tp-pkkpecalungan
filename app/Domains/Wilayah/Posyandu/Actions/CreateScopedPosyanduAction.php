@@ -6,12 +6,14 @@ use App\Domains\Wilayah\Posyandu\DTOs\PosyanduData;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
 use App\Domains\Wilayah\Posyandu\Repositories\PosyanduRepositoryInterface;
 use App\Domains\Wilayah\Posyandu\Services\PosyanduScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 
 class CreateScopedPosyanduAction
 {
     public function __construct(
         private readonly PosyanduRepositoryInterface $posyanduRepository,
-        private readonly PosyanduScopeService $posyanduScopeService
+        private readonly PosyanduScopeService $posyanduScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
@@ -30,6 +32,7 @@ class CreateScopedPosyanduAction
             'jumlah_petugas_l' => $payload['jumlah_petugas_l'],
             'jumlah_petugas_p' => $payload['jumlah_petugas_p'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'level' => $level,
             'area_id' => $this->posyanduScopeService->requireUserAreaId(),
             'created_by' => (int) auth()->id(),
@@ -38,8 +41,3 @@ class CreateScopedPosyanduAction
         return $this->posyanduRepository->store($data);
     }
 }
-
-
-
-
-
