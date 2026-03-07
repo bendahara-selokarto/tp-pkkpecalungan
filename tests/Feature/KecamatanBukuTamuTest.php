@@ -15,6 +15,8 @@ class KecamatanBukuTamuTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
 
     protected Area $kecamatanB;
@@ -43,6 +45,7 @@ class KecamatanBukuTamuTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -104,12 +107,40 @@ class KecamatanBukuTamuTest extends TestCase
             'guest_name' => 'Slamet Riyadi Final',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminKecamatan)->delete(route('kecamatan.buku-tamu.destroy', $created->id))
             ->assertStatus(302);
 
         $this->assertDatabaseMissing('buku_tamus', ['id' => $created->id]);
+    }
+
+    #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_tahun_anggaran_lain(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $bukuTamu = BukuTamu::create([
+            'visit_date' => '2025-02-26',
+            'guest_name' => 'Tamu Tahun Lama',
+            'purpose' => 'Arsip',
+            'institution' => 'TP PKK Kecamatan Pecalungan',
+            'description' => 'Tidak boleh diakses',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => 2025,
+        ]);
+
+        $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.buku-tamu.show', $bukuTamu->id))
+            ->assertStatus(403);
     }
 
     #[Test]
@@ -124,6 +155,7 @@ class KecamatanBukuTamuTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -143,6 +175,7 @@ class KecamatanBukuTamuTest extends TestCase
         $staleUser = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $staleUser->assignRole('admin-kecamatan');
 

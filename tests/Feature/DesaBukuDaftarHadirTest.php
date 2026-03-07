@@ -16,6 +16,8 @@ class DesaBukuDaftarHadirTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
 
     protected Area $desaA;
@@ -53,6 +55,7 @@ class DesaBukuDaftarHadirTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -124,6 +127,7 @@ class DesaBukuDaftarHadirTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'activity_id' => $activityA->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->put(route('desa.buku-daftar-hadir.update', $created->id), [
@@ -147,11 +151,104 @@ class DesaBukuDaftarHadirTest extends TestCase
     }
 
     #[Test]
+    public function admin_desa_hanya_melihat_daftar_hadir_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        $activityAktif = Activity::create([
+            'title' => 'Kegiatan 2026',
+            'activity_date' => '2026-02-26',
+            'description' => 'Aktif',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $activityLama = Activity::create([
+            'title' => 'Kegiatan 2025',
+            'activity_date' => '2025-02-26',
+            'description' => 'Lama',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        BukuDaftarHadir::create([
+            'attendance_date' => '2026-02-26',
+            'activity_id' => $activityAktif->id,
+            'attendee_name' => 'Peserta Tahun Aktif',
+            'institution' => 'TP PKK Desa A',
+            'description' => 'Masuk list',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => 2026,
+        ]);
+
+        BukuDaftarHadir::create([
+            'attendance_date' => '2025-02-26',
+            'activity_id' => $activityLama->id,
+            'attendee_name' => 'Peserta Tahun Lama',
+            'institution' => 'TP PKK Desa A',
+            'description' => 'Tidak boleh muncul',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => 2025,
+        ]);
+
+        $this->actingAs($adminDesa)->get('/desa/buku-daftar-hadir')
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page): void {
+                $page
+                    ->where('items.total', 1)
+                    ->where('items.data.0.attendee_name', 'Peserta Tahun Aktif')
+                    ->where('filters.tahun_anggaran', 2026);
+            });
+    }
+
+    #[Test]
+    public function admin_desa_tidak_bisa_membuat_daftar_hadir_dengan_kegiatan_tahun_anggaran_lain(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        $activityLama = Activity::create([
+            'title' => 'Kegiatan 2025',
+            'activity_date' => '2025-02-26',
+            'description' => 'Lama',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
+
+        $this->actingAs($adminDesa)
+            ->post('/desa/buku-daftar-hadir', [
+                'attendance_date' => '2026-02-27',
+                'activity_id' => $activityLama->id,
+                'attendee_name' => 'Peserta Tidak Valid',
+                'institution' => 'TP PKK Desa Gombong',
+                'description' => 'Harus ditolak.',
+            ])
+            ->assertStatus(403);
+    }
+
+    #[Test]
     public function pengguna_non_admin_desa_tidak_bisa_mengakses_modul_daftar_hadir_desa(): void
     {
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -165,6 +262,7 @@ class DesaBukuDaftarHadirTest extends TestCase
         $staleUser = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $staleUser->assignRole('admin-desa');
 

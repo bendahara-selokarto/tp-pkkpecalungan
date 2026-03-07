@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\BukuDaftarHadir\Controllers;
 use App\Domains\Wilayah\BukuDaftarHadir\Models\BukuDaftarHadir;
 use App\Domains\Wilayah\BukuDaftarHadir\UseCases\ListScopedBukuDaftarHadirUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ class BukuDaftarHadirPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedBukuDaftarHadirUseCase $listScopedBukuDaftarHadirUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -37,10 +39,12 @@ class BukuDaftarHadirPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.buku_daftar_hadir_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

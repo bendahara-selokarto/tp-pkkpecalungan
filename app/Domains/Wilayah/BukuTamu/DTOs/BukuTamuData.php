@@ -13,6 +13,7 @@ class BukuTamuData
         public string $level,
         public int $area_id,
         public int $created_by,
+        public int $tahun_anggaran,
     ) {
     }
 
@@ -26,7 +27,8 @@ class BukuTamuData
             $data['description'] ?? null,
             $data['level'],
             $data['area_id'],
-            $data['created_by']
+            $data['created_by'],
+            $data['tahun_anggaran']
         );
     }
 }

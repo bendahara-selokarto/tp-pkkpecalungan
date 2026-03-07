@@ -50,6 +50,7 @@ class KecamatanBukuNotulenRapatController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -84,6 +85,7 @@ class KecamatanBukuNotulenRapatController extends Controller
                 'person_name' => $item->person_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);
     }
@@ -101,6 +103,7 @@ class KecamatanBukuNotulenRapatController extends Controller
                 'person_name' => $item->person_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);
     }

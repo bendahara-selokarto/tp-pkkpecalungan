@@ -15,6 +15,8 @@ class BukuTamuReportPrintTest extends TestCase
     use RefreshDatabase;
     use AssertsPdfReportHeaders;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
     protected Area $desaA;
@@ -45,7 +47,11 @@ class BukuTamuReportPrintTest extends TestCase
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_buku_tamu_desanya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desaA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         BukuTamu::create([
@@ -57,6 +63,7 @@ class BukuTamuReportPrintTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($user)->get(route('desa.buku-tamu.report'));
@@ -67,7 +74,11 @@ class BukuTamuReportPrintTest extends TestCase
 
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_buku_tamu_kecamatannya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-kecamatan');
 
         BukuTamu::create([
@@ -79,6 +90,7 @@ class BukuTamuReportPrintTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($user)->get(route('kecamatan.buku-tamu.report'));
@@ -89,7 +101,11 @@ class BukuTamuReportPrintTest extends TestCase
 
     public function test_laporan_pdf_buku_tamu_tetap_aman_saat_role_dan_level_area_tidak_sinkron(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->kecamatanB->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         $response = $this->actingAs($user)->get(route('desa.buku-tamu.report'));

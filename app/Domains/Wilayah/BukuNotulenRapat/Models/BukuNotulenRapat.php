@@ -19,11 +19,31 @@ class BukuNotulenRapat extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
-    protected $casts = [
-        'entry_date' => 'date:Y-m-d',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'entry_date' => 'date:Y-m-d',
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $bukuNotulenRapat): void {
+            if (is_numeric($bukuNotulenRapat->tahun_anggaran)) {
+                return;
+            }
+
+            $fallbackYear = $bukuNotulenRapat->entry_date
+                ? (int) date('Y', strtotime((string) $bukuNotulenRapat->entry_date))
+                : (int) now()->format('Y');
+
+            $bukuNotulenRapat->tahun_anggaran = $fallbackYear;
+        });
+    }
 
     public function area()
     {

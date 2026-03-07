@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\BukuNotulenRapat\Controllers;
 use App\Domains\Wilayah\BukuNotulenRapat\Models\BukuNotulenRapat;
 use App\Domains\Wilayah\BukuNotulenRapat\UseCases\ListScopedBukuNotulenRapatUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ class BukuNotulenRapatPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedBukuNotulenRapatUseCase $listScopedBukuNotulenRapatUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -37,10 +39,12 @@ class BukuNotulenRapatPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.buku_notulen_rapat_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

@@ -24,6 +24,7 @@ class UpdateBukuTamuAction
             'level' => $bukuTamu->level,
             'area_id' => $bukuTamu->area_id,
             'created_by' => $bukuTamu->created_by,
+            'tahun_anggaran' => $bukuTamu->tahun_anggaran,
         ]);
 
         return $this->bukuTamuRepository->update($bukuTamu, $data);

@@ -16,6 +16,8 @@ class KecamatanBukuDaftarHadirTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
 
     protected Area $kecamatanB;
@@ -44,6 +46,7 @@ class KecamatanBukuDaftarHadirTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -123,12 +126,49 @@ class KecamatanBukuDaftarHadirTest extends TestCase
             'attendee_name' => 'Kader Kecamatan Updated',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminKecamatan)->delete(route('kecamatan.buku-daftar-hadir.destroy', $created->id))
             ->assertStatus(302);
 
         $this->assertDatabaseMissing('buku_daftar_hadirs', ['id' => $created->id]);
+    }
+
+    #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_tahun_anggaran_lain(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $activity = Activity::create([
+            'title' => 'Kegiatan 2025',
+            'activity_date' => '2025-02-26',
+            'description' => 'Lama',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
+
+        $bukuDaftarHadir = BukuDaftarHadir::create([
+            'attendance_date' => '2025-02-26',
+            'activity_id' => $activity->id,
+            'attendee_name' => 'Peserta Lama',
+            'institution' => 'TP PKK Kecamatan Pecalungan',
+            'description' => 'Tidak boleh diakses',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => 2025,
+        ]);
+
+        $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.buku-daftar-hadir.show', $bukuDaftarHadir->id))
+            ->assertStatus(403);
     }
 
     #[Test]
@@ -143,6 +183,7 @@ class KecamatanBukuDaftarHadirTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -162,6 +203,7 @@ class KecamatanBukuDaftarHadirTest extends TestCase
         $staleUser = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $staleUser->assignRole('admin-kecamatan');
 

@@ -50,6 +50,7 @@ class DesaBukuTamuController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -84,6 +85,7 @@ class DesaBukuTamuController extends Controller
                 'purpose' => $item->purpose,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);
     }
@@ -101,6 +103,7 @@ class DesaBukuTamuController extends Controller
                 'purpose' => $item->purpose,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);
     }

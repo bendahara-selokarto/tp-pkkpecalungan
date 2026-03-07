@@ -18,10 +18,12 @@ class CreateScopedBukuDaftarHadirAction
     public function execute(array $payload, string $level): BukuDaftarHadir
     {
         $areaId = $this->bukuDaftarHadirScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->bukuDaftarHadirScopeService->requireActiveBudgetYear();
         $this->bukuDaftarHadirScopeService->authorizeActivityScope(
             (int) $payload['activity_id'],
             $level,
-            $areaId
+            $areaId,
+            $tahunAnggaran
         );
 
         $data = BukuDaftarHadirData::fromArray([
@@ -33,6 +35,7 @@ class CreateScopedBukuDaftarHadirAction
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => auth()->id(),
+            'tahun_anggaran' => $tahunAnggaran,
         ]);
 
         return $this->bukuDaftarHadirRepository->store($data);

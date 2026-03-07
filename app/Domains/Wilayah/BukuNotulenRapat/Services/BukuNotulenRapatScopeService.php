@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\BukuNotulenRapat\Services;
 
 use App\Domains\Wilayah\BukuNotulenRapat\Models\BukuNotulenRapat;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class BukuNotulenRapatScopeService
 {
     public function __construct(
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly UserAreaContextService $userAreaContextService
     ) {
     }
@@ -30,7 +32,8 @@ class BukuNotulenRapatScopeService
             return false;
         }
 
-        return (int) $bukuNotulenRapat->area_id === (int) $user->area_id;
+        return (int) $bukuNotulenRapat->area_id === (int) $user->area_id
+            && (int) $bukuNotulenRapat->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, BukuNotulenRapat $bukuNotulenRapat): bool
@@ -43,9 +46,13 @@ class BukuNotulenRapatScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(BukuNotulenRapat $bukuNotulenRapat, string $level, int $areaId): BukuNotulenRapat
+    public function authorizeSameLevelAreaAndBudgetYear(BukuNotulenRapat $bukuNotulenRapat, string $level, int $areaId, int $tahunAnggaran): BukuNotulenRapat
     {
-        if ($bukuNotulenRapat->level !== $level || (int) $bukuNotulenRapat->area_id !== $areaId) {
+        if (
+            $bukuNotulenRapat->level !== $level
+            || (int) $bukuNotulenRapat->area_id !== $areaId
+            || (int) $bukuNotulenRapat->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
@@ -56,4 +63,3 @@ class BukuNotulenRapatScopeService
         return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
     }
 }
-

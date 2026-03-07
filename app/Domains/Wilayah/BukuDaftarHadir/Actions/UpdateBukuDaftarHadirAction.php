@@ -17,10 +17,12 @@ class UpdateBukuDaftarHadirAction
 
     public function execute(BukuDaftarHadir $bukuDaftarHadir, array $payload): BukuDaftarHadir
     {
+        $tahunAnggaran = (int) $bukuDaftarHadir->tahun_anggaran;
         $this->bukuDaftarHadirScopeService->authorizeActivityScope(
             (int) $payload['activity_id'],
             $bukuDaftarHadir->level,
-            (int) $bukuDaftarHadir->area_id
+            (int) $bukuDaftarHadir->area_id,
+            $tahunAnggaran
         );
 
         $data = BukuDaftarHadirData::fromArray([
@@ -32,6 +34,7 @@ class UpdateBukuDaftarHadirAction
             'level' => $bukuDaftarHadir->level,
             'area_id' => $bukuDaftarHadir->area_id,
             'created_by' => $bukuDaftarHadir->created_by,
+            'tahun_anggaran' => $tahunAnggaran,
         ]);
 
         return $this->bukuDaftarHadirRepository->update($bukuDaftarHadir, $data);

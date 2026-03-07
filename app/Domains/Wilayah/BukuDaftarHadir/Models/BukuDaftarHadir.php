@@ -20,11 +20,31 @@ class BukuDaftarHadir extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
-    protected $casts = [
-        'attendance_date' => 'date:Y-m-d',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'attendance_date' => 'date:Y-m-d',
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $bukuDaftarHadir): void {
+            if (is_numeric($bukuDaftarHadir->tahun_anggaran)) {
+                return;
+            }
+
+            $fallbackYear = $bukuDaftarHadir->attendance_date
+                ? (int) date('Y', strtotime((string) $bukuDaftarHadir->attendance_date))
+                : (int) now()->format('Y');
+
+            $bukuDaftarHadir->tahun_anggaran = $fallbackYear;
+        });
+    }
 
     public function area()
     {

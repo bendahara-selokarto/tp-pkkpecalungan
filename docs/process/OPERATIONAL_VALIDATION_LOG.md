@@ -24,10 +24,10 @@ Aturan:
   - `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` (`planned`)
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`planned`)
-  - `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md` (`planned`)
+  - `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md` (`in-progress`)
 
 ### Refactor Tahun Anggaran (`TAG26A1`) - 2026-03-07
-- Status concern: `in-progress` (`state:wave1-implemented`).
+- Status concern: `in-progress` (`state:wave2-books-slice-implemented`).
 - Fokus concern:
   - menambahkan `tahun_anggaran` sebagai context transversal administrasi TP PKK,
   - menjaga concern existing tetap utuh sambil meretrofit schema/query per wave.
@@ -36,10 +36,13 @@ Aturan:
   - audit pola repository `paginateByLevelAndArea/getByLevelAndArea`: `DONE`,
   - audit migration concern wilayah untuk keberadaan dimensi tahun: `DONE`,
   - wave-1 pilot dikunci: `Profile + AgendaSurat`: `DONE`,
+  - slice awal wave-2 buku administrasi (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`): `DONE`,
   - ADR `0005` status `accepted`: `DONE`,
-  - targeted concern tests (`Profile`, `AgendaSurat`, policy, dashboard coverage terkait): `43 passed`,
-  - full suite `php artisan test --compact`: `1061 passed`,
-  - runtime wave-1 implemented: `DONE`.
+  - targeted concern tests wave-1 (`Profile`, `AgendaSurat`, policy, dashboard coverage terkait): `43 passed`,
+  - targeted concern tests wave-2 slice (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, policy, report terkait): `46 passed`,
+  - full suite `php artisan test --compact`: `1071 passed`,
+  - runtime wave-1 implemented: `DONE`,
+  - runtime wave-2 secretary books slice implemented: `DONE`.
 
 ### Hardening Struktur Folder (`SFC26A1`) - 2026-03-07
 - Status concern: `done` (`state:structure-hardened`) (arsip concern ada di `docs/process/archive/2026_03/`).

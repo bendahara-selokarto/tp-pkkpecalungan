@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\BukuTamu\Services;
 
 use App\Domains\Wilayah\BukuTamu\Models\BukuTamu;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class BukuTamuScopeService
 {
     public function __construct(
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly UserAreaContextService $userAreaContextService
     ) {
     }
@@ -30,7 +32,8 @@ class BukuTamuScopeService
             return false;
         }
 
-        return (int) $bukuTamu->area_id === (int) $user->area_id;
+        return (int) $bukuTamu->area_id === (int) $user->area_id
+            && (int) $bukuTamu->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, BukuTamu $bukuTamu): bool
@@ -43,9 +46,13 @@ class BukuTamuScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(BukuTamu $bukuTamu, string $level, int $areaId): BukuTamu
+    public function authorizeSameLevelAreaAndBudgetYear(BukuTamu $bukuTamu, string $level, int $areaId, int $tahunAnggaran): BukuTamu
     {
-        if ($bukuTamu->level !== $level || (int) $bukuTamu->area_id !== $areaId) {
+        if (
+            $bukuTamu->level !== $level
+            || (int) $bukuTamu->area_id !== $areaId
+            || (int) $bukuTamu->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
@@ -56,4 +63,3 @@ class BukuTamuScopeService
         return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
     }
 }
-

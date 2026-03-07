@@ -19,11 +19,31 @@ class BukuTamu extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
-    protected $casts = [
-        'visit_date' => 'date:Y-m-d',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'visit_date' => 'date:Y-m-d',
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $bukuTamu): void {
+            if (is_numeric($bukuTamu->tahun_anggaran)) {
+                return;
+            }
+
+            $fallbackYear = $bukuTamu->visit_date
+                ? (int) date('Y', strtotime((string) $bukuTamu->visit_date))
+                : (int) now()->format('Y');
+
+            $bukuTamu->tahun_anggaran = $fallbackYear;
+        });
+    }
 
     public function area()
     {

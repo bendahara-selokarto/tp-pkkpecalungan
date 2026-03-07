@@ -15,6 +15,8 @@ class DesaBukuTamuTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
 
     protected Area $desaA;
@@ -52,6 +54,7 @@ class DesaBukuTamuTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -104,6 +107,7 @@ class DesaBukuTamuTest extends TestCase
             'id' => $created->id,
             'level' => 'desa',
             'area_id' => $this->desaA->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->put(route('desa.buku-tamu.update', $created->id), [
@@ -127,11 +131,56 @@ class DesaBukuTamuTest extends TestCase
     }
 
     #[Test]
+    public function admin_desa_hanya_melihat_buku_tamu_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        BukuTamu::create([
+            'visit_date' => '2026-02-26',
+            'guest_name' => 'Tamu Tahun Aktif',
+            'purpose' => 'Koordinasi',
+            'institution' => 'TP PKK Desa A',
+            'description' => 'Masuk list 2026',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => 2026,
+        ]);
+
+        BukuTamu::create([
+            'visit_date' => '2025-02-26',
+            'guest_name' => 'Tamu Tahun Lama',
+            'purpose' => 'Arsip',
+            'institution' => 'TP PKK Desa A',
+            'description' => 'Tidak boleh muncul',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => 2025,
+        ]);
+
+        $this->actingAs($adminDesa)->get('/desa/buku-tamu')
+            ->assertOk()
+            ->assertInertia(function (AssertableInertia $page): void {
+                $page
+                    ->where('items.total', 1)
+                    ->where('items.data.0.guest_name', 'Tamu Tahun Aktif')
+                    ->where('filters.tahun_anggaran', 2026);
+            });
+    }
+
+    #[Test]
     public function pengguna_non_admin_desa_tidak_bisa_mengakses_modul_buku_tamu_desa(): void
     {
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -145,6 +194,7 @@ class DesaBukuTamuTest extends TestCase
         $staleUser = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $staleUser->assignRole('admin-desa');
 

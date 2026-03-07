@@ -21,15 +21,17 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
         return BukuDaftarHadir::query()
             ->with('activity:id,title,activity_date')
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('attendance_date')
             ->latest('id')
@@ -37,23 +39,25 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection
     {
         return BukuDaftarHadir::query()
             ->with('activity:id,title,activity_date')
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('attendance_date')
             ->latest('id')
             ->get();
     }
 
-    public function listActivityOptionsByLevelAndArea(string $level, int $areaId): Collection
+    public function listActivityOptionsByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection
     {
         return Activity::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->whereYear('activity_date', $tahunAnggaran)
             ->orderByDesc('activity_date')
             ->orderByDesc('id')
             ->get(['id', 'title', 'activity_date']);
@@ -74,6 +78,7 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
             'attendee_name' => $data->attendee_name,
             'institution' => $data->institution,
             'description' => $data->description,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 
         return $bukuDaftarHadir;
@@ -84,7 +89,6 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
         $bukuDaftarHadir->delete();
     }
 }
-
 
 
 

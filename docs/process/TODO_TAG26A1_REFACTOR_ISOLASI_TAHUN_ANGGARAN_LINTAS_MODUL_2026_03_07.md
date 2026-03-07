@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `in-progress` (`state:wave1-implemented`)
+Status: `in-progress` (`state:wave2-books-slice-implemented`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -103,13 +103,16 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] Audit report/export/dashboard supaya agregasi dan cetak memakai dataset tahun aktif yang benar untuk concern pilot (`AgendaSurat` report + dashboard coverage yang sudah year-aware).
 - [ ] Fase 4 - Migration/backfill/compatibility.
   - [x] Siapkan migration bertahap per wave, bukan big-bang tunggal (wave-1: `users.active_budget_year`, `agenda_surats.tahun_anggaran`).
-  - [ ] Definisikan default backfill untuk data existing development:
+  - [x] Definisikan default backfill untuk data existing development secara bertahap per wave concern yang sudah diimplementasikan:
     - jika sumber tahun eksplisit tersedia, gunakan sumber tersebut,
-    - jika tidak tersedia, pakai tahun anggaran baseline yang dikunci eksplisit dalam concern implementasi.
+    - untuk concern dokumen secretary books (`AgendaSurat`, `BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`), backfill memakai tahun dari kolom tanggal dokumen masing-masing,
+    - jika concern wave berikutnya belum punya sumber tahun yang cukup presisi, pakai tahun anggaran baseline yang dikunci eksplisit saat wave concern tersebut dieksekusi.
   - [ ] Siapkan aturan transisi untuk unique constraint, seed, dan fixture test.
 - [ ] Fase 5 - Rollout validation waves.
   - [x] Wave 1 dikunci: `Profile` + `ActiveBudgetYearContextService` + `AgendaSurat`.
   - [ ] Wave 2: concern CRUD mayoritas yang pattern query-nya homogen (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`, dll).
+    - [x] Slice awal wave-2 terimplementasi: `BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`.
+    - [ ] Concern homogen wave-2 yang masih pending: `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`, dan concern sejenis lain.
   - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
   - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
 - [ ] Sinkronisasi dokumen concern terkait (trigger hardening aktif).
@@ -194,3 +197,11 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] `AgendaSurat` kini menyimpan `tahun_anggaran` dan seluruh read/write path pilot sudah terisolasi per tahun aktif.
 - [x] PDF `AgendaSurat` dan `Ekspedisi Surat` menampilkan metadata tahun anggaran aktif.
 - [x] Dashboard coverage untuk model yang sudah punya `tahun_anggaran` ikut sadar tahun aktif pada wave-1.
+
+## Hasil Implementasi Wave-2 (Slice Buku Administrasi)
+- [x] `BukuTamu` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `BukuDaftarHadir` kini menyimpan `tahun_anggaran`, mengunci read/write path per tahun aktif, dan opsi `Activity` di concern ini hanya menerima kegiatan pada tahun aktif.
+- [x] `BukuNotulenRapat` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] PDF `BukuTamu`, `BukuDaftarHadir`, dan `BukuNotulenRapat` menampilkan metadata tahun anggaran aktif.
+- [x] Targeted regression wave-2 slice lulus: `46 passed`.
+- [x] Full suite setelah rollout slice wave-2 lulus: `1071 passed`.

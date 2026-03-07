@@ -54,6 +54,7 @@ class KecamatanBukuDaftarHadirController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -92,6 +93,7 @@ class KecamatanBukuDaftarHadirController extends Controller
                 'attendee_name' => $item->attendee_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);
     }
@@ -111,6 +113,7 @@ class KecamatanBukuDaftarHadirController extends Controller
                 'attendee_name' => $item->attendee_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'tahun_anggaran' => $item->tahun_anggaran,
             ],
             'activityOptions' => $this->activityOptions('kecamatan'),
         ]);
@@ -150,9 +153,10 @@ class KecamatanBukuDaftarHadirController extends Controller
     private function activityOptions(string $level): array
     {
         $areaId = $this->bukuDaftarHadirScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->bukuDaftarHadirScopeService->requireActiveBudgetYear();
 
         return $this->bukuDaftarHadirRepository
-            ->listActivityOptionsByLevelAndArea($level, $areaId)
+            ->listActivityOptionsByLevelAndArea($level, $areaId, $tahunAnggaran)
             ->map(fn (Activity $activity) => [
                 'id' => $activity->id,
                 'title' => $activity->title,

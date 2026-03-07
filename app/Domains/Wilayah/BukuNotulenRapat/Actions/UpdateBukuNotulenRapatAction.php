@@ -24,6 +24,7 @@ class UpdateBukuNotulenRapatAction
             'level' => $bukuNotulenRapat->level,
             'area_id' => $bukuNotulenRapat->area_id,
             'created_by' => $bukuNotulenRapat->created_by,
+            'tahun_anggaran' => $bukuNotulenRapat->tahun_anggaran,
         ]);
 
         return $this->bukuNotulenRapatRepository->update($bukuNotulenRapat, $data);

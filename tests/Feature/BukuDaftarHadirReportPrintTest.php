@@ -16,6 +16,8 @@ class BukuDaftarHadirReportPrintTest extends TestCase
     use RefreshDatabase;
     use AssertsPdfReportHeaders;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
     protected Area $desaA;
@@ -46,7 +48,11 @@ class BukuDaftarHadirReportPrintTest extends TestCase
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_buku_daftar_hadir_desanya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desaA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         $activity = Activity::create([
@@ -56,6 +62,7 @@ class BukuDaftarHadirReportPrintTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         BukuDaftarHadir::create([
@@ -77,7 +84,11 @@ class BukuDaftarHadirReportPrintTest extends TestCase
 
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_buku_daftar_hadir_kecamatannya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-kecamatan');
 
         $activity = Activity::create([
@@ -87,6 +98,7 @@ class BukuDaftarHadirReportPrintTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         BukuDaftarHadir::create([
@@ -108,7 +120,11 @@ class BukuDaftarHadirReportPrintTest extends TestCase
 
     public function test_laporan_pdf_buku_daftar_hadir_tetap_aman_saat_role_dan_level_area_tidak_sinkron(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->kecamatanB->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         $response = $this->actingAs($user)->get(route('desa.buku-daftar-hadir.report'));
