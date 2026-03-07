@@ -1,0 +1,189 @@
+# TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
+
+Tanggal: 2026-03-07  
+Status: `planned` (`state:implementation-ready`)
+Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
+
+## Aturan Pakai
+- `KODE_UNIK` wajib 4-8 karakter, huruf kapital + angka (contoh: `A2B9`).
+- Format judul wajib: `TODO <KODE_UNIK> <Judul Ringkas>`.
+- Simpan file dengan pola: `TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
+- Gunakan checklist `- [ ]` dan ubah ke `- [x]` saat item selesai.
+
+## Konteks
+- Frasa definisi yang dikunci untuk concern ini:
+  - `Tahun anggaran adalah identitas isolasi data administrasi TP PKK per siklus tahunan, default 1 Januari-31 Desember, dan ditetapkan sebagai context kerja aktif user.`
+- Konteks wajib yang sempat terlewat pada desain sebelumnya: administrasi TP PKK dikelompokkan berdasarkan `tahun anggaran`, dan data operasional harus terisolasi per tahun anggaran.
+- Baseline implementasi saat ini masih dominan memakai isolasi `level + area_id` pada hampir seluruh repository concern, sementara `Profile` baru memuat identitas user (`name`, `email`) dan belum mengunci tahun anggaran aktif.
+- Sebagian concern memang sudah memiliki field periode sendiri (`tahun_laporan`, `tahun_awal`, `tahun_akhir`, `year`), tetapi field tersebut masih bersifat domain-spesifik dan belum menjadi kontrak transversal isolasi data administrasi.
+- Refactor ini harus besar tetapi tidak boleh mengubah concern yang sudah ada: boundary domain, nama modul, route, dan pola `Controller -> UseCase/Action -> Repository -> Model` tetap dipertahankan.
+- Dokumen ini adalah jalur planning resmi sebelum implementasi bertahap runtime.
+
+## Kontrak Concern (Lock)
+- Domain: isolasi data administrasi TP PKK lintas modul berbasis `tahun_anggaran` sebagai context transversal baru.
+- Role/scope target: seluruh role operasional `desa|kecamatan`, `super-admin` untuk audit/backoffice, dan flow `profile` sebagai titik set tahun anggaran aktif.
+- Boundary data:
+  - source of truth tahun aktif: backend profile context milik user yang sedang login.
+  - persistence transversal: tabel data administrasi TP PKK yang saat ini hanya bergantung pada `level + area_id` akan ditambah `tahun_anggaran` secara bertahap.
+  - query path: repository/read model concern yang termasuk data administrasi wajib mem-filter `tahun_anggaran` bersama `level + area_id`.
+  - write path: action/use case menginjeksi `tahun_anggaran` dari backend context; frontend tidak boleh menjadi authority.
+  - reporting/dashboard/export: seluruh agregasi yang merepresentasikan data operasional wajib sadar tahun anggaran aktif.
+  - pengecualian: field periode domain-spesifik (`tahun_laporan`, `tahun_awal`, `tahun_akhir`, `year`, `semester`) tetap dipertahankan dan tidak otomatis menggantikan `tahun_anggaran`.
+- Acceptance criteria:
+  - semua data administrasi yang termasuk concern ini dapat dibaca dan ditulis terisolasi per `tahun_anggaran` tanpa memindahkan concern existing.
+  - pergantian tahun aktif di `Profile` hanya mengganti context kerja, bukan memutasi data tahun lain.
+  - repository boundary tetap jadi satu-satunya jalur query, dengan filter default `level + area_id + tahun_anggaran` pada concern yang relevan.
+  - tidak ada drift `role` vs `scope` vs `areas.level`, dan tidak ada data leak lintas tahun anggaran.
+  - ada strategi migrasi/backfill untuk data existing yang belum punya `tahun_anggaran`.
+- Dampak keputusan arsitektur: `ya`
+
+## Target Hasil
+- [ ] Tersusun klasifikasi modul/tabel yang wajib memakai `tahun_anggaran`, yang opsional, dan yang tetap memakai periode domain-spesifik saja.
+- [ ] Tersusun desain context backend `tahun anggaran aktif` yang terhubung ke `Profile` tanpa menggeser authority akses ke frontend.
+- [ ] Tersusun strategi retrofit repository/action/request/test secara bertahap tanpa rewrite concern.
+- [ ] Tersusun strategi migrasi data, rollout, dan fallback bila isolasi tahun memicu regresi lintas modul.
+
+## Readiness Lock
+- Status kesiapan implementasi: `ready for wave-1`.
+- Tidak ada blocker konseptual terbuka untuk memulai implementasi.
+- Wave pilot yang dikunci:
+  - `Profile` sebagai entry point tahun anggaran aktif.
+  - `AgendaSurat` sebagai concern pilot CRUD/list/report dengan pola repository sederhana.
+- Concern yang sengaja tidak masuk wave pilot:
+  - `Activities`, karena memiliki query lintas role + dual-scope kecamatan/desa monitoring yang lebih kompleks.
+  - dashboard agregat, report lintas tabel, dan concern dengan unique constraint majemuk; ditunda ke wave setelah pilot stabil.
+- Target file awal wave-1:
+  - `app/Http/Controllers/ProfileController.php`
+  - `app/Http/Requests/ProfileUpdateRequest.php`
+  - `app/Models/User.php`
+  - `resources/js/Pages/Profile/Edit.vue`
+  - `app/Domains/Wilayah/AgendaSurat/DTOs/AgendaSuratData.php`
+  - `app/Domains/Wilayah/AgendaSurat/Models/AgendaSurat.php`
+  - `app/Domains/Wilayah/AgendaSurat/Repositories/AgendaSuratRepositoryInterface.php`
+  - `app/Domains/Wilayah/AgendaSurat/Repositories/AgendaSuratRepository.php`
+  - `app/Domains/Wilayah/AgendaSurat/UseCases/ListScopedAgendaSuratUseCase.php`
+  - `app/Domains/Wilayah/AgendaSurat/Actions/CreateScopedAgendaSuratAction.php`
+  - `app/Domains/Wilayah/AgendaSurat/Actions/UpdateAgendaSuratAction.php`
+  - migration baru untuk `users` context tahun aktif + migration baru untuk `agenda_surats.tahun_anggaran`
+- Definition of done wave-1:
+  - user dapat set tahun anggaran aktif dari `Profile`,
+  - create/list/update `AgendaSurat` sudah terisolasi per `tahun_anggaran`,
+  - report `AgendaSurat` mengikuti tahun aktif,
+  - targeted tests untuk `Profile` dan `AgendaSurat` hijau,
+  - tidak ada regresi auth/scope existing.
+
+## Langkah Eksekusi
+- [x] Fase 0 - Contract lock dan klasifikasi concern.
+  - [x] Tetapkan definisi canonical `tahun_anggaran` sebagai context transversal administrasi TP PKK.
+  - [x] Daftarkan modul yang terdampak langsung:
+    - modul CRUD/list/report dengan repository `paginateByLevelAndArea` / `getByLevelAndArea`,
+    - dashboard agregat,
+    - flow `Profile`,
+    - export/report yang membawa ringkasan data tahunan.
+  - [x] Tandai modul pengecualian yang tetap memakai periode domain-spesifik sebagai data utama, tetapi tetap perlu context tahun aktif untuk akses daftar/summary.
+  - [x] Kunci wave pilot implementasi pertama: `Profile + AgendaSurat`.
+- [ ] Fase 1 - Inventory schema dan klasifikasi retrofit.
+  - [ ] Audit semua tabel persisten administrasi TP PKK dan kelompokkan:
+    - `kelas A`: tabel wajib tambah `tahun_anggaran`,
+    - `kelas B`: tabel sudah punya field tahun/periode tetapi tetap butuh `tahun_anggaran`,
+    - `kelas C`: master/reference yang tidak perlu isolasi tahun.
+  - [ ] Tentukan naming canonical kolom: `tahun_anggaran` (`unsignedSmallInteger`).
+  - [ ] Tentukan strategi index/unique baru per tabel, misalnya memperluas unique lama dari `level + area_id + ...` menjadi `level + area_id + tahun_anggaran + ...`.
+- [ ] Fase 2 - Active budget year context.
+  - [x] Tetapkan penyimpanan tahun aktif user pada flow `Profile` tanpa membuat frontend menjadi authority.
+    - keputusan implementasi awal: simpan pada tabel `users` sebagai context aktif per user.
+  - [x] Rancang service transversal baru untuk resolve tahun aktif user, sejajar dengan `UserAreaContextService`.
+    - nama kerja: `ActiveBudgetYearContextService`.
+  - [x] Tentukan apakah tahun aktif perlu ikut ke session/cache/request shared props untuk UX, dengan backend tetap sebagai pengendali final.
+    - keputusan implementasi awal: kirim ke Inertia shared props/read payload setelah backend resolve nilai aktif.
+- [ ] Fase 3 - Retrofit boundary backend.
+  - [ ] Tambah kontrak `tahun_anggaran` pada DTO/model/factory concern yang relevan.
+  - [ ] Retrofit repository interface dan implementasi agar default query selalu include filter tahun aktif.
+  - [ ] Retrofit action/use case create/update agar otomatis mengisi atau mengunci `tahun_anggaran`.
+  - [ ] Audit report/export/dashboard supaya agregasi dan cetak memakai dataset tahun aktif yang benar.
+- [ ] Fase 4 - Migration/backfill/compatibility.
+  - [ ] Siapkan migration bertahap per wave, bukan big-bang tunggal.
+  - [ ] Definisikan default backfill untuk data existing development:
+    - jika sumber tahun eksplisit tersedia, gunakan sumber tersebut,
+    - jika tidak tersedia, pakai tahun anggaran baseline yang dikunci eksplisit dalam concern implementasi.
+  - [ ] Siapkan aturan transisi untuk unique constraint, seed, dan fixture test.
+- [ ] Fase 5 - Rollout validation waves.
+  - [x] Wave 1 dikunci: `Profile` + `ActiveBudgetYearContextService` + `AgendaSurat`.
+  - [ ] Wave 2: concern CRUD mayoritas yang pattern query-nya homogen (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`, dll).
+  - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
+  - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
+- [ ] Sinkronisasi dokumen concern terkait (trigger hardening aktif).
+  - [ ] TODO concern + ADR.
+  - [ ] registry concern aktif + log validasi.
+  - [ ] dokumen proses/domain canonical yang menyebut invariant data lintas modul.
+
+## Validasi
+- [x] L1: planning/doc audit scoped (sesi ini).
+  - [x] Audit baseline `ProfileController`, `ProfileUpdateRequest`, `User`, `UserAreaContextService`.
+  - [x] Audit pola repository `paginateByLevelAndArea/getByLevelAndArea` pada concern wilayah.
+  - [x] Audit migration untuk mendeteksi tabel yang belum memiliki `tahun_anggaran`.
+- [ ] L2: targeted regression saat implementasi.
+  - [ ] feature test flow `profile` untuk set/switch tahun anggaran aktif.
+  - [ ] unit/service test resolver tahun anggaran aktif.
+  - [ ] feature/repository tests `AgendaSurat` untuk anti data leak lintas tahun.
+  - [ ] print/report test `AgendaSurat` mengikuti tahun aktif.
+- [ ] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
+
+### Matrix Implementasi Wave-1
+- [ ] Migration test:
+  - [ ] `users.active_budget_year` atau nama final canonical tersedia dan tervalidasi.
+  - [ ] `agenda_surats.tahun_anggaran` tersedia + index/query path aman.
+- [ ] Feature test:
+  - [ ] user valid bisa menyimpan tahun aktif dari `Profile`.
+  - [ ] daftar `AgendaSurat` hanya menampilkan data tahun aktif.
+  - [ ] create `AgendaSurat` otomatis menyimpan `tahun_anggaran` aktif.
+  - [ ] update `AgendaSurat` tidak memindahkan record ke tahun lain secara diam-diam.
+  - [ ] print/report `AgendaSurat` tidak bocor lintas tahun.
+- [ ] Regression auth:
+  - [ ] `scope.role` dan creator filter existing tetap berjalan.
+  - [ ] role kecamatan sekretaris tetap hanya melihat data yang sesuai scope + creator rule + tahun aktif.
+
+## Risiko
+- Risiko 1: data leak lintas tahun anggaran karena ada repository atau report yang masih hanya mem-filter `level + area_id`.
+  - Mitigasi: retrofit repository interface terlebih dahulu, lalu audit seluruh pemanggilnya.
+- Risiko 2: unique constraint lama menjadi tidak valid setelah data multi-tahun masuk.
+  - Mitigasi: klasifikasikan constraint per tabel sebelum migration wave dimulai.
+- Risiko 3: user salah persepsi saat pindah tahun aktif dan mengira data hilang.
+  - Mitigasi: copy UI natural pada `Profile` dan indicator tahun aktif pada layout concern terdampak.
+- Risiko 4: concern yang sudah punya field periode domain-spesifik mengalami tumpang tindih makna dengan `tahun_anggaran`.
+  - Mitigasi: kunci definisi bahwa `tahun_anggaran` adalah context isolasi administratif, bukan pengganti semua field periode domain.
+- Risiko 5: patch besar lintas modul sulit dibatalkan jika dieksekusi sekaligus.
+  - Mitigasi: rollout per wave + concern pilot + fallback migration terpisah.
+
+## Keputusan
+- [x] K1: `tahun_anggaran` diperlakukan sebagai context transversal baru, bukan alasan untuk membentuk ulang domain concern.
+- [x] K2: `Profile` menjadi entry point set tahun aktif, tetapi authority final tetap backend service.
+- [x] K3: retrofit dilakukan per wave berbasis repository pattern yang sudah ada, bukan rewrite besar per modul.
+- [x] K4: field periode domain-spesifik tetap hidup dan dipetakan eksplisit terhadap `tahun_anggaran`.
+- [x] K5: dashboard/report ikut dalam scope mandatory, bukan follow-up opsional.
+- [x] K6: wave implementasi pertama memakai `AgendaSurat`, bukan `Activities`, untuk menekan risiko regresi pada concern dengan query lintas role yang lebih kompleks.
+- [x] K7: storage tahun aktif user pada wave-1 dikunci di backend persistence user, bukan session-only, agar context kerja konsisten lintas request.
+
+## Keputusan Arsitektur (Jika Ada)
+- [x] Tautkan ADR di `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`.
+- [x] Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern saat implementasi dimulai/diterima.
+
+## Fallback Plan
+- Jalur fallback 1: hentikan rollout setelah wave concern pilot jika test anti data leak belum stabil.
+- Jalur fallback 2: pertahankan kolom/perilaku lama sementara dengan adapter repository per concern sampai migration wave berikutnya siap.
+- Jalur fallback 3: untuk data development pre-release, lakukan `migrate:fresh` hanya bila klasifikasi dan backfill manual sudah terkunci; laporkan reset data secara eksplisit.
+- Jalur fallback 4: jika flow `Profile` belum siap, backend dapat sementara memakai tahun anggaran default yang dikunci di config/service internal khusus wave pilot, tanpa membuka input manual di tiap modul.
+
+## Output Final
+- [ ] Ringkasan apa yang diubah dan kenapa.
+- [ ] Daftar file terdampak (schema/backend/frontend/test/docs) per wave.
+- [ ] Hasil validasi + residual risk.
+- [ ] Keputusan rollout: `pilot-ready` / `hold` / `needs-contract-clarification`.
+
+## Status Readiness
+- [x] Contract lock selesai.
+- [x] ADR sinkron.
+- [x] Wave-1 target file sudah dikunci.
+- [x] Modul pilot sudah dipilih.
+- [x] Matrix validasi wave-1 sudah ditulis.
+- [x] TODO siap dipakai implementasi.

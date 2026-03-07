@@ -120,9 +120,11 @@ Jika permintaan tidak cocok tabel:
 
 ## 5. Decision Gates (No-Assumption Rules)
 
-Gate A - Scope & Area:
+Gate A - Scope, Area, and Budget Year:
 - Data wilayah wajib memiliki `level`, `area_id`, `created_by`.
 - `area_id` user wajib konsisten dengan `scope` dan `areas.level`.
+- Untuk data administrasi TP PKK yang terisolasi periode, `tahun_anggaran` wajib diperlakukan sebagai context backend resmi dan tidak boleh hanya menjadi filter frontend ad-hoc.
+- Jika concern sudah termasuk isolasi `tahun_anggaran`, query repository wajib mengunci `tahun_anggaran` bersama `level + area_id`.
 
 Gate B - Authorization:
 - Frontend bukan authority akses; enforcement wajib terbukti di backend (policy/middleware/scope service).
@@ -154,6 +156,7 @@ Ladder tambahan concern `UI/UX auditability gate`:
 Kriteria selesai:
 - Semua gate concern terpenuhi.
 - Tidak ada drift `role` vs `scope` vs `areas.level`.
+- Tidak ada drift `tahun_anggaran` aktif vs data yang dibaca/ditulis pada concern yang relevan.
 - Dokumen concern sinkron.
 
 ## 7. Commit by Concern

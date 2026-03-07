@@ -12,8 +12,15 @@ Status interpretasi:
 
 Aturan baca:
 - Kolom `field canonical` berisi field inti domain. Untuk tabel persisten, invariant wajib: `level`, `area_id`, `created_by`.
+- Untuk data administrasi TP PKK yang dikelompokkan per periode kerja, invariant transversal tambahan adalah `tahun_anggaran`; field periode domain-spesifik (`tahun_laporan`, `tahun_awal`, `tahun_akhir`, `year`, `semester`) tidak otomatis menggantikannya.
 - Kolom `label PDF saat ini` diambil dari judul render pada `resources/views/pdf/*.blade.php`.
 - Kolom `catatan koherensi` menandai apakah label PDF sudah identik dengan label pedoman.
+
+Kontrak transversal aktif:
+- `Tahun anggaran adalah identitas isolasi data administrasi TP PKK per siklus tahunan, default 1 Januari-31 Desember, dan ditetapkan sebagai context kerja aktif user.`
+- `tahun_anggaran` adalah identitas periode kerja administrasi TP PKK yang mengisolasi data lintas modul.
+- Tahun anggaran aktif ditetapkan dari flow `Profile` sebagai context backend user, lalu diterapkan ke boundary repository concern yang relevan.
+- Refactor `tahun_anggaran` tidak mengubah concern domain existing; hanya menambah dimensi isolasi data lintas concern.
 
 | Lampiran | Slug modul | Label pedoman | Field canonical (inti) | Label PDF saat ini | Sumber halaman pedoman | Catatan koherensi |
 | --- | --- | --- | --- | --- | --- | --- |
