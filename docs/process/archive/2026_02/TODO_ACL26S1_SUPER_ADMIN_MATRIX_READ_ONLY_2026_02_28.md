@@ -6,10 +6,12 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 Parent Concern: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
 
 ## Konteks
+
 - Tahap awal perlu halaman read-only agar stakeholder dapat memvalidasi desain matrix akses sebelum write override diaktifkan.
 - Basis data akses diambil dari resolver runtime existing (`RoleMenuVisibilityService`) agar representasi akurat dengan kondisi produksi saat ini.
 
 ## Target Hasil
+
 - [x] Menu super-admin baru: `Management Ijin Akses`.
 - [x] Tabel read-only menampilkan kombinasi:
   - `scope` (`desa|kecamatan`),
@@ -20,6 +22,7 @@ Parent Concern: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES
 - [x] Tidak ada endpoint write/update pada tahap ini.
 
 ## Langkah Eksekusi
+
 - [x] Tambah route + controller read-only concern super-admin.
 - [x] Tambah use case read model matrix akses dari resolver runtime.
 - [x] Tambah halaman Inertia `SuperAdmin/AccessControl/Index` (read-only).
@@ -27,22 +30,27 @@ Parent Concern: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES
 - [x] Tambah feature test akses menu (allowed: super-admin, denied: non super-admin).
 
 ## Validasi
+
 - [x] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`
 - [x] `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
 - [x] `php artisan test`
 
 ## Risiko
+
 - Potensi salah tafsir jika label tabel terlalu teknis.
 - Potensi mismatch jika resolver runtime berubah tanpa sinkronisasi read model.
 
 ## Keputusan
+
 - [x] Tahap ini murni observability UI, tanpa mutasi data ijin akses.
 
 ## Output Final
+
 - [x] Screenshot/rekap matrix akses dari UI super-admin.
 - [x] Catatan keputusan desain untuk lanjut tahap write pilot.
 
 ## Hasil Implementasi (2026-02-28)
+
 - Backend:
   - route `super-admin/access-control` (read-only),
   - controller `AccessControlManagementController`,
@@ -55,3 +63,4 @@ Parent Concern: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES
   - feature test khusus read-only matrix super-admin,
   - regression test payload visibilitas menu,
   - full test suite (`php artisan test`) hijau.
+

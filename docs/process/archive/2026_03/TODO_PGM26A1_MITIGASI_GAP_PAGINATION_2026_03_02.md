@@ -5,11 +5,13 @@ Status: `done`
 Related ADR: `-`
 
 ## Konteks
+
 - Audit implementasi pagination per 2026-03-02 menemukan gap kontrak pada modul list yang masih memakai `Collection` tanpa payload paginator.
 - Terdapat drift status dokumen concern pagination (`TODO_UI_PAGINATION_E2E_2026_02_24.md` berstatus `done`, namun sebagian modul belum memenuhi kontrak canonical `page/per_page`).
 - Jalur Super Admin (`User Management`, `Management Arsip`) sudah memakai `paginate`, tetapi masih hardcoded `10` dan belum punya normalisasi request `per_page` seperti modul domain lain.
 
 ## Kontrak Concern (Lock)
+
 - Domain: pagination list Inertia lintas modul wilayah + super admin.
 - Role/scope target: `desa`, `kecamatan`, `super-admin`.
 - Boundary data: `Controller -> UseCase/Action -> Repository -> Model` tetap dijaga; frontend hanya consumer metadata pagination.
@@ -21,6 +23,7 @@ Related ADR: `-`
 - Dampak keputusan arsitektur: `tidak` (tidak ubah boundary utama, hanya hardening konsistensi implementasi).
 
 ## Scope Mitigasi
+
 - Modul wilayah non-paginated:
   - `Koperasi`, `KejarPaket`, `Posyandu`, `ProgramPrioritas`, `SimulasiPenyuluhan`, `WarungPkk` (Desa + Kecamatan).
   - `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan` (Desa + Kecamatan).
@@ -31,12 +34,14 @@ Related ADR: `-`
   - sinkronisasi `TODO_UI_PAGINATION_E2E_2026_02_24.md` dan log validasi concern terkait.
 
 ## Target Hasil
+
 - [x] Seluruh modul dalam scope mitigasi berpindah dari list `Collection` ke kontrak pagination canonical.
 - [x] Kontrak request list `per_page` seragam lintas concern target.
 - [x] UI list concern target memakai komponen pagination reusable dan mempertahankan query aktif.
 - [x] Drift status dokumen concern pagination ditutup lewat doc-hardening pass.
 
 ## Langkah Eksekusi
+
 - [x] P1. Re-baseline concern: petakan file controller/use case/repository/request/ui/test untuk seluruh modul scope mitigasi.
 - [x] P2. Backend contract hardening:
   - [x] tambah request list untuk modul yang belum punya (`per_page` whitelist + fallback);
@@ -57,6 +62,7 @@ Related ADR: `-`
   - [x] catat hasil validasi di `OPERATIONAL_VALIDATION_LOG.md`.
 
 ## Validasi
+
 - [x] L1: targeted test concern pagination per modul yang diubah.
 - [x] L2: regression test lintas concern list wilayah + super admin.
 - [x] L3: `php artisan test`.
@@ -64,25 +70,30 @@ Related ADR: `-`
 - [x] L5: smoke test navigasi concern target (roundtrip `page=1 -> page=2 -> page=1`, perubahan `per_page`, dan persistence query pada URL paginator).
 
 ## Risiko
+
 - Risiko 1: perubahan massal list endpoint berpotensi memicu drift payload antar halaman.
 - Risiko 2: query filter existing bisa hilang saat migrasi ke paginator jika mapping URL state tidak seragam.
 - Risiko 3: durasi eksekusi tinggi karena scope menyentuh backend, frontend, test, dan dokumentasi.
 
 ## Keputusan
+
 - [x] K1: Eksekusi mitigasi dilakukan bertahap per domain (bukan big-bang) agar rollback lebih aman.
 - [x] K2: Prioritas awal pada modul dengan gap terbesar (12 modul wilayah non-paginated), lanjut pilot project dan super admin.
 - [x] K3: Concern dinyatakan selesai hanya jika implementasi + test + doc-hardening sudah sinkron.
 
 ## Fallback Plan
+
 - Jika regresi ditemukan pada domain tertentu, rollback domain tersebut ke commit stabil terakhir tanpa menghentikan domain lain.
 - Jika beban perubahan terlalu besar dalam satu siklus, pecah ke sub-concern per modul dengan status terukur (`planned/in-progress/done`) di dokumen turunan.
 
 ## Output Final
+
 - [x] Ringkasan implementasi mitigasi per domain.
 - [x] Daftar file terdampak (backend, frontend, test, docs).
 - [x] Bukti validasi otomatis + manual dan residual risk.
 
 ## Progress Update 2026-03-02
+
 - Backend lintas modul target sudah memakai jalur `paginateByLevelAndArea + execute(level, perPage)` serta `executeAll(level)` untuk kebutuhan print.
 - Normalisasi request `per_page` (`10,25,50` + fallback) sudah ditambahkan untuk seluruh modul target dan super-admin (`users`, `arsip`).
 - UI super-admin (`Users`, `Arsip`) sudah memakai kontrol `per_page` + `PaginationBar`.
@@ -100,6 +111,7 @@ Related ADR: `-`
   - `php artisan test --filter ArsipManagement`
 
 ## Progress Update 2026-03-02 (Lanjutan Eksekusi Manto)
+
 - Hardening frontend concern target selesai:
   - `Desa/Kecamatan` untuk `Koperasi`, `KejarPaket`, `Posyandu`, `WarungPkk`.
   - `Desa/Kecamatan` untuk `ProgramPrioritas`, `SimulasiPenyuluhan` (query persistence).
@@ -116,6 +128,7 @@ Related ADR: `-`
   - `npm run build` (`PASS`, `vite build`, `built in 6m 4s`).
 
 ## Progress Update 2026-03-02 (Penutupan Concern)
+
 - Hardening smoke test navigasi concern super-admin ditambahkan:
   - `tests/Feature/SuperAdmin/UserManagementIndexPaginationTest.php` (guard `next_page_url` + roundtrip `page=1 -> page=2 -> page=1`).
   - `tests/Feature/SuperAdmin/ArsipManagementTest.php` (guard `next_page_url` + roundtrip `page=1 -> page=2 -> page=1`).
@@ -124,3 +137,4 @@ Related ADR: `-`
   - `php artisan test --filter UserManagementIndexPaginationTest` (`PASS`, `6` tests, `107` assertions).
   - `php artisan test --filter ArsipManagementTest` (`PASS`, `6` tests, `98` assertions).
 - Concern `PGM26A1` ditutup sebagai `done`; residual risk manual browser dipersempit lewat regression guard otomatis pada layer feature test.
+

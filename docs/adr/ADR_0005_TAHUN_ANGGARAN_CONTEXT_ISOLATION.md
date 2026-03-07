@@ -8,6 +8,7 @@ Supersedes: `-`
 Superseded by: `-`
 
 ## Konteks
+
 - Konteks bisnis yang baru dikunci: administrasi TP PKK dikelompokkan berdasarkan `tahun anggaran`, sehingga data operasional harus terisolasi per tahun anggaran.
 - Baseline implementasi saat ini hanya konsisten pada isolasi `level + area_id + created_by`; `Profile` belum memuat tahun anggaran aktif, dan mayoritas repository concern wilayah hanya mem-filter `level + area_id`.
 - Beberapa concern sudah memiliki field periode (`tahun_laporan`, `tahun_awal`, `tahun_akhir`, `year`, `semester`), tetapi field tersebut bersifat domain-spesifik dan belum menjadi kontrak transversal isolasi data.
@@ -15,6 +16,7 @@ Superseded by: `-`
 
 ## Opsi yang Dipertimbangkan
 ### Opsi A - Pertahankan struktur sekarang, tambahkan filter tahun per modul secara eksplisit di UI
+
 - Ringkasan pendek: setiap modul diberi input/filter tahun sendiri, lalu controller/repository concern menanganinya masing-masing.
 - Kelebihan:
   - implementasi awal tampak cepat pada modul tertentu.
@@ -25,6 +27,7 @@ Superseded by: `-`
   - operator harus mengatur tahun berulang kali di banyak halaman.
 
 ### Opsi B - Tambahkan `tahun_anggaran` sebagai context transversal yang diset dari `Profile`, lalu dipersist ke record concern
+
 - Ringkasan pendek: user memiliki tahun anggaran aktif yang dikendalikan backend; concern data administrasi menyimpan `tahun_anggaran` dan repository default mem-filter `level + area_id + tahun_anggaran`.
 - Kelebihan:
   - isolasi data konsisten lintas concern tanpa mengubah struktur domain.
@@ -35,6 +38,7 @@ Superseded by: `-`
   - perlu definisi eksplisit untuk relasi `tahun_anggaran` versus field periode domain-spesifik.
 
 ### Opsi C - Pisahkan data per tahun anggaran dengan tabel/partisi concern terpisah
+
 - Ringkasan pendek: setiap tahun anggaran diperlakukan seperti namespace penyimpanan terpisah yang lebih fisik.
 - Kelebihan:
   - isolasi data sangat ketat pada level penyimpanan.
@@ -43,6 +47,7 @@ Superseded by: `-`
   - terlalu invasif terhadap concern existing untuk kebutuhan aplikasi saat ini.
 
 ## Keputusan
+
 - Opsi terpilih: Opsi B.
 - Alasan utama:
   - paling sejalan dengan arsitektur aktif `Controller -> UseCase/Action -> Repository -> Model`.
@@ -57,6 +62,7 @@ Superseded by: `-`
   - concern existing, route utama, dan boundary arsitektur tidak diubah.
 
 ## Dampak
+
 - Dampak positif:
   - desain data menjadi sesuai konteks bisnis yang sebenarnya.
   - risiko tercampurnya data antar tahun anggaran turun drastis.
@@ -74,12 +80,14 @@ Superseded by: `-`
   - dashboard, report, export, dan dokumen domain/proses terkait
 
 ## Validasi
+
 - [x] Targeted audit dokumen + baseline code scoped.
 - [ ] Targeted test concern.
 - [ ] Regression test concern terkait.
 - [ ] `php artisan test` (jika perubahan signifikan).
 
 Catatan validasi:
+
 - Sesi ini bersifat `planning-only`; belum ada perubahan runtime.
 - Baseline yang sudah diaudit:
   - `ProfileController`, `ProfileUpdateRequest`, `User`,
@@ -88,6 +96,7 @@ Catatan validasi:
   - migration concern wilayah untuk cek keberadaan kolom tahun.
 
 ## Rollback/Fallback Plan
+
 - Langkah rollback minimum:
   - jika implementasi wave pilot gagal, batalkan concern wave tersebut tanpa memaksa rollout ke seluruh modul.
   - jika schema multi-wave mulai drift, kembalikan ke adapter repository transisional sebelum melanjutkan migrasi berikutnya.
@@ -97,6 +106,7 @@ Catatan validasi:
   - flow `Profile` belum stabil menjadi source context backend.
 
 ## Referensi
+
 - `AGENTS.md`
 - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
 - `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md`
@@ -106,5 +116,7 @@ Catatan validasi:
   - DJPb Kemenkeu, aplikasi SAKTI: periodisasi transaksi tahunan dan closing period berbasis tahun anggaran.
 
 ## Status Log
+
 - 2026-03-07: `proposed` dibuat untuk mengunci keputusan awal refactor tahun anggaran sebelum implementasi runtime.
 - 2026-03-07: `proposed` -> `accepted` | contract lock, wave-1 pilot, dan target file implementasi pertama sudah dikunci sehingga concern siap dieksekusi.
+

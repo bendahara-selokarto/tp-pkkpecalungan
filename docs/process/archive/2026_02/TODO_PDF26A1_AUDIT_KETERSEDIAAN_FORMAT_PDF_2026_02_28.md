@@ -5,12 +5,14 @@ Status: `done`
 Related ADR: `-`
 
 ## Konteks
+
 - Permintaan user: pastikan semua format generate PDF memiliki UI, end-to-end valid, dan dimiliki minimal satu role.
 - Scope audit mencakup:
   - route `*/report/pdf`
   - route `*/print` yang benar-benar menghasilkan PDF (activity detail print).
 
 ## Kontrak Concern (Lock)
+
 - Domain: ketersediaan format PDF lintas modul.
 - Role/scope target: `desa`, `kecamatan`, dan route dashboard berbasis `auth+verified`.
 - Boundary data: route -> controller -> `loadView('pdf.*')` -> blade view -> trigger UI.
@@ -22,6 +24,7 @@ Related ADR: `-`
 - Dampak keputusan arsitektur: `tidak` (tidak mengubah boundary backend utama).
 
 ## Target Hasil
+
 - [x] Laporan audit PDF terdokumentasi dalam markdown.
 - [x] Registry kejadian PDF yatim tersedia dan terisi.
 - [x] Jalur tracking berulang untuk audit berikutnya ditetapkan.
@@ -37,17 +40,20 @@ Related ADR: `-`
 | Route berbasis `auth+verified` (dashboard) | 1 | covered |
 
 ## Definisi PDF Yatim (Standar Audit)
+
 - `A. Route yatim`: route PDF ada, tapi tidak ada trigger UI.
 - `B. UI yatim`: trigger UI ada, tapi route PDF tidak terdaftar.
 - `C. E2E yatim`: route ada, tapi controller/method/view PDF putus.
 - `D. Role yatim`: route PDF tidak punya ownership akses minimal (`scope.role:*` atau guard yang disetujui).
 
 ## Temuan Audit 2026-02-28
+
 - Kandidat awal dari scan literal UI: `12` route.
 - Kandidat false-positive (jalur dinamis `scopePrefix`): `4` route.
 - PDF yatim terkonfirmasi: `8` route (`A. Route yatim`).
 
 Daftar 8 route yatim terkonfirmasi (sebelum perbaikan):
+
 - `desa/buku-daftar-hadir/report/pdf`
 - `desa/buku-notulen-rapat/report/pdf`
 - `desa/buku-tamu/report/pdf`
@@ -58,6 +64,7 @@ Daftar 8 route yatim terkonfirmasi (sebelum perbaikan):
 - `kecamatan/bantuans/keuangan/report/pdf`
 
 ## Perbaikan yang Dilakukan
+
 - Menambahkan trigger UI `Cetak PDF` pada:
   - `resources/js/Pages/Desa/BukuDaftarHadir/Index.vue`
   - `resources/js/Pages/Desa/BukuNotulenRapat/Index.vue`
@@ -70,6 +77,7 @@ Daftar 8 route yatim terkonfirmasi (sebelum perbaikan):
   - `resources/js/Pages/Kecamatan/Bantuan/Index.vue`
 
 ## Validasi
+
 - [x] Inventory route PDF: `php artisan route:list --path=report/pdf --json --except-vendor`
 - [x] Inventory route print PDF: `php artisan route:list --path=print --json --except-vendor`
 - [x] Verifikasi mapping UI route literal + dinamis (`scopePrefix` / `routes.print`) via `rg`
@@ -93,6 +101,7 @@ Gunakan format ini setiap audit:
 ```
 
 ## Tujuan Arsitektur Terstruktur Ketersediaan PDF
+
 1. Gate inventaris route: semua endpoint PDF harus terdeteksi dari route registry.
 2. Gate kontrak UI: semua endpoint PDF harus punya trigger UI yang dapat ditelusuri.
 3. Gate integritas E2E: semua controller print harus punya view PDF valid.
@@ -100,6 +109,7 @@ Gunakan format ini setiap audit:
 5. Gate incident log: setiap temuan PDF yatim wajib dicatat pada registry di dokumen ini.
 
 ## Protokol Audit Berkala (Operasional)
+
 - [x] Jalankan inventory route PDF dan print PDF (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
 - [x] Jalankan scan trigger UI (`literal` + `dinamis`) (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
 - [x] Validasi controller -> view PDF (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
@@ -108,22 +118,27 @@ Gunakan format ini setiap audit:
 - [x] Tutup gap sebelum rilis jika status masih `open` (dipindah ke concern turunan `TODO_PDF26A2_FOLLOW_UP_AUDIT_BERKALA_PDF_2026_03_02.md`).
 
 ## Risiko
+
 - Route dinamis dapat menghasilkan false-positive bila audit hanya berbasis pencarian literal URL.
 - Drift dokumentasi dapat terjadi jika registry tidak diperbarui saat audit berikutnya.
 - Endpoint dengan guard umum (`auth+verified`) perlu verifikasi owner operasional saat perubahan role matrix.
 
 ## Keputusan
+
 - [x] K1: PDF yatim dikunci ke klasifikasi `A/B/C/D` untuk konsistensi lintas audit.
 - [x] K2: Registry pada dokumen ini menjadi sumber log resmi kejadian PDF yatim concern ini.
 - [x] K3: Audit dinamis (`scopePrefix`/`routes.print`) wajib dicatat sebagai evidence agar tidak dianggap yatim semu.
 
 ## Fallback Plan
+
 - Jika audit berikutnya menemukan PDF yatim:
   - prioritas 1: pulihkan trigger UI jika route valid;
   - prioritas 2: hapus/disable trigger UI jika route tidak valid;
   - prioritas 3: sinkronkan route-controller-view dan ownership role sebelum release.
 
 ## Output Final
+
 - [x] Ringkasan apa yang diubah dan kenapa.
 - [x] Daftar file terdampak.
 - [x] Hasil validasi + residual risk.
+

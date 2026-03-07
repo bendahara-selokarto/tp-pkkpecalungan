@@ -49,3 +49,4 @@ Gunakan arsip berikut jika user meminta audit concern lama, jejak keputusan deta
 - [x] Registry aktif dipangkas agar fokus concern berjalan.
 - [x] Jalur referensi concern aktif tetap deterministik (1 concern -> 1 SOT).
 - [x] Concern baru `C-BUDGET-YEAR-CONTEXT` ditambahkan untuk mengunci refactor canonical `tahun_anggaran`.
+

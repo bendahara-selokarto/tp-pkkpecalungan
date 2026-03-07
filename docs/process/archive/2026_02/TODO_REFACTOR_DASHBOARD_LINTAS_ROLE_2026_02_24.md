@@ -127,3 +127,4 @@ Status: `done` (`superseded` untuk koherensi kritis oleh `docs/process/archive/2
 - [x] Baseline minimalis utama: dashboard `kecamatan-sekretaris` versi aktif.
 - [x] Refactor fokus pada lapisan presentasi; kontrak data backend tetap.
 - [x] Laporan hasil tiap concern wajib mencantumkan perubahan, validasi, dan dampaknya.
+

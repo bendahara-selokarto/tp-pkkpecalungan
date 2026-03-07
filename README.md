@@ -27,6 +27,7 @@ powershell -File scripts/generate_todo.ps1 -Code PGM26A1 -Title "Mitigasi Gap Pa
 
 Aplikasi ini dipakai untuk manajemen data PKK berbasis wilayah.
 Target utama:
+
 - Konsistensi arsitektur lintas modul.
 - Pemisahan business flow dari layer HTTP.
 - Authorization yang ketat per scope wilayah.
@@ -51,6 +52,7 @@ Pola authorization wajib:
 `Policy -> Scope Service`
 
 Aturan implementasi:
+
 - Controller harus tipis (orchestration request/response).
 - Business flow di `UseCase/Action`, bukan di controller.
 - Query domain melalui repository.
@@ -68,18 +70,22 @@ Aturan implementasi:
 ## 5. Authorization dan Scope
 
 Scope aktif:
+
 - `desa`
 - `kecamatan`
 
 Role scoped aktif:
+
 - `desa-sekretaris`, `desa-bendahara`, `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv`
 - `kecamatan-sekretaris`, `kecamatan-bendahara`, `kecamatan-pokja-i`, `kecamatan-pokja-ii`, `kecamatan-pokja-iii`, `kecamatan-pokja-iv`
 
 Role kompatibilitas legacy:
+
 - `admin-desa`
 - `admin-kecamatan`
 
 Aturan penting:
+
 - Source of truth authorization: `Policy -> Scope Service`.
 - Guard route domain: middleware `scope.role:{desa|kecamatan}`.
 - `role`, `scope`, `area_id` harus konsisten.
@@ -88,11 +94,13 @@ Aturan penting:
 ## 6. Standar Database
 
 Untuk tabel domain wilayah, kolom berikut wajib ada:
+
 - `level` (`desa|kecamatan`)
 - `area_id` (FK ke `areas.id`)
 - `created_by` (FK ke `users.id`)
 
 Standar wajib:
+
 - Relasi penting harus FK eksplisit.
 - Aksi delete harus jelas (`cascadeOnDelete`, `nullOnDelete`, `restrict`).
 - Index minimal tabel domain wilayah: `index(['level', 'area_id'])`.
@@ -100,6 +108,7 @@ Standar wajib:
 - Seeder harus idempotent (`firstOrCreate` atau `updateOrCreate`).
 
 Status saat ini:
+
 - Struktur utama sudah mengikuti pola scope wilayah.
 - Constraint DB untuk memaksa kecocokan `record.level` dan `areas.level` lintas tabel belum penuh.
 - Enum literal masih tersebar lintas migration/request/UI (target refactor bertahap).
@@ -107,20 +116,24 @@ Status saat ini:
 ## 7. Standar UI
 
 Entrypoint utama:
+
 - `resources/js/app.js`
 - Pages: `resources/js/Pages/**/*.vue`
 
 Layout default:
+
 - Auth: `resources/js/admin-one/layouts/LayoutGuest.vue`
 - App: `resources/js/Layouts/DashboardLayout.vue`
 
 Aturan UI:
+
 - Sidebar menyesuaikan `scope` dan role user.
 - Akses riil tetap ditentukan backend (middleware + policy).
 - Hindari menambah Blade untuk flow aplikasi utama kecuali kebutuhan khusus.
 - Kode domain/menu (contoh: `S1`, `L44`, `PRG`, `MON`) boleh disertakan pada dokumen resmi sebagai kode kecil di kanan atas area header.
 
 Standar input tanggal:
+
 - UI form domain memakai `DD/MM/YYYY`.
 - Validasi dan normalisasi tanggal dilakukan di `FormRequest`.
 - Format canonical backend: `Y-m-d`.
@@ -129,6 +142,7 @@ Standar input tanggal:
 ## 8. Modul Inertia Aktif
 
 Sudah berbasis Inertia Vue:
+
 - `kegiatan` (route teknis saat ini: `activities`)
 - `inventaris`
 - `bantuans`
@@ -158,6 +172,7 @@ Sudah berbasis Inertia Vue:
 - `auth/confirm-password`
 
 Blade dipertahankan untuk use case khusus:
+
 - Contoh: template PDF kegiatan.
 
 ## 9. Konvensi Bahasa
@@ -170,6 +185,7 @@ Blade dipertahankan untuk use case khusus:
 ## 10. Definition of Done
 
 Perubahan dianggap selesai jika:
+
 - Mengikuti layering dan authorization pattern di dokumen ini.
 - Tidak menambah bypass repository untuk query domain baru.
 - Tidak menambah dependency baru ke tabel legacy.
@@ -179,11 +195,13 @@ Perubahan dianggap selesai jika:
 ## 11. Known Debt dan Arah Refactor
 
 Known debt aktif:
+
 - Sebagian controller administratif masih query model langsung.
 - Enum domain belum sepenuhnya terpusat.
 - Enforcement DB level-area match lintas tabel belum menyeluruh.
 
 Arah refactor prioritas:
+
 1. Sentralisasi enum domain.
 2. Eliminasi query langsung controller administratif.
 3. Tambah constraint DB untuk validasi level-area.
@@ -198,6 +216,7 @@ Arah refactor prioritas:
 ## 13. Playbook Modul/Menu Baru
 
 Gunakan urutan ini agar implementasi konsisten:
+
 1. Tetapkan kontrak domain: nama modul, scope aktif (`desa`/`kecamatan`), role yang diizinkan, dan boundary data.
 2. Definisikan route + middleware: group route wajib pakai `scope.role:{desa|kecamatan}`.
 3. Buat `FormRequest` untuk validasi + normalisasi input (termasuk tanggal `DD/MM/YYYY` ke `Y-m-d`).
@@ -208,6 +227,7 @@ Gunakan urutan ini agar implementasi konsisten:
 8. Tutup dengan test matrix minimum (lihat bagian 14).
 
 Aturan implementasi penting:
+
 - Untuk nilai scope/level di PHP, gunakan enum domain (`ScopeLevel`) dan hindari literal berulang.
 - Data domain wilayah baru harus tetap menyimpan `level`, `area_id`, `created_by`.
 - Flow create/update harus menjaga konsistensi `area_id` terhadap `areas.level`.
@@ -216,6 +236,7 @@ Aturan implementasi penting:
 ## 14. Test Matrix Minimum (Modul Baru)
 
 Minimal test yang wajib ada:
+
 1. Feature test jalur sukses untuk role/scope yang valid.
 2. Feature test jalur tolak untuk role tidak valid.
 3. Feature test jalur tolak untuk mismatch role vs level area (simulasi data stale/legacy).
@@ -228,6 +249,7 @@ Minimal test yang wajib ada:
 Baseline audit runtime UI/UX tersedia melalui Playwright (smoke) dan Axe (aksesibilitas).
 
 Prasyarat:
+
 - Dependensi terpasang:
   - `npm install`
   - `npm run test:e2e:install`
@@ -240,6 +262,7 @@ Prasyarat:
     - `php artisan serve --host=127.0.0.1 --port=8000`
 
 Kredensial login (opsional untuk smoke terautentikasi):
+
 - `E2E_DESA_EMAIL`
 - `E2E_DESA_PASSWORD`
 - `E2E_KECAMATAN_EMAIL`
@@ -252,6 +275,7 @@ Kredensial login (opsional untuk smoke terautentikasi):
 - `E2E_A11Y_DISABLE_COLOR_CONTRAST=0` untuk mengaktifkan rule `color-contrast` pada scan Axe.
 
 Provisioning akun deterministik untuk CI:
+
 - Jalankan seeder `Database\\Seeders\\E2ERuntimeUserSeeder`.
 - Nilai default seeder:
   - desa: `e2e.desa@pkk.local / password123`
@@ -259,9 +283,11 @@ Provisioning akun deterministik untuk CI:
   - super-admin: `e2e.superadmin@pkk.local / password123`
 
 Fallback kompatibilitas lama:
+
 - `E2E_EMAIL` + `E2E_PASSWORD` tetap dibaca untuk role `super-admin` jika env khusus super-admin belum diisi.
 
 Perintah:
+
 - `npm run test:e2e`
 - `npm run test:e2e:smoke`
 - `npm run test:e2e:a11y`
@@ -274,6 +300,7 @@ Perintah:
   - `$env:E2E_A11Y_EXCLUDE_NPROGRESS='0'; $env:E2E_A11Y_DISABLE_COLOR_CONTRAST='0'; npm run test:e2e:a11y`
 
 Catatan:
+
 - Linux/WSL: wrapper e2e otomatis set `TMPDIR/TEMP/TMP=/tmp` untuk menghindari masalah permission cache temp lintas OS.
 - Jika preflight melaporkan library OS tidak lengkap (contoh: `libnspr4.so`, `libnss3.so`, `libasound.so.2`), pasang paket yang disarankan (Ubuntu/Debian: `sudo apt-get install -y libnspr4 libnss3 libasound2`) lalu jalankan ulang.
 - Test login page (`@smoke`, `@a11y`) selalu jalan tanpa kredensial.
@@ -288,3 +315,4 @@ Catatan:
 - Selama history belum mencapai 3 run, evaluator memberi status `warmup` (bukan `ok`) agar fase pematangan data tetap terbaca eksplisit di audit CI.
 - Workflow runtime evidence dijalankan terjadwal 2x sehari (cron) agar history trend cepat terakumulasi walau tanpa push baru.
 - Artefak trend menyertakan `warmupRemainingRuns` + rekomendasi `Next Action` agar tindak lanjut audit operasional lebih cepat.
+

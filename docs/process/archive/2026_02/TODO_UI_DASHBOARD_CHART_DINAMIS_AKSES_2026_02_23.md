@@ -15,6 +15,7 @@ Status: `done`
 - Jika ada analisa yang memakai dokumen ini sebagai acuan final concern aktif, analisa tersebut dianggap usang dan wajib mengikuti dokumen acuan terbaru di atas.
 
 Catatan lanjutan visual minimalis:
+
 - Eksekusi refactor UI minimalis direncanakan di `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
 - Acuan baseline visual: dashboard role `kecamatan-sekretaris` yang sudah diperbaiki pada sesi aktif.
 - Update skenario aktif 2026-02-26: untuk concern sekretaris, rendering dikunci satu section (`sekretaris-section-1`), section lanjutan tidak dirender.
@@ -178,3 +179,4 @@ Catatan lanjutan visual minimalis:
 - `app/Domains/Wilayah/Dashboard/UseCases/BuildRoleAwareDashboardBlocksUseCase.php`
 - `resources/js/Pages/Dashboard.vue`
 - `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
+

@@ -1,10 +1,12 @@
 # Mapping Lampiran 4.24 - Data Kegiatan PKK (Pokja IV)
 
 ## Sumber Autentik
+
 - Text-layer: `docs/referensi/232.pdf` (cara pengisian Pokja IV, kolom 1-27).
 - Verifikasi visual header tabel: screenshot lampiran 4.24 pada sesi implementasi ini.
 
 ## Hasil Baca Header (Final)
+
 - Judul: `DATA KEGIATAN PKK`
 - Subjudul: `POKJA IV`
 - Total kolom: `27`
@@ -32,9 +34,11 @@
 
 ## Mapping Implementasi (Report-Only)
 Target file:
+
 - `resources/views/pdf/data_kegiatan_pkk_pokja_iv_report.blade.php`
 
 Sumber data agregasi:
+
 - `KaderKhusus` -> kolom 3-7 (kader kesehatan + klasifikasi gizi/kesling/phbs/kb).
 - `Posyandu` -> kolom 8-9.
 - `DataKegiatanWarga` -> kolom 10-11 (indikator PKG/TBC berbasis keyword operasional).
@@ -42,12 +46,16 @@ Sumber data agregasi:
 - `ProgramPrioritas` -> kolom 25-27 (program unggulan berbasis keyword operasional).
 
 Route report:
+
 - `desa.catatan-keluarga.data-kegiatan-pkk-pokja-iv.report`
 - `kecamatan.catatan-keluarga.data-kegiatan-pkk-pokja-iv.report`
 
 Use case + repository:
+
 - `app/Domains/Wilayah/CatatanKeluarga/UseCases/ListScopedDataKegiatanPkkPokjaIvUseCase.php`
 - `app/Domains/Wilayah/CatatanKeluarga/Repositories/CatatanKeluargaRepository.php` (`getDataKegiatanPkkPokjaIvByLevelAndArea`)
 
 ## Catatan Deviasi
+
 - Lihat `DV-015` pada `docs/domain/DOMAIN_DEVIATION_LOG.md`.
+

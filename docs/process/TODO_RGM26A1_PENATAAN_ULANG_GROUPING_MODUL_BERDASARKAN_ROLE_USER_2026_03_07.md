@@ -5,12 +5,14 @@ Status: `planned` (`state:awaiting-owner-group-target`)
 Related ADR: `-`
 
 ## Aturan Pakai
+
 - `KODE_UNIK` wajib 4-8 karakter, huruf kapital + angka (contoh: `A2B9`).
 - Format judul wajib: `TODO <KODE_UNIK> <Judul Ringkas>`.
 - Simpan file dengan pola: `TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
 - Gunakan checklist `- [ ]` dan ubah ke `- [x]` saat item selesai.
 
 ## Konteks
+
 - Saat ini pengelompokan modul untuk visibilitas role tersebar pada:
   - `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php` (mapping group, mode role, override modul),
   - `app/Http/Middleware/EnsureModuleVisibility.php` (enforcement akses runtime),
@@ -19,6 +21,7 @@ Related ADR: `-`
 - Perubahan ini berdampak lintas backend, middleware, payload Inertia, sidebar, test matrix, dan dokumen canonical.
 
 ## Kontrak Concern (Lock)
+
 - Domain: authorization visibility dan grouping menu domain berbasis role-scope (`desa`, `kecamatan`, `super-admin` bila relevan).
 - Role/scope target: seluruh role operasional pada `RoleScopeMatrix` + role legacy yang masih aktif.
 - Boundary data: `Controller -> UseCase/Action -> Repository -> Model` tetap; authority akses tetap backend (`Policy -> Scope Service -> module.visibility`).
@@ -31,6 +34,7 @@ Related ADR: `-`
 - Dampak keputusan arsitektur: `ya` (menyentuh kontrak akses lintas concern).
 
 ## Input Owner (Wajib sebelum Implementasi)
+
 - [ ] Owner memilih modul prioritas dari baseline tabel berikut.
 - [ ] Owner mengunci `Group Target` dan `Mode Target` pada sesi finalisasi concern.
 - [ ] Owner menyetujui batas scope rollout (`desa only`, `kecamatan only`, atau keduanya).
@@ -79,12 +83,14 @@ Catatan realitas runtime saat ini:
 - `inventaris` dan `buku-tamu` memiliki override mode untuk `desa-pokja-i..iv` pada level role-module, meski baseline group asal ada di `sekretaris-tpk`.
 
 ## Target Hasil
+
 - [ ] Baseline mapping lama vs mapping target terdokumentasi lengkap per role dan scope.
 - [ ] Entry point backend final disepakati (`RoleMenuVisibilityService`) dengan daftar efek turunannya.
 - [ ] Rencana eksekusi end-to-end siap jalan tanpa ambigu (backend, middleware, UI, test, docs).
 - [ ] Strategi rollout + fallback disetujui owner sebelum patch kode dimulai.
 
 ## Langkah Eksekusi Terstruktur (Tanpa Eksekusi Kode)
+
 - [ ] P0. Baseline audit:
   - inventarisasi `GROUP_MODULES`, `ROLE_GROUP_MODES`, `ROLE_MODULE_MODE_OVERRIDES`,
   - inventarisasi konsumsi di middleware `module.visibility` dan layout sidebar.
@@ -116,6 +122,7 @@ Catatan realitas runtime saat ini:
   - sign-off owner.
 
 ## Validation Gate Plan
+
 - [ ] G1. Konfirmasi matrix owner sudah lengkap dan tidak ambigu.
 - [ ] G2. Targeted test plan disetujui sebelum patch:
   - `RoleMenuVisibilityServiceTest`,
@@ -133,32 +140,38 @@ Catatan realitas runtime saat ini:
   - dokumen canonical sinkron.
 
 ## Risiko
+
 - Risiko 1: drift kontrak antara mapping backend dan struktur sidebar frontend.
 - Risiko 2: privilege escalation jika override role-module tidak dipetakan ulang dengan benar.
 - Risiko 3: regressi role legacy (`admin-*`) bila compatibility mapping tidak diuji.
 - Risiko 4: keputusan owner berubah di tengah eksekusi tanpa freeze baseline.
 
 ## Keputusan
+
 - [ ] K1: `RoleMenuVisibilityService` ditetapkan sebagai entry point utama refactor grouping.
 - [ ] K2: authority akses tetap backend-first; frontend hanya consumer payload.
 - [ ] K3: semua perubahan grouping wajib melewati gate test akses lintas scope.
 - [ ] K4: implementasi baru hanya dimulai setelah tabel Input Owner terisi penuh.
 
 ## Keputusan Arsitektur (Jika Ada)
+
 - [ ] Buat/tautkan ADR di `docs/adr/ADR_<NOMOR4>_<RINGKASAN>.md`.
 - [ ] Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern.
 
 ## Fallback Plan
+
 - Jika uji akses gagal, rollback ke baseline mapping terakhir yang lulus test penuh.
 - Jika hanya sebagian modul bermasalah, lakukan rollback parsial per modul dengan guard matrix tetap aktif.
 - Jika ada konflik keputusan owner, hentikan patch dan kembali ke tahap freeze tabel Input Owner.
 
 ## Output Final
+
 - [ ] Ringkasan apa yang diubah dan kenapa.
 - [ ] Daftar file terdampak backend, frontend, test, dan dokumentasi.
 - [ ] Hasil validasi otomatis + manual dan residual risk.
 
 ## Progress Update 2026-03-07 (Eksekusi No-op)
+
 - Hasil pembacaan tabel owner:
   - seluruh kolom `Group Target` dikosongkan,
   - sesuai aturan concern, seluruh modul dianggap `tetap` (tidak ada perubahan grouping).
@@ -172,6 +185,7 @@ Catatan realitas runtime saat ini:
   - kontrak string test frontend diperbarui agar tidak brittle terhadap variasi label `catatan-keluarga` (`tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`), tanpa perubahan perilaku aplikasi.
 
 ## Progress Update 2026-03-07 (Re-eksekusi `manto`)
+
 - Verifikasi input owner diulang:
   - seluruh kolom `Group Target` masih kosong, sehingga concern tetap no-op terkontrol.
 - Validasi regresi yang dijalankan:
@@ -186,6 +200,8 @@ Catatan realitas runtime saat ini:
   - concern `RGM26A1` tetap `done` dengan status no-op tervalidasi end-to-end.
 
 ## Progress Update 2026-03-07 (Reset untuk Input Owner Baru)
+
 - Status concern dikembalikan ke `planned` dengan state `awaiting-owner-group-target`.
 - Checklist gate eksekusi (`G1-G4`), keputusan (`K1-K4`), dan output final di-reset ke `- [ ]`.
 - Seluruh histori eksekusi no-op sebelumnya dipertahankan sebagai audit trail, namun tidak lagi dianggap baseline final untuk siklus perubahan berikutnya.
+

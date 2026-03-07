@@ -13,6 +13,7 @@ Status: `done` (`historical`, diikuti fase minimalis dan koherensi kritis)
   - `docs/process/archive/2026_02/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 
 Catatan lanjutan visual minimalis:
+
 - Rencana fase lanjutan UI ada di `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
 - Baseline visual untuk fase minimalis mengacu ke dashboard role `kecamatan-sekretaris` versi aktif saat ini.
 - Update 2026-03-01: representasi dashboard disederhanakan ke `single-section` pada UI aktif; section 2/3/4 dipertahankan sebagai jejak historis kontrak awal.
@@ -169,3 +170,4 @@ Aturan label UI:
 - [x] `kecamatan-sekretaris` dan role bertingkat lain memakai mode dinamis: dapat lihat `all`, filter `by level`, atau `by sub-level`.
 - [x] Aturan multi-role dashboard mengikuti visibilitas bertingkat yang dapat difilter dinamis (`all/level/sub-level`).
 - [x] Blok `monitoring` tetap dipisah dari blok `sekretaris-tpk` pada scope kecamatan agar konteks monitor lintas desa tetap tegas.
+

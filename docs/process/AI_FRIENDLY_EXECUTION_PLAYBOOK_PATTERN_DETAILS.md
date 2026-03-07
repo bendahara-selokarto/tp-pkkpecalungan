@@ -9,6 +9,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
 ## 7) Detail Pattern Tanggal
 
 ### P-007 - Canonical Date Input UI
+
 - Tanggal: 2026-02-21
 - Status: active
 - Konteks: Standardisasi field tanggal lintas form Inertia + Vue agar konsisten di UI dan backend.
@@ -17,6 +18,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   1) Gunakan `input` dengan `type="date"` pada komponen Vue.
   2) Ikat nilai field dengan `v-model` ke properti form.
   3) Pertahankan nilai submit dalam format canonical `YYYY-MM-DD`.
+
 - Guardrail:
   - Jangan ubah ke format teks bebas di frontend.
   - Hindari parsing manual tanggal di komponen jika tidak diperlukan.
@@ -32,6 +34,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Gunakan pola ini sebagai default semua field tanggal baru, kecuali ada kebutuhan eksplisit format lain dari kontrak domain.
 
 ### P-008 - Pre-Release Legacy Upgrade Track
+
 - Tanggal: 2026-02-21
 - Status: active
 - Konteks: Aplikasi masih pre-release dan diizinkan reset data development untuk percepatan upgrade legacy.
@@ -41,6 +44,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Terapkan patch migrasi/refactor terkontrol dengan target pengurangan dependency legacy.
   3) Jika perlu reset struktur data, jalankan `php artisan migrate:fresh`.
   4) Validasi regresi area terdampak dengan test relevan.
+
 - Guardrail:
   - Tetap pertahankan otorisasi backend.
   - `areas` tetap canonical wilayah.
@@ -57,6 +61,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Terapkan hanya untuk fase pre-release atau environment non-produksi.
 
 ### P-009 - Hybrid PDF Authenticity Verification
+
 - Tanggal: 2026-02-22
 - Status: active
 - Konteks: Verifikasi struktur lampiran PDF dengan tabel kompleks (merge header) yang tidak stabil jika hanya mengandalkan ekstraksi text-layer otomatis.
@@ -67,6 +72,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Baca lanjutan (presisi header): jika text-layer tidak menangkap header tabel utuh, render visual halaman (screenshot) lalu verifikasi manual struktur header (jumlah kolom, merge row/col, label grup/sub-header).
   3) Laporkan/Konfirmasi: laporkan temuan baca (termasuk gap parser) dan konfirmasi keputusan kontrak sebelum patch sinkronisasi.
   4) Sinkronkan: simpan hasil transformasi pada dokumen mapping domain, lalu sinkronkan terminology/domain matrix/implementasi yang terdampak.
+
 - Guardrail:
   - Jangan tetapkan kontrak tabel kompleks hanya dari OCR/parser teks.
   - Jangan tetapkan kontrak header tabel hanya dari text-layer jika hasil baca parsial.
@@ -95,6 +101,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Perubahan metode wajib memperbarui `AGENTS.md` dan registry pattern pada sesi yang sama agar kontrak tetap sinkron.
 
 ### P-010 - Date Output Harmonization Without Persistence Drift
+
 - Tanggal: 2026-02-22
 - Status: active
 - Konteks: Harmonisasi output tanggal sering membutuhkan konsistensi `Y-m-d` di payload controller, tetapi penambahan cast `date` pada model bisa mengubah format persistence (`YYYY-MM-DD HH:MM:SS`) pada tabel tertentu.
@@ -104,6 +111,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Harmonisasikan output tanggal di controller ke `Y-m-d` saat serialize payload (form/list/show).
   3) Gunakan formatter frontend terpusat untuk display (`DD/MM/YYYY`), bukan format ad-hoc.
   4) Verifikasi bahwa perubahan tidak menggeser format simpan di database pada tabel existing.
+
 - Guardrail:
   - Jangan menambah cast model tanggal jika berdampak ke format simpan data existing tanpa kebutuhan eksplisit migrasi.
   - Jika cast model menimbulkan drift persistence, rollback cast dan pindahkan normalisasi ke layer controller/presenter.
@@ -120,6 +128,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Jadikan controller serialization sebagai titik normalisasi utama saat schema historis belum seragam antar tabel.
 
 ### P-011 - Managed Super-Admin Assignment Guardrail
+
 - Tanggal: 2026-02-22
 - Status: active
 - Konteks: Role `super-admin` wajib tetap bisa dipakai untuk akses sistem, tetapi tidak boleh ditetapkan dari jalur manajemen user administratif biasa.
@@ -129,6 +138,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Keluarkan `super-admin` dari `assignableRolesForScope`.
   3) Tolak assignment `super-admin` di request + action create/update user.
   4) Terapkan filter defensif di UI create/edit user agar opsi `super-admin` tidak muncul.
+
 - Guardrail:
   - Frontend bukan authority; backend wajib menolak assignment terlarang meski payload dipaksa manual.
   - Jangan melemahkan policy existing yang memang membutuhkan role `super-admin`.
@@ -144,6 +154,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Gunakan pola ini untuk semua flow administrasi role sistem yang bersifat reserved.
 
 ### P-012 - Unit Direct Coverage Gate by Discovery
+
 - Tanggal: 2026-02-22
 - Status: active
 - Konteks: Requirement project mewajibkan seluruh unit Action/UseCase/Service/Repository memiliki direct test tanpa menunggu audit manual berulang.
@@ -153,6 +164,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Bangun data provider otomatis untuk seluruh unit terdeteksi.
   3) Jalankan gate test per unit untuk memastikan seluruh unit ter-load dan terpetakan.
   4) Kunci expected total unit pada test agar penambahan unit baru wajib diikuti pembaruan coverage gate.
+
 - Guardrail:
   - Unit discovery harus deterministic dan tidak menyapu folder di luar boundary.
   - Gate test tidak menggantikan test perilaku; gunakan sebagai minimum direct coverage contract.
@@ -167,6 +179,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Pakai pattern ini sebagai baseline gate sebelum memperluas test perilaku high-risk per domain.
 
 ### P-013 - UI Slug Humanization for Role/Scope
+
 - Tanggal: 2026-02-22
 - Status: active
 - Konteks: UI administratif bisa menerima slug teknis (`super-admin`, `admin-kecamatan`, `desa`) dari backend dan membuat teks terlihat tidak natural.
@@ -176,6 +189,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Terapkan formatter label terpusat di frontend untuk role/scope/area.
   3) Jika endpoint tertentu lebih stabil dengan label siap pakai, backend boleh kirim label terformat.
   4) Gunakan formatter yang sama di halaman list + form + ringkasan layout.
+
 - Guardrail:
   - Jangan ubah slug yang dipakai policy/authorization.
   - Hindari formatter ad-hoc per halaman; wajib util terpusat.
@@ -191,6 +205,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Jadikan formatter role/scope sebagai dependency default semua halaman administratif.
 
 ### P-014 - Responsibility Visibility with Backend Read-Only Enforcement
+
 - Tanggal: 2026-02-23
 - Status: active
 - Konteks: UI perlu menampilkan menu domain hanya sesuai penanggung jawab role, dengan mode `read-only` yang tidak boleh bisa dibypass via URL langsung.
@@ -200,6 +215,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Resolve mode per group + per module dan share ke Inertia sebagai source of truth UI.
   3) Terapkan middleware akses modul yang memblokir modul di luar tanggung jawab dan menolak write intent saat mode `read-only`.
   4) Jadikan UI hanya consume payload backend; untuk mode `read-only`, sembunyikan tombol mutasi (`create/update/delete`) pada level layout.
+
 - Guardrail:
   - Frontend bukan authority akses; backend wajib menolak bypass URL.
   - Matrix role harus sinkron dengan scope-area valid dari `UserAreaContextService`.
@@ -217,6 +233,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Pattern ini direkomendasikan sebagai default untuk kebutuhan segmentasi menu lintas role dengan hardening backend.
 
 ### P-015 - Section-Scoped Query Key Contract for Role-Aware Dashboard
+
 - Tanggal: 2026-02-23
 - Status: active
 - Konteks: Dashboard sekretaris memakai beberapa section dengan filter group berbeda sehingga token query generik (`by_group`) mudah menimbulkan drift state dan ambigu sumber filter.
@@ -226,6 +243,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Pastikan backend normalisasi token query mengikuti key per section, bukan key generik tunggal.
   3) Pastikan frontend memetakan kontrol filter ke query key section yang tepat dan menjaga state independen antarseksi.
   4) Kunci kontrak key yang sama di dokumen rencana dan dokumen arsitektur untuk mencegah drift terminologi.
+
 - Guardrail:
   - Hindari query key generik untuk beberapa section berbeda.
   - Jangan izinkan perubahan filter section A mengubah payload section B tanpa kontrak eksplisit.
@@ -242,6 +260,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Terapkan pada semua halaman analitik bertingkat yang memiliki lebih dari satu panel filter independen.
 
 ### P-016 - Triggered Doc-Hardening Pass
+
 - Tanggal: 2026-02-23
 - Status: active
 - Konteks: Perubahan concern besar sering menyentuh beberapa dokumen sekaligus dan memicu drift istilah, status checklist, atau kontrak query/akses.
@@ -254,6 +273,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Normalisasi kontrak istilah canonical lintas TODO/process/domain/playbook.
   3) Sinkronkan status checklist dan keputusan terkunci dengan implementasi terbaru.
   4) Laporkan jejak hardening: file terdampak + validasi yang dijalankan.
+
 - Guardrail:
   - Tetap scoped; hindari menyapu seluruh dokumen proyek tanpa trigger.
   - Jangan mengubah dokumen non-concern.
@@ -270,6 +290,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Terapkan sebagai opsi default saat terdeteksi sinyal drift canonical antar dokumen.
 
 ### P-017 - Zero-Ambiguity Single Path Routing
+
 - Tanggal: 2026-02-23
 - Status: active
 - Konteks: Task lintas concern sering memicu multi-interpretasi ketika routing kerja AI hanya tersirat di beberapa dokumen.
@@ -282,6 +303,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   3) Eksekusi patch minimal sesuai boundary arsitektur.
   4) Jalankan validation ladder (L1-L3) sesuai tingkat dampak.
   5) Tutup dengan doc-hardening sinkron lintas dokumen concern.
+
 - Guardrail:
   - Prioritas kebenaran tetap mengikuti `AGENTS.md`.
   - Tidak boleh bypass quality gate authorization/repository boundary.
@@ -298,6 +320,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Pattern ini cocok sebagai baseline di project yang punya guardrail domain/policy ketat dan kebutuhan konsistensi lintas sesi AI.
 
 ### P-018 - UI Runtime Safety Guardrail
+
 - Tanggal: 2026-02-24
 - Status: active
 - Konteks: Interaksi UI yang ditenagai JavaScript (dropdown, theme switch, state sidebar, event-driven update) dapat memicu behavior tidak diinginkan saat error runtime tidak ditangani.
@@ -309,6 +332,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Emit event internal runtime error agar layer layout bisa menampilkan fallback terkontrol.
   3) Tampilkan fallback banner non-blocking + aksi pemulihan (`Muat Ulang`).
   4) Lindungi akses storage browser dengan wrapper aman (`try/catch`) untuk mencegah crash awal render.
+
 - Guardrail:
   - Jangan biarkan error runtime diam tanpa sinyal ke UI.
   - Jangan menggantungkan state kritikal pada `localStorage` tanpa fallback in-memory.
@@ -325,6 +349,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Terapkan pada aplikasi SPA/Inertia yang mengandalkan layout global untuk interaksi kritikal.
 
 ### P-019 - Attachment Render Recovery via Protected Stream Route
+
 - Tanggal: 2026-02-27
 - Status: active
 - Konteks: Pada environment Apache/Windows, URL lampiran berbasis static path (`/storage/...`) bisa gagal render (404/403) walau file ada dan symlink sudah benar.
@@ -337,6 +362,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   3) Di controller, stream file via `Storage::disk('public')->response(...)` setelah `authorize('view', $activity)` agar akses tetap mengikuti policy/scope.
   4) Ubah payload `image_url`/`document_url` menjadi URL route attachment terproteksi.
   5) Di UI show, render preview inline (gambar/PDF) dan sediakan fallback tautan `Buka berkas`.
+
 - Guardrail:
   - Route attachment wajib berada di belakang middleware + policy concern yang sama dengan halaman detail.
   - Dilarang membuka file path langsung tanpa validasi akses backend.
@@ -353,6 +379,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Jadikan pattern pertama untuk insiden lampiran tidak tampil di modul Inertia/Laravel yang menyimpan file pada disk `public`.
 
 ### P-020 - Kecamatan Dual-Scope List Contract (`kecamatan` vs `desa monitoring`)
+
 - Tanggal: 2026-02-28
 - Status: active
 - Konteks: Role level kecamatan (khususnya `kecamatan-sekretaris`) membutuhkan dua mode daftar dalam satu concern: mode kerja level kecamatan dan mode monitoring desa.
@@ -361,11 +388,14 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Ada kebutuhan mencegah data campur antara daftar kerja kecamatan dan daftar monitoring desa.
 - Langkah eksekusi:
   1) Tetapkan kontrak mode:
+
      - mode `kecamatan`: list kegiatan level kecamatan milik aktor login (`created_by = user_id` untuk `kecamatan-sekretaris`).
      - mode `desa`: list seluruh data level desa dalam parent kecamatan aktor login.
+
   2) Implementasikan filter di backend (use case/repository), bukan di frontend.
   3) Pastikan mode monitoring desa tetap `read-only` di payload visibilitas + middleware anti bypass mutasi.
   4) Gunakan toggle UI hanya sebagai pengalih endpoint/list source, bukan authority akses data.
+
 - Guardrail:
   - Jangan menyamakan mode `kecamatan` dengan semua data kecamatan by-area jika kontrak menyebut data milik sendiri.
   - Jangan membolehkan mode monitoring desa melakukan `create/update/delete`.
@@ -383,6 +413,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Gunakan sebagai template default untuk semua daftar scope kecamatan yang punya mode operasional internal + monitoring desa.
 
 ### P-021 - ADR + TODO Coupled Governance
+
 - Tanggal: 2026-02-28
 - Status: active
 - Konteks: Hindari keputusan arsitektur hanya tersimpan di chat/TODO.
@@ -395,6 +426,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Catat keputusan arsitektur pada ADR (`docs/adr/ADR_<NOMOR4>_<RINGKASAN>.md`) dengan basis `docs/adr/ADR_TEMPLATE.md`.
   3) Tautkan ADR ke TODO concern dan area validasi test.
   4) Saat keputusan berubah, buat ADR baru dan tandai ADR lama sebagai `superseded`.
+
 - Guardrail:
   - TODO tetap sumber rencana eksekusi; ADR sumber keputusan arsitektur.
   - Jangan ubah status ADR ke `accepted` tanpa rencana validasi yang jelas.
@@ -411,6 +443,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Cocok untuk project dengan kebutuhan audit trail.
 
 ### P-023 - Doc-Only Fast Lane Validation
+
 - Tanggal: 2026-03-01
 - Status: active
 - Konteks: Perubahan dokumen sering tidak butuh full suite.
@@ -422,6 +455,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   2) Validasi cepat dengan `rg` token concern.
   3) Catat hasil di `OPERATIONAL_VALIDATION_LOG.md` (`doc-only fast lane`).
   4) Jalankan `L3` hanya jika ada sinyal drift ke runtime.
+
 - Guardrail:
   - Tidak boleh dipakai jika ada perubahan kode aplikasi.
   - Tetap wajib sinkron lintas dokumen concern saat trigger `P-016` aktif.
@@ -438,6 +472,7 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Cocok untuk repo dengan governance dokumen ketat.
 
 ### P-022 - Self-Reflective Routing
+
 - Tanggal: 2026-03-01
 - Status: active
 - Konteks: mencegah salah klasifikasi concern pada routing awal.
@@ -461,6 +496,7 @@ STATUS: active
 ```
 
 ### P-024 - TODO Generator Canonicalization
+
 - Tanggal: 2026-03-02
 - Status: active
 - Konteks: pembuatan TODO concern manual rawan drift pada format judul, kode unik, metadata tanggal, dan nama file.
@@ -472,6 +508,7 @@ STATUS: active
   2) gunakan `-Date` bila perlu tanggal spesifik; default hari ini.
   3) gunakan `-RelatedAdr` bila concern terkait keputusan arsitektur.
   4) verifikasi hasil file berada di `docs/process/TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
+
 - Guardrail:
   - `Code` wajib `^[A-Z0-9]{4,8}$`.
   - generator wajib bersumber dari `docs/process/TEMPLATE_TODO_CONCERN.md`.
@@ -488,6 +525,7 @@ STATUS: active
   - bisa dipakai lintas project Laravel/Inertia selama pola dokumentasi TODO mengikuti kontrak serupa.
 
 ### P-026 - TTY Wrapper for Non-TTY Test Runner
+
 - Tanggal: 2026-03-07
 - Status: active
 - Konteks: runner non-TTY pada environment tertentu menelan progres per-file dan membuat subset failure sulit diinspeksi saat `composer test` dikunci ke mode `--compact`.
@@ -499,6 +537,7 @@ STATUS: active
   2) sediakan wrapper project-level berbasis `script -qefc` untuk memaksa pseudo-TTY.
   3) expose wrapper lewat alias `composer test:tty`, `composer test:debug`, dan bila perlu loop per-file `composer test:tty:files`.
   4) teruskan argumen subset lewat `composer run <script> -- <args>`.
+
 - Guardrail:
   - jangan ubah script CI existing hanya demi kebutuhan debugging lokal.
   - wrapper harus fallback ke eksekusi langsung jika utilitas `script` tidak tersedia atau environment menolak pembuatan pseudo-TTY.
@@ -513,3 +552,4 @@ STATUS: active
   - utilitas `script` bergantung pada paket `util-linux`; tanpa paket itu, atau jika PTY diblokir sandbox, wrapper jatuh ke mode direct exec.
 - Catatan reuse lintas domain/project:
   - cocok untuk repo PHP/Laravel yang memakai wrapper test ringkas di Composer tetapi tetap butuh mode inspeksi interaktif di WSL/Linux.
+

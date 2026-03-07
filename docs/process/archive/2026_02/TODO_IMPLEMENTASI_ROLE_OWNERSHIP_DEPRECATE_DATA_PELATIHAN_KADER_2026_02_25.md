@@ -30,6 +30,7 @@ Status: `done`
 - [x] `php artisan test` penuh
 
 Catatan validasi:
+
 - `php artisan test` penuh lulus pada eksekusi 2026-02-25 (suite hijau end-to-end).
 
 ## Risiko
@@ -41,3 +42,4 @@ Catatan validasi:
 
 - [x] Concern ini dikunci dari temuan audit ownership 2026-02-25.
 - [x] Keputusan final sesi ini: modul dipertahankan (`retain`) sampai ada keputusan domain terpisah untuk deprecate.
+

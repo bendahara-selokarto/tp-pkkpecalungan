@@ -1,11 +1,13 @@
 # Validasi Format Buku Sekretaris TP PKK
 
 Status dokumen:
+
 - Dokumen ini adalah bukti validasi format PDF/autentik.
 - Untuk status ketersediaan buku, autentikasi lintas modul, dan penanggung jawab buku, acuan canonical tunggal adalah:
   - `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md`
 
 Sumber validasi:
+
 - `d:\Buku kegiatan sekretaris (1).pdf` (66 halaman)
 
 ## Ringkasan validasi utama
@@ -87,3 +89,4 @@ Sumber validasi:
   - `resources/views/pdf/simulasi_penyuluhan_report.blade.php`
   - `resources/views/pdf/program_prioritas_report.blade.php`
   - `resources/views/pdf/prestasi_lomba_report.blade.php`
+

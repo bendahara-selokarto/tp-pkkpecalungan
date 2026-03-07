@@ -5,14 +5,17 @@ Status: `done` (`state:cycle-2026-03-02`, `state:operational-follow-up`)
 Related ADR: `-`
 
 ## Konteks
+
 - Concern ini adalah turunan operasional dari `TODO_PDF26A1_AUDIT_KETERSEDIAAN_FORMAT_PDF_2026_02_28.md`.
 - `PDF26A1` dikunci sebagai baseline audit awal (snapshot), sedangkan siklus audit berkala dipindahkan ke dokumen ini agar status concern tidak drift.
 
 ## Target Hasil
+
 - Audit berkala route PDF berjalan konsisten per siklus tanpa mengubah baseline audit awal.
 - Registry temuan PDF yatim (`A/B/C/D`) terus diperbarui pada dokumen induk (`PDF26A1`) dengan jejak eksekusi yang jelas.
 
 ## Langkah Eksekusi
+
 - [x] Jalankan inventory route PDF dan print PDF.
 - [x] Jalankan scan trigger UI (`literal` + `dinamis`).
 - [x] Validasi controller -> view PDF.
@@ -21,6 +24,7 @@ Related ADR: `-`
 - [x] Tutup gap sebelum rilis jika status masih `open`.
 
 ## Validasi
+
 - [x] `php artisan route:list --path=report/pdf --json --except-vendor`
   - hasil: `report_routes=103`.
 - [x] `php artisan route:list --path=print --json --except-vendor`
@@ -35,14 +39,17 @@ Related ADR: `-`
   - hasil validasi sesi 2026-03-02: `PASS` (`1047` tests, `7033` assertions).
 
 ## Risiko
+
 - False-positive audit jika route dinamis tidak dimasukkan (`scopePrefix`/`routes.print`).
 - Drift registry jika update temuan tidak disinkronkan ke dokumen induk.
 
 ## Keputusan
+
 - [x] Concern operasional berkala dipisah dari concern baseline audit awal.
 - [x] Dokumen induk (`PDF26A1`) tetap jadi referensi baseline; concern ini menjadi jalur eksekusi periodik.
 
 ## Hasil Audit Siklus 2026-03-02
+
 - Total route PDF diaudit: `106` (`103` route `report/pdf` + `3` route `print` berbasis PDF).
 - Distribusi ownership akses:
   - `scope.role:desa` = `52`,
@@ -57,7 +64,9 @@ Related ADR: `-`
   - `2` jalur `print/docx` (`laporan-tahunan-pkk`) terdeteksi di route `print` namun bukan target audit PDF siklus ini.
 
 ## Output Final
+
 - [x] Ringkasan hasil audit siklus ini.
 - [x] Daftar temuan baru + status (`open/resolved`).
   - hasil: tidak ada temuan baru (`A/B/C/D = 0`), status siklus `resolved`.
 - [x] Bukti validasi command yang dijalankan.
+

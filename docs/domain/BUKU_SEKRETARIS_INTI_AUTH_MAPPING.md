@@ -4,6 +4,7 @@ Tanggal: 2026-02-27
 Status: `source-scanned` (`unverified-local-extension`)
 
 ## Konteks
+
 - Modul berikut sudah aktif pada level desa/kecamatan:
   - `buku-notulen-rapat`
   - `buku-daftar-hadir`
@@ -12,6 +13,7 @@ Status: `source-scanned` (`unverified-local-extension`)
 - Dokumen ini mengunci baseline struktur header report saat ini untuk mencegah drift implementasi.
 
 ## Sumber Validasi Saat Ini
+
 1. Implementasi blade PDF:
    - `resources/views/pdf/buku_notulen_rapat_report.blade.php`
    - `resources/views/pdf/buku_daftar_hadir_report.blade.php`
@@ -29,6 +31,7 @@ Status: `source-scanned` (`unverified-local-extension`)
    - `docs/referensi/_screenshots/rakernas-x-secretariat-core/rakernas_x_page_26.png` (Lampiran 4.13)
 
 Catatan sumber primer:
+
 - Scan text-layer `Rakernas X.pdf` (2026-03-02) menunjukkan:
   - `NOTULEN` -> `NO_MATCH`
   - `DAFTAR HADIR` -> `NO_MATCH`
@@ -42,6 +45,7 @@ Catatan sumber primer:
 - Keputusan: tiga buku sekretaris inti diposisikan sebagai `ekstensi lokal` tanpa template tabel primer eksplisit saat ini; status autentik tetap `unverified-local-extension` sampai ada sumber resmi baru.
 
 ## Bukti Scan Sumber Primer (2026-03-02)
+
 - Perintah:
   - `python -c "... scan keyword NOTULEN|DAFTAR HADIR|BUKU TAMU pada docs/referensi/Rakernas X.pdf ..."`
   - `python -c "... scan sheet workbook docs/referensi/excel/BUKU BANTU.xlsx ..."`
@@ -52,6 +56,7 @@ Catatan sumber primer:
 ## Peta Header Baseline (Implementasi Aktif)
 
 ### 1) Buku Notulen Rapat
+
 - Jumlah kolom: 6
 - Pola merge:
   - semua header `rowspan=1`, `colspan=1` (tanpa merge)
@@ -64,6 +69,7 @@ Catatan sumber primer:
   6. `KETERANGAN`
 
 ### 2) Buku Daftar Hadir
+
 - Jumlah kolom: 6
 - Pola merge:
   - semua header `rowspan=1`, `colspan=1` (tanpa merge)
@@ -76,6 +82,7 @@ Catatan sumber primer:
   6. `KETERANGAN`
 
 ### 3) Buku Tamu
+
 - Jumlah kolom: 6
 - Pola merge:
   - semua header `rowspan=1`, `colspan=1` (tanpa merge)
@@ -88,7 +95,9 @@ Catatan sumber primer:
   6. `KETERANGAN`
 
 ## Kontrak Operasional Sementara
+
 1. Struktur header baseline internal dianggap kontrak operasional aktif untuk tiga buku ekstensi lokal ini.
 2. Perubahan urutan/label header wajib melalui test update + sinkronisasi dokumen ini.
 3. Status autentik saat ini dikunci `unverified-local-extension`.
 4. Kenaikan status ke `verified` hanya boleh dilakukan bila sumber primer resmi untuk tiga buku ini tersedia dan tervalidasi (`text-layer + bukti visual header + mapping merge cell`).
+

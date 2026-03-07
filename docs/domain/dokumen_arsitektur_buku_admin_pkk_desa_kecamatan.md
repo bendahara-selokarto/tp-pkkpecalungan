@@ -5,21 +5,25 @@
 
 ## Status Canonical
 Dokumen ini adalah acuan canonical tunggal untuk concern:
+
 1. Ketersediaan buku.
 2. Autentikasi buku.
 3. Penempatan penanggung jawab buku.
 
 Dokumen ini merupakan interpretasi operasional dari Rakernas X, bukan sumber primer.
 Sumber primer tetap:
+
 1. `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
 2. `docs/referensi/Rakernas X.pdf`
 
 Aturan interpretasi:
+
 1. Setiap entri buku harus dapat ditelusuri ke lampiran/istilah Rakernas X.
 2. Jika ada konflik istilah, struktur, atau makna, keputusan final wajib kembali ke sumber primer Rakernas X.
 3. Status `verified` hanya boleh dipakai jika bukti autentik (text-layer + verifikasi visual bila diperlukan) tersedia.
 
 Dokumen lain yang menyinggung concern serupa diperlakukan sebagai:
+
 1. Bukti validasi teknis (mis. PDF/auth/audit).
 2. Catatan historis implementasi.
 3. Turunan operasional terbatas.
@@ -28,12 +32,14 @@ Dokumen lain yang menyinggung concern serupa diperlakukan sebagai:
 
 ## I. Fungsi Dokumen
 Dokumen ini menjadi sumber tunggal untuk:
+
 1. Merekam ketersediaan buku administrasi per level.
 2. Merencanakan pemenuhan gap buku yang belum tersedia.
 3. Memastikan autentikasi buku berdasarkan format resmi Rakernas X.
 4. Memastikan penempatan buku pada penanggung jawab yang tepat.
 
 Dokumen ini menjadi acuan untuk sinkronisasi:
+
 - Role & permission.
 - Modul aplikasi (route/controller/use case/repository/policy).
 - Artefak validasi autentik (header tabel + struktur merge cell jika bertabel).
@@ -42,10 +48,12 @@ Dokumen ini menjadi acuan untuk sinkronisasi:
 
 ## II. Ruang Lingkup dan Level Operasional
 Level operasional:
+
 1. TP PKK Desa/Kelurahan (input + rekap awal).
 2. TP PKK Kecamatan (rekap wilayah + validasi berjenjang).
 
 Prinsip operasional:
+
 1. Tidak ada edit silang antar level.
 2. Arus data berjenjang: Dasawisma -> Desa/Kelurahan -> Kecamatan.
 3. Penanggung jawab buku wajib sesuai struktur kelembagaan.
@@ -55,11 +63,13 @@ Prinsip operasional:
 
 ## III. Status Kontrol Buku (Baseline)
 Gunakan status berikut:
+
 - `available`: modul/fitur buku sudah tersedia.
 - `planned`: sudah masuk rencana implementasi.
 - `missing`: belum tersedia dan belum masuk backlog aktif.
 
 Gunakan status autentikasi:
+
 - `verified`: format autentik tervalidasi.
 - `partial`: sebagian tervalidasi, belum final.
 - `unverified`: belum tervalidasi autentik.
@@ -116,18 +126,21 @@ Gunakan status autentikasi:
 
 ## IV. Standar Autentikasi Buku
 Metode baku autentikasi:
+
 1. Ekstraksi text-layer dokumen autentik.
 2. Jika header tabel belum utuh, lakukan verifikasi visual screenshot.
 3. Validasi peta header sampai merge cell (`rowspan`/`colspan`).
 4. Simpan bukti validasi sebagai artefak resmi.
 
 Kriteria bukti screenshot header:
+
 1. Seluruh area header tabel tercakup.
 2. Garis batas sel terlihat.
 3. Baris nomor kolom terlihat.
 4. Teks header terbaca.
 
 Aturan keputusan:
+
 1. Jika peta header belum lengkap: status `belum siap sinkronisasi`.
 2. Sinkronisasi kontrak dan implementasi hanya setelah status siap.
 
@@ -135,11 +148,13 @@ Aturan keputusan:
 
 ## V. Matriks Penanggung Jawab dan Akses
 Prinsip penempatan:
+
 1. Sekretaris: buku sekretariat + finalisasi level masing-masing.
 2. Pokja Desa: input dan update pada buku pokja masing-masing.
 3. Pokja Kecamatan: monitoring/evaluasi rekap bidang dari desa.
 
 Kontrol akses minimal:
+
 1. Desa: `scope.role:desa`.
 2. Kecamatan: `scope.role:kecamatan`.
 3. Konsistensi role-scope-area wajib tervalidasi backend.
@@ -148,6 +163,7 @@ Kontrol akses minimal:
 6. Modul `Buku Kegiatan` (`activities`) wajib tersedia untuk seluruh role operasional pada scope validnya masing-masing (sekretaris desa/kecamatan, pokja I-IV desa/kecamatan, role admin kompatibilitas, dan `super-admin`) dengan mode akses mengikuti kontrak backend.
 
 Keputusan operasional terkunci (2026-02-27):
+
 1. Pokja kecamatan pada concern rekap lintas desa diposisikan sebagai monitoring/evaluasi (`read-only`) dan bukan jalur mutasi data sumber.
 2. Mutasi data sumber tetap terjadi di level desa sesuai ownership pokja terkait.
 3. Enforcement backend mengikuti guard `RoleMenuVisibilityService` + middleware visibilitas modul + policy/scope service.
@@ -157,17 +173,20 @@ Keputusan operasional terkunci (2026-02-27):
 
 ## VI. Rencana Implementasi Gap (Checklist Kerja)
 ### A. Ketersediaan Buku
+
 - [x] Tambah modul `buku-notulen-rapat` desa/kecamatan.
 - [x] Tambah modul `buku-daftar-hadir` desa/kecamatan.
 - [x] Tambah modul `buku-tamu` desa/kecamatan.
 - [x] Tegaskan pemetaan `buku-program-kerja` agar tidak overlap (ownership `sekretaris-tpk`, tidak berada pada group `pokja-iv`).
 
 ### B. Autentikasi Buku
+
 - [ ] Lengkapi validasi autentik untuk buku berstatus `partial`.
 - [ ] Kunci artefak bukti screenshot untuk setiap format tabel autentik.
 - [ ] Sinkronkan kontrak field per buku dengan hasil baca autentik final.
 
 ### C. Penanggung Jawab Buku
+
 - [x] Audit seluruh modul agar ownership sesuai sekretaris/pokja.
 - [x] Audit mode akses pokja kecamatan agar sesuai kebijakan monitoring.
 - [x] Tambah test untuk mismatch role-area-level pada modul gap baru.
@@ -176,6 +195,7 @@ Keputusan operasional terkunci (2026-02-27):
 
 ## VII. Validasi Berkala
 Checklist validasi setiap perubahan:
+
 1. Buku tercatat di tabel status kontrol.
 2. Status autentikasi terbarui (`verified/partial/unverified`).
 3. Penanggung jawab dan mode akses sudah tepat.
@@ -186,6 +206,7 @@ Checklist validasi setiap perubahan:
 
 ## VIII. Output Wajib per Update
 Setiap update dokumen ini wajib menyebut:
+
 1. Buku yang berubah status.
 2. Alasan perubahan.
 3. Dampak ke modul/rute/policy/test.
@@ -197,16 +218,19 @@ Setiap update dokumen ini wajib menyebut:
 Kontrak ini dipakai sebagai baseline sebelum coding modul buku yang masih `missing`.
 
 Invariant wajib untuk seluruh modul baru:
+
 1. Menyimpan `level`, `area_id`, `created_by` sebagai metadata canonical wilayah.
 2. `level` record harus sinkron dengan `areas.level` dari user scope aktif.
 3. Route tetap dipisah per scope (`desa`/`kecamatan`) dan dijaga backend (`scope.role` + `module.visibility`).
 
 ### A. Buku Notulen Rapat (`buku-notulen-rapat`)
 Tujuan:
+
 1. Mencatat jalannya rapat resmi per level wilayah.
 2. Menyimpan keputusan dan tindak lanjut yang dapat diaudit.
 
 Field minimum:
+
 1. `tanggal_rapat`
 2. `waktu_mulai`
 3. `waktu_selesai`
@@ -222,10 +246,12 @@ Field minimum:
 
 ### B. Buku Daftar Hadir (`buku-daftar-hadir`)
 Tujuan:
+
 1. Menyimpan bukti kehadiran kegiatan rapat/kegiatan pokja.
 2. Menjadi basis validasi partisipasi kegiatan periodik.
 
 Field minimum:
+
 1. `tanggal_kegiatan`
 2. `nama_kegiatan`
 3. `tempat`
@@ -239,10 +265,12 @@ Field minimum:
 
 ### C. Buku Tamu (`buku-tamu`)
 Tujuan:
+
 1. Mencatat kunjungan tamu ke sekretariat/pengurus.
 2. Menjadi jejak administrasi layanan tamu lintas level.
 
 Field minimum:
+
 1. `tanggal_kunjungan`
 2. `nama_tamu`
 3. `instansi_atau_asal`
@@ -254,6 +282,7 @@ Field minimum:
 9. `keterangan` (opsional)
 
 ### D. Boundary Implementasi Teknis (Wajib)
+
 1. Route: `scope.role:{desa|kecamatan}` + `module.visibility`.
 2. Request: validasi field wajib + normalisasi tanggal/waktu.
 3. Action/Use Case: seluruh business flow di layer ini.
@@ -266,6 +295,8 @@ Field minimum:
    - anti data leak scoped query.
 
 ### E. Fallback/Compatibility Plan
+
 1. Tidak ada dual-write ke modul legacy/non-canonical.
 2. Integrasi dashboard dilakukan via agregasi read-only dari repository modul baru.
 3. Jika kontrak autentik final menambah kolom, gunakan migrasi additive + backfill terkontrol.
+

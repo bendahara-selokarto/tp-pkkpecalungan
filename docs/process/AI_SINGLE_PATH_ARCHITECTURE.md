@@ -7,6 +7,7 @@ Audience: AI agent eksekusi teknis pada repository ini.
 ## 1. Tujuan
 
 Dokumen ini menetapkan jalur tunggal eksekusi AI agar:
+
 - keputusan deterministik,
 - checkpoint refleksi terkontrol,
 - file target dan validasi jelas,
@@ -27,6 +28,7 @@ SYNC_REQUIRED: playbook,single-path,todo,adr
 ## 2. Prioritas Sumber Kebenaran
 
 Jika ada konflik, gunakan urutan ini:
+
 1. `AGENTS.md`
 2. `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md` (dokumen ini)
 3. `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
@@ -35,6 +37,7 @@ Jika ada konflik, gunakan urutan ini:
 6. `README.md`
 
 Aturan anti-ambiguity:
+
 - Prioritas tetap mengikuti `AGENTS.md`; konflik instruksi yang melanggar invariants harus ditolak.
 - Istilah domain mengikuti pedoman utama; status dokumen harus sinkron dengan implementasi sebelum final report.
 - Untuk concern ganda, acuan final adalah referensi user terakhir dan referensi lama ditandai `superseded`.
@@ -45,19 +48,23 @@ Aturan anti-ambiguity:
 ## 2A. Context Load Order (Anti-Bottleneck)
 
 Tujuan:
+
 - Menjaga konteks tetap presisi tanpa overloading markdown saat generate.
 
 Urutan baca default:
+
 1. `AGENTS.md`
 2. `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md` (thin registry aktif)
 3. `docs/process/OPERATIONAL_VALIDATION_LOG.md` (index aktif)
 4. TODO concern aktif yang dirujuk registry
 
 Buka arsip detail hanya saat diperlukan:
+
 - `docs/process/archive/registry/TTM25R1_REGISTRY_FULL_2026_03_02.md` untuk audit histori concern lama.
 - `docs/process/logs/OPERATIONAL_VALIDATION_LOG_*.md` untuk evidence command detail per periode.
 
 Aturan:
+
 - Dilarang memuat arsip historis sebagai context default jika task hanya concern aktif.
 - Jika task meminta investigasi lintas sesi/lintas concern lama, arsip boleh dibuka secara scoped.
 
@@ -116,31 +123,38 @@ Aturan:
 | Keputusan arsitektur lintas concern | ADR governance | `docs/adr/ADR_*.md`, `docs/process/TODO_*` | ADR terhubung ke TODO concern + validasi concern terdampak |
 
 Jika permintaan tidak cocok tabel:
+
 - map ke concern terdekat, tulis asumsi eksplisit, lalu lanjut scoped read.
 
 ## 5. Decision Gates (No-Assumption Rules)
 
 Gate A - Scope, Area, and Budget Year:
+
 - Data wilayah wajib memiliki `level`, `area_id`, `created_by`.
 - `area_id` user wajib konsisten dengan `scope` dan `areas.level`.
 - Untuk data administrasi TP PKK yang terisolasi periode, `tahun_anggaran` wajib diperlakukan sebagai context backend resmi dan tidak boleh hanya menjadi filter frontend ad-hoc.
 - Jika concern sudah termasuk isolasi `tahun_anggaran`, query repository wajib mengunci `tahun_anggaran` bersama `level + area_id`.
 
 Gate B - Authorization:
+
 - Frontend bukan authority akses; enforcement wajib terbukti di backend (policy/middleware/scope service).
 
 Gate C - Repository Boundary:
+
 - Query domain baru hanya melalui repository boundary; query ad-hoc di controller/view/helper dilarang.
 
 Gate D - Legacy Control:
+
 - `areas` adalah source of truth wilayah; coupling baru ke artefak legacy non-canonical dilarang.
 
 Gate E - Documentation Sync:
+
 - Perubahan canonical tanpa update dokumen terkait = `belum selesai`.
 
 ## 6. Validation Matrix (Single Path)
 
 Urutan validasi:
+
 1. Syntax/lint file yang diubah.
 2. Test targeted concern.
 3. Regression concern terdekat.
@@ -148,12 +162,14 @@ Urutan validasi:
 5. Khusus `doc-only` process/domain/adr: boleh selesai di step 1 + log operasional, jika tidak ada perubahan runtime/backend contract.
 
 Ladder tambahan concern `UI/UX auditability gate`:
+
 1. L1: frontend contract assertion concern (`tests/Unit/Frontend/*` atau setara) + audit scoped query/payload.
 2. L2: regression feature concern UI (auth/scope/filter/pagination/runtime endpoint terkait).
 3. L3: runtime browser evidence (E2E/accessibility/visual/performance) jika tooling tersedia.
 4. Jika L3 belum tersedia, status concern wajib eksplisit `partial` dengan gap evidence + TODO follow-up.
 
 Kriteria selesai:
+
 - Semua gate concern terpenuhi.
 - Tidak ada drift `role` vs `scope` vs `areas.level`.
 - Tidak ada drift `tahun_anggaran` aktif vs data yang dibaca/ditulis pada concern yang relevan.
@@ -162,11 +178,13 @@ Kriteria selesai:
 ## 7. Commit by Concern
 
 Aturan commit:
+
 - Satu commit = satu concern logis.
 - Pesan commit format: `type(scope): intent`.
 - Concern besar dipecah ke commit independen agar rollback granular.
 
 Contoh concern:
+
 - `refactor(seeder): migrate legacy role assignments to sekretaris`
 - `feat(dashboard): add section3 filter context isolation`
 - `docs(process): harden single path routing contract`
@@ -174,6 +192,7 @@ Contoh concern:
 ## 8. Trigger Wajib Hardening
 
 Jalankan hardening bila salah satu terjadi:
+
 - perubahan kontrak query key/filter,
 - perubahan role/scope/matrix akses,
 - perubahan section dashboard berbasis hak akses,
@@ -182,15 +201,18 @@ Jalankan hardening bila salah satu terjadi:
 - perubahan keputusan arsitektur tanpa sinkronisasi ADR.
 
 Output hardening minimum:
+
 - daftar file terdampak, keputusan terkunci, dan validasi yang dijalankan.
 
 ## 9. Residual Risk & Mitigation
 
 Risiko:
+
 - Dokumen jalur tunggal bisa usang saat arsitektur berevolusi.
 - AI terlalu kaku pada kasus edge yang butuh eksplorasi non-standar.
 
 Mitigasi:
+
 - Perubahan pola eksekusi wajib update playbook + dokumen ini pada sesi yang sama.
 - Deviasi edge case wajib ditulis di TODO concern + log validasi.
 - Checkpoint refleksi dibatasi satu koreksi rute utama per concern.
@@ -206,3 +228,4 @@ Mitigasi:
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 - `docs/security/AUTH_COHERENCE_MATRIX.md`
 - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
+

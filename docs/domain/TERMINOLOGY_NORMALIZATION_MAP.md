@@ -1,9 +1,11 @@
 # Terminology Normalization Map (Lampiran 4.9-4.24 + Ekstensi 202-211 + Ekstensi Lokal)
 
 Sumber canonical:
+
 - `docs/referensi/Rakernas X.pdf`
 
 Tujuan:
+
 - Mengunci istilah canonical domain agar output UI/PDF koheren terhadap pedoman.
 - Memisahkan istilah teknis (slug/table/model) dari istilah bisnis (label pedoman).
 
@@ -90,9 +92,11 @@ Tujuan:
 ## Normalisasi Label UI Administratif (Role/Scope/Wilayah)
 
 Tujuan:
+
 - Mencegah slug teknis (`super-admin`, `admin-kecamatan`, `desa`) tampil mentah pada UI end-user.
 
 Aturan canonical:
+
 - Role `super-admin` -> tampil sebagai `Super Admin`.
 - Role slug kebijakan (`admin-desa`, `admin-kecamatan`) -> tampil title-case (`Admin Desa`, `Admin Kecamatan`).
 - Role scope baru (`desa-sekretaris`, `kecamatan-pokja-ii`, dst) -> tampil format `<Nama Role> (<Scope>)`.
@@ -100,6 +104,7 @@ Aturan canonical:
 - Label area -> tampil format `<Scope Label> - <Nama Area>`.
 
 Implementasi canonical:
+
 - `app/Support/RoleLabelFormatter.php`
 - `resources/js/utils/roleLabelFormatter.js`
 - `resources/js/Pages/SuperAdmin/Users/Index.vue`
@@ -160,3 +165,4 @@ Implementasi canonical:
   - `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md`
 - Ekstensi pedoman:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
+

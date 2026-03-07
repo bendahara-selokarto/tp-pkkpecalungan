@@ -3,20 +3,24 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - Screenshot dokumen resmi Lampiran 4.18b dari user pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
+
 - Lampiran: `4.18b`.
 - Judul utama: `REKAPITULASI DATA/BUKU CATATAN IBU HAMIL, MELAHIRKAN, NIFAS, IBU MENINGGAL, KELAHIRAN BAYI, BAYI MENINGGAL DAN KEMATIAN BALITA DALAM KELOMPOK PKK RT`.
 
 ## Hasil Verifikasi Visual Header Tabel
 
 Struktur umum:
+
 - Header numerik terbaca sampai kolom `15`.
 - Header bertingkat dengan merge (`rowspan`/`colspan`) tervalidasi visual.
 - Basis agregasi baris: `NAMA KELOMPOK DASA WISMA`.
 
 Grup header:
+
 - Kolom tunggal non-grup:
   - `1: NO.`
   - `2: NAMA KELOMPOK DASA WISMA`
@@ -57,3 +61,4 @@ Grup header:
   - Agregasi utama dihitung per `NAMA KELOMPOK DASA WISMA` dari dataset rekap 4.18a.
   - Hitungan `JUMLAH IBU`, `JUMLAH BAYI`, dan `JUMLAH BALITA MENINGGAL` bersumber dari proyeksi operasional `data_wargas` + `data_warga_anggotas`.
   - Field `AKTE KELAHIRAN` masih bersifat proyeksi karena belum ada field dedicated akte per bayi pada kontrak input saat ini.
+

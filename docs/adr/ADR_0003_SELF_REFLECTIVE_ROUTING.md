@@ -8,23 +8,28 @@ Supersedes: `-`
 Superseded by: `-`
 
 ## Konteks
+
 - Single-path sudah deterministik, tetapi belum punya checkpoint refleksi eksplisit.
 - Task ambigu berisiko salah route concern dan memicu rework.
 
 ## Opsi yang Dipertimbangkan
 ### Opsi A - Tetap Single Path Tanpa Refleksi Eksplisit
+
 - Pro: paling sederhana.
 - Kontra: koreksi salah route kurang auditable.
 
 ### Opsi B - Tambah Self-Reflective Checkpoint Terbatas
+
 - Pro: rework turun, determinisme terjaga.
 - Kontra: ada overhead evaluasi awal.
 
 ### Opsi C - Routing Adaptif Multi-Loop Bebas
+
 - Pro: fleksibel.
 - Kontra: risiko loop dan latency tinggi.
 
 ## Keputusan
+
 - Opsi terpilih: Opsi B.
 - Alasan utama: koreksi rute terukur tanpa melepas kontrak single-path.
 - Kontrak yang dikunci:
@@ -44,6 +49,7 @@ STATUS: accepted
 ```
 
 ## Dampak
+
 - Dampak positif: akurasi routing naik, rework turun, audit trail jelas.
 - Trade-off: ada tambahan langkah dokumentasi/evaluasi awal.
 - Area terdampak (route/request/use case/repository/test/docs):
@@ -54,19 +60,24 @@ STATUS: accepted
   - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
 
 ## Validasi
+
 - [x] Targeted test concern.
 - [x] Regression test concern terkait.
 - [ ] `php artisan test` (jika perubahan signifikan).
 
 ## Rollback/Fallback Plan
+
 - Rollback: hapus checkpoint refleksi dari single-path dan tandai `P-022` sebagai `deprecated`.
 - Fallback dipakai jika latency naik tanpa peningkatan akurasi routing concern.
 
 ## Referensi
+
 - `AGENTS.md`
 - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
 - `docs/process/archive/2026_03/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`
 
 ## Status Log
+
 - 2026-03-01: `proposed` -> `accepted` | checkpoint refleksi terbatas disepakati sebagai ekstensi resmi single-path routing.
+

@@ -1,6 +1,7 @@
 # Policy Scope Audit Report (T4)
 
 Ruang lingkup audit:
+
 - Modul buku sekretaris dan turunan lampiran 4.9a-4.15:
   - `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-keuangan`, `bantuans`, `inventaris`, `activities`
   - `data-warga`, `data-kegiatan-warga`, `data-keluarga`
@@ -8,6 +9,7 @@ Ruang lingkup audit:
   - `warung-pkk`, `taman-bacaan`, `koperasi`, `kejar-paket`, `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`
 
 Metode audit:
+
 - Verifikasi middleware route scope: `scope.role:{desa|kecamatan}`
 - Verifikasi gate policy call (`authorize(...)`) di controller domain
 - Verifikasi guard query scoped di use case + scope service
@@ -44,6 +46,7 @@ Metode audit:
 ## Bukti Validasi
 
 Perintah audit yang dijalankan:
+
 - `php artisan route:list`
 - `php artisan route:list --json`
 - Scan controller authorize:
@@ -70,11 +73,13 @@ Perintah audit yang dijalankan:
 ## Addendum Audit Role-Policy: 2026-02-23
 
 Ruang lingkup audit:
+
 - Konsistensi `Policy -> Scope Service -> Middleware scope.role`.
 - Koherensi `role` vs `scope` vs `areas.level`.
 - Guardrail mutasi user administratif untuk role `super-admin`.
 
 Metode audit:
+
 - Pembacaan source pada komponen inti:
   - `app/Support/RoleScopeMatrix.php`
   - `app/Http/Middleware/EnsureScopeRole.php`
@@ -85,11 +90,13 @@ Metode audit:
 - Verifikasi eksekusi test terfokus policy dan super-admin flow.
 
 Hasil ringkas:
+
 - Status audit: `PASS`.
 - Tidak ditemukan temuan `critical/high/medium`.
 - Tidak ada perubahan kode pada siklus audit ini (audit-only).
 
 Temuan:
+
 1. `LOW` - `Gate::before` memberikan bypass penuh untuk `super-admin`.
    - Lokasi: `app/Providers/AppServiceProvider.php`.
    - Detail: untuk role `super-admin`, policy detail tidak lagi menjadi guard utama karena seluruh ability diizinkan.
@@ -100,6 +107,7 @@ Temuan:
    - Keputusan: diterima, namun rawan regresi jika route dipindah ke luar group tanpa guard setara.
 
 Bukti validasi:
+
 - `php artisan test tests/Unit/Policies`
   - hasil: `55` test pass (`88` assertions).
 - `php artisan test tests/Feature/SuperAdmin/UserProtectionTest.php tests/Feature/SuperAdmin/UserScopePresentationTest.php`
@@ -110,11 +118,13 @@ Bukti validasi:
 ## Addendum Audit Visibility by Responsibility: 2026-02-23
 
 Ruang lingkup audit:
+
 - Verifikasi hardening akses modul berbasis role tanggung jawab + mode akses (`read-only` / `read-write`).
 - Verifikasi payload visibility backend sebagai source of truth UI.
 - Verifikasi anti bypass URL untuk route `desa/*` dan `kecamatan/*`.
 
 Artefak audit:
+
 - `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
 - `app/Http/Middleware/EnsureModuleVisibility.php`
 - `app/Http/Middleware/HandleInertiaRequests.php`
@@ -122,12 +132,14 @@ Artefak audit:
 - `resources/js/Layouts/DashboardLayout.vue`
 
 Hasil ringkas:
+
 - Status audit: `PASS`.
 - Guard `module.visibility` aktif pada route group `desa` dan `kecamatan`.
 - Endpoint mutasi pada modul `read-only` ditolak `403`.
 - Akses lintas tanggung jawab (modul di luar role) ditolak `403`.
 
 Validasi pengujian:
+
 - `php artisan test tests/Feature/ModuleVisibilityMiddlewareTest.php`
   - hasil: `4` test pass (`8` assertions).
 - `php artisan test tests/Feature/MenuVisibilityPayloadTest.php`
@@ -138,4 +150,6 @@ Validasi pengujian:
   - hasil: `715` test pass (`3163` assertions).
 
 Catatan residual risk:
+
 - Migrasi user role legacy (`admin-*` dan role historis non-operasional) belum dieksekusi pada sesi ini; kompatibilitas sementara masih dipertahankan sampai migrasi dijalankan terkontrol.
+

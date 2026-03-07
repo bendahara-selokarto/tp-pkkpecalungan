@@ -84,3 +84,4 @@ Status: `done` (`experimental-ui-only`, non-final, rolling)
 - [x] Concern chart/filter lintas role memakai dokumen ini sebagai acuan tunggal.
 - [x] Perubahan fase ini tetap UI-only eksperimen.
 - [x] Perubahan backend/E2E dibuka hanya jika rule UI sudah stabil dan ada concern terpisah.
+

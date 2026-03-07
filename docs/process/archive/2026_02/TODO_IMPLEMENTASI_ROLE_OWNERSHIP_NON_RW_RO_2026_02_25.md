@@ -4,6 +4,7 @@ Tanggal: 2026-02-25
 Status: `done`
 
 Catatan supersede 2026-02-27:
+
 - Keputusan sementara `program-prioritas -> retain` digantikan pemetaan final ownership ke `sekretaris-tpk` agar tidak overlap dengan `pokja-iv`.
 
 ## Konteks
@@ -35,6 +36,7 @@ Catatan supersede 2026-02-27:
 - [x] `php artisan test` penuh
 
 Catatan validasi:
+
 - `php artisan test` penuh lulus pada eksekusi 2026-02-25 (suite hijau end-to-end).
 
 ## Risiko
@@ -46,3 +48,4 @@ Catatan validasi:
 
 - [x] Concern ini dibuat untuk menutup delta audit modul non-ownership 2026-02-25.
 - [x] Implementasi runtime dikunci `retain sementara` untuk modul non-RW/RO pada sesi ini agar tidak terjadi drift akses mendadak.
+

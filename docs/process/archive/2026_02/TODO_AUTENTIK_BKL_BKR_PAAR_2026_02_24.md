@@ -3,6 +3,7 @@ Tanggal: 2026-02-24
 Status: `done`
 
 ## Konteks
+
 - User memberikan bukti visual header tabel untuk:
   - `REKAPITULASI DATA KELOMPOK BKL`
   - `REKAPITULASI DATA KELOMPOK BKR`
@@ -13,11 +14,13 @@ Status: `done`
   - Untuk referensi ganda, berlaku aturan `referensi terakhir menjadi acuan final`.
 
 ## Target Hasil
+
 - Peta header final per format tervalidasi sampai level merge/subkolom.
 - Mapping `kolom autentik -> field input/storage/report` bisa disusun tanpa ambigu.
 - Deviasi antara tampilan autentik vs implementasi existing terpetakan sebelum patch.
 
 ## Status Umum
+
 - [x] Verifikasi visual header tabel selesai untuk BKL, BKR, dan PAAR.
 - [x] Peta header final tidak ambigu untuk ketiga format.
 - [x] Konfirmasi file sumber autentik (workbook/sheet) selesai.
@@ -27,6 +30,7 @@ Status: `done`
 ## Peta Header Final
 
 ### 1) Rekapitulasi Data Kelompok BKL
+
 - Judul: `REKAPITULASI DATA KELOMPOK BKL`.
 - Metadata atas tabel:
   - `KEC ..........`
@@ -42,6 +46,7 @@ Status: `done`
   - 7 `KEGIATAN`
 
 ### 2) Rekapitulasi Data Kelompok BKR
+
 - Judul: `REKAPITULASI DATA KELOMPOK BKR`.
 - Metadata atas tabel:
   - `KEC ..........`
@@ -57,6 +62,7 @@ Status: `done`
   - 7 `KEGIATAN`
 
 ### 3) Data Pola Asuh Anak dan Remaja (PAAR)
+
 - Judul: `DATA POLA ASUH ANAK DAN REMAJA (PAAR)`.
 - Varian metadata atas tabel:
   - Varian A: tanpa baris `DESA/KEC` (hanya tabel utama).
@@ -78,10 +84,12 @@ Status: `done`
   - 6 `Kasus Narkoba`
 
 ## Catatan Sinkronisasi dengan Implementasi Saat Ini
+
 - BKL/BKR pada implementasi existing sudah memakai struktur kolom yang sama dengan header autentik utama (7 kolom).
 - PAAR sudah diimplementasikan sebagai modul domain aktif (scope `desa` dan `kecamatan`) dengan kontrak tabel `paars`.
 
 ## Langkah Lanjut (Minimal)
+
 - [x] Konfirmasi sumber file autentik concern ini (nama workbook + nama sheet).
 - [x] Bentuk matrix mapping kolom ke field domain:
   - BKL/BKR: validasi field report + metadata cetak.
@@ -90,6 +98,7 @@ Status: `done`
 - [x] Siapkan test matrix minimum (feature + policy/scope + scoped data leak check).
 
 ## Progress Implementasi (2026-02-24)
+
 - [x] Copy UI halaman daftar BKL/BKR dinormalisasi ke istilah autentik:
   - `Rekapitulasi Data Kelompok BKL`
   - `Rekapitulasi Data Kelompok BKR`
@@ -120,10 +129,13 @@ Status: `done`
   - `tests/Unit/Policies/PaarPolicyTest.php`
 
 ## Risiko
+
 - PAAR punya 2 varian metadata atas tabel; risiko drift ditutup dengan keputusan referensi terakhir (Varian B).
 - Risiko tersisa: perubahan template autentik di luar referensi sesi ini perlu audit ulang kontrak header.
 
 ## Keputusan
+
 - [x] Screenshot user sesi 2026-02-24 dikunci sebagai bukti visual resmi untuk kontrak header concern ini.
 - [x] Concern dinyatakan `siap sinkronisasi kontrak header`.
 - [x] Concern dinyatakan `siap implementasi` setelah mapping field + konfirmasi sumber + validasi test terarah selesai.
+

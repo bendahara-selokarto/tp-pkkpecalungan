@@ -3,6 +3,7 @@ Tanggal: 2026-02-24
 Status: `done`
 
 ## Konteks
+
 - User menetapkan dua dokumen Excel sebagai format autentik:
   - `docs/referensi/excel/Buku Wajib Pokja I.xlsx`
   - `docs/referensi/excel/BUKU BANTU.xlsx`
@@ -10,12 +11,14 @@ Status: `done`
 - Sinkronisasi kontrak implementasi belum boleh lanjut sebelum verifikasi visual header tabel untuk sheet prioritas selesai.
 
 ## Target Hasil
+
 - Kontrak header tabel autentik per sheet prioritas terkunci sampai level merge cell (`rowspan`/`colspan` ekuivalen Excel merge range).
 - Tersedia matrix mapping kolom autentik -> field/domain canonical untuk implementasi backend/frontend.
 - Dokumen proses/domain terkait tersinkron, tanpa drift istilah.
 - Siap dieksekusi untuk patch implementasi bertahap (query, form, report, dan validasi test).
 
 ## Ruang Lingkup Prioritas
+
 - `Buku Wajib Pokja I.xlsx`:
   - `Buku Rencana Program`
   - `Buku Kegiatan`
@@ -28,6 +31,7 @@ Status: `done`
   - `BukuKelompok Simulasi`
 
 ## Rencana Eksekusi Bertahap
+
 - [x] Fase 1A: `Buku Wajib Pokja I - Buku Kegiatan`:
   - `docs/process/archive/2026_02/TODO_IMPLEMENTASI_AUTENTIK_BUKU_KEGIATAN_2026_02_24.md`
   - status: implementasi selesai (header autentik tervalidasi, mapping field terkunci, copy UI/report sinkron).
@@ -42,6 +46,7 @@ Status: `done`
   - status: implementasi selesai (matrix mapping, normalisasi label UI/menu/PDF, dan sinkronisasi dokumen concern).
 
 ## Langkah Eksekusi
+
 - [x] Inventarisasi struktur workbook (sheet list + merge ranges) untuk kedua file autentik.
 - [x] Verifikasi visual header tabel untuk `BUKU BANTU.xlsx` sheet `Buku Bantuan`.
 - [x] Tetapkan peta header final sheet `Buku Bantuan` (termasuk merge `JENIS BANTUAN -> UANG/BARANG`).
@@ -57,6 +62,7 @@ Status: `done`
 - [x] Sinkronkan dokumen canonical yang terdampak (TODO/process/domain matrix/deviasi bila ada).
 
 ## Validasi
+
 - [x] Pembacaan text-layer Excel (via XML workbook) berhasil untuk dua file autentik.
 - [x] Bukti visual + peta merge header tervalidasi untuk sheet `Buku Bantuan`.
 - [x] Bukti visual + peta merge header tervalidasi untuk 5 sheet lanjutan `BUKU BANTU.xlsx`.
@@ -66,11 +72,14 @@ Status: `done`
 - [x] Rencana patch per concern terdokumentasi dengan fallback plan teknis.
 
 ## Risiko
+
 - Header multi-baris dengan merge kompleks berisiko salah tafsir jika tanpa verifikasi visual.
 - Sebagian sheet memiliki variasi istilah antar dokumen (potensi drift terminologi).
 - Risiko over-coupling jika implementasi langsung tanpa matrix mapping canonical.
 
 ## Keputusan
+
 - [x] Dua file Excel di atas dikunci sebagai referensi autentik untuk concern ini.
 - [x] Seluruh concern prioritas (fase 1A, 1B, 2, dan 3) diselesaikan bertahap per concern dengan commit terpisah.
 - [x] Implementasi hanya dilakukan setelah peta header visual tervalidasi untuk sheet target.
+

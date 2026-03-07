@@ -1,9 +1,11 @@
 # Command Number Shortcuts
 
 Tujuan:
+
 - Menyederhanakan instruksi ke AI dengan cukup kirim nomor perintah.
 
 Cara pakai:
+
 - Kirim angka saja, contoh: `3`.
 - Bisa gabung beberapa nomor, contoh: `1,3,7`.
 
@@ -24,3 +26,4 @@ Cara pakai:
 13. Eksekusi todo `[file]` sampai end-to-end, commit by concern, jalankan test, dan sinkronkan dokumen kontrak.
 14. Generate TODO concern baru via `powershell -File scripts/generate_todo.ps1 -Code <KODE> -Title "<Judul>"`.
 15. Restruktur artefak perencanaan: sinkronkan `TTM25R1` + `OPERATIONAL_VALIDATION_LOG` + `PLANNING_ARTIFACT_INDEX` dengan patch minimal.
+

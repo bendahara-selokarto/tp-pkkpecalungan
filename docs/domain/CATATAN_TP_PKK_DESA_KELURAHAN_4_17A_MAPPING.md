@@ -3,9 +3,11 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - Screenshot dokumen resmi Lampiran 4.17a dari user pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
+
 - Lampiran: `4.17a`.
 - Judul utama: `CATATAN DATA DAN KEGIATAN WARGA TP PKK`.
 - Subjudul: `DESA/KELURAHAN TAHUN ...`.
@@ -13,11 +15,13 @@ Catatan identitas dokumen:
 ## Hasil Verifikasi Visual Header Tabel
 
 Struktur umum:
+
 - Header numerik terbaca sampai kolom `33`.
 - Header bertingkat dengan merge (`rowspan`/`colspan`) tervalidasi visual.
 - Basis agregasi baris: `NAMA DUSUN/LINGKUNGAN`.
 
 Grup header:
+
 - Kolom tunggal non-grup:
   - `1: NO`
   - `2: NAMA DUSUN/LINGKUNGAN`
@@ -89,3 +93,4 @@ Grup header:
   - `JML RW` dan `JML RT` dihitung dari nilai unik hasil ekstraksi pada grup dusun/lingkungan.
 - Catatan deviasi:
   - Lihat `docs/domain/DOMAIN_DEVIATION_LOG.md` untuk deviasi ketersediaan field dusun/lingkungan dedicated pada model sumber data saat ini.
+

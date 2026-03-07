@@ -1,10 +1,12 @@
 # Regression Checklist Auth Scope (T8)
 
 Tujuan:
+
 - Menjaga konsistensi `role`, `scope`, dan `area_id` agar tidak terjadi bypass akses lintas level wilayah.
 - Menjadi checklist wajib sebelum merge perubahan yang menyentuh policy, middleware `scope.role`, route report, atau scope service.
 
 Sumber acuan:
+
 - `AGENTS.md` (hard invariants role/scope/area)
 - `docs/security/AUTH_COHERENCE_MATRIX.md`
 - `docs/security/POLICY_SCOPE_AUDIT_REPORT.md`
@@ -17,11 +19,13 @@ Sumber acuan:
 | `A2` | `scope=kecamatan` tetapi `area_id` mengarah ke area level `desa` | role `admin-kecamatan`, scope `kecamatan`, area desa | request route `kecamatan.*.report` ditolak `403` atau scope dinetralkan (no access) | `tests/Feature/KecamatanReportReverseAreaMismatchTest.php` (multi-route matrix), `tests/Feature/AgendaSuratReportPrintTest.php` (`ekspedisi.report`), `tests/Feature/DashboardActivityChartTest.php` (`role_kecamatan_tetapi_area_level_desa`) |
 
 Catatan:
+
 - `A2` sengaja diverifikasi di endpoint report (`agenda-surat ekspedisi`) dan agregasi dashboard untuk memastikan guard berlaku lintas entry-point.
 
 ## 2) Checklist Eksekusi Review
 
 Catatan:
+
 - Checklist ini adalah template eksekusi per perubahan; gunakan section "Eksekusi Terbaru" untuk status run terakhir.
 
 - [x] Cek route report tetap berada di scope middleware:
@@ -46,6 +50,7 @@ Catatan:
 - [x] Route report autentik 4.23/4.24 (`data-kegiatan-pkk-pokja-iii`, `data-kegiatan-pkk-pokja-iv`) ikut tercakup pada regression `scope_metadata_tidak_sinkron`.
 
 Ringkasan hasil:
+
 - `php artisan route:list --name=report` -> `90` route report.
 - validasi middleware (`route:list --name=report --json`) -> `invalid_scope_middleware=0`.
 - `php artisan test --filter=scope_metadata_tidak_sinkron` -> `28` test pass.
@@ -55,6 +60,7 @@ Ringkasan hasil:
 ## 4) Bukti Validasi T8
 
 Perintah yang dijalankan:
+
 - `php artisan route:list --name=report`
   - hasil terbaru: `90` route report terdaftar (desa + kecamatan).
 - `php artisan route:list --name=report --json`
@@ -67,4 +73,6 @@ Perintah yang dijalankan:
   - hasil: `20` test pass (termasuk matrix multi-route untuk report kecamatan).
 
 Status:
+
 - `PASS` untuk checklist regression auth-scope pada baseline saat ini.
+

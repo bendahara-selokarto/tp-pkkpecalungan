@@ -110,3 +110,4 @@ Status: `done` (`historical`, referensi aktif koherensi ada di `docs/process/arc
 - [x] Penyesuaian dashboard terakhir dijadikan baseline wajib (tidak boleh diregresikan).
 - [x] Baseline utama diambil dari implementasi dashboard role `kecamatan-sekretaris` yang sudah disetujui user (24 Februari 2026).
 - [x] Jika ada konflik preferensi visual vs kontrak data, kontrak data backend tetap prioritas.
+

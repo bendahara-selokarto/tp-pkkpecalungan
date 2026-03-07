@@ -1,6 +1,7 @@
 # UI Consistency Gate (Admin-One)
 
 Tujuan:
+
 - Menjaga implementasi UI feedback tetap konsisten dengan komponen `admin-one`.
 - Mencegah regresi native dialog (`window.confirm`/`alert`) pada flow utama aplikasi.
 
@@ -31,3 +32,4 @@ rg "border-emerald-200 bg-emerald-50|border-rose-200 bg-rose-50" resources/js/Pa
 ## 4) Pengecualian Saat Ini (Tercatat)
 
 - Tidak ada pengecualian aktif.
+

@@ -3,16 +3,19 @@ Tanggal: 2026-02-22
 Status: `done`
 
 ## Konteks
+
 - Requirement: semua unit disertakan test, dan semua isian/domain disertai seeder.
 - Kondisi saat ini: coverage feature test domain sudah luas, tetapi coverage unit per class dan coverage seeder per domain belum merata.
 - Dokumen ini menjadi checklist kanonikal untuk menutup gap coverage tersebut.
 
 ## Target Hasil
+
 - Setiap unit inti (Action, UseCase, Service, Repository, Scope Service) memiliki test yang relevan.
 - Setiap domain/isian utama memiliki seeder minimal untuk data baseline.
 - Tersedia gate verifikasi yang bisa dijalankan ulang sebelum penutupan tugas.
 
 ## Kanonikal Status (Wajib)
+
 - [x] `[x]` hanya jika sudah ada bukti (file test/seeder + command validasi pada sesi yang sama).
 - [x] Semua yang belum selesai wajib `[ ]` dan ditulis `PENDING` jika masih menunggu keputusan/implementasi.
 - [x] Tidak boleh asumsi coverage; semua klaim harus berbasis audit file nyata.
@@ -23,6 +26,7 @@ Status: `done`
   - jika salah satu gate di atas belum terpenuhi, status wajib tetap `[ ] PENDING`.
 
 ## Hasil Audit Awal (2026-02-22)
+
 - [x] Audit jumlah file dilakukan:
   - domain PHP: 392 file (`app/Domains/Wilayah`)
   - test PHP: 140 file (`tests`)
@@ -43,6 +47,7 @@ Status: `done`
   - hasil: `476 passed`.
 
 ## Hasil Audit Mendalam (2026-02-22)
+
 - [x] Audit unit level aplikasi (`app/Actions|UseCases|Services|Repositories` + `app/Domains/Wilayah/*/{Actions,UseCases,Services,Repositories}`) selesai:
   - total unit: 183
   - covered direct test (berbasis nama test class): 8
@@ -87,6 +92,7 @@ Status: `done`
   - validasi regresi final: `php artisan test` lulus (`667 passed`).
 
 ## Definisi Unit Coverage
+
 - [x] Definisi awal disepakati untuk eksekusi:
   - `Actions`
   - `UseCases`
@@ -98,10 +104,12 @@ Status: `done`
 ## Checklist Eksekusi Test Coverage
 
 ### Phase T1 - Stabilkan Baseline
+
 - [x] Selesaikan blocker bootstrap `CatatanKeluargaRepository` agar command verifikasi berjalan normal.
 - [x] Jalankan ulang audit runtime (`php artisan test`) setelah baseline pulih.
 
 ### Phase T2 - Matriks Unit per Domain
+
 - [x] Matriks unit-per-domain baseline sudah dibuat (ringkasan angka + gap utama).
 - [x] Unit yang belum punya test langsung sudah ditandai sebagai `PENDING` melalui metrik `missing direct test`.
 - [x] Generate daftar rinci unit coverage final ke lampiran markdown:
@@ -112,12 +120,14 @@ Status: `done`
   - action create/update yang menyentuh `level/area_id/created_by`
 
 ### Phase T3 - Implement Test yang Hilang
+
 - [x] Tambah unit test untuk unit high-risk yang belum tercakup.
 - [x] Tambah test anti data leak pada repository scoped query yang kompleks.
 - [x] Tambah regression test untuk guardrail admin (`super-admin` path).
 - [x] Pastikan seluruh test baru memakai naming dan pola assertion yang konsisten.
 
 ### Phase T4 - Gate Verifikasi Test
+
 - [x] Jalankan targeted test per concern setelah penambahan.
 - [x] Jalankan `php artisan test` penuh dan simpan hasil pada log operasional.
 - [x] Capai gate final test coverage: `183/183` unit punya direct test.
@@ -125,6 +135,7 @@ Status: `done`
 ## Checklist Eksekusi Seeder Coverage
 
 ### Phase S1 - Definisi Seeder Scope
+
 - [x] Definisi awal disepakati:
   - "semua isian disertai seeder" diukur minimal per tabel domain utama dari migration (28 tabel).
 - [x] Mode seeding disepakati:
@@ -134,6 +145,7 @@ Status: `done`
   - keputusan: keduanya domain agregasi turunan dari tabel sumber, tidak butuh tabel seeder baru terpisah.
 
 ### Phase S2 - Seeder per Domain
+
 - [x] Seeder sudah tersedia (di `DashboardNaturalBatangSeeder`, belum masuk default chain):
   - `Activities`, `AgendaSurat`, `AnggotaTimPenggerak`, `Bantuan`, `DataIndustriRumahTangga`, `DataKegiatanWarga`, `DataKeluarga`, `DataPelatihanKader`, `DataPemanfaatanTanahPekaranganHatinyaPkk`, `DataWarga`, `Inventaris`, `KaderKhusus`, `KejarPaket`, `Koperasi`, `Posyandu`, `SimulasiPenyuluhan`, `TamanBacaan`, `WarungPkk`.
 - [x] Seeder minimal untuk domain/tabel yang sebelumnya belum ada sudah ditambahkan via `WilayahMissingDomainSeeder`:
@@ -149,6 +161,7 @@ Status: `done`
   - `Dashboard`: menggunakan data sumber chain baseline + use case agregasi runtime.
 
 ### Phase S3 - Integrasi Seeder
+
 - [x] Seluruh seeder domain baseline didaftarkan di `DatabaseSeeder`:
   - existing: `DashboardNaturalBatangSeeder`
   - tambahan baru: `WilayahMissingDomainSeeder`
@@ -157,24 +170,29 @@ Status: `done`
 - [x] Refactor lanjutan seeder modular ditetapkan sebagai optimasi opsional non-gate (tidak memblokir closure concern F).
 
 ### Phase S4 - Gate Verifikasi Seeder
+
 - [x] Jalankan seeding verification:
   - `php artisan migrate:fresh --seed`
 - [x] Verifikasi data seed tidak melanggar policy/scope saat dipakai feature test inti.
 - [x] Gate final seeder coverage tercapai: `28/28` tabel domain baseline terseed via chain `DatabaseSeeder`.
 
 ## Validasi Minimum Penutupan Concern F
+
 - [x] Semua unit (183/183) memiliki test langsung.
 - [x] Semua tabel domain baseline (28/28) terseed lewat chain `DatabaseSeeder`.
 - [x] `php artisan migrate:fresh --seed` lulus.
 - [x] `php artisan test` penuh lulus setelah perbaikan baseline seeder dan bootstrap.
 
 ## Risiko
+
 - Penambahan test masif berpotensi memperpanjang durasi CI.
 - Seeder lintas domain berpotensi menambah coupling jika tidak dijaga minimalis.
 - Seeder bisa memicu false positive test jika data terlalu "sempurna" dan tidak mencerminkan edge case.
 
 ## Fallback Plan
+
 - [x] Implement coverage secara bertahap per domain (batch), bukan sekaligus.
 - [x] Gunakan commit per concern domain agar rollback granular.
 - [x] Jika `migrate:fresh --seed` terlalu berat, pisahkan baseline seeder dan extended seeder.
+
 

@@ -3,16 +3,19 @@ Tanggal: 2026-02-24
 Status: `done`
 
 ## Konteks
+
 - Sumber autentik: `docs/referensi/excel/Buku Wajib Pokja I.xlsx` (sheet `Buku Rencana Program` / judul visual `BUKU PROGRAM KERJA`).
 - Pada sesi 2026-02-24 user memberikan screenshot visual header tabel yang memenuhi syarat validasi (header utuh, garis sel terlihat, teks terbaca, nomor kolom terlihat).
 - Implementasi existing domain `ProgramPrioritas` saat ini masih memakai jadwal triwulan (`jadwal_i` s.d. `jadwal_iv`), sementara format autentik memakai 12 kolom jadwal bulanan.
 
 ## Target Hasil
+
 - Kontrak header autentik `Buku Program Kerja` terkunci sampai level grup subkolom.
 - Gap kontrak autentik vs skema existing terdokumentasi jelas.
 - Rencana patch minimal untuk migrasi dari jadwal 4 kolom ke 12 kolom siap dieksekusi.
 
 ## Bukti Visual dan Peta Header Terkunci
+
 - Judul: `BUKU PROGRAM KERJA`.
 - Header utama:
   - Kolom tunggal: `NO`, `PROGRAM`, `PRIORITAS PROGRAM`, `KEGIATAN`, `SASARAN TARGET`, `KET`.
@@ -32,6 +35,7 @@ Status: `done`
   - `22` `KET`
 
 ## Gap Kontrak vs Implementasi Existing
+
 - Struktur existing:
   - `jadwal_i`, `jadwal_ii`, `jadwal_iii`, `jadwal_iv` (4 flag jadwal).
   - `sumber_dana_pusat`, `sumber_dana_apbd`, `sumber_dana_swd`, `sumber_dana_bant`.
@@ -40,6 +44,7 @@ Status: `done`
   - Label visual sumber dana `APB/SWL/Ban` perlu diselaraskan terhadap field canonical existing `APBD/SWD/Bant`.
 
 ## Langkah Eksekusi
+
 - [x] Verifikasi visual header `Buku Program Kerja` selesai.
 - [x] Peta header final terkunci sampai grup subkolom.
 - [x] Tetapkan matrix mapping kolom autentik -> field canonical:
@@ -55,16 +60,20 @@ Status: `done`
 - [x] Definisikan fallback plan teknis untuk kompatibilitas data lama (`jadwal_i..iv`).
 
 ## Validasi
+
 - [x] Bukti visual header valid tersedia.
 - [x] Tidak ada ambigu jumlah kolom pada header autentik (22 kolom).
 - [x] Keputusan model data jadwal bulanan disetujui.
 - [x] Rencana test executable sebelum patch implementasi.
 
 ## Risiko
+
 - Migrasi jadwal 4 -> 12 kolom berisiko memengaruhi data existing dan report PDF.
 - Jika label sumber dana tidak dinormalisasi tegas, berisiko drift antara UI autentik dan kontrak backend.
 
 ## Keputusan
+
 - [x] Screenshot user sesi 2026-02-24 dikunci sebagai bukti resmi kontrak header `Buku Program Kerja`.
 - [x] Concern dinyatakan `siap sinkronisasi kontrak header`.
 - [x] Implementasi jadwal bulanan 12 kolom dieksekusi dengan kompatibilitas data lama (`jadwal_i..iv`) tetap aktif.
+

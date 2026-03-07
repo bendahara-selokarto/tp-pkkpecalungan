@@ -3,13 +3,16 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - `d:\pedoman\185.pdf`
 
 Artefak verifikasi visual:
+
 - Screenshot header tabel Lampiran 4.16d (dari user) pada sesi validasi 2026-02-22.
 - Screenshot halaman penuh Lampiran 4.16d (dari user) pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
+
 - Lampiran terkonfirmasi: `4.16d`.
 - Judul canonical tervalidasi: `CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK DUSUN/LINGKUNGAN`.
 - Judul report implementasi telah disinkronkan ke judul canonical berdasarkan bukti visual halaman penuh.
@@ -17,11 +20,13 @@ Catatan identitas dokumen:
 ## Hasil Verifikasi Visual Header Tabel
 
 Struktur umum:
+
 - Header numerik terbaca sampai kolom `33`.
 - Header bertingkat dengan model merge (`rowspan`/`colspan`) setara keluarga lampiran 4.16.
 - Kolom dasar agregasi menunjukkan level baris per `NOMOR RW`.
 
 Grup header:
+
 - Kolom tunggal non-grup:
   - `1: NO`
   - `2: NOMOR RW`
@@ -93,3 +98,4 @@ Grup header:
   - `JML RT` dihitung dari jumlah unik RT terdeteksi dalam setiap grup RW.
 - Catatan deviasi:
   - Deviasi judul 4.16d (`DV-006`) telah ditutup (`resolved`) setelah konfirmasi halaman penuh.
+

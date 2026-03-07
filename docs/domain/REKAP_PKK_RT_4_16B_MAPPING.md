@@ -3,20 +3,24 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - `d:\pedoman\181.pdf`
 
 Judul dokumen:
+
 - `REKAPITULASI CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK RT`
 
 ## Hasil Baca Struktur
 
 Metadata form:
+
 - `DASA WISMA`
 - `RT / RW`
 - `DESA/KELURAHAN`
 - `TAHUN`
 
 Struktur tabel:
+
 - Header numerik terlihat sampai kolom `30`.
 - Header bertingkat dengan grup utama:
   - `JUMLAH ANGGOTA KELUARGA` (kolom `5-14`)
@@ -34,6 +38,7 @@ Struktur tabel:
 ## Peta Header Hingga Merge Cell
 
 Model merge header:
+
 - Baris grup (atas): kolom grup memakai `colspan`.
 - Baris sub-header (bawah): kolom detail per indikator.
 - Kolom non-grup (`1-4`, `30`) berperan sebagai kolom tunggal (`rowspan`) pada header.
@@ -93,3 +98,4 @@ Model merge header:
 - Catatan sumber data:
   - Agregasi jumlah anggota keluarga dihitung dari `data_warga_anggotas` dan digrup per `dasawisma`.
   - Indikator kegiatan 26-29 saat ini mengikuti indikator level area (belum per-keluarga/per-dasawisma detail) karena kontrak input granular belum tersedia.
+

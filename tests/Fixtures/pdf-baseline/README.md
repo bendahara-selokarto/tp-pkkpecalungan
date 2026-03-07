@@ -1,14 +1,17 @@
 # PDF Baseline Fixtures
 
 Tujuan:
+
 - Menyimpan baseline kontrak tampilan PDF per modul (judul, urutan header kolom, orientasi default).
 - Menjadi acuan review visual saat ada perubahan template report.
 
 Struktur:
+
 - Satu file JSON per modul di folder ini.
 - Nama file mengikuti format `<lampiran>-<slug-modul>.json`.
 
 Kunci fixture:
+
 - `lampiran`: referensi lampiran pedoman.
 - `moduleSlug`: slug domain modul.
 - `view`: view blade PDF sumber render.
@@ -33,3 +36,4 @@ Kunci fixture:
    - `defaultOrientation`
 3. Verifikasi metadata cetak (`area`, `printedBy`, `printedAt`) pada output.
 4. Jika ada deviasi terhadap pedoman, catat di `docs/domain/DOMAIN_DEVIATION_LOG.md`.
+

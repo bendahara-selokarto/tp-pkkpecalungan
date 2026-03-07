@@ -1,14 +1,17 @@
 # Pedoman Domain Utama 202-211 (Analisis + Rencana Implementasi Fullstack)
 
 Sumber utama domain:
+
 - https://pubhtml5.com/zsnqq/vjcf/basic/201-241
 
 Catatan penting:
+
 - Halaman target yang dianalisis: `202` s.d. `211`.
 - Ekstraksi OCR dari sumber memiliki noise teks, tetapi struktur domain utamanya konsisten dan dapat dipetakan untuk kontrak implementasi.
 - Canonical wilayah tetap `areas` (`level`, `area_id`, `created_by`) sebagai acuan otorisasi data.
 
 Status eksekusi (2026-02-21):
+
 - [x] `F1` Domain contract + terminology mapping.
 - [x] `F2` Data layer scaffold (migration, model, repository boundary, config catalog awal).
 - [x] `F3` Authorization & scope (ScopeService + Policy + Gate binding).
@@ -58,12 +61,15 @@ Status eksekusi (2026-02-21):
 ## 2) Kontrak Domain Teknis (Usulan)
 
 Slug modul usulan:
+
 - `pilot-project-keluarga-sehat`
 
 Boundary domain:
+
 - `app/Domains/Wilayah/PilotProjectKeluargaSehat/*`
 
 Entitas utama:
+
 1. `pilot_project_keluarga_sehat_reports`
    - Menyimpan header laporan + narasi (dasar, pendahuluan, tujuan, pelaksanaan, penutup).
    - Field wajib domain: `level`, `area_id`, `created_by`.
@@ -78,6 +84,7 @@ Entitas utama:
    - Menghindari drift naming antar backend, frontend, dan PDF.
 
 Aturan koherensi:
+
 - Label indikator di UI/PDF harus berasal dari catalog statis yang sama.
 - Nomor urut indikator di PDF tidak boleh dihitung dinamis dari data user.
 - Struktur klaster I-IX harus tetap.
@@ -93,14 +100,17 @@ Aturan koherensi:
   - `202-211` untuk modul pilot project Pokja IV.
 
 Acceptance:
+
 - Ada mapping: slug, label pedoman, daftar klaster, daftar indikator, dan aturan periode.
 
 ## F1.1 - Pemetaan Posisi Sidebar (Rencana UI Navigasi)
 
 Target file:
+
 - `resources/js/Layouts/DashboardLayout.vue`
 
 Posisi menu yang direncanakan:
+
 1. Scope `desa`
    - Tambah group baru setelah `Lampiran 4.15` dan sebelum `Program Pendukung`.
    - Group:
@@ -121,6 +131,7 @@ Posisi menu yang direncanakan:
      - `label`: `Laporan Pilot Project Keluarga Sehat`
 
 Acceptance:
+
 - Menu muncul konsisten pada sidebar desa/kecamatan.
 - Group aktif/open state mengikuti pola group lain di `DashboardLayout`.
 
@@ -136,6 +147,7 @@ Acceptance:
   - interface + implementation untuk query scoped area dan query report.
 
 Acceptance:
+
 - Semua query domain melalui repository, tidak ada query liar di controller.
 
 ## F3 - Authorization & Scope
@@ -146,6 +158,7 @@ Acceptance:
 - Terapkan `scope.role:{desa|kecamatan}` + policy `view/create/update/delete/print`.
 
 Acceptance:
+
 - Tidak ada data leak lintas area.
 - Role/scope mismatch ditolak (stale metadata scenario).
 
@@ -159,6 +172,7 @@ Acceptance:
   - `BuildPilotProjectKeluargaSehatReportUseCase`
 
 Acceptance:
+
 - Business flow terkonsentrasi di use case/action, controller tetap tipis.
 
 ## F5 - HTTP Layer (Routes + Controllers + Requests)
@@ -171,6 +185,7 @@ Acceptance:
   - normalisasi semester (`I|II`).
 
 Acceptance:
+
 - CRUD + print route tersedia di dua scope area.
 
 ## F6 - Frontend Inertia (Vue)
@@ -184,6 +199,7 @@ Acceptance:
   - matrix input per tahun/semester.
 
 Acceptance:
+
 - Input indikator konsisten dengan catalog statis.
 - Flash/confirm mengikuti komponen Admin-One (sudah distandardkan).
 
@@ -200,28 +216,33 @@ Acceptance:
   - `landscape`.
 
 Acceptance:
+
 - Header, urutan klaster, urutan indikator, dan label sesuai pedoman.
 
 ## F8 - Test Matrix (Mandatory)
 
 Feature tests:
+
 1. jalur sukses role/scope valid (desa, kecamatan).
 2. role tidak valid ditolak.
 3. mismatch role-area level ditolak (stale metadata).
 4. report PDF scoped sesuai area.
 
 Unit tests:
+
 1. policy `view/update/delete/print`.
 2. use case agregasi report (urutan klaster/indikator stabil).
 3. serializer PDF context (judul, header, metadata cetak).
 
 Regression:
+
 - Tambah fixture baseline PDF khusus modul ini.
 - Tambah assertion header/label klaster pada report print test.
 
 ## F9 - Operasional Validation
 
 Per batch:
+
 1. `php artisan route:list --name=pilot-project-keluarga-sehat`
 2. `php artisan test --filter=PilotProjectKeluargaSehat`
 3. `php artisan test`
@@ -230,31 +251,39 @@ Per batch:
 ## 4) Strategi Delivery (Disarankan)
 
 Fase 1 (backend contract dulu):
+
 - F1-F4
 
 Fase 2 (UI + print):
+
 - F5-F7
 
 Fase 3 (hardening):
+
 - F8-F9
 
 Keuntungan:
+
 - Risiko drift domain turun karena catalog indikator ditetapkan dari awal.
 - PDF bisa distabilkan lebih cepat karena struktur tabel tidak dibangun ad-hoc.
 
 ## 5) Risiko & Mitigasi
 
 Risiko utama:
+
 - OCR pedoman mengandung noise pada beberapa label indikator.
 
 Mitigasi:
+
 - Bekukan `indicator_catalog` dari review manual final sebelum coding penuh.
 - Simpan mismatch teks ke `docs/domain/DOMAIN_DEVIATION_LOG.md` jika ditemukan.
 
 Risiko kedua:
+
 - Volume field indikator cukup banyak dan rentan typo.
 
 Mitigasi:
+
 - Gunakan catalog berbasis enum/config + generator mapping kolom UI/PDF.
 - Tambah test urutan indikator sebagai guard regresi.
 
@@ -265,4 +294,5 @@ Mitigasi:
 - Policy/scope aman dan lolos skenario stale metadata.
 - Output PDF konsisten dengan pedoman halaman 202-211.
 - Test matrix minimum terpenuhi dan `php artisan test` hijau.
+
 

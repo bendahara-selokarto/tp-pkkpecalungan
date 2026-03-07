@@ -1,22 +1,26 @@
 # Domain Contract Matrix (Lampiran 4.9-4.24 + Ekstensi 202-211 + Ekstensi Lokal)
 
 Sumber canonical domain:
+
 - `docs/referensi/Rakernas X.pdf`
 - `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md` (status ketersediaan buku, autentikasi buku, dan penanggung jawab buku)
 
 Status interpretasi:
+
 - Dokumen ini adalah interpretasi teknis-operasional dari Rakernas X untuk kebutuhan implementasi aplikasi.
 - Saat terjadi konflik interpretasi, sumber primer yang wajib diikuti adalah:
   - `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
   - `docs/referensi/Rakernas X.pdf`
 
 Aturan baca:
+
 - Kolom `field canonical` berisi field inti domain. Untuk tabel persisten, invariant wajib: `level`, `area_id`, `created_by`.
 - Untuk data administrasi TP PKK yang dikelompokkan per periode kerja, invariant transversal tambahan adalah `tahun_anggaran`; field periode domain-spesifik (`tahun_laporan`, `tahun_awal`, `tahun_akhir`, `year`, `semester`) tidak otomatis menggantikannya.
 - Kolom `label PDF saat ini` diambil dari judul render pada `resources/views/pdf/*.blade.php`.
 - Kolom `catatan koherensi` menandai apakah label PDF sudah identik dengan label pedoman.
 
 Kontrak transversal aktif:
+
 - `Tahun anggaran adalah identitas isolasi data administrasi TP PKK per siklus tahunan, default 1 Januari-31 Desember, dan ditetapkan sebagai context kerja aktif user.`
 - `tahun_anggaran` adalah identitas periode kerja administrasi TP PKK yang mengisolasi data lintas modul.
 - Tahun anggaran aktif ditetapkan dari flow `Profile` sebagai context backend user, lalu diterapkan ke boundary repository concern yang relevan.
@@ -170,6 +174,7 @@ Label berikut dikunci sebagai istilah canonical lintas domain/process. Kolom sta
 ## Mapping Sidebar by Domain (Sekretaris TP-PKK + Pokja I-IV)
 
 Tujuan:
+
 - Menyatukan navigasi domain dari struktur lampiran pedoman menjadi struktur kerja organisasi `Sekretaris TP-PKK` dan `Pokja I-IV`.
 
 Mapping grup sidebar:
@@ -183,11 +188,13 @@ Mapping grup sidebar:
 | Pokja IV | `activities`, `inventaris`, `buku-tamu`, `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` |
 
 Implementasi aktif:
+
 - `resources/js/Layouts/DashboardLayout.vue`
 
 ## Role Responsibility Matrix + Access Mode
 
 Kontrak mode:
+
 - `read-write`: dapat baca + mutasi (`create/store/edit/update/destroy`).
 - `read-only`: hanya baca (`index/show/report/print`), mutasi ditolak backend.
 
@@ -205,6 +212,7 @@ Kontrak mode:
 | `kecamatan-pokja-iv` | `kecamatan` | `-` | `-` | `-` | `-` | `read-write` | `-` | `read-only` |
 
 Catatan:
+
 - `super-admin` bypass policy dan tidak dibatasi matrix ini.
 - Role legacy (`admin-*`) dipertahankan sementara untuk kompatibilitas sampai migrasi role legacy selesai.
 - Pengecualian akses modul `inventaris`:
@@ -217,18 +225,22 @@ Catatan:
 ## Dashboard Representation Contract (Role-Aware)
 
 Status kontrak:
+
 - Aktif per 2026-02-23 untuk dashboard berbasis hak akses backend.
 
 Payload utama:
+
 - `dashboardBlocks[]` menjadi source utama representasi dashboard.
 - Payload legacy (`dashboardStats`/`dashboardCharts`) hanya fallback transisi.
 
 Struktur section sekretaris:
+
 - Single section aktif: dashboard hanya menampilkan satu section utama untuk mengurangi beban kognitif.
 - Section utama memprioritaskan domain sekretaris dan chart activity.
 - Pada scope `kecamatan`, chart activity menampilkan `jumlah kegiatan per desa` dengan filter bulan `section1_month` (`all|1..12`).
 
 Aturan role khusus:
+
 - `desa-sekretaris`: default `level=desa`, tanpa kontrol `sub_level`.
 - `kecamatan-sekretaris`: tetap dapat mode bertingkat (`all|by-level|by-sub-level`) dan filter bulan `section1_month` pada section utama.
 - `desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv`: section utama menampilkan chart activity bulanan pokja sendiri (scope area desa sendiri).
@@ -237,8 +249,10 @@ Aturan role khusus:
 - Ringkasan angka di dalam card dashboard ditampilkan sebagai tile mini di atas chart dengan gaya visual konsisten seperti halaman `management ijin akses`.
 
 Kontrak metadata sumber (anti label ambigu):
+
 - `source_group`: `sekretaris-tpk|pokja-i|pokja-ii|pokja-iii|pokja-iv`.
 - `source_scope`: `desa|kecamatan`.
 - `source_area_type`: `area-sendiri|desa-turunan`.
 - `source_modules`: daftar slug modul penyusun metrik.
 - `filter_context`: wajib memuat token query aktif minimal `mode|level|sub_level|section1_month`.
+

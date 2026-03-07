@@ -1,6 +1,7 @@
 # AI Friendly Execution Playbook (Domain Agnostic)
 
 Tujuan:
+
 - Menyimpan pola eksekusi yang efisien, akurat, dan valid untuk dipakai ulang lintas project.
 - Menjaga agar jalur kerja AI selalu bisa ditingkatkan saat ditemukan pendekatan yang lebih baik.
 
@@ -29,6 +30,7 @@ Tujuan:
 ## 2) Pattern Registry
 
 Gunakan status:
+
 - `active`: direkomendasikan.
 - `candidate`: baru diuji sebagian.
 - `deprecated`: tidak direkomendasikan.
@@ -65,15 +67,18 @@ Gunakan status:
 ## 3) Protocol Update Pattern
 
 Tambahkan pattern baru jika:
+
 - Dipakai berulang minimal 2 kali.
 - Mengurangi waktu eksekusi atau tingkat error secara nyata.
 - Punya guardrail dan langkah validasi yang jelas.
 
 Ubah pattern existing jika:
+
 - Ada jalur baru dengan hasil lebih cepat dan coverage validasi setara/lebih baik.
 - Jalur lama sering memicu rework atau false positive.
 
 Deprecate pattern jika:
+
 - Tidak kompatibel dengan arsitektur saat ini.
 - Menambah risiko drift/bug.
 
@@ -100,6 +105,7 @@ Gunakan template berikut saat menambah pattern:
 ## 5) Reuse Pack Lintas Project
 
 Artefak yang direkomendasikan untuk dibawa ke project lain:
+
 - Kontrak eksekusi AI (`AGENTS.md` atau setara).
 - Playbook pattern ini.
 - Checklist quality gate (auth, boundary, test).
@@ -115,9 +121,12 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
 ## 7) Detail Pattern Tanggal
 
 Detail operasional lengkap setiap pattern dipindahkan ke lampiran berikut agar konteks default lebih ringkas:
+
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md`
 
 Aturan pakai:
+
 - Baca file utama ini terlebih dahulu untuk routing cepat.
 - Buka lampiran detail hanya saat perlu mengeksekusi pattern spesifik.
 - Setiap perubahan status/isi pattern wajib disinkronkan di file utama dan lampiran pada sesi yang sama.
+

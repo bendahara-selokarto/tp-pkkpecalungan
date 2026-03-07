@@ -4,6 +4,7 @@ Tanggal: 2026-02-25
 Status: `done`
 
 Catatan supersede 2026-02-27:
+
 - Ownership `program-prioritas` sudah dipindah ke grup `sekretaris-tpk` (bukan `pokja-iv`) mengikuti sinkronisasi canonical terbaru pada `RoleMenuVisibilityService` dan `DOMAIN_CONTRACT_MATRIX`.
 
 ## Konteks
@@ -24,15 +25,18 @@ Catatan supersede 2026-02-27:
 ## Update 2026-02-25 (Hasil Koreksi Domain)
 
 Sumber:
+
 - `docs/referensi/Pemetaan Modul.xlsx`
 
 Validasi struktur header tabel:
+
 - Sheet: `Daftar Modul`.
 - Dimensi data: `A1:W34`.
 - Merge header tervalidasi: `A1:A3`, `B1:B3`, `C1:C3`, `D1:M1` (Kecamatan), `N1:W1` (Desa), pasangan role baris 2 (`D2:E2` s.d. `V2:W2`).
 - Header operasional yang dipakai: `Kecamatan/Desa -> Sekretaris/Pokja I-IV -> RW/RO`.
 
 Koreksi nama modul (kolom `Nama Modul yang benar`) yang dikunci:
+
 - `Buku Anggota Tim Penggerak` -> `Buku Daftar Anggota Tim Penggerak PKK`
 - `Buku Anggota Tim Penggerak Kader` -> `Buku Daftar Anggota TP PKK dan Kader`
 - `Buku Agenda Surat` -> `Buku Agenda Surat Masuk/Keluar`
@@ -41,17 +45,20 @@ Koreksi nama modul (kolom `Nama Modul yang benar`) yang dikunci:
 - `Data HATINYA PKK` -> `Buku HATINYA PKK`
 
 Temuan delta ownership terhadap implementasi saat ini:
+
 - Koreksi domain menandai banyak modul Pokja sebagai `RW Desa` saja (tanpa `RW Kecamatan`), sedangkan implementasi backend saat ini masih memberi `RW` untuk desa + kecamatan pada grup Pokja.
 - `data-pelatihan-kader` ditandai `tidak usah`.
 - `catatan-keluarga`, `program-prioritas`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat`, `desa-activities` tidak ditandai owner `RW/RO` pada hasil koreksi.
 
 Keputusan sesi ini:
+
 - Sinkronisasi label modul untuk dokumen audit/generator sudah diterapkan pada script ekspor.
 - Perubahan otorisasi runtime belum diterapkan karena membutuhkan keputusan eksplisit pada boundary `RoleMenuVisibilityService` + test matrix.
 
 ## Update 2026-02-25 (Eksekusi Runtime Batch-2)
 
 Perubahan runtime yang dieksekusi:
+
 - `RoleMenuVisibilityService` menambahkan override modul per-role (`ROLE_MODULE_MODE_OVERRIDES`) untuk menurunkan akses `kecamatan-pokja-*` dari `read-write` ke `read-only` pada modul pokja desa-only:
   - `kecamatan-pokja-i`: `bkl`, `bkr`, `paar`, `data-warga`, `data-kegiatan-warga`
   - `kecamatan-pokja-ii`: `taman-bacaan`, `koperasi`, `kejar-paket`
@@ -59,6 +66,7 @@ Perubahan runtime yang dieksekusi:
   - `kecamatan-pokja-iv`: `posyandu`, `simulasi-penyuluhan`
 
 Validasi runtime batch-2:
+
 - `tests/Unit/Services/RoleMenuVisibilityServiceTest.php` lulus.
 - `tests/Feature/ModuleVisibilityMiddlewareTest.php` lulus (termasuk guard RO untuk `kecamatan-pokja-i` pada `data-warga`).
 
@@ -150,3 +158,4 @@ Validasi runtime batch-2:
 
 - [x] Checklist audit role-modul dikunci berbasis source of truth backend, bukan asumsi UI.
 - [x] Kolom perbaikan role disiapkan agar bisa dipakai tim domain saat validasi penempatan akses.
+

@@ -3,6 +3,7 @@ Tanggal: 2026-02-24
 Status: `done`
 
 ## Konteks
+
 - Sumber autentik: `docs/referensi/excel/BUKU BANTU.xlsx`.
 - Pada sesi 2026-02-24 user memberikan 5 screenshot visual header untuk sheet:
   - `Buku Kader Khusus`
@@ -16,11 +17,13 @@ Status: `done`
   - `Buku Inventaris`, `Buku Anggota Pokja`, `BukuKelompok Simulasi`: implemented (copy UI + label menu + label PDF sinkron).
 
 ## Target Hasil
+
 - Kontrak header final 5 sheet tervalidasi hingga level merge cell (`rowspan`/`colspan`).
 - Mapping `kolom autentik -> field input/storage/report` siap disusun tanpa ambigu.
 - Tersedia rencana patch minimal lintas layer arsitektur.
 
 ## Langkah Eksekusi
+
 - [x] Ambil bukti visual valid untuk 5 sheet (header utuh, garis sel terlihat, nomor kolom terlihat, teks terbaca).
 - [x] Finalisasi peta header per sheet sampai level merge (`rowspan`/`colspan`).
 - [x] Susun matrix mapping `kolom autentik -> field input/storage/report` per sheet untuk `Buku Kader Khusus` dan `Buku Prestasi`.
@@ -30,6 +33,7 @@ Status: `done`
 - [x] Jalankan doc-hardening jika muncul drift istilah/kontrak saat sinkronisasi mapping.
 
 ## Progress Implementasi (Parsial)
+
 - [x] `Buku Kader Khusus`
   - Mapping terkunci:
     - `NAMA` -> `nama`
@@ -91,6 +95,7 @@ Status: `done`
 ## Bukti Visual dan Peta Header Terkunci
 
 ### Sheet `Buku Kader Khusus`
+
 - Jumlah kolom data: 11.
 - Grup header:
   - `JENIS KELAMIN` -> `L`, `P` (`colspan=2`).
@@ -111,6 +116,7 @@ Status: `done`
   - 11 `KETERANGAN`
 
 ### Sheet `Buku Prestasi`
+
 - Jumlah kolom data: 9.
 - Grup header:
   - `PRESTASI/KEBERHASILAN YANG DICAPAI` -> `KECAMATAN`, `KABUPATEN`, `PROVINSI`, `NASIONAL` (`colspan=4`).
@@ -128,6 +134,7 @@ Status: `done`
   - 9 `KETERANGAN`
 
 ### Sheet `Buku Inventaris`
+
 - Jumlah kolom data: 8.
 - Tidak ada grup subkolom horizontal.
 - Semua header utama efektif `rowspan=2` karena baris kedua dipakai nomor kolom.
@@ -142,6 +149,7 @@ Status: `done`
   - 8 `KETERANGAN`
 
 ### Sheet `Buku Anggota Pokja`
+
 - Jumlah kolom data: 12.
 - Grup header:
   - `JENIS KELAMIN` -> `L`, `P` (`colspan=2`).
@@ -163,6 +171,7 @@ Status: `done`
   - 12 `KET`
 
 ### Sheet `BukuKelompok Simulasi`
+
 - Jumlah kolom data: 7.
 - Grup header:
   - `JUMLAH` -> `KELOMPOK`, `SOSIALISASI` (`colspan=2`).
@@ -179,6 +188,7 @@ Status: `done`
   - 7 `JUMLAH KADER - P`
 
 ## Validasi
+
 - [x] Bukti visual 5 sheet valid dan terbaca.
 - [x] Peta header final per sheet tidak ambigu untuk level merge/subkolom.
 - [x] Mapping field disetujui untuk implementasi (`Buku Kader Khusus`, `Buku Prestasi`).
@@ -186,6 +196,7 @@ Status: `done`
 - [x] Rencana test untuk 3 sheet tersisa terdefinisi dan dapat dijalankan.
 
 ## Test Matrix Concern
+
 - [x] Feature akses scoped:
   - `DesaInventarisTest`, `KecamatanInventarisTest`
   - `DesaAnggotaPokjaTest`, `KecamatanAnggotaPokjaTest`
@@ -199,10 +210,13 @@ Status: `done`
   - `DashboardCoverageMenuSyncTest`
 
 ## Risiko
+
 - Istilah lokal seperti `KET`, `BLM NIKAH`, dan `TEMP, TGL/BLN/LAHIR (UMUR)` berpotensi drift saat dijadikan label UI/query.
 - Sheet dengan subkolom (contoh `PRESTASI`, `JUMLAH`, `STATUS`) berisiko salah map jika naming field tidak dikunci sejak awal.
 
 ## Keputusan
+
 - [x] Lima screenshot user pada sesi 2026-02-24 dikunci sebagai bukti kontrak visual header resmi.
 - [x] Implementasi dilepas bertahap per concern; `Kader Khusus` dan `Prestasi` sudah sinkron.
 - [x] Implementasi 3 sheet tersisa diselesaikan setelah matrix mapping dikunci.
+

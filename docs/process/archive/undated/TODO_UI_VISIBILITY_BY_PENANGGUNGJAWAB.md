@@ -64,6 +64,7 @@ Status: `done` (`state:historical-e2e`, sinkronisasi concern sidebar aktif ada d
 - `desa-pokja-iv` -> `Pokja IV` (`read/write`)
 
 Catatan kompatibilitas (rencana):
+
 - `super-admin` tetap melihat menu administratif (`Manajemen User`) + bypass gate.
 - `admin-desa`/`admin-kecamatan` tidak dipakai untuk model akses baru.
 - Jika masih ada data user legacy dengan role `admin-*`, wajib migrasi role sebelum enforcement final visibility.
@@ -158,3 +159,4 @@ Catatan kompatibilitas (rencana):
 - Endpoint/domain di luar tanggung jawab role tertolak dari backend.
 - Endpoint mutasi pada area `read-only` tertolak dari backend.
 - Kontrak domain + policy/scope audit terbarui dan lulus test matrix.
+

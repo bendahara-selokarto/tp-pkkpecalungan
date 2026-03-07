@@ -4,6 +4,7 @@ Tanggal: 2026-02-23
 Status: `done` (`state:superseded-2026-02-26`)
 
 Catatan superseded (2026-02-26):
+
 - Skenario aktif dashboard sekretaris diubah menjadi satu section saja (`sekretaris-section-1`).
 - Section lanjutan (`section-2/3/4`) tidak lagi dirender pada implementasi aktif.
 
@@ -90,3 +91,4 @@ Catatan superseded (2026-02-26):
 - [x] Section 4 fokus pada rincian sumber data per desa untuk Pokja I.
 - [x] Tidak menambah authority akses di frontend; kontrol akses tetap di backend.
 - [x] Selama mode kompatibilitas legacy aktif, `admin-kecamatan` mengikuti aturan visibilitas sekretaris kecamatan.
+

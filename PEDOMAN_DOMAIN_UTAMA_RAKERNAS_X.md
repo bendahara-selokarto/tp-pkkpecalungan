@@ -17,3 +17,4 @@ Tanggal penetapan: 2026-02-24
 
 - Referensi lama berbasis halaman `101-150` dipertahankan hanya untuk jejak historis audit/deviasi.
 - Seluruh dokumen canonical (matrix kontrak, terminologi, process architecture) wajib mengarah ke dokumen ini.
+

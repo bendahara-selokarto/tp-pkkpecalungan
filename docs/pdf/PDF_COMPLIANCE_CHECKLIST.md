@@ -1,10 +1,12 @@
 # PDF Compliance Checklist (Lampiran 4.9-4.24)
 
 Tujuan:
+
 - Menjadi checklist baku verifikasi output PDF agar identik dengan pedoman domain utama.
 - Menjadi baseline regression untuk perubahan header, urutan kolom, format nilai, orientasi, dan metadata cetak.
 
 Sumber acuan:
+
 - Pedoman domain utama: `docs/referensi/Rakernas X.pdf`
 - Validasi awal format: `docs/pdf/VALIDASI_FORMAT_BUKU_SEKRETARIS_PDF.md`
 - Kontrak domain: `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
@@ -24,11 +26,13 @@ Sumber acuan:
 ## B. Checklist Per Modul
 
 Keterangan status:
+
 - `pending`: belum divalidasi pada siklus ini.
 - `pass`: sudah diverifikasi sesuai pedoman.
 - `fail`: ada mismatch yang harus diperbaiki.
 
 Siklus validasi terbaru:
+
 - `2026-02-21`: validasi otomatis lulus via:
   - `php artisan test --filter=PdfBaselineFixtureComplianceTest`
   - `php artisan test --filter=header_kolom_pdf`
@@ -77,6 +81,7 @@ Siklus validasi terbaru:
 ## D. Audit Trail Sumber Data PDF
 
 Tujuan:
+
 - Menjaga agar semua laporan PDF bertabel mengambil data dari tabel database yang tepat sesuai boundary domain.
 - Menyediakan jejak audit yang bisa diulang pada siklus berikutnya.
 
@@ -94,6 +99,7 @@ Tujuan:
 - Tidak ditemukan penggunaan tabel legacy compatibility (`kecamatans`, `desas`, `user_assignments`) pada jalur print PDF.
 
 Catatan penting:
+
 - Domain `catatan-keluarga` memakai model marker policy (`CatatanKeluarga`) untuk otorisasi, namun sumber report berasal dari tabel operasional lintas modul.
 - Report `ekspedisi` berasal dari tabel `agenda_surats` dengan filter `jenis_surat = keluar` (bukan tabel ekspedisi terpisah).
 
@@ -133,6 +139,7 @@ Catatan penting:
 ### Template Audit Berikutnya (Wajib Isi)
 
 Isi baris baru pada tabel `Riwayat Audit` dengan format:
+
 - Tanggal audit (`YYYY-MM-DD`)
 - Cakupan route/fitur
 - Metode verifikasi
@@ -140,11 +147,13 @@ Isi baris baru pada tabel `Riwayat Audit` dengan format:
 - Status (`pass`/`fail`)
 
 Checklist run minimum sebelum mengisi riwayat:
+
 1. `php artisan route:list --json` lalu filter route `report/pdf` dan `print`.
 2. Mapping `loadView('pdf.*')` dari seluruh `*PrintController.php`.
 3. Verifikasi chain `UseCase -> Repository`.
 4. Verifikasi query repository (`::query()`) dan tabel model (`getTable()`).
 5. Validasi tabel eksis (`Schema::hasTable`).
 6. Catat mismatch jika ada ke `docs/domain/DOMAIN_DEVIATION_LOG.md`.
+
 
 

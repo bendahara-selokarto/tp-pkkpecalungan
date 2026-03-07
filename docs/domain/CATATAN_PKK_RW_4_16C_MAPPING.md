@@ -3,17 +3,21 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - `d:\pedoman\183.pdf`
 
 Artefak verifikasi visual:
+
 - Screenshot header tabel Lampiran 4.16c (dari user) pada sesi validasi 2026-02-22.
 
 Judul dokumen:
+
 - `CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK RW`
 
 ## Hasil Baca Awal (Text-Layer)
 
 Token identitas yang berhasil dibaca:
+
 - `LAMPIRAN 4.16c`
 - `CATATAN DATA DAN KEGIATAN WARGA KELOMPOK PKK RW`
 - `DASA WISMA`
@@ -22,16 +26,19 @@ Token identitas yang berhasil dibaca:
 - `TAHUN`
 
 Catatan:
+
 - Text-layer cukup untuk identitas dokumen, tetapi tidak cukup untuk struktur header tabel.
 
 ## Hasil Verifikasi Visual Header Tabel
 
 Struktur umum:
+
 - Header numerik terbaca sampai kolom `32`.
 - Header bertingkat 3 baris (grup, sub-header, nomor kolom).
 - Peta merge cell (`rowspan`/`colspan`) berhasil divalidasi.
 
 Grup header:
+
 - Kolom tunggal non-grup:
   - `1: NO`
   - `2: NOMOR RT`
@@ -98,3 +105,4 @@ Grup header:
 - Catatan sumber data:
   - Agregasi utama dihitung dari `data_wargas` + `data_warga_anggotas`.
   - Indikator kegiatan 4.16c mengikuti indikator level area (belum granular per-keluarga/per-RT) untuk menjaga konsistensi kontrak input saat ini.
+

@@ -68,10 +68,12 @@ Status: `done` (`state:experimental-ui-closed-by-owner-approval`)
 ## Rencana Batch 2026-03-02 (Iwan): Semua Output PDF Menjadi Menu Sidebar
 
 Tujuan batch:
+
 - Seluruh route output PDF statis (`*/report/pdf`) punya entry menu di sidebar sesuai scope/role.
 - Tetap `UI-only` (tanpa ubah policy/middleware/backend visibility payload).
 
 Baseline inventaris (hasil audit route + sidebar):
+
 - Total route statis `report/pdf`: `52` path unik (lintas scope).
 - Gap base module PDF yang belum punya entry sidebar:
   - `bantuans`
@@ -84,9 +86,11 @@ Baseline inventaris (hasil audit route + sidebar):
   - item `catatan-keluarga`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` masih `uiVisibility: disabled` padahal punya output PDF.
 
 Constraint:
+
 - Route dinamis berbasis ID (`activities/{id}/print`, `desa-activities/{id}/print`) tidak dapat dijadikan entry sidebar langsung tanpa konteks record; route ini dikecualikan dari target "menu PDF statis".
 
 Langkah eksekusi batch PDF-sidebar:
+
 - [x] P0. Kunci inventory route PDF statis + peta gap menu sidebar.
 - [x] P1. Tetapkan IA sidebar PDF:
   - opsi default: tambah group `Laporan PDF` per scope (`desa`, `kecamatan`) dengan link langsung ke route `report/pdf`;
@@ -106,6 +110,7 @@ Langkah eksekusi batch PDF-sidebar:
   - [x] guard unit frontend untuk coverage menu PDF wajib + anti duplikasi + UI-only visibility.
 
 Target output batch:
+
 - [x] Daftar final semua menu PDF di sidebar (desa + kecamatan + super-admin jika relevan).
 - [x] Daftar route PDF yang dikecualikan beserta alasan teknis.
 - [x] Bukti validasi UI-only dan residual risk.
@@ -181,3 +186,4 @@ Target output batch:
 
 - Concern `UVM25R1` ditutup ke `done` berdasarkan persetujuan owner untuk finalisasi lebih awal tanpa menunggu dua siklus cadence.
 - Seluruh checklist eksekusi aktif concern ini sudah tertutup; residual guard dipertahankan melalui kontrak test frontend (`DashboardLayoutMenuContractTest`, `NavigationSemanticContractTest`, `ResponsiveTableRolloutContractTest`, `DashboardResponsiveInteractionContractTest`).
+

@@ -8,27 +8,32 @@ Supersedes: `-`
 Superseded by: `-`
 
 ## Konteks
+
 - Akses modul saat ini ditentukan oleh konstanta hardcoded pada `RoleMenuVisibilityService`.
 - Perubahan akses operasional (contoh: penyesuaian akses `catatan-keluarga`) membutuhkan perubahan kode dan deployment.
 - Dibutuhkan mekanisme terkelola oleh `super-admin` untuk mengatur ijin akses per `modul x group role` tanpa melemahkan guardrail backend.
 
 ## Opsi yang Dipertimbangkan
 ### Opsi A - Tetap Hardcoded Penuh
+
 - Ringkasan pendek: semua mapping akses dipertahankan di kode.
 - Kelebihan: sederhana, tidak menambah kompleksitas storage.
 - Konsekuensi: perubahan akses lambat, beban patch berulang, sulit didelegasikan ke operator super-admin.
 
 ### Opsi B - Override Terkelola di Database + Fallback Hardcoded
+
 - Ringkasan pendek: base matrix tetap di kode, super-admin dapat menulis override valid di storage.
 - Kelebihan: fleksibel, tetap punya fallback aman, perubahan akses lebih cepat.
 - Konsekuensi: butuh desain validasi, audit log, dan sinkronisasi resolver agar tidak drift.
 
 ### Opsi C - Full Dynamic Tanpa Hardcoded Base
+
 - Ringkasan pendek: seluruh matrix akses dipindah ke storage, kode hanya membaca konfigurasi runtime.
 - Kelebihan: paling fleksibel.
 - Konsekuensi: risiko tinggi jika seed/konfigurasi rusak, kompleksitas bootstrap besar, rollback lebih sulit.
 
 ## Keputusan
+
 - Opsi terpilih: Opsi B.
 - Alasan utama: menjaga baseline keamanan existing sambil membuka jalur pengelolaan akses oleh super-admin.
 - Kontrak yang dikunci:
@@ -39,6 +44,7 @@ Superseded by: `-`
   - tahap awal wajib read-only untuk validasi desain sebelum write override.
 
 ## Dampak
+
 - Dampak positif:
   - perubahan mapping akses tidak selalu memerlukan perubahan kode.
   - audit keputusan akses menjadi lebih eksplisit.
@@ -55,15 +61,18 @@ Superseded by: `-`
   - dokumen TODO/domain matrix/terminology map.
 
 ## Validasi
+
 - [x] Targeted test concern.
 - [x] Regression test concern terkait.
 - [x] `php artisan test` (jika perubahan signifikan).
 
 ## Rollback/Fallback Plan
+
 - Langkah rollback minimum: nonaktifkan pembacaan override storage dan pakai matrix hardcoded penuh.
 - Kondisi kapan fallback dijalankan: ditemukan anomali akses lintas role/scope pada smoke test atau produksi.
 
 ## Referensi
+
 - `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
 - `app/Http/Middleware/EnsureModuleVisibility.php`
 - `app/Support/RoleScopeMatrix.php`
@@ -72,8 +81,10 @@ Superseded by: `-`
 - `docs/process/archive/2026_02/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`
 
 ## Status Log
+
 - 2026-02-28: `proposed` | baseline keputusan concern.
 - 2026-02-28: `proposed` -> `accepted` | disetujui implementasi Opsi B bertahap per concern modul, dimulai observasi + finalisasi markdown.
 - 2026-02-28: tahap 1 read-only matrix selesai (`ACL26S1`).
 - 2026-02-28: tahap 2 pilot write `catatan-keluarga` selesai (`ACL26C1`) dengan update, rollback, audit trail, dan fallback flag.
 - 2026-03-02: tahap 3 batch 1 rollout `activities` selesai (`ACL26A2`); endpoint override digeneralisasi ke payload `module` dengan validasi role-scope-module dan resolver rollout terkelola (`catatan-keluarga`, `activities`).
+

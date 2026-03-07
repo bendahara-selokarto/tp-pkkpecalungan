@@ -124,6 +124,7 @@ Status: `done` (`state:historical-baseline`, concern mitigasi `PGM26A1` sudah `d
   - role lain tidak dapat mengakses data di luar scope.
 
 Catatan validasi penutupan:
+
 - `php artisan test` penuh lulus pada 2026-02-25.
 - `npm run build` lulus pada 2026-02-25 (setelah sinkronisasi dependency lewat `npm install`).
 
@@ -144,3 +145,4 @@ Catatan validasi penutupan:
 - [x] Implementasi pagination dilakukan bertahap `by concern`, bukan big-bang rewrite.
 - [x] Kontrak akses backend tetap prioritas; UI hanya consumer.
 - [x] Jika ditemukan konflik UX vs kontrak domain, kontrak domain canonical tetap menang.
+

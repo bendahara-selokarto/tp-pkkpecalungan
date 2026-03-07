@@ -27,6 +27,7 @@ Tujuan: referensi implementasi dashboard role lain dengan pola yang sama seperti
 ## Struktur Section Khusus Sekretaris Kecamatan
 
 Precondition masuk mode section sekretaris:
+
 - group `sekretaris-tpk` tersedia, dan
 - minimal satu group pokja (`pokja-i..pokja-iv`) tersedia.
 
@@ -41,6 +42,7 @@ Section yang dihasilkan backend (skenario aktif saat ini):
 ## Kontrak Data Block
 
 Setiap block di `dashboardBlocks[]` membawa:
+
 - `key`, `kind`, `group`, `group_label`, `mode`, `title`,
 - `stats`,
 - `charts`,
@@ -53,11 +55,13 @@ Setiap block di `dashboardBlocks[]` membawa:
   - `filter_context` (`mode`, `level`, `sub_level`, `section1_month`, `section2_group`, `section3_group`).
 
 Untuk block dokumen, chart utama:
+
 - `charts.coverage_per_module` (`labels`, `values`, `items`).
 
 ## Mapping Group -> Module (Sumber Visibilitas)
 
 Kontrak mapping berasal dari `RoleMenuVisibilityService::GROUP_MODULES`:
+
 - `sekretaris-tpk`
 - `pokja-i`
 - `pokja-ii`
@@ -270,3 +274,4 @@ Mode akses group per role berasal dari `ROLE_GROUP_MODES` dan di-resolve per sco
 - `tests/Feature/DashboardDocumentCoverageTest.php`
 - `tests/Feature/DashboardActivityChartTest.php`
 - `tests/Unit/Dashboard/DashboardCoverageMenuSyncTest.php`
+

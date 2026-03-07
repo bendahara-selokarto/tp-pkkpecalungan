@@ -7,6 +7,7 @@ Tujuan: memastikan setiap penambahan, pengurangan, atau perubahan visibility mod
 ## 1. Scope Monitoring
 
 Dokumen ini wajib dipakai untuk seluruh perubahan visibility yang menyentuh:
+
 - Mapping role/scope/group/module.
 - Mode akses modul (`read-only` / `read-write` / tidak tersedia).
 - Guard backend (`policy`, `scope service`, `module.visibility` middleware).
@@ -15,6 +16,7 @@ Dokumen ini wajib dipakai untuk seluruh perubahan visibility yang menyentuh:
 ## 2. Trigger Wajib
 
 Jalankan monitoring ini setiap ada:
+
 1. Penambahan modul baru ke role/group.
 2. Pengurangan modul dari role/group.
 3. Perubahan mode akses modul pada role/group.
@@ -43,16 +45,19 @@ Jalankan monitoring ini setiap ada:
 ## 4. Checklist Eksekusi (Mandatory)
 
 ### A. Analisis
+
 - [ ] Identifikasi perubahan visibility: `add` / `remove` / `change-mode`.
 - [ ] Tetapkan role terdampak (`desa/kecamatan`, sekretaris/pokja/admin/super-admin).
 - [ ] Tetapkan dampak scope-area-level (anti mismatch `role` vs `scope` vs `areas.level`).
 
 ### B. Implementasi
+
 - [ ] Patch minimal pada source of truth backend (utamakan `RoleMenuVisibilityService`).
 - [ ] Pastikan frontend hanya menampilkan menu berdasarkan `auth.user.moduleModes`.
 - [ ] Pastikan tidak ada bypass authority dari frontend.
 
 ### C. Validasi Teknis
+
 - [ ] Jalankan test targeted visibility:
   - `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
   - `php artisan test tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php`
@@ -62,6 +67,7 @@ Jalankan monitoring ini setiap ada:
 - [ ] Jika perubahan lintas modul/auth: jalankan `php artisan test`.
 
 ### D. Doc-Hardening
+
 - [ ] Sinkronkan dokumen canonical/process concern yang terdampak.
 - [ ] Catat keputusan kontrak yang dikunci (role, scope, mode, slug modul).
 - [ ] Tambah bukti eksekusi ke `docs/process/OPERATIONAL_VALIDATION_LOG.md`.
@@ -69,6 +75,7 @@ Jalankan monitoring ini setiap ada:
 ## 5. Output Wajib per Perubahan
 
 Setiap perubahan visibility wajib menghasilkan:
+
 1. Daftar role terdampak.
 2. Daftar modul terdampak + mode sebelum/sesudah.
 3. File yang diubah (backend, frontend, tests, docs).
@@ -111,7 +118,9 @@ Status:
 ## 7. Gate Merge
 
 Perubahan visibility dinyatakan **belum siap merge** jika salah satu kondisi ini terjadi:
+
 - Test visibility belum hijau.
 - Frontend menu masih bisa menampilkan slug tanpa mode backend.
 - Dokumentasi canonical/process belum sinkron.
 - Dampak role-scope-area belum dinyatakan eksplisit.
+

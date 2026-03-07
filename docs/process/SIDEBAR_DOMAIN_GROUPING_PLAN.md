@@ -1,11 +1,13 @@
 # Sidebar Domain Grouping Plan
 
 Tujuan:
+
 - Menetapkan organisasi menu sidebar berbasis domain agar navigasi konsisten dengan struktur organisasi TP PKK.
 - Menjadi baseline untuk pengaturan `menu -> sub menu -> sub sub menu` pada scope `desa` dan `kecamatan`.
 - Menjadi referensi audit teks sidebar agar label mengikuti terminology canonical domain.
 
 Sumber acuan:
+
 - `AGENTS.md`
 - `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
@@ -78,10 +80,12 @@ Sumber acuan:
 ## Catatan Audit Teks Sidebar (2026-02-22)
 
 Status audit:
+
 - Fokus audit hanya teks pada `resources/js/Layouts/DashboardLayout.vue`.
 - Tujuan audit: memastikan label `L2/L3` relevan dengan domain dan sesuai acuan canonical.
 
 Temuan yang perlu dijaga:
+
 - Label sidebar harus sinkron dengan terminology map saat ada perubahan domain baru.
 - `Buku Kegiatan` adalah modul lintas role dan dapat muncul pada lebih dari satu group organisasi; render UI harus mencegah duplikasi item pada role gabungan.
 - Penamaan item Pokja IV pilot project harus jelas membedakan:
@@ -93,6 +97,7 @@ Temuan yang perlu dijaga:
   - `Keluar`
 
 Checklist audit sidebar berikutnya:
+
 - [x] Verifikasi `L1/L2/L3` terhadap `TERMINOLOGY_NORMALIZATION_MAP`.
 - [x] Verifikasi slug route di `DashboardLayout.vue` tetap match dengan matrix domain.
 - [x] Verifikasi penempatan domain baru selalu masuk group organisasi yang benar.
@@ -101,10 +106,12 @@ Checklist audit sidebar berikutnya:
 ## Catatan Audit Metode Collapse Sidebar (2026-02-22)
 
 Scope audit:
+
 - Membandingkan metode collapse di `resources/js/Layouts/DashboardLayout.vue` dengan template asli `resources/js/admin-one/layouts/LayoutAuthenticated.vue`.
 - Fokus hanya pada mekanisme collapse, breakpoint behavior, dan persistence state.
 
 Ringkasan temuan:
+
 - State pattern sudah disamakan: `isAsideMobileExpanded`, `isAsideLgActive`, `isAsideDesktopCollapsed`.
 - Desktop collapse mengikuti pola template:
   - panel `lg` diperlakukan sebagai off-canvas aktif/non-aktif,
@@ -115,10 +122,12 @@ Ringkasan temuan:
   - `xl`: toggle collapse desktop.
 
 Keputusan audit saat ini:
+
 - Refactor metode collapse dieksekusi pada sesi ini untuk menyamakan pola state + persistence dengan template admin-one.
 - Tidak ada perubahan kontrak domain/menu; concern murni pada UX dan keselarasan pattern template.
 
 Checklist tindak lanjut (opsional, jika nanti disetujui refactor):
+
 - [x] Samakan state pattern menjadi `isAsideMobileExpanded`, `isAsideLgActive`, `isAsideDesktopCollapsed`.
 - [x] Samakan behavior desktop collapse agar mengikuti pola `AsideMenu` (`lg:hidden xl:flex` + `xl:hidden`).
 - [x] Samakan key localStorage dengan template (`admin-one-sidebar-collapsed`) atau dokumentasikan alasan deviasi.
@@ -136,3 +145,4 @@ Checklist tindak lanjut (opsional, jika nanti disetujui refactor):
 - [x] Struktur organisasi sidebar `L1/L2/L3` terdokumentasi.
 - [x] Mapping domain sidebar ke slug route terdokumentasi.
 - [x] Catatan audit teks sidebar dan checklist audit lanjutan ditambahkan.
+

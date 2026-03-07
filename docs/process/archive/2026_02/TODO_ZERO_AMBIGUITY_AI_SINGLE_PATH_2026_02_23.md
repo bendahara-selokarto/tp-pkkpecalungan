@@ -12,25 +12,32 @@ CONCERN: process_execution
 ```
 
 ## Konteks
+
 - Menetapkan jalur eksekusi AI `zero ambiguity` sebagai baseline concern process.
 - Concern ini kemudian disupersede oleh SOT baru dengan `self-reflective routing`.
 
 ## Target Hasil
+
 - Dokumen single-path tersedia dan terhubung ke `AGENTS.md`.
 - Pattern routing reusable tercatat di playbook.
 
 ## Langkah Eksekusi
+
 - [x] `Z1` Bentuk dokumen single-path.
 - [x] `Z2` Sinkronkan referensi di `AGENTS.md` dan playbook.
 - [x] `Z3` Catat hardening di validation log.
 
 ## Validasi
+
 - [x] Referensi lintas dokumen valid dan konsisten (`AGENTS.md` -> single-path doc -> playbook).
 - [x] Tidak ada perubahan runtime.
 
 ## Risiko
+
 - [x] Over-constraint dan drift bila dokumen tidak diperbarui saat pola berubah.
 
 ## Keputusan Dikunci
+
 - [x] Single-path menjadi baseline resmi concern process.
 - [x] Concern aktif kini mengikuti SOT `SRR26A1` (self-reflective routing).
+

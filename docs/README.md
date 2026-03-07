@@ -3,17 +3,20 @@
 Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
 
 ## Protokol Eksekusi
+
 - Rencana kerja lintas-file ditulis pada TODO concern di `docs/process/TODO_*.md`.
 - Keputusan arsitektur strategis ditulis pada ADR di `docs/adr/ADR_*.md`.
 - TODO dan ADR wajib saling merujuk jika concern menyentuh perubahan arsitektur.
 
 ## Root (Dokumen Inti)
+
 - `AGENTS.md`: kontrak eksekusi AI dan aturan teknis utama.
 - `README.md`: panduan manusia untuk penggunaan dan pengembangan.
 - `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`: ringkasan sinkronisasi pedoman domain utama (canonical lokal aktif).
 - Dokumen pedoman historis disimpan di `docs/domain/historical/` (read-only, non-canonical).
 
 ## docs/domain
+
 - Kontrak domain, deviasi, normalisasi istilah, dan pedoman domain ekstensi.
 - File utama:
   - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
@@ -23,12 +26,14 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
   - `docs/domain/ADJUSTMENT_PLAN_4_14_1A_DAFTAR_WARGA_TP_PKK.md`
 
 ## docs/pdf
+
 - Checklist dan validasi format output PDF.
 - File utama:
   - `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`
   - `docs/pdf/VALIDASI_FORMAT_BUKU_SEKRETARIS_PDF.md`
 
 ## docs/process
+
 - Runbook, rencana eksekusi, gate operasional, dan log validasi.
 - File utama:
   - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
@@ -40,12 +45,14 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
   - `docs/process/RELEASE_CHECKLIST_PDF.md`
 
 ## docs/adr
+
 - Arsip keputusan arsitektur (`Architecture Decision Record`) untuk keputusan teknis berdampak jangka panjang.
 - File utama:
   - `docs/adr/README.md`
   - `docs/adr/ADR_TEMPLATE.md`
 
 ## docs/user-guide
+
 - Panduan penggunaan sistem untuk pengguna akhir per peran dan per alur kerja.
 - File utama:
   - `docs/user-guide/README.md`
@@ -56,16 +63,21 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
   - `docs/user-guide/print/*.html` (versi siap cetak)
 
 ## docs/security
+
 - Audit policy/scope dan checklist regresi akses.
 
 ## docs/ui
+
 - Inventaris dan audit konsistensi UI.
 
 ## Konvensi Nama File
+
 - Gunakan pola `UPPER_SNAKE_CASE` untuk dokumen proses/kontrak/checklist.
 - Gunakan `README.md` untuk index folder.
 - Hindari membuat dokumen operasional baru di root project; tempatkan di `docs/<concern>/`.
 
 ## docs/referensi
+
 - Bahan referensi domain lokal (PDF/Excel/screenshot) dan marker canonical path.
 - Ketentuan tracking file biner ada di `docs/referensi/README.md`.
+

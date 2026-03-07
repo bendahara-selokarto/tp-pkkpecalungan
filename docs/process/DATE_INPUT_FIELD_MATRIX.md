@@ -4,6 +4,7 @@ Tanggal audit: 2026-02-22
 Scope audit: form tanggal di modul Desa + Kecamatan
 
 ## Klasifikasi
+
 - `MIGRATE_PHASE_2`: harus migrasi ke `type="date"` + payload `Y-m-d` + validasi strict.
 - `CANONICAL_DONE`: UI dan backend sudah canonical strict `Y-m-d`.
 - `CANONICAL_KEEP_STRICTEN`: UI sudah canonical; backend perlu diseragamkan ke validasi strict canonical.
@@ -62,6 +63,8 @@ Scope audit: form tanggal di modul Desa + Kecamatan
   - `app/Domains/Wilayah/Bkr/Requests/StoreBkrRequest.php`
 
 ## Catatan Risiko Phase 2
+
 - Migrasi frontend ke `type="date"` tanpa update request akan menolak payload lama.
 - Field yang masih `|date` perlu diperketat agar tidak ambigu parsing.
 - Exception domain harus dipertahankan agar tidak kehilangan konteks bisnis dokumen.
+

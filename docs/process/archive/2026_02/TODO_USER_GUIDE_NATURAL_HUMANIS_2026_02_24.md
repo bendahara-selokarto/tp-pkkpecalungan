@@ -3,23 +3,27 @@ Tanggal: 2026-02-24
 Status: `done`
 
 ## Konteks
+
 - Sistem sudah memiliki modul luas berbasis role/scope (`desa`, `kecamatan`, `sekretaris`, `pokja`) namun belum ada user guide operasional yang terstruktur untuk pengguna akhir.
 - User meminta user guide dengan copywriting natural-humanis (bahasa mudah dipahami, tidak teknis, dan berorientasi tindakan pengguna).
 - Dokumen ini menjadi rencana eksekusi tunggal sebelum penulisan konten final.
 
 ## Target Hasil
+
 - Tersedia user guide berbasis skenario tugas nyata pengguna, bukan berbasis istilah teknis internal.
 - Setiap peran utama punya panduan ringkas: tujuan, langkah kerja, hasil yang diharapkan, dan solusi saat kendala.
 - Standar copywriting natural-humanis terkunci dan dipakai konsisten pada seluruh halaman panduan.
 - Ada quality gate konten agar panduan tidak ambigu, tidak terlalu teknis, dan tetap sinkron dengan perilaku sistem.
 
 ## Ruang Lingkup Peran dan Audiens
+
 - `super-admin` (manajemen user dan kontrol administrasi sistem).
 - `kecamatan-sekretaris` dan `desa-sekretaris`.
 - `kecamatan-pokja-i` s.d. `kecamatan-pokja-iv`.
 - `desa-pokja-i` s.d. `desa-pokja-iv`.
 
 ## Arsitektur Dokumen User Guide (Rencana Struktur)
+
 - `docs/user-guide/README.md` (beranda panduan + peta navigasi).
 - `docs/user-guide/mulai-cepat.md` (login, navigasi, istilah dasar).
 - `docs/user-guide/peran/sekretaris-desa.md`
@@ -33,6 +37,7 @@ Status: `done`
 - `docs/user-guide/faq.md`
 
 ## Standar Copywriting Natural Humanis (Wajib)
+
 - Gunakan sudut pandang pengguna: `Anda`.
 - Pakai kalimat aktif, singkat, dan langsung ke tindakan.
 - Hindari istilah teknis internal (contoh slug role, nama query key, istilah backend).
@@ -45,6 +50,7 @@ Status: `done`
 - Hindari nada menggurui; gunakan nada membantu dan jelas.
 
 ## Langkah Eksekusi
+
 - [x] `U1` Tetapkan dokumen rencana concern user guide ini di `docs/process/`.
 - [x] `U2` Audit menu dan flow aktual per role dari sisi UI/route agar daftar topik panduan sesuai perilaku sistem.
 - [x] `U3` Kunci glossary istilah user-facing di `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md` agar bahasa panduan konsisten.
@@ -60,6 +66,7 @@ Status: `done`
 - [x] `U13` Susun ulang dokumen cetak gabungan agar menggunakan tepat 1 gambar (login).
 
 ## Acceptance Criteria
+
 - [x] Pengguna baru bisa menyelesaikan 3 tugas inti tanpa pendamping:
   - login dan memahami halaman kerja,
   - input/update data sesuai peran,
@@ -70,12 +77,14 @@ Status: `done`
 - [x] Minimal satu dokumen panduan siap cetak tersedia untuk uji distribusi.
 
 ## Validasi
+
 - [x] Review konten oleh tim domain: istilah sesuai pedoman domain utama.
 - [x] Review konten oleh tim produk/UI: bahasa natural dan tidak ambigu.
 - [x] Smoke test manual: ikuti panduan langkah demi langkah pada akun role berbeda dan pastikan hasilnya sesuai.
 - [x] Konsistensi lintas dokumen: terminologi user guide sinkron dengan `TERMINOLOGY_NORMALIZATION_MAP`.
 
 ## Artefak Eksekusi U2 dan U4
+
 - Audit role-flow: `docs/process/USER_GUIDE_ROLE_FLOW_AUDIT_2026_02_24.md`
 - Skeleton user guide:
   - `docs/user-guide/README.md`
@@ -94,16 +103,20 @@ Status: `done`
   - `docs/user-guide/print/01-login-siap-cetak.html`
 
 ## Risiko
+
 - Risiko drift: panduan tidak diupdate saat UI berubah.
 - Risiko bahasa: istilah teknis kembali masuk saat update cepat.
 - Risiko over-detail: panduan terlalu panjang dan sulit dipakai di lapangan.
 
 ## Mitigasi
+
 - Tetapkan ritme update: setiap perubahan UI mayor wajib memicu update user guide concern terkait.
 - Wajib copywriting pass untuk setiap PR yang menambah teks user-facing.
 - Pisahkan panduan `mulai cepat` dan `panduan rinci` agar pengguna bisa memilih kedalaman informasi.
 
 ## Keputusan
+
 - [x] User guide akan berbasis role + alur tugas nyata pengguna.
 - [x] Copywriting natural-humanis adalah kontrak wajib, bukan opsional.
 - [x] Implementasi konten dilakukan bertahap per fase agar kualitas tetap terjaga.
+

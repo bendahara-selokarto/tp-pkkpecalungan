@@ -5,11 +5,13 @@ Status: `done` (`state:phased-rollout-closed`)
 Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 
 ## Konteks
+
 - Kontrol akses modul berbasis role/group saat ini masih hardcoded pada `RoleMenuVisibilityService`.
 - Perubahan akses (contoh: concern `catatan-keluarga`) masih membutuhkan patch kode + deploy.
 - Diperlukan menu baru pada `super-admin` untuk mengelola ijin akses berbasis `modul x group role` secara bertahap dengan guardrail backend tetap ketat.
 
 ## Hasil Observasi (2026-02-28)
+
 - Source of truth akses runtime saat ini:
   - `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
   - `app/Http/Middleware/EnsureModuleVisibility.php`
@@ -20,6 +22,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - UI sidebar `catatan-keluarga` saat ini diset `uiVisibility: disabled`; akses banyak terjadi via URL langsung.
 
 ## Kontrak Concern (Lock)
+
 - Domain: management ijin akses modul-group role oleh `super-admin`.
 - Role/scope target:
   - pengelola: `super-admin`.
@@ -35,12 +38,14 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - guardrail `scope-role-area` tidak melemah.
 
 ## Strategi Bertahap (Concern by Modul)
+
 - Tahap 1 (read-only): tabel informatif matrix akses untuk validasi desain keputusan.
 - Tahap 2 (pilot write): aktivasi write override hanya untuk modul `catatan-keluarga`.
 - Tahap 3 (rollout): aktivasi write override modul lain secara batch concern.
 - Tahap 4 (stabilisasi): audit, hardening, dan keputusan apakah matrix hardcoded tetap permanen sebagai fallback.
 
 ## Breakdown Concern Turunan
+
 - Tahap 1 read-only matrix:
   - `docs/process/archive/2026_02/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`
 - Tahap 2 pilot modul `catatan-keluarga`:
@@ -51,6 +56,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `docs/process/archive/2026_03/TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md`
 
 ## Target Hasil
+
 - [x] Observasi kontrak akses existing selesai dan tervalidasi scoped.
 - [x] Finalisasi markdown baseline concern (master TODO + ADR + registry SOT).
 - [x] Menu baru sidebar super-admin: `Management Ijin Akses`.
@@ -59,6 +65,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Jejak audit perubahan ijin akses (`changed_by`, waktu, before/after).
 
 ## Langkah Eksekusi
+
 - [x] Audit kontrak akses existing (`RoleMenuVisibilityService`, middleware, matrix role).
 - [x] Finalisasi keputusan bertahap via markdown (master TODO + ADR + child TODO).
 - [x] Implementasi Tahap 1 read-only matrix super-admin.
@@ -68,6 +75,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] Sinkronisasi dokumen domain/process/ADR pada setiap batch concern.
 
 ## Test Matrix Minimum (Concern Ini)
+
 - [x] Feature test super-admin dapat melihat matrix akses read-only.
 - [x] Feature test role non super-admin ditolak akses menu management ijin.
 - [x] Feature test pilot override `catatan-keluarga` sukses dan fallback aman.
@@ -76,6 +84,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 - [x] `php artisan test` penuh sebelum close concern.
 
 ## Validasi
+
 - [x] Validasi observasi scoped file akses + route `catatan-keluarga`.
 - [x] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`
 - [x] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`
@@ -86,21 +95,25 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - hasil: `PASS` (`26` tests, `280` assertions).
 
 ## Risiko
+
 - Risiko eskalasi privilege jika kombinasi role/modul tidak divalidasi ketat.
 - Risiko drift lintas scope jika override tidak mengikat `scope-role-area`.
 - Risiko regresi global karena concern ini menyentuh central gate akses modul.
 
 ## Keputusan
+
 - [x] K1: Implementasi dilakukan bertahap per concern modul (bukan big-bang).
 - [x] K2: Tahap awal wajib read-only untuk mengunci keputusan desain sebelum write.
 - [x] K3: Override storage aktif terbatas pada modul pilot sampai test matrix stabil.
 - [x] K4: Authority tetap backend (`EnsureScopeRole` + `EnsureModuleVisibility` + policy), frontend hanya konsumsi payload.
 
 ## Fallback Plan
+
 - [x] Flag rollback untuk menonaktifkan pembacaan override storage dan kembali ke hardcoded penuh.
 - [x] Snapshot matrix sebelum perubahan write massal.
 
 ## Output Final
+
 - [x] Ringkasan perubahan + alasan + dampak.
   - Tahap 1: matrix akses read-only super-admin untuk observability keputusan akses tanpa mutasi.
   - Tahap 2: write override pilot `catatan-keluarga` + audit trail untuk validasi jalur mutasi terkontrol.
@@ -124,22 +137,26 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
     3) jika perlu freeze total, nonaktifkan rollout override global via config dan kembali ke hardcoded penuh.
 
 ## Progress Tahap 1 (2026-02-28)
+
 - Tahap 1 read-only selesai diimplementasikan dengan route/controller/use case/UI/table filter.
 - Kontrak mode `read-only|read-write|hidden` sudah dapat diobservasi dari UI super-admin tanpa endpoint mutasi.
 - Concern aktif berpindah ke validasi stakeholder dan persiapan Tahap 2 (pilot write modul `catatan-keluarga`).
 
 ## Progress Tahap 2 (2026-02-28)
+
 - Tahap 2 pilot write modul `catatan-keluarga` sudah aktif untuk update + rollback dari UI super-admin.
 - Audit trail perubahan mode sudah tercatat (`before_mode`, `after_mode`, `changed_by`, `changed_at`).
 - Resolver runtime sudah memprioritaskan override pilot saat aktif dan fallback ke hardcoded saat rollback.
 
 ## Progress Tahap 3 Batch 1 (2026-03-02)
+
 - Batch rollout modul berikutnya (`activities`) selesai diimplementasikan sebagai concern terpisah (`ACL26A2`).
 - Endpoint override digeneralisasi menjadi `PUT/DELETE /super-admin/access-control/override` dengan payload `module`.
 - Validasi role-scope-module ditambahkan untuk mencegah kombinasi override yang tidak kompatibel.
 - Resolver runtime kini membaca override dari daftar modul rollout terkelola (`catatan-keluarga`, `activities`, `agenda-surat`) dengan fallback hardcoded tetap aktif.
 
 ## Mitigasi Ringan Blocker Eksternal (2026-03-02)
+
 - [x] Scope rollout dibekukan sementara pada modul terkelola saat itu (`catatan-keluarga`, `activities`) sampai validasi stakeholder selesai.
 - [x] Evidence pack teknis dikunci di concern ini:
   - ringkasan perubahan per tahap (`read-only` -> `pilot` -> `rollout batch 1`),
@@ -180,3 +197,4 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `php artisan test`
   - hasil: `PASS` (`1043` tests, `7009` assertions).
 - Parent concern `ACL26M1` ditutup ke `done`; child concern closure `ACL26E2` menjadi bukti penutupan gap end-to-end.
+

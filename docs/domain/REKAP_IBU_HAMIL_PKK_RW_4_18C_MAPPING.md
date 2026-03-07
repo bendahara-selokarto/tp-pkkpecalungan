@@ -3,15 +3,18 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - Screenshot dokumen resmi Lampiran 4.18c (halaman cara pengisian) dari user pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
+
 - Lampiran: `4.18c`.
 - Judul halaman autentik: `CARA PENGISIAN BUKU CATATAN IBU HAMIL, KELAHIRAN, KEMATIAN BAYI, KEMATIAN BALITA DAN KEMATIAN IBU HAMIL, MELAHIRKAN DAN NIFAS DALAM KELOMPOK PKK RW`.
 
 ## Hasil Verifikasi Visual Kontrak Kolom
 
 Sesuai tabel `Kolom | Penjelasan` pada lampiran:
+
 - Metadata form wajib: `RW`, `Dusun/Lingkungan`, `Desa/Kel.`, `Bulan`, `Tahun` (dengan konteks wilayah sampai `Kecamatan/Kabupaten/Kota/Provinsi` pada penjelasan).
 - Kolom data numerik:
   - `1`: nomor urut penulisan.
@@ -52,3 +55,4 @@ Sesuai tabel `Kolom | Penjelasan` pada lampiran:
   - Agregasi utama dihitung per `NOMOR RT` dari dataset 4.18a.
   - Kolom `4-15` dijumlahkan dari indikator maternal/kelahiran/kematian pada level rumah tangga.
   - `JUMLAH KELOMPOK DASAWISMA` dihitung dari jumlah nama dasawisma unik per RT.
+

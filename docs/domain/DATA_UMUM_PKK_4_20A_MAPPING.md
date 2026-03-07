@@ -3,10 +3,12 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - Dokumen PDF resmi: `docs/referensi/213.pdf`.
 - Screenshot header tabel Lampiran 4.20a dari user pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
+
 - Lampiran: `4.20a`.
 - Judul utama: `DATA UMUM PKK`.
 
@@ -15,17 +17,20 @@ Catatan identitas dokumen:
 Ekstraksi text-layer dijalankan ke `213.pdf` sebagai langkah awal kontrak baca dokumen.
 
 Temuan parser:
+
 - text-layer tidak cukup terbaca untuk menangkap token header secara stabil (hasil deteksi identitas dan header tidak reliabel),
 - keputusan: text-layer dicatat sebagai langkah wajib awal, namun struktur header final dikunci dari verifikasi visual screenshot.
 
 ## Hasil Verifikasi Visual Header Tabel
 
 Struktur umum:
+
 - Header numerik terbaca sampai kolom `20`.
 - Header bertingkat dengan merge (`rowspan`/`colspan`) tervalidasi visual.
 - Basis baris data: `NAMA DUSUN LINGKUNGAN ATAU SEBUTAN LAIN`.
 
 Peta merge header:
+
 - Baris 1:
   - `1` (`NO`) `rowspan=3`
   - `2` (`NAMA DUSUN LINGKUNGAN ATAU SEBUTAN LAIN`) `rowspan=3`
@@ -90,3 +95,4 @@ Peta merge header:
   - `kolom 3-9` berasal dari agregasi rumah tangga (`data_wargas`) per grup dusun/lingkungan,
   - `kolom 10-15` berasal dari agregasi `anggota_tim_penggeraks` + `anggota_pokjas` + `kader_khusus`,
   - `kolom 16-19` sementara diproyeksikan dari inferensi token `jabatan` (`honorer`/`bantuan`) pada `anggota_tim_penggeraks`.
+

@@ -1,13 +1,16 @@
 # Domain Deviation Log (T11)
 
 Tujuan:
+
 - Menjadi register resmi untuk semua deviasi antara implementasi domain aplikasi dan pedoman domain utama.
 - Menjamin setiap deviasi memiliki jejak keputusan, dampak, mitigasi, dan status penyelesaian.
 
 Sumber canonical:
+
 - `docs/referensi/Rakernas X.pdf`
 
 Aturan pencatatan:
+
 - Setiap deviasi wajib mencantumkan: alasan teknis, dampak, rencana mitigasi, status.
 - Setiap perubahan status deviasi wajib menambah tanggal update.
 - Jika deviasi mempengaruhi output PDF/auth scope, wajib sinkron ke:
@@ -45,10 +48,12 @@ Aturan pencatatan:
 ## Bukti Validasi T11
 
 Perintah yang dijalankan saat pembuatan log:
+
 - `php artisan route:list --name=report`
 - `php artisan test --filter=PdfBaselineFixtureComplianceTest`
 
 Ringkasan hasil:
+
 - Route report aktif (2026-02-21): `56`.
 - Baseline PDF compliance (2026-02-21): `20` test pass.
 - Catatan: `DV-003` tetap `open` sampai sumber canonical lampiran `4.14.5` tersedia.
@@ -58,3 +63,4 @@ Ringkasan hasil:
 - Scope review: squash migration `agenda-surat`, `program-prioritas`, `pilot-project-naskah-pelaporan` + audit compatibility/fallback.
 - Hasil review: tidak ditemukan deviasi domain baru terhadap pedoman utama; perubahan bersifat simplifikasi baseline migration teknis.
 - Keputusan: tidak menambah entri `DV-*` baru pada siklus ini.
+

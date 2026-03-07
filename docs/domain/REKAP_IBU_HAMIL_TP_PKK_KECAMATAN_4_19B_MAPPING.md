@@ -3,31 +3,37 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - Dokumen PDF resmi: `docs/referensi/207.pdf`.
 - Screenshot header tabel Lampiran 4.19b dari user pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
+
 - Lampiran: `4.19b`.
 - Judul utama: `REKAPITULASI DATA/BUKU CATATAN IBU HAMIL, MELAHIRKAN, NIFAS, IBU MENINGGAL, KELAHIRAN BAYI, BAYI MENINGGAL DAN KEMATIAN BALITA PADA TINGKAT TP PKK KECAMATAN`.
 
 ## Hasil Baca Awal (Text-Layer)
 
 Ekstraksi text-layer dari `207.pdf` mendeteksi token identitas:
+
 - fragmen judul maternal (`IBU HAMIL`, `MELAHIRKAN`, `NIFAS`, `MENINGGAL`, `KELAHIRAN BAYI`, `KEMATIAN BALITA`);
 - token metadata wilayah (`Kecamatan`, `Kab/Kota`, `Provinsi`, `Bulan`, `Tahun`).
 
 Temuan parser:
+
 - text-layer terfragmentasi akibat kerning font dan tidak cukup untuk merekonstruksi struktur header tabel 19 kolom secara utuh.
 - keputusan: parser dipakai untuk identitas dokumen, struktur header final dikunci dari verifikasi visual.
 
 ## Hasil Verifikasi Visual Header Tabel
 
 Struktur umum:
+
 - Header numerik terbaca sampai kolom `19`.
 - Header bertingkat dengan merge (`rowspan`/`colspan`) tervalidasi visual.
 - Basis agregasi baris: `NAMA DESA/KEL`.
 
 Peta merge header:
+
 - Baris 1:
   - `1` (`NO`) `rowspan=3`
   - `2` (`NAMA DESA/KEL`) `rowspan=3`
@@ -90,3 +96,4 @@ Peta merge header:
   - Agregasi 4.19b dibangun dari agregasi tingkat desa/kelurahan (turunan 4.18d).
   - `kolom 3` dihitung dari jumlah dusun/lingkungan unik per desa/kelurahan.
   - `kolom 4-18` dihitung dari penjumlahan indikator maternal/kelahiran/kematian pada agregasi sumber.
+

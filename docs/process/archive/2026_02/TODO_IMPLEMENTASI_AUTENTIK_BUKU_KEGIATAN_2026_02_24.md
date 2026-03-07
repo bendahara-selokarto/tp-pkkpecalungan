@@ -3,17 +3,20 @@ Tanggal: 2026-02-24
 Status: `done`
 
 ## Konteks
+
 - Sumber autentik: `docs/referensi/excel/Buku Wajib Pokja I.xlsx`, sheet `Buku Kegiatan`.
 - Hasil baca text-layer XML sudah tersedia (struktur merge awal sudah teridentifikasi).
 - Bukti visual header tabel sudah tersedia dari screenshot user sesi 2026-02-24.
 - Status saat ini: `implemented` (copy UI + label report sinkron dengan kontrak autentik).
 
 ## Target Hasil
+
 - Kontrak header final sheet `Buku Kegiatan` tervalidasi sampai merge cell.
 - Mapping kolom autentik ke field aplikasi terdokumentasi.
 - Rencana patch implementasi minimal lintas layer (`request -> use case -> repository -> inertia`) siap eksekusi.
 
 ## Langkah Eksekusi
+
 - [x] Ambil bukti visual header tabel `Buku Kegiatan` (header utuh + garis sel + teks terbaca).
 - [x] Finalisasi peta header:
   - `NO`
@@ -31,6 +34,7 @@ Status: `done`
 - [x] Sinkronkan dokumen concern jika ada perubahan kontrak canonical.
 
 ## Matrix Mapping Final
+
 - `NO` -> nomor urut report (`index + 1`).
 - `NAMA` -> `nama_petugas` (fallback kompatibilitas: `title`).
 - `JABATAN` -> `jabatan_petugas`.
@@ -40,6 +44,7 @@ Status: `done`
 - `TANDA TANGAN` -> `tanda_tangan` (fallback kompatibilitas: `nama_petugas`).
 
 ## Dampak Implementasi
+
 - Route/middleware scope-role tetap memakai jalur existing:
   - `/{scope}/activities/*` dengan policy backend sebagai authority.
 - Request + use case + repository:
@@ -50,12 +55,14 @@ Status: `done`
   - Tidak memerlukan perubahan coverage baru karena modul `activities` sudah masuk coverage dan matrix dashboard.
 
 ## Validasi
+
 - [x] Bukti visual header valid tersimpan.
 - [x] Tidak ada ambiguitas merge cell pada header.
 - [x] Checklist dampak layer arsitektur lengkap.
 - [x] Rencana test executable sebelum patch implementasi.
 
 ## Test Matrix Concern
+
 - [x] Feature scoped CRUD:
   - `tests/Feature/DesaActivityTest.php`
   - `tests/Feature/KecamatanActivityTest.php`
@@ -66,10 +73,13 @@ Status: `done`
   - `tests/Feature/PdfBaselineFixtureComplianceTest.php` (fixture `4.13-kegiatan.json`)
 
 ## Risiko
+
 - Salah interpretasi header `KEGIATAN` multi-subkolom jika hanya mengandalkan text-layer.
 - Drift istilah kolom antara referensi autentik dan label UI existing.
 
 ## Keputusan
+
 - [x] Sheet `Buku Kegiatan` dipilih sebagai prioritas fase 1A.
 - [x] Implementasi ditahan sampai verifikasi visual header selesai.
 - [x] Setelah verifikasi visual dikunci, concern `Buku Kegiatan` diselesaikan tanpa perubahan kontrak storage.
+

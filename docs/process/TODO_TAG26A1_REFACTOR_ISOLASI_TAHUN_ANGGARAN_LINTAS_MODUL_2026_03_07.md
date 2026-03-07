@@ -5,12 +5,14 @@ Status: `in-progress` (`state:wave3-program-prioritas-pilot-project-slice-implem
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
+
 - `KODE_UNIK` wajib 4-8 karakter, huruf kapital + angka (contoh: `A2B9`).
 - Format judul wajib: `TODO <KODE_UNIK> <Judul Ringkas>`.
 - Simpan file dengan pola: `TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
 - Gunakan checklist `- [ ]` dan ubah ke `- [x]` saat item selesai.
 
 ## Konteks
+
 - Frasa definisi yang dikunci untuk concern ini:
   - `Tahun anggaran adalah identitas isolasi data administrasi TP PKK per siklus tahunan, default 1 Januari-31 Desember, dan ditetapkan sebagai context kerja aktif user.`
 - Konteks wajib yang sempat terlewat pada desain sebelumnya: administrasi TP PKK dikelompokkan berdasarkan `tahun anggaran`, dan data operasional harus terisolasi per tahun anggaran.
@@ -20,6 +22,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - Dokumen ini adalah jalur planning resmi sebelum implementasi bertahap runtime.
 
 ## Kontrak Concern (Lock)
+
 - Domain: isolasi data administrasi TP PKK lintas modul berbasis `tahun_anggaran` sebagai context transversal baru.
 - Role/scope target: seluruh role operasional `desa|kecamatan`, `super-admin` untuk audit/backoffice, dan flow `profile` sebagai titik set tahun anggaran aktif.
 - Boundary data:
@@ -38,12 +41,14 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - Dampak keputusan arsitektur: `ya`
 
 ## Target Hasil
+
 - [ ] Tersusun klasifikasi modul/tabel yang wajib memakai `tahun_anggaran`, yang opsional, dan yang tetap memakai periode domain-spesifik saja.
 - [x] Tersusun desain context backend `tahun anggaran aktif` yang terhubung ke `Profile` tanpa menggeser authority akses ke frontend.
 - [x] Tersusun strategi retrofit repository/action/request/test secara bertahap tanpa rewrite concern.
 - [ ] Tersusun strategi migrasi data, rollout, dan fallback bila isolasi tahun memicu regresi lintas modul.
 
 ## Readiness Lock
+
 - Status kesiapan implementasi: `ready for wave-1`.
 - Tidak ada blocker konseptual terbuka untuk memulai implementasi.
 - Wave pilot yang dikunci:
@@ -73,6 +78,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - tidak ada regresi auth/scope existing.
 
 ## Langkah Eksekusi
+
 - [x] Fase 0 - Contract lock dan klasifikasi concern.
   - [x] Tetapkan definisi canonical `tahun_anggaran` sebagai context transversal administrasi TP PKK.
   - [x] Daftarkan modul yang terdampak langsung:
@@ -131,6 +137,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] dokumen proses/domain canonical yang menyebut invariant data lintas modul.
 
 ## Validasi
+
 - [x] L1: planning/doc audit scoped (sesi ini).
   - [x] Audit baseline `ProfileController`, `ProfileUpdateRequest`, `User`, `UserAreaContextService`.
   - [x] Audit pola repository `paginateByLevelAndArea/getByLevelAndArea` pada concern wilayah.
@@ -149,6 +156,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
 
 ### Matrix Implementasi Wave-1
+
 - [x] Migration test:
   - [x] `users.active_budget_year` canonical tersedia dan tervalidasi.
   - [x] `agenda_surats.tahun_anggaran` tersedia + index/query path aman.
@@ -163,6 +171,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] role kecamatan sekretaris tetap hanya melihat data yang sesuai scope + creator rule + tahun aktif.
 
 ## Risiko
+
 - Risiko 1: data leak lintas tahun anggaran karena ada repository atau report yang masih hanya mem-filter `level + area_id`.
   - Mitigasi: retrofit repository interface terlebih dahulu, lalu audit seluruh pemanggilnya.
 - Risiko 2: unique constraint lama menjadi tidak valid setelah data multi-tahun masuk.
@@ -175,6 +184,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - Mitigasi: rollout per wave + concern pilot + fallback migration terpisah.
 
 ## Keputusan
+
 - [x] K1: `tahun_anggaran` diperlakukan sebagai context transversal baru, bukan alasan untuk membentuk ulang domain concern.
 - [x] K2: `Profile` menjadi entry point set tahun aktif, tetapi authority final tetap backend service.
 - [x] K3: retrofit dilakukan per wave berbasis repository pattern yang sudah ada, bukan rewrite besar per modul.
@@ -184,22 +194,26 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] K7: storage tahun aktif user pada wave-1 dikunci di backend persistence user, bukan session-only, agar context kerja konsisten lintas request.
 
 ## Keputusan Arsitektur (Jika Ada)
+
 - [x] Tautkan ADR di `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`.
 - [x] Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern saat implementasi dimulai/diterima.
 
 ## Fallback Plan
+
 - Jalur fallback 1: hentikan rollout setelah wave concern pilot jika test anti data leak belum stabil.
 - Jalur fallback 2: pertahankan kolom/perilaku lama sementara dengan adapter repository per concern sampai migration wave berikutnya siap.
 - Jalur fallback 3: untuk data development pre-release, lakukan `migrate:fresh` hanya bila klasifikasi dan backfill manual sudah terkunci; laporkan reset data secara eksplisit.
 - Jalur fallback 4: jika flow `Profile` belum siap, backend dapat sementara memakai tahun anggaran default yang dikunci di config/service internal khusus wave pilot, tanpa membuka input manual di tiap modul.
 
 ## Output Final
+
 - [ ] Ringkasan apa yang diubah dan kenapa.
 - [ ] Daftar file terdampak (schema/backend/frontend/test/docs) per wave.
 - [ ] Hasil validasi + residual risk.
 - [ ] Keputusan rollout: `pilot-ready` / `hold` / `needs-contract-clarification`.
 
 ## Status Readiness
+
 - [x] Contract lock selesai.
 - [x] ADR sinkron.
 - [x] Wave-1 target file sudah dikunci.
@@ -208,6 +222,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] TODO siap dipakai implementasi.
 
 ## Hasil Implementasi Wave-1
+
 - [x] `Profile` kini menyimpan `active_budget_year` sebagai context kerja aktif user.
 - [x] Service backend `ActiveBudgetYearContextService` aktif untuk runtime/shared props.
 - [x] `AgendaSurat` kini menyimpan `tahun_anggaran` dan seluruh read/write path pilot sudah terisolasi per tahun aktif.
@@ -215,6 +230,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Dashboard coverage untuk model yang sudah punya `tahun_anggaran` ikut sadar tahun aktif pada wave-1.
 
 ## Hasil Implementasi Wave-2 (Slice Buku Administrasi)
+
 - [x] `BukuTamu` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `BukuDaftarHadir` kini menyimpan `tahun_anggaran`, mengunci read/write path per tahun aktif, dan opsi `Activity` di concern ini hanya menerima kegiatan pada tahun aktif.
 - [x] `BukuNotulenRapat` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
@@ -223,6 +239,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Full suite setelah rollout slice wave-2 lulus: `1071 passed`.
 
 ## Hasil Implementasi Wave-3 (Slice Program Prioritas + Pilot Project)
+
 - [x] `ProgramPrioritas` kini menyimpan `tahun_anggaran` dan seluruh read/write/list/report path sudah terisolasi per tahun aktif.
 - [x] `PilotProjectKeluargaSehat` kini menyimpan `tahun_anggaran` pada report dan value rows; query scope-period backend serta unique constraint schema sudah sadar tahun anggaran.
 - [x] `PilotProjectNaskahPelaporan` kini menyimpan `tahun_anggaran` pada report dan attachment rows; list/detail/update/report path sudah terisolasi per tahun aktif.
@@ -231,6 +248,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Full suite setelah rollout slice ini lulus: `1136 passed`.
 
 ## Hasil Implementasi Wave-2 (Slice CRUD Homogen Lanjutan)
+
 - [x] `Inventaris` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `AnggotaTimPenggerak` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `KaderKhusus` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
@@ -240,6 +258,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Full suite setelah rollout slice lanjutan wave-2 lulus: `1088 passed`.
 
 ## Hasil Implementasi Wave-2 (Slice Pendidikan dan Usaha)
+
 - [x] `Koperasi` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `WarungPkk` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `TamanBacaan` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
@@ -250,6 +269,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Full suite setelah rollout slice pendidikan/usaha lulus: `1100 passed`.
 
 ## Hasil Implementasi Wave-2 (Slice Layanan Keluarga)
+
 - [x] `BKL` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `BKR` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `Posyandu` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
@@ -258,6 +278,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Full suite setelah rollout slice layanan keluarga lulus: `1112 passed`.
 
 ## Hasil Implementasi Wave-2 (Slice Administrasi Operasional)
+
 - [x] `Bantuan` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `PrestasiLomba` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `AnggotaPokja` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
@@ -268,6 +289,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Full suite setelah rollout slice administrasi operasional lulus: `1114 passed`.
 
 ## Hasil Implementasi Wave-2 (Slice Komunitas dan Penyuluhan)
+
 - [x] `DataIndustriRumahTangga` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `DataPemanfaatanTanahPekaranganHatinyaPkk` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `Paar` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
@@ -279,6 +301,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Full suite setelah rollout slice komunitas/penyuluhan lulus: `1119 passed`.
 
 ## Hasil Implementasi Wave-2 (Slice Data Keluarga)
+
 - [x] `DataKeluarga` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] PDF `DataKeluarga` menampilkan metadata tahun anggaran aktif.
 - [x] Backfill development untuk slice ini dikunci: `DataKeluarga` memakai baseline eksplisit `2026` karena belum ada sumber tahun domain yang lebih presisi.
@@ -287,6 +310,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Keputusan dependency lock: `DataWarga` dan `DataKegiatanWarga` tidak dilanjutkan pada patch yang sama karena `CatatanKeluarga` masih membaca keduanya langsung dan harus di-retrofit bersama pada wave berikutnya.
 
 ## Hasil Implementasi Wave-2 (Bundle Dependensi Data Warga dan Catatan Keluarga)
+
 - [x] `DataWarga` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
 - [x] `DataWargaAnggota` kini menyimpan `tahun_anggaran` sebagai identitas child record yang konsisten dengan rumah tangga induknya.
 - [x] `DataKegiatanWarga` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
@@ -297,3 +321,4 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Targeted regression bundle dependensi ini lulus: `49 passed`.
 - [x] Targeted regression report bundle ini lulus: `39 passed`.
 - [x] Full suite setelah rollout bundle dependensi `DataWarga` / `DataKegiatanWarga` / `CatatanKeluarga` lulus: `1130 passed`.
+

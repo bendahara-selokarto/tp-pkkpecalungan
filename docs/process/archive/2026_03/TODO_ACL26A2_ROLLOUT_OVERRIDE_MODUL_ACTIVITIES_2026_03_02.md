@@ -6,11 +6,13 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 Parent Concern: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
 
 ## Konteks
+
 - Tahap 2 pilot `catatan-keluarga` sudah stabil dan fallback aman.
 - Tahap 3 membutuhkan rollout batch modul berikutnya secara terkontrol tanpa melemahkan enforcement backend.
 - Modul `activities` dipilih sebagai batch pertama Tahap 3 karena coverage route lintas `desa|kecamatan` sudah stabil dan memiliki test matrix middleware yang matang.
 
 ## Kontrak Concern (Lock)
+
 - Domain: rollout override akses `module x role-scope` untuk modul `activities`.
 - Role/scope target:
   - pengelola: `super-admin`,
@@ -25,11 +27,13 @@ Parent Concern: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES
 - Dampak keputusan arsitektur: `tidak` (tetap dalam ADR 0002, tanpa boundary baru).
 
 ## Target Hasil
+
 - [x] Kontrol override matrix tidak lagi hardcoded satu modul.
 - [x] Modul `activities` aktif sebagai rollout batch pertama setelah pilot.
 - [x] Validasi role-scope-module diterapkan konsisten di request/action/service.
 
 ## Langkah Eksekusi
+
 - [x] Analisis scoped dependency + side effect (`controller/request/action/service/usecase/ui/test/docs`).
 - [x] Patch minimal:
   - generalisasi endpoint override menjadi `PUT/DELETE /super-admin/access-control/override` dengan payload `module`,
@@ -38,6 +42,7 @@ Parent Concern: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES
 - [x] Sinkronisasi dokumen concern terkait (`ACL26M1`, `ACL26C1`, registry SOT, ADR 0002, validation log).
 
 ## Validasi
+
 - [x] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`
 - [x] `php artisan test tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`
 - [x] `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
@@ -47,18 +52,23 @@ Parent Concern: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES
 - [x] `npm run build`
 
 ## Risiko
+
 - Override pada modul `activities` berpotensi memblokir akses role kompatibel jika salah kombinasi role-scope-module.
 - Rollout batch berikutnya berisiko drift jika modul tidak divalidasi terhadap group role scope.
 
 ## Keputusan
+
 - [x] Batch Tahap 3 dimulai dengan satu modul (`activities`) agar blast radius tetap kecil.
 - [x] Resolver hanya membaca override dari modul rollout terkelola; override modul lain diabaikan.
 
 ## Fallback Plan
+
 - Nonaktifkan override rollout global via `ACCESS_CONTROL_ROLLOUT_OVERRIDE_ENABLED=false` (fallback ke hardcoded penuh).
 - Rollback per kombinasi role-scope-module tetap tersedia via endpoint rollback override.
 
 ## Output Final
+
 - [x] Ringkasan perubahan dan alasan teknis per layer.
 - [x] Daftar file terdampak + bukti validasi test/build.
 - [x] Residual risk + jalur lanjutan batch rollout berikutnya.
+

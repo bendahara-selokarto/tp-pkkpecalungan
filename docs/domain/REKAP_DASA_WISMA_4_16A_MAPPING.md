@@ -3,20 +3,24 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - `d:\pedoman\179.pdf`
 
 Judul dokumen:
+
 - `REKAPITULASI CATATAN DATA DAN KEGIATAN WARGA KELOMPOK DASA WISMA`
 
 ## Hasil Baca Struktur
 
 Metadata form:
+
 - `DASA WISMA`
 - `RT / RW`
 - `DESA/KELURAHAN`
 - `TAHUN`
 
 Struktur tabel:
+
 - Header numerik terlihat sampai kolom `29`.
 - Header bertingkat dengan grup utama:
   - `JUMLAH ANGGOTA KELUARGA` (kolom `4-13`)
@@ -63,6 +67,7 @@ Struktur tabel:
 | 29 | KET |
 
 Catatan:
+
 - Label sub-header kolom `14`, `18`, dan `19` telah difinalkan dengan verifikasi lintas-lampiran 4.16a/4.16b yang memiliki struktur indikator sepadan pada grup kriteria rumah.
 
 ## Temuan Akurasi Parser Node.js
@@ -88,3 +93,4 @@ Catatan:
 - Catatan sumber data:
   - Kolom berbasis anggota keluarga dihitung dari `data_warga_anggotas`.
   - Indikator kegiatan 25-28 saat ini mengikuti indikator level area (belum per-keluarga) karena kontrak input per-keluarga belum tersedia.
+

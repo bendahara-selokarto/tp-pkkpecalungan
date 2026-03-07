@@ -36,3 +36,4 @@ Menjaga `docs/process` tetap mudah dinavigasi saat jumlah TODO bertambah.
 - Dilarang mengarsipkan TODO `planned` atau `in-progress`.
 - Dilarang mengarsipkan TODO `done` yang masih menjadi SOT concern aktif.
 - Semua pemindahan harus `commit by concern`.
+

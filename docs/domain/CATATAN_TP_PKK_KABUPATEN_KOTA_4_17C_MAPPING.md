@@ -3,9 +3,11 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - Screenshot dokumen resmi Lampiran 4.17c dari user pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
+
 - Lampiran: `4.17c`.
 - Judul utama: `CATATAN DATA DAN KEGIATAN WARGA`.
 - Subjudul: `TP PKK KABUPATEN/KOTA TAHUN ...`.
@@ -13,11 +15,13 @@ Catatan identitas dokumen:
 ## Hasil Verifikasi Visual Header Tabel
 
 Struktur umum:
+
 - Header numerik terbaca sampai kolom `36`.
 - Header bertingkat dengan merge (`rowspan`/`colspan`) tervalidasi visual.
 - Basis agregasi baris: `NAMA KECAMATAN`.
 
 Grup header:
+
 - Kolom tunggal non-grup:
   - `1: NO`
   - `2: NAMA KECAMATAN`
@@ -93,3 +97,4 @@ Grup header:
   - `JML DESA/KEL`, `JML DUSUN/LINGK`, `JUML RW`, dan `JUML RT` dihitung dari nilai unik hasil ekstraksi per grup kecamatan.
 - Catatan deviasi:
   - Lihat `docs/domain/DOMAIN_DEVIATION_LOG.md` untuk deviasi ketersediaan field dedicated kecamatan/desa pada sumber data saat ini.
+

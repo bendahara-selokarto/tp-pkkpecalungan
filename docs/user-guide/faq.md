@@ -8,6 +8,7 @@ Akses menu mengikuti peran, scope, dan wilayah akun Anda. Jika perlu perubahan, 
 
 ## 3. Kenapa saya tidak bisa menyimpan data?
 Kemungkinan:
+
 - akun Anda memang tidak punya izin ubah pada modul itu,
 - data wajib belum lengkap,
 - format isian belum sesuai.
@@ -17,6 +18,7 @@ Dashboard membaca data dari modul sumber. Jika belum ada input atau filter terla
 
 ## 5. Bagaimana cara meminta perubahan akses?
 Sampaikan kebutuhan akses ke admin dengan menyebut:
+
 - nama Anda,
 - peran yang dibutuhkan,
 - wilayah kerja.
@@ -26,3 +28,4 @@ Kemungkinan Anda sedang memakai filter bulan yang berbeda. Periksa pilihan bulan
 
 ## 7. Kenapa saya tidak bisa membuka modul di luar pokja saya?
 Sistem membatasi akses sesuai tanggung jawab. Ini normal untuk menjaga keamanan data.
+

@@ -3,11 +3,13 @@ Tanggal: 2026-03-02 (normalisasi metadata; perlu verifikasi historis)
 Status: `done`
 
 ## Konteks
+
 - User menyediakan dokumen contoh domain: `docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx`.
 - Domain matrix saat ini belum memiliki kontrak resmi untuk laporan tahunan berbasis dokumen tersebut.
 - Diperlukan lock kontrak data canonical sebagai baseline backend sebelum implementasi modul/menu.
 
 ## Target Hasil
+
 - Tersedia dokumen mapping canonical untuk laporan tahunan PKK 2025.
 - Tersedia entri resmi pada matrix kontrak domain.
 - Terminologi user-facing untuk concern ini terkunci agar tidak drift.
@@ -18,6 +20,7 @@ Status: `done`
 - Kontrak fallback data terkunci: jika data tidak ditemukan, sistem boleh menyediakan form isian pelengkap laporan tahunan.
 
 ## Langkah Eksekusi
+
 - [x] `L1` Validasi keberadaan dan keterbacaan dokumen sumber `.docx`.
 - [x] `L2` Ekstraksi text-layer `word/document.xml` dan identifikasi struktur tabel.
 - [x] `L3` Pemetaan struktur merge cell (`rowspan/colspan`) per tabel.
@@ -32,6 +35,7 @@ Status: `done`
 - [x] `L12` Implementasi form isian pelengkap saat data DB tidak ditemukan, termasuk persistence + policy/scope + validasi input.
 
 ## Validasi
+
 - [x] `Test-Path` file sumber mengembalikan `True`.
 - [x] Ekstraksi XML `.docx` sukses, tabel terdeteksi: `7`.
 - [x] Struktur merge cell terdeteksi:
@@ -46,6 +50,7 @@ Status: `done`
   - full suite: `745` test pass.
 
 ## Risiko
+
 - Dokumen sumber adalah contoh lokal, bukan lampiran resmi 4.9-4.24, sehingga tidak memiliki nomor lampiran canonical.
 - Header tabel kegiatan tidak menyertakan baris label eksplisit pada beberapa bagian; pemetaan kolom diturunkan dari struktur kolom aktual + konteks narasi.
 - Risiko salah implementasi visual jika tabel OOXML dianggap tabel ber-border, padahal fungsinya hanya layout naskah.
@@ -55,6 +60,7 @@ Status: `done`
 - Modul tidak masuk dashboard coverage canonical dan dikecualikan eksplisit sebagai ekstensi lokal.
 
 ## Keputusan
+
 - [x] Concern ini dikunci sebagai `Ekstensi Lokal 2025`.
 - [x] Sumber referensi utama concern ini tetap dokumen lokal yang user berikan.
 - [x] Kontrak data difokuskan pada tiga blok: metadata laporan, daftar kegiatan per bidang, narasi evaluasi/penutup.
@@ -66,3 +72,4 @@ Status: `done`
 - [x] Jika data tidak ditemukan, sistem boleh membuat form isian baru untuk melengkapi dokumen.
 - [x] `Laravel Office` dicatat sebagai opsi teknis, bukan instruksi wajib.
 - [x] Implementasi concern dinyatakan selesai end-to-end (backend, UI, export, test, sinkronisasi dokumen).
+

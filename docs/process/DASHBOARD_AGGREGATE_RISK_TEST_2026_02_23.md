@@ -186,3 +186,4 @@ Hasil:
 - Semua test lulus (`7 tests`, `99 assertions`).
 - Risiko medium #3 dinyatakan ditutup:
   - baseline query agregat kecamatan banyak desa kini dijaga oleh benchmark test otomatis.
+

@@ -1,15 +1,18 @@
 # Auth Coherence Matrix (Buku Sekretaris PKK)
 
 Status dokumen:
+
 - Dokumen ini adalah snapshot audit coherence auth/scope.
 - Untuk acuan canonical aktif terkait ketersediaan buku, autentikasi buku, dan penanggung jawab buku, gunakan:
   - `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md`
 
 Tujuan:
+
 - Memetakan `role -> scope -> area level -> akses modul` untuk lampiran 4.9-4.15.
 - Menjadi baseline audit sebelum perubahan policy/scope di modul sekretaris.
 
 Sumber teknis:
+
 - `app/Http/Middleware/EnsureScopeRole.php`
 - `app/Support/RoleScopeMatrix.php`
 - `app/Domains/Wilayah/Services/UserAreaContextService.php`
@@ -19,6 +22,7 @@ Sumber teknis:
 ## 1) Kontrak Role -> Scope -> Area Level
 
 Kunci:
+
 - `V` = view/list/show
 - `C` = create/store
 - `U` = update/edit
@@ -44,6 +48,7 @@ Kunci:
 | `super-admin` | `kecamatan` | `kecamatan` | `V/C/U/D/P` | `V/P` |
 
 Catatan penting:
+
 - Role di luar matrix (`RoleScopeMatrix`) ditolak oleh middleware `scope.role`.
 - Jika `role` valid tapi `area_id` tidak sesuai level scope, akses ditolak (`EnsureScopeRole` + `UserAreaContextService`).
 - `super-admin` tetap harus punya `area_id` yang mengarah ke area level `kecamatan` untuk masuk modul scope `kecamatan`.
@@ -82,10 +87,12 @@ Catatan penting:
 ## 4) Bukti Validasi (T3)
 
 Perintah yang dijalankan:
+
 - `php artisan route:list`
 - `php artisan route:list --json`
 
 Ringkasan hasil route (name-based count):
+
 - `anggota-tim-penggerak`: desa=9, kecamatan=9
 - `kader-khusus`: desa=8, kecamatan=8
 - `agenda-surat`: desa=9, kecamatan=9
@@ -106,3 +113,4 @@ Ringkasan hasil route (name-based count):
 - `posyandu`: desa=8, kecamatan=8
 - `simulasi-penyuluhan`: desa=8, kecamatan=8
 - `catatan-keluarga`: desa=2, kecamatan=2
+

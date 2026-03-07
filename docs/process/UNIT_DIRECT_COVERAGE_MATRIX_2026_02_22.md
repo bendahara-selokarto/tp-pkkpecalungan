@@ -1,11 +1,13 @@
 ﻿# Unit Direct Coverage Matrix (2026-02-22)
 
 ## Ringkasan
+
 - Total unit terdeteksi: **183**.
 - Missing unit tanpa gate test: **0**.
 - Gate test canonical: `tests/Unit/Architecture/UnitCoverageGateTest.php`.
 
 ## Daftar Unit
+
 - [x] `app/Actions/User/CreateUserAction.php`
 - [x] `app/Actions/User/DeleteUserAction.php`
 - [x] `app/Actions/User/UpdateUserAction.php`
@@ -189,3 +191,4 @@
 - [x] `app/Services/User/UserService.php`
 - [x] `app/UseCases/User/GetUserManagementFormOptionsUseCase.php`
 - [x] `app/UseCases/User/ListUsersForManagementUseCase.php`
+

@@ -1,6 +1,7 @@
 # Mapping Laporan Tahunan PKK 2025 (Ekstensi Lokal)
 
 ## Sumber Dokumen
+
 - Dokumen utama: `docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx`
 - Identitas yang terbaca:
   - `LAPORAN TAHUNAN`
@@ -8,12 +9,14 @@
   - `TAHUN 2025`
 
 ## Konteks Visual Dokumen (Wajib)
+
 - Dokumen ini adalah `naskah .docx`, bukan dokumen tabel formal.
 - Struktur `w:tbl` pada OOXML dipakai sebagai alat `perataan/pengendalian tata letak`, bukan representasi tabel ber-border.
 - Saat rendering output, elemen layout grid wajib tampil tanpa border agar visual tetap seperti naskah contoh.
 - Dokumen contoh dipakai sebagai `struktur/layout template` saja; konten runtime tidak di-hardcode dari file contoh.
 
 ## Metode Baca Kontrak
+
 - Ekstraksi text-layer dari `word/document.xml` pada file `.docx`.
 - Verifikasi struktur tabel menggunakan node `w:tbl`, `w:tr`, `w:tc`, `w:gridSpan`, `w:vMerge`.
 - Hasil verifikasi merge cell:
@@ -24,6 +27,7 @@
 ## Peta Struktur Layout Grid (Final)
 
 ### Grid 1-5: Kegiatan Sekretariat + Pokja I-IV
+
 - Jumlah kolom: `4`
 - Peta kolom operasional:
   - Kolom 1: `nomor_urut`
@@ -35,10 +39,12 @@
   - Kontrak kolom dikunci dari struktur kolom aktual + pola isi setiap baris.
 
 ### Grid 6: Hambatan
+
 - Jumlah kolom: `1`
 - Field narasi: `narasi_hambatan`.
 
 ### Grid 7: Penutup/Tanda Tangan
+
 - Jumlah kolom: `2`
 - Field operasional:
   - `jabatan_penanda_tangan`
@@ -48,6 +54,7 @@
 
 ### A. Entitas Header Laporan Tahunan
 Field inti:
+
 - `judul_laporan`
 - `tahun_laporan`
 - `nama_tim_penggerak`
@@ -58,10 +65,12 @@ Field inti:
 - `tanggal_penyusunan` (opsional)
 
 Invariant:
+
 - `level`, `area_id`, `created_by` wajib ada dan konsisten dengan scope user serta `areas.level`.
 
 ### B. Entitas Item Kegiatan Tahunan
 Field inti:
+
 - `laporan_tahunan_id`
 - `bidang` (`sekretariat|pokja-i|pokja-ii|pokja-iii|pokja-iv`)
 - `nomor_urut`
@@ -72,11 +81,13 @@ Field inti:
 - `created_by`
 
 Aturan:
+
 - `tanggal_kegiatan` menggunakan format canonical `Y-m-d`.
 - `nomor_urut` unik per `laporan_tahunan_id + bidang`.
 
 ### C. Entitas Narasi Evaluasi dan Penutup
 Field inti:
+
 - `laporan_tahunan_id`
 - `section_key` (`keberhasilan|hambatan|kesimpulan|penutup`)
 - `isi_narasi`
@@ -87,6 +98,7 @@ Field inti:
 - `created_by`
 
 ## Kontrak Pengisian Data Runtime (Wajib)
+
 - Generator dokumen wajib memakai struktur template `.docx` sebagai kerangka visual.
 - Isi dokumen wajib diambil dari database aplikasi melalui boundary repository/use case, bukan menyalin teks statis dari dokumen contoh.
 - Pengisian isi dokumen diperbolehkan dari `lintas tabel` karena dokumen ini adalah ringkasan umum kegiatan tahunan.
@@ -97,6 +109,7 @@ Field inti:
 - Jika data DB untuk section tertentu belum tersedia, gunakan fallback kosong terkontrol pada section tersebut tanpa mengubah urutan dokumen.
 
 ### Fallback Kelengkapan Data (Wajib)
+
 - Jika hasil pencarian data dari DB tidak ditemukan atau belum cukup untuk section tertentu, sistem `boleh` menyediakan form isian baru untuk melengkapi dokumen laporan tahunan.
 - Form isian pelengkap wajib disimpan ke storage aplikasi (bukan hanya state sementara) agar bisa dipakai ulang pada generate berikutnya.
 - Form pelengkap wajib tunduk ke kontrak scope yang sama:
@@ -106,9 +119,11 @@ Field inti:
   1) data operasional lintas tabel,
   2) data isian pelengkap laporan tahunan,
   3) fallback kosong terkontrol.
+
 - Form pelengkap hanya melengkapi data yang tidak tersedia; tidak mengubah struktur template dan urutan dokumen.
 
 ### Aturan Agregasi Lintas Tabel
+
 - Agregasi wajib dilakukan melalui repository concern `laporan-tahunan-pkk` (tidak query ad-hoc di controller/view).
 - Data lintas tabel yang dipakai harus tetap memenuhi scope user aktif (`level`, `area_id`) untuk mencegah data leak antar wilayah.
 - Sumber lintas tabel minimum yang dapat dipakai:
@@ -117,6 +132,7 @@ Field inti:
 - Urutan output tetap mengikuti struktur dokumen contoh; lintas tabel hanya memengaruhi sumber isi, bukan struktur/urutan dokumen.
 
 ## Kontrak Output Dokumen (Wajib)
+
 - Output laporan tahunan harus berupa `1 file utuh` (single document) berformat `.docx`, bukan pecahan per section.
 - Urutan konten wajib mengikuti urutan dokumen contoh sumber secara penuh:
   - halaman identitas laporan,
@@ -133,10 +149,13 @@ Field inti:
 - Opsi teknis `Laravel Office` diperbolehkan sebagai pertimbangan implementasi, namun tidak menjadi ketergantungan wajib pada kontrak domain ini.
 
 ## Status Sinkronisasi
+
 - Status: `implemented`
 - Implementasi backend/UI: `selesai (CRUD + form pelengkap + generator .docx + policy/scope + test)`
 - Referensi proses: `docs/process/archive/undated/TODO_KONTRAK_DOMAIN_LAPORAN_TAHUNAN_PKK_2025.md`
 
 ## Catatan Koherensi
+
 - Concern ini tidak berasal dari lampiran canonical 4.9-4.24, sehingga diklasifikasikan sebagai `Ekstensi Lokal 2025`.
 - Jika modul ini diimplementasikan sebagai menu baru, wajib mengikuti protokol `New Menu/Domain` dan trigger audit dashboard sesuai `AGENTS.md`.
+

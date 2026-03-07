@@ -31,6 +31,7 @@ Status: `done`
 - [x] `php artisan test` penuh
 
 Catatan validasi:
+
 - `php artisan test` penuh lulus pada eksekusi 2026-02-25 (suite hijau end-to-end).
 
 ## Risiko
@@ -42,3 +43,4 @@ Catatan validasi:
 
 - [x] Concern ini dikunci sebagai turunan langsung hasil audit ownership 2026-02-25.
 - [x] Perubahan runtime disetujui pada sesi ini untuk daftar modul desa-only dengan skema penurunan ke `read-only` (bukan pencabutan akses baca).
+

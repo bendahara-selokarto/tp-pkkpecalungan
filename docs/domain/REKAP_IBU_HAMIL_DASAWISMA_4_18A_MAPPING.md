@@ -3,15 +3,18 @@
 Tanggal baca: 2026-02-22
 
 Sumber autentik:
+
 - Screenshot dokumen resmi Lampiran 4.18a dari user pada sesi validasi 2026-02-22.
 
 Catatan identitas dokumen:
+
 - Lampiran: `4.18a`.
 - Judul utama: `REKAPITULASI DATA/BUKU CATATAN IBU HAMIL, MELAHIRKAN, NIFAS, IBU MENINGGAL, KELAHIRAN BAYI, BAYI MENINGGAL DAN KEMATIAN BALITA DALAM KELOMPOK DASAWISMA`.
 
 ## Hasil Verifikasi Visual Header Tabel
 
 Struktur umum:
+
 - Header numerik terbaca sampai kolom `17`.
 - Header bertingkat dengan merge (`rowspan`/`colspan`) tervalidasi visual.
 - Grup header utama: `CATATAN KELAHIRAN` dan `CATATAN KEMATIAN`.
@@ -50,3 +53,4 @@ Struktur umum:
   - Basis data bersumber dari `data_wargas` + `data_warga_anggotas`.
   - Status ibu dan kematian diturunkan dari atribut `keterangan` (household/anggota) menggunakan keyword matching.
   - Indikator `AKTE KELAHIRAN` saat ini masih proyeksi operasional (belum ada field dedicated akte per bayi pada kontrak input).
+

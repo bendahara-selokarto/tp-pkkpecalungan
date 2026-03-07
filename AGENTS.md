@@ -137,6 +137,7 @@ Langkah minimal copywriting pass:
 4. Validasi cepat: smoke test UI + test feature relevan yang terdampak tetap hijau.
 
 Flow pembacaan dokumen (wajib, terutama header tabel):
+
 1. Baca:
    - Lakukan ekstraksi text-layer terlebih dahulu untuk token identitas dokumen.
    - Jika header tabel tidak terbaca utuh, wajib render visual halaman (screenshot) lalu verifikasi manual struktur tabel (jumlah kolom, merge row/col, label header).
@@ -276,3 +277,4 @@ Aturan markdown operasional:
 - Jika trigger doc-hardening pass aktif, pembaruan dokumen wajib mencakup sinkronisasi lintas dokumen terkait concern yang sama (bukan hanya satu file terisolasi).
 - Jika trigger ADR pass aktif, pembaruan dokumen wajib mencakup sinkronisasi TODO + ADR + dokumen process/domain concern terkait.
 - Jika trigger copywriting pass aktif, teks user-facing wajib distandardkan ke bahasa natural user dan menghindari istilah teknis internal.
+
