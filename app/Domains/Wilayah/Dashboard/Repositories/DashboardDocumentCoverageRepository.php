@@ -22,14 +22,17 @@ use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
 use App\Domains\Wilayah\WarungPkk\Models\WarungPkk;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Schema;
 
 class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRepositoryInterface
 {
     public function __construct(
-        private readonly AreaRepositoryInterface $areaRepository
+        private readonly AreaRepositoryInterface $areaRepository,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
@@ -49,6 +52,7 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
         $desaIds = $scope === ScopeLevel::KECAMATAN->value
             ? $this->areaRepository->getDesaByKecamatan($areaId)->pluck('id')->map(static fn ($id): int => (int) $id)->values()
             : collect();
+        $activeBudgetYear = $this->activeBudgetYearContextService->resolveForUser($user);
 
         $moduleItems = [];
         $modelTotals = [];
@@ -71,7 +75,8 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
                     $scope,
                     $areaId,
                     $desaIds,
-                    $includeDescendantForKecamatan
+                    $includeDescendantForKecamatan,
+                    $activeBudgetYear
                 );
             }
 
@@ -217,7 +222,8 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
         string $scope,
         int $areaId,
         Collection $desaIds,
-        bool $includeDescendantForKecamatan
+        bool $includeDescendantForKecamatan,
+        int $activeBudgetYear
     ): array {
         $query = $modelClass::query();
 
@@ -249,6 +255,8 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
             });
         }
 
+        $this->applyBudgetYearScope($query, $modelClass, $activeBudgetYear);
+
         $grouped = $query
             ->selectRaw('level, COUNT(*) as total')
             ->groupBy('level')
@@ -262,6 +270,18 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
             'kecamatan' => $kecamatan,
             'total' => $desa + $kecamatan,
         ];
+    }
+
+    private function applyBudgetYearScope(Builder $query, string $modelClass, int $activeBudgetYear): void
+    {
+        $model = new $modelClass();
+        $table = $model->getTable();
+
+        if (! Schema::hasColumn($table, 'tahun_anggaran')) {
+            return;
+        }
+
+        $query->where($table.'.tahun_anggaran', $activeBudgetYear);
     }
 
     /**
@@ -482,4 +502,3 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
     }
 
 }
-

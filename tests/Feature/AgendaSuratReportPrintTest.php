@@ -13,6 +13,8 @@ class AgendaSuratReportPrintTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
     protected Area $desaA;
@@ -31,7 +33,7 @@ class AgendaSuratReportPrintTest extends TestCase
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_agenda_surat_desanya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-desa');
 
         AgendaSurat::create([
@@ -60,7 +62,7 @@ class AgendaSuratReportPrintTest extends TestCase
 
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_agenda_surat_kecamatannya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-kecamatan');
 
         AgendaSurat::create([
@@ -89,7 +91,7 @@ class AgendaSuratReportPrintTest extends TestCase
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_ekspedisi_dari_surat_keluar_desanya(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-desa');
 
         AgendaSurat::create([
@@ -136,7 +138,7 @@ class AgendaSuratReportPrintTest extends TestCase
 
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_ekspedisi_dari_surat_keluar_kecamatannya(): void
     {
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-kecamatan');
 
         AgendaSurat::create([
@@ -165,7 +167,7 @@ class AgendaSuratReportPrintTest extends TestCase
 
     public function test_laporan_pdf_agenda_surat_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-desa');
 
         $response = $this->actingAs($user)->get(route('desa.agenda-surat.report'));
@@ -175,7 +177,7 @@ class AgendaSuratReportPrintTest extends TestCase
 
     public function test_laporan_pdf_ekspedisi_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->desaA->id]);
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-kecamatan');
 
         $response = $this->actingAs($user)->get(route('kecamatan.agenda-surat.ekspedisi.report'));

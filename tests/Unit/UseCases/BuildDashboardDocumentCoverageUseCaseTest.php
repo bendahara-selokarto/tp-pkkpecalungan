@@ -34,6 +34,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
         $user = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $desa->id,
+            'active_budget_year' => (int) now()->format('Y'),
         ]);
         $user->assignRole('admin-desa');
 
@@ -62,6 +63,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
             'level' => 'desa',
             'area_id' => $desa->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => $user->active_budget_year,
         ]);
 
         DataWarga::create([
@@ -102,6 +104,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
         $user = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $desa->id,
+            'active_budget_year' => (int) now()->format('Y'),
         ]);
         $user->assignRole('admin-desa');
 
@@ -143,6 +146,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
         $user = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $desa->id,
+            'active_budget_year' => (int) now()->format('Y'),
         ]);
         $user->assignRole('admin-desa');
 

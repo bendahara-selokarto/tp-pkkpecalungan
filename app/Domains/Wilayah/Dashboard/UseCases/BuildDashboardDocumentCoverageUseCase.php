@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Dashboard\UseCases;
 
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Services\DashboardDocumentCacheVersionService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
@@ -12,6 +13,7 @@ class BuildDashboardDocumentCoverageUseCase
 {
     public function __construct(
         private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly UserAreaContextService $userAreaContextService,
         private readonly DashboardDocumentCacheVersionService $dashboardDocumentCacheVersionService
     ) {
@@ -30,7 +32,14 @@ class BuildDashboardDocumentCoverageUseCase
 
         $ttl = (int) config('dashboard.documents_cache_ttl_seconds', 60);
         $cacheVersion = $this->dashboardDocumentCacheVersionService->currentVersion();
-        $cacheKey = $this->buildCacheKey($user, $effectiveScope, (int) $user->area_id, $dashboardContext, $cacheVersion);
+        $cacheKey = $this->buildCacheKey(
+            $user,
+            $effectiveScope,
+            (int) $user->area_id,
+            $dashboardContext,
+            $cacheVersion,
+            $this->activeBudgetYearContextService->resolveForUser($user)
+        );
 
         return Cache::remember(
             $cacheKey,
@@ -42,16 +51,17 @@ class BuildDashboardDocumentCoverageUseCase
     /**
      * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed} $dashboardContext
      */
-    private function buildCacheKey(User $user, string $effectiveScope, int $areaId, array $dashboardContext, int $cacheVersion): string
+    private function buildCacheKey(User $user, string $effectiveScope, int $areaId, array $dashboardContext, int $cacheVersion, int $activeBudgetYear): string
     {
         $roleSignature = $this->resolveRoleSignature($user);
         $filterSignature = $this->resolveFilterSignature($dashboardContext);
         $blockSignature = $this->resolveBlockSignature($dashboardContext);
 
         return sprintf(
-            'dashboard:documents:v3:%s:%d:%d:%s:%s:%s',
+            'dashboard:documents:v4:%s:%d:%d:%d:%s:%s:%s',
             $effectiveScope,
             $areaId,
+            $activeBudgetYear,
             max(1, $cacheVersion),
             $roleSignature,
             $filterSignature,

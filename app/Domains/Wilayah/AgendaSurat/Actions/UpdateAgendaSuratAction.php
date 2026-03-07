@@ -36,6 +36,7 @@ class UpdateAgendaSuratAction
             'level' => $agendaSurat->level,
             'area_id' => $agendaSurat->area_id,
             'created_by' => $agendaSurat->created_by,
+            'tahun_anggaran' => $agendaSurat->tahun_anggaran,
         ]);
 
         return $this->agendaSuratRepository->update($agendaSurat, $data);

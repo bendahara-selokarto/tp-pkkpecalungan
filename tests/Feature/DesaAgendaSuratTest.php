@@ -17,6 +17,8 @@ class DesaAgendaSuratTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -52,6 +54,7 @@ class DesaAgendaSuratTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -110,6 +113,7 @@ class DesaAgendaSuratTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -172,6 +176,7 @@ class DesaAgendaSuratTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -212,6 +217,7 @@ class DesaAgendaSuratTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -265,6 +271,7 @@ class DesaAgendaSuratTest extends TestCase
             'kepada' => 'Kecamatan',
             'tembusan' => 'Arsip Desa',
             'data_dukung_path' => $newAttachmentPath,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.agenda-surat.destroy', $agenda->id))
@@ -282,6 +289,7 @@ class DesaAgendaSuratTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -317,6 +325,7 @@ class DesaAgendaSuratTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -331,11 +340,61 @@ class DesaAgendaSuratTest extends TestCase
         $user = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $user->assignRole('admin-desa');
 
         $response = $this->actingAs($user)->get('/desa/agenda-surat');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_data_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        AgendaSurat::create([
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2026-02-20',
+            'tanggal_surat' => '2026-02-19',
+            'nomor_surat' => 'TA-2026',
+            'asal_surat' => 'Kecamatan',
+            'dari' => 'Sekretariat Kecamatan',
+            'perihal' => 'Aktif',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => 2026,
+        ]);
+
+        AgendaSurat::create([
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2025-02-20',
+            'tanggal_surat' => '2025-02-19',
+            'nomor_surat' => 'TA-2025',
+            'asal_surat' => 'Kecamatan',
+            'dari' => 'Sekretariat Kecamatan',
+            'perihal' => 'Lama',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => 2025,
+        ]);
+
+        $response = $this->actingAs($adminDesa)->get('/desa/agenda-surat');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->where('agendaSurats.total', 1)
+                ->where('agendaSurats.data.0.nomor_surat', 'TA-2026')
+                ->where('filters.tahun_anggaran', 2026);
+        });
     }
 }

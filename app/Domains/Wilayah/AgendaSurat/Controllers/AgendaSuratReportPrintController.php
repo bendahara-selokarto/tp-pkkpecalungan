@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\AgendaSurat\Controllers;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\AgendaSurat\UseCases\ListScopedAgendaSuratUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ class AgendaSuratReportPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedAgendaSuratUseCase $listScopedAgendaSuratUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -47,10 +49,12 @@ class AgendaSuratReportPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.agenda_surat_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);
@@ -69,10 +73,12 @@ class AgendaSuratReportPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.ekspedisi_surat_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

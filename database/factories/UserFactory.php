@@ -31,7 +31,7 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'scope' => 'desa',
             'area_id' => null,
-
+            'active_budget_year' => (int) now()->format('Y'),
         ];
     }
 

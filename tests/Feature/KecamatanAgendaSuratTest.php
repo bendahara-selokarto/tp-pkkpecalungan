@@ -17,6 +17,8 @@ class KecamatanAgendaSuratTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
 
@@ -44,6 +46,7 @@ class KecamatanAgendaSuratTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -102,6 +105,7 @@ class KecamatanAgendaSuratTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -164,6 +168,7 @@ class KecamatanAgendaSuratTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -198,6 +203,7 @@ class KecamatanAgendaSuratTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -261,6 +267,7 @@ class KecamatanAgendaSuratTest extends TestCase
             'data_dukung_path' => $newAttachmentPath,
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
     }
 
@@ -272,6 +279,7 @@ class KecamatanAgendaSuratTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -313,11 +321,41 @@ class KecamatanAgendaSuratTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/agenda-surat');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_tahun_anggaran_lain(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $agendaTahunLain = AgendaSurat::create([
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2025-02-20',
+            'tanggal_surat' => '2025-02-19',
+            'nomor_surat' => 'KCA/2025',
+            'asal_surat' => 'Kabupaten',
+            'dari' => 'Sekretariat Kabupaten',
+            'perihal' => 'Lama',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => 2025,
+        ]);
+
+        $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.agenda-surat.show', $agendaTahunLain->id))
+            ->assertStatus(403);
     }
 }

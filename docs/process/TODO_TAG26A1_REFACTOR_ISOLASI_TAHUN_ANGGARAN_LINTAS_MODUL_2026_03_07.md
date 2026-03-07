@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `planned` (`state:implementation-ready`)
+Status: `in-progress` (`state:wave1-implemented`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -39,8 +39,8 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Target Hasil
 - [ ] Tersusun klasifikasi modul/tabel yang wajib memakai `tahun_anggaran`, yang opsional, dan yang tetap memakai periode domain-spesifik saja.
-- [ ] Tersusun desain context backend `tahun anggaran aktif` yang terhubung ke `Profile` tanpa menggeser authority akses ke frontend.
-- [ ] Tersusun strategi retrofit repository/action/request/test secara bertahap tanpa rewrite concern.
+- [x] Tersusun desain context backend `tahun anggaran aktif` yang terhubung ke `Profile` tanpa menggeser authority akses ke frontend.
+- [x] Tersusun strategi retrofit repository/action/request/test secara bertahap tanpa rewrite concern.
 - [ ] Tersusun strategi migrasi data, rollout, dan fallback bila isolasi tahun memicu regresi lintas modul.
 
 ## Readiness Lock
@@ -97,12 +97,12 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] Tentukan apakah tahun aktif perlu ikut ke session/cache/request shared props untuk UX, dengan backend tetap sebagai pengendali final.
     - keputusan implementasi awal: kirim ke Inertia shared props/read payload setelah backend resolve nilai aktif.
 - [ ] Fase 3 - Retrofit boundary backend.
-  - [ ] Tambah kontrak `tahun_anggaran` pada DTO/model/factory concern yang relevan.
-  - [ ] Retrofit repository interface dan implementasi agar default query selalu include filter tahun aktif.
-  - [ ] Retrofit action/use case create/update agar otomatis mengisi atau mengunci `tahun_anggaran`.
-  - [ ] Audit report/export/dashboard supaya agregasi dan cetak memakai dataset tahun aktif yang benar.
+  - [x] Tambah kontrak `tahun_anggaran` pada DTO/model/factory concern yang relevan untuk wave-1 (`AgendaSurat` + `User` context).
+  - [x] Retrofit repository interface dan implementasi agar default query selalu include filter tahun aktif pada concern pilot `AgendaSurat`.
+  - [x] Retrofit action/use case create/update agar otomatis mengisi atau mengunci `tahun_anggaran` pada concern pilot `AgendaSurat`.
+  - [x] Audit report/export/dashboard supaya agregasi dan cetak memakai dataset tahun aktif yang benar untuk concern pilot (`AgendaSurat` report + dashboard coverage yang sudah year-aware).
 - [ ] Fase 4 - Migration/backfill/compatibility.
-  - [ ] Siapkan migration bertahap per wave, bukan big-bang tunggal.
+  - [x] Siapkan migration bertahap per wave, bukan big-bang tunggal (wave-1: `users.active_budget_year`, `agenda_surats.tahun_anggaran`).
   - [ ] Definisikan default backfill untuk data existing development:
     - jika sumber tahun eksplisit tersedia, gunakan sumber tersebut,
     - jika tidak tersedia, pakai tahun anggaran baseline yang dikunci eksplisit dalam concern implementasi.
@@ -113,9 +113,9 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
   - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
 - [ ] Sinkronisasi dokumen concern terkait (trigger hardening aktif).
-  - [ ] TODO concern + ADR.
-  - [ ] registry concern aktif + log validasi.
-  - [ ] dokumen proses/domain canonical yang menyebut invariant data lintas modul.
+  - [x] TODO concern + ADR.
+  - [x] registry concern aktif + log validasi.
+  - [x] dokumen proses/domain canonical yang menyebut invariant data lintas modul.
 
 ## Validasi
 - [x] L1: planning/doc audit scoped (sesi ini).
@@ -123,25 +123,25 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] Audit pola repository `paginateByLevelAndArea/getByLevelAndArea` pada concern wilayah.
   - [x] Audit migration untuk mendeteksi tabel yang belum memiliki `tahun_anggaran`.
 - [ ] L2: targeted regression saat implementasi.
-  - [ ] feature test flow `profile` untuk set/switch tahun anggaran aktif.
-  - [ ] unit/service test resolver tahun anggaran aktif.
-  - [ ] feature/repository tests `AgendaSurat` untuk anti data leak lintas tahun.
-  - [ ] print/report test `AgendaSurat` mengikuti tahun aktif.
-- [ ] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
+  - [x] feature test flow `profile` untuk set/switch tahun anggaran aktif.
+  - [x] unit/service test resolver tahun anggaran aktif.
+  - [x] feature/repository tests `AgendaSurat` untuk anti data leak lintas tahun.
+  - [x] print/report test `AgendaSurat` mengikuti tahun aktif.
+- [x] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
 
 ### Matrix Implementasi Wave-1
-- [ ] Migration test:
-  - [ ] `users.active_budget_year` atau nama final canonical tersedia dan tervalidasi.
-  - [ ] `agenda_surats.tahun_anggaran` tersedia + index/query path aman.
-- [ ] Feature test:
-  - [ ] user valid bisa menyimpan tahun aktif dari `Profile`.
-  - [ ] daftar `AgendaSurat` hanya menampilkan data tahun aktif.
-  - [ ] create `AgendaSurat` otomatis menyimpan `tahun_anggaran` aktif.
-  - [ ] update `AgendaSurat` tidak memindahkan record ke tahun lain secara diam-diam.
-  - [ ] print/report `AgendaSurat` tidak bocor lintas tahun.
-- [ ] Regression auth:
-  - [ ] `scope.role` dan creator filter existing tetap berjalan.
-  - [ ] role kecamatan sekretaris tetap hanya melihat data yang sesuai scope + creator rule + tahun aktif.
+- [x] Migration test:
+  - [x] `users.active_budget_year` canonical tersedia dan tervalidasi.
+  - [x] `agenda_surats.tahun_anggaran` tersedia + index/query path aman.
+- [x] Feature test:
+  - [x] user valid bisa menyimpan tahun aktif dari `Profile`.
+  - [x] daftar `AgendaSurat` hanya menampilkan data tahun aktif.
+  - [x] create `AgendaSurat` otomatis menyimpan `tahun_anggaran` aktif.
+  - [x] update `AgendaSurat` tidak memindahkan record ke tahun lain secara diam-diam.
+  - [x] print/report `AgendaSurat` tidak bocor lintas tahun.
+- [x] Regression auth:
+  - [x] `scope.role` dan creator filter existing tetap berjalan.
+  - [x] role kecamatan sekretaris tetap hanya melihat data yang sesuai scope + creator rule + tahun aktif.
 
 ## Risiko
 - Risiko 1: data leak lintas tahun anggaran karena ada repository atau report yang masih hanya mem-filter `level + area_id`.
@@ -187,3 +187,10 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Modul pilot sudah dipilih.
 - [x] Matrix validasi wave-1 sudah ditulis.
 - [x] TODO siap dipakai implementasi.
+
+## Hasil Implementasi Wave-1
+- [x] `Profile` kini menyimpan `active_budget_year` sebagai context kerja aktif user.
+- [x] Service backend `ActiveBudgetYearContextService` aktif untuk runtime/shared props.
+- [x] `AgendaSurat` kini menyimpan `tahun_anggaran` dan seluruh read/write path pilot sudah terisolasi per tahun aktif.
+- [x] PDF `AgendaSurat` dan `Ekspedisi Surat` menampilkan metadata tahun anggaran aktif.
+- [x] Dashboard coverage untuk model yang sudah punya `tahun_anggaran` ikut sadar tahun aktif pada wave-1.

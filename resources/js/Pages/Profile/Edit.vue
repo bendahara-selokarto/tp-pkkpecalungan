@@ -25,6 +25,7 @@ const props = defineProps({
 const profileForm = useForm({
   name: props.user.name ?? '',
   email: props.user.email ?? '',
+  active_budget_year: Number(props.user.active_budget_year ?? new Date().getFullYear()),
 })
 
 const passwordForm = useForm({
@@ -92,7 +93,7 @@ const submitDelete = () => {
     <div class="space-y-6">
       <CardBox class="max-w-3xl">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Informasi Profil</h3>
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Perbarui informasi profil akun dan alamat email.</p>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">Perbarui informasi profil akun, alamat email, dan tahun anggaran aktif.</p>
 
         <form class="mt-6 space-y-5" @submit.prevent="submitProfile">
           <div>
@@ -115,6 +116,13 @@ const submitDelete = () => {
                 Tautan verifikasi baru telah dikirim ke alamat email Anda.
               </p>
             </div>
+          </div>
+
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tahun Anggaran Aktif</label>
+            <input v-model.number="profileForm.active_budget_year" type="number" min="2000" max="2100" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required inputmode="numeric">
+            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">Tahun anggaran dipakai sebagai ruang kerja data aktif untuk satu siklus 1 Januari sampai 31 Desember.</p>
+            <p v-if="profileForm.errors.active_budget_year" class="mt-1 text-xs text-rose-600">{{ profileForm.errors.active_budget_year }}</p>
           </div>
 
           <div class="flex items-center gap-3">

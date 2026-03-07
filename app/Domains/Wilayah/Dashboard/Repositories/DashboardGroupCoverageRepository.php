@@ -25,6 +25,7 @@ use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
 use App\Domains\Wilayah\WarungPkk\Models\WarungPkk;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,7 @@ class DashboardGroupCoverageRepository implements DashboardGroupCoverageReposito
 {
     public function __construct(
         private readonly AreaRepositoryInterface $areaRepository,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly RoleMenuVisibilityService $roleMenuVisibilityService
     ) {
     }
@@ -88,6 +90,7 @@ class DashboardGroupCoverageRepository implements DashboardGroupCoverageReposito
         }
 
         $desaIds = $desaAreas->pluck('id')->map(static fn ($id): int => (int) $id)->values();
+        $activeBudgetYear = $this->activeBudgetYearContextService->resolveForUser($user);
         $countsBySlug = [];
 
         foreach ($requestedSlugs as $slug) {
@@ -96,6 +99,8 @@ class DashboardGroupCoverageRepository implements DashboardGroupCoverageReposito
             $modelQuery = $modelClass::query()
                 ->where('level', ScopeLevel::DESA->value)
                 ->whereIn('area_id', $desaIds->all());
+
+            $this->applyBudgetYearScope($modelQuery, $modelClass, $activeBudgetYear);
 
             if ($month !== null) {
                 if ($modelClass === Activity::class) {
@@ -179,5 +184,21 @@ class DashboardGroupCoverageRepository implements DashboardGroupCoverageReposito
         }
 
         return Schema::hasColumn($model->getTable(), 'created_at');
+    }
+
+    /**
+     * @param class-string<Model> $modelClass
+     */
+    private function applyBudgetYearScope(\Illuminate\Database\Eloquent\Builder $query, string $modelClass, int $activeBudgetYear): void
+    {
+        /** @var Model $model */
+        $model = new $modelClass();
+        $table = $model->getTable();
+
+        if (! Schema::hasColumn($table, 'tahun_anggaran')) {
+            return;
+        }
+
+        $query->where($table.'.tahun_anggaran', $activeBudgetYear);
     }
 }

@@ -27,17 +27,19 @@ Aturan:
   - `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md` (`planned`)
 
 ### Refactor Tahun Anggaran (`TAG26A1`) - 2026-03-07
-- Status concern: `planned` (`state:implementation-ready`).
+- Status concern: `in-progress` (`state:wave1-implemented`).
 - Fokus concern:
   - menambahkan `tahun_anggaran` sebagai context transversal administrasi TP PKK,
   - menjaga concern existing tetap utuh sambil meretrofit schema/query per wave.
-- Baseline evidence concern (planning-only):
+- Evidence concern:
   - audit `ProfileController`, `ProfileUpdateRequest`, `User`, `UserAreaContextService`: `DONE`,
   - audit pola repository `paginateByLevelAndArea/getByLevelAndArea`: `DONE`,
   - audit migration concern wilayah untuk keberadaan dimensi tahun: `DONE`,
   - wave-1 pilot dikunci: `Profile + AgendaSurat`: `DONE`,
   - ADR `0005` status `accepted`: `DONE`,
-  - runtime change/test suite: `BELUM DIJALANKAN`.
+  - targeted concern tests (`Profile`, `AgendaSurat`, policy, dashboard coverage terkait): `43 passed`,
+  - full suite `php artisan test --compact`: `1061 passed`,
+  - runtime wave-1 implemented: `DONE`.
 
 ### Hardening Struktur Folder (`SFC26A1`) - 2026-03-07
 - Status concern: `done` (`state:structure-hardened`) (arsip concern ada di `docs/process/archive/2026_03/`).

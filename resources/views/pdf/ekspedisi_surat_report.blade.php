@@ -23,6 +23,7 @@
     <div class="title">BUKU EKSPEDISI SURAT {{ $levelLabel }}</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
+        Tahun Anggaran: {{ $tahunAnggaran ?? '-' }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>

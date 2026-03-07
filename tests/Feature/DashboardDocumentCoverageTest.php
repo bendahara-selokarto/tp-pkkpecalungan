@@ -547,6 +547,7 @@ class DashboardDocumentCoverageTest extends TestCase
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => $user->id,
+            'tahun_anggaran' => (int) ($user->active_budget_year ?? now()->format('Y')),
         ]);
     }
 

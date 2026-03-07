@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -19,6 +20,10 @@ class ProfileTest extends TestCase
             ->get('/profile');
 
         $response->assertOk();
+        $response->assertInertia(fn (AssertableInertia $page) => $page
+            ->where('user.active_budget_year', (int) now()->format('Y'))
+            ->where('auth.user.active_budget_year', (int) now()->format('Y'))
+        );
     }
 
     public function test_informasi_profil_dapat_diperbarui(): void
@@ -30,6 +35,7 @@ class ProfileTest extends TestCase
             ->patch('/profile', [
                 'name' => 'Test User',
                 'email' => 'test@example.com',
+                'active_budget_year' => 2027,
             ]);
 
         $response
@@ -40,6 +46,7 @@ class ProfileTest extends TestCase
 
         $this->assertSame('Test User', $user->name);
         $this->assertSame('test@example.com', $user->email);
+        $this->assertSame(2027, $user->active_budget_year);
         $this->assertNull($user->email_verified_at);
     }
 
@@ -52,6 +59,7 @@ class ProfileTest extends TestCase
             ->patch('/profile', [
                 'name' => 'Test User',
                 'email' => $user->email,
+                'active_budget_year' => 2026,
             ]);
 
         $response
@@ -59,6 +67,7 @@ class ProfileTest extends TestCase
             ->assertRedirect('/profile');
 
         $this->assertNotNull($user->refresh()->email_verified_at);
+        $this->assertSame(2026, $user->active_budget_year);
     }
 
     public function test_pengguna_dapat_menghapus_akunnya(): void
@@ -97,4 +106,3 @@ class ProfileTest extends TestCase
         $this->assertNotNull($user->fresh());
     }
 }
-

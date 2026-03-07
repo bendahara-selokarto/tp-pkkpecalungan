@@ -47,6 +47,7 @@ class DesaAgendaSuratController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -137,6 +138,7 @@ class DesaAgendaSuratController extends Controller
             'tembusan' => $item->tembusan,
             'keterangan' => $item->keterangan,
             'data_dukung_url' => $this->resolveAttachmentUrl($item),
+            'tahun_anggaran' => $item->tahun_anggaran,
         ];
     }
 

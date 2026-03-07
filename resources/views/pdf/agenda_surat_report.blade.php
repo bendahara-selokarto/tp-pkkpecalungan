@@ -27,7 +27,8 @@
     <div class="title">BUKU AGENDA SURAT MASUK/KELUAR</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
-        Level: {{ $levelLabel }}
+        Level: {{ $levelLabel }}<br>
+        Tahun Anggaran: {{ $tahunAnggaran ?? '-' }}
     </div>
 
     <table>

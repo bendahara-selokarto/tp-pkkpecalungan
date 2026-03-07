@@ -7,19 +7,22 @@ use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\AgendaSurat\Repositories\AgendaSuratRepositoryInterface;
 use App\Domains\Wilayah\AgendaSurat\Services\AgendaSuratAttachmentService;
 use App\Domains\Wilayah\AgendaSurat\Services\AgendaSuratScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 
 class CreateScopedAgendaSuratAction
 {
     public function __construct(
         private readonly AgendaSuratRepositoryInterface $agendaSuratRepository,
         private readonly AgendaSuratScopeService $agendaSuratScopeService,
-        private readonly AgendaSuratAttachmentService $agendaSuratAttachmentService
+        private readonly AgendaSuratAttachmentService $agendaSuratAttachmentService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
     public function execute(array $payload, string $level): AgendaSurat
     {
         $areaId = $this->agendaSuratScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
         $dataDukungPath = $this->agendaSuratAttachmentService->storeFromPayload($payload, $level, $areaId);
 
         $data = AgendaSuratData::fromArray([
@@ -39,6 +42,7 @@ class CreateScopedAgendaSuratAction
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => auth()->id(),
+            'tahun_anggaran' => $tahunAnggaran,
         ]);
 
         return $this->agendaSuratRepository->store($data);

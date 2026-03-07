@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
@@ -13,6 +14,11 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+    public function __construct(
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {
+    }
+
     /**
      * Display the user's profile form.
      */
@@ -23,6 +29,7 @@ class ProfileController extends Controller
                 'name' => $request->user()->name,
                 'email' => $request->user()->email,
                 'email_verified_at' => $request->user()->email_verified_at,
+                'active_budget_year' => $this->activeBudgetYearContextService->resolveForUser($request->user()),
             ],
             'mustVerifyEmail' => $request->user() instanceof MustVerifyEmail,
             'status' => $request->session()->get('status'),

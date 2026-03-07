@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -10,6 +11,7 @@ use Inertia\Middleware;
 class HandleInertiaRequests extends Middleware
 {
     public function __construct(
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly UserAreaContextService $userAreaContextService,
         private readonly RoleMenuVisibilityService $roleMenuVisibilityService
     ) {
@@ -56,6 +58,7 @@ class HandleInertiaRequests extends Middleware
                         'id' => $user->id,
                         'name' => $user->name,
                         'email' => $user->email,
+                        'active_budget_year' => $this->activeBudgetYearContextService->resolveForUser($user),
                         'scope' => $scope,
                         'roles' => $user->getRoleNames()->values(),
                         'menuGroupModes' => $visibility['groups'],

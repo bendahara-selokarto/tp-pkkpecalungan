@@ -27,6 +27,7 @@ class User extends Authenticatable
         'password',
         'area_id',
         'scope',
+        'active_budget_year',
     ];
 
     /**
@@ -47,9 +48,19 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
+            'active_budget_year' => 'integer',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $user): void {
+            if (! is_numeric($user->active_budget_year)) {
+                $user->active_budget_year = (int) now()->format('Y');
+            }
+        });
     }
 
     public function area()

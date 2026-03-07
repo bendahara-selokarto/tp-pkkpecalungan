@@ -27,7 +27,30 @@ class AgendaSurat extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $agendaSurat): void {
+            if (is_numeric($agendaSurat->tahun_anggaran)) {
+                return;
+            }
+
+            $fallbackYear = $agendaSurat->tanggal_surat
+                ? (int) date('Y', strtotime((string) $agendaSurat->tanggal_surat))
+                : (int) now()->format('Y');
+
+            $agendaSurat->tahun_anggaran = $fallbackYear;
+        });
+    }
 
     public function area()
     {
