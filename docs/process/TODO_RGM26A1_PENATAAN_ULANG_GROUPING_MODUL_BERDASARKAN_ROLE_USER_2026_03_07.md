@@ -1,7 +1,7 @@
 # TODO RGM26A1 Penataan Ulang Grouping Modul Berdasarkan Role User
 
 Tanggal: 2026-03-07  
-Status: `planned`
+Status: `done` (`state:no-op-all-group-target-empty`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -156,3 +156,16 @@ Catatan realitas runtime saat ini:
 - [ ] Ringkasan apa yang diubah dan kenapa.
 - [ ] Daftar file terdampak backend, frontend, test, dan dokumentasi.
 - [ ] Hasil validasi otomatis + manual dan residual risk.
+
+## Progress Update 2026-03-07 (Eksekusi No-op)
+- Hasil pembacaan tabel owner:
+  - seluruh kolom `Group Target` dikosongkan,
+  - sesuai aturan concern, seluruh modul dianggap `tetap` (tidak ada perubahan grouping).
+- Dampak eksekusi:
+  - tidak ada patch kontrak akses pada `RoleMenuVisibilityService`, middleware, atau payload Inertia.
+  - concern ditutup sebagai no-op terkontrol karena tidak ada target regroup aktif dari owner.
+- Validasi yang dijalankan:
+  - `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
+  - hasil: `PASS` (`49` tests, `449` assertions).
+- Hardening minor saat validasi:
+  - kontrak string test frontend diperbarui agar tidak brittle terhadap variasi label `catatan-keluarga` (`tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`), tanpa perubahan perilaku aplikasi.

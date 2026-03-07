@@ -1562,3 +1562,29 @@ Keputusan:
 
 Status:
 - `PASS` (`buku-tamu-rw-desa-pokja-locked`).
+
+## Eksekusi TODO RGM26A1 (No-op Grouping Owner) : 2026-03-07
+
+Ruang lingkup:
+- Menjalankan concern `RGM26A1` berdasarkan tabel `Group Target` owner pada TODO.
+- Memastikan baseline akses tetap stabil ketika tidak ada regroup aktif.
+
+Hasil intake owner:
+- Semua kolom `Group Target` pada `TODO_RGM26A1_*` kosong.
+- Sesuai aturan concern, kondisi ini berarti seluruh modul `tetap` (no change).
+
+Artefak terdampak:
+- `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+- `tests/Unit/Frontend/DashboardLayoutMenuContractTest.php` (hardening assertion non-brittle saat validasi)
+
+Perintah validasi:
+- `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
+  - hasil: `PASS` (`49` tests, `449` assertions).
+
+Keputusan:
+- Concern `RGM26A1` ditutup sebagai no-op terkontrol karena tidak ada modul yang diminta regroup.
+- Kontrak akses backend (`RoleMenuVisibilityService` + middleware + payload) tidak berubah.
+
+Status:
+- `PASS` (`rgm26a1-noop-owner-target-empty`).
+

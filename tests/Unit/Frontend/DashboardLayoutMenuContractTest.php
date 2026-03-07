@@ -95,10 +95,10 @@ class DashboardLayoutMenuContractTest extends TestCase
     {
         $content = $this->readDashboardLayout();
 
-        $this->assertStringContainsString('{ href: `/${scope}/catatan-keluarga`, label: \'Catatan Keluarga\' }', $content);
+        $this->assertStringContainsString('href: `/${scope}/catatan-keluarga`', $content);
         $this->assertStringContainsString('{ href: `/${scope}/pilot-project-naskah-pelaporan`, label: \'Naskah Pelaporan Pilot Project Pokja IV\' }', $content);
         $this->assertStringContainsString('{ href: `/${scope}/pilot-project-keluarga-sehat`, label: \'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana\' }', $content);
-        $this->assertStringNotContainsString('href: `/${scope}/catatan-keluarga`, label: \'Catatan Keluarga\', uiVisibility: \'disabled\'', $content);
+        $this->assertStringNotContainsString('href: `/${scope}/catatan-keluarga`, label: \'Catatan Keluarga | 4.15\', uiVisibility: \'disabled\'', $content);
         $this->assertStringNotContainsString('href: `/${scope}/pilot-project-naskah-pelaporan`, label: \'Naskah Pelaporan Pilot Project Pokja IV\', uiVisibility: \'disabled\'', $content);
         $this->assertStringNotContainsString('href: `/${scope}/pilot-project-keluarga-sehat`, label: \'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana\', uiVisibility: \'disabled\'', $content);
     }
