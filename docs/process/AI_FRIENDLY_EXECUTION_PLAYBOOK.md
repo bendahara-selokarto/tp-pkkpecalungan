@@ -60,6 +60,7 @@ Gunakan status:
 | `P-023` | Doc-Only Fast Lane Validation | Perubahan hanya dokumentasi process/domain/adr tanpa runtime change | Siklus validasi lebih cepat tanpa menurunkan guardrail sinkronisasi kontrak | L1 audit scoped (`rg`/link/status) + skip L3 bila tidak ada dampak runtime | `active` |
 | `P-024` | TODO Generator Canonicalization | User/AI perlu membuat TODO concern baru dengan format konsisten | Nama file + judul + metadata TODO selalu sesuai kontrak AGENTS | Dry-run generator + verifikasi output file terhadap template canonical | `active` |
 | `P-025` | UI/UX Auditability Gate via Code | Concern UI/UX membutuhkan status "auditable" yang bisa direplay lintas sesi | Jalur audit UI/UX memiliki evidence terstruktur (test + log concern) dan gap tooling terlihat eksplisit | L1 frontend contract, L2 feature regression concern, L3 runtime browser evidence jika tooling tersedia; jika belum, status `partial` + TODO follow-up | `active` |
+| `P-026` | TTY Wrapper for Non-TTY Test Runner | Environment runner tidak menampilkan progres subset/failure dengan baik | Debug subset test tetap interaktif tanpa mengubah script CI compact | `composer test:tty -- ...` atau `composer test:debug -- ...` berhasil pada shell interaktif | `active` |
 
 ## 3) Protocol Update Pattern
 

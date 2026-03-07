@@ -486,3 +486,30 @@ STATUS: active
   - judul dengan kata sangat umum bisa menghasilkan ringkasan nama file kurang deskriptif.
 - Catatan reuse lintas domain/project:
   - bisa dipakai lintas project Laravel/Inertia selama pola dokumentasi TODO mengikuti kontrak serupa.
+
+### P-026 - TTY Wrapper for Non-TTY Test Runner
+- Tanggal: 2026-03-07
+- Status: active
+- Konteks: runner non-TTY pada environment tertentu menelan progres per-file dan membuat subset failure sulit diinspeksi saat `composer test` dikunci ke mode `--compact`.
+- Trigger:
+  - debugging subset test pada shell non-TTY / output buffering berat.
+  - butuh progres interaktif tanpa mengubah script CI yang tetap memakai output ringkas.
+- Langkah eksekusi:
+  1) pertahankan script CI default (`composer test`, `composer test:full`, dst.) tetap `--compact`.
+  2) sediakan wrapper project-level berbasis `script -qefc` untuk memaksa pseudo-TTY.
+  3) expose wrapper lewat alias `composer test:tty`, `composer test:debug`, dan bila perlu loop per-file `composer test:tty:files`.
+  4) teruskan argumen subset lewat `composer run <script> -- <args>`.
+- Guardrail:
+  - jangan ubah script CI existing hanya demi kebutuhan debugging lokal.
+  - wrapper harus fallback ke eksekusi langsung jika utilitas `script` tidak tersedia atau environment menolak pembuatan pseudo-TTY.
+  - tetap jalankan `php artisan config:clear --ansi` agar perilaku test lokal selaras dengan wrapper composer utama.
+- Validasi minimum:
+  - `composer run test:tty -- --help` atau subset test ringan bisa dieksekusi dari shell interaktif.
+  - `composer run test:debug -- --filter=<Subset>` menampilkan trace `phpunit --debug`.
+  - `composer test` tetap mempertahankan output compact untuk jalur non-interaktif/CI.
+- Bukti efisiensi/akurasi:
+  - mengurangi kebutuhan pindah manual ke runner ad-hoc di home directory dan menjaga jalur debug tetap terikat ke repo.
+- Risiko:
+  - utilitas `script` bergantung pada paket `util-linux`; tanpa paket itu, atau jika PTY diblokir sandbox, wrapper jatuh ke mode direct exec.
+- Catatan reuse lintas domain/project:
+  - cocok untuk repo PHP/Laravel yang memakai wrapper test ringkas di Composer tetapi tetap butuh mode inspeksi interaktif di WSL/Linux.

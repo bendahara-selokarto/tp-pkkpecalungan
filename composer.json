@@ -64,6 +64,15 @@
             "@php artisan config:clear --ansi",
             "@php -d memory_limit=512M artisan test tests/Feature --compact"
         ],
+        "test:tty": [
+            "bash scripts/artest-tty.sh"
+        ],
+        "test:debug": [
+            "bash scripts/artest-debug.sh"
+        ],
+        "test:tty:files": [
+            "bash scripts/artest-files.sh"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"
