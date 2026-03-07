@@ -18,6 +18,10 @@ Owner: process governance
   - jalur operasional default.
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
   - pattern reusable lintas concern.
+- `docs/process/CODE_PLACEMENT_POLICY.md`
+  - policy penempatan kode concern baru agar struktur repository konsisten.
+- `docs/process/TODO_ARCHIVE_STRATEGY.md`
+  - strategi arsip TODO `done` agar `docs/process` tetap navigable.
 
 ### Layer 1 - Registry dan Routing Concern
 - `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`

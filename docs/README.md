@@ -31,7 +31,9 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
 - Runbook, rencana eksekusi, gate operasional, dan log validasi.
 - File utama:
   - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+  - `docs/process/CODE_PLACEMENT_POLICY.md`
   - `docs/process/TEMPLATE_TODO_CONCERN.md`
+  - `docs/process/TODO_ARCHIVE_STRATEGY.md`
   - `docs/process/RUNBOOK_429_RATE_LIMITER.md`
   - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
   - `docs/process/RELEASE_CHECKLIST_PDF.md`
@@ -62,3 +64,7 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
 - Gunakan pola `UPPER_SNAKE_CASE` untuk dokumen proses/kontrak/checklist.
 - Gunakan `README.md` untuk index folder.
 - Hindari membuat dokumen operasional baru di root project; tempatkan di `docs/<concern>/`.
+
+## docs/referensi
+- Bahan referensi domain lokal (PDF/Excel/screenshot) dan marker canonical path.
+- Ketentuan tracking file biner ada di `docs/referensi/README.md`.

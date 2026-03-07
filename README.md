@@ -7,6 +7,7 @@ Indeks dokumentasi ada di `docs/README.md`.
 ## 0. Referensi Domain Utama
 
 - Pedoman domain utama (canonical aktif): `docs/referensi/Rakernas X.pdf`
+- Ketentuan penyimpanan referensi lokal: `docs/referensi/README.md`
 - Ringkasan sinkronisasi lokal: `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`
 - Jika ada ketidakkoherenan istilah/label domain, utamakan pedoman domain utama di atas.
 - Aturan teknis implementasi tetap mengacu ke `AGENTS.md`.
@@ -55,6 +56,7 @@ Aturan implementasi:
 - Query domain melalui repository.
 - Dependency repository di layer aplikasi harus via interface.
 - Hindari service locator `app()` di use case/action/service.
+- Placement concern baru wajib mengikuti `docs/process/CODE_PLACEMENT_POLICY.md`.
 
 ## 4. Domain Wilayah dan Source of Truth
 

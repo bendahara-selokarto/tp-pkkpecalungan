@@ -44,6 +44,11 @@ Architecture:
 Authorization:
 - `Policy -> Scope Service`
 
+Code placement contract:
+- concern domain wilayah baru default di `app/Domains/Wilayah/<Concern>/<Layer>`.
+- concern lintas-domain/platform boleh di `app/*` global dengan justifikasi jelas pada TODO concern.
+- acuan detail: `docs/process/CODE_PLACEMENT_POLICY.md`.
+
 Domain canonical:
 - `areas` adalah single source of truth wilayah.
 

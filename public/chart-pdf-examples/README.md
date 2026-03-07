@@ -69,6 +69,10 @@ Cara pakai (PowerShell):
 2. Output default:
    `public/chart-pdf-examples/output/quickchart-example.pdf`
 
+Catatan tracking:
+- file output pada `public/chart-pdf-examples/output/*.pdf` adalah artefak generated lokal dan tidak di-track git.
+- gunakan `.gitkeep` untuk menjaga struktur folder output.
+
 ## Catatan evaluasi
 
 Fokus pembandingan:

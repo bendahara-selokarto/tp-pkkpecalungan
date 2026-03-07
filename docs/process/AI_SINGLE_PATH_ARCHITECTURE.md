@@ -177,6 +177,8 @@ Mitigasi:
 
 - `AGENTS.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
+- `docs/process/CODE_PLACEMENT_POLICY.md`
+- `docs/process/TODO_ARCHIVE_STRATEGY.md`
 - `docs/process/PLANNING_ARTIFACT_INDEX.md`
 - `docs/adr/README.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`

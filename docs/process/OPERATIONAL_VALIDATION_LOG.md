@@ -1952,3 +1952,50 @@ Keputusan:
 Status:
 
 - `PASS` (`mfc26a1-cleanup-closed-with-retain-decisions`).
+
+## Hardening Struktur Folder Maintainable (`SFC26A1`): 2026-03-07
+
+Ruang lingkup:
+
+- Menutup concern maintainability struktur repository untuk review manual.
+- Mengunci policy placement concern baru, membersihkan artefak root/generated, dan menambahkan strategi arsip TODO done.
+
+Artefak terdampak:
+
+- `.gitignore`
+- `AGENTS.md`
+- `README.md`
+- `docs/README.md`
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
+- `docs/process/CODE_PLACEMENT_POLICY.md`
+- `docs/process/TODO_ARCHIVE_STRATEGY.md`
+- `docs/process/PLANNING_ARTIFACT_INDEX.md`
+- `docs/process/archive/README.md`
+- `docs/process/TODO_SFC26A1_HARDENING_STRUKTUR_FOLDER_MAINTAINABLE_2026_03_07.md`
+- `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
+- `docs/referensi/README.md`
+- `docs/referensi/_local/README.md`
+- `public/chart-pdf-examples/README.md`
+- `buku_3_petunjuk_teknis_tata_kelola_kelembagaan_pkk_1761536074.pdf` (deleted from root tracked)
+- `public/chart-pdf-examples/output/quickchart-example.pdf` (deleted from tracked)
+
+Perintah validasi:
+
+- `git diff --name-status | rg '^(D)\\s+(buku_.*\\.pdf|public/chart-pdf-examples/output/quickchart-example.pdf)$'`
+  - hasil: `PASS` (dua deletion marker terdeteksi).
+- `test -f buku_3_petunjuk_teknis_tata_kelola_kelembagaan_pkk_1761536074.pdf`
+  - hasil: `PASS` (`not found`).
+- `test -f public/chart-pdf-examples/output/quickchart-example.pdf`
+  - hasil: `PASS` (`not found`).
+- `rg -n "CODE_PLACEMENT_POLICY|TODO_ARCHIVE_STRATEGY|docs/referensi/README.md" AGENTS.md README.md docs/README.md docs/process/AI_SINGLE_PATH_ARCHITECTURE.md docs/process/PLANNING_ARTIFACT_INDEX.md`
+  - hasil: `PASS` (referensi policy sinkron).
+
+Keputusan:
+
+- Policy placement concern baru dikunci pada `docs/process/CODE_PLACEMENT_POLICY.md`.
+- File referensi biner lokal dipisahkan dari source tracked melalui `docs/referensi/_local` + hardening `.gitignore`.
+- Strategi arsip TODO done diaktifkan melalui `docs/process/TODO_ARCHIVE_STRATEGY.md`.
+
+Status:
+
+- `PASS` (`sfc26a1-structure-hardened`).

@@ -23,8 +23,16 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 .tmp/
-docs/referensi/
+docs/referensi/*
+!docs/referensi/.gitkeep
+!docs/referensi/README.md
+!docs/referensi/_local/
+docs/referensi/_local/*
+!docs/referensi/_local/.gitkeep
+!docs/referensi/_local/README.md
 /reports/*
 !/reports/.gitkeep
 /playwright-report/
 /test-results/
+/public/chart-pdf-examples/output/*.pdf
+/buku_*.pdf
