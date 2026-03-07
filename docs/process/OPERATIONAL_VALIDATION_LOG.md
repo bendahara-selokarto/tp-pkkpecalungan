@@ -1588,3 +1588,35 @@ Keputusan:
 Status:
 - `PASS` (`rgm26a1-noop-owner-target-empty`).
 
+## Mitigasi Blocked Dependency OS Browser Playwright (`MNT26E2`): 2026-03-07
+
+Ruang lingkup:
+- Menurunkan risiko kegagalan E2E akibat dependency OS browser yang tidak lengkap.
+- Menambah guard preflight deterministik sebelum `playwright test` dieksekusi.
+
+Artefak terdampak:
+- `scripts/ui-runtime/run-playwright-with-preflight.mjs`
+- `package.json`
+- `README.md`
+
+Perubahan:
+- Tambah wrapper `run-playwright-with-preflight.mjs` untuk:
+  - set `TMPDIR/TEMP/TMP=/tmp` pada Linux/WSL,
+  - cek instalasi browser Playwright Chromium,
+  - cek shared library Linux via `ldd`,
+  - fail-fast dengan instruksi package OS yang spesifik.
+- Script npm E2E dialihkan ke wrapper preflight.
+- Tambah command `npm run test:e2e:doctor` sebagai health-check dependency sebelum run suite.
+
+Perintah validasi:
+- `npm run test:e2e:doctor`
+  - hasil: `PASS` (`[e2e-preflight] OK: Playwright browser dependencies siap.`).
+- `npm run test:e2e -- --list`
+  - hasil: `PASS` (`34` test cases terdaftar; forwarding argumen wrapper tervalidasi).
+
+Keputusan:
+- Kegagalan dependency OS browser tidak lagi muncul terlambat saat runtime test, melainkan terdeteksi pada preflight.
+- Operasional E2E lokal menjadi lebih stabil lintas Linux/WSL tanpa mengubah kontrak test suite.
+
+Status:
+- `PASS` (`playwright-os-preflight-guard-active`).

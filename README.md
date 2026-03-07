@@ -229,6 +229,7 @@ Prasyarat:
 - Dependensi terpasang:
   - `npm install`
   - `npm run test:e2e:install`
+  - `npm run test:e2e:doctor` (cek preflight browser + dependency OS)
 - Base URL aplikasi:
   - default: `http://127.0.0.1:8000`
   - override: set `E2E_BASE_URL`
@@ -264,12 +265,15 @@ Perintah:
 - `npm run test:e2e:a11y`
 - `npm run test:e2e:visual`
 - `npm run test:e2e:perf`
+- `npm run test:e2e:doctor`
 - `npm run test:e2e:perf:summary`
 - `npm run test:e2e:perf:trend`
 - Audit a11y mendalam (PowerShell):
   - `$env:E2E_A11Y_EXCLUDE_NPROGRESS='0'; $env:E2E_A11Y_DISABLE_COLOR_CONTRAST='0'; npm run test:e2e:a11y`
 
 Catatan:
+- Linux/WSL: wrapper e2e otomatis set `TMPDIR/TEMP/TMP=/tmp` untuk menghindari masalah permission cache temp lintas OS.
+- Jika preflight melaporkan library OS tidak lengkap (contoh: `libnspr4.so`, `libnss3.so`, `libasound.so.2`), pasang paket yang disarankan (Ubuntu/Debian: `sudo apt-get install -y libnspr4 libnss3 libasound2`) lalu jalankan ulang.
 - Test login page (`@smoke`, `@a11y`) selalu jalan tanpa kredensial.
 - Test smoke/a11y terautentikasi per role otomatis `skip` jika pasangan kredensial role terkait belum diisi.
 - CI runtime evidence menjalankan lane tambahan `a11y deep audit` (non-blocking) untuk mendeteksi potensi blind spot.
