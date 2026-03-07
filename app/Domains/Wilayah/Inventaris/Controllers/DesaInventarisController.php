@@ -54,6 +54,7 @@ class DesaInventarisController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -90,6 +91,7 @@ class DesaInventarisController extends Controller
                 'tanggal_penerimaan' => $this->formatDateForPayload($inventaris->tanggal_penerimaan),
                 'tempat_penyimpanan' => $inventaris->tempat_penyimpanan,
                 'condition' => $inventaris->condition,
+                'tahun_anggaran' => $inventaris->tahun_anggaran,
             ],
         ]);
     }
@@ -111,6 +113,7 @@ class DesaInventarisController extends Controller
                 'tanggal_penerimaan' => $this->formatDateForPayload($inventaris->tanggal_penerimaan),
                 'tempat_penyimpanan' => $inventaris->tempat_penyimpanan,
                 'condition' => $inventaris->condition,
+                'tahun_anggaran' => $inventaris->tahun_anggaran,
             ],
         ]);
     }

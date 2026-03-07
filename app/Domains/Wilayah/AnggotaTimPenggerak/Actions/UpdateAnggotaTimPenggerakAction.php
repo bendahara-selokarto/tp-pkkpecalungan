@@ -29,10 +29,10 @@ class UpdateAnggotaTimPenggerakAction
             'level' => $anggotaTimPenggerak->level,
             'area_id' => $anggotaTimPenggerak->area_id,
             'created_by' => $anggotaTimPenggerak->created_by,
+            'tahun_anggaran' => $anggotaTimPenggerak->tahun_anggaran,
         ]);
 
         return $this->anggotaTimPenggerakRepository->update($anggotaTimPenggerak, $data);
     }
 }
-
 

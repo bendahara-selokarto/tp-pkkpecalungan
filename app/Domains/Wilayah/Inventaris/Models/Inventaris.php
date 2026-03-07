@@ -23,7 +23,30 @@ class Inventaris extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $inventaris): void {
+            if (is_numeric($inventaris->tahun_anggaran)) {
+                return;
+            }
+
+            $fallbackYear = $inventaris->tanggal_penerimaan
+                ? (int) date('Y', strtotime((string) $inventaris->tanggal_penerimaan))
+                : (int) now()->format('Y');
+
+            $inventaris->tahun_anggaran = $fallbackYear;
+        });
+    }
 
     public function area()
     {

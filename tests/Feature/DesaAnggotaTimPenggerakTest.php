@@ -15,6 +15,8 @@ class DesaAnggotaTimPenggerakTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -50,6 +52,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -67,6 +70,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         AnggotaTimPenggerak::create([
@@ -83,6 +87,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/anggota-tim-penggerak');
@@ -94,7 +99,8 @@ class DesaAnggotaTimPenggerakTest extends TestCase
                 ->has('anggotaTimPenggeraks.data', 1)
                 ->where('anggotaTimPenggeraks.data.0.nama', 'Siti Aminah')
                 ->where('anggotaTimPenggeraks.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -104,6 +110,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -122,6 +129,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
+                'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             ]);
         }
 
@@ -139,6 +147,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/anggota-tim-penggerak?page=2&per_page=10');
@@ -152,8 +161,61 @@ class DesaAnggotaTimPenggerakTest extends TestCase
                 ->where('anggotaTimPenggeraks.current_page', 2)
                 ->where('anggotaTimPenggeraks.per_page', 10)
                 ->where('anggotaTimPenggeraks.total', 12)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_anggota_tim_penggerak_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        AnggotaTimPenggerak::create([
+            'nama' => 'Anggota Aktif',
+            'jabatan' => 'Anggota',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Melati',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'Ibu Rumah Tangga',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        AnggotaTimPenggerak::create([
+            'nama' => 'Anggota Lama',
+            'jabatan' => 'Anggota',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Melati Lama',
+            'pendidikan' => 'SMA',
+            'pekerjaan' => 'Ibu Rumah Tangga',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminDesa)->get('/desa/anggota-tim-penggerak')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('anggotaTimPenggeraks.total', 1)
+                ->where('anggotaTimPenggeraks.data.0.nama', 'Anggota Aktif')
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR));
     }
 
     #[Test]
@@ -162,6 +224,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -179,6 +242,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/anggota-tim-penggerak?per_page=999');
@@ -188,7 +252,8 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             $page
                 ->component('Desa/AnggotaTimPenggerak/Index')
                 ->where('filters.per_page', 10)
-                ->where('anggotaTimPenggeraks.per_page', 10);
+                ->where('anggotaTimPenggeraks.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -198,6 +263,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -234,6 +300,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'alamat' => 'Jl. Kenanga 33',
             'pendidikan' => 'S1',
             'keterangan' => 'Pengurus inti',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.anggota-tim-penggerak.destroy', $anggota->id))
@@ -248,6 +315,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 

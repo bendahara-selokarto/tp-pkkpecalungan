@@ -48,6 +48,7 @@ class DesaAnggotaTimPenggerakController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -86,6 +87,7 @@ class DesaAnggotaTimPenggerakController extends Controller
                 'pendidikan' => $anggotaTimPenggerak->pendidikan,
                 'pekerjaan' => $anggotaTimPenggerak->pekerjaan,
                 'keterangan' => $anggotaTimPenggerak->keterangan,
+                'tahun_anggaran' => $anggotaTimPenggerak->tahun_anggaran,
             ],
         ]);
     }
@@ -108,6 +110,7 @@ class DesaAnggotaTimPenggerakController extends Controller
                 'pendidikan' => $anggotaTimPenggerak->pendidikan,
                 'pekerjaan' => $anggotaTimPenggerak->pekerjaan,
                 'keterangan' => $anggotaTimPenggerak->keterangan,
+                'tahun_anggaran' => $anggotaTimPenggerak->tahun_anggaran,
             ],
         ]);
     }
@@ -130,5 +133,4 @@ class DesaAnggotaTimPenggerakController extends Controller
         return redirect()->route('desa.anggota-tim-penggerak.index')->with('success', 'Buku Daftar Anggota Tim Penggerak PKK berhasil dihapus');
     }
 }
-
 

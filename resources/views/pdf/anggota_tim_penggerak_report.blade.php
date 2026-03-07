@@ -25,6 +25,7 @@
         $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
         $desaKel = $scopeLevel === \App\Domains\Wilayah\Enums\ScopeLevel::DESA ? $areaName : '-';
         $kec = $scopeLevel === \App\Domains\Wilayah\Enums\ScopeLevel::KECAMATAN ? $areaName : '-';
+        $budgetYearLabel = $tahunAnggaran ?? ($printedBy?->active_budget_year ?? now()->format('Y'));
     @endphp
 
     <div class="lampiran">LAMPIRAN 4.9a</div>
@@ -46,6 +47,14 @@
             <td class="label">Prov.</td>
             <td class="dot">:</td>
             <td>-</td>
+        </tr>
+        <tr>
+            <td class="label">Tahun Anggaran</td>
+            <td class="dot">:</td>
+            <td>{{ $budgetYearLabel }}</td>
+            <td></td>
+            <td></td>
+            <td></td>
         </tr>
     </table>
 
@@ -126,4 +135,3 @@
     </div>
 </body>
 </html>
-

@@ -22,12 +22,13 @@
         $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
         $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $level);
         $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
+        $budgetYearLabel = $tahunAnggaran ?? ($printedBy?->active_budget_year ?? now()->format('Y'));
     @endphp
 
     <div class="lampiran">LAMPIRAN 4.12</div>
     <div class="title">BUKU INVENTARIS</div>
     <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }}
+        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }} | Tahun Anggaran: {{ $budgetYearLabel }}
     </div>
 
     <table>

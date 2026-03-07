@@ -24,7 +24,7 @@ Status: `done` (`state:thin-registry-active-index`)
 | `C-MODULE-GROUPING-E2E` | Refactor grouping modul domain E2E | `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` | `planned` | Grouping menu/modul lintas domain mengikuti concern ini sebagai parent concern. |
 | `C-ROLE-BASED-GROUPING` | Penataan ulang grouping modul berdasarkan role user | `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` | `planned` | Concern ini dipakai untuk validasi rule grouping berbasis role sebelum merge ke concern parent E2E. |
 | `C-QUALITY-GATE-90PLUS` | Roadmap sprint naik skor project 90+ | `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` | `planned` | Concern ini menjadi jalur eksekusi hardening quality gate (style + e2e dependency) untuk mendorong skor proyek ke 90+. |
-| `C-BUDGET-YEAR-CONTEXT` | Refactor isolasi tahun anggaran lintas modul | `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md` | `in-progress` (`state:wave2-books-slice-implemented`) | Concern ini menjadi jalur resmi refactor besar `tahun_anggaran` tanpa mengubah concern existing. |
+| `C-BUDGET-YEAR-CONTEXT` | Refactor isolasi tahun anggaran lintas modul | `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md` | `in-progress` (`state:wave2-homogeneous-crud-slice-implemented`) | Concern ini menjadi jalur resmi refactor besar `tahun_anggaran` tanpa mengubah concern existing. |
 
 ## Registry Historis (Full Context)
 

@@ -15,6 +15,8 @@ class DesaKaderKhususTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -50,6 +52,7 @@ class DesaKaderKhususTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -66,6 +69,7 @@ class DesaKaderKhususTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         KaderKhusus::create([
@@ -81,6 +85,7 @@ class DesaKaderKhususTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/kader-khusus');
@@ -92,7 +97,8 @@ class DesaKaderKhususTest extends TestCase
                 ->has('kaderKhususItems.data', 1)
                 ->where('kaderKhususItems.data.0.nama', 'Siti Aminah')
                 ->where('kaderKhususItems.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -102,6 +108,7 @@ class DesaKaderKhususTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -119,6 +126,7 @@ class DesaKaderKhususTest extends TestCase
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
+                'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             ]);
         }
 
@@ -135,6 +143,7 @@ class DesaKaderKhususTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/kader-khusus?page=2&per_page=10');
@@ -148,8 +157,59 @@ class DesaKaderKhususTest extends TestCase
                 ->where('kaderKhususItems.current_page', 2)
                 ->where('kaderKhususItems.per_page', 10)
                 ->where('kaderKhususItems.total', 12)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_kader_khusus_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        KaderKhusus::create([
+            'nama' => 'Kader Aktif',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Alamat Aktif',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Kader Lansia',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        KaderKhusus::create([
+            'nama' => 'Kader Lama',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Alamat Lama',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Kader Remaja',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminDesa)->get('/desa/kader-khusus')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('kaderKhususItems.total', 1)
+                ->where('kaderKhususItems.data.0.nama', 'Kader Aktif')
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR));
     }
 
     #[Test]
@@ -158,6 +218,7 @@ class DesaKaderKhususTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -174,6 +235,7 @@ class DesaKaderKhususTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/kader-khusus?per_page=999');
@@ -183,7 +245,8 @@ class DesaKaderKhususTest extends TestCase
             $page
                 ->component('Desa/KaderKhusus/Index')
                 ->where('filters.per_page', 10)
-                ->where('kaderKhususItems.per_page', 10);
+                ->where('kaderKhususItems.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -193,6 +256,7 @@ class DesaKaderKhususTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -227,6 +291,7 @@ class DesaKaderKhususTest extends TestCase
             'alamat' => 'Jl. Kenanga 33',
             'pendidikan' => 'S1',
             'keterangan' => 'Pengurus inti',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.kader-khusus.destroy', $kaderKhusus->id))
@@ -241,6 +306,7 @@ class DesaKaderKhususTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 

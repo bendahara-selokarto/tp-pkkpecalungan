@@ -28,6 +28,7 @@ class UpdateKaderKhususAction
             'level' => $kaderKhusus->level,
             'area_id' => $kaderKhusus->area_id,
             'created_by' => $kaderKhusus->created_by,
+            'tahun_anggaran' => $kaderKhusus->tahun_anggaran,
         ]);
 
         return $this->kaderKhususRepository->update($kaderKhusus, $data);

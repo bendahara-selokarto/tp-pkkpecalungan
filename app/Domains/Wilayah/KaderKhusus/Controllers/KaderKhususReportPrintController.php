@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\KaderKhusus\Controllers;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use App\Domains\Wilayah\KaderKhusus\UseCases\ListScopedKaderKhususUseCase;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ class KaderKhususReportPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedKaderKhususUseCase $listScopedKaderKhususUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -37,10 +39,12 @@ class KaderKhususReportPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.kader_khusus_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

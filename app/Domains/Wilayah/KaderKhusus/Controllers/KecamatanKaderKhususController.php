@@ -50,6 +50,7 @@ class KecamatanKaderKhususController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -87,6 +88,7 @@ class KecamatanKaderKhususController extends Controller
                 'pendidikan' => $kaderKhusus->pendidikan,
                 'jenis_kader_khusus' => $kaderKhusus->jenis_kader_khusus,
                 'keterangan' => $kaderKhusus->keterangan,
+                'tahun_anggaran' => $kaderKhusus->tahun_anggaran,
             ],
         ]);
     }
@@ -108,6 +110,7 @@ class KecamatanKaderKhususController extends Controller
                 'pendidikan' => $kaderKhusus->pendidikan,
                 'jenis_kader_khusus' => $kaderKhusus->jenis_kader_khusus,
                 'keterangan' => $kaderKhusus->keterangan,
+                'tahun_anggaran' => $kaderKhusus->tahun_anggaran,
             ],
         ]);
     }
@@ -130,4 +133,3 @@ class KecamatanKaderKhususController extends Controller
         return redirect()->route('kecamatan.kader-khusus.index')->with('success', 'Data buku kader khusus berhasil dihapus');
     }
 }
-

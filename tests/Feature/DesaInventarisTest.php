@@ -15,6 +15,8 @@ class DesaInventarisTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -50,6 +52,7 @@ class DesaInventarisTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -84,8 +87,51 @@ class DesaInventarisTest extends TestCase
                 ->has('inventaris.data', 1)
                 ->where('inventaris.data.0.name', 'Kursi Balai Desa')
                 ->where('inventaris.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', 2026);
         });
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_inventaris_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        Inventaris::create([
+            'name' => 'Inventaris Aktif',
+            'description' => 'Aset 2026',
+            'quantity' => 1,
+            'unit' => 'buah',
+            'condition' => 'baik',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => 2026,
+        ]);
+
+        Inventaris::create([
+            'name' => 'Inventaris Lama',
+            'description' => 'Aset 2025',
+            'quantity' => 1,
+            'unit' => 'buah',
+            'condition' => 'baik',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => 2025,
+        ]);
+
+        $this->actingAs($adminDesa)->get('/desa/inventaris')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('inventaris.total', 1)
+                ->where('inventaris.data.0.name', 'Inventaris Aktif')
+                ->where('filters.tahun_anggaran', 2026));
     }
 
     #[Test]
@@ -94,6 +140,7 @@ class DesaInventarisTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -142,6 +189,7 @@ class DesaInventarisTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -173,6 +221,7 @@ class DesaInventarisTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -199,6 +248,7 @@ class DesaInventarisTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -223,6 +273,7 @@ class DesaInventarisTest extends TestCase
             'keterangan' => 'Untuk rapat warga',
             'area_id' => $this->desaA->id,
             'level' => 'desa',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
     }
 

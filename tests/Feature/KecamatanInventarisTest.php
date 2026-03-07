@@ -15,6 +15,8 @@ class KecamatanInventarisTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
 
@@ -42,6 +44,7 @@ class KecamatanInventarisTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -76,7 +79,8 @@ class KecamatanInventarisTest extends TestCase
                 ->has('inventaris.data', 1)
                 ->where('inventaris.data.0.name', 'Kursi Aula Kecamatan')
                 ->where('inventaris.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', 2026);
         });
     }
 
@@ -86,6 +90,7 @@ class KecamatanInventarisTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -134,6 +139,7 @@ class KecamatanInventarisTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -165,6 +171,7 @@ class KecamatanInventarisTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -191,6 +198,7 @@ class KecamatanInventarisTest extends TestCase
             'description' => 'Untuk pelayanan publik',
             'quantity' => 4,
             'condition' => 'rusak_ringan',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminKecamatan)->delete(route('kecamatan.inventaris.destroy', $inventaris->id))
@@ -205,6 +213,7 @@ class KecamatanInventarisTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -225,6 +234,33 @@ class KecamatanInventarisTest extends TestCase
     }
 
     #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_inventaris_tahun_anggaran_lain(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $inventaris = Inventaris::create([
+            'name' => 'Inventaris Lama',
+            'description' => 'Aset 2025',
+            'quantity' => 1,
+            'unit' => 'unit',
+            'condition' => 'baik',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => 2025,
+        ]);
+
+        $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.inventaris.show', $inventaris->id))
+            ->assertStatus(403);
+    }
+
+    #[Test]
     public function pengguna_non_admin_kecamatan_tidak_bisa_mengakses_modul_inventaris_kecamatan()
     {
         $desa = Area::create([
@@ -236,6 +272,7 @@ class KecamatanInventarisTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -244,4 +281,3 @@ class KecamatanInventarisTest extends TestCase
         $response->assertStatus(403);
     }
 }
-

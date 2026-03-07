@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
+use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -10,7 +10,7 @@ use Spatie\Permission\Models\Role;
 use Tests\Feature\Concerns\AssertsPdfReportHeaders;
 use Tests\TestCase;
 
-class KaderKhususReportPrintTest extends TestCase
+class InventarisReportPrintTest extends TestCase
 {
     use RefreshDatabase;
     use AssertsPdfReportHeaders;
@@ -18,7 +18,9 @@ class KaderKhususReportPrintTest extends TestCase
     private const ACTIVE_BUDGET_YEAR = 2026;
 
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
+
     protected Area $desaA;
 
     protected function setUp(): void
@@ -33,26 +35,21 @@ class KaderKhususReportPrintTest extends TestCase
         $this->desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $this->kecamatanA->id]);
     }
 
-    public function test_header_kolom_pdf_kader_khusus_tetap_stabil(): void
+    public function test_header_kolom_pdf_inventaris_tetap_stabil(): void
     {
-        $this->assertPdfReportHeadersInOrder('pdf.kader_khusus_report', [
+        $this->assertPdfReportHeadersInOrder('pdf.inventaris_report', [
             'NO',
-            'NAMA',
-            'JENIS KELAMIN',
-            'TEMPAT TANGGAL LAHIR',
-            'STATUS',
-            'ALAMAT',
-            'PENDIDIKAN',
-            'JENIS KADER KHUSUS',
+            'NAMA BARANG',
+            'ASAL BARANG',
+            'TANGGAL PENERIMAAN/PEMBELIAN',
+            'JUMLAH',
+            'TEMPAT PENYIMPANAN',
+            'KONDISI BARANG',
             'KETERANGAN',
-            'L',
-            'P',
-            'NIKAH',
-            'BLM NIKAH',
         ]);
     }
 
-    public function test_admin_desa_dapat_mencetak_laporan_pdf_kader_khusus_desanya_sendiri(): void
+    public function test_admin_desa_dapat_mencetak_laporan_pdf_inventaris_desanya_sendiri(): void
     {
         $user = User::factory()->create([
             'scope' => 'desa',
@@ -61,29 +58,25 @@ class KaderKhususReportPrintTest extends TestCase
         ]);
         $user->assignRole('admin-desa');
 
-        KaderKhusus::create([
-            'nama' => 'Kader Desa',
-            'jenis_kelamin' => 'P',
-            'tempat_lahir' => 'Batang',
-            'tanggal_lahir' => '1995-01-01',
-            'status_perkawinan' => 'kawin',
-            'alamat' => 'Jl. Desa',
-            'pendidikan' => 'SMA',
-            'jenis_kader_khusus' => 'Kader Lansia',
-            'keterangan' => null,
+        Inventaris::create([
+            'name' => 'Lemari Arsip',
+            'description' => 'Arsip utama',
+            'quantity' => 2,
+            'unit' => 'unit',
+            'condition' => 'baik',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $user->id,
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
-        $response = $this->actingAs($user)->get(route('desa.kader-khusus.report'));
+        $response = $this->actingAs($user)->get(route('desa.inventaris.report'));
 
         $response->assertOk();
         $response->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_kader_khusus_kecamatannya_sendiri(): void
+    public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_inventaris_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create([
             'scope' => 'kecamatan',
@@ -92,29 +85,25 @@ class KaderKhususReportPrintTest extends TestCase
         ]);
         $user->assignRole('admin-kecamatan');
 
-        KaderKhusus::create([
-            'nama' => 'Kader Kecamatan',
-            'jenis_kelamin' => 'L',
-            'tempat_lahir' => 'Batang',
-            'tanggal_lahir' => '1990-01-01',
-            'status_perkawinan' => 'kawin',
-            'alamat' => 'Jl. Kecamatan',
-            'pendidikan' => 'S1',
-            'jenis_kader_khusus' => 'Kader Disabilitas',
-            'keterangan' => null,
+        Inventaris::create([
+            'name' => 'Printer Operasional',
+            'description' => 'Untuk sekretariat',
+            'quantity' => 1,
+            'unit' => 'unit',
+            'condition' => 'baik',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $user->id,
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
-        $response = $this->actingAs($user)->get(route('kecamatan.kader-khusus.report'));
+        $response = $this->actingAs($user)->get(route('kecamatan.inventaris.report'));
 
         $response->assertOk();
         $response->assertHeader('content-type', 'application/pdf');
     }
 
-    public function test_laporan_pdf_kader_khusus_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
+    public function test_laporan_pdf_inventaris_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create([
             'scope' => 'desa',
@@ -123,7 +112,7 @@ class KaderKhususReportPrintTest extends TestCase
         ]);
         $user->assignRole('admin-desa');
 
-        $response = $this->actingAs($user)->get(route('desa.kader-khusus.report'));
+        $response = $this->actingAs($user)->get(route('desa.inventaris.report'));
 
         $response->assertStatus(403);
     }

@@ -24,13 +24,26 @@ class KaderKhusus extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
     protected function casts(): array
     {
         return [
             'tanggal_lahir' => 'date',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $kaderKhusus): void {
+            if (is_numeric($kaderKhusus->tahun_anggaran)) {
+                return;
+            }
+
+            $kaderKhusus->tahun_anggaran = (int) now()->format('Y');
+        });
     }
 
     protected $appends = [

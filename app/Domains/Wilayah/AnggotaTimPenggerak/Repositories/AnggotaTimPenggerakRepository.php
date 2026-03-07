@@ -25,25 +25,28 @@ class AnggotaTimPenggerakRepository implements AnggotaTimPenggerakRepositoryInte
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
         return AnggotaTimPenggerak::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection
     {
         return AnggotaTimPenggerak::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('id')
             ->get();
@@ -67,6 +70,7 @@ class AnggotaTimPenggerakRepository implements AnggotaTimPenggerakRepositoryInte
             'pendidikan' => $data->pendidikan,
             'pekerjaan' => $data->pekerjaan,
             'keterangan' => $data->keterangan,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 
         return $anggotaTimPenggerak;
@@ -77,7 +81,6 @@ class AnggotaTimPenggerakRepository implements AnggotaTimPenggerakRepositoryInte
         $anggotaTimPenggerak->delete();
     }
 }
-
 
 
 

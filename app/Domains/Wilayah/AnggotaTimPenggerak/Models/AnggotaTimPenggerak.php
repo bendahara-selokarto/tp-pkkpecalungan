@@ -25,13 +25,26 @@ class AnggotaTimPenggerak extends Model
         'level',
         'area_id',
         'created_by',
+        'tahun_anggaran',
     ];
 
     protected function casts(): array
     {
         return [
             'tanggal_lahir' => 'date',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (self $anggotaTimPenggerak): void {
+            if (is_numeric($anggotaTimPenggerak->tahun_anggaran)) {
+                return;
+            }
+
+            $anggotaTimPenggerak->tahun_anggaran = (int) now()->format('Y');
+        });
     }
 
     protected $appends = [
@@ -57,4 +70,3 @@ class AnggotaTimPenggerak extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-

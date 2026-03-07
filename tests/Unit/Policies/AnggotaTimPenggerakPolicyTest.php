@@ -2,23 +2,23 @@
 
 namespace Tests\Unit\Policies;
 
-use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
+use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
-use App\Policies\KaderKhususPolicy;
+use App\Policies\AnggotaTimPenggerakPolicy;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
-class KaderKhususPolicyTest extends TestCase
+class AnggotaTimPenggerakPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
     private const ACTIVE_BUDGET_YEAR = 2026;
 
     #[Test]
-    public function admin_desa_hanya_boleh_melihat_kader_khusus_pada_desanya_sendiri(): void
+    public function admin_desa_hanya_boleh_melihat_anggota_tim_penggerak_pada_desanya_sendiri(): void
     {
         Role::create(['name' => 'admin-desa']);
 
@@ -33,15 +33,16 @@ class KaderKhususPolicyTest extends TestCase
         ]);
         $user->assignRole('admin-desa');
 
-        $milikSendiri = KaderKhusus::create([
+        $milikSendiri = AnggotaTimPenggerak::create([
             'nama' => 'Nisa Khairunnisa',
+            'jabatan' => 'Ketua',
             'jenis_kelamin' => 'P',
             'tempat_lahir' => 'Batang',
             'tanggal_lahir' => '1990-01-01',
             'status_perkawinan' => 'kawin',
             'alamat' => 'Jl. Cendana 1',
             'pendidikan' => 'S1',
-            'jenis_kader_khusus' => 'Kader Lansia',
+            'pekerjaan' => 'Guru',
             'keterangan' => null,
             'level' => 'desa',
             'area_id' => $desaA->id,
@@ -49,15 +50,16 @@ class KaderKhususPolicyTest extends TestCase
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
-        $milikDesaLain = KaderKhusus::create([
+        $milikDesaLain = AnggotaTimPenggerak::create([
             'nama' => 'Maya Sari',
+            'jabatan' => 'Sekretaris',
             'jenis_kelamin' => 'P',
             'tempat_lahir' => 'Batang',
             'tanggal_lahir' => '1992-02-02',
             'status_perkawinan' => 'kawin',
             'alamat' => 'Jl. Cendana 2',
             'pendidikan' => 'SMA',
-            'jenis_kader_khusus' => 'Kader Remaja',
+            'pekerjaan' => 'Wiraswasta',
             'keterangan' => null,
             'level' => 'desa',
             'area_id' => $desaB->id,
@@ -65,14 +67,14 @@ class KaderKhususPolicyTest extends TestCase
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
-        $policy = app(KaderKhususPolicy::class);
+        $policy = app(AnggotaTimPenggerakPolicy::class);
 
         $this->assertTrue($policy->view($user, $milikSendiri));
         $this->assertFalse($policy->view($user, $milikDesaLain));
     }
 
     #[Test]
-    public function admin_desa_tidak_boleh_melihat_kader_khusus_tahun_anggaran_lain(): void
+    public function admin_desa_tidak_boleh_melihat_anggota_tim_penggerak_tahun_anggaran_lain(): void
     {
         Role::create(['name' => 'admin-desa']);
 
@@ -86,15 +88,16 @@ class KaderKhususPolicyTest extends TestCase
         ]);
         $user->assignRole('admin-desa');
 
-        $kaderKhusus = KaderKhusus::create([
-            'nama' => 'Kader Lama',
+        $anggota = AnggotaTimPenggerak::create([
+            'nama' => 'Anggota Lama',
+            'jabatan' => 'Bendahara',
             'jenis_kelamin' => 'P',
             'tempat_lahir' => 'Batang',
             'tanggal_lahir' => '1990-01-01',
             'status_perkawinan' => 'kawin',
             'alamat' => 'Jl. Cendana 3',
             'pendidikan' => 'S1',
-            'jenis_kader_khusus' => 'Kader Lansia',
+            'pekerjaan' => 'Guru',
             'keterangan' => null,
             'level' => 'desa',
             'area_id' => $desa->id,
@@ -102,13 +105,13 @@ class KaderKhususPolicyTest extends TestCase
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
         ]);
 
-        $policy = app(KaderKhususPolicy::class);
+        $policy = app(AnggotaTimPenggerakPolicy::class);
 
-        $this->assertFalse($policy->view($user, $kaderKhusus));
+        $this->assertFalse($policy->view($user, $anggota));
     }
 
     #[Test]
-    public function admin_kecamatan_tidak_boleh_memperbarui_kader_khusus_kecamatan_lain(): void
+    public function admin_kecamatan_tidak_boleh_memperbarui_anggota_tim_penggerak_kecamatan_lain(): void
     {
         Role::create(['name' => 'admin-kecamatan']);
 
@@ -122,15 +125,16 @@ class KaderKhususPolicyTest extends TestCase
         ]);
         $user->assignRole('admin-kecamatan');
 
-        $kaderKhususLuar = KaderKhusus::create([
+        $anggotaLuar = AnggotaTimPenggerak::create([
             'nama' => 'Joko Widodo',
+            'jabatan' => 'Ketua',
             'jenis_kelamin' => 'L',
             'tempat_lahir' => 'Batang',
             'tanggal_lahir' => '1985-03-03',
             'status_perkawinan' => 'kawin',
             'alamat' => 'Jl. Dahlia 3',
             'pendidikan' => 'D3',
-            'jenis_kader_khusus' => 'Kader Disabilitas',
+            'pekerjaan' => 'Pegawai',
             'keterangan' => null,
             'level' => 'kecamatan',
             'area_id' => $kecamatanB->id,
@@ -138,8 +142,8 @@ class KaderKhususPolicyTest extends TestCase
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
-        $policy = app(KaderKhususPolicy::class);
+        $policy = app(AnggotaTimPenggerakPolicy::class);
 
-        $this->assertFalse($policy->update($user, $kaderKhususLuar));
+        $this->assertFalse($policy->update($user, $anggotaLuar));
     }
 }

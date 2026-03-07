@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\AnggotaTimPenggerak\Services;
 
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,6 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class AnggotaTimPenggerakScopeService
 {
     public function __construct(
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly UserAreaContextService $userAreaContextService
     ) {
     }
@@ -30,7 +32,8 @@ class AnggotaTimPenggerakScopeService
             return false;
         }
 
-        return (int) $anggotaTimPenggerak->area_id === (int) $user->area_id;
+        return (int) $anggotaTimPenggerak->area_id === (int) $user->area_id
+            && (int) $anggotaTimPenggerak->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, AnggotaTimPenggerak $anggotaTimPenggerak): bool
@@ -43,9 +46,13 @@ class AnggotaTimPenggerakScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(AnggotaTimPenggerak $anggotaTimPenggerak, string $level, int $areaId): AnggotaTimPenggerak
+    public function authorizeSameLevelAreaAndBudgetYear(AnggotaTimPenggerak $anggotaTimPenggerak, string $level, int $areaId, int $tahunAnggaran): AnggotaTimPenggerak
     {
-        if ($anggotaTimPenggerak->level !== $level || (int) $anggotaTimPenggerak->area_id !== $areaId) {
+        if (
+            $anggotaTimPenggerak->level !== $level
+            || (int) $anggotaTimPenggerak->area_id !== $areaId
+            || (int) $anggotaTimPenggerak->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
@@ -56,4 +63,3 @@ class AnggotaTimPenggerakScopeService
         return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);
     }
 }
-

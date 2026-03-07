@@ -7,6 +7,7 @@ use App\Domains\Wilayah\AnggotaTimPenggerak\UseCases\ListScopedAnggotaDanKaderUs
 use App\Domains\Wilayah\AnggotaTimPenggerak\UseCases\ListScopedAnggotaTimPenggerakUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,6 +17,7 @@ class AnggotaTimPenggerakReportPrintController extends Controller
     public function __construct(
         private readonly ListScopedAnggotaTimPenggerakUseCase $listScopedAnggotaTimPenggerakUseCase,
         private readonly ListScopedAnggotaDanKaderUseCase $listScopedAnggotaDanKaderUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -50,10 +52,12 @@ class AnggotaTimPenggerakReportPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.anggota_tim_penggerak_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);
@@ -69,11 +73,13 @@ class AnggotaTimPenggerakReportPrintController extends Controller
         $items = $this->listScopedAnggotaDanKaderUseCase->execute($level);
 
         $user = auth()->user()->loadMissing('area');
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.anggota_dan_kader_report', [
             'anggotaTimPenggeraks' => $items['anggotaTimPenggerak'],
             'kaderKhusus' => $items['kaderKhusus'],
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

@@ -18,6 +18,7 @@ class AnggotaTimPenggerakData
         public string $level,
         public int $area_id,
         public int $created_by,
+        public int $tahun_anggaran,
     ) {
     }
 
@@ -37,7 +38,7 @@ class AnggotaTimPenggerakData
             $data['level'],
             $data['area_id'],
             $data['created_by'],
+            $data['tahun_anggaran'],
         );
     }
 }
-

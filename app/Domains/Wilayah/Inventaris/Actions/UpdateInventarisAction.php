@@ -28,6 +28,7 @@ class UpdateInventarisAction
             'level' => $inventaris->level,
             'area_id' => $inventaris->area_id,
             'created_by' => $inventaris->created_by,
+            'tahun_anggaran' => $inventaris->tahun_anggaran,
         ]);
 
         return $this->inventarisRepository->update($inventaris, $data);

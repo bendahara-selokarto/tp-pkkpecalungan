@@ -27,7 +27,7 @@ Aturan:
   - `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md` (`in-progress`)
 
 ### Refactor Tahun Anggaran (`TAG26A1`) - 2026-03-07
-- Status concern: `in-progress` (`state:wave2-books-slice-implemented`).
+- Status concern: `in-progress` (`state:wave2-homogeneous-crud-slice-implemented`).
 - Fokus concern:
   - menambahkan `tahun_anggaran` sebagai context transversal administrasi TP PKK,
   - menjaga concern existing tetap utuh sambil meretrofit schema/query per wave.
@@ -37,12 +37,15 @@ Aturan:
   - audit migration concern wilayah untuk keberadaan dimensi tahun: `DONE`,
   - wave-1 pilot dikunci: `Profile + AgendaSurat`: `DONE`,
   - slice awal wave-2 buku administrasi (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`): `DONE`,
+  - slice lanjutan wave-2 CRUD homogen (`Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`): `DONE`,
   - ADR `0005` status `accepted`: `DONE`,
   - targeted concern tests wave-1 (`Profile`, `AgendaSurat`, policy, dashboard coverage terkait): `43 passed`,
   - targeted concern tests wave-2 slice (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, policy, report terkait): `46 passed`,
-  - full suite `php artisan test --compact`: `1071 passed`,
+  - targeted concern tests wave-2 slice lanjutan (`Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`, policy, report terkait): `62 passed`,
+  - full suite `php artisan test --compact`: `1088 passed`,
   - runtime wave-1 implemented: `DONE`,
-  - runtime wave-2 secretary books slice implemented: `DONE`.
+  - runtime wave-2 secretary books slice implemented: `DONE`,
+  - runtime wave-2 homogeneous CRUD slice implemented: `DONE`.
 
 ### Hardening Struktur Folder (`SFC26A1`) - 2026-03-07
 - Status concern: `done` (`state:structure-hardened`) (arsip concern ada di `docs/process/archive/2026_03/`).

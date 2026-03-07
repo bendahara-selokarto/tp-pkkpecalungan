@@ -6,17 +6,21 @@ use App\Domains\Wilayah\Inventaris\DTOs\InventarisData;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\Inventaris\Repositories\InventarisRepositoryInterface;
 use App\Domains\Wilayah\Inventaris\Services\InventarisScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 
 class CreateScopedInventarisAction
 {
     public function __construct(
         private readonly InventarisRepositoryInterface $inventarisRepository,
-        private readonly InventarisScopeService $inventarisScopeService
+        private readonly InventarisScopeService $inventarisScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
     public function execute(array $payload, string $level): Inventaris
     {
+        $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
+
         $data = InventarisData::fromArray([
             'name' => $payload['name'],
             'asal_barang' => $payload['asal_barang'] ?? null,
@@ -30,6 +34,7 @@ class CreateScopedInventarisAction
             'level' => $level,
             'area_id' => $this->inventarisScopeService->requireUserAreaId(),
             'created_by' => auth()->id(),
+            'tahun_anggaran' => $tahunAnggaran,
         ]);
 
         return $this->inventarisRepository->store($data);
