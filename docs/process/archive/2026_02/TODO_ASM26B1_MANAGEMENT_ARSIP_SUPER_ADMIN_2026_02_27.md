@@ -21,7 +21,7 @@ Status: `done`
 - Enforcement akses wajib backend: middleware `role:super-admin` + policy/authorization gate untuk operasi management.
 
 ## Update Kontrak 2026-02-28
-- Concern turunan aktif: `docs/process/TODO_ARS26B2_HARDENING_AKSES_ARSIP_GLOBAL_PRIBADI_2026_02_28.md`.
+- Concern turunan aktif: `docs/process/archive/2026_02/TODO_ARS26B2_HARDENING_AKSES_ARSIP_GLOBAL_PRIBADI_2026_02_28.md`.
 - Kontrak akses terkunci:
   - arsip unggahan `super-admin` bernilai `global` dan visible semua role,
   - arsip unggahan non `super-admin` bernilai private dan mutasi hanya owner,

@@ -135,7 +135,7 @@ Field inti:
 ## Status Sinkronisasi
 - Status: `implemented`
 - Implementasi backend/UI: `selesai (CRUD + form pelengkap + generator .docx + policy/scope + test)`
-- Referensi proses: `docs/process/TODO_KONTRAK_DOMAIN_LAPORAN_TAHUNAN_PKK_2025.md`
+- Referensi proses: `docs/process/archive/undated/TODO_KONTRAK_DOMAIN_LAPORAN_TAHUNAN_PKK_2025.md`
 
 ## Catatan Koherensi
 - Concern ini tidak berasal dari lampiran canonical 4.9-4.24, sehingga diklasifikasikan sebagai `Ekstensi Lokal 2025`.

@@ -20,12 +20,14 @@ Owner: process governance
   - pattern reusable lintas concern.
 - `docs/process/CODE_PLACEMENT_POLICY.md`
   - policy penempatan kode concern baru agar struktur repository konsisten.
-- `docs/process/TODO_ARCHIVE_STRATEGY.md`
+- `docs/process/PROCESS_TODO_ARCHIVE_STRATEGY.md`
   - strategi arsip TODO `done` agar `docs/process` tetap navigable.
 
 ### Layer 1 - Registry dan Routing Concern
 - `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
-  - source of truth concern aktif (`Concern ID -> SOT TODO`).
+  - thin registry concern aktif (`Concern ID -> SOT TODO`).
+- `docs/process/archive/registry/TTM25R1_REGISTRY_FULL_2026_03_02.md`
+  - snapshot historis penuh registry concern untuk audit lintas sesi.
 - `docs/process/COMMAND_NUMBER_SHORTCUTS.md`
   - perintah ringkas untuk routing instruksi user.
 
@@ -58,10 +60,10 @@ Owner: process governance
 2. Sinkronkan referensi di dokumen index ini bila jalur berubah.
 
 ## Snapshot Concern Aktif (Baseline 2026-03-02)
-- `ACL26M1` -> `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
-- `SKC0201` -> `docs/process/TODO_SKC0201_ROADMAP_SEKRETARIS_KECAMATAN_2026_02_28.md`
-- `UVM25R1` -> `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
-- `UXR26A1` -> `docs/process/TODO_UXR26A1_REFACTOR_RESPONSIVE_UX_LAYOUT_2026_03_01.md`
+- `ACL26M1` -> `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
+- `SKC0201` -> `docs/process/archive/2026_02/TODO_SKC0201_ROADMAP_SEKRETARIS_KECAMATAN_2026_02_28.md`
+- `UVM25R1` -> `docs/process/archive/2026_02/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+- `UXR26A1` -> `docs/process/archive/2026_03/TODO_UXR26A1_REFACTOR_RESPONSIVE_UX_LAYOUT_2026_03_01.md`
 - `TTM25R1` -> `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
 
 ## Guard Anti-Drift

@@ -1,7 +1,7 @@
 # TODO DRL24R1 Refactor Dashboard Lintas Role 2026-02-24
 
 Tanggal: 2026-02-24  
-Status: `done` (`superseded` untuk koherensi kritis oleh `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`)
+Status: `done` (`superseded` untuk koherensi kritis oleh `docs/process/archive/2026_02/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`)
 
 ## Force Latest Marker
 
@@ -9,9 +9,9 @@ Status: `done` (`superseded` untuk koherensi kritis oleh `docs/process/TODO_KOHE
 - Marker: `DASH-LINTAS-HIST-2026-02-24-R2`
 - Dokumen ini historis (`superseded`) dan tidak menjadi acuan final untuk concern eksperimen UI yang masih berjalan.
 - Acuan aktif wajib:
-  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
-  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
-- Khusus penataan menu/sidebar, acuan tunggal tetap `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`.
+  - `docs/process/archive/2026_02/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+- Khusus penataan menu/sidebar, acuan tunggal tetap `docs/process/archive/2026_02/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`.
 
 ## Konteks
 
@@ -78,9 +78,9 @@ Status: `done` (`superseded` untuk koherensi kritis oleh `docs/process/TODO_KOHE
   - pastikan filter URL tidak membuka data lintas scope.
 - [x] `R8` Doc-hardening:
   - sinkronkan status dengan:
-    - `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
-    - `docs/process/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
-    - `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
+    - `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
+    - `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
+    - `docs/process/archive/2026_02/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
 
 ## Pembagian Concern (Commit Plan)
 
@@ -98,9 +98,9 @@ Status: `done` (`superseded` untuk koherensi kritis oleh `docs/process/TODO_KOHE
 - `tests/Feature/DashboardDocumentCoverageTest.php`
 - `tests/Feature/DashboardActivityChartTest.php`
 - `tests/Unit/Dashboard/DashboardCoverageMenuSyncTest.php`
-- `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
-- `docs/process/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
-- `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
+- `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
+- `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
+- `docs/process/archive/2026_02/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
 
 ## Validasi Wajib
 

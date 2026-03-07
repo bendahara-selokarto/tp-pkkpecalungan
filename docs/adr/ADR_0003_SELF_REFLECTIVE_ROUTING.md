@@ -3,7 +3,7 @@
 Tanggal: 2026-03-01  
 Status: `accepted`  
 Owner: AI process governance  
-Related TODO: `docs/process/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`  
+Related TODO: `docs/process/archive/2026_03/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`  
 Supersedes: `-`  
 Superseded by: `-`
 
@@ -50,7 +50,7 @@ STATUS: accepted
   - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
   - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
   - `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
-  - `docs/process/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`
+  - `docs/process/archive/2026_03/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`
   - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
 
 ## Validasi
@@ -66,7 +66,7 @@ STATUS: accepted
 - `AGENTS.md`
 - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
-- `docs/process/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`
+- `docs/process/archive/2026_03/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`
 
 ## Status Log
 - 2026-03-01: `proposed` -> `accepted` | checkpoint refleksi terbatas disepakati sebagai ekstensi resmi single-path routing.

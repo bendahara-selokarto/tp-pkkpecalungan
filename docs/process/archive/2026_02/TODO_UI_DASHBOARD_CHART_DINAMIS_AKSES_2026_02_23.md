@@ -9,20 +9,20 @@ Status: `done`
 - Marker: `DASH-CHART-HIST-2026-02-23-R2`
 - Dokumen ini adalah catatan implementasi historis.
 - Untuk concern koherensi dashboard eksperimen UI terbaru, acuan wajib:
-  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
-  - `docs/process/TODO_DCF25R1_KOHERENSI_CHART_FILTER_LINTAS_ROLE_2026_02_25.md`
-  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_DCF25R1_KOHERENSI_CHART_FILTER_LINTAS_ROLE_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 - Jika ada analisa yang memakai dokumen ini sebagai acuan final concern aktif, analisa tersebut dianggap usang dan wajib mengikuti dokumen acuan terbaru di atas.
 
 Catatan lanjutan visual minimalis:
-- Eksekusi refactor UI minimalis direncanakan di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
+- Eksekusi refactor UI minimalis direncanakan di `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
 - Acuan baseline visual: dashboard role `kecamatan-sekretaris` yang sudah diperbaiki pada sesi aktif.
 - Update skenario aktif 2026-02-26: untuk concern sekretaris, rendering dikunci satu section (`sekretaris-section-1`), section lanjutan tidak dirender.
 - Update representasi 2026-02-26: tiap blok dashboard menampilkan tabel informatif (`Informasi|Nilai|Keterangan`) untuk melengkapi kartu KPI.
 - Update copywriting 2026-02-26: label user-facing dashboard ditulis dengan bahasa natural user (mengurangi istilah teknis seperti `RO/RW`, `By Level`, `Read Only`).
 - Harmonisasi koherensi UI terbaru mengikuti:
-  - `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
-  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
+  - `docs/process/archive/2026_02/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
 - Ketentuan detail metadata panjang (`Filter aktif`) dan badge mode (`RW/RO`) pada dokumen ini diperlakukan sebagai historis; baseline aktif adalah metadata ringkas non-dominan.
 
 ## Konteks
@@ -177,4 +177,4 @@ Catatan lanjutan visual minimalis:
 - `app/Http/Controllers/DashboardController.php`
 - `app/Domains/Wilayah/Dashboard/UseCases/BuildRoleAwareDashboardBlocksUseCase.php`
 - `resources/js/Pages/Dashboard.vue`
-- `docs/process/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
+- `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`

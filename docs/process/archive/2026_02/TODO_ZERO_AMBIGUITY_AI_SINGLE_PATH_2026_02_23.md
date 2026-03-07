@@ -2,7 +2,7 @@
 
 Tanggal: 2026-02-23  
 Status: `done` (`historical-baseline`)  
-Superseded concern SOT: `docs/process/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`
+Superseded concern SOT: `docs/process/archive/2026_03/TODO_SRR26A1_SELF_REFLECTIVE_ROUTING_2026_03_01.md`
 
 ```dsl
 TODO_CODE: ZERO_AMBIGUITY_BASELINE

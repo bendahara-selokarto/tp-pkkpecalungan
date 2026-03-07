@@ -42,13 +42,13 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 
 ## Breakdown Concern Turunan
 - Tahap 1 read-only matrix:
-  - `docs/process/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`
+  - `docs/process/archive/2026_02/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`
 - Tahap 2 pilot modul `catatan-keluarga`:
-  - `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`
+  - `docs/process/archive/2026_02/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`
 - Tahap 3 rollout batch modul `activities`:
-  - `docs/process/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md`
+  - `docs/process/archive/2026_03/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md`
 - Tahap 4 closure end-to-end parent concern:
-  - `docs/process/TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md`
+  - `docs/process/archive/2026_03/TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md`
 
 ## Target Hasil
 - [x] Observasi kontrak akses existing selesai dan tervalidasi scoped.
@@ -114,7 +114,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
   - `service enforcement`: `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`, `app/Http/Middleware/EnsureModuleVisibility.php`.
   - `ui`: `resources/js/Pages/SuperAdmin/AccessControl/Index.vue`, `resources/js/Layouts/DashboardLayout.vue`.
   - `test`: `tests/Feature/SuperAdmin/AccessControlManagementReadOnlyTest.php`, `tests/Feature/SuperAdmin/AccessControlManagementWritePilotTest.php`, `tests/Unit/Services/RoleMenuVisibilityServiceTest.php`, `tests/Feature/MenuVisibilityPayloadTest.php`.
-  - `docs/adr`: `docs/process/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`, `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`, `docs/process/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md`, `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`.
+  - `docs/adr`: `docs/process/archive/2026_02/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`, `docs/process/archive/2026_02/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`, `docs/process/archive/2026_03/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md`, `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`.
 - [x] Hasil validasi + residual risk + opsi lanjutan.
   - Validasi terbaru 2026-03-02: targeted suite concern akses modular `PASS` (`40` tests, `325` assertions) + full suite `PASS` (`1043` tests, `7009` assertions).
   - Residual risk: tidak ada gap teknis ACL terbuka pada concern parent; fallback rollback per kombinasi dan fallback global hardcoded tetap aktif.
@@ -165,7 +165,7 @@ Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`
 ## Progress Update 2026-03-02 (Planner Sync: Gap E2E Closure)
 
 - Child concern penutupan gap end-to-end ditetapkan:
-  - `docs/process/TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md`
+  - `docs/process/archive/2026_03/TODO_ACL26E2_PENUTUPAN_GAP_END_TO_END_MANAGEMENT_IJIN_AKSES_2026_03_02.md`
 - Tujuan child concern:
   - mengunci keputusan stakeholder `go/hold/adjust`,
   - mengeksekusi rollout batch modul lanjutan dengan regression gate,

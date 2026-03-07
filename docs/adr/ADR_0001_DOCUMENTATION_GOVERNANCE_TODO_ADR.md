@@ -3,7 +3,7 @@
 Tanggal: 2026-02-28  
 Status: `accepted`  
 Owner: AI execution flow  
-Related TODO: `docs/process/TODO_MDA26R1_REFACTOR_MARKDOWN_ARSITEKTUR_BARU_2026_02_28.md`  
+Related TODO: `docs/process/archive/2026_02/TODO_MDA26R1_REFACTOR_MARKDOWN_ARSITEKTUR_BARU_2026_02_28.md`  
 Supersedes: `-`  
 Superseded by: `-`
 
@@ -54,7 +54,7 @@ Superseded by: `-`
 - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
 - `docs/adr/README.md`
-- `docs/process/TODO_MDA26R1_REFACTOR_MARKDOWN_ARSITEKTUR_BARU_2026_02_28.md`
+- `docs/process/archive/2026_02/TODO_MDA26R1_REFACTOR_MARKDOWN_ARSITEKTUR_BARU_2026_02_28.md`
 
 ## Status Log
 - 2026-02-28: `proposed` -> `accepted` | Dipakai sebagai baseline arsitektur dokumentasi baru TODO+ADR.

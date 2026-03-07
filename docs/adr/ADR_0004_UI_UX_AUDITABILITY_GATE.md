@@ -3,7 +3,7 @@
 Tanggal: 2026-03-03  
 Status: `accepted`  
 Owner: AI process governance  
-Related TODO: `docs/process/TODO_AUI26A1_AUDITABILITY_GATE_UI_UX_BERBASIS_KODE_2026_03_03.md`  
+Related TODO: `docs/process/archive/2026_03/TODO_AUI26A1_AUDITABILITY_GATE_UI_UX_BERBASIS_KODE_2026_03_03.md`  
 Supersedes: `-`  
 Superseded by: `-`
 
@@ -49,7 +49,7 @@ STATUS: accepted
 - Area terdampak (route/request/use case/repository/test/docs):
   - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
   - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
-  - `docs/process/TODO_AUI26A1_AUDITABILITY_GATE_UI_UX_BERBASIS_KODE_2026_03_03.md`
+  - `docs/process/archive/2026_03/TODO_AUI26A1_AUDITABILITY_GATE_UI_UX_BERBASIS_KODE_2026_03_03.md`
 
 ## Validasi
 - [x] Targeted test concern.
@@ -70,7 +70,7 @@ Catatan validasi:
 - `AGENTS.md`
 - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
-- `docs/process/TODO_AUI26A1_AUDITABILITY_GATE_UI_UX_BERBASIS_KODE_2026_03_03.md`
+- `docs/process/archive/2026_03/TODO_AUI26A1_AUDITABILITY_GATE_UI_UX_BERBASIS_KODE_2026_03_03.md`
 
 ## Status Log
 - 2026-03-03: `proposed` -> `accepted` | gate auditability UI/UX berbasis kode dikunci sebagai kontrak arsitektur proses.

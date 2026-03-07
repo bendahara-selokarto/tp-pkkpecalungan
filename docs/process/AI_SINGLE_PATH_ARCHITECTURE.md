@@ -42,6 +42,25 @@ Aturan anti-ambiguity:
 - TODO baru wajib berkode unik; ADR baru wajib bernomor 4 digit + status eksplisit.
 - Status utama TODO harus konsisten (`planned`, `in-progress`, `done`); state tambahan ditaruh sebagai keterangan.
 
+## 2A. Context Load Order (Anti-Bottleneck)
+
+Tujuan:
+- Menjaga konteks tetap presisi tanpa overloading markdown saat generate.
+
+Urutan baca default:
+1. `AGENTS.md`
+2. `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md` (thin registry aktif)
+3. `docs/process/OPERATIONAL_VALIDATION_LOG.md` (index aktif)
+4. TODO concern aktif yang dirujuk registry
+
+Buka arsip detail hanya saat diperlukan:
+- `docs/process/archive/registry/TTM25R1_REGISTRY_FULL_2026_03_02.md` untuk audit histori concern lama.
+- `docs/process/logs/OPERATIONAL_VALIDATION_LOG_*.md` untuk evidence command detail per periode.
+
+Aturan:
+- Dilarang memuat arsip historis sebagai context default jika task hanya concern aktif.
+- Jika task meminta investigasi lintas sesi/lintas concern lama, arsip boleh dibuka secara scoped.
+
 ## 3. Jalur Tunggal Eksekusi (Mandatory)
 
 1. `Classify`
@@ -178,7 +197,7 @@ Mitigasi:
 - `AGENTS.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
 - `docs/process/CODE_PLACEMENT_POLICY.md`
-- `docs/process/TODO_ARCHIVE_STRATEGY.md`
+- `docs/process/PROCESS_TODO_ARCHIVE_STRATEGY.md`
 - `docs/process/PLANNING_ARTIFACT_INDEX.md`
 - `docs/adr/README.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`

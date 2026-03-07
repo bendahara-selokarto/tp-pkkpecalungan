@@ -26,8 +26,8 @@ Status: `done` (`state:experimental-ui-closed-by-owner-approval`)
 
 - Dokumen ini adalah satu-satunya acuan aktif untuk concern penataan menu/sidebar eksperimen UI.
 - Dokumen terkait berikut diperlakukan sebagai historis (bukan acuan eksekusi aktif concern sidebar):
-  - `docs/process/TODO_UI_VISIBILITY_BY_PENANGGUNGJAWAB.md` (implementasi E2E historis).
-  - `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md` (refactor dashboard historis).
+  - `docs/process/archive/undated/TODO_UI_VISIBILITY_BY_PENANGGUNGJAWAB.md` (implementasi E2E historis).
+  - `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md` (refactor dashboard historis).
 - Jika ada mismatch narasi antar dokumen, keputusan concern sidebar mengikuti dokumen ini.
 
 ## Konteks

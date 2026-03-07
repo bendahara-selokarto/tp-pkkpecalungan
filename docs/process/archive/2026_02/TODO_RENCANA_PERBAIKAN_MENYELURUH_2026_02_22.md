@@ -105,7 +105,7 @@ Status: `done`
 ### Concern F - Coverage Unit Test dan Seeder
 - [x] Requirement baru ditetapkan: semua unit wajib punya test, semua isian/domain wajib punya seeder.
 - [x] Rencana detail dipisah ke dokumen khusus:
-  - `docs/process/TODO_COVERAGE_UNIT_TEST_DAN_SEEDER_2026_02_22.md`
+  - `docs/process/archive/2026_02/TODO_COVERAGE_UNIT_TEST_DAN_SEEDER_2026_02_22.md`
 - [x] Audit mendalam coverage sudah dicatat di dokumen khusus:
   - total unit terdeteksi: 183
   - unit dengan direct test: 8

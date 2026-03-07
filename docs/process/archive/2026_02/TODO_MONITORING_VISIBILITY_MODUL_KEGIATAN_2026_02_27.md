@@ -3,7 +3,7 @@ Tanggal: 2026-02-27
 Status: `done` (`state:child-spec`, `state:rolling-monitoring`)
 
 ## Konteks
-- Status concern: `active` sebagai sub-scope modul kegiatan; baseline lintas semua modul dilanjutkan di `docs/process/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`.
+- Status concern: `active` sebagai sub-scope modul kegiatan; baseline lintas semua modul dilanjutkan di `docs/process/archive/2026_02/TODO_MONITORING_VISIBILITY_SEMUA_MODUL_2026_02_27.md`.
 - Dokumen acuan monitoring global: `docs/process/MONITORING_VISIBILITY_MODUL.md`.
 - Modul target: `Buku Kegiatan` (`activities`) dan modul monitoring turunan kecamatan (`desa-activities`).
 - Concern: mencegah mismatch antara menu frontend, visibilitas backend, dan otorisasi policy/scope.

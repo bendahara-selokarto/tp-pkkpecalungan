@@ -109,9 +109,9 @@ Keputusan final terkunci:
   - Test concern gelombang 1 menjaga anti data leak lintas kecamatan + konsistensi payload visibilitas.
 - [x] Daftar file terdampak dan alasan.
   - Concern pelaksanaan gelombang 1 diturunkan ke concern domain implementasi:
-    - `docs/process/TODO_ARS26B2_HARDENING_AKSES_ARSIP_GLOBAL_PRIBADI_2026_02_28.md` (hardening pola dual-scope arsip),
-    - `docs/process/TODO_ASM26B1_MANAGEMENT_ARSIP_SUPER_ADMIN_2026_02_27.md` (boundary management arsip + monitoring sekretaris kecamatan),
-    - `docs/process/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md` (stabilisasi akses modul `activities` lintas role/scope).
+    - `docs/process/archive/2026_02/TODO_ARS26B2_HARDENING_AKSES_ARSIP_GLOBAL_PRIBADI_2026_02_28.md` (hardening pola dual-scope arsip),
+    - `docs/process/archive/2026_02/TODO_ASM26B1_MANAGEMENT_ARSIP_SUPER_ADMIN_2026_02_27.md` (boundary management arsip + monitoring sekretaris kecamatan),
+    - `docs/process/archive/2026_03/TODO_ACL26A2_ROLLOUT_OVERRIDE_MODUL_ACTIVITIES_2026_03_02.md` (stabilisasi akses modul `activities` lintas role/scope).
   - Evidence validasi concern sekretaris kecamatan dieksekusi pada:
     - `tests/Feature/KecamatanActivityTest.php`,
     - `tests/Feature/KecamatanDesaActivityTest.php`,

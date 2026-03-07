@@ -10,7 +10,7 @@ Tanggal penetapan: 2026-02-24
 ## Aturan koherensi
 
 - Jika ada konflik istilah/label/kontrak domain dengan dokumen lama, gunakan Rakernas X sebagai referensi final.
-- Dokumen `PEDOMAN_DOMAIN_UTAMA_101_150.md` berstatus historis (`deprecated`) dan tidak lagi menjadi acuan baku.
+- Dokumen historis (`deprecated`) dipindahkan ke `docs/domain/historical/PEDOMAN_DOMAIN_UTAMA_101_150.md` dan tidak lagi menjadi acuan baku.
 - Aspek teknis implementasi tetap mengikuti `AGENTS.md`.
 
 ## Catatan transisi

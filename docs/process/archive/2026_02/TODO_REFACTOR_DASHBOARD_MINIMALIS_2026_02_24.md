@@ -1,7 +1,7 @@
 # TODO DRM24R1 Refactor Dashboard Minimalis 2026-02-24
 
 Tanggal: 2026-02-24  
-Status: `done` (`historical`, referensi aktif koherensi ada di `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`)
+Status: `done` (`historical`, referensi aktif koherensi ada di `docs/process/archive/2026_02/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`)
 
 ## Force Latest Marker
 
@@ -9,8 +9,8 @@ Status: `done` (`historical`, referensi aktif koherensi ada di `docs/process/TOD
 - Marker: `DASH-MIN-HIST-2026-02-24-R2`
 - Dokumen ini adalah catatan hasil fase minimalis.
 - Untuk perubahan eksperimen UI yang masih berjalan, acuan wajib:
-  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
-  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 
 ## Konteks
 
@@ -18,8 +18,8 @@ Status: `done` (`historical`, referensi aktif koherensi ada di `docs/process/TOD
 - Preferensi user: dashboard minimalis, ringkas, fokus pada informasi inti.
 - Acuan visual utama diset dari implementasi dashboard role `kecamatan-sekretaris` yang sudah diperbaiki user pada 24 Februari 2026.
 - Rencana ini adalah fase lanjutan dari:
-  - `docs/process/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
-  - `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
+  - `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
+  - `docs/process/archive/2026_02/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
 - Kontrak akses backend, scope, dan anti data leak tetap harus dipertahankan.
 
 ## Target Hasil
@@ -77,8 +77,8 @@ Status: `done` (`historical`, referensi aktif koherensi ada di `docs/process/TOD
 - `tests/Feature/DashboardDocumentCoverageTest.php`
 - `tests/Feature/DashboardActivityChartTest.php`
 - `tests/Unit/Dashboard/DashboardCoverageMenuSyncTest.php`
-- `docs/process/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
-- `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
+- `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_AKSES_2026_02_23.md`
+- `docs/process/archive/2026_02/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
 
 ## Validasi Wajib
 

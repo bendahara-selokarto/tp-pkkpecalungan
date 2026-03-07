@@ -11,6 +11,7 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
 - `AGENTS.md`: kontrak eksekusi AI dan aturan teknis utama.
 - `README.md`: panduan manusia untuk penggunaan dan pengembangan.
 - `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md`: ringkasan sinkronisasi pedoman domain utama (canonical lokal aktif).
+- Dokumen pedoman historis disimpan di `docs/domain/historical/` (read-only, non-canonical).
 
 ## docs/domain
 - Kontrak domain, deviasi, normalisasi istilah, dan pedoman domain ekstensi.
@@ -33,7 +34,7 @@ Struktur dokumentasi dibagi per concern agar mudah dicari dan dipelihara.
   - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
   - `docs/process/CODE_PLACEMENT_POLICY.md`
   - `docs/process/TEMPLATE_TODO_CONCERN.md`
-  - `docs/process/TODO_ARCHIVE_STRATEGY.md`
+  - `docs/process/PROCESS_TODO_ARCHIVE_STRATEGY.md`
   - `docs/process/RUNBOOK_429_RATE_LIMITER.md`
   - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
   - `docs/process/RELEASE_CHECKLIST_PDF.md`

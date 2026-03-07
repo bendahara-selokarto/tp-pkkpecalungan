@@ -172,7 +172,7 @@ Kontrak tambahan:
   - section 3: khusus kecamatan, pokja level bawah/desa turunan (query key `section3_group`).
 - Skenario khusus kecamatan:
   - jika `section3_group=pokja-i`, tampilkan section 4 rincian sumber data per desa.
-  - referensi: `docs/process/TODO_SCENARIO_KECAMATAN_SECTION4_POKJA_I_2026_02_23.md`.
+  - referensi: `docs/process/archive/2026_02/TODO_SCENARIO_KECAMATAN_SECTION4_POKJA_I_2026_02_23.md`.
 
 Guardrail hardening:
 - Hindari istilah query generik `by_group`; wajib pakai query key per section.

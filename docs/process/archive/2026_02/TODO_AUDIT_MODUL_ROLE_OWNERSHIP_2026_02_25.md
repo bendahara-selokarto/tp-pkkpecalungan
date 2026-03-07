@@ -129,9 +129,9 @@ Validasi runtime batch-2:
 
 ## Concern Implementasi Turunan (Disetujui untuk Ditindaklanjuti)
 
-- [x] Concern A (pokja desa-only): `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_POKJA_DESA_ONLY_2026_02_25.md`.
-- [x] Concern B (modul non-ownership RW/RO): `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_NON_RW_RO_2026_02_25.md`.
-- [x] Concern C (deprecate modul `data-pelatihan-kader`): `docs/process/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_DEPRECATE_DATA_PELATIHAN_KADER_2026_02_25.md`.
+- [x] Concern A (pokja desa-only): `docs/process/archive/2026_02/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_POKJA_DESA_ONLY_2026_02_25.md`.
+- [x] Concern B (modul non-ownership RW/RO): `docs/process/archive/2026_02/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_NON_RW_RO_2026_02_25.md`.
+- [x] Concern C (deprecate modul `data-pelatihan-kader`): `docs/process/archive/2026_02/TODO_IMPLEMENTASI_ROLE_OWNERSHIP_DEPRECATE_DATA_PELATIHAN_KADER_2026_02_25.md`.
 
 ## Modul Global (Non Scope Prefix `desa|kecamatan`)
 

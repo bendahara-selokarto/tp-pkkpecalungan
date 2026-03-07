@@ -10,7 +10,7 @@ Status: `done` (`experimental-ui-only`, non-final, rolling)
 - Jika ada analisa yang memakai versi TODO ini sebelum marker ini ditambahkan, analisa tersebut dianggap usang.
 - Wajib gunakan isi terbaru dokumen ini sebagai acuan concern koherensi UI dashboard eksperimen.
 - Concern turunan chart/filter lintas role pasca Apex dipisahkan ke acuan tunggal:
-  - `docs/process/TODO_DCF25R1_KOHERENSI_CHART_FILTER_LINTAS_ROLE_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_DCF25R1_KOHERENSI_CHART_FILTER_LINTAS_ROLE_2026_02_25.md`
 
 ## Konteks
 
@@ -20,9 +20,9 @@ Status: `done` (`experimental-ui-only`, non-final, rolling)
   - ada cabang render khusus `kecamatan-sekretaris` yang memotong section 2/3/4 hanya di frontend,
   - copy user-facing masih bercampur istilah teknis/internal.
 - Concern ini meneruskan hasil:
-  - `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
-  - `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
-  - `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
+  - `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
+  - `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
+  - `docs/process/archive/2026_02/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
 - Fase saat ini dibatasi pada eksperimen UI (presentasi) dan belum menjadi keputusan final.
 
 ## Target Hasil
@@ -88,9 +88,9 @@ Status: `done` (`experimental-ui-only`, non-final, rolling)
 ## File Target (Rencana)
 
 - `resources/js/Pages/Dashboard.vue`
-- `docs/process/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
-- `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
-- `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
+- `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_LINTAS_ROLE_2026_02_24.md`
+- `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`
+- `docs/process/archive/2026_02/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md` (jika ada pattern baru yang dikunci)
 
 ## Validasi Wajib

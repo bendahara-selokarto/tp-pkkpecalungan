@@ -45,7 +45,7 @@ Catatan:
 - [x] Semua route report masih terdaftar normal (`route:list --name=report`).
 - [x] Test scoped auth hijau (`scope_metadata_tidak_sinkron`).
 - [x] Test compliance baseline PDF hijau (`PdfBaselineFixtureComplianceTest`).
-- [x] Audit PDF yatim lintas route/UI/E2E hijau (`0 orphan`, referensi: `docs/process/TODO_PDF26A1_AUDIT_KETERSEDIAAN_FORMAT_PDF_2026_02_28.md`).
+- [x] Audit PDF yatim lintas route/UI/E2E hijau (`0 orphan`, referensi: `docs/process/archive/2026_02/TODO_PDF26A1_AUDIT_KETERSEDIAAN_FORMAT_PDF_2026_02_28.md`).
 - [x] Test header kolom modul terdampak hijau (`header_kolom_pdf`) jika relevan.
 - [x] Sample PDF level `desa` diverifikasi manual.
 - [x] Sample PDF level `kecamatan` diverifikasi manual.
@@ -67,7 +67,7 @@ Catatan:
 - [x] Cakupan ownership akses tervalidasi: `52 desa`, `53 kecamatan`, `1 auth+verified`.
 - [x] Audit orphan PDF lintas route/UI/E2E: `0` temuan terbuka.
 - [x] Bukti + log insiden tersimpan di:
-  - `docs/process/TODO_PDF26A1_AUDIT_KETERSEDIAAN_FORMAT_PDF_2026_02_28.md`.
+  - `docs/process/archive/2026_02/TODO_PDF26A1_AUDIT_KETERSEDIAAN_FORMAT_PDF_2026_02_28.md`.
 
 ## 5) Kriteria Go / No-Go
 

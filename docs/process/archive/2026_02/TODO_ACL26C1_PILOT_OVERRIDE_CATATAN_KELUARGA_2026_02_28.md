@@ -3,7 +3,7 @@
 Tanggal: 2026-02-28  
 Status: `done`  
 Related ADR: `docs/adr/ADR_0002_MODULAR_ACCESS_MANAGEMENT_SUPER_ADMIN.md`  
-Parent Concern: `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
+Parent Concern: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
 
 ## Konteks
 - Modul `catatan-keluarga` dipilih sebagai pilot write override karena:

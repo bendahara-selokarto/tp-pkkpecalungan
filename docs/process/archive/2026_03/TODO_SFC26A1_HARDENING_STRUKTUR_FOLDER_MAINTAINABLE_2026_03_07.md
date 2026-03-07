@@ -78,7 +78,7 @@ Related ADR: `-`
   - sample output generated `public/chart-pdf-examples/output/quickchart-example.pdf` dihapus dari tracked file,
   - `.gitignore` dihardening untuk memisahkan referensi lokal (`docs/referensi`) dan output generated sample.
 - Strategi arsip TODO:
-  - dibuat `docs/process/TODO_ARCHIVE_STRATEGY.md`,
+  - dibuat `docs/process/PROCESS_TODO_ARCHIVE_STRATEGY.md`,
   - dibuat `docs/process/archive/README.md` sebagai lokasi arsip concern done.
 - Sinkronisasi registry:
   - concern `SFC26A1` ditambahkan pada registry SOT `TODO_TTM25R1_*`.

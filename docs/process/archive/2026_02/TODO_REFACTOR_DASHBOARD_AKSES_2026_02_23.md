@@ -9,11 +9,11 @@ Status: `done` (`historical`, diikuti fase minimalis dan koherensi kritis)
 - Marker: `DASH-AKSES-HIST-2026-02-23-R2`
 - Dokumen ini adalah kontrak implementasi awal dashboard role-aware.
 - Untuk concern eksperimen UI terkini, acuan wajib:
-  - `docs/process/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
-  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_KOHERENSI_KRITIS_DASHBOARD_SEKRETARIS_KECAMATAN_BASELINE_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 
 Catatan lanjutan visual minimalis:
-- Rencana fase lanjutan UI ada di `docs/process/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
+- Rencana fase lanjutan UI ada di `docs/process/archive/2026_02/TODO_REFACTOR_DASHBOARD_MINIMALIS_2026_02_24.md`.
 - Baseline visual untuk fase minimalis mengacu ke dashboard role `kecamatan-sekretaris` versi aktif saat ini.
 - Update 2026-03-01: representasi dashboard disederhanakan ke `single-section` pada UI aktif; section 2/3/4 dipertahankan sebagai jejak historis kontrak awal.
 - Update 2026-03-01 (concern pokja desa): role `desa-pokja-i..iv` pada UI aktif memakai chart activity bulanan pokja sendiri (tetap scoped ke area desa sendiri).
@@ -116,7 +116,7 @@ Aturan label UI:
     - section 2: semua pokja level aktif + filter `section2_group`.
     - section 3 (khusus kecamatan): semua pokja level bawah (desa turunan) + filter `section3_group`.
   - desain kontrol wajib mengutamakan keterbacaan (label eksplisit, tanpa istilah ambigu).
-  - rincian rencana UI: `docs/process/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`.
+  - rincian rencana UI: `docs/process/archive/2026_02/TODO_UI_DASHBOARD_CHART_DINAMIS_AKSES_2026_02_23.md`.
 - [x] `D7` Hardening cache dashboard:
   - cache key minimal: `scope + area_id + role signature + block signature`.
   - invalidasi event-based + TTL pendek diterapkan untuk menjaga freshness.

@@ -1,7 +1,7 @@
 # TODO UVPJ23R1 UI Visibility by Penanggung Jawab
 
 Tanggal: 2026-02-23  
-Status: `done` (`state:historical-e2e`, sinkronisasi concern sidebar aktif ada di `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`)
+Status: `done` (`state:historical-e2e`, sinkronisasi concern sidebar aktif ada di `docs/process/archive/2026_02/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`)
 
 ## Marker Keterbaruan
 
@@ -10,7 +10,7 @@ Status: `done` (`state:historical-e2e`, sinkronisasi concern sidebar aktif ada d
 - Untuk matrix penanggung jawab buku lintas desa/kecamatan yang berlaku sebagai acuan domain aktif, gunakan:
   - `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md`
 - Untuk concern eksperimen UI visibility saat ini, acuan wajib terbaru adalah:
-  - `docs/process/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
+  - `docs/process/archive/2026_02/TODO_UI_MENU_VISIBILITY_ALIGNMENT_2026_02_25.md`
 - Jika ada analisa yang mencampur concern eksperimen UI dengan dokumen historis ini, wajib ikuti acuan terbaru di atas.
 
 ## Scope Sinkronisasi Sidebar

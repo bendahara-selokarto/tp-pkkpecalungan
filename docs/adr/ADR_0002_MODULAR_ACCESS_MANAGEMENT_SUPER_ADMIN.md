@@ -3,7 +3,7 @@
 Tanggal: 2026-02-28  
 Status: `accepted`  
 Owner: Access governance  
-Related TODO: `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`  
+Related TODO: `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`  
 Supersedes: `-`  
 Superseded by: `-`
 
@@ -67,9 +67,9 @@ Superseded by: `-`
 - `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
 - `app/Http/Middleware/EnsureModuleVisibility.php`
 - `app/Support/RoleScopeMatrix.php`
-- `docs/process/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
-- `docs/process/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`
-- `docs/process/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`
+- `docs/process/archive/2026_02/TODO_ACL26M1_MANAGEMENT_IJIN_AKSES_MODUL_GROUP_ROLE_2026_02_28.md`
+- `docs/process/archive/2026_02/TODO_ACL26S1_SUPER_ADMIN_MATRIX_READ_ONLY_2026_02_28.md`
+- `docs/process/archive/2026_02/TODO_ACL26C1_PILOT_OVERRIDE_CATATAN_KELUARGA_2026_02_28.md`
 
 ## Status Log
 - 2026-02-28: `proposed` | baseline keputusan concern.
