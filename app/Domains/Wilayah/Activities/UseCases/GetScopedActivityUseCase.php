@@ -11,15 +11,15 @@ class GetScopedActivityUseCase
     public function __construct(
         private readonly ActivityRepositoryInterface $activityRepository,
         private readonly ActivityScopeService $activityScopeService
-    ) {
-    }
+    ) {}
 
     public function execute(int $id, string $level): Activity
     {
         $activity = $this->activityRepository->find($id);
         $user = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
-        $activity = $this->activityScopeService->authorizeSameLevelAndArea($activity, $level, $areaId);
+        $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
+        $activity = $this->activityScopeService->authorizeSameLevelAreaAndBudgetYear($activity, $level, $areaId, $tahunAnggaran);
 
         return $this->activityScopeService->authorizeRoleScopedActivity($user, $activity, $level);
     }

@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageReposito
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryInterface;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -17,24 +18,26 @@ class DashboardActivityChartService
         private readonly ActivityRepositoryInterface $activityRepository,
         private readonly AreaRepositoryInterface $areaRepository,
         private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository,
-        private readonly DashboardGroupCoverageRepositoryInterface $dashboardGroupCoverageRepository
-    ) {
-    }
+        private readonly DashboardGroupCoverageRepositoryInterface $dashboardGroupCoverageRepository,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function buildForUser(User $user, ?int $section1Month = null): array
     {
+        $activeBudgetYear = $this->activeBudgetYearContextService->resolveForUser($user);
         $baseQuery = $this->buildScopedQuery($user);
 
-        $monthly = $this->buildMonthlyChart((clone $baseQuery), $section1Month);
+        $monthly = $this->buildMonthlyChart((clone $baseQuery), $activeBudgetYear, $section1Month);
         $status = $this->buildStatusChart((clone $baseQuery));
         $level = $this->buildLevelChart((clone $baseQuery));
         $byDesa = $this->buildByDesaChart($user, (clone $baseQuery), $section1Month);
+        $referenceMonth = Carbon::create($activeBudgetYear, now()->month, 1);
 
         return [
             'stats' => [
                 'total' => (clone $baseQuery)->count(),
                 'this_month' => (clone $baseQuery)
-                    ->whereBetween('activity_date', [now()->startOfMonth()->toDateString(), now()->endOfMonth()->toDateString()])
+                    ->whereBetween('activity_date', [$referenceMonth->copy()->startOfMonth()->toDateString(), $referenceMonth->copy()->endOfMonth()->toDateString()])
                     ->count(),
                 'published' => $status['published'],
                 'draft' => $status['draft'],
@@ -67,10 +70,10 @@ class DashboardActivityChartService
         return $this->activityRepository->queryScopedByUser($user);
     }
 
-    private function buildMonthlyChart(Builder $query, ?int $section1Month = null): array
+    private function buildMonthlyChart(Builder $query, int $activeBudgetYear, ?int $section1Month = null): array
     {
         if ($section1Month !== null) {
-            $month = Carbon::create(null, $section1Month, 1);
+            $month = Carbon::create($activeBudgetYear, $section1Month, 1);
 
             return [
                 'labels' => [$month->translatedFormat('F')],
@@ -82,7 +85,7 @@ class DashboardActivityChartService
             ];
         }
 
-        $startMonth = Carbon::now()->startOfMonth()->subMonths(5);
+        $startMonth = Carbon::create($activeBudgetYear, now()->month, 1)->startOfMonth()->subMonths(5);
         $labels = [];
         $keys = [];
 

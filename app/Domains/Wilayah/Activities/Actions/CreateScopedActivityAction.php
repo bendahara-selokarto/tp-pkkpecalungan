@@ -14,12 +14,12 @@ class CreateScopedActivityAction
         private readonly ActivityRepositoryInterface $activityRepository,
         private readonly ActivityScopeService $activityScopeService,
         private readonly ActivityAttachmentService $activityAttachmentService
-    ) {
-    }
+    ) {}
 
     public function execute(array $payload, string $level): Activity
     {
         $areaId = $this->activityScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
         $attachments = $this->activityAttachmentService->storeFromPayload($payload, $level, $areaId);
 
         $data = ActivityData::fromArray([
@@ -31,6 +31,7 @@ class CreateScopedActivityAction
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => auth()->id(),
+            'tahun_anggaran' => $tahunAnggaran,
             'activity_date' => $payload['activity_date'],
             'tempat_kegiatan' => $payload['tempat_kegiatan'] ?? null,
             'status' => 'draft',

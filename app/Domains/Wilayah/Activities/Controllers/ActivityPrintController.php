@@ -2,11 +2,12 @@
 
 namespace App\Domains\Wilayah\Activities\Controllers;
 
-use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Activities\UseCases\GetKecamatanDesaActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\GetScopedActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\ListScopedActivitiesUseCase;
+use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,9 +18,9 @@ class ActivityPrintController extends Controller
         private readonly GetScopedActivityUseCase $getScopedActivityUseCase,
         private readonly GetKecamatanDesaActivityUseCase $getKecamatanDesaActivityUseCase,
         private readonly ListScopedActivitiesUseCase $listScopedActivitiesUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesa(int $id): Response
     {
@@ -59,6 +60,7 @@ class ActivityPrintController extends Controller
     {
         $pdf = $this->pdfViewFactory->loadView('pdf.activity', [
             'activity' => $activity,
+            'budgetYearLabel' => (string) $activity->tahun_anggaran,
             'printedBy' => auth()->user(),
             'printedAt' => now(),
         ]);
@@ -80,6 +82,7 @@ class ActivityPrintController extends Controller
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => (string) $this->activeBudgetYearContextService->resolveForUser($user),
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

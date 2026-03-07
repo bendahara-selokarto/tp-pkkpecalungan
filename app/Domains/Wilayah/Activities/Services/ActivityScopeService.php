@@ -2,8 +2,9 @@
 
 namespace App\Domains\Wilayah\Activities\Services;
 
-use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -38,9 +39,9 @@ class ActivityScopeService
     ];
 
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
-    ) {
-    }
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function canAccessLevel(User $user, string $level): bool
     {
@@ -134,26 +135,31 @@ class ActivityScopeService
         return $activity;
     }
 
-    public function isSameLevelAndArea(Activity $activity, string $level, int $areaId): bool
+    public function isSameLevelAreaAndBudgetYear(Activity $activity, string $level, int $areaId, int $tahunAnggaran): bool
     {
-        return $activity->level === $level && $activity->area_id === $areaId;
+        return $activity->level === $level
+            && (int) $activity->area_id === $areaId
+            && (int) $activity->tahun_anggaran === $tahunAnggaran;
     }
 
-    public function isDesaInKecamatan(Activity $activity, int $kecamatanAreaId): bool
+    public function isDesaInKecamatanAndBudgetYear(Activity $activity, int $kecamatanAreaId, int $tahunAnggaran): bool
     {
         return $activity->level === ScopeLevel::DESA->value
             && $activity->area?->level === ScopeLevel::DESA->value
-            && $activity->area?->parent_id === $kecamatanAreaId;
+            && (int) $activity->area?->parent_id === $kecamatanAreaId
+            && (int) $activity->tahun_anggaran === $tahunAnggaran;
     }
 
     public function canView(User $user, Activity $activity): bool
     {
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
+
         if ($user->hasRoleForScope(ScopeLevel::DESA->value)) {
             if (! $this->canAccessLevel($user, ScopeLevel::DESA->value)) {
                 return false;
             }
 
-            return $this->isSameLevelAndArea($activity, ScopeLevel::DESA->value, (int) $user->area_id);
+            return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::DESA->value, (int) $user->area_id, $tahunAnggaran);
         }
 
         if ($user->hasRoleForScope(ScopeLevel::KECAMATAN->value)) {
@@ -162,11 +168,11 @@ class ActivityScopeService
             }
 
             if ($activity->level === ScopeLevel::KECAMATAN->value) {
-                return $this->isSameLevelAndArea($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id);
+                return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id, $tahunAnggaran);
             }
 
             if ($activity->level === ScopeLevel::DESA->value) {
-                return $this->isDesaInKecamatan($activity, (int) $user->area_id);
+                return $this->isDesaInKecamatanAndBudgetYear($activity, (int) $user->area_id, $tahunAnggaran);
             }
         }
 
@@ -175,12 +181,14 @@ class ActivityScopeService
 
     public function canUpdate(User $user, Activity $activity): bool
     {
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
+
         if ($user->hasRoleForScope(ScopeLevel::DESA->value)) {
             if (! $this->canAccessLevel($user, ScopeLevel::DESA->value)) {
                 return false;
             }
 
-            return $this->isSameLevelAndArea($activity, ScopeLevel::DESA->value, (int) $user->area_id);
+            return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::DESA->value, (int) $user->area_id, $tahunAnggaran);
         }
 
         if ($user->hasRoleForScope(ScopeLevel::KECAMATAN->value)) {
@@ -188,7 +196,7 @@ class ActivityScopeService
                 return false;
             }
 
-            return $this->isSameLevelAndArea($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id);
+            return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id, $tahunAnggaran);
         }
 
         return false;
@@ -199,21 +207,26 @@ class ActivityScopeService
         return $this->canView($user, $activity);
     }
 
-    public function authorizeSameLevelAndArea(Activity $activity, string $level, int $areaId): Activity
+    public function authorizeSameLevelAreaAndBudgetYear(Activity $activity, string $level, int $areaId, int $tahunAnggaran): Activity
     {
-        if (! $this->isSameLevelAndArea($activity, $level, $areaId)) {
+        if (! $this->isSameLevelAreaAndBudgetYear($activity, $level, $areaId, $tahunAnggaran)) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
         return $activity;
     }
 
-    public function authorizeDesaInKecamatan(Activity $activity, int $kecamatanAreaId): Activity
+    public function authorizeDesaInKecamatanAndBudgetYear(Activity $activity, int $kecamatanAreaId, int $tahunAnggaran): Activity
     {
-        if (! $this->isDesaInKecamatan($activity, $kecamatanAreaId)) {
+        if (! $this->isDesaInKecamatanAndBudgetYear($activity, $kecamatanAreaId, $tahunAnggaran)) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
         return $activity;
+    }
+
+    public function requireActiveBudgetYear(): int
+    {
+        return $this->activeBudgetYearContextService->requireForAuthenticatedUser();
     }
 }

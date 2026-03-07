@@ -57,7 +57,7 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
         return Activity::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
-            ->whereYear('activity_date', $tahunAnggaran)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->orderByDesc('activity_date')
             ->orderByDesc('id')
             ->get(['id', 'title', 'activity_date']);
@@ -89,6 +89,3 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
         $bukuDaftarHadir->delete();
     }
 }
-
-
-

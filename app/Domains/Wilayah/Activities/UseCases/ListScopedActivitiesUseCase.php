@@ -12,24 +12,25 @@ class ListScopedActivitiesUseCase
     public function __construct(
         private readonly ActivityRepositoryInterface $activityRepository,
         private readonly ActivityScopeService $activityScopeService
-    ) {
-    }
+    ) {}
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
         $actor = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
         $creatorIdFilter = $this->activityScopeService->resolveCreatorIdFilterForList($actor, $level);
 
-        return $this->activityRepository->paginateByLevelAndArea($level, $areaId, $perPage, $actor, $creatorIdFilter);
+        return $this->activityRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $actor, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
         $actor = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
         $creatorIdFilter = $this->activityScopeService->resolveCreatorIdFilterForList($actor, $level);
 
-        return $this->activityRepository->listByLevelAndArea($level, $areaId, $actor, $creatorIdFilter);
+        return $this->activityRepository->listByLevelAndArea($level, $areaId, $tahunAnggaran, $actor, $creatorIdFilter);
     }
 }

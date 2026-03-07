@@ -20,7 +20,10 @@ class KecamatanActivityTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
 
     protected function setUp(): void
@@ -52,6 +55,7 @@ class KecamatanActivityTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -93,6 +97,7 @@ class KecamatanActivityTest extends TestCase
             'status' => 'published',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
     }
 
@@ -104,6 +109,7 @@ class KecamatanActivityTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -219,7 +225,7 @@ class KecamatanActivityTest extends TestCase
 
         for ($index = 1; $index <= 11; $index++) {
             Activity::create([
-                'title' => 'Kegiatan Kecamatan A ' . $index,
+                'title' => 'Kegiatan Kecamatan A '.$index,
                 'level' => 'kecamatan',
                 'area_id' => $this->kecamatanA->id,
                 'created_by' => $adminKecamatan->id,
@@ -248,8 +254,46 @@ class KecamatanActivityTest extends TestCase
                 ->where('activities.current_page', 2)
                 ->where('activities.per_page', 10)
                 ->where('activities.total', 11)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
+    }
+
+    #[Test]
+    public function admin_kecamatan_hanya_melihat_kegiatan_pada_tahun_anggaran_aktif(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        Activity::create([
+            'title' => 'Kegiatan Tahun Aktif',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'activity_date' => '2026-02-10',
+            'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Tahun Lama',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'activity_date' => '2026-02-10',
+            'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($adminKecamatan)->get('/kecamatan/activities');
+
+        $response->assertOk();
+        $response->assertSee('Kegiatan Tahun Aktif');
+        $response->assertDontSee('Kegiatan Tahun Lama');
     }
 
     #[Test]

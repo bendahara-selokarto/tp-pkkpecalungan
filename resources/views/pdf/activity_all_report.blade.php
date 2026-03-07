@@ -26,7 +26,7 @@
     <div class="lampiran">LAMPIRAN 4.13</div>
     <div class="title">BUKU KEGIATAN</div>
     <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }}
+        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }} | Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}
     </div>
 
     <table>

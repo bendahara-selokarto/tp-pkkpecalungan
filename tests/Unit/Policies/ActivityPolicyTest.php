@@ -13,6 +13,8 @@ class ActivityPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -27,7 +29,7 @@ class ActivityPolicyTest extends TestCase
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-desa');
 
         $ownActivity = Activity::create([
@@ -37,6 +39,7 @@ class ActivityPolicyTest extends TestCase
             'created_by' => $user->id,
             'activity_date' => now()->toDateString(),
             'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $otherActivity = Activity::create([
@@ -46,6 +49,7 @@ class ActivityPolicyTest extends TestCase
             'created_by' => $user->id,
             'activity_date' => now()->toDateString(),
             'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->assertTrue($user->can('view', $ownActivity));
@@ -59,7 +63,7 @@ class ActivityPolicyTest extends TestCase
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatan->id]);
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatan->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-kecamatan');
 
         $desaActivity = Activity::create([
@@ -69,6 +73,7 @@ class ActivityPolicyTest extends TestCase
             'created_by' => $user->id,
             'activity_date' => now()->toDateString(),
             'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $kecamatanActivity = Activity::create([
@@ -78,11 +83,33 @@ class ActivityPolicyTest extends TestCase
             'created_by' => $user->id,
             'activity_date' => now()->toDateString(),
             'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->assertTrue($user->can('view', $desaActivity));
         $this->assertFalse($user->can('update', $desaActivity));
         $this->assertTrue($user->can('update', $kecamatanActivity));
     }
-}
 
+    public function test_admin_desa_tidak_dapat_melihat_kegiatan_tahun_anggaran_lain_meski_area_sama(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
+        $user->assignRole('admin-desa');
+
+        $oldBudgetYearActivity = Activity::create([
+            'title' => 'Old',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->assertFalse($user->can('view', $oldBudgetYearActivity));
+        $this->assertFalse($user->can('update', $oldBudgetYearActivity));
+    }
+}

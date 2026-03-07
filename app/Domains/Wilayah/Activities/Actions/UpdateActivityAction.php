@@ -12,8 +12,7 @@ class UpdateActivityAction
     public function __construct(
         private readonly ActivityRepositoryInterface $activityRepository,
         private readonly ActivityAttachmentService $activityAttachmentService
-    ) {
-    }
+    ) {}
 
     public function execute(Activity $activity, array $payload): Activity
     {
@@ -28,6 +27,7 @@ class UpdateActivityAction
             'level' => $activity->level,
             'area_id' => $activity->area_id,
             'created_by' => $activity->created_by,
+            'tahun_anggaran' => $activity->tahun_anggaran,
             'activity_date' => $payload['activity_date'],
             'tempat_kegiatan' => $payload['tempat_kegiatan'] ?? null,
             'status' => $payload['status'],

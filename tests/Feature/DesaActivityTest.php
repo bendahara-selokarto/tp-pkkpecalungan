@@ -1,23 +1,26 @@
 <?php
 
 namespace Tests\Feature;
-use PHPUnit\Framework\Attributes\Test;
 
-use Tests\TestCase;
-use App\Models\User;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\UploadedFile;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Inertia\Testing\AssertableInertia;
-use Spatie\Permission\Models\Role;
-use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\Models\Area;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\Test;
+use Spatie\Permission\Models\Role;
+use Tests\TestCase;
 
 class DesaActivityTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
+
     protected Area $desa;
 
     protected function setUp(): void
@@ -51,7 +54,8 @@ class DesaActivityTest extends TestCase
     {
         $user = User::factory()->create([
             'area_id' => $this->desa->id,
-            'scope'   => 'desa',
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $user->assignRole('admin-desa');
@@ -78,6 +82,7 @@ class DesaActivityTest extends TestCase
             'tanda_tangan' => 'Siti Aminah',
             'description' => 'Rapat tahunan',
             'area_id' => $this->desa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
     }
 
@@ -214,7 +219,8 @@ class DesaActivityTest extends TestCase
     {
         $desaUser = User::factory()->create([
             'area_id' => $this->desa->id,
-            'scope'   => 'desa',
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $desaUser->assignRole('admin-desa');
 
@@ -233,6 +239,7 @@ class DesaActivityTest extends TestCase
             'created_by' => $desaUser->id,
             'activity_date' => now()->toDateString(),
             'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         // Activity desa lain
@@ -243,6 +250,7 @@ class DesaActivityTest extends TestCase
             'created_by' => $desaUser->id,
             'activity_date' => now()->toDateString(),
             'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($desaUser);
@@ -254,11 +262,51 @@ class DesaActivityTest extends TestCase
     }
 
     #[Test]
+    public function pengguna_desa_hanya_melihat_kegiatan_pada_tahun_anggaran_aktif(): void
+    {
+        $desaUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $desaUser->assignRole('admin-desa');
+
+        Activity::create([
+            'title' => 'Kegiatan Tahun Aktif',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $desaUser->id,
+            'activity_date' => '2026-02-10',
+            'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Tahun Lama',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $desaUser->id,
+            'activity_date' => '2026-02-10',
+            'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($desaUser)->get('/desa/activities');
+
+        $response->assertOk();
+        $response->assertSee('Kegiatan Tahun Aktif');
+        $response->assertDontSee('Kegiatan Tahun Lama');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
+        });
+    }
+
+    #[Test]
     public function pengguna_non_desa_tidak_dapat_mengakses_rute_desa()
     {
         $user = User::factory()->create([
             'area_id' => $this->desa->id,
-            'scope'   => 'kecamatan',
+            'scope' => 'kecamatan',
         ]);
 
         $this->actingAs($user);
@@ -301,7 +349,7 @@ class DesaActivityTest extends TestCase
 
         for ($index = 1; $index <= 12; $index++) {
             Activity::create([
-                'title' => 'Kegiatan Desa Gombong ' . $index,
+                'title' => 'Kegiatan Desa Gombong '.$index,
                 'level' => 'desa',
                 'area_id' => $this->desa->id,
                 'created_by' => $desaUser->id,

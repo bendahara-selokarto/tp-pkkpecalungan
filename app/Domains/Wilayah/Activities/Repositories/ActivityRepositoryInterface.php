@@ -5,8 +5,8 @@ namespace App\Domains\Wilayah\Activities\Repositories;
 use App\Domains\Wilayah\Activities\DTOs\ActivityData;
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 interface ActivityRepositoryInterface
@@ -16,6 +16,7 @@ interface ActivityRepositoryInterface
     public function paginateByLevelAndArea(
         string $level,
         int $areaId,
+        int $tahunAnggaran,
         int $perPage,
         ?User $actor = null,
         ?int $creatorIdFilter = null
@@ -24,12 +25,14 @@ interface ActivityRepositoryInterface
     public function listByLevelAndArea(
         string $level,
         int $areaId,
+        int $tahunAnggaran,
         ?User $actor = null,
         ?int $creatorIdFilter = null
     ): Collection;
 
     public function paginateDesaActivitiesByKecamatan(
         int $kecamatanAreaId,
+        int $tahunAnggaran,
         int $perPage,
         ?int $desaId = null,
         ?string $status = null,

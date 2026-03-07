@@ -14,8 +14,7 @@ class BukuDaftarHadirScopeService
     public function __construct(
         private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly UserAreaContextService $userAreaContextService
-    ) {
-    }
+    ) {}
 
     public function canAccessLevel(User $user, string $level): bool
     {
@@ -63,14 +62,11 @@ class BukuDaftarHadirScopeService
     public function authorizeActivityScope(int $activityId, string $level, int $areaId, int $tahunAnggaran): Activity
     {
         $activity = Activity::query()->findOrFail($activityId);
-        $activityYear = $activity->activity_date
-            ? (int) date('Y', strtotime((string) $activity->activity_date))
-            : null;
 
         if (
             $activity->level !== $level
             || (int) $activity->area_id !== $areaId
-            || $activityYear !== $tahunAnggaran
+            || (int) $activity->tahun_anggaran !== $tahunAnggaran
         ) {
             throw new HttpException(403, 'Kegiatan tidak berada pada scope wilayah Anda.');
         }
@@ -82,6 +78,7 @@ class BukuDaftarHadirScopeService
     {
         return $this->activeBudgetYearContextService->requireForAuthenticatedUser();
     }
+
     public function resolveCreatorIdFilterForList(string $level): ?int
     {
         return $this->userAreaContextService->resolveCreatorIdFilterForKecamatanSekretaris($level);

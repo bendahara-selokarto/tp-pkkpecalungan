@@ -30,7 +30,7 @@ Aturan:
 
 ### Refactor Tahun Anggaran (`TAG26A1`) - 2026-03-07
 
-- Status concern: `in-progress` (`state:wave3-laporan-tahunan-pkk-slice-implemented`).
+- Status concern: `in-progress` (`state:wave3-activities-monitoring-slice-implemented`).
 - Fokus concern:
   - menambahkan `tahun_anggaran` sebagai context transversal administrasi TP PKK,
   - menjaga concern existing tetap utuh sambil meretrofit schema/query per wave.
@@ -49,6 +49,7 @@ Aturan:
   - bundle dependensi wave-2 (`DataWarga`, `DataWargaAnggota`, `DataKegiatanWarga`, `CatatanKeluarga`): `DONE`,
   - slice wave-3 `ProgramPrioritas`, `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan`: `DONE`,
   - slice wave-3 `LaporanTahunanPkk`: `DONE`,
+  - slice wave-3 `Activities`, monitoring kecamatan/desa, dan dashboard chart kegiatan: `DONE`,
   - unique constraint `PilotProjectKeluargaSehat` diperluas ke `tahun_anggaran + periode`: `DONE`,
   - unique constraint `LaporanTahunanPkk` diperluas ke `tahun_anggaran + tahun_laporan`: `DONE`,
   - ADR `0005` status `accepted`: `DONE`,
@@ -64,9 +65,11 @@ Aturan:
   - targeted report tests wave-2 bundle dependensi `DataWarga`, `DataKegiatanWarga`, `CatatanKeluarga`: `39 passed`,
   - targeted concern tests wave-3 slice `ProgramPrioritas`, `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan` (feature + policy + report + aggregate check): `70 passed`,
   - targeted concern tests wave-3 slice `LaporanTahunanPkk` (feature + policy + report + auto-entry `AgendaSurat`): `23 passed`,
+  - targeted concern tests wave-3 slice `Activities`, monitoring kecamatan/desa, dashboard chart kegiatan, `BukuDaftarHadir`, dan dependent report: `68 passed`,
   - full suite `php artisan test --compact`: `1130 passed`,
   - full suite setelah slice wave-3 `ProgramPrioritas + PilotProject`: `1136 passed`,
   - full suite setelah slice wave-3 `LaporanTahunanPkk`: `1143 passed`,
+  - full suite setelah slice wave-3 `Activities + monitoring`: `1149 passed`,
   - runtime wave-1 implemented: `DONE`,
   - runtime wave-2 secretary books slice implemented: `DONE`,
   - runtime wave-2 homogeneous CRUD slice implemented: `DONE`,
@@ -77,7 +80,8 @@ Aturan:
   - runtime wave-2 data keluarga slice implemented: `DONE`,
   - runtime wave-2 bundle dependensi `DataWarga` / `DataKegiatanWarga` / `CatatanKeluarga` implemented: `DONE`.
   - runtime wave-3 `ProgramPrioritas` / `PilotProjectKeluargaSehat` / `PilotProjectNaskahPelaporan` implemented: `DONE`,
-  - runtime wave-3 `LaporanTahunanPkk` implemented: `DONE`.
+  - runtime wave-3 `LaporanTahunanPkk` implemented: `DONE`,
+  - runtime wave-3 `Activities` / monitoring kecamatan-desa / activity dashboard chart implemented: `DONE`.
 
 ### Hardening Struktur Folder (`SFC26A1`) - 2026-03-07
 

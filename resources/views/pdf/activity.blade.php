@@ -32,7 +32,8 @@
     <div class="title">BUKU KEGIATAN</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $activity->area?->name ?? '-' }}<br>
-        Level: {{ $levelLabel }}
+        Level: {{ $levelLabel }}<br>
+        Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}
     </div>
 
     <table>

@@ -1,13 +1,13 @@
 <?php
 
 namespace Tests\Feature;
-use PHPUnit\Framework\Attributes\Test;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -15,9 +15,14 @@ class KecamatanDesaActivityTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
+
     protected Area $desaA1;
+
     protected Area $desaB1;
 
     protected function setUp(): void
@@ -57,6 +62,7 @@ class KecamatanDesaActivityTest extends TestCase
         $kecamatanUser = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $kecamatanUser->assignRole('admin-kecamatan');
 
@@ -68,6 +74,7 @@ class KecamatanDesaActivityTest extends TestCase
             'created_by' => $kecamatanUser->id,
             'activity_date' => now()->toDateString(),
             'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         Activity::create([
@@ -78,6 +85,7 @@ class KecamatanDesaActivityTest extends TestCase
             'created_by' => $kecamatanUser->id,
             'activity_date' => now()->toDateString(),
             'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($kecamatanUser);
@@ -87,6 +95,48 @@ class KecamatanDesaActivityTest extends TestCase
         $response->assertOk();
         $response->assertSee('Kegiatan Desa Gombong');
         $response->assertDontSee('Kegiatan Desa Kalisalak');
+    }
+
+    #[Test]
+    public function monitoring_kecamatan_tidak_membocorkan_kegiatan_desa_tahun_anggaran_lain(): void
+    {
+        $kecamatanUser = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $kecamatanUser->assignRole('admin-kecamatan');
+
+        Activity::create([
+            'title' => 'Monitoring Tahun Aktif',
+            'description' => 'Dalam tahun aktif',
+            'level' => 'desa',
+            'area_id' => $this->desaA1->id,
+            'created_by' => $kecamatanUser->id,
+            'activity_date' => '2026-02-10',
+            'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        Activity::create([
+            'title' => 'Monitoring Tahun Lama',
+            'description' => 'Di luar tahun aktif',
+            'level' => 'desa',
+            'area_id' => $this->desaA1->id,
+            'created_by' => $kecamatanUser->id,
+            'activity_date' => '2026-02-10',
+            'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($kecamatanUser)->get(route('kecamatan.desa-activities.index'));
+
+        $response->assertOk();
+        $response->assertSee('Monitoring Tahun Aktif');
+        $response->assertDontSee('Monitoring Tahun Lama');
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
+        });
     }
 
     #[Test]
@@ -158,7 +208,7 @@ class KecamatanDesaActivityTest extends TestCase
 
         for ($index = 1; $index <= 11; $index++) {
             Activity::create([
-                'title' => 'Kegiatan Desa Gombong ' . $index,
+                'title' => 'Kegiatan Desa Gombong '.$index,
                 'description' => 'Dalam kecamatan user',
                 'level' => 'desa',
                 'area_id' => $this->desaA1->id,

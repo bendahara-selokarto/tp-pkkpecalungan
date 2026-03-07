@@ -5,10 +5,10 @@ namespace App\Domains\Wilayah\Activities\Controllers;
 use App\Domains\Wilayah\Activities\Actions\CreateScopedActivityAction;
 use App\Domains\Wilayah\Activities\Actions\UpdateActivityAction;
 use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\Activities\Requests\ListActivitiesRequest;
 use App\Domains\Wilayah\Activities\Requests\StoreActivityRequest;
 use App\Domains\Wilayah\Activities\Requests\UpdateActivityRequest;
-use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\Activities\Services\ActivityAttachmentService;
 use App\Domains\Wilayah\Activities\UseCases\GetScopedActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\ListScopedActivitiesUseCase;
@@ -47,6 +47,7 @@ class DesaActivityController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) ($request->user()->active_budget_year ?? now()->year),
             ],
         ]);
     }
@@ -151,6 +152,7 @@ class DesaActivityController extends Controller
             'image_url' => $this->resolveAttachmentUrl($activity, 'image'),
             'document_path' => $activity->document_path,
             'document_url' => $this->resolveAttachmentUrl($activity, 'document'),
+            'tahun_anggaran' => $activity->tahun_anggaran,
         ];
     }
 

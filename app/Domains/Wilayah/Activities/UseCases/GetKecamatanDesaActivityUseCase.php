@@ -11,14 +11,14 @@ class GetKecamatanDesaActivityUseCase
     public function __construct(
         private readonly ActivityRepositoryInterface $activityRepository,
         private readonly ActivityScopeService $activityScopeService
-    ) {
-    }
+    ) {}
 
     public function execute(int $id): Activity
     {
         $activity = $this->activityRepository->find($id)->loadMissing(['area', 'creator']);
         $kecamatanAreaId = $this->activityScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
 
-        return $this->activityScopeService->authorizeDesaInKecamatan($activity, $kecamatanAreaId);
+        return $this->activityScopeService->authorizeDesaInKecamatanAndBudgetYear($activity, $kecamatanAreaId, $tahunAnggaran);
     }
 }

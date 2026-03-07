@@ -52,6 +52,7 @@ class KecamatanDesaActivityController extends Controller
                 'image_url' => $this->resolveAttachmentUrl($activity, 'image'),
                 'document_path' => $activity->document_path,
                 'document_url' => $this->resolveAttachmentUrl($activity, 'document'),
+                'tahun_anggaran' => $activity->tahun_anggaran,
                 'area' => $activity->area
                     ? [
                         'id' => $activity->area->id,
@@ -89,6 +90,7 @@ class KecamatanDesaActivityController extends Controller
                 'desa_id' => $request->desaId(),
                 'status' => $request->status(),
                 'q' => $request->keyword(),
+                'tahun_anggaran' => (int) ($request->user()->active_budget_year ?? now()->year),
             ],
         ]);
     }
@@ -114,6 +116,7 @@ class KecamatanDesaActivityController extends Controller
                 'image_url' => $this->resolveAttachmentUrl($activity, 'image'),
                 'document_path' => $activity->document_path,
                 'document_url' => $this->resolveAttachmentUrl($activity, 'document'),
+                'tahun_anggaran' => $activity->tahun_anggaran,
                 'area' => $activity->area
                     ? [
                         'id' => $activity->area->id,

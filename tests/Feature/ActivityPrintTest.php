@@ -14,9 +14,14 @@ class ActivityPrintTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
+
     protected Area $desaA;
+
     protected Area $desaB;
 
     protected function setUp(): void
@@ -34,7 +39,7 @@ class ActivityPrintTest extends TestCase
 
     public function test_pengguna_desa_dapat_mencetak_pdf_kegiatannya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-desa');
 
         $activity = Activity::create([
@@ -44,6 +49,7 @@ class ActivityPrintTest extends TestCase
             'created_by' => $user->id,
             'activity_date' => now()->toDateString(),
             'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($user)->get(route('desa.activities.print', $activity->id));
@@ -54,7 +60,7 @@ class ActivityPrintTest extends TestCase
 
     public function test_pengguna_desa_dapat_mencetak_pdf_daftar_kegiatan_all_pada_scopenya(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
         $user->assignRole('admin-desa');
 
         Activity::create([
@@ -64,6 +70,7 @@ class ActivityPrintTest extends TestCase
             'created_by' => $user->id,
             'activity_date' => now()->toDateString(),
             'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         Activity::create([
@@ -73,12 +80,33 @@ class ActivityPrintTest extends TestCase
             'created_by' => $user->id,
             'activity_date' => now()->toDateString(),
             'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($user)->get(route('desa.activities.report'));
 
         $response->assertOk();
         $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_pengguna_desa_tidak_dapat_mencetak_pdf_kegiatan_tahun_anggaran_lain(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
+        $user->assignRole('admin-desa');
+
+        $activity = Activity::create([
+            'title' => 'Kegiatan Tahun Lama',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('desa.activities.print', $activity->id));
+
+        $response->assertStatus(403);
     }
 
     public function test_pengguna_desa_tidak_dapat_mencetak_kegiatan_desa_lain(): void

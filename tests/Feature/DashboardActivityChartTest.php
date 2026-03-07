@@ -40,7 +40,7 @@ class DashboardActivityChartTest extends TestCase
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create();
-        $user->forceFill(['scope' => 'desa', 'area_id' => $desaA->id])->save();
+        $user->forceFill(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => 2026])->save();
         $user->assignRole('admin-desa');
 
         Activity::create([
@@ -81,6 +81,50 @@ class DashboardActivityChartTest extends TestCase
                 ->where('dashboardStats.this_month', 1)
                 ->where('dashboardStats.published', 1)
                 ->where('dashboardStats.draft', 1);
+        });
+    }
+
+    public function test_grafik_dashboard_tidak_menghitung_kegiatan_tahun_anggaran_lain_di_wilayah_yang_sama(): void
+    {
+        Carbon::setTestNow('2026-02-14');
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create();
+        $user->forceFill(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => 2026])->save();
+        $user->assignRole('admin-desa');
+
+        Activity::create([
+            'title' => 'Aktif 2026',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => '2026-02-10',
+            'status' => 'published',
+            'tahun_anggaran' => 2026,
+        ]);
+
+        Activity::create([
+            'title' => 'Lama 2025',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => '2025-02-10',
+            'status' => 'draft',
+            'tahun_anggaran' => 2025,
+        ]);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardStats.total', 1)
+                ->where('dashboardStats.this_month', 1)
+                ->where('dashboardStats.published', 1)
+                ->where('dashboardStats.draft', 0);
         });
     }
 

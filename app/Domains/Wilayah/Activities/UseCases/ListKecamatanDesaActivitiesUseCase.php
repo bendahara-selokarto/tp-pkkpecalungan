@@ -11,20 +11,20 @@ class ListKecamatanDesaActivitiesUseCase
     public function __construct(
         private readonly ActivityRepositoryInterface $activityRepository,
         private readonly ActivityScopeService $activityScopeService
-    ) {
-    }
+    ) {}
 
     public function execute(
         int $perPage,
         ?int $desaId = null,
         ?string $status = null,
         ?string $keyword = null
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         $kecamatanAreaId = $this->activityScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
 
         return $this->activityRepository->paginateDesaActivitiesByKecamatan(
             $kecamatanAreaId,
+            $tahunAnggaran,
             $perPage,
             $desaId,
             $status,

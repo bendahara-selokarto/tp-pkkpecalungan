@@ -2,11 +2,12 @@
 
 namespace App\Domains\Wilayah\Activities\Repositories;
 
-use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Activities\DTOs\ActivityData;
+use App\Domains\Wilayah\Activities\Models\Activity;
+use App\Domains\Wilayah\Activities\Services\ActivityScopeService;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
-use App\Domains\Wilayah\Activities\Services\ActivityScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -16,26 +17,27 @@ class ActivityRepository implements ActivityRepositoryInterface
 {
     public function __construct(
         private readonly AreaRepositoryInterface $areaRepository,
-        private readonly ActivityScopeService $activityScopeService
-    ) {
-    }
+        private readonly ActivityScopeService $activityScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+    ) {}
 
     public function store(ActivityData $data): Activity
     {
         return Activity::create([
-            'title'         => $data->title,
-            'nama_petugas'  => $data->nama_petugas,
+            'title' => $data->title,
+            'nama_petugas' => $data->nama_petugas,
             'jabatan_petugas' => $data->jabatan_petugas,
-            'description'   => $data->description,
-            'uraian'        => $data->uraian,
-            'level'         => $data->level,
-            'area_id'       => $data->area_id,
-            'created_by'    => $data->created_by,
+            'description' => $data->description,
+            'uraian' => $data->uraian,
+            'level' => $data->level,
+            'area_id' => $data->area_id,
+            'created_by' => $data->created_by,
+            'tahun_anggaran' => $data->tahun_anggaran,
             'activity_date' => $data->activity_date,
             'tempat_kegiatan' => $data->tempat_kegiatan,
-            'status'        => $data->status,
-            'tanda_tangan'  => $data->tanda_tangan,
-            'image_path'    => $data->image_path,
+            'status' => $data->status,
+            'tanda_tangan' => $data->tanda_tangan,
+            'image_path' => $data->image_path,
             'document_path' => $data->document_path,
         ]);
     }
@@ -43,14 +45,15 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function paginateByLevelAndArea(
         string $level,
         int $areaId,
+        int $tahunAnggaran,
         int $perPage,
         ?User $actor = null,
         ?int $creatorIdFilter = null
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         $query = Activity::query()
             ->where('level', $level)
-            ->where('area_id', $areaId);
+            ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran);
 
         if (is_int($creatorIdFilter)) {
             $query->where('created_by', $creatorIdFilter);
@@ -68,13 +71,14 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function listByLevelAndArea(
         string $level,
         int $areaId,
+        int $tahunAnggaran,
         ?User $actor = null,
         ?int $creatorIdFilter = null
-    ): Collection
-    {
+    ): Collection {
         $query = Activity::query()
             ->where('level', $level)
-            ->where('area_id', $areaId);
+            ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran);
 
         if (is_int($creatorIdFilter)) {
             $query->where('created_by', $creatorIdFilter);
@@ -90,12 +94,12 @@ class ActivityRepository implements ActivityRepositoryInterface
 
     public function paginateDesaActivitiesByKecamatan(
         int $kecamatanAreaId,
+        int $tahunAnggaran,
         int $perPage,
         ?int $desaId = null,
         ?string $status = null,
         ?string $keyword = null
-    ): LengthAwarePaginator
-    {
+    ): LengthAwarePaginator {
         $desaIds = $this->areaRepository
             ->getDesaByKecamatan($kecamatanAreaId)
             ->pluck('id');
@@ -103,6 +107,7 @@ class ActivityRepository implements ActivityRepositoryInterface
         $query = Activity::query()
             ->with(['area', 'creator'])
             ->where('level', ScopeLevel::DESA->value)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->whereIn('area_id', $desaIds);
 
         if (is_int($desaId)) {
@@ -117,10 +122,10 @@ class ActivityRepository implements ActivityRepositoryInterface
             $normalizedKeyword = trim($keyword);
             $query->where(static function (Builder $inner) use ($normalizedKeyword): void {
                 $inner
-                    ->where('title', 'like', '%' . $normalizedKeyword . '%')
-                    ->orWhere('description', 'like', '%' . $normalizedKeyword . '%')
-                    ->orWhere('nama_petugas', 'like', '%' . $normalizedKeyword . '%')
-                    ->orWhere('tempat_kegiatan', 'like', '%' . $normalizedKeyword . '%');
+                    ->where('title', 'like', '%'.$normalizedKeyword.'%')
+                    ->orWhere('description', 'like', '%'.$normalizedKeyword.'%')
+                    ->orWhere('nama_petugas', 'like', '%'.$normalizedKeyword.'%')
+                    ->orWhere('tempat_kegiatan', 'like', '%'.$normalizedKeyword.'%');
             });
         }
 
@@ -136,7 +141,7 @@ class ActivityRepository implements ActivityRepositoryInterface
         $query = Activity::query();
 
         if ($user->hasRole('super-admin')) {
-            return $query;
+            return $query->where('tahun_anggaran', $this->activeBudgetYearContextService->resolveForUser($user));
         }
 
         if (! is_numeric($user->area_id)) {
@@ -144,6 +149,7 @@ class ActivityRepository implements ActivityRepositoryInterface
         }
 
         $areaId = (int) $user->area_id;
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $areaLevel = $user->relationLoaded('area')
             ? $user->area?->level
             : $this->areaRepository->getLevelById($areaId);
@@ -154,8 +160,9 @@ class ActivityRepository implements ActivityRepositoryInterface
         ) {
             return $this->applyRoleScopedCreatorFilter(
                 $query
-                ->where('level', ScopeLevel::DESA->value)
-                ->where('area_id', $areaId),
+                    ->where('level', ScopeLevel::DESA->value)
+                    ->where('area_id', $areaId)
+                    ->where('tahun_anggaran', $tahunAnggaran),
                 $user,
                 ScopeLevel::DESA->value
             );
@@ -169,14 +176,16 @@ class ActivityRepository implements ActivityRepositoryInterface
                 ->getDesaByKecamatan($areaId)
                 ->pluck('id');
 
-            return $query->where(function (Builder $scoped) use ($areaId, $desaIds) {
-                $scoped->where(function (Builder $kecamatanScope) use ($areaId) {
+            return $query->where(function (Builder $scoped) use ($areaId, $desaIds, $tahunAnggaran) {
+                $scoped->where(function (Builder $kecamatanScope) use ($areaId, $tahunAnggaran) {
                     $kecamatanScope
                         ->where('level', ScopeLevel::KECAMATAN->value)
-                        ->where('area_id', $areaId);
-                })->orWhere(function (Builder $desaScope) use ($desaIds) {
+                        ->where('area_id', $areaId)
+                        ->where('tahun_anggaran', $tahunAnggaran);
+                })->orWhere(function (Builder $desaScope) use ($desaIds, $tahunAnggaran) {
                     $desaScope
                         ->where('level', ScopeLevel::DESA->value)
+                        ->where('tahun_anggaran', $tahunAnggaran)
                         ->whereIn('area_id', $desaIds);
                 });
             });
@@ -193,14 +202,15 @@ class ActivityRepository implements ActivityRepositoryInterface
     public function update(Activity $activity, ActivityData $data): Activity
     {
         $activity->update([
-            'title'         => $data->title,
+            'title' => $data->title,
             'nama_petugas' => $data->nama_petugas,
             'jabatan_petugas' => $data->jabatan_petugas,
-            'description'   => $data->description,
-            'uraian'        => $data->uraian,
+            'description' => $data->description,
+            'uraian' => $data->uraian,
+            'tahun_anggaran' => $data->tahun_anggaran,
             'activity_date' => $data->activity_date,
             'tempat_kegiatan' => $data->tempat_kegiatan,
-            'status'        => $data->status,
+            'status' => $data->status,
             'tanda_tangan' => $data->tanda_tangan,
             'image_path' => $data->image_path,
             'document_path' => $data->document_path,
