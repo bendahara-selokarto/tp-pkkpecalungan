@@ -11,6 +11,7 @@ class TamanBacaanData
         public string $jenis_buku,
         public string $kategori,
         public string $jumlah,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
@@ -26,11 +27,11 @@ class TamanBacaanData
             $data['jenis_buku'],
             $data['kategori'],
             $data['jumlah'],
+            (int) $data['tahun_anggaran'],
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],
         );
     }
 }
-
 

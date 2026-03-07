@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\KejarPaket\Controllers;
 use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
 use App\Domains\Wilayah\KejarPaket\UseCases\ListScopedKejarPaketUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ class KejarPaketPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedKejarPaketUseCase $listScopedKejarPaketUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -37,10 +39,12 @@ class KejarPaketPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.kejar_paket_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);
@@ -48,7 +52,6 @@ class KejarPaketPrintController extends Controller
         return $pdf->stream("kejar-paket-{$level}-report.pdf");
     }
 }
-
 
 
 

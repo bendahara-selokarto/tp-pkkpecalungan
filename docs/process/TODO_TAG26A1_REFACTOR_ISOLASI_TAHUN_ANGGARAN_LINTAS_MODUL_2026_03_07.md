@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `in-progress` (`state:wave2-homogeneous-crud-slice-implemented`)
+Status: `in-progress` (`state:wave2-education-economy-slice-implemented`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -113,6 +113,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [ ] Wave 2: concern CRUD mayoritas yang pattern query-nya homogen (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`, dll).
     - [x] Slice awal wave-2 terimplementasi: `BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`.
     - [x] Slice lanjutan wave-2 terimplementasi: `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`.
+    - [x] Slice pendidikan/usaha wave-2 terimplementasi: `Koperasi`, `WarungPkk`, `TamanBacaan`, `KejarPaket`.
     - [ ] Concern homogen wave-2 yang masih pending: concern sejenis lain di luar slice yang sudah terkunci.
   - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
   - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
@@ -132,6 +133,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] feature/repository tests `AgendaSurat` untuk anti data leak lintas tahun.
   - [x] print/report test `AgendaSurat` mengikuti tahun aktif.
   - [x] feature/policy/report tests `Inventaris`, `AnggotaTimPenggerak`, dan `KaderKhusus` untuk anti data leak lintas tahun.
+  - [x] feature/policy/report tests `Koperasi`, `WarungPkk`, `TamanBacaan`, dan `KejarPaket` untuk anti data leak lintas tahun.
 - [x] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
 
 ### Matrix Implementasi Wave-1
@@ -216,3 +218,13 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Backfill development untuk wave ini dikunci: `Inventaris` memakai tahun dari `tanggal_penerimaan` bila tersedia, sedangkan `AnggotaTimPenggerak` dan `KaderKhusus` memakai baseline eksplisit `2026` karena belum ada sumber tahun domain yang lebih presisi.
 - [x] Targeted regression tambahan wave-2 slice lulus: `62 passed`.
 - [x] Full suite setelah rollout slice lanjutan wave-2 lulus: `1088 passed`.
+
+## Hasil Implementasi Wave-2 (Slice Pendidikan dan Usaha)
+- [x] `Koperasi` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `WarungPkk` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `TamanBacaan` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `KejarPaket` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] PDF `Koperasi`, `WarungPkk`, `TamanBacaan`, dan `KejarPaket` menampilkan metadata tahun anggaran aktif.
+- [x] Backfill development untuk wave ini dikunci: seluruh concern pada slice ini memakai baseline eksplisit `2026` karena belum ada sumber tahun domain yang lebih presisi.
+- [x] Targeted regression tambahan wave-2 slice lulus: `68 passed`.
+- [x] Full suite setelah rollout slice pendidikan/usaha lulus: `1100 passed`.

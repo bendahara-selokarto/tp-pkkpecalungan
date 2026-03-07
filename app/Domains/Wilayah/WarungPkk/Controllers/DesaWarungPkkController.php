@@ -48,6 +48,7 @@ class DesaWarungPkkController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -80,6 +81,7 @@ class DesaWarungPkkController extends Controller
                 'komoditi' => $warungPkk->komoditi,
                 'kategori' => $warungPkk->kategori,
                 'volume' => $warungPkk->volume,
+                'tahun_anggaran' => $warungPkk->tahun_anggaran,
             ],
         ]);
     }
@@ -97,6 +99,7 @@ class DesaWarungPkkController extends Controller
                 'komoditi' => $warungPkk->komoditi,
                 'kategori' => $warungPkk->kategori,
                 'volume' => $warungPkk->volume,
+                'tahun_anggaran' => $warungPkk->tahun_anggaran,
             ],
         ]);
     }
@@ -119,4 +122,3 @@ class DesaWarungPkkController extends Controller
         return redirect()->route('desa.warung-pkk.index')->with('success', 'Data aset (sarana) desa/kelurahan berhasil dihapus');
     }
 }
-

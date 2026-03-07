@@ -22,6 +22,7 @@ class UpdateKoperasiAction
             'belum_berbadan_hukum' => $payload['belum_berbadan_hukum'],
             'jumlah_anggota_l' => $payload['jumlah_anggota_l'],
             'jumlah_anggota_p' => $payload['jumlah_anggota_p'],
+            'tahun_anggaran' => $koperasi->tahun_anggaran,
             'level' => $koperasi->level,
             'area_id' => $koperasi->area_id,
             'created_by' => $koperasi->created_by,
@@ -30,5 +31,4 @@ class UpdateKoperasiAction
         return $this->koperasiRepository->update($koperasi, $data);
     }
 }
-
 

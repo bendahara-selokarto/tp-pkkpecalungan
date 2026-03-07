@@ -49,6 +49,7 @@ class KecamatanKoperasiController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -82,6 +83,7 @@ class KecamatanKoperasiController extends Controller
                 'belum_berbadan_hukum' => $koperasi->belum_berbadan_hukum,
                 'jumlah_anggota_l' => $koperasi->jumlah_anggota_l,
                 'jumlah_anggota_p' => $koperasi->jumlah_anggota_p,
+                'tahun_anggaran' => $koperasi->tahun_anggaran,
             ],
         ]);
     }
@@ -100,6 +102,7 @@ class KecamatanKoperasiController extends Controller
                 'belum_berbadan_hukum' => $koperasi->belum_berbadan_hukum,
                 'jumlah_anggota_l' => $koperasi->jumlah_anggota_l,
                 'jumlah_anggota_p' => $koperasi->jumlah_anggota_p,
+                'tahun_anggaran' => $koperasi->tahun_anggaran,
             ],
         ]);
     }
@@ -122,4 +125,3 @@ class KecamatanKoperasiController extends Controller
         return redirect()->route('kecamatan.koperasi.index')->with('success', 'Data koperasi berhasil dihapus');
     }
 }
-

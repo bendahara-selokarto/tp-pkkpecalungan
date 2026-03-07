@@ -14,6 +14,8 @@ class KecamatanKoperasiTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
 
@@ -41,6 +43,7 @@ class KecamatanKoperasiTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -54,6 +57,7 @@ class KecamatanKoperasiTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         Koperasi::create([
@@ -66,6 +70,7 @@ class KecamatanKoperasiTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)->get('/kecamatan/koperasi');
@@ -81,6 +86,7 @@ class KecamatanKoperasiTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -94,12 +100,41 @@ class KecamatanKoperasiTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
             'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminKecamatan)
             ->get(route('kecamatan.koperasi.show', $koperasiLuar->id));
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function admin_kecamatan_tidak_bisa_melihat_detail_koperasi_tahun_anggaran_lain(): void
+    {
+        $adminKecamatan = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminKecamatan->assignRole('admin-kecamatan');
+
+        $koperasi = Koperasi::create([
+            'nama_koperasi' => 'Koperasi Lama',
+            'jenis_usaha' => 'Usaha bersama',
+            'berbadan_hukum' => true,
+            'belum_berbadan_hukum' => false,
+            'jumlah_anggota_l' => 5,
+            'jumlah_anggota_p' => 10,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminKecamatan)
+            ->get(route('kecamatan.koperasi.show', $koperasi->id))
+            ->assertStatus(403);
     }
 
     #[Test]
@@ -114,6 +149,7 @@ class KecamatanKoperasiTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -134,6 +170,7 @@ class KecamatanKoperasiTest extends TestCase
         $userStale = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $userStale->assignRole('admin-kecamatan');
 

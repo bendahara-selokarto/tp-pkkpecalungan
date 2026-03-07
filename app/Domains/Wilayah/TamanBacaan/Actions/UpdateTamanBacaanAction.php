@@ -22,6 +22,7 @@ class UpdateTamanBacaanAction
             'jenis_buku' => $payload['jenis_buku'],
             'kategori' => $payload['kategori'],
             'jumlah' => $payload['jumlah'],
+            'tahun_anggaran' => $tamanBacaan->tahun_anggaran,
             'level' => $tamanBacaan->level,
             'area_id' => $tamanBacaan->area_id,
             'created_by' => $tamanBacaan->created_by,
@@ -30,5 +31,4 @@ class UpdateTamanBacaanAction
         return $this->tamanBacaanRepository->update($tamanBacaan, $data);
     }
 }
-
 

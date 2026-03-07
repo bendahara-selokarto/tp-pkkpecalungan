@@ -22,6 +22,7 @@ class UpdateKejarPaketAction
             'jumlah_warga_belajar_p' => $payload['jumlah_warga_belajar_p'],
             'jumlah_pengajar_l' => $payload['jumlah_pengajar_l'],
             'jumlah_pengajar_p' => $payload['jumlah_pengajar_p'],
+            'tahun_anggaran' => $kejarPaket->tahun_anggaran,
             'level' => $kejarPaket->level,
             'area_id' => $kejarPaket->area_id,
             'created_by' => $kejarPaket->created_by,
@@ -30,7 +31,6 @@ class UpdateKejarPaketAction
         return $this->kejarPaketRepository->update($kejarPaket, $data);
     }
 }
-
 
 
 

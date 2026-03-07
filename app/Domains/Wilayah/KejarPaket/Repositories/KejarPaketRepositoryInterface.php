@@ -11,9 +11,9 @@ interface KejarPaketRepositoryInterface
 {
     public function store(KejarPaketData $data): KejarPaket;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection;
 
     public function find(int $id): KejarPaket;
 
@@ -21,7 +21,6 @@ interface KejarPaketRepositoryInterface
 
     public function delete(KejarPaket $kejarPaket): void;
 }
-
 
 
 

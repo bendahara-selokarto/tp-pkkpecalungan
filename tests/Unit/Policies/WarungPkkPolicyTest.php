@@ -15,6 +15,8 @@ class WarungPkkPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     #[Test]
     public function admin_desa_hanya_boleh_melihat_warung_pkk_pada_desanya_sendiri(): void
     {
@@ -24,7 +26,11 @@ class WarungPkkPolicyTest extends TestCase
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desaA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         $milikSendiri = WarungPkk::create([
@@ -36,6 +42,7 @@ class WarungPkkPolicyTest extends TestCase
             'level' => 'desa',
             'area_id' => $desaA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $milikDesaLain = WarungPkk::create([
@@ -47,12 +54,45 @@ class WarungPkkPolicyTest extends TestCase
             'level' => 'desa',
             'area_id' => $desaB->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $policy = app(WarungPkkPolicy::class);
 
         $this->assertTrue($policy->view($user, $milikSendiri));
         $this->assertFalse($policy->view($user, $milikDesaLain));
+    }
+
+    #[Test]
+    public function admin_desa_tidak_boleh_melihat_warung_pkk_tahun_anggaran_lain(): void
+    {
+        Role::create(['name' => 'admin-desa']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $warungPkk = WarungPkk::create([
+            'nama_warung_pkk' => 'Warung Lama',
+            'nama_pengelola' => 'Siti Aminah',
+            'komoditi' => 'Beras',
+            'kategori' => 'Pangan',
+            'volume' => '100 kg',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $policy = app(WarungPkkPolicy::class);
+
+        $this->assertFalse($policy->view($user, $warungPkk));
     }
 
     #[Test]
@@ -63,7 +103,11 @@ class WarungPkkPolicyTest extends TestCase
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id]);
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatanA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-kecamatan');
 
         $warungPkkLuar = WarungPkk::create([
@@ -75,6 +119,7 @@ class WarungPkkPolicyTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $kecamatanB->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $policy = app(WarungPkkPolicy::class);

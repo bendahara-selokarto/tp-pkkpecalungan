@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\WarungPkk\Services;
 
 use App\Domains\Wilayah\Services\UserAreaContextService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\WarungPkk\Models\WarungPkk;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,7 +11,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class WarungPkkScopeService
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
@@ -30,7 +32,8 @@ class WarungPkkScopeService
             return false;
         }
 
-        return (int) $warungPkk->area_id === (int) $user->area_id;
+        return (int) $warungPkk->area_id === (int) $user->area_id
+            && (int) $warungPkk->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, WarungPkk $warungPkk): bool
@@ -43,9 +46,13 @@ class WarungPkkScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(WarungPkk $warungPkk, string $level, int $areaId): WarungPkk
+    public function authorizeSameLevelAreaAndBudgetYear(WarungPkk $warungPkk, string $level, int $areaId, int $tahunAnggaran): WarungPkk
     {
-        if ($warungPkk->level !== $level || (int) $warungPkk->area_id !== $areaId) {
+        if (
+            $warungPkk->level !== $level
+            || (int) $warungPkk->area_id !== $areaId
+            || (int) $warungPkk->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 

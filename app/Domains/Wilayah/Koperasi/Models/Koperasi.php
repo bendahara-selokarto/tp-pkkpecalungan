@@ -17,6 +17,7 @@ class Koperasi extends Model
         'belum_berbadan_hukum',
         'jumlah_anggota_l',
         'jumlah_anggota_p',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -29,7 +30,19 @@ class Koperasi extends Model
             'belum_berbadan_hukum' => 'boolean',
             'jumlah_anggota_l' => 'integer',
             'jumlah_anggota_p' => 'integer',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Koperasi $koperasi): void {
+            if (is_numeric($koperasi->tahun_anggaran)) {
+                return;
+            }
+
+            $koperasi->tahun_anggaran = (int) now()->format('Y');
+        });
     }
 
     public function area()
@@ -42,5 +55,4 @@ class Koperasi extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-
 

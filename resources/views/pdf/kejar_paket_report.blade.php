@@ -18,11 +18,13 @@
         $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
         $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $level);
         $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
+        $budgetYearLabel = $tahunAnggaran ?? ($printedBy?->active_budget_year ?? now()->format('Y'));
     @endphp
 
     <div class="title">DATA ISIAN KEJAR PAKET/KF/PAUD {{ $levelLabel }}</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
+        Tahun Anggaran: {{ $budgetYearLabel }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
@@ -72,7 +74,6 @@
     </table>
 </body>
 </html>
-
 
 
 

@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\Koperasi\Services;
 
 use App\Domains\Wilayah\Services\UserAreaContextService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Koperasi\Models\Koperasi;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,7 +11,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class KoperasiScopeService
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
@@ -30,7 +32,8 @@ class KoperasiScopeService
             return false;
         }
 
-        return (int) $koperasi->area_id === (int) $user->area_id;
+        return (int) $koperasi->area_id === (int) $user->area_id
+            && (int) $koperasi->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, Koperasi $koperasi): bool
@@ -43,15 +46,18 @@ class KoperasiScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(Koperasi $koperasi, string $level, int $areaId): Koperasi
+    public function authorizeSameLevelAreaAndBudgetYear(Koperasi $koperasi, string $level, int $areaId, int $tahunAnggaran): Koperasi
     {
-        if ($koperasi->level !== $level || (int) $koperasi->area_id !== $areaId) {
+        if (
+            $koperasi->level !== $level
+            || (int) $koperasi->area_id !== $areaId
+            || (int) $koperasi->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
         return $koperasi;
     }
 }
-
 
 

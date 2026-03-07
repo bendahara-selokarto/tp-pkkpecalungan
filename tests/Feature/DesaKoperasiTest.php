@@ -14,6 +14,8 @@ class DesaKoperasiTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -49,6 +51,7 @@ class DesaKoperasiTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -62,6 +65,7 @@ class DesaKoperasiTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         Koperasi::create([
@@ -74,6 +78,7 @@ class DesaKoperasiTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/koperasi');
@@ -84,11 +89,54 @@ class DesaKoperasiTest extends TestCase
     }
 
     #[Test]
+    public function admin_desa_hanya_melihat_koperasi_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        Koperasi::create([
+            'nama_koperasi' => 'Koperasi Aktif',
+            'jenis_usaha' => 'Simpan pinjam',
+            'berbadan_hukum' => true,
+            'belum_berbadan_hukum' => false,
+            'jumlah_anggota_l' => 12,
+            'jumlah_anggota_p' => 25,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        Koperasi::create([
+            'nama_koperasi' => 'Koperasi Lama',
+            'jenis_usaha' => 'Usaha bersama',
+            'berbadan_hukum' => false,
+            'belum_berbadan_hukum' => true,
+            'jumlah_anggota_l' => 9,
+            'jumlah_anggota_p' => 18,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminDesa)->get('/desa/koperasi')
+            ->assertOk()
+            ->assertSee('Koperasi Aktif')
+            ->assertDontSee('Koperasi Lama');
+    }
+
+    #[Test]
     public function admin_desa_dapat_menambah_memperbarui_dan_menghapus_koperasi(): void
     {
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -119,6 +167,7 @@ class DesaKoperasiTest extends TestCase
             'belum_berbadan_hukum' => 1,
             'jumlah_anggota_l' => 10,
             'jumlah_anggota_p' => 20,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.koperasi.destroy', $koperasi->id))
@@ -133,6 +182,7 @@ class DesaKoperasiTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -147,6 +197,7 @@ class DesaKoperasiTest extends TestCase
         $userStale = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $userStale->assignRole('admin-desa');
 

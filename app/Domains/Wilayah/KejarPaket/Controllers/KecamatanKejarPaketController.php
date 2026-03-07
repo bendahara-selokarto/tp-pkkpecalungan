@@ -49,6 +49,7 @@ class KecamatanKejarPaketController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -82,6 +83,7 @@ class KecamatanKejarPaketController extends Controller
                 'jumlah_warga_belajar_p' => $kejarPaket->jumlah_warga_belajar_p,
                 'jumlah_pengajar_l' => $kejarPaket->jumlah_pengajar_l,
                 'jumlah_pengajar_p' => $kejarPaket->jumlah_pengajar_p,
+                'tahun_anggaran' => $kejarPaket->tahun_anggaran,
             ],
         ]);
     }
@@ -100,6 +102,7 @@ class KecamatanKejarPaketController extends Controller
                 'jumlah_warga_belajar_p' => $kejarPaket->jumlah_warga_belajar_p,
                 'jumlah_pengajar_l' => $kejarPaket->jumlah_pengajar_l,
                 'jumlah_pengajar_p' => $kejarPaket->jumlah_pengajar_p,
+                'tahun_anggaran' => $kejarPaket->tahun_anggaran,
             ],
         ]);
     }
@@ -122,7 +125,6 @@ class KecamatanKejarPaketController extends Controller
         return redirect()->route('kecamatan.kejar-paket.index')->with('success', 'Data kejar paket berhasil dihapus');
     }
 }
-
 
 
 

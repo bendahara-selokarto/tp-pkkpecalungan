@@ -21,6 +21,7 @@ class UpdateWarungPkkAction
             'komoditi' => $payload['komoditi'],
             'kategori' => $payload['kategori'],
             'volume' => $payload['volume'],
+            'tahun_anggaran' => $warungPkk->tahun_anggaran,
             'level' => $warungPkk->level,
             'area_id' => $warungPkk->area_id,
             'created_by' => $warungPkk->created_by,

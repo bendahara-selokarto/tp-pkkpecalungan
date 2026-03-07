@@ -14,6 +14,8 @@ class DesaKejarPaketTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -49,6 +51,7 @@ class DesaKejarPaketTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -62,6 +65,7 @@ class DesaKejarPaketTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         KejarPaket::create([
@@ -74,6 +78,7 @@ class DesaKejarPaketTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/kejar-paket');
@@ -84,11 +89,54 @@ class DesaKejarPaketTest extends TestCase
     }
 
     #[Test]
+    public function admin_desa_hanya_melihat_kejar_paket_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        KejarPaket::create([
+            'nama_kejar_paket' => 'PKBM Aktif',
+            'jenis_kejar_paket' => 'Paket B',
+            'jumlah_warga_belajar_l' => 18,
+            'jumlah_warga_belajar_p' => 25,
+            'jumlah_pengajar_l' => 2,
+            'jumlah_pengajar_p' => 3,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        KejarPaket::create([
+            'nama_kejar_paket' => 'PKBM Lama',
+            'jenis_kejar_paket' => 'PAUD',
+            'jumlah_warga_belajar_l' => 10,
+            'jumlah_warga_belajar_p' => 12,
+            'jumlah_pengajar_l' => 1,
+            'jumlah_pengajar_p' => 2,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminDesa)->get('/desa/kejar-paket')
+            ->assertOk()
+            ->assertSee('PKBM Aktif')
+            ->assertDontSee('PKBM Lama');
+    }
+
+    #[Test]
     public function admin_desa_dapat_menambah_memperbarui_dan_menghapus_kejar_paket(): void
     {
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -118,6 +166,7 @@ class DesaKejarPaketTest extends TestCase
             'jumlah_warga_belajar_l' => 12,
             'jumlah_warga_belajar_p' => 15,
             'jumlah_pengajar_p' => 3,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.kejar-paket.destroy', $kejarPaket->id))
@@ -132,6 +181,7 @@ class DesaKejarPaketTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -146,6 +196,7 @@ class DesaKejarPaketTest extends TestCase
         $userStale = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $userStale->assignRole('admin-desa');
 

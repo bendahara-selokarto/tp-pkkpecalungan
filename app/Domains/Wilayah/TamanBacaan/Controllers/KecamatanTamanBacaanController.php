@@ -51,6 +51,7 @@ class KecamatanTamanBacaanController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -84,6 +85,7 @@ class KecamatanTamanBacaanController extends Controller
                 'jenis_buku' => $tamanBacaan->jenis_buku,
                 'kategori' => $tamanBacaan->kategori,
                 'jumlah' => $tamanBacaan->jumlah,
+                'tahun_anggaran' => $tamanBacaan->tahun_anggaran,
             ],
         ]);
     }
@@ -102,6 +104,7 @@ class KecamatanTamanBacaanController extends Controller
                 'jenis_buku' => $tamanBacaan->jenis_buku,
                 'kategori' => $tamanBacaan->kategori,
                 'jumlah' => $tamanBacaan->jumlah,
+                'tahun_anggaran' => $tamanBacaan->tahun_anggaran,
             ],
         ]);
     }
@@ -124,4 +127,3 @@ class KecamatanTamanBacaanController extends Controller
         return redirect()->route('kecamatan.taman-bacaan.index')->with('success', 'Data isian taman bacaan/perpustakaan berhasil dihapus');
     }
 }
-

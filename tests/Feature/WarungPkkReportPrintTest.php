@@ -13,6 +13,8 @@ class WarungPkkReportPrintTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
     protected Area $kecamatanB;
     protected Area $desaA;
@@ -31,7 +33,11 @@ class WarungPkkReportPrintTest extends TestCase
 
     public function test_admin_desa_dapat_mencetak_laporan_pdf_warung_pkk_desanya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desaA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         WarungPkk::create([
@@ -43,6 +49,7 @@ class WarungPkkReportPrintTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($user)->get(route('desa.warung-pkk.report'));
@@ -53,7 +60,11 @@ class WarungPkkReportPrintTest extends TestCase
 
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_warung_pkk_kecamatannya_sendiri(): void
     {
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-kecamatan');
 
         WarungPkk::create([
@@ -65,6 +76,7 @@ class WarungPkkReportPrintTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($user)->get(route('kecamatan.warung-pkk.report'));
@@ -75,7 +87,11 @@ class WarungPkkReportPrintTest extends TestCase
 
     public function test_laporan_pdf_warung_pkk_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->kecamatanB->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         $response = $this->actingAs($user)->get(route('desa.warung-pkk.report'));

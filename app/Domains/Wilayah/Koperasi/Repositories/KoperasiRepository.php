@@ -18,27 +18,30 @@ class KoperasiRepository implements KoperasiRepositoryInterface
             'belum_berbadan_hukum' => $data->belum_berbadan_hukum,
             'jumlah_anggota_l' => $data->jumlah_anggota_l,
             'jumlah_anggota_p' => $data->jumlah_anggota_p,
+            'tahun_anggaran' => $data->tahun_anggaran,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator
     {
         return Koperasi::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection
     {
         return Koperasi::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->get();
     }
@@ -57,6 +60,7 @@ class KoperasiRepository implements KoperasiRepositoryInterface
             'belum_berbadan_hukum' => $data->belum_berbadan_hukum,
             'jumlah_anggota_l' => $data->jumlah_anggota_l,
             'jumlah_anggota_p' => $data->jumlah_anggota_p,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 
         return $koperasi;
@@ -67,5 +71,4 @@ class KoperasiRepository implements KoperasiRepositoryInterface
         $koperasi->delete();
     }
 }
-
 

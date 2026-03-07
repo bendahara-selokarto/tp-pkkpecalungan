@@ -17,27 +17,30 @@ class WarungPkkRepository implements WarungPkkRepositoryInterface
             'komoditi' => $data->komoditi,
             'kategori' => $data->kategori,
             'volume' => $data->volume,
+            'tahun_anggaran' => $data->tahun_anggaran,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator
     {
         return WarungPkk::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection
     {
         return WarungPkk::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->latest('id')
             ->get();
     }
@@ -55,6 +58,7 @@ class WarungPkkRepository implements WarungPkkRepositoryInterface
             'komoditi' => $data->komoditi,
             'kategori' => $data->kategori,
             'volume' => $data->volume,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 
         return $warungPkk;

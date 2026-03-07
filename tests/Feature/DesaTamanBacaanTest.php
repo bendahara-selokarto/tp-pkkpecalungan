@@ -15,6 +15,8 @@ class DesaTamanBacaanTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -50,6 +52,7 @@ class DesaTamanBacaanTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -63,6 +66,7 @@ class DesaTamanBacaanTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         TamanBacaan::create([
@@ -75,6 +79,7 @@ class DesaTamanBacaanTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/taman-bacaan');
@@ -86,7 +91,8 @@ class DesaTamanBacaanTest extends TestCase
                 ->has('tamanBacaanItems.data', 1)
                 ->where('tamanBacaanItems.data.0.nama_taman_bacaan', 'Taman Bacaan Mawar')
                 ->where('tamanBacaanItems.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -96,6 +102,7 @@ class DesaTamanBacaanTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -110,6 +117,7 @@ class DesaTamanBacaanTest extends TestCase
                 'level' => 'desa',
                 'area_id' => $this->desaA->id,
                 'created_by' => $adminDesa->id,
+                'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
             ]);
         }
 
@@ -123,6 +131,7 @@ class DesaTamanBacaanTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/taman-bacaan?page=2&per_page=10');
@@ -136,8 +145,53 @@ class DesaTamanBacaanTest extends TestCase
                 ->where('tamanBacaanItems.current_page', 2)
                 ->where('tamanBacaanItems.per_page', 10)
                 ->where('tamanBacaanItems.total', 12)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
+    }
+
+    #[Test]
+    public function admin_desa_hanya_melihat_taman_bacaan_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        TamanBacaan::create([
+            'nama_taman_bacaan' => 'Taman Aktif',
+            'nama_pengelola' => 'Pengelola Default',
+            'jumlah_buku_bacaan' => '100 buku',
+            'jenis_buku' => 'Umum',
+            'kategori' => 'Kategori',
+            'jumlah' => '10',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        TamanBacaan::create([
+            'nama_taman_bacaan' => 'Taman Lama',
+            'nama_pengelola' => 'Pengelola Lama',
+            'jumlah_buku_bacaan' => '90 buku',
+            'jenis_buku' => 'Lama',
+            'kategori' => 'Kategori',
+            'jumlah' => '8',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminDesa)->get('/desa/taman-bacaan')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('tamanBacaanItems.total', 1)
+                ->where('tamanBacaanItems.data.0.nama_taman_bacaan', 'Taman Aktif')
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR));
     }
 
     #[Test]
@@ -146,6 +200,7 @@ class DesaTamanBacaanTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -159,6 +214,7 @@ class DesaTamanBacaanTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/taman-bacaan?per_page=999');
@@ -168,7 +224,8 @@ class DesaTamanBacaanTest extends TestCase
             $page
                 ->component('Desa/TamanBacaan/Index')
                 ->where('filters.per_page', 10)
-                ->where('tamanBacaanItems.per_page', 10);
+                ->where('tamanBacaanItems.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -178,6 +235,7 @@ class DesaTamanBacaanTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -206,6 +264,7 @@ class DesaTamanBacaanTest extends TestCase
             'jumlah_buku_bacaan' => '175 buku',
             'jenis_buku' => 'Keterampilan keluarga',
             'jumlah' => '45',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.taman-bacaan.destroy', $tamanBacaan->id))
@@ -220,6 +279,7 @@ class DesaTamanBacaanTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -234,6 +294,7 @@ class DesaTamanBacaanTest extends TestCase
         $userStale = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $userStale->assignRole('admin-desa');
 

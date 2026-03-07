@@ -11,6 +11,7 @@ class KoperasiData
         public bool $belum_berbadan_hukum,
         public int $jumlah_anggota_l,
         public int $jumlah_anggota_p,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
@@ -26,11 +27,11 @@ class KoperasiData
             (bool) $data['belum_berbadan_hukum'],
             (int) $data['jumlah_anggota_l'],
             (int) $data['jumlah_anggota_p'],
+            (int) $data['tahun_anggaran'],
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],
         );
     }
 }
-
 

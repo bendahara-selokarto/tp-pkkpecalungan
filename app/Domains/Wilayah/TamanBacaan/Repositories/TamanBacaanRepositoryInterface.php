@@ -11,9 +11,9 @@ interface TamanBacaanRepositoryInterface
 {
     public function store(TamanBacaanData $data): TamanBacaan;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran): Collection;
 
     public function find(int $id): TamanBacaan;
 
@@ -21,4 +21,3 @@ interface TamanBacaanRepositoryInterface
 
     public function delete(TamanBacaan $tamanBacaan): void;
 }
-

@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\KejarPaket\Services;
 
 use App\Domains\Wilayah\Services\UserAreaContextService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,7 +11,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class KejarPaketScopeService
 {
     public function __construct(
-        private readonly UserAreaContextService $userAreaContextService
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
@@ -30,7 +32,8 @@ class KejarPaketScopeService
             return false;
         }
 
-        return (int) $kejarPaket->area_id === (int) $user->area_id;
+        return (int) $kejarPaket->area_id === (int) $user->area_id
+            && (int) $kejarPaket->tahun_anggaran === $this->activeBudgetYearContextService->resolveForUser($user);
     }
 
     public function canUpdate(User $user, KejarPaket $kejarPaket): bool
@@ -43,16 +46,19 @@ class KejarPaketScopeService
         return $this->userAreaContextService->requireUserAreaId();
     }
 
-    public function authorizeSameLevelAndArea(KejarPaket $kejarPaket, string $level, int $areaId): KejarPaket
+    public function authorizeSameLevelAreaAndBudgetYear(KejarPaket $kejarPaket, string $level, int $areaId, int $tahunAnggaran): KejarPaket
     {
-        if ($kejarPaket->level !== $level || (int) $kejarPaket->area_id !== $areaId) {
+        if (
+            $kejarPaket->level !== $level
+            || (int) $kejarPaket->area_id !== $areaId
+            || (int) $kejarPaket->tahun_anggaran !== $tahunAnggaran
+        ) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
         return $kejarPaket;
     }
 }
-
 
 
 

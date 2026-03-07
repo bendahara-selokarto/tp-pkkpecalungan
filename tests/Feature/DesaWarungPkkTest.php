@@ -14,6 +14,8 @@ class DesaWarungPkkTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatan;
     protected Area $desaA;
     protected Area $desaB;
@@ -49,6 +51,7 @@ class DesaWarungPkkTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -61,6 +64,7 @@ class DesaWarungPkkTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaA->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         WarungPkk::create([
@@ -72,6 +76,7 @@ class DesaWarungPkkTest extends TestCase
             'level' => 'desa',
             'area_id' => $this->desaB->id,
             'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($adminDesa)->get('/desa/warung-pkk');
@@ -82,11 +87,52 @@ class DesaWarungPkkTest extends TestCase
     }
 
     #[Test]
+    public function admin_desa_hanya_melihat_warung_pkk_pada_tahun_anggaran_aktif(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('admin-desa');
+
+        WarungPkk::create([
+            'nama_warung_pkk' => 'Warung Aktif',
+            'nama_pengelola' => 'Siti Aminah',
+            'komoditi' => 'Beras',
+            'kategori' => 'Pangan',
+            'volume' => '100 kg',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        WarungPkk::create([
+            'nama_warung_pkk' => 'Warung Lama',
+            'nama_pengelola' => 'Rina Wati',
+            'komoditi' => 'Minyak goreng',
+            'kategori' => 'Pangan',
+            'volume' => '80 liter',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $this->actingAs($adminDesa)->get('/desa/warung-pkk')
+            ->assertOk()
+            ->assertSee('Warung Aktif')
+            ->assertDontSee('Warung Lama');
+    }
+
+    #[Test]
     public function admin_desa_dapat_menambah_memperbarui_dan_menghapus_warung_pkk(): void
     {
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 
@@ -112,6 +158,7 @@ class DesaWarungPkkTest extends TestCase
             'id' => $warungPkk->id,
             'komoditi' => 'Telur ayam',
             'volume' => '30 kg',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.warung-pkk.destroy', $warungPkk->id))
@@ -126,6 +173,7 @@ class DesaWarungPkkTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
@@ -140,6 +188,7 @@ class DesaWarungPkkTest extends TestCase
         $userStale = User::factory()->create([
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $userStale->assignRole('admin-desa');
 

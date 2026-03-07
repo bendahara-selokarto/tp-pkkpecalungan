@@ -16,10 +16,29 @@ class WarungPkk extends Model
         'komoditi',
         'kategori',
         'volume',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (WarungPkk $warungPkk): void {
+            if (is_numeric($warungPkk->tahun_anggaran)) {
+                return;
+            }
+
+            $warungPkk->tahun_anggaran = (int) now()->format('Y');
+        });
+    }
 
     public function area()
     {

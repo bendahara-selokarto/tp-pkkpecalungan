@@ -17,10 +17,29 @@ class TamanBacaan extends Model
         'jenis_buku',
         'kategori',
         'jumlah',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (TamanBacaan $tamanBacaan): void {
+            if (is_numeric($tamanBacaan->tahun_anggaran)) {
+                return;
+            }
+
+            $tamanBacaan->tahun_anggaran = (int) now()->format('Y');
+        });
+    }
 
     public function area()
     {
@@ -32,5 +51,4 @@ class TamanBacaan extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 }
-
 

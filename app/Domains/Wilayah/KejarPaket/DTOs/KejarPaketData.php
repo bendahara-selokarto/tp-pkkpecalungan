@@ -11,6 +11,7 @@ class KejarPaketData
         public int $jumlah_warga_belajar_p,
         public int $jumlah_pengajar_l,
         public int $jumlah_pengajar_p,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
@@ -26,13 +27,13 @@ class KejarPaketData
             (int) $data['jumlah_warga_belajar_p'],
             (int) $data['jumlah_pengajar_l'],
             (int) $data['jumlah_pengajar_p'],
+            (int) $data['tahun_anggaran'],
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],
         );
     }
 }
-
 
 
 

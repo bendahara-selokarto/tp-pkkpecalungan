@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\Koperasi\Controllers;
 use App\Domains\Wilayah\Koperasi\Models\Koperasi;
 use App\Domains\Wilayah\Koperasi\UseCases\ListScopedKoperasiUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,6 +14,7 @@ class KoperasiPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedKoperasiUseCase $listScopedKoperasiUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {
     }
@@ -37,10 +39,12 @@ class KoperasiPrintController extends Controller
             ->values();
 
         $user = auth()->user()->loadMissing('area');
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
         $pdf = $this->pdfViewFactory->loadView('pdf.koperasi_report', [
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
         ]);
@@ -48,5 +52,4 @@ class KoperasiPrintController extends Controller
         return $pdf->stream("koperasi-{$level}-report.pdf");
     }
 }
-
 

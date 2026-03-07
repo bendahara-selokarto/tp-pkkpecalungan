@@ -6,17 +6,21 @@ use App\Domains\Wilayah\KejarPaket\DTOs\KejarPaketData;
 use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
 use App\Domains\Wilayah\KejarPaket\Repositories\KejarPaketRepositoryInterface;
 use App\Domains\Wilayah\KejarPaket\Services\KejarPaketScopeService;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 
 class CreateScopedKejarPaketAction
 {
     public function __construct(
         private readonly KejarPaketRepositoryInterface $kejarPaketRepository,
-        private readonly KejarPaketScopeService $kejarPaketScopeService
+        private readonly KejarPaketScopeService $kejarPaketScopeService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
     ) {
     }
 
     public function execute(array $payload, string $level): KejarPaket
     {
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser(auth()->user());
+
         $data = KejarPaketData::fromArray([
             'nama_kejar_paket' => $payload['nama_kejar_paket'],
             'jenis_kejar_paket' => $payload['jenis_kejar_paket'],
@@ -24,6 +28,7 @@ class CreateScopedKejarPaketAction
             'jumlah_warga_belajar_p' => $payload['jumlah_warga_belajar_p'],
             'jumlah_pengajar_l' => $payload['jumlah_pengajar_l'],
             'jumlah_pengajar_p' => $payload['jumlah_pengajar_p'],
+            'tahun_anggaran' => $tahunAnggaran,
             'level' => $level,
             'area_id' => $this->kejarPaketScopeService->requireUserAreaId(),
             'created_by' => (int) auth()->id(),
@@ -32,7 +37,6 @@ class CreateScopedKejarPaketAction
         return $this->kejarPaketRepository->store($data);
     }
 }
-
 
 
 
