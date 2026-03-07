@@ -23,6 +23,7 @@ class AnggotaPokja extends Model
         'pekerjaan',
         'keterangan',
         'pokja',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
@@ -32,7 +33,19 @@ class AnggotaPokja extends Model
     {
         return [
             'tanggal_lahir' => 'date',
+            'tahun_anggaran' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (AnggotaPokja $anggotaPokja): void {
+            if (is_numeric($anggotaPokja->tahun_anggaran)) {
+                return;
+            }
+
+            $anggotaPokja->tahun_anggaran = (int) now()->format('Y');
+        });
     }
 
     protected $appends = [

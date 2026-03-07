@@ -53,6 +53,7 @@ class DesaPrestasiLombaController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -88,6 +89,7 @@ class DesaPrestasiLombaController extends Controller
                 'prestasi_provinsi' => (bool) $prestasiLomba->prestasi_provinsi,
                 'prestasi_nasional' => (bool) $prestasiLomba->prestasi_nasional,
                 'keterangan' => $prestasiLomba->keterangan,
+                'tahun_anggaran' => $prestasiLomba->tahun_anggaran,
             ],
         ]);
     }
@@ -108,6 +110,7 @@ class DesaPrestasiLombaController extends Controller
                 'prestasi_provinsi' => (bool) $prestasiLomba->prestasi_provinsi,
                 'prestasi_nasional' => (bool) $prestasiLomba->prestasi_nasional,
                 'keterangan' => $prestasiLomba->keterangan,
+                'tahun_anggaran' => $prestasiLomba->tahun_anggaran,
             ],
         ]);
     }

@@ -49,6 +49,7 @@ class DesaAnggotaPokjaController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -88,6 +89,7 @@ class DesaAnggotaPokjaController extends Controller
                 'pekerjaan' => $anggotaPokja->pekerjaan,
                 'keterangan' => $anggotaPokja->keterangan,
                 'pokja' => $anggotaPokja->pokja,
+                'tahun_anggaran' => $anggotaPokja->tahun_anggaran,
             ],
         ]);
     }
@@ -111,6 +113,7 @@ class DesaAnggotaPokjaController extends Controller
                 'pekerjaan' => $anggotaPokja->pekerjaan,
                 'keterangan' => $anggotaPokja->keterangan,
                 'pokja' => $anggotaPokja->pokja,
+                'tahun_anggaran' => $anggotaPokja->tahun_anggaran,
             ],
         ]);
     }

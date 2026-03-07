@@ -11,9 +11,9 @@ interface PrestasiLombaRepositoryInterface
 {
     public function store(PrestasiLombaData $data): PrestasiLomba;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection;
 
     public function find(int $id): PrestasiLomba;
 
@@ -21,4 +21,3 @@ interface PrestasiLombaRepositoryInterface
 
     public function delete(PrestasiLomba $prestasiLomba): void;
 }
-

@@ -10,13 +10,13 @@ class UpdateBantuanAction
 {
     public function __construct(
         private readonly BantuanRepositoryInterface $bantuanRepository
-    ) {
-    }
+    ) {}
 
     public function execute(Bantuan $bantuan, array $payload): Bantuan
     {
         $data = BantuanData::fromArray([
             ...$payload,
+            'tahun_anggaran' => $bantuan->tahun_anggaran,
             'level' => $bantuan->level,
             'area_id' => $bantuan->area_id,
             'created_by' => $bantuan->created_by,

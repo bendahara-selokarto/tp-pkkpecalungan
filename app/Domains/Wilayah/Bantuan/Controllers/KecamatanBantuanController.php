@@ -43,6 +43,7 @@ class KecamatanBantuanController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -122,6 +123,7 @@ class KecamatanBantuanController extends Controller
             'asal_bantuan' => $item->source,
             'jumlah' => $item->amount,
             'tanggal' => $this->formatDateForPayload($item->received_date),
+            'tahun_anggaran' => $item->tahun_anggaran,
         ];
     }
 }

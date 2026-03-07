@@ -38,7 +38,7 @@
     <div class="lampiran">LAMPIRAN 4.11</div>
     <div class="title">BUKU TABUNGAN</div>
     <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }}
+        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }} | Tahun anggaran: {{ $budgetYearLabel ?? '-' }}
     </div>
 
     <table>

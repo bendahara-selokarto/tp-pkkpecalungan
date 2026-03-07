@@ -15,7 +15,10 @@ class KecamatanPrestasiLombaTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected Area $kecamatanA;
+
     protected Area $kecamatanB;
 
     protected function setUp(): void
@@ -42,11 +45,12 @@ class KecamatanPrestasiLombaTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
         PrestasiLomba::create([
-            'tahun' => 2025,
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
             'jenis_lomba' => 'Lomba PKK Kecamatan A',
             'lokasi' => 'Pendopo Kecamatan A',
             'prestasi_kecamatan' => true,
@@ -60,7 +64,7 @@ class KecamatanPrestasiLombaTest extends TestCase
         ]);
 
         PrestasiLomba::create([
-            'tahun' => 2025,
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
             'jenis_lomba' => 'Lomba PKK Kecamatan B',
             'lokasi' => 'Pendopo Kecamatan B',
             'prestasi_kecamatan' => true,
@@ -82,7 +86,8 @@ class KecamatanPrestasiLombaTest extends TestCase
                 ->has('prestasiLombaItems.data', 1)
                 ->where('prestasiLombaItems.data.0.jenis_lomba', 'Lomba PKK Kecamatan A')
                 ->where('prestasiLombaItems.total', 1)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -92,13 +97,14 @@ class KecamatanPrestasiLombaTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
         for ($index = 1; $index <= 11; $index++) {
             PrestasiLomba::create([
-                'tahun' => 2025,
-                'jenis_lomba' => 'Lomba Kecamatan ' . $index,
+                'tahun' => self::ACTIVE_BUDGET_YEAR,
+                'jenis_lomba' => 'Lomba Kecamatan '.$index,
                 'lokasi' => 'Pendopo Kecamatan',
                 'prestasi_kecamatan' => true,
                 'prestasi_kabupaten' => false,
@@ -112,7 +118,7 @@ class KecamatanPrestasiLombaTest extends TestCase
         }
 
         PrestasiLomba::create([
-            'tahun' => 2025,
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
             'jenis_lomba' => 'Lomba Bocor',
             'lokasi' => 'Kecamatan Lain',
             'prestasi_kecamatan' => true,
@@ -136,7 +142,8 @@ class KecamatanPrestasiLombaTest extends TestCase
                 ->where('prestasiLombaItems.current_page', 2)
                 ->where('prestasiLombaItems.per_page', 10)
                 ->where('prestasiLombaItems.total', 11)
-                ->where('filters.per_page', 10);
+                ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
         });
     }
 
@@ -146,11 +153,12 @@ class KecamatanPrestasiLombaTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
         PrestasiLomba::create([
-            'tahun' => 2025,
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
             'jenis_lomba' => 'Lomba Default',
             'lokasi' => 'Pendopo Kecamatan',
             'prestasi_kecamatan' => true,
@@ -170,6 +178,7 @@ class KecamatanPrestasiLombaTest extends TestCase
             $page
                 ->component('Kecamatan/PrestasiLomba/Index')
                 ->where('filters.per_page', 10)
+                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR)
                 ->where('prestasiLombaItems.per_page', 10);
         });
     }
@@ -180,11 +189,12 @@ class KecamatanPrestasiLombaTest extends TestCase
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminKecamatan->assignRole('admin-kecamatan');
 
         $prestasiLuar = PrestasiLomba::create([
-            'tahun' => 2025,
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
             'jenis_lomba' => 'Lomba Luar Area',
             'lokasi' => 'Limpung',
             'prestasi_kecamatan' => true,
@@ -215,6 +225,7 @@ class KecamatanPrestasiLombaTest extends TestCase
         $adminDesa = User::factory()->create([
             'area_id' => $desa->id,
             'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $adminDesa->assignRole('admin-desa');
 

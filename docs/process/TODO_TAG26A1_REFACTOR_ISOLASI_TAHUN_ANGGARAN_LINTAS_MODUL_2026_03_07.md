@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `in-progress` (`state:wave2-education-economy-slice-implemented`)
+Status: `in-progress` (`state:wave2-family-service-and-administration-slices-implemented`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -114,6 +114,8 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - [x] Slice awal wave-2 terimplementasi: `BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`.
     - [x] Slice lanjutan wave-2 terimplementasi: `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`.
     - [x] Slice pendidikan/usaha wave-2 terimplementasi: `Koperasi`, `WarungPkk`, `TamanBacaan`, `KejarPaket`.
+    - [x] Slice layanan keluarga wave-2 terimplementasi: `BKL`, `BKR`, `Posyandu`, `DataPelatihanKader`.
+    - [x] Slice administrasi operasional wave-2 terimplementasi: `Bantuan`, `PrestasiLomba`, `AnggotaPokja`, `BukuKeuangan`.
     - [ ] Concern homogen wave-2 yang masih pending: concern sejenis lain di luar slice yang sudah terkunci.
   - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
   - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
@@ -134,6 +136,8 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] print/report test `AgendaSurat` mengikuti tahun aktif.
   - [x] feature/policy/report tests `Inventaris`, `AnggotaTimPenggerak`, dan `KaderKhusus` untuk anti data leak lintas tahun.
   - [x] feature/policy/report tests `Koperasi`, `WarungPkk`, `TamanBacaan`, dan `KejarPaket` untuk anti data leak lintas tahun.
+  - [x] feature/policy/report tests `BKL`, `BKR`, `Posyandu`, dan `DataPelatihanKader` untuk anti data leak lintas tahun.
+  - [x] feature/policy/report tests `Bantuan`, `PrestasiLomba`, `AnggotaPokja`, dan `BukuKeuangan` untuk anti data leak lintas tahun.
 - [x] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
 
 ### Matrix Implementasi Wave-1
@@ -228,3 +232,21 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] Backfill development untuk wave ini dikunci: seluruh concern pada slice ini memakai baseline eksplisit `2026` karena belum ada sumber tahun domain yang lebih presisi.
 - [x] Targeted regression tambahan wave-2 slice lulus: `68 passed`.
 - [x] Full suite setelah rollout slice pendidikan/usaha lulus: `1100 passed`.
+
+## Hasil Implementasi Wave-2 (Slice Layanan Keluarga)
+- [x] `BKL` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `BKR` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `Posyandu` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `DataPelatihanKader` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] PDF concern layanan keluarga menampilkan metadata tahun anggaran aktif dengan fallback kompatibel untuk baseline fixture lama.
+- [x] Full suite setelah rollout slice layanan keluarga lulus: `1112 passed`.
+
+## Hasil Implementasi Wave-2 (Slice Administrasi Operasional)
+- [x] `Bantuan` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `PrestasiLomba` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `AnggotaPokja` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] `BukuKeuangan` kini menyimpan `tahun_anggaran` dan seluruh list/detail/create/update/report sudah terisolasi per tahun aktif.
+- [x] PDF `Bantuan`, `PrestasiLomba`, `AnggotaPokja`, dan `BukuKeuangan` menampilkan metadata tahun anggaran aktif.
+- [x] Backfill development untuk slice ini dikunci: `Bantuan` memakai tahun dari `received_date`, `PrestasiLomba` memakai `tahun`, `BukuKeuangan` memakai tahun dari `transaction_date`, dan `AnggotaPokja` memakai baseline eksplisit `2026`.
+- [x] Targeted regression tambahan wave-2 slice lulus: `58 passed`.
+- [x] Full suite setelah rollout slice administrasi operasional lulus: `1114 passed`.

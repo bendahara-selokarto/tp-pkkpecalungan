@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\AnggotaPokja\Controllers;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
 use App\Domains\Wilayah\AnggotaPokja\UseCases\ListScopedAnggotaPokjaUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,9 @@ class AnggotaPokjaReportPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedAnggotaPokjaUseCase $listScopedAnggotaPokjaUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -41,6 +42,7 @@ class AnggotaPokjaReportPrintController extends Controller
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

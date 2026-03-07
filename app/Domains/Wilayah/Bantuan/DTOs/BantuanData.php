@@ -11,11 +11,11 @@ class BantuanData
         public string $asal_bantuan,
         public string $jumlah,
         public string $tanggal,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {
@@ -26,6 +26,7 @@ class BantuanData
             $data['asal_bantuan'],
             (string) $data['jumlah'],
             $data['tanggal'],
+            (int) $data['tahun_anggaran'],
             $data['level'],
             $data['area_id'],
             $data['created_by'],

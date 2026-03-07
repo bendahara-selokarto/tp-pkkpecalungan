@@ -10,8 +10,7 @@ class UpdateBukuKeuanganAction
 {
     public function __construct(
         private readonly BukuKeuanganRepositoryInterface $bukuKeuanganRepository
-    ) {
-    }
+    ) {}
 
     public function execute(BukuKeuangan $bukuKeuangan, array $payload): BukuKeuangan
     {
@@ -22,6 +21,7 @@ class UpdateBukuKeuanganAction
             'reference_number' => $payload['reference_number'] ?? null,
             'entry_type' => $payload['entry_type'],
             'amount' => $payload['amount'],
+            'tahun_anggaran' => $bukuKeuangan->tahun_anggaran,
             'level' => $bukuKeuangan->level,
             'area_id' => $bukuKeuangan->area_id,
             'created_by' => $bukuKeuangan->created_by,

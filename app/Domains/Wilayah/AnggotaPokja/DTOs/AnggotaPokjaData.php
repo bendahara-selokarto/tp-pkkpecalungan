@@ -16,11 +16,11 @@ class AnggotaPokjaData
         public string $pekerjaan,
         public ?string $keterangan,
         public string $pokja,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {
@@ -36,6 +36,7 @@ class AnggotaPokjaData
             $data['pekerjaan'],
             $data['keterangan'] ?? null,
             $data['pokja'],
+            (int) $data['tahun_anggaran'],
             $data['level'],
             $data['area_id'],
             $data['created_by'],

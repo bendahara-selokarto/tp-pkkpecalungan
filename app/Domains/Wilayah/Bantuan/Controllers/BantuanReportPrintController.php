@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\Bantuan\Controllers;
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Bantuan\UseCases\ListScopedBantuanUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,9 @@ class BantuanReportPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedBantuanUseCase $listScopedBantuanUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -41,6 +42,7 @@ class BantuanReportPrintController extends Controller
             'items' => $items,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

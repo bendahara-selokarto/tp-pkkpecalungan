@@ -18,17 +18,19 @@ class BantuanRepository implements BantuanRepositoryInterface
             'source' => $data->asal_bantuan,
             'amount' => $data->jumlah,
             'received_date' => $data->tanggal,
+            'tahun_anggaran' => $data->tahun_anggaran,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
         return Bantuan::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('received_date')
             ->latest('id')
@@ -36,11 +38,12 @@ class BantuanRepository implements BantuanRepositoryInterface
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId, ?int $creatorIdFilter = null): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection
     {
         return Bantuan::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('received_date')
             ->latest('id')
@@ -61,6 +64,7 @@ class BantuanRepository implements BantuanRepositoryInterface
             'source' => $data->asal_bantuan,
             'amount' => $data->jumlah,
             'received_date' => $data->tanggal,
+            'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 
         return $bantuan;
@@ -71,7 +75,3 @@ class BantuanRepository implements BantuanRepositoryInterface
         $bantuan->delete();
     }
 }
-
-
-
-

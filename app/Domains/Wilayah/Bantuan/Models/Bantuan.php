@@ -17,10 +17,29 @@ class Bantuan extends Model
         'source',
         'amount',
         'received_date',
+        'tahun_anggaran',
         'level',
         'area_id',
         'created_by',
     ];
+
+    protected function casts(): array
+    {
+        return [
+            'tahun_anggaran' => 'integer',
+        ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Bantuan $bantuan): void {
+            if (is_numeric($bantuan->tahun_anggaran)) {
+                return;
+            }
+
+            $bantuan->tahun_anggaran = (int) now()->format('Y');
+        });
+    }
 
     public function area()
     {

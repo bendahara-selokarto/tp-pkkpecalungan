@@ -15,6 +15,8 @@ class PrestasiLombaPolicyTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     #[Test]
     public function admin_desa_hanya_boleh_melihat_prestasi_lomba_pada_desanya_sendiri(): void
     {
@@ -24,11 +26,15 @@ class PrestasiLombaPolicyTest extends TestCase
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desaA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-desa');
 
         $milikSendiri = PrestasiLomba::create([
-            'tahun' => 2025,
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
             'jenis_lomba' => 'Lomba A',
             'lokasi' => 'Gombong',
             'prestasi_kecamatan' => true,
@@ -42,7 +48,7 @@ class PrestasiLombaPolicyTest extends TestCase
         ]);
 
         $milikDesaLain = PrestasiLomba::create([
-            'tahun' => 2025,
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
             'jenis_lomba' => 'Lomba B',
             'lokasi' => 'Bandung',
             'prestasi_kecamatan' => true,
@@ -62,6 +68,41 @@ class PrestasiLombaPolicyTest extends TestCase
     }
 
     #[Test]
+    public function admin_desa_tidak_boleh_melihat_prestasi_lomba_di_tahun_anggaran_lain(): void
+    {
+        Role::create(['name' => 'admin-desa']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $prestasiTahunLama = PrestasiLomba::create([
+            'tahun' => self::ACTIVE_BUDGET_YEAR - 1,
+            'jenis_lomba' => 'Lomba Arsip',
+            'lokasi' => 'Gombong',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
+        ]);
+
+        $policy = app(PrestasiLombaPolicy::class);
+
+        $this->assertFalse($policy->view($user, $prestasiTahunLama));
+    }
+
+    #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_prestasi_lomba_kecamatan_lain(): void
     {
         Role::create(['name' => 'admin-kecamatan']);
@@ -69,11 +110,15 @@ class PrestasiLombaPolicyTest extends TestCase
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id]);
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatanA->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
         $user->assignRole('admin-kecamatan');
 
         $prestasiLuar = PrestasiLomba::create([
-            'tahun' => 2025,
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
             'jenis_lomba' => 'Lomba Luar',
             'lokasi' => 'Limpung',
             'prestasi_kecamatan' => true,

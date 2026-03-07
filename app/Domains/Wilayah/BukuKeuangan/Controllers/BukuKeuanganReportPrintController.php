@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\BukuKeuangan\Controllers;
 use App\Domains\Wilayah\BukuKeuangan\Models\BukuKeuangan;
 use App\Domains\Wilayah\BukuKeuangan\UseCases\ListScopedBukuKeuanganUseCase;
 use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Http\Controllers\Controller;
 use App\Support\Pdf\PdfViewFactory;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +14,9 @@ class BukuKeuanganReportPrintController extends Controller
 {
     public function __construct(
         private readonly ListScopedBukuKeuanganUseCase $listScopedBukuKeuanganUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function printDesaReport(): Response
     {
@@ -60,6 +61,7 @@ class BukuKeuanganReportPrintController extends Controller
             'entries' => $entries,
             'level' => $level,
             'areaName' => $user->area?->name ?? '-',
+            'budgetYearLabel' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'printedBy' => $user,
             'printedAt' => now(),
         ]);

@@ -13,11 +13,11 @@ class PrestasiLombaData
         public bool $prestasi_provinsi,
         public bool $prestasi_nasional,
         public ?string $keterangan,
+        public int $tahun_anggaran,
         public string $level,
         public int $area_id,
         public int $created_by,
-    ) {
-    }
+    ) {}
 
     public static function fromArray(array $data): self
     {
@@ -30,6 +30,7 @@ class PrestasiLombaData
             (bool) $data['prestasi_provinsi'],
             (bool) $data['prestasi_nasional'],
             $data['keterangan'] ?? null,
+            (int) $data['tahun_anggaran'],
             $data['level'],
             (int) $data['area_id'],
             (int) $data['created_by'],

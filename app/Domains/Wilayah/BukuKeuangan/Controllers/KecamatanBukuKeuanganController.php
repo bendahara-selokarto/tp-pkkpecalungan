@@ -51,6 +51,7 @@ class KecamatanBukuKeuanganController extends Controller
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
+                'tahun_anggaran' => (int) $request->user()->active_budget_year,
             ],
         ]);
     }
@@ -84,6 +85,7 @@ class KecamatanBukuKeuanganController extends Controller
                 'reference_number' => $bukuKeuangan->reference_number,
                 'entry_type' => $bukuKeuangan->entry_type,
                 'amount' => $bukuKeuangan->amount,
+                'tahun_anggaran' => $bukuKeuangan->tahun_anggaran,
             ],
         ]);
     }
@@ -102,6 +104,7 @@ class KecamatanBukuKeuanganController extends Controller
                 'reference_number' => $bukuKeuangan->reference_number,
                 'entry_type' => $bukuKeuangan->entry_type,
                 'amount' => $bukuKeuangan->amount,
+                'tahun_anggaran' => $bukuKeuangan->tahun_anggaran,
             ],
         ]);
     }

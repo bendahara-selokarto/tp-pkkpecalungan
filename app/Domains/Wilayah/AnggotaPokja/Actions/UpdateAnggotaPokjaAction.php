@@ -10,8 +10,7 @@ class UpdateAnggotaPokjaAction
 {
     public function __construct(
         private readonly AnggotaPokjaRepositoryInterface $anggotaPokjaRepository
-    ) {
-    }
+    ) {}
 
     public function execute(AnggotaPokja $anggotaPokja, array $payload): AnggotaPokja
     {
@@ -27,6 +26,7 @@ class UpdateAnggotaPokjaAction
             'pekerjaan' => $payload['pekerjaan'],
             'keterangan' => $payload['keterangan'] ?? null,
             'pokja' => $payload['pokja'],
+            'tahun_anggaran' => $anggotaPokja->tahun_anggaran,
             'level' => $anggotaPokja->level,
             'area_id' => $anggotaPokja->area_id,
             'created_by' => $anggotaPokja->created_by,
@@ -35,4 +35,3 @@ class UpdateAnggotaPokjaAction
         return $this->anggotaPokjaRepository->update($anggotaPokja, $data);
     }
 }
-

@@ -23,6 +23,7 @@
     <div class="title">BUKU PRESTASI {{ $levelLabel }}</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
+        Tahun anggaran: {{ $budgetYearLabel ?? '-' }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>

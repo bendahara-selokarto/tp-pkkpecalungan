@@ -10,8 +10,7 @@ class UpdatePrestasiLombaAction
 {
     public function __construct(
         private readonly PrestasiLombaRepositoryInterface $prestasiLombaRepository
-    ) {
-    }
+    ) {}
 
     public function execute(PrestasiLomba $prestasiLomba, array $payload): PrestasiLomba
     {
@@ -24,6 +23,7 @@ class UpdatePrestasiLombaAction
             'prestasi_provinsi' => $payload['prestasi_provinsi'],
             'prestasi_nasional' => $payload['prestasi_nasional'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'tahun_anggaran' => $prestasiLomba->tahun_anggaran,
             'level' => $prestasiLomba->level,
             'area_id' => $prestasiLomba->area_id,
             'created_by' => $prestasiLomba->created_by,

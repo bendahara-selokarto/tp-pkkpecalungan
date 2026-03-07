@@ -17,6 +17,7 @@
     <div class="title">BUKU BANTUAN {{ strtoupper($level) }}</div>
     <div class="meta">
         Wilayah: {{ $areaName }}<br>
+        Tahun anggaran: {{ $budgetYearLabel ?? '-' }}<br>
         Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
