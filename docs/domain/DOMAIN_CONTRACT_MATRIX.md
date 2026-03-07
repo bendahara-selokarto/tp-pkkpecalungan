@@ -162,16 +162,16 @@ Label berikut dikunci sebagai istilah canonical lintas domain/process. Kolom sta
 - Ekstensi pilot project source:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
 
-## Mapping Sidebar by Domain (Sekretaris TPK + Pokja I-IV)
+## Mapping Sidebar by Domain (Sekretaris TP-PKK + Pokja I-IV)
 
 Tujuan:
-- Menyatukan navigasi domain dari struktur lampiran pedoman menjadi struktur kerja organisasi `Sekretaris TPK` dan `Pokja I-IV`.
+- Menyatukan navigasi domain dari struktur lampiran pedoman menjadi struktur kerja organisasi `Sekretaris TP-PKK` dan `Pokja I-IV`.
 
 Mapping grup sidebar:
 
 | Grup Sidebar | Slug Modul |
 | --- | --- |
-| Sekretaris TPK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-daftar-hadir`, `buku-tamu`, `buku-notulen-rapat`, `buku-keuangan`, `inventaris`, `activities`, `program-prioritas`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
+| Sekretaris TP-PKK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-daftar-hadir`, `buku-tamu`, `buku-notulen-rapat`, `buku-keuangan`, `inventaris`, `activities`, `program-prioritas`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
 | Pokja I | `activities`, `inventaris`, `buku-tamu`, `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`, `paar` |
 | Pokja II | `activities`, `inventaris`, `buku-tamu`, `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
 | Pokja III | `activities`, `inventaris`, `buku-tamu`, `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |
@@ -186,7 +186,7 @@ Kontrak mode:
 - `read-write`: dapat baca + mutasi (`create/store/edit/update/destroy`).
 - `read-only`: hanya baca (`index/show/report/print`), mutasi ditolak backend.
 
-| Role | Scope | Sekretaris TPK | Pokja I | Pokja II | Pokja III | Pokja IV | Monitoring Kecamatan | Referensi |
+| Role | Scope | Sekretaris TP-PKK | Pokja I | Pokja II | Pokja III | Pokja IV | Monitoring Kecamatan | Referensi |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | `desa-sekretaris` | `desa` | `read-write` | `read-only` | `read-only` | `read-only` | `read-only` | `-` | `read-only` |
 | `kecamatan-sekretaris` | `kecamatan` | `read-write` | `read-only` | `read-only` | `read-only` | `read-only` | `read-only` | `read-only` |

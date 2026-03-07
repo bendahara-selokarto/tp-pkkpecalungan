@@ -18,14 +18,14 @@
 - `super-admin`: prefix `/super-admin/*`, fokus utama pada manajemen user.
 
 ### Grup Menu Domain
-- `Sekretaris TPK`: administrasi sekretariat dan operasional umum.
+- `Sekretaris TP-PKK`: administrasi sekretariat dan operasional umum.
 - `Pokja I` sampai `Pokja IV`: modul isian per bidang.
 - `Monitoring Kecamatan`: khusus scope kecamatan (`/kecamatan/desa-activities`).
 - `Referensi`: tautan pedoman, mode baca.
 
 ## Matrix Role ke Mode Akses (Hasil Audit)
 
-| Role | Scope | Sekretaris TPK | Pokja I-IV | Monitoring Kecamatan |
+| Role | Scope | Sekretaris TP-PKK | Pokja I-IV | Monitoring Kecamatan |
 | --- | --- | --- | --- | --- |
 | `desa-sekretaris` | desa | read-write | read-only | tidak ada |
 | `kecamatan-sekretaris` | kecamatan | read-write | read-only | read-only |

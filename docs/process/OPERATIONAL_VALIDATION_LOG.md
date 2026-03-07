@@ -240,12 +240,12 @@ Perintah validasi:
 Status:
 - `PASS` untuk tahap implementasi F5-F9.
 
-## Siklus Sidebar Grouping by Domain (Sekretaris TPK + Pokja I-IV): 2026-02-21
+## Siklus Sidebar Grouping by Domain (Sekretaris TP-PKK + Pokja I-IV): 2026-02-21
 
 Ruang lingkup:
 - Refactor pengelompokan menu domain pada sidebar:
   - dari struktur berbasis lampiran (`4.14.1`, `4.14.2`, dst)
-  - menjadi struktur organisasi `Sekretaris TPK`, `Pokja I`, `Pokja II`, `Pokja III`, `Pokja IV`.
+  - menjadi struktur organisasi `Sekretaris TP-PKK`, `Pokja I`, `Pokja II`, `Pokja III`, `Pokja IV`.
 - Scope `desa` dan `kecamatan` diselaraskan.
 - Group `Monitoring Kecamatan` dipertahankan untuk `kecamatan`.
 

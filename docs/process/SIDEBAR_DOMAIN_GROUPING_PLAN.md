@@ -15,7 +15,7 @@ Sumber acuan:
 
 1. Level menu:
 - `L1` = kategori utama sidebar (`Main`, `Menu Domain`, `Account`).
-- `L2` = group organisasi domain (`Sekretaris TPK`, `Pokja I-IV`, `Referensi`, `Monitoring Kecamatan`).
+- `L2` = group organisasi domain (`Sekretaris TP-PKK`, `Pokja I-IV`, `Referensi`, `Monitoring Kecamatan`).
 - `L3` = item domain yang mengarah ke modul (route prefix berbasis scope).
 2. Semua item domain pada `L3` wajib punya hubungan langsung ke slug domain pada matrix kontrak.
 3. Label di `L2/L3` wajib mengacu terminology canonical (bukan istilah ad-hoc).
@@ -34,15 +34,15 @@ Sumber acuan:
 
 | L2 | L3 (Domain) | Slug/Route Prefix |
 | --- | --- | --- |
-| Sekretaris TPK | Buku Daftar Anggota Tim Penggerak PKK | `/{scope}/anggota-tim-penggerak` |
-| Sekretaris TPK | Buku Daftar Kader Tim Penggerak PKK | `/{scope}/kader-khusus` |
-| Sekretaris TPK | Buku Agenda Surat Masuk/Keluar | `/{scope}/agenda-surat` |
-| Sekretaris TPK | Buku Keuangan | `/{scope}/buku-keuangan` |
-| Sekretaris TPK | Buku Inventaris | `/{scope}/inventaris` |
-| Sekretaris TPK | Buku Kegiatan | `/{scope}/activities` |
-| Sekretaris TPK | Buku Program Kerja TP PKK | `/{scope}/program-prioritas` |
-| Sekretaris TPK | Buku Anggota Pokja | `/{scope}/anggota-pokja` |
-| Sekretaris TPK | Prestasi Lomba | `/{scope}/prestasi-lomba` |
+| Sekretaris TP-PKK | Buku Daftar Anggota Tim Penggerak PKK | `/{scope}/anggota-tim-penggerak` |
+| Sekretaris TP-PKK | Buku Daftar Kader Tim Penggerak PKK | `/{scope}/kader-khusus` |
+| Sekretaris TP-PKK | Buku Agenda Surat Masuk/Keluar | `/{scope}/agenda-surat` |
+| Sekretaris TP-PKK | Buku Keuangan | `/{scope}/buku-keuangan` |
+| Sekretaris TP-PKK | Buku Inventaris | `/{scope}/inventaris` |
+| Sekretaris TP-PKK | Buku Kegiatan | `/{scope}/activities` |
+| Sekretaris TP-PKK | Buku Program Kerja TP PKK | `/{scope}/program-prioritas` |
+| Sekretaris TP-PKK | Buku Anggota Pokja | `/{scope}/anggota-pokja` |
+| Sekretaris TP-PKK | Prestasi Lomba | `/{scope}/prestasi-lomba` |
 | Pokja I | Buku Kegiatan | `/{scope}/activities` |
 | Pokja I | Daftar Warga TP PKK | `/{scope}/data-warga` |
 | Pokja I | Data Kegiatan Warga | `/{scope}/data-kegiatan-warga` |

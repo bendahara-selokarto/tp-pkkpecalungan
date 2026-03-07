@@ -19,7 +19,7 @@ Status: `done` (`state:wave-delivery-closed`)
 - Role fokus: `kecamatan-sekretaris`.
 - Group akses fokus:
   - `sekretaris-tpk` (`read-write`)  
-    Keterangan: `TPK` = `Tim Penggerak PKK`.
+    Keterangan: `TP-PKK` = `Tim Penggerak PKK`.
   - `monitoring` (`read-only`)
   - `pokja-i..iv` (`read-only`) sebagai kandidat monitoring lintas desa jika concern membutuhkan.
 

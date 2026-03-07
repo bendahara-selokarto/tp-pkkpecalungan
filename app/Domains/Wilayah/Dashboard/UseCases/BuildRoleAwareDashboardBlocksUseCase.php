@@ -31,7 +31,7 @@ class BuildRoleAwareDashboardBlocksUseCase
      * @var array<string, string>
      */
     private const GROUP_LABELS = [
-        'sekretaris-tpk' => 'Sekretaris TPK',
+        'sekretaris-tpk' => 'Sekretaris TP-PKK',
         'pokja-i' => 'Pokja I',
         'pokja-ii' => 'Pokja II',
         'pokja-iii' => 'Pokja III',

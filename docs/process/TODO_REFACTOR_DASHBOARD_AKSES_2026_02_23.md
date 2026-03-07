@@ -21,7 +21,7 @@ Catatan lanjutan visual minimalis:
 
 ## Konteks
 
-- Dashboard saat ini masih menyajikan blok statistik generik (`activity` + `documents`) tanpa pemisahan tegas per penanggung jawab organisasi (`Sekretaris TPK`, `Pokja I-IV`).
+- Dashboard saat ini masih menyajikan blok statistik generik (`activity` + `documents`) tanpa pemisahan tegas per penanggung jawab organisasi (`Sekretaris TP-PKK`, `Pokja I-IV`).
 - Kontrak visibilitas menu per role sudah ada di backend (`RoleMenuVisibilityService`), tetapi kontrak visibilitas dashboard per role belum dipisah menjadi blok dashboard yang eksplisit.
 - Kebutuhan produk sesi ini:
   - `pokja` hanya melihat dashboard sesuai pokja-nya,

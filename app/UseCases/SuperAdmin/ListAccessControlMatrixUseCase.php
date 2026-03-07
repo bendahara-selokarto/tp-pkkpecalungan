@@ -273,7 +273,7 @@ class ListAccessControlMatrixUseCase
     private function groupLabel(string $group): string
     {
         return match ($group) {
-            'sekretaris-tpk' => 'Sekretaris TPK',
+            'sekretaris-tpk' => 'Sekretaris TP-PKK',
             'pokja-i' => 'Pokja I',
             'pokja-ii' => 'Pokja II',
             'pokja-iii' => 'Pokja III',

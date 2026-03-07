@@ -21,7 +21,7 @@ Status: `done` (`state:historical-e2e`, sinkronisasi concern sidebar aktif ada d
 
 ## Konteks
 
-- Saat ini grouping menu domain sudah ada per organisasi (`Sekretaris TPK`, `Pokja I-IV`) di:
+- Saat ini grouping menu domain sudah ada per organisasi (`Sekretaris TP-PKK`, `Pokja I-IV`) di:
   - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
   - `resources/js/Layouts/DashboardLayout.vue`
 - Namun visibilitas menu masih berbasis `scope` (`desa`/`kecamatan`), belum berbasis `penanggung jawab` (role spesifik sekretaris/pokja).
@@ -35,21 +35,21 @@ Status: `done` (`state:historical-e2e`, sinkronisasi concern sidebar aktif ada d
 - Visibilitas UI tetap ditentukan backend (frontend bukan authority).
 - Tidak terjadi drift dengan kontrak domain canonical (`PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` dan `DOMAIN_CONTRACT_MATRIX`).
 - Sekretaris PKK mendapat akses:
-  - penuh (`read/write`) pada group `Sekretaris TPK`,
+  - penuh (`read/write`) pada group `Sekretaris TP-PKK`,
   - baca saja (`read-only`) pada group `Pokja I-IV`.
 - Akses `Monitoring Kecamatan` bersifat `read-only`.
 
 ## Matrix Rencana Visibility (Role -> Group Menu + Mode)
 
 - `kecamatan-sekretaris`:
-  - `Sekretaris TPK` -> `read/write`
+  - `Sekretaris TP-PKK` -> `read/write`
   - `Pokja I` -> `read-only`
   - `Pokja II` -> `read-only`
   - `Pokja III` -> `read-only`
   - `Pokja IV` -> `read-only`
   - `Monitoring Kecamatan` -> `read-only`
 - `desa-sekretaris`:
-  - `Sekretaris TPK` -> `read/write`
+  - `Sekretaris TP-PKK` -> `read/write`
   - `Pokja I` -> `read-only`
   - `Pokja II` -> `read-only`
   - `Pokja III` -> `read-only`
@@ -102,7 +102,7 @@ Catatan kompatibilitas (rencana):
 
 - [x] Unit test matrix role->menu + access mode (semua role target + super-admin).
 - [x] Feature test payload menu Inertia:
-  - role sekretaris lihat `Sekretaris TPK` (`read/write`) + `Pokja I-IV` (`read-only`).
+  - role sekretaris lihat `Sekretaris TP-PKK` (`read/write`) + `Pokja I-IV` (`read-only`).
   - role pokja hanya lihat group pokja terkait (`read/write`).
   - role kecamatan yang berhak monitoring melihat `Monitoring Kecamatan` (`read-only`).
   - multi-role menerima union group.
@@ -112,7 +112,7 @@ Catatan kompatibilitas (rencana):
   - mismatch role-area-level tetap 403.
 - [x] Feature/UI test visibilitas aksi:
   - pada sekretaris di modul `Pokja I-IV`, tombol `Tambah/Ubah/Hapus` tidak muncul.
-  - pada sekretaris di modul `Sekretaris TPK`, tombol aksi mutasi tetap muncul sesuai policy.
+  - pada sekretaris di modul `Sekretaris TP-PKK`, tombol aksi mutasi tetap muncul sesuai policy.
 - [x] Regression test super-admin flow (`users` management) tetap aman.
 - [x] Jalankan `php artisan test` full sebelum final merge.
 
