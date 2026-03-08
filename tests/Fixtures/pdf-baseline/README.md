@@ -17,6 +17,7 @@ Kunci fixture:
 - `view`: view blade PDF sumber render.
 - `titleToken`: token judul minimal yang wajib muncul.
 - `defaultOrientation`: orientasi standar (default `landscape`).
+- `expectedTextTokens`: token teks tambahan yang wajib selalu muncul bila kontrak PDF butuh metadata tetap.
 - `expectedHeaderOrder`: urutan header kolom yang wajib stabil.
 
 ## Prosedur Compare Otomatis
@@ -36,4 +37,3 @@ Kunci fixture:
    - `defaultOrientation`
 3. Verifikasi metadata cetak (`area`, `printedBy`, `printedAt`) pada output.
 4. Jika ada deviasi terhadap pedoman, catat di `docs/domain/DOMAIN_DEVIATION_LOG.md`.
-

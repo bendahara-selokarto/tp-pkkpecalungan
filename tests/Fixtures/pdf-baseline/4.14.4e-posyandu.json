@@ -1,10 +1,15 @@
 {
-    "fixtureVersion":  1,
+    "fixtureVersion":  2,
     "lampiran":  "4.14.4e",
     "moduleSlug":  "posyandu",
     "view":  "pdf.posyandu_report",
     "titleToken":  "DATA ISIAN POSYANDU OLEH TP PKK",
     "defaultOrientation":  "landscape",
+    "expectedTextTokens":  [
+                                "Pecalungan",
+                                "Batang",
+                                "Jawa Tengah"
+                            ],
     "expectedHeaderOrder":  [
                                 "NO",
                                 "JENIS KEGIATAN/LAYANAN",

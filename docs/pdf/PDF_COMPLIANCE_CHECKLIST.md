@@ -33,6 +33,7 @@ Keterangan status:
 
 Siklus validasi terbaru:
 
+- `2026-03-08`: identitas wilayah PDF untuk deployment tunggal dikunci ke `Kecamatan Pecalungan`, `Kabupaten Batang`, `Provinsi Jawa Tengah` pada format yang meminta field tersebut; baseline fixture menambahkan token identitas tetap untuk modul prioritas.
 - `2026-02-21`: validasi otomatis lulus via:
   - `php artisan test --filter=PdfBaselineFixtureComplianceTest`
   - `php artisan test --filter=header_kolom_pdf`
@@ -154,6 +155,5 @@ Checklist run minimum sebelum mengisi riwayat:
 4. Verifikasi query repository (`::query()`) dan tabel model (`getTable()`).
 5. Validasi tabel eksis (`Schema::hasTable`).
 6. Catat mismatch jika ada ke `docs/domain/DOMAIN_DEVIATION_LOG.md`.
-
 
 

@@ -34,6 +34,14 @@ class PdfBaselineFixtureComplianceTest extends TestCase
 
             $cursor = $position + strlen($needle);
         }
+
+        foreach (($fixture['expectedTextTokens'] ?? []) as $token) {
+            $this->assertStringContainsString(
+                $this->normalizeText($token),
+                $normalizedHtml,
+                sprintf('Token teks "%s" tidak ditemukan pada view %s.', $token, $fixture['view'])
+            );
+        }
     }
 
     public function test_fixture_pdf_baseline_mencakup_semua_modul_pedoman_4_9_sampai_4_15(): void
@@ -120,7 +128,7 @@ class PdfBaselineFixtureComplianceTest extends TestCase
     }
 
     /**
-     * @return array{fixtureVersion:int,lampiran:string,moduleSlug:string,view:string,titleToken:string,defaultOrientation:string,expectedHeaderOrder:array<int,string>}
+     * @return array{fixtureVersion:int,lampiran:string,moduleSlug:string,view:string,titleToken:string,defaultOrientation:string,expectedHeaderOrder:array<int,string>,expectedTextTokens?:array<int,string>}
      */
     private function loadFixture(string $path): array
     {
@@ -140,7 +148,7 @@ class PdfBaselineFixtureComplianceTest extends TestCase
     }
 
     /**
-     * @return array<int, array{fixtureVersion:int,lampiran:string,moduleSlug:string,view:string,titleToken:string,defaultOrientation:string,expectedHeaderOrder:array<int,string>}>
+     * @return array<int, array{fixtureVersion:int,lampiran:string,moduleSlug:string,view:string,titleToken:string,defaultOrientation:string,expectedHeaderOrder:array<int,string>,expectedTextTokens?:array<int,string>}>
      */
     private function loadAllFixtures(): array
     {

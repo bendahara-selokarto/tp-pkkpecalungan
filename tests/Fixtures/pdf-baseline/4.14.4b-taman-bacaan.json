@@ -1,10 +1,15 @@
 {
-    "fixtureVersion": 1,
+    "fixtureVersion": 2,
     "lampiran": "4.14.4b",
     "moduleSlug": "taman-bacaan",
     "view": "pdf.taman_bacaan_report",
     "titleToken": "B. TAMAN BACAAN",
     "defaultOrientation": "landscape",
+    "expectedTextTokens": [
+        "Pecalungan",
+        "Batang",
+        "Jawa Tengah"
+    ],
     "expectedHeaderOrder": [
         "NO",
         "JENIS BUKU",
