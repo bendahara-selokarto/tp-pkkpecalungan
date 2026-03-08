@@ -2,9 +2,9 @@
 
 namespace App\Domains\Wilayah\Dashboard\UseCases;
 
-use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryInterface;
+use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
@@ -23,8 +23,11 @@ class BuildRoleAwareDashboardBlocksUseCase
     ];
 
     private const SECTION_SEKRETARIS_1 = 'sekretaris-section-1';
+
     private const SECTION_SEKRETARIS_2 = 'sekretaris-section-2';
+
     private const SECTION_SEKRETARIS_3 = 'sekretaris-section-3';
+
     private const SECTION_SEKRETARIS_4 = 'sekretaris-section-4';
 
     /**
@@ -44,13 +47,12 @@ class BuildRoleAwareDashboardBlocksUseCase
         private readonly UserAreaContextService $userAreaContextService,
         private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository,
         private readonly DashboardGroupCoverageRepositoryInterface $dashboardGroupCoverageRepository
-    ) {
-    }
+    ) {}
 
     /**
-     * @param array<string, mixed> $activityData
-     * @param array<string, mixed> $documentData
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  array<string, mixed>  $activityData
+     * @param  array<string, mixed>  $documentData
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
      * @return array<int, array<string, mixed>>
      */
     public function execute(
@@ -134,6 +136,7 @@ class BuildRoleAwareDashboardBlocksUseCase
 
                 if (is_array($kecamatanByDesaBlock)) {
                     $blocks[] = $kecamatanByDesaBlock;
+
                     continue;
                 }
             }
@@ -164,9 +167,9 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array<string, mixed> $activityData
-     * @param array<string, mixed> $bookSummary
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  array<string, mixed>  $activityData
+     * @param  array<string, mixed>  $bookSummary
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
      * @return array<string, mixed>
      */
     private function buildActivityBlock(
@@ -189,9 +192,9 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array<string, mixed> $activityData
-     * @param array<string, mixed> $bookSummary
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  array<string, mixed>  $activityData
+     * @param  array<string, mixed>  $bookSummary
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
      * @return array<string, mixed>
      */
     private function buildGroupActivityBlock(
@@ -244,7 +247,7 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array<string, mixed> $stats
+     * @param  array<string, mixed>  $stats
      * @return array{total_buku_tracked: int, buku_terisi: int}
      */
     private function resolveBookSummaryFromStats(array $stats): array
@@ -256,8 +259,8 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $documentItems
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  Collection<int, array<string, mixed>>  $documentItems
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
      * @return array{total_buku_tracked: int, buku_terisi: int}
      */
     private function resolveBookSummaryByGroup(string $groupKey, Collection $documentItems, array $dashboardContext): array
@@ -287,7 +290,7 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array<string, string> $groupModes
+     * @param  array<string, string>  $groupModes
      */
     private function resolveDesaPokjaOwnGroup(string $effectiveScope, array $groupModes): ?string
     {
@@ -312,8 +315,8 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param list<string> $modules
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  list<string>  $modules
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
      * @return array<string, mixed>|null
      */
     private function buildKecamatanPokjaByDesaBlock(
@@ -390,9 +393,9 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param Collection<int, array<string, mixed>> $groupDocumentItems
-     * @param list<string> $modules
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  Collection<int, array<string, mixed>>  $groupDocumentItems
+     * @param  list<string>  $modules
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed}  $dashboardContext
      * @return array<string, mixed>
      */
     private function buildDocumentBlock(
@@ -477,8 +480,8 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
-     * @return array{mode: string, level: string, sub_level: string, section1_month: string, section2_group: string, section3_group: string}
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
+     * @return array{mode: string, level: string, sub_level: string, section1_month: string, section2_group: string, section3_group: string, tahun_anggaran: string}
      */
     private function buildFilterContext(array $dashboardContext): array
     {
@@ -489,6 +492,7 @@ class BuildRoleAwareDashboardBlocksUseCase
             'section1_month' => $this->normalizeContextToken($dashboardContext['section1_month'] ?? null, 'all'),
             'section2_group' => $this->normalizeContextToken($dashboardContext['section2_group'] ?? null, 'all'),
             'section3_group' => $this->normalizeContextToken($dashboardContext['section3_group'] ?? null, 'all'),
+            'tahun_anggaran' => $this->normalizeContextToken($dashboardContext['tahun_anggaran'] ?? null, '0'),
         ];
     }
 
@@ -500,8 +504,8 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array<string, mixed> $item
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  array<string, mixed>  $item
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
      */
     private function resolveItemTotalByContext(array $item, array $dashboardContext): int
     {
@@ -531,8 +535,8 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
-     * @return array{mode: string, level: string, sub_level: string, section1_month: mixed, section2_group: mixed, section3_group: mixed}
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
+     * @return array{mode: string, level: string, sub_level: string, section1_month: mixed, section2_group: mixed, section3_group: mixed, tahun_anggaran: mixed}
      */
     private function buildKecamatanByDesaFilterContext(array $dashboardContext): array
     {
@@ -543,11 +547,12 @@ class BuildRoleAwareDashboardBlocksUseCase
             'section1_month' => $dashboardContext['section1_month'] ?? 'all',
             'section2_group' => $dashboardContext['section2_group'] ?? 'all',
             'section3_group' => $dashboardContext['section3_group'] ?? 'all',
+            'tahun_anggaran' => $dashboardContext['tahun_anggaran'] ?? '0',
         ];
     }
 
     /**
-     * @param array<string, string> $groupModes
+     * @param  array<string, string>  $groupModes
      */
     private function shouldUseSekretarisSections(array $groupModes): bool
     {
@@ -565,11 +570,11 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array<string, string> $groupModes
-     * @param array<string, mixed> $activityData
-     * @param Collection<int, array<string, mixed>> $documentItems
-     * @param array<string, mixed> $documentStats
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  array<string, string>  $groupModes
+     * @param  array<string, mixed>  $activityData
+     * @param  Collection<int, array<string, mixed>>  $documentItems
+     * @param  array<string, mixed>  $documentStats
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
      * @return array<int, array<string, mixed>>
      */
     private function buildSekretarisSectionBlocks(
@@ -604,6 +609,7 @@ class BuildRoleAwareDashboardBlocksUseCase
                 'section1_month' => $dashboardContext['section1_month'] ?? 'all',
                 'section2_group' => $selectedSection2Group ?? 'all',
                 'section3_group' => 'all',
+                'tahun_anggaran' => $dashboardContext['tahun_anggaran'] ?? '0',
             ],
             $this->buildSectionMeta(self::SECTION_SEKRETARIS_1, $effectiveScope)
         );
@@ -642,6 +648,7 @@ class BuildRoleAwareDashboardBlocksUseCase
                     'section1_month' => $dashboardContext['section1_month'] ?? 'all',
                     'section2_group' => $selectedSection2Group ?? 'all',
                     'section3_group' => 'all',
+                    'tahun_anggaran' => $dashboardContext['tahun_anggaran'] ?? '0',
                 ],
                 $this->buildSectionMeta(self::SECTION_SEKRETARIS_2, $effectiveScope),
                 ''
@@ -652,7 +659,7 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param list<string> $availablePokjaGroups
+     * @param  list<string>  $availablePokjaGroups
      */
     private function resolveSelectedPokjaGroup(mixed $value, array $availablePokjaGroups): ?string
     {
@@ -667,8 +674,8 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param list<string> $pokjaGroups
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  list<string>  $pokjaGroups
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
      */
     private function shouldRenderSekretarisSection4(
         string $effectiveScope,
@@ -689,7 +696,7 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed} $dashboardContext
+     * @param  array{mode?: mixed, level?: mixed, sub_level?: mixed, block?: mixed, section1_month?: mixed, section2_group?: mixed, section3_group?: mixed, tahun_anggaran?: mixed}  $dashboardContext
      * @return array<string, mixed>|null
      */
     private function buildSekretarisSection4Block(
@@ -769,6 +776,7 @@ class BuildRoleAwareDashboardBlocksUseCase
                     'section1_month' => $dashboardContext['section1_month'] ?? 'all',
                     'section2_group' => $dashboardContext['section2_group'] ?? 'all',
                     'section3_group' => $dashboardContext['section3_group'] ?? 'all',
+                    'tahun_anggaran' => $dashboardContext['tahun_anggaran'] ?? '0',
                 ]),
             ],
         ], $this->buildSectionMeta(self::SECTION_SEKRETARIS_4, $effectiveScope));
@@ -831,8 +839,8 @@ class BuildRoleAwareDashboardBlocksUseCase
     }
 
     /**
-     * @param array<string, mixed> $block
-     * @param array<string, mixed>|null $section
+     * @param  array<string, mixed>  $block
+     * @param  array<string, mixed>|null  $section
      * @return array<string, mixed>
      */
     private function attachSection(array $block, ?array $section): array

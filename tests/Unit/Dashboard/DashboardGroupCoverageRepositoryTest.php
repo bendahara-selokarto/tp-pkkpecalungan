@@ -2,8 +2,8 @@
 
 namespace Tests\Unit\Dashboard;
 
-use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryInterface;
+use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -89,5 +89,53 @@ class DashboardGroupCoverageRepositoryTest extends TestCase
         $result = $repository->buildBreakdownByDesaForGroup($user, 'pokja-i');
 
         $this->assertSame([], $result);
+    }
+
+    public function test_breakdown_per_desa_hanya_menghitung_data_tahun_anggaran_aktif(): void
+    {
+        $activeBudgetYear = 2026;
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $kecamatan->id,
+            'active_budget_year' => $activeBudgetYear,
+        ]);
+        $user->assignRole('kecamatan-pokja-i');
+
+        DataWarga::create([
+            'dasawisma' => 'Melati',
+            'nama_kepala_keluarga' => 'Kepala 2026',
+            'alamat' => 'Alamat 2026',
+            'jumlah_warga_laki_laki' => 2,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => $activeBudgetYear,
+        ]);
+        DataWarga::create([
+            'dasawisma' => 'Anggrek',
+            'nama_kepala_keluarga' => 'Kepala 2025',
+            'alamat' => 'Alamat 2025',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 2,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => $activeBudgetYear - 1,
+        ]);
+
+        $repository = $this->app->make(DashboardGroupCoverageRepositoryInterface::class);
+        $result = collect($repository->buildBreakdownByDesaForGroup($user, 'pokja-i'));
+
+        $this->assertSame([1], $result->pluck('total')->all());
+        $this->assertSame(
+            1,
+            $result->firstWhere('desa_name', 'Gombong')['per_module']['data-warga'] ?? null
+        );
     }
 }

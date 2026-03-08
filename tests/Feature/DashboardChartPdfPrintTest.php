@@ -13,6 +13,8 @@ class DashboardChartPdfPrintTest extends TestCase
 {
     use RefreshDatabase;
 
+    private const ACTIVE_BUDGET_YEAR = 2026;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -30,6 +32,7 @@ class DashboardChartPdfPrintTest extends TestCase
         $user = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
         $user->assignRole('admin-desa');
 
@@ -38,8 +41,9 @@ class DashboardChartPdfPrintTest extends TestCase
             'level' => 'desa',
             'area_id' => $desa->id,
             'created_by' => $user->id,
-            'activity_date' => now()->toDateString(),
+            'activity_date' => '2026-01-15',
             'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $response = $this->actingAs($user)->get(route('dashboard.charts.report'));
@@ -56,5 +60,43 @@ class DashboardChartPdfPrintTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard.charts.report'));
 
         $response->assertRedirect(route('super-admin.users.index'));
+    }
+
+    public function test_template_pdf_dashboard_menampilkan_tahun_anggaran_aktif(): void
+    {
+        $user = User::factory()->make([
+            'name' => 'Admin Desa',
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->setRelation('area', Area::make(['name' => 'Gombong', 'level' => 'desa']));
+
+        $html = view('pdf.dashboard_chart_report', [
+            'stats' => [
+                'activity' => ['total' => 1, 'this_month' => 1],
+                'documents' => ['total_buku_tracked' => 19, 'buku_terisi' => 4, 'buku_belum_terisi' => 15],
+            ],
+            'charts' => [
+                'activity' => [
+                    'monthly' => ['labels' => ['Jan 2026'], 'values' => [1]],
+                    'level' => ['labels' => ['Desa', 'Kecamatan'], 'values' => [1, 0]],
+                ],
+                'documents' => [
+                    'coverage_per_buku' => ['labels' => ['activities'], 'values' => [1]],
+                    'coverage_per_lampiran' => ['labels' => ['4.13'], 'values' => [1]],
+                ],
+            ],
+            'filters' => [
+                'mode' => 'all',
+                'level' => 'all',
+                'sub_level' => 'all',
+                'section1_month' => 'all',
+                'tahun_anggaran' => (string) self::ACTIVE_BUDGET_YEAR,
+            ],
+            'printedBy' => $user,
+            'printedAt' => now(),
+        ])->render();
+
+        $this->assertStringContainsString('Tahun Anggaran: 2026', $html);
     }
 }

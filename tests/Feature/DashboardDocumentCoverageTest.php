@@ -59,6 +59,7 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Dashboard')
+                ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
                 ->where('dashboardStats.documents.total_buku_tracked', 19)
                 ->where('dashboardStats.documents.buku_terisi', 4)
                 ->where('dashboardStats.documents.buku_belum_terisi', 15)
@@ -116,6 +117,7 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Dashboard')
+                ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
                 ->where('dashboardStats.documents.total_buku_tracked', 19)
                 ->where('dashboardStats.documents.buku_terisi', 2)
                 ->where('dashboardStats.documents.buku_belum_terisi', 17)
@@ -275,8 +277,50 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ($section2['group'] ?? null) === 'pokja-i'
                         && ($section2['section']['filter']['query_key'] ?? null) === 'section2_group'
                         && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'pokja-i'
+                        && ($section2['sources']['filter_context']['tahun_anggaran'] ?? null) === now()->format('Y')
                         && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
                         && ($section2['sources']['filter_context']['section3_group'] ?? null) === 'all';
+                });
+        });
+    }
+
+    public function test_dashboard_coverage_dokumen_tidak_bocor_ke_tahun_anggaran_lain_pada_area_yang_sama(): void
+    {
+        $activeBudgetYear = 2026;
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => $activeBudgetYear,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $this->createActivity($user, 'desa', $desa->id, 'Aktivitas 2026', $activeBudgetYear);
+        $this->createActivity($user, 'desa', $desa->id, 'Aktivitas 2025', $activeBudgetYear - 1);
+        $this->createAgendaSurat($user, 'desa', $desa->id, 'A-2026', $activeBudgetYear);
+        $this->createAgendaSurat($user, 'desa', $desa->id, 'A-2025', $activeBudgetYear - 1);
+        $this->createDataWarga($user, 'desa', $desa->id, 'Kepala 2026', $activeBudgetYear);
+        $this->createDataWarga($user, 'desa', $desa->id, 'Kepala 2025', $activeBudgetYear - 1);
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page) use ($activeBudgetYear) {
+            $page
+                ->component('Dashboard')
+                ->where('dashboardContext.tahun_anggaran', (string) $activeBudgetYear)
+                ->where('dashboardStats.documents.total_entri_buku', 4)
+                ->where('dashboardStats.documents.buku_terisi', 4)
+                ->where('dashboardCharts.documents.level_distribution.values', [4, 0])
+                ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
+                    $bySlug = collect($items)->keyBy('slug');
+
+                    return ($bySlug->get('activities')['total'] ?? null) === 1
+                        && ($bySlug->get('agenda-surat')['total'] ?? null) === 1
+                        && ($bySlug->get('data-warga')['total'] ?? null) === 1
+                        && ($bySlug->get('catatan-keluarga')['total'] ?? null) === 1;
                 });
         });
     }
@@ -517,24 +561,25 @@ class DashboardDocumentCoverageTest extends TestCase
         });
     }
 
-    private function createActivity(User $user, string $level, int $areaId, string $title): void
+    private function createActivity(User $user, string $level, int $areaId, string $title, ?int $tahunAnggaran = null): void
     {
         Activity::create([
             'title' => $title,
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => $user->id,
-            'activity_date' => now()->toDateString(),
+            'activity_date' => sprintf('%d-01-15', $tahunAnggaran ?? (int) now()->format('Y')),
             'status' => 'published',
+            'tahun_anggaran' => $tahunAnggaran ?? (int) ($user->active_budget_year ?? now()->format('Y')),
         ]);
     }
 
-    private function createAgendaSurat(User $user, string $level, int $areaId, string $nomorSurat): void
+    private function createAgendaSurat(User $user, string $level, int $areaId, string $nomorSurat, ?int $tahunAnggaran = null): void
     {
         AgendaSurat::create([
             'jenis_surat' => 'masuk',
-            'tanggal_terima' => now()->toDateString(),
-            'tanggal_surat' => now()->toDateString(),
+            'tanggal_terima' => sprintf('%d-01-15', $tahunAnggaran ?? (int) now()->format('Y')),
+            'tanggal_surat' => sprintf('%d-01-15', $tahunAnggaran ?? (int) now()->format('Y')),
             'nomor_surat' => $nomorSurat,
             'asal_surat' => 'Asal',
             'dari' => 'Dari',
@@ -547,11 +592,11 @@ class DashboardDocumentCoverageTest extends TestCase
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => $user->id,
-            'tahun_anggaran' => (int) ($user->active_budget_year ?? now()->format('Y')),
+            'tahun_anggaran' => $tahunAnggaran ?? (int) ($user->active_budget_year ?? now()->format('Y')),
         ]);
     }
 
-    private function createDataWarga(User $user, string $level, int $areaId, string $kepalaKeluarga): void
+    private function createDataWarga(User $user, string $level, int $areaId, string $kepalaKeluarga, ?int $tahunAnggaran = null): void
     {
         DataWarga::create([
             'dasawisma' => 'Melati',
@@ -563,6 +608,7 @@ class DashboardDocumentCoverageTest extends TestCase
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => $user->id,
+            'tahun_anggaran' => $tahunAnggaran ?? (int) ($user->active_budget_year ?? now()->format('Y')),
         ]);
     }
 }

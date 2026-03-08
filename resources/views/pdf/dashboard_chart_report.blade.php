@@ -33,6 +33,7 @@
         $levelLabel = strtoupper((string) ($filters['level'] ?? 'all'));
         $subLevelLabel = (string) ($filters['sub_level'] ?? 'all');
         $monthLabel = (string) ($filters['section1_month'] ?? 'all');
+        $budgetYearLabel = (string) ($filters['tahun_anggaran'] ?? ($printedBy?->active_budget_year ?? '-'));
 
         $buildItems = static function (array $labels, array $values): array {
             $items = [];
@@ -69,6 +70,7 @@
     <h1>Laporan Chart Dashboard</h1>
     <div class="meta muted">
         Area: {{ $printedBy?->area?->name ?? '-' }} | Scope: {{ strtoupper((string) ($printedBy?->scope ?? '-')) }}<br>
+        Tahun Anggaran: {{ $budgetYearLabel }}<br>
         Filter: mode={{ $modeLabel }}, level={{ $levelLabel }}, sub_level={{ $subLevelLabel }}, bulan={{ $monthLabel }}
     </div>
 

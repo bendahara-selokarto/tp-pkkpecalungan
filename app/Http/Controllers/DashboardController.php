@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Domains\Wilayah\Dashboard\UseCases\BuildDashboardDocumentCoverageUseCase;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildRoleAwareDashboardBlocksUseCase;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Services\DashboardActivityChartService;
 use App\Support\Pdf\PdfViewFactory;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -18,9 +19,9 @@ class DashboardController extends Controller
         private readonly DashboardActivityChartService $dashboardActivityChartService,
         private readonly BuildDashboardDocumentCoverageUseCase $buildDashboardDocumentCoverageUseCase,
         private readonly BuildRoleAwareDashboardBlocksUseCase $buildRoleAwareDashboardBlocksUseCase,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
-    ) {
-    }
+    ) {}
 
     public function __invoke(Request $request): Response|RedirectResponse
     {
@@ -34,6 +35,7 @@ class DashboardController extends Controller
             'dashboardStats' => $dashboardPayload['stats'],
             'dashboardCharts' => $dashboardPayload['charts'],
             'dashboardBlocks' => $dashboardPayload['blocks'],
+            'dashboardContext' => $dashboardPayload['context'],
         ]);
     }
 
@@ -60,6 +62,7 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
         $section1Month = $this->resolveSection1Month($request->query('section1_month', 'all'));
+        $activeBudgetYear = $this->activeBudgetYearContextService->resolveForUser($user);
         $dashboardContext = [
             'mode' => $request->query('mode', 'all'),
             'level' => $request->query('level', 'all'),
@@ -67,6 +70,7 @@ class DashboardController extends Controller
             'section2_group' => $request->query('section2_group', 'all'),
             'section3_group' => $request->query('section3_group', 'all'),
             'section1_month' => $section1Month === null ? 'all' : (string) $section1Month,
+            'tahun_anggaran' => (string) $activeBudgetYear,
             'block' => 'documents',
         ];
         $activityData = $this->dashboardActivityChartService->buildForUser($user, $section1Month);

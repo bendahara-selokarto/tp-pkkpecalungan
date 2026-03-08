@@ -51,6 +51,12 @@ const props = defineProps({
       },
     }),
   },
+  dashboardContext: {
+    type: Object,
+    default: () => ({
+      tahun_anggaran: '0',
+    }),
+  },
 })
 
 const BarChart = defineAsyncComponent(() => import('@/admin-one/components/Charts/BarChart.vue'))
@@ -58,6 +64,15 @@ const ApexChart = defineAsyncComponent(() => import('@/admin-one/components/Char
 
 const page = usePage()
 const authUser = computed(() => page.props?.auth?.user ?? null)
+const activeBudgetYearLabel = computed(() => {
+  const contextYear = props.dashboardContext?.tahun_anggaran
+  if (typeof contextYear === 'string' && contextYear.trim() !== '' && contextYear !== '0') {
+    return contextYear
+  }
+
+  const userYear = authUser.value?.active_budget_year
+  return userYear ? String(userYear) : '-'
+})
 const authRoles = computed(() => {
   const roles = authUser.value?.roles
   if (!Array.isArray(roles)) {
@@ -1144,6 +1159,9 @@ const hasLegacyBookComparisonData = computed(() =>
         small
       />
     </SectionTitleLineWithButton>
+    <p class="mt-[-8px] mb-4 text-xs text-slate-500 dark:text-slate-400">
+      Tahun anggaran aktif: {{ activeBudgetYearLabel }}
+    </p>
 
     <template v-if="hasDynamicBlocks">
       <div class="space-y-8">

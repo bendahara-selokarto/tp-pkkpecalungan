@@ -203,4 +203,110 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
         ]);
         $this->assertSame(3, $recalculatedByFilterPayload['stats']['total_entri_buku']);
     }
+
+    public function test_use_case_hanya_menghitung_data_tahun_anggaran_aktif(): void
+    {
+        $activeBudgetYear = 2026;
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => $activeBudgetYear,
+        ]);
+        $user->assignRole('admin-desa');
+
+        Activity::create([
+            'title' => 'Aktivitas 2026',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => '2026-01-15',
+            'status' => 'published',
+            'tahun_anggaran' => $activeBudgetYear,
+        ]);
+        Activity::create([
+            'title' => 'Aktivitas 2025',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'activity_date' => '2025-01-15',
+            'status' => 'published',
+            'tahun_anggaran' => $activeBudgetYear - 1,
+        ]);
+
+        AgendaSurat::create([
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2026-01-15',
+            'tanggal_surat' => '2026-01-15',
+            'nomor_surat' => 'A-2026',
+            'asal_surat' => 'Asal',
+            'dari' => 'Dari',
+            'kepada' => 'Kepada',
+            'perihal' => 'Perihal',
+            'lampiran' => null,
+            'diteruskan_kepada' => null,
+            'tembusan' => null,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => $activeBudgetYear,
+        ]);
+        AgendaSurat::create([
+            'jenis_surat' => 'masuk',
+            'tanggal_terima' => '2025-01-15',
+            'tanggal_surat' => '2025-01-15',
+            'nomor_surat' => 'A-2025',
+            'asal_surat' => 'Asal',
+            'dari' => 'Dari',
+            'kepada' => 'Kepada',
+            'perihal' => 'Perihal',
+            'lampiran' => null,
+            'diteruskan_kepada' => null,
+            'tembusan' => null,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => $activeBudgetYear - 1,
+        ]);
+
+        DataWarga::create([
+            'dasawisma' => 'Melati',
+            'nama_kepala_keluarga' => 'Kepala 2026',
+            'alamat' => 'Alamat 2026',
+            'jumlah_warga_laki_laki' => 1,
+            'jumlah_warga_perempuan' => 1,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => $activeBudgetYear,
+        ]);
+        DataWarga::create([
+            'dasawisma' => 'Anggrek',
+            'nama_kepala_keluarga' => 'Kepala 2025',
+            'alamat' => 'Alamat 2025',
+            'jumlah_warga_laki_laki' => 2,
+            'jumlah_warga_perempuan' => 2,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => $activeBudgetYear - 1,
+        ]);
+
+        $payload = app(BuildDashboardDocumentCoverageUseCase::class)->execute($user);
+        $items = collect($payload['charts']['coverage_per_buku']['items'])->keyBy('slug');
+
+        $this->assertSame(4, $payload['stats']['total_entri_buku']);
+        $this->assertSame(4, $payload['stats']['buku_terisi']);
+        $this->assertSame([4, 0], $payload['charts']['level_distribution']['values']);
+        $this->assertSame(1, $items->get('activities')['total']);
+        $this->assertSame(1, $items->get('agenda-surat')['total']);
+        $this->assertSame(1, $items->get('data-warga')['total']);
+        $this->assertSame(1, $items->get('catatan-keluarga')['total']);
+    }
 }
