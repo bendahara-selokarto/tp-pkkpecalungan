@@ -1,7 +1,7 @@
 # TODO DBL26A1 Pilot Dashboard Wave 2 Deferred Blocks Dan Lazy Fetch
 
 Tanggal: 2026-03-08  
-Status: `in-progress` (`state:targeted-validated-full-suite-build-pending`)
+Status: `done` (`state:full-suite-and-build-validated`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -56,8 +56,8 @@ Related ADR: `-`
 - [x] V1. `php artisan test tests/Feature/DashboardActivityChartTest.php --compact`
 - [x] V2. `php artisan test tests/Feature/DashboardDocumentCoverageTest.php --compact`
 - [x] V3. `php artisan test tests/Feature/DashboardChartPdfPrintTest.php --compact`
-- [ ] V4. Full regression `php artisan test --compact` di-offload ke operator lokal bila batch ini ditutup.
-- [ ] V5. Frontend compile guard `npm run build` di-offload ke operator lokal karena batch ini menyentuh halaman dashboard Vue.
+- [x] V4. Full regression `php artisan test --compact` di-offload ke operator lokal bila batch ini ditutup.
+- [x] V5. Frontend compile guard `npm run build` di-offload ke operator lokal karena batch ini menyentuh halaman dashboard Vue.
 
 ## Risiko
 

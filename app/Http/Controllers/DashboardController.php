@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Wilayah\Dashboard\UseCases\BuildDashboardBlockDetailWidgetUseCase;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildDashboardDocumentCoverageUseCase;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildRoleAwareDashboardBlocksUseCase;
 use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Services\DashboardActivityChartService;
 use App\Support\Pdf\PdfViewFactory;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,6 +21,7 @@ class DashboardController extends Controller
         private readonly DashboardActivityChartService $dashboardActivityChartService,
         private readonly BuildDashboardDocumentCoverageUseCase $buildDashboardDocumentCoverageUseCase,
         private readonly BuildRoleAwareDashboardBlocksUseCase $buildRoleAwareDashboardBlocksUseCase,
+        private readonly BuildDashboardBlockDetailWidgetUseCase $buildDashboardBlockDetailWidgetUseCase,
         private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory
     ) {}
@@ -49,6 +52,20 @@ class DashboardController extends Controller
         ]);
 
         return $pdf->stream('dashboard-chart-report.pdf');
+    }
+
+    public function showBlockDetail(Request $request, string $blockKey): JsonResponse
+    {
+        abort_if(auth()->user()?->hasRole('super-admin'), 404);
+
+        $payload = $this->buildDashboardBlockDetailWidgetUseCase->execute(
+            auth()->user(),
+            trim($blockKey)
+        );
+
+        abort_if(! is_array($payload), 404);
+
+        return response()->json($payload);
     }
 
     private function buildDashboardChartPayload(Request $request): array
@@ -92,12 +109,12 @@ class DashboardController extends Controller
         $resolveBlocks = function () use ($resolvePayload): array {
             $payload = $resolvePayload();
 
-            return $this->buildRoleAwareDashboardBlocksUseCase->execute(
+            return $this->attachDashboardBlockDetailEndpoints($this->buildRoleAwareDashboardBlocksUseCase->execute(
                 auth()->user(),
                 $payload['activityData'],
                 $payload['documentData'],
                 $payload['context']
-            );
+            ));
         };
 
         return [
@@ -123,6 +140,53 @@ class DashboardController extends Controller
             'tahun_anggaran' => (string) $activeBudgetYear,
             'block' => 'documents',
         ];
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $blocks
+     * @return array<int, array<string, mixed>>
+     */
+    private function attachDashboardBlockDetailEndpoints(array $blocks): array
+    {
+        return collect($blocks)
+            ->map(function (array $block): array {
+                $key = (string) ($block['key'] ?? '');
+                if (! $this->supportsDashboardBlockDetailWidget($key)) {
+                    return $block;
+                }
+
+                $block['detail'] = [
+                    'strategy' => 'json',
+                    'endpoint' => route('dashboard.blocks.show', ['blockKey' => $key], false),
+                ];
+
+                $items = $block['charts']['coverage_per_module']['items'] ?? null;
+                if (! is_array($items)) {
+                    return $block;
+                }
+
+                $block['charts']['coverage_per_module']['items'] = collect($items)
+                    ->map(static function (array $item): array {
+                        return collect($item)
+                            ->except(['per_module'])
+                            ->all();
+                    })
+                    ->values()
+                    ->all();
+
+                return $block;
+            })
+            ->values()
+            ->all();
+    }
+
+    private function supportsDashboardBlockDetailWidget(string $blockKey): bool
+    {
+        if ($blockKey === 'documents-pokja-i-desa-breakdown') {
+            return true;
+        }
+
+        return (bool) preg_match('/^documents\-(pokja\-i|pokja\-ii|pokja\-iii|pokja\-iv)\-kecamatan\-desa\-breakdown$/', $blockKey);
     }
 
     private function resolveSection1Month(mixed $rawMonth): ?int

@@ -266,6 +266,7 @@ const hasSekretarisSections = computed(() =>
 
 const dashboardUiRememberKey = `dashboard:ui-state:${String(page.props?.auth?.user?.id ?? 'guest')}`
 const expandedBlockKeys = useRemember({}, dashboardUiRememberKey)
+const blockDetailWidgets = ref({})
 
 const syncExpandedBlocks = (sections) => {
   const next = {}
@@ -293,9 +294,11 @@ const toggleBlockExpanded = (blockKey) => {
     return
   }
 
+  const nextExpanded = !isBlockExpanded(key)
+
   expandedBlockKeys.value = {
     ...expandedBlockKeys.value,
-    [key]: !isBlockExpanded(key),
+    [key]: nextExpanded,
   }
 }
 
@@ -627,6 +630,30 @@ watch(
   { immediate: true },
 )
 
+watch(
+  visibleDashboardBlocks,
+  (blocks) => {
+    blocks.forEach((block) => {
+      if (isBlockExpanded(block?.key) && isLazyBlockDetailWidgetEnabled(block)) {
+        void ensureBlockDetailWidget(block)
+      }
+    })
+  },
+  { immediate: true },
+)
+
+watch(
+  expandedBlockKeys,
+  () => {
+    visibleDashboardBlocks.value.forEach((block) => {
+      if (isBlockExpanded(block?.key) && isLazyBlockDetailWidgetEnabled(block)) {
+        void ensureBlockDetailWidget(block)
+      }
+    })
+  },
+  { deep: true },
+)
+
 const humanizeLabel = (value) => String(value ?? '')
   .replace(/[-_]+/g, ' ')
   .trim()
@@ -713,6 +740,119 @@ const sourceModulesLabel = (block) => {
   }
 
   return modules.map((moduleSlug) => humanizeLabel(moduleSlug)).join(', ')
+}
+
+const isLazyBlockDetailWidgetEnabled = (block) =>
+  normalizeToken(block?.detail?.strategy, '') === 'json'
+  && typeof block?.detail?.endpoint === 'string'
+  && block.detail.endpoint.trim() !== ''
+
+const resolveBlockDetailWidgetState = (blockKey) => {
+  const key = String(blockKey ?? '')
+  const state = blockDetailWidgets.value[key]
+
+  if (!state || typeof state !== 'object') {
+    return {
+      status: 'idle',
+      items: [],
+      trackedModules: [],
+      error: '',
+    }
+  }
+
+  return {
+    status: typeof state.status === 'string' ? state.status : 'idle',
+    items: Array.isArray(state.items) ? state.items : [],
+    trackedModules: Array.isArray(state.trackedModules) ? state.trackedModules : [],
+    error: typeof state.error === 'string' ? state.error : '',
+  }
+}
+
+const isLazyBlockDetailWidgetLoading = (block) =>
+  resolveBlockDetailWidgetState(block?.key).status === 'loading'
+
+const isLazyBlockDetailWidgetReady = (block) =>
+  resolveBlockDetailWidgetState(block?.key).status === 'loaded'
+
+const lazyBlockDetailRows = (block) =>
+  resolveBlockDetailWidgetState(block?.key).items
+
+const lazyBlockDetailError = (block) =>
+  resolveBlockDetailWidgetState(block?.key).error
+
+const formatPerModuleBreakdown = (item) => {
+  const modules = item?.per_module
+  if (!modules || typeof modules !== 'object') {
+    return '-'
+  }
+
+  const entries = Object.entries(modules)
+    .filter(([, total]) => Number(total ?? 0) > 0)
+    .map(([moduleSlug, total]) => `${humanizeLabel(moduleSlug)}: ${Number(total).toLocaleString('id-ID')}`)
+
+  return entries.length > 0 ? entries.join(', ') : '-'
+}
+
+const ensureBlockDetailWidget = async (block) => {
+  if (!isLazyBlockDetailWidgetEnabled(block)) {
+    return
+  }
+
+  const key = String(block?.key ?? '')
+  if (key === '') {
+    return
+  }
+
+  const currentState = resolveBlockDetailWidgetState(key)
+  if (currentState.status === 'loading' || currentState.status === 'loaded') {
+    return
+  }
+
+  blockDetailWidgets.value = {
+    ...blockDetailWidgets.value,
+    [key]: {
+      status: 'loading',
+      items: currentState.items,
+      trackedModules: currentState.trackedModules,
+      error: '',
+    },
+  }
+
+  try {
+    const response = await fetch(block.detail.endpoint, {
+      headers: {
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      credentials: 'same-origin',
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`)
+    }
+
+    const payload = await response.json()
+
+    blockDetailWidgets.value = {
+      ...blockDetailWidgets.value,
+      [key]: {
+        status: 'loaded',
+        items: Array.isArray(payload?.items) ? payload.items : [],
+        trackedModules: Array.isArray(payload?.tracked_modules) ? payload.tracked_modules : [],
+        error: '',
+      },
+    }
+  } catch (_error) {
+    blockDetailWidgets.value = {
+      ...blockDetailWidgets.value,
+      [key]: {
+        status: 'error',
+        items: [],
+        trackedModules: [],
+        error: 'Rincian per desa belum berhasil dimuat.',
+      },
+    }
+  }
 }
 
 const sourceAreaTypeLabel = (block) => {
@@ -1348,6 +1488,47 @@ const hasLegacyBookComparisonData = computed(() =>
                         Belum ada data untuk filter yang dipilih.
                       </p>
                     </div>
+                  </div>
+
+                  <div v-if="isLazyBlockDetailWidgetEnabled(block)" class="mt-6">
+                    <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                      Rincian Per Modul per Desa
+                    </h4>
+                    <p class="mb-3 text-[11px] text-slate-500 dark:text-slate-400">
+                      Rincian ini dimuat saat blok dibuka agar payload awal dashboard tetap tipis.
+                    </p>
+
+                    <p v-if="isLazyBlockDetailWidgetLoading(block)" class="text-xs text-slate-500 dark:text-slate-300">
+                      Memuat rincian per modul per desa.
+                    </p>
+                    <p v-else-if="lazyBlockDetailError(block) !== ''" class="text-xs text-amber-700 dark:text-amber-300">
+                      {{ lazyBlockDetailError(block) }}
+                    </p>
+                    <div v-else-if="isLazyBlockDetailWidgetReady(block) && lazyBlockDetailRows(block).length > 0" class="overflow-x-auto">
+                      <table class="w-full min-w-[680px] text-sm">
+                        <thead class="border-b border-slate-200 dark:border-slate-700">
+                          <tr class="text-left text-slate-600 dark:text-slate-300">
+                            <th class="px-3 py-3 font-semibold">Desa</th>
+                            <th class="px-3 py-3 font-semibold">Total</th>
+                            <th class="px-3 py-3 font-semibold">Rincian Modul</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            v-for="item in lazyBlockDetailRows(block)"
+                            :key="`${block.key}-${item.slug}`"
+                            class="border-b border-slate-100 align-top dark:border-slate-800"
+                          >
+                            <td class="px-3 py-3 text-slate-800 dark:text-slate-100">{{ item.label }}</td>
+                            <td class="px-3 py-3 text-slate-700 dark:text-slate-300">{{ toNumber(item.total).toLocaleString('id-ID') }}</td>
+                            <td class="px-3 py-3 text-slate-700 dark:text-slate-300">{{ formatPerModuleBreakdown(item) }}</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                    <p v-else class="text-xs text-slate-500 dark:text-slate-300">
+                      Belum ada rincian modul per desa untuk filter yang dipilih.
+                    </p>
                   </div>
                 </template>
 

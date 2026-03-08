@@ -29,6 +29,7 @@ Status: `done` (`state:thin-registry-active-index`)
 | `C-USER-MANAGEMENT-WAVE1-PARTIAL-RELOAD` | Pilot user management index partial reload dan payload slimming | `docs/process/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` | `done` | Concern ini menutup pilot kedua wave 1 pada halaman index user management super-admin dengan partial reload paginasi/per-page yang sudah tervalidasi. |
 | `C-DASHBOARD-WAVE2-DEFERRED-BLOCKS` | Pilot dashboard wave 2 deferred blocks dan lazy fetch | `docs/process/TODO_DBL26A1_PILOT_DASHBOARD_WAVE_2_DEFERRED_BLOCKS_DAN_LAZY_FETCH_2026_03_08.md` | `done` | Concern ini menutup lazy fetch tahap kedua pada dashboard dengan deferred `dashboardBlocks` yang sudah tervalidasi tanpa menambah API route baru. |
 | `C-DASHBOARD-WAVE3-STATEFUL-UI` | Pilot dashboard wave 3 stateful presentational UI | `docs/process/TODO_DBS26A1_PILOT_DASHBOARD_WAVE_3_STATEFUL_PRESENTATIONAL_UI_2026_03_08.md` | `done` | Concern ini menutup persistensi state presentasional dashboard di client tanpa mengubah query atau boundary backend. |
+| `C-DASHBOARD-WAVE4-JSON-DETAIL-WIDGET` | Pilot dashboard wave 4 JSON detail widget per desa | `docs/process/TODO_DBJ26A1_PILOT_DASHBOARD_WAVE_4_JSON_DETAIL_WIDGET_PER_DESA_2026_03_08.md` | `done` | Concern ini menutup endpoint JSON kecil on-expand untuk rincian per-desa/per-modul yang sudah tervalidasi penuh tanpa membuka API dashboard generik. |
 
 ## Registry Historis (Full Context)
 

@@ -123,6 +123,9 @@ Route::get('/', function () {
 Route::get('/dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+Route::get('/dashboard/blocks/{blockKey}/detail', [DashboardController::class, 'showBlockDetail'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard.blocks.show');
 Route::get('/dashboard/charts/report/pdf', [DashboardController::class, 'printChartPdf'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard.charts.report');

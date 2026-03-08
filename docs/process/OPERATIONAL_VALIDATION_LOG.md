@@ -31,13 +31,14 @@ Aturan:
   - `docs/process/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
   - `docs/process/TODO_DBL26A1_PILOT_DASHBOARD_WAVE_2_DEFERRED_BLOCKS_DAN_LAZY_FETCH_2026_03_08.md` (`done`)
   - `docs/process/TODO_DBS26A1_PILOT_DASHBOARD_WAVE_3_STATEFUL_PRESENTATIONAL_UI_2026_03_08.md` (`done`)
+  - `docs/process/TODO_DBJ26A1_PILOT_DASHBOARD_WAVE_4_JSON_DETAIL_WIDGET_PER_DESA_2026_03_08.md` (`done`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
 
 ### Roadmap Optimasi Inertia Bertahap (`SPA26A1`) - 2026-03-08
 
-- Status concern: `in-progress` (`state:wave3-dashboard-validated-wave4-pending`).
+- Status concern: `in-progress` (`state:wave4-dashboard-validated-wave5-pending`).
 - Keputusan concern:
   - stack utama tetap `Laravel + Inertia + Vue`,
   - tidak ada migrasi ke SPA murni pada fase ini,
@@ -129,6 +130,31 @@ Aturan:
   - `php artisan test tests/Feature/DashboardDocumentCoverageTest.php --compact` -> `PASS` (`13` tests, `441` assertions, `22.46s`),
   - `php artisan test tests/Feature/DashboardActivityChartTest.php --compact` -> `PASS` (`6` tests, `148` assertions, `16.42s`),
   - operator lokal menjalankan `npm run build` -> `PASS`.
+
+### Pilot Dashboard Wave 4 JSON Detail Widget (`DBJ26A1`) - 2026-03-08
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Scope batch:
+  - `app/Http/Controllers/DashboardController.php`,
+  - `app/Domains/Wilayah/Dashboard/UseCases/BuildDashboardBlockDetailWidgetUseCase.php`,
+  - `resources/js/Pages/Dashboard.vue`,
+  - `routes/web.php`,
+  - `tests/Feature/DashboardBlockDetailWidgetTest.php`.
+- Target batch:
+  - memindahkan nested detail `per_module` dari block per-desa ke endpoint JSON kecil,
+  - memuat detail hanya saat block dibuka.
+- Hasil batch implementasi:
+  - `DashboardController` menambahkan route/detail response untuk block key yang didukung,
+  - use case baru membangun payload detail widget per-desa berbasis repository existing,
+  - `Dashboard.vue` memuat rincian per-desa/per-modul saat block dibuka,
+  - payload awal block pilot hanya membawa summary item tanpa nested `per_module`.
+- Validasi batch:
+  - `php artisan test tests/Feature/DashboardBlockDetailWidgetTest.php --compact` -> `PASS` (`3` tests, `37` assertions, `10.79s`),
+  - `php artisan test tests/Feature/DashboardDocumentCoverageTest.php --compact` -> `PASS` (`13` tests, `441` assertions, `17.39s`),
+  - `php artisan test tests/Unit/UseCases/BuildDashboardBlockDetailWidgetUseCaseTest.php --compact` -> `PASS` (operator lokal),
+  - `php artisan test tests/Unit/Architecture/UnitCoverageGateTest.php --compact` -> `PASS` (operator lokal),
+  - `php artisan test --compact` -> `PASS` (operator lokal),
+  - `npm run build` -> `PASS` (operator lokal).
 
 ### Concern Archived
 

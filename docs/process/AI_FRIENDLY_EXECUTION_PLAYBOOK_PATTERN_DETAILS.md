@@ -271,6 +271,32 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Key yang terlalu luas bisa menabrak state page lain dalam browser yang sama.
 - Catatan reuse lintas domain/project:
   - Cocok untuk collapse/tab/modal helper pada page Inertia yang sering melakukan partial/deferred reload.
+
+### P-030 - On-Expand JSON Detail Widget
+
+- Tanggal: 2026-03-08
+- Status: active
+- Konteks: Sebagian widget detail pada halaman Inertia hanya diperlukan ketika user membuka panel tertentu, sementara nested payload-nya terlalu berat untuk dibawa terus di response utama.
+- Trigger: Ada block/panel detail dengan nested data yang tidak dibutuhkan untuk first paint tetapi tetap perlu interaksi cepat saat dibuka.
+- Langkah eksekusi:
+  1) Pertahankan summary/meta block di payload Inertia utama.
+  2) Pindahkan nested detail ke endpoint JSON kecil yang sempit per widget/block key.
+  3) Lindungi endpoint dengan auth + validasi key block yang eksplisit.
+  4) Load detail hanya saat panel dibuka dan render fallback/error state yang jelas.
+- Guardrail:
+  - Jangan membuat endpoint dashboard generik tanpa whitelist block/widget yang didukung.
+  - Jangan memindahkan authority akses ke frontend; backend tetap memverifikasi role/scope/visibility.
+  - Pastikan first-load payload masih cukup untuk summary tile dan navigasi UI dasar.
+- Validasi minimum:
+  - Targeted test initial payload tidak lagi membawa nested detail.
+  - Targeted test JSON endpoint hanya mengembalikan block yang didukung.
+  - Build frontend lulus.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada block rincian per-desa dashboard dengan nested `per_module` yang hanya dibutuhkan saat expand.
+- Risiko:
+  - Naming block key yang drift dapat memutus koneksi antara payload Inertia dan endpoint detail.
+- Catatan reuse lintas domain/project:
+  - Cocok untuk accordions, inspector panel, atau breakdown table yang berat tetapi tidak perlu ikut payload awal.
   - Matrix role harus sinkron dengan scope-area valid dari `UserAreaContextService`.
   - Read-only harus menolak `POST/PUT/PATCH/DELETE` dan endpoint `create/edit`.
 - Validasi minimum:

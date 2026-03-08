@@ -1,7 +1,7 @@
 # TODO SPA26A1 Roadmap Optimasi Bertahap Inertia Tanpa Migrasi SPA Murni
 
 Tanggal: 2026-03-08  
-Status: `in-progress` (`state:wave3-dashboard-validated-wave4-pending`)
+Status: `in-progress` (`state:wave4-dashboard-validated-wave5-pending`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -66,6 +66,7 @@ Related ADR: `-`
   - batasi pada use case yang memang buruk jika tetap full prop refresh,
   - gunakan kontrak response tipis, bukan API generik lintas aplikasi,
   - larang bypass policy/repository boundary.
+  - child concern pilot dashboard per-desa detail widget: `docs/process/TODO_DBJ26A1_PILOT_DASHBOARD_WAVE_4_JSON_DETAIL_WIDGET_PER_DESA_2026_03_08.md`.
 - [ ] L5. Hardening observability dan regresi.
   - catat metrik sebelum/sesudah pada concern pilot,
   - pastikan telemetry runtime error dan smoke test tetap relevan setelah pola fetch baru ditambah.
