@@ -1,12 +1,12 @@
 # TODO RGM26A1 Penataan Ulang Grouping Modul Berdasarkan Role User
 
 Tanggal: 2026-03-07  
-Status: `planned` (`state:awaiting-owner-group-target`)
+Status: `planned` (`state:awaiting-owner-mode-target`)
 Related ADR: `-`
 
 ## Interpretasi Status Aktif
 
-- Status aktif concern ini adalah `planned` dengan `state:awaiting-owner-group-target`.
+- Status aktif concern ini adalah `planned` dengan `state:awaiting-owner-mode-target`.
 - Seluruh blok `Progress Update 2026-03-07` di bagian bawah dipertahankan sebagai audit trail historis.
 - Entri historis yang sempat menyebut concern `done` tidak lagi berlaku sebagai status aktif karena sudah disupersede oleh reset concern pada 2026-03-07.
 
@@ -41,20 +41,66 @@ Related ADR: `-`
 
 ## Input Owner (Wajib sebelum Implementasi)
 
-- [ ] Owner memilih modul prioritas dari baseline tabel berikut.
+- [x] Owner memilih modul prioritas dari baseline tabel berikut.
 - [ ] Owner mengunci `Group Target` dan `Mode Target` pada sesi finalisasi concern.
-- [ ] Owner menyetujui batas scope rollout (`desa only`, `kecamatan only`, atau keduanya).
+- [x] Owner menyetujui batas scope rollout (`desa only`, `kecamatan only`, atau keduanya).
 - Aturan isi tabel: jika `Group Target` dikosongkan, modul dianggap `tetap` (tidak diubah).
+
+Konfirmasi owner 2026-03-08:
+
+- Shortlist aman tahap-1 disetujui untuk dipindahkan ke tabel utama.
+- Scope rollout owner dikunci ke `desa only` untuk tahap pertama.
+- `Mode Target` belum dikunci; state aktif concern bergerak ke `awaiting-owner-mode-target`.
+
+### Draft Input Owner Aman (Hasil Analisa 2026-03-08)
+
+Tujuan shortlist ini:
+
+- Memilih modul yang paling aman untuk dibahas lebih dulu pada sesi owner.
+- Fokus hanya pada modul yang `match langsung` dengan bahan administrasi yang sudah direkam.
+- Menghindari modul yang masih `reuse parsial/report-only`, bergantung override khusus, atau shared terlalu lebar lintas group.
+
+Rekomendasi tahap-1 paling aman:
+
+| Prioritas | Modul Slug | Group Rekomendasi | Alasan aman |
+| --- | --- | --- | --- |
+| 1 | `agenda-surat` | `sekretaris-tpk` | Match langsung dengan bahan sekretaris inti dan sudah stabil pada boundary sekretariat. |
+| 2 | `buku-daftar-hadir` | `sekretaris-tpk` | Match langsung dengan bahan sekretaris inti dan tidak bergantung override role-module. |
+| 3 | `buku-notulen-rapat` | `sekretaris-tpk` | Match langsung dengan bahan sekretaris inti; meski ekstensi lokal, grouping-nya paling jelas. |
+| 4 | `data-warga` | `pokja-i` | Match langsung dengan bahan Pokja I dan sudah menjadi kepemilikan inti Pokja I. |
+| 5 | `data-kegiatan-warga` | `pokja-i` | Match langsung dengan kebutuhan data kegiatan Pokja I dan boundary-nya sudah spesifik. |
+| 6 | `bkl` | `pokja-i` | Match langsung dengan bahan Pokja I dan tidak punya ambiguity group lintas role. |
+| 7 | `bkr` | `pokja-i` | Match langsung dengan bahan Pokja I dan stabil sebagai concern spesifik. |
+| 8 | `paar` | `pokja-i` | Match langsung dengan bahan Pokja I dan canonical label sudah terkunci. |
+| 9 | `data-keluarga` | `pokja-iii` | Match paling dekat dengan bahan Pokja III dan group saat ini sudah konsisten. |
+| 10 | `posyandu` | `pokja-iv` | Match langsung dengan bahan Pokja IV dan sudah punya boundary domain jelas. |
+| 11 | `simulasi-penyuluhan` | `pokja-iv` | Match langsung dengan bahan Pokja IV dan tidak bergantung wrapper report. |
+
+Rekomendasi yang sengaja belum diprioritaskan pada tahap aman:
+
+- `activities`: terlalu shared lintas sekretaris + semua pokja; perubahan grouping berisiko tinggi.
+- `inventaris` dan `buku-tamu`: saat ini memiliki realitas runtime khusus/override sehingga tidak cocok dijadikan batch aman pertama.
+- `program-prioritas`, `buku-keuangan`, `bantuans`, `catatan-keluarga`: lebih dekat ke `reuse parsial/report-only` atau punya dampak lintas concern lebih besar.
+- `KWT`, `Dasa Wisma`, `IVA test`, `grafik/kliping`: belum punya boundary modul input yang cukup eksplisit.
+
+Rekomendasi scope rollout paling aman:
+
+- `desa only` untuk tahap owner pertama, karena bahan yang direkam sejauh ini dominan level desa dan blast radius lebih kecil.
+
+Aturan pakai shortlist:
+
+- Jika owner setuju, isi `Group Target` pada tabel utama minimal untuk modul-modul di shortlist ini.
+- Modul di luar shortlist tetap dibiarkan kosong sampai owner memberi keputusan eksplisit.
 
 | No | Modul Slug | Group Saat Ini | Group Target |
 | --- | --- | --- | --- |
 | 1 | anggota-tim-penggerak | sekretaris-tpk |  |
 | 2 | anggota-tim-penggerak-kader | sekretaris-tpk |  |
 | 3 | kader-khusus | sekretaris-tpk |  |
-| 4 | agenda-surat | sekretaris-tpk |  |
-| 5 | buku-daftar-hadir | sekretaris-tpk |  |
+| 4 | agenda-surat | sekretaris-tpk | sekretaris-tpk |
+| 5 | buku-daftar-hadir | sekretaris-tpk | sekretaris-tpk |
 | 6 | buku-tamu | sekretaris-tpk |  |
-| 7 | buku-notulen-rapat | sekretaris-tpk |  |
+| 7 | buku-notulen-rapat | sekretaris-tpk | sekretaris-tpk |
 | 8 | buku-keuangan | sekretaris-tpk |  |
 | 9 | bantuans | sekretaris-tpk |  |
 | 10 | inventaris | sekretaris-tpk |  |
@@ -63,21 +109,21 @@ Related ADR: `-`
 | 13 | anggota-pokja | sekretaris-tpk, pokja-i, pokja-ii, pokja-iii, pokja-iv |  |
 | 14 | prestasi-lomba | sekretaris-tpk, pokja-i, pokja-ii, pokja-iii, pokja-iv |  |
 | 15 | laporan-tahunan-pkk | sekretaris-tpk |  |
-| 16 | data-warga | pokja-i |  |
-| 17 | data-kegiatan-warga | pokja-i |  |
-| 18 | bkl | pokja-i |  |
-| 19 | bkr | pokja-i |  |
-| 20 | paar | pokja-i |  |
+| 16 | data-warga | pokja-i | pokja-i |
+| 17 | data-kegiatan-warga | pokja-i | pokja-i |
+| 18 | bkl | pokja-i | pokja-i |
+| 19 | bkr | pokja-i | pokja-i |
+| 20 | paar | pokja-i | pokja-i |
 | 21 | data-pelatihan-kader | pokja-ii |  |
 | 22 | taman-bacaan | pokja-ii |  |
 | 23 | koperasi | pokja-ii |  |
 | 24 | kejar-paket | pokja-ii |  |
-| 25 | data-keluarga | pokja-iii |  |
+| 25 | data-keluarga | pokja-iii | pokja-iii |
 | 26 | data-industri-rumah-tangga | pokja-iii |  |
 | 27 | data-pemanfaatan-tanah-pekarangan-hatinya-pkk | pokja-iii |  |
 | 28 | warung-pkk | pokja-iii |  |
-| 29 | posyandu | pokja-iv |  |
-| 30 | simulasi-penyuluhan | pokja-iv |  |
+| 29 | posyandu | pokja-iv | pokja-iv |
+| 30 | simulasi-penyuluhan | pokja-iv | pokja-iv |
 | 31 | catatan-keluarga | pokja-iv |  |
 | 32 | pilot-project-naskah-pelaporan | pokja-iv |  |
 | 33 | pilot-project-keluarga-sehat | pokja-iv |  |

@@ -2009,3 +2009,349 @@ Keputusan:
 Status:
 
 - `PASS` (`sfc26a1-structure-hardened`).
+
+## Inisialisasi TODO Bahan Aktual dan Terjemahan Berkala (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Menyiapkan dokumen TODO hidup untuk menerima input aktual owner dan menerjemahkannya ke bahasa bahan formal.
+- Mengunci pola update append-only agar histori perubahan tetap utuh.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+
+Perintah validasi:
+
+- `rg -n "^# TODO TBH26A1 " docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "^Status:\s*`in-progress`" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "^## Update " docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Concern dikunci sebagai `doc-only` tanpa perubahan runtime/backend contract.
+- Format update dikunci: `Input Aktual (Asli)`, `Terjemahan Bahan (Formal)`, `Catatan (Opsional)`.
+
+Status:
+
+- `PASS` (`tbh26a1-doc-only-template-initialized`).
+
+## Append Update Pokja I Desa pada TODO Bahan Aktual (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Merekam input aktual owner untuk baseline Pokja I level desa.
+- Menambahkan terjemahan bahan formal ke dokumen hidup `TBH26A1` dengan pola append-only.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+
+Perintah validasi:
+
+- `rg -n "^## Update .*\\(U002\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "Pokja I tingkat desa memiliki dokumen administrasi" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Input Pokja I level desa dikunci sebagai baseline isi `U002`.
+- Perapian ejaan hanya dilakukan pada bagian terjemahan formal; input asli tetap dipertahankan apa adanya.
+
+Status:
+
+- `PASS` (`tbh26a1-u002-pokja-i-desa-recorded`).
+
+## Append Update Pokja III dan Administrasi KWT pada TODO Bahan Aktual (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Merekam daftar administrasi Pokja III.
+- Merekam daftar administrasi KWT (Kelompok Wanita Tani) yang menyertai input Pokja III.
+- Menandai ambiguitas yang mempengaruhi makna tanpa mengubah input asli.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+
+Perintah validasi:
+
+- `rg -n "^## Update .*\\(U003\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "Pokja III juga memiliki administrasi KWT" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "\\[PERLU KONFIRMASI: item ini muncul kembali setelah nomor 2\\]" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Input Pokja III dan administrasi KWT dikunci sebagai isi `U003`.
+- Ambiguitas duplikasi `Buku Kegiatan` tidak diselesaikan dengan asumsi; statusnya tetap `[PERLU KONFIRMASI]`.
+
+Status:
+
+- `PASS` (`tbh26a1-u003-pokja-iii-kwt-recorded`).
+
+## Append Update Pokja IV pada TODO Bahan Aktual (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Merekam daftar administrasi Pokja IV dari input yang terpecah pada dua pesan user.
+- Menggabungkan potongan input tersebut menjadi satu update append-only yang utuh.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+
+Perintah validasi:
+
+- `rg -n "^## Update .*\\(U004\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "Administrasi Pokja IV pada baseline ini dicatat sebagai berikut" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "menggabungkan potongan input Pokja IV dari dua pesan terakhir" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Potongan input Pokja IV digabung dalam satu entry `U004` agar tidak memecah konteks.
+- Context level tetap diasumsikan `desa` mengikuti alur sebelumnya sampai ada koreksi.
+
+Status:
+
+- `PASS` (`tbh26a1-u004-pokja-iv-recorded`).
+
+## Append Update Administrasi Dasa Wisma pada TODO Bahan Aktual (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Merekam baseline administrasi Dasa Wisma.
+- Menandai duplikasi item yang berpotensi ambigu tanpa mengubah input asli.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+
+Perintah validasi:
+
+- `rg -n "^## Update .*\\(U005\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "Administrasi Dasa Wisma pada baseline ini dicatat" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "\\[PERLU KONFIRMASI: item ini muncul kembali seperti nomor 1\\]" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Baseline administrasi Dasa Wisma dikunci sebagai isi `U005`.
+- Duplikasi item `Rekapitulasi Data Bumil dll` tidak diselesaikan dengan asumsi; statusnya tetap `[PERLU KONFIRMASI]`.
+
+Status:
+
+- `PASS` (`tbh26a1-u005-dasa-wisma-recorded`).
+
+## Append Update Bendahara pada TODO Bahan Aktual (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Merekam baseline administrasi bendahara.
+- Menambahkan terjemahan bahan formal ke dokumen hidup `TBH26A1`.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+
+Perintah validasi:
+
+- `rg -n "^## Update .*\\(U006\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "Administrasi bendahara pada baseline ini meliputi" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Baseline administrasi bendahara dikunci sebagai isi `U006`.
+- Tidak ada ambiguitas baru yang perlu diberi tag `[PERLU KONFIRMASI]`.
+
+Status:
+
+- `PASS` (`tbh26a1-u006-bendahara-recorded`).
+
+## Append Update Sekretaris pada TODO Bahan Aktual (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Merekam baseline administrasi sekretaris.
+- Menambahkan versi bahan formal untuk kelompok buku wajib dan lampiran.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+
+Perintah validasi:
+
+- `rg -n "^## Update .*\\(U007\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "Administrasi sekretaris pada baseline ini dicatat sebagai berikut" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Baseline administrasi sekretaris dikunci sebagai isi `U007`.
+- Perapian istilah `Bandel` menjadi `Bundel` dilakukan hanya pada versi formal.
+
+Status:
+
+- `PASS` (`tbh26a1-u007-sekretaris-recorded`).
+
+## Append Update Buku Bantu Sekretaris pada TODO Bahan Aktual (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Merekam lanjutan administrasi sekretaris pada bagian `B. Buku Bantu`.
+- Menambahkan versi bahan formal dengan perapian ejaan terbatas.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+
+Perintah validasi:
+
+- `rg -n "^## Update .*\\(U008\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "Lanjutan administrasi sekretaris pada bagian" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Bagian `B. Buku Bantu` dikunci sebagai isi `U008` dan diposisikan sebagai lanjutan dari `U007`.
+- Perapian ejaan hanya dilakukan pada versi formal.
+
+Status:
+
+- `PASS` (`tbh26a1-u008-buku-bantu-sekretaris-recorded`).
+
+## Append Update Buku Penunjang Sekretaris pada TODO Bahan Aktual (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Merekam lanjutan administrasi sekretaris pada bagian `C. Buku Penunjang Buku Wajib`.
+- Menambahkan lampiran terkait ke dokumen hidup `TBH26A1`.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+
+Perintah validasi:
+
+- `rg -n "^## Update .*\\(U009\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "Lanjutan administrasi sekretaris pada bagian" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "Buku Grafik TP PKK Desa" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Bagian `C. Buku Penunjang Buku Wajib` dikunci sebagai isi `U009`.
+- Entri ini diposisikan sebagai lanjutan dari blok administrasi sekretaris sebelumnya.
+
+Status:
+
+- `PASS` (`tbh26a1-u009-buku-penunjang-sekretaris-recorded`).
+
+## Append Peta Analisa Kesesuaian Project Existing pada TODO Bahan Aktual (`TBH26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Menyusun peta koheren untuk membaca kesesuaian bahan administrasi yang sudah direkam terhadap modul yang sudah ada di project.
+- Menggunakan source of truth dokumen domain, sidebar grouping, dan route aktif.
+
+Artefak:
+
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- `docs/process/SIDEBAR_DOMAIN_GROUPING_PLAN.md`
+- `routes/web.php`
+
+Perintah validasi:
+
+- `rg -n "^## Update .*\\(U010\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "match langsung|reuse parsial/report-only|gap/perlu concern baru" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+- `rg -n "KWT|Dasa Wisma|Bendahara|Pokja IV" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Bahan yang sudah direkam dipetakan ke tiga status analisa: `match langsung`, `reuse parsial/report-only`, dan `gap/perlu concern baru`.
+- Peta ini diposisikan sebagai bahan analisa kesesuaian project existing, bukan perubahan kontrak modul existing.
+
+Status:
+
+- `PASS` (`tbh26a1-u010-project-fit-analysis-mapped`).
+
+## Draft Input Owner Aman untuk Concern Grouping Modul (`RGM26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Menurunkan hasil analisa kesesuaian project existing menjadi shortlist `Input Owner` yang paling aman.
+- Fokus pada modul yang `match langsung`, tidak bergantung override khusus, dan tidak shared terlalu lebar lintas group.
+
+Artefak:
+
+- `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- `docs/process/SIDEBAR_DOMAIN_GROUPING_PLAN.md`
+- `routes/web.php`
+
+Perintah validasi:
+
+- `rg -n "Draft Input Owner Aman|Rekomendasi tahap-1 paling aman|desa only" docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+  - hasil: `PASS`.
+- `rg -n "agenda-surat|data-warga|posyandu|simulasi-penyuluhan" docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Shortlist owner aman ditambahkan tanpa mengubah tabel baseline modul utama.
+- Scope rollout paling aman direkomendasikan `desa only` untuk tahap owner pertama.
+
+Status:
+
+- `PASS` (`rgm26a1-safe-owner-shortlist-added`).
+
+## Konfirmasi Owner Shortlist Aman pada Concern Grouping Modul (`RGM26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Memindahkan shortlist aman yang sudah disetujui owner ke tabel utama `Input Owner`.
+- Mengunci scope rollout awal ke `desa only`.
+- Menggeser state concern dari `awaiting-owner-group-target` ke `awaiting-owner-mode-target`.
+
+Artefak:
+
+- `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+
+Perintah validasi:
+
+- `rg -n "awaiting-owner-mode-target|Konfirmasi owner 2026-03-08|desa only" docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+  - hasil: `PASS`.
+- `rg -n "\\| 4 \\| agenda-surat \\| sekretaris-tpk \\| sekretaris-tpk \\||\\| 16 \\| data-warga \\| pokja-i \\| pokja-i \\||\\| 29 \\| posyandu \\| pokja-iv \\| pokja-iv \\|" docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Owner menyetujui shortlist aman tahap-1 untuk dimasukkan ke tabel utama.
+- Group target untuk 11 modul shortlist dikunci sama dengan rekomendasi aman.
+- `Mode Target` belum dikunci, sehingga concern belum siap implementasi runtime.
+
+Status:
+
+- `PASS` (`rgm26a1-owner-shortlist-confirmed-awaiting-mode-target`).
