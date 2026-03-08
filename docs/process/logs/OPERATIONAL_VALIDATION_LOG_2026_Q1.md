@@ -2355,3 +2355,63 @@ Keputusan:
 Status:
 
 - `PASS` (`rgm26a1-owner-shortlist-confirmed-awaiting-mode-target`).
+
+## Validasi Batch Aman No-op Runtime untuk Concern Grouping Modul (`RGM26A1`): 2026-03-08
+
+Ruang lingkup:
+
+- Memvalidasi bahwa shortlist aman yang sudah disetujui owner tidak menghasilkan delta runtime karena mapping aktif sudah sesuai.
+- Membuktikan baseline aman lewat targeted test akses, payload, middleware, dan layout contract.
+
+Artefak:
+
+- `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+- `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`
+- `resources/js/Layouts/DashboardLayout.vue`
+- `tests/Unit/Services/RoleMenuVisibilityServiceTest.php`
+- `tests/Feature/MenuVisibilityPayloadTest.php`
+- `tests/Feature/ModuleVisibilityMiddlewareTest.php`
+- `tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
+
+Perintah validasi:
+
+- `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php --compact`
+  - hasil: `PASS` (`46` tests, `347` assertions).
+
+Keputusan:
+
+- Shortlist aman `RGM26A1` tervalidasi sebagai `no-op runtime` karena group target dan default mode aman sudah cocok dengan runtime aktif.
+- Patch backend/frontend belum diperlukan selama owner tidak meminta deviasi `Mode Target`.
+
+Status:
+
+- `PASS` (`rgm26a1-safe-batch-noop-runtime-validated`).
+
+## Dokumentasi Sumber Data dan Cek Manual Lampiran 4.24: 2026-03-08
+
+Ruang lingkup:
+
+- Menambahkan markdown khusus yang menjelaskan sumber data operasional Lampiran `4.24`.
+- Menandai bahwa header autentik dan jalur sumber data concern ini sudah dicek manual dan dinyatakan sesuai.
+
+Artefak:
+
+- `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_SUMBER_DATA.md`
+- `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md`
+- `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`
+
+Perintah validasi:
+
+- `rg -n "Sumber Data Lampiran 4.24|Status cek manual sumber data report|Status akhir: \\*\\*sesuai\\*\\*" docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_SUMBER_DATA.md`
+  - hasil: `PASS`.
+- `rg -n "DATA_KEGIATAN_PKK_POKJA_IV_4_24_SUMBER_DATA.md|dokumen sumber data rinci" docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`
+  - hasil: `PASS`.
+
+Keputusan:
+
+- Lampiran `4.24` dikunci sebagai concern `report-only via catatan-keluarga` dengan sumber data lintas modul yang sudah terdokumentasi eksplisit.
+- Status cek manual concern ini dinyatakan `sesuai` terhadap implementasi aktif dan bukti visual header autentik.
+
+Status:
+
+- `PASS` (`lampiran-424-sumber-data-manual-check-documented`).

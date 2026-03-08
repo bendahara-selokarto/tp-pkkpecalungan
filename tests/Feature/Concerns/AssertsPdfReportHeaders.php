@@ -37,7 +37,7 @@ trait AssertsPdfReportHeaders
 
     private function normalizeText(string $text): string
     {
-        $stripped = strip_tags($text);
+        $stripped = html_entity_decode(strip_tags($text), ENT_QUOTES | ENT_HTML5);
         $upper = strtoupper($stripped);
 
         return trim((string) preg_replace('/\s+/u', ' ', $upper));

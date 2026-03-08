@@ -6,13 +6,14 @@
     <style>
         @page { margin: 14px 16px; }
         body { font-family: DejaVu Sans, sans-serif; font-size: 7px; color: #111827; margin: 0; }
-        .lampiran { text-align: right; font-weight: 700; font-size: 10px; margin-bottom: 4px; }
-        .title { text-align: center; font-size: 12px; font-weight: 700; margin-bottom: 4px; }
-        .meta { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
-        .meta td { padding: 1px 4px; }
-        .meta .label { width: 80px; font-weight: 700; }
+        .header { min-height: 98px; margin-bottom: 8px; }
+        .lampiran { text-align: right; font-weight: 700; font-size: 10px; margin-bottom: 14px; }
+        .title { text-align: center; font-size: 12px; font-weight: 700; margin-bottom: 8px; }
+        .meta { width: 170px; border-collapse: collapse; margin: 0 auto; }
+        .meta td { padding: 0 2px; }
+        .meta .label { width: 52px; font-weight: 700; }
         .meta .sep { width: 8px; text-align: center; font-weight: 700; }
-        .pokja { font-size: 10px; font-weight: 700; margin: 4px 0 3px; }
+        .pokja { font-size: 10px; font-weight: 700; margin: 6px 0 6px; }
         .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
@@ -29,66 +30,71 @@
 </head>
 <body>
     @php($totals = is_array($totals ?? null) ? $totals : [])
-    <div class="lampiran">LAMPIRAN 4.24</div>
-    <div class="title">DATA KEGIATAN PKK</div>
+    <div class="header">
+        <div class="lampiran">LAMPIRAN 4.24</div>
+        <div class="title">DATA KEGIATAN PKK</div>
 
-    <table class="meta">
-        <tr>
-            <td class="label">TP PKK</td>
-            <td class="sep">:</td>
-            <td>{{ $areaName ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td class="label">TAHUN</td>
-            <td class="sep">:</td>
-            <td>{{ $tahun ?? now()->format('Y') }}</td>
-        </tr>
-    </table>
+        <table class="meta">
+            <tr>
+                <td class="label">TP PKK</td>
+                <td class="sep">:</td>
+                <td>{{ $areaName ?? '-' }}</td>
+            </tr>
+            <tr>
+                <td class="label">TAHUN</td>
+                <td class="sep">:</td>
+                <td>{{ $tahun ?? now()->format('Y') }}</td>
+            </tr>
+        </table>
+    </div>
 
     <div class="pokja">POKJA IV</div>
 
     <table class="main-table">
         <thead>
             <tr>
-                <th rowspan="3">NO</th>
-                <th rowspan="3">NAMA WILAYAH<br>(DUSUN/DESA/KEL./KEC./KAB./KOTA/PROV)</th>
+                <th rowspan="4">NO</th>
+                <th rowspan="4">NAMA WILAYAH<br>(DUSUN/DESA/KEL./KEC./KAB./KOTA/PROV)</th>
+                <th colspan="9">KESEHATAN</th>
+                <th colspan="7">KELESTARIAN LINGKUNGAN HIDUP</th>
+                <th colspan="6">PERENCANAAN SEHAT</th>
+                <th colspan="3">PROGRAM UNGGULAN GERAKAN KELUARGA SEHAT TANGGAP &amp; TANGGUH BENCANA (GKSTTB)</th>
+            </tr>
+            <tr>
                 <th colspan="5">JUMLAH KADER</th>
                 <th rowspan="3">POSYANDU</th>
                 <th rowspan="3">IMUNISASI / VAKSINASI BAYI/BALITA</th>
                 <th rowspan="3">PKG</th>
                 <th rowspan="3">TBC</th>
-                <th colspan="7">KELESTARIAN LINGKUNGAN HIDUP</th>
-                <th colspan="6">PERENCANAAN SEHAT</th>
-                <th colspan="3">PROGRAM UNGGULAN</th>
+                <th colspan="3">JUMLAH RUMAH YANG MEMILIKI</th>
+                <th rowspan="3">JUMLAH MCK</th>
+                <th colspan="3">JUMLAH KRT YANG MENGGUNAKAN AIR</th>
+                <th rowspan="3">JUMLAH PUS</th>
+                <th rowspan="3">JUMLAH WUS</th>
+                <th colspan="2">JUMLAH AKSEPTOR KB</th>
+                <th rowspan="3">JML. KK YANG MEMILIKI TABUNGAN KELUARGA</th>
+                <th rowspan="3">JML. KK YANG MEMILIKI ASURANSI KESEHATAN</th>
+                <th rowspan="3">KESEHATAN</th>
+                <th rowspan="3">KELESTARIAN LINGKUNGAN HIDUP</th>
+                <th rowspan="3">PERENCANAAN SEHAT</th>
             </tr>
             <tr>
                 <th rowspan="2">KADER KESEHATAN</th>
                 <th colspan="4">KADER YANG ADA</th>
-                <th colspan="3">JUMLAH RUMAH YANG MEMILIKI</th>
-                <th rowspan="2">JUMLAH MCK</th>
-                <th colspan="3">JUMLAH KRT YANG MENGGUNAKAN AIR</th>
-                <th rowspan="2">JUMLAH PUS</th>
-                <th rowspan="2">JUMLAH WUS</th>
-                <th colspan="2">JUMLAH AKSEPTOR KB</th>
-                <th rowspan="2">JML. KK YANG MEMILIKI TABUNGAN KELUARGA</th>
-                <th rowspan="2">JML. KK YANG MEMILIKI ASURANSI KESEHATAN</th>
-                <th rowspan="2">KESEHATAN</th>
-                <th rowspan="2">KELESTARIAN LINGKUNGAN HIDUP</th>
-                <th rowspan="2">PERENCANAAN SEHAT</th>
+                <th rowspan="2">JAMBAN (WC)</th>
+                <th rowspan="2">SPAL</th>
+                <th rowspan="2">TPS</th>
+                <th rowspan="2">PDAM</th>
+                <th rowspan="2">SUMUR</th>
+                <th rowspan="2">LAIN-LAIN</th>
+                <th rowspan="2">L</th>
+                <th rowspan="2">P</th>
             </tr>
             <tr>
                 <th>GIZI</th>
                 <th>KESLING</th>
                 <th>PHBS</th>
                 <th>KB</th>
-                <th>JAMBAN (WC)</th>
-                <th>SPAL</th>
-                <th>TPS</th>
-                <th>PDAM</th>
-                <th>SUMUR</th>
-                <th>LAIN-LAIN</th>
-                <th>L</th>
-                <th>P</th>
             </tr>
             <tr class="number-row">
                 @for ($column = 1; $column <= 27; $column++)

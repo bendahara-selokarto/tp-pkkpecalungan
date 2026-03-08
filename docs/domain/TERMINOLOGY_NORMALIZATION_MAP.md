@@ -67,7 +67,7 @@ Tujuan:
 | 4.20a | `data-umum-pkk` | Data Umum PKK | Report PDF 20 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-20 untuk mencegah drift | implemented (report-only) |
 | 4.20b | `data-umum-pkk-kecamatan` | Data Umum PKK | Report PDF 21 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-21 untuk mencegah drift | implemented (report-only) |
 | 4.23 | `data-kegiatan-pkk-pokja-iii` | Data Kegiatan PKK (Pokja III) | Report PDF 20 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-20 untuk mencegah drift | implemented (report-only) |
-| 4.24 | `data-kegiatan-pkk-pokja-iv` | Data Kegiatan PKK (Pokja IV) | Report PDF 27 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + jaga validasi struktur kolom 1-27 untuk mencegah drift | implemented (report-only) |
+| 4.24 | `data-kegiatan-pkk-pokja-iv` | Data Kegiatan PKK (Pokja IV) | Report PDF 27 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan grup header puncak `KESEHATAN` dan label canonical `PROGRAM UNGGULAN GERAKAN KELUARGA SEHAT TANGGAP & TANGGUH BENCANA (GKSTTB)`; jangan diringkas menjadi `PROGRAM UNGGULAN` generik | implemented (report-only) |
 | Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | Menu/index masih memakai label ringkas (`Laporan Manual Pilot Project`, `Laporan Pilot Project Keluarga Sehat`); PDF sudah memuat judul canonical panjang | Sinkronkan label sidebar/index ke judul canonical agar konsisten lintas UI-PDF | partial |
 | Ekstensi Lokal 2025 | `laporan-tahunan-pkk` | Laporan Tahunan Tim Penggerak PKK Kecamatan | Menu/index sudah aktif pada grup `Sekretaris TP-PKK`, output dokumen memakai judul naskah `LAPORAN TAHUNAN` + identitas tim/area/tahun dalam format `.docx` | Pertahankan label canonical concern `Laporan Tahunan Tim Penggerak PKK Kecamatan`, format output `.docx` naskah, dan label fallback `Isian Pelengkap Kegiatan` pada form | implemented |
 
@@ -165,4 +165,3 @@ Implementasi canonical:
   - `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md`
 - Ekstensi pedoman:
   - `docs/domain/PEDOMAN_DOMAIN_UTAMA_202_211.md`
-
