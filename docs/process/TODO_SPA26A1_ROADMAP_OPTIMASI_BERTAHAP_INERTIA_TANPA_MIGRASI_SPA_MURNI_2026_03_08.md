@@ -1,7 +1,7 @@
 # TODO SPA26A1 Roadmap Optimasi Bertahap Inertia Tanpa Migrasi SPA Murni
 
 Tanggal: 2026-03-08  
-Status: `in-progress` (`state:wave2-dashboard-deferred-blocks-active`)
+Status: `in-progress` (`state:wave3-dashboard-validated-wave4-pending`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -61,6 +61,7 @@ Related ADR: `-`
 - [ ] L3. Wave 3: komponen stateful lokal.
   - pertahankan state UI seperti tab, collapse, draft filter, modal, dan helper panel di client,
   - kurangi visit Inertia hanya untuk perubahan state presentasional.
+  - child concern pilot dashboard presentational state: `docs/process/TODO_DBS26A1_PILOT_DASHBOARD_WAVE_3_STATEFUL_PRESENTATIONAL_UI_2026_03_08.md`.
 - [ ] L4. Wave 4: endpoint JSON kecil untuk widget sangat interaktif.
   - batasi pada use case yang memang buruk jika tetap full prop refresh,
   - gunakan kontrak response tipis, bukan API generik lintas aplikasi,

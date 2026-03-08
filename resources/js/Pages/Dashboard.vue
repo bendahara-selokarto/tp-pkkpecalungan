@@ -1,6 +1,6 @@
 <script setup>
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
-import { Deferred, router, usePage } from '@inertiajs/vue3'
+import { Deferred, router, usePage, useRemember } from '@inertiajs/vue3'
 import CardBox from '@/admin-one/components/CardBox.vue'
 import BaseButton from '@/admin-one/components/BaseButton.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
@@ -264,7 +264,8 @@ const hasSekretarisSections = computed(() =>
   ),
 )
 
-const expandedBlockKeys = ref({})
+const dashboardUiRememberKey = `dashboard:ui-state:${String(page.props?.auth?.user?.id ?? 'guest')}`
+const expandedBlockKeys = useRemember({}, dashboardUiRememberKey)
 
 const syncExpandedBlocks = (sections) => {
   const next = {}

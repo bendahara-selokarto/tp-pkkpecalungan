@@ -246,6 +246,31 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Watcher/filter yang tidak digating bisa salah memicu visit ulang sebelum prop deferred selesai dimuat.
 - Catatan reuse lintas domain/project:
   - Cocok untuk dashboard atau halaman summary yang punya blok sekunder berat tetapi tidak layak dipecah menjadi API concern baru.
+
+### P-029 - Remembered Presentational UI State
+
+- Tanggal: 2026-03-08
+- Status: active
+- Konteks: Halaman Inertia memiliki state UI lokal seperti collapse, tab aktif, atau helper panel yang bukan bagian dari contract backend tetapi mengganggu UX bila selalu reset setelah visit.
+- Trigger: State presentasional reset pada partial reload, deferred reload, atau visit Inertia berikutnya padahal tidak perlu ikut URL/query.
+- Langkah eksekusi:
+  1) Identifikasi state yang murni presentasional dan tidak mempengaruhi query/backend.
+  2) Simpan state tersebut dengan `useRemember`.
+  3) Gunakan remember key yang cukup sempit agar tidak bertabrakan antar concern atau user.
+  4) Pertahankan sinkronisasi cleanup lokal bila data backend untuk elemen terkait berubah.
+- Guardrail:
+  - Jangan gunakan `useRemember` untuk state yang seharusnya canonical di URL atau backend.
+  - Hindari remember key generik lintas concern.
+  - Jangan menambah side effect backend hanya untuk menyimpan state presentasional.
+- Validasi minimum:
+  - Targeted regression concern tetap hijau.
+  - Build frontend lulus.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada dashboard untuk mempertahankan state expand/collapse blok antar visit Inertia.
+- Risiko:
+  - Key yang terlalu luas bisa menabrak state page lain dalam browser yang sama.
+- Catatan reuse lintas domain/project:
+  - Cocok untuk collapse/tab/modal helper pada page Inertia yang sering melakukan partial/deferred reload.
   - Matrix role harus sinkron dengan scope-area valid dari `UserAreaContextService`.
   - Read-only harus menolak `POST/PUT/PATCH/DELETE` dan endpoint `create/edit`.
 - Validasi minimum:

@@ -29,14 +29,15 @@ Aturan:
   - `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md` (`in-progress`)
   - `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
   - `docs/process/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
-  - `docs/process/TODO_DBL26A1_PILOT_DASHBOARD_WAVE_2_DEFERRED_BLOCKS_DAN_LAZY_FETCH_2026_03_08.md` (`in-progress`)
+  - `docs/process/TODO_DBL26A1_PILOT_DASHBOARD_WAVE_2_DEFERRED_BLOCKS_DAN_LAZY_FETCH_2026_03_08.md` (`done`)
+  - `docs/process/TODO_DBS26A1_PILOT_DASHBOARD_WAVE_3_STATEFUL_PRESENTATIONAL_UI_2026_03_08.md` (`done`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
 
 ### Roadmap Optimasi Inertia Bertahap (`SPA26A1`) - 2026-03-08
 
-- Status concern: `in-progress` (`state:wave2-dashboard-deferred-blocks-active`).
+- Status concern: `in-progress` (`state:wave3-dashboard-validated-wave4-pending`).
 - Keputusan concern:
   - stack utama tetap `Laravel + Inertia + Vue`,
   - tidak ada migrasi ke SPA murni pada fase ini,
@@ -94,7 +95,7 @@ Aturan:
 
 ### Pilot Dashboard Wave 2 Deferred Blocks (`DBL26A1`) - 2026-03-08
 
-- Status concern: `in-progress` (`state:targeted-validated-full-suite-build-pending`).
+- Status concern: `done` (`state:full-suite-and-build-validated`).
 - Scope batch:
   - `app/Http/Controllers/DashboardController.php`,
   - `resources/js/Pages/Dashboard.vue`,
@@ -111,7 +112,23 @@ Aturan:
   - `php artisan test tests/Feature/DashboardActivityChartTest.php --compact` -> `PASS` (`6` tests, `148` assertions, `19.49s`),
   - `php artisan test tests/Feature/DashboardDocumentCoverageTest.php --compact` -> `PASS` (`13` tests, `441` assertions, `31.43s`),
   - `php artisan test tests/Feature/DashboardChartPdfPrintTest.php --compact` -> `PASS` (`3` tests, `6` assertions, `25.41s`),
-  - full regression/build tetap mengikuti kontrak offload operator setelah batch teknis stabil.
+  - operator lokal menjalankan `php artisan test --compact` -> `PASS` (`1156 passed`, `7975 assertions`, `121.79s`),
+  - operator lokal menjalankan `npm run build` -> `PASS` (`built in 11.30s`).
+
+### Pilot Dashboard Wave 3 Stateful Presentational UI (`DBS26A1`) - 2026-03-08
+
+- Status concern: `done` (`state:targeted-and-build-validated`).
+- Scope batch:
+  - `resources/js/Pages/Dashboard.vue`.
+- Target batch:
+  - menjaga state expand/collapse blok tetap lokal dan persisten antar visit Inertia,
+  - tanpa menambah query, prop backend, atau endpoint baru.
+- Hasil batch implementasi:
+  - `Dashboard.vue` memakai `useRemember` untuk `expandedBlockKeys`.
+- Validasi batch:
+  - `php artisan test tests/Feature/DashboardDocumentCoverageTest.php --compact` -> `PASS` (`13` tests, `441` assertions, `22.46s`),
+  - `php artisan test tests/Feature/DashboardActivityChartTest.php --compact` -> `PASS` (`6` tests, `148` assertions, `16.42s`),
+  - operator lokal menjalankan `npm run build` -> `PASS`.
 
 ### Concern Archived
 

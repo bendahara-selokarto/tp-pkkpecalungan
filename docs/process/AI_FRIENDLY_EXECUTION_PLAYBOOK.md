@@ -66,6 +66,7 @@ Gunakan status:
 | `P-026` | TTY Wrapper for Non-TTY Test Runner | Environment runner tidak menampilkan progres subset/failure dengan baik | Debug subset test tetap interaktif tanpa mengubah script CI compact | `composer test:tty -- ...` atau `composer test:debug -- ...` berhasil pada shell interaktif | `active` |
 | `P-027` | Heavy Validation Offload to Local Operator | Full test/build/seed/E2E memakan waktu lebih efisien jika dijalankan operator lokal | Siklus patch lebih cepat tanpa kehilangan evidence validasi closure | AI memberi command + operator memberi ringkasan hasil + AI menindaklanjuti failure | `active` |
 | `P-028` | Deferred Secondary Inertia Prop | Halaman Inertia punya payload sekunder besar yang tidak wajib ikut first paint | First paint lebih ringan tanpa memecah route menjadi pseudo-API baru | Targeted feature test initial missing + deferred reload + compile/build concern | `active` |
+| `P-029` | Remembered Presentational UI State | Halaman Inertia punya state UI lokal non-domain yang reset saat visit berikutnya | UX lebih stabil tanpa menambah query/backend state | Targeted regression concern + build frontend | `active` |
 
 ## 3) Protocol Update Pattern
 
