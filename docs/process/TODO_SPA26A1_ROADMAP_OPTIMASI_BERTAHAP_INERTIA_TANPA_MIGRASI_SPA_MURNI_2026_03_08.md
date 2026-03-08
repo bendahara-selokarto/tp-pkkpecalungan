@@ -1,7 +1,7 @@
 # TODO SPA26A1 Roadmap Optimasi Bertahap Inertia Tanpa Migrasi SPA Murni
 
 Tanggal: 2026-03-08  
-Status: `in-progress` (`state:wave1-pilots-validated-wave2-pending`)
+Status: `in-progress` (`state:wave2-dashboard-deferred-blocks-active`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -57,6 +57,7 @@ Related ADR: `-`
 - [ ] L2. Wave 2: lazy data fetch untuk blok sekunder.
   - pindahkan blok non-kritis di dashboard atau halaman detail yang tidak perlu hadir pada first paint,
   - gunakan endpoint kecil berbasis auth session yang tetap lewat boundary controller/use case/repository.
+  - child concern pilot dashboard deferred blocks: `docs/process/TODO_DBL26A1_PILOT_DASHBOARD_WAVE_2_DEFERRED_BLOCKS_DAN_LAZY_FETCH_2026_03_08.md`.
 - [ ] L3. Wave 3: komponen stateful lokal.
   - pertahankan state UI seperti tab, collapse, draft filter, modal, dan helper panel di client,
   - kurangi visit Inertia hanya untuk perubahan state presentasional.

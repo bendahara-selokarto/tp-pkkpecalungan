@@ -29,13 +29,14 @@ Aturan:
   - `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md` (`in-progress`)
   - `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
   - `docs/process/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
+  - `docs/process/TODO_DBL26A1_PILOT_DASHBOARD_WAVE_2_DEFERRED_BLOCKS_DAN_LAZY_FETCH_2026_03_08.md` (`in-progress`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
 
 ### Roadmap Optimasi Inertia Bertahap (`SPA26A1`) - 2026-03-08
 
-- Status concern: `in-progress` (`state:wave1-pilots-validated-wave2-pending`).
+- Status concern: `in-progress` (`state:wave2-dashboard-deferred-blocks-active`).
 - Keputusan concern:
   - stack utama tetap `Laravel + Inertia + Vue`,
   - tidak ada migrasi ke SPA murni pada fase ini,
@@ -90,6 +91,27 @@ Aturan:
   - `php artisan test tests/Feature/SuperAdmin/UserManagementIndexPaginationTest.php --compact` -> `PASS` (`7` tests, `137` assertions, `15.29s`),
   - operator lokal menjalankan `php artisan test --compact` -> `PASS` (`1155 passed`, `7760 assertions`, `85.70s`),
   - operator lokal menjalankan `npm run build` -> `PASS` (`built in 7.82s`).
+
+### Pilot Dashboard Wave 2 Deferred Blocks (`DBL26A1`) - 2026-03-08
+
+- Status concern: `in-progress` (`state:targeted-validated-full-suite-build-pending`).
+- Scope batch:
+  - `app/Http/Controllers/DashboardController.php`,
+  - `resources/js/Pages/Dashboard.vue`,
+  - `tests/Feature/DashboardDocumentCoverageTest.php`.
+- Target batch:
+  - menunda `dashboardBlocks` dari first load,
+  - menjaga stats/charts/context tetap eager,
+  - menambah fallback loading dan guard test deferred prop.
+- Hasil batch implementasi:
+  - `DashboardController` memisahkan resolver stats/charts/context dari resolver blocks dan menandai `dashboardBlocks` sebagai deferred prop,
+  - `Dashboard.vue` memakai komponen `Deferred` untuk fallback loading blok dashboard dan menggating watcher agar tidak salah membaca state pending,
+  - `DashboardDocumentCoverageTest` dipindah ke contract deferred (`missing` pada first load + `loadDeferredProps('dashboard-blocks')`).
+- Validasi batch:
+  - `php artisan test tests/Feature/DashboardActivityChartTest.php --compact` -> `PASS` (`6` tests, `148` assertions, `19.49s`),
+  - `php artisan test tests/Feature/DashboardDocumentCoverageTest.php --compact` -> `PASS` (`13` tests, `441` assertions, `31.43s`),
+  - `php artisan test tests/Feature/DashboardChartPdfPrintTest.php --compact` -> `PASS` (`3` tests, `6` assertions, `25.41s`),
+  - full regression/build tetap mengikuti kontrak offload operator setelah batch teknis stabil.
 
 ### Concern Archived
 

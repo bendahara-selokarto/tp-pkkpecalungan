@@ -218,6 +218,34 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
 
 - Guardrail:
   - Frontend bukan authority akses; backend wajib menolak bypass URL.
+
+### P-028 - Deferred Secondary Inertia Prop
+
+- Tanggal: 2026-03-08
+- Status: active
+- Konteks: Halaman Inertia memiliki prop sekunder berukuran besar yang tidak harus tersedia pada first paint, tetapi masih lebih aman dipertahankan pada route yang sama.
+- Trigger: Payload sekunder besar mempengaruhi waktu render awal, sementara prop primer (`stats`, `charts`, context inti) harus tetap tampil segera.
+- Langkah eksekusi:
+  1) Pisahkan resolver backend antara prop primer dan prop sekunder agar prop primer tidak ikut menghitung payload sekunder.
+  2) Ubah prop sekunder menjadi `Inertia::defer(...)` dengan group yang eksplisit.
+  3) Render fallback di Vue memakai komponen `Deferred` agar state loading tidak ambigu.
+  4) Gating watcher/query sync yang sebelumnya mengasumsikan prop sekunder selalu tersedia pada first load.
+  5) Pindahkan assertion test prop sekunder ke `loadDeferredProps(<group>)`.
+- Guardrail:
+  - Jangan menandai prop sebagai deferred jika resolver prop primer masih menghitungnya diam-diam.
+  - Jangan menambah JSON route baru hanya untuk payload sekunder yang masih satu concern halaman.
+  - Pastikan state kosong nyata dibedakan dari state “belum dimuat”.
+- Validasi minimum:
+  - Initial Inertia response tidak memuat prop deferred.
+  - `loadDeferredProps()` berhasil memuat prop group yang benar.
+  - Targeted feature test concern tetap hijau.
+  - Build frontend lulus jika halaman Vue disentuh.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada dashboard `dashboardBlocks` setelah wave 1 partial reload selesai, dengan route dashboard yang tetap tunggal.
+- Risiko:
+  - Watcher/filter yang tidak digating bisa salah memicu visit ulang sebelum prop deferred selesai dimuat.
+- Catatan reuse lintas domain/project:
+  - Cocok untuk dashboard atau halaman summary yang punya blok sekunder berat tetapi tidak layak dipecah menjadi API concern baru.
   - Matrix role harus sinkron dengan scope-area valid dari `UserAreaContextService`.
   - Read-only harus menolak `POST/PUT/PATCH/DELETE` dan endpoint `create/edit`.
 - Validasi minimum:

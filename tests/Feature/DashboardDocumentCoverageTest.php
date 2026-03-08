@@ -56,7 +56,7 @@ class DashboardDocumentCoverageTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
                 ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
@@ -64,19 +64,7 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardStats.documents.buku_terisi', 4)
                 ->where('dashboardStats.documents.buku_belum_terisi', 15)
                 ->where('dashboardStats.documents.total_entri_buku', 4)
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $collected = collect($blocks);
-                    if ($collected->isEmpty()) {
-                        return false;
-                    }
-
-                    return $collected->contains(function ($block): bool {
-                        return is_array($block)
-                            && is_array($block['sources'] ?? null)
-                            && ($block['sources']['source_scope'] ?? null) === 'desa'
-                            && is_array($block['sources']['source_modules'] ?? null);
-                    });
-                })
+                ->missing('dashboardBlocks')
                 ->where('dashboardCharts.documents.level_distribution.values', [4, 0])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 1, 1, 1])
                 ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
@@ -87,6 +75,52 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ($bySlug->get('data-warga')['total'] ?? null) === 1
                         && ($bySlug->get('catatan-keluarga')['total'] ?? null) === 1;
                 });
+
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $collected = collect($blocks);
+                if ($collected->isEmpty()) {
+                    return false;
+                }
+
+                return $collected->contains(function ($block): bool {
+                    return is_array($block)
+                        && is_array($block['sources'] ?? null)
+                        && ($block['sources']['source_scope'] ?? null) === 'desa'
+                        && is_array($block['sources']['source_modules'] ?? null);
+                });
+            });
+        });
+    }
+
+    public function test_dashboard_blocks_dimuat_sebagai_deferred_prop_setelah_first_paint(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $this->createActivity($user, 'desa', $desa->id, 'Aktivitas A');
+        $this->createAgendaSurat($user, 'desa', $desa->id, 'A-001');
+
+        $response = $this->actingAs($user)->get(route('dashboard'));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Dashboard')
+                ->missing('dashboardBlocks');
+
+            $page->loadDeferredProps('dashboard-blocks', function (AssertableInertia $reload): void {
+                $reload
+                    ->has('dashboardBlocks')
+                    ->missing('dashboardStats')
+                    ->missing('dashboardCharts')
+                    ->missing('dashboardContext');
+            });
         });
     }
 
@@ -112,6 +146,7 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardBlocks')
                 ->reloadOnly(['dashboardContext', 'dashboardBlocks'], function (AssertableInertia $reload): void {
                     $reload
                         ->where('dashboardContext.section1_month', '2')
@@ -146,7 +181,7 @@ class DashboardDocumentCoverageTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
                 ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
@@ -154,19 +189,7 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardStats.documents.buku_terisi', 2)
                 ->where('dashboardStats.documents.buku_belum_terisi', 17)
                 ->where('dashboardStats.documents.total_entri_buku', 3)
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $collected = collect($blocks);
-                    if ($collected->isEmpty()) {
-                        return false;
-                    }
-
-                    return $collected->contains(function ($block): bool {
-                        return is_array($block)
-                            && is_array($block['sources'] ?? null)
-                            && ($block['sources']['source_scope'] ?? null) === 'kecamatan'
-                            && ($block['sources']['source_area_type'] ?? null) === 'area-sendiri+desa-turunan';
-                    });
-                })
+                ->missing('dashboardBlocks')
                 ->where('dashboardCharts.documents.level_distribution.values', [1, 2])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 2, 0, 0])
                 ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
@@ -177,6 +200,20 @@ class DashboardDocumentCoverageTest extends TestCase
                         && ($bySlug->get('data-warga')['total'] ?? null) === 0
                         && ($bySlug->get('catatan-keluarga')['total'] ?? null) === 0;
                 });
+
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $collected = collect($blocks);
+                if ($collected->isEmpty()) {
+                    return false;
+                }
+
+                return $collected->contains(function ($block): bool {
+                    return is_array($block)
+                        && is_array($block['sources'] ?? null)
+                        && ($block['sources']['source_scope'] ?? null) === 'kecamatan'
+                        && ($block['sources']['source_area_type'] ?? null) === 'area-sendiri+desa-turunan';
+                });
+            });
         });
     }
 
@@ -199,7 +236,7 @@ class DashboardDocumentCoverageTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
                 ->where('auth.user.scope', null)
@@ -207,9 +244,11 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->where('dashboardStats.documents.buku_terisi', 0)
                 ->where('dashboardStats.documents.buku_belum_terisi', 19)
                 ->where('dashboardStats.documents.total_entri_buku', 0)
-                ->where('dashboardBlocks', [])
+                ->missing('dashboardBlocks')
                 ->where('dashboardCharts.documents.level_distribution.values', [0, 0])
                 ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 0, 0, 0, 0, 0, 0]);
+
+            $this->assertDeferredDashboardBlocks($page, fn ($blocks): bool => collect($blocks)->isEmpty());
         });
     }
 
@@ -227,39 +266,41 @@ class DashboardDocumentCoverageTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $collected = collect($blocks);
-                    $section1 = $collected
-                        ->where('section.key', 'sekretaris-section-1')
-                        ->first();
-                    $section2 = $collected
-                        ->where('section.key', 'sekretaris-section-2')
-                        ->first();
-                    $section3 = $collected
-                        ->where('section.key', 'sekretaris-section-3')
-                        ->first();
-                    $section4 = $collected
-                        ->where('section.key', 'sekretaris-section-4')
-                        ->first();
+                ->missing('dashboardBlocks');
 
-                    return is_array($section1)
-                        && is_array($section2)
-                        && ($section2['section']['filter']['query_key'] ?? null) === 'section2_group'
-                        && ($section2['section']['source_level'] ?? null) === 'desa'
-                        && ($section2['sources']['filter_context']['mode'] ?? null) === 'by-level'
-                        && ($section2['sources']['filter_context']['level'] ?? null) === 'desa'
-                        && $section4 === null
-                        && ($section1['section']['source_level'] ?? null) === 'desa'
-                        && collect($collected->where('section.key', 'sekretaris-section-2')->pluck('group')->all())->sort()->values()->all() === [
-                            'pokja-i',
-                            'pokja-ii',
-                            'pokja-iii',
-                            'pokja-iv',
-                        ];
-                });
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $collected = collect($blocks);
+                $section1 = $collected
+                    ->where('section.key', 'sekretaris-section-1')
+                    ->first();
+                $section2 = $collected
+                    ->where('section.key', 'sekretaris-section-2')
+                    ->first();
+                $section3 = $collected
+                    ->where('section.key', 'sekretaris-section-3')
+                    ->first();
+                $section4 = $collected
+                    ->where('section.key', 'sekretaris-section-4')
+                    ->first();
+
+                return is_array($section1)
+                    && is_array($section2)
+                    && ($section2['section']['filter']['query_key'] ?? null) === 'section2_group'
+                    && ($section2['section']['source_level'] ?? null) === 'desa'
+                    && ($section2['sources']['filter_context']['mode'] ?? null) === 'by-level'
+                    && ($section2['sources']['filter_context']['level'] ?? null) === 'desa'
+                    && $section4 === null
+                    && ($section1['section']['source_level'] ?? null) === 'desa'
+                    && collect($collected->where('section.key', 'sekretaris-section-2')->pluck('group')->all())->sort()->values()->all() === [
+                        'pokja-i',
+                        'pokja-ii',
+                        'pokja-iii',
+                        'pokja-iv',
+                    ];
+            });
         });
     }
 
@@ -283,36 +324,38 @@ class DashboardDocumentCoverageTest extends TestCase
         ]));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $collected = collect($blocks);
-                    $section1 = $collected
-                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-1');
-                    $section2 = $collected
-                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-2');
-                    $section3 = $collected
-                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-3');
-                    $section4 = $collected
-                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
+                ->missing('dashboardBlocks');
 
-                    return is_array($section1)
-                        && is_array($section2)
-                        && $section3 === null
-                        && $section4 === null
-                        && ($section1['section']['source_level'] ?? null) === 'kecamatan'
-                        && ($section1['charts']['by_desa']['labels'] ?? null) === ['Gombong']
-                        && ($section1['charts']['by_desa']['values'] ?? null) === [1]
-                        && ($section1['charts']['by_desa']['books_total'] ?? null) === [19]
-                        && ($section1['charts']['by_desa']['books_filled'] ?? null) === [1]
-                        && ($section2['group'] ?? null) === 'pokja-i'
-                        && ($section2['section']['filter']['query_key'] ?? null) === 'section2_group'
-                        && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'pokja-i'
-                        && ($section2['sources']['filter_context']['tahun_anggaran'] ?? null) === now()->format('Y')
-                        && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
-                        && ($section2['sources']['filter_context']['section3_group'] ?? null) === 'all';
-                });
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $collected = collect($blocks);
+                $section1 = $collected
+                    ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-1');
+                $section2 = $collected
+                    ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-2');
+                $section3 = $collected
+                    ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-3');
+                $section4 = $collected
+                    ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
+
+                return is_array($section1)
+                    && is_array($section2)
+                    && $section3 === null
+                    && $section4 === null
+                    && ($section1['section']['source_level'] ?? null) === 'kecamatan'
+                    && ($section1['charts']['by_desa']['labels'] ?? null) === ['Gombong']
+                    && ($section1['charts']['by_desa']['values'] ?? null) === [1]
+                    && ($section1['charts']['by_desa']['books_total'] ?? null) === [19]
+                    && ($section1['charts']['by_desa']['books_filled'] ?? null) === [1]
+                    && ($section2['group'] ?? null) === 'pokja-i'
+                    && ($section2['section']['filter']['query_key'] ?? null) === 'section2_group'
+                    && ($section2['sources']['filter_context']['section2_group'] ?? null) === 'pokja-i'
+                    && ($section2['sources']['filter_context']['tahun_anggaran'] ?? null) === now()->format('Y')
+                    && ($section2['sources']['filter_context']['level'] ?? null) === 'kecamatan'
+                    && ($section2['sources']['filter_context']['section3_group'] ?? null) === 'all';
+            });
         });
     }
 
@@ -381,26 +424,28 @@ class DashboardDocumentCoverageTest extends TestCase
         ]));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $collected = collect($blocks);
-                    $section1 = $collected
-                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-1');
-                    $section2 = $collected
-                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-2');
-                    $section3 = $collected
-                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-3');
-                    $section4 = $collected
-                        ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
+                ->missing('dashboardBlocks');
 
-                    return is_array($section1)
-                        && is_array($section2)
-                        && $section3 === null
-                        && $section4 === null
-                        && ($section2['sources']['filter_context']['section3_group'] ?? null) === 'all';
-                });
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $collected = collect($blocks);
+                $section1 = $collected
+                    ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-1');
+                $section2 = $collected
+                    ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-2');
+                $section3 = $collected
+                    ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-3');
+                $section4 = $collected
+                    ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-4');
+
+                return is_array($section1)
+                    && is_array($section2)
+                    && $section3 === null
+                    && $section4 === null
+                    && ($section2['sources']['filter_context']['section3_group'] ?? null) === 'all';
+            });
         });
     }
 
@@ -427,27 +472,29 @@ class DashboardDocumentCoverageTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $collected = collect($blocks);
-                    $groups = $collected
-                        ->map(static fn (array $block): string => (string) ($block['group'] ?? ''))
-                        ->unique()
-                        ->values()
-                        ->all();
-                    $block = $collected->first();
+                ->missing('dashboardBlocks');
 
-                    return count($groups) === 1
-                        && $groups === ['pokja-i']
-                        && is_array($block)
-                        && ($block['kind'] ?? null) === 'activity'
-                        && ($block['stats']['total'] ?? null) === 1
-                        && ($block['section'] ?? null) === null
-                        && ($block['sources']['source_group'] ?? null) === 'pokja-i'
-                        && ($block['sources']['source_scope'] ?? null) === 'desa';
-                });
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $collected = collect($blocks);
+                $groups = $collected
+                    ->map(static fn (array $block): string => (string) ($block['group'] ?? ''))
+                    ->unique()
+                    ->values()
+                    ->all();
+                $block = $collected->first();
+
+                return count($groups) === 1
+                    && $groups === ['pokja-i']
+                    && is_array($block)
+                    && ($block['kind'] ?? null) === 'activity'
+                    && ($block['stats']['total'] ?? null) === 1
+                    && ($block['section'] ?? null) === null
+                    && ($block['sources']['source_group'] ?? null) === 'pokja-i'
+                    && ($block['sources']['source_scope'] ?? null) === 'desa';
+            });
         });
     }
 
@@ -473,36 +520,38 @@ class DashboardDocumentCoverageTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $collected = collect($blocks);
-                    $block = $collected->first();
+                ->missing('dashboardBlocks');
 
-                    if (! is_array($block)) {
-                        return false;
-                    }
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $collected = collect($blocks);
+                $block = $collected->first();
 
-                    $items = collect($block['charts']['coverage_per_module']['items'] ?? []);
-                    $labels = $items->pluck('label')->all();
-                    $totalsByLabel = $items->mapWithKeys(
-                        static fn (array $item): array => [(string) ($item['label'] ?? '-') => (int) ($item['total'] ?? 0)]
-                    );
+                if (! is_array($block)) {
+                    return false;
+                }
 
-                    return $collected->count() === 1
-                        && ($block['group'] ?? null) === 'pokja-i'
-                        && ($block['charts']['coverage_per_module']['dimension'] ?? null) === 'desa'
-                        && ($block['sources']['source_area_type'] ?? null) === 'desa-turunan'
-                        && ($block['sources']['filter_context']['mode'] ?? null) === 'by-level'
-                        && ($block['sources']['filter_context']['level'] ?? null) === 'desa'
-                        && ($block['sources']['filter_context']['sub_level'] ?? null) === 'all'
-                        && in_array('Gombong', $labels, true)
-                        && in_array('Bandung', $labels, true)
-                        && ! in_array('Sidomukti', $labels, true)
-                        && ($totalsByLabel['Gombong'] ?? null) === 1
-                        && ($totalsByLabel['Bandung'] ?? null) === 2;
-                });
+                $items = collect($block['charts']['coverage_per_module']['items'] ?? []);
+                $labels = $items->pluck('label')->all();
+                $totalsByLabel = $items->mapWithKeys(
+                    static fn (array $item): array => [(string) ($item['label'] ?? '-') => (int) ($item['total'] ?? 0)]
+                );
+
+                return $collected->count() === 1
+                    && ($block['group'] ?? null) === 'pokja-i'
+                    && ($block['charts']['coverage_per_module']['dimension'] ?? null) === 'desa'
+                    && ($block['sources']['source_area_type'] ?? null) === 'desa-turunan'
+                    && ($block['sources']['filter_context']['mode'] ?? null) === 'by-level'
+                    && ($block['sources']['filter_context']['level'] ?? null) === 'desa'
+                    && ($block['sources']['filter_context']['sub_level'] ?? null) === 'all'
+                    && in_array('Gombong', $labels, true)
+                    && in_array('Bandung', $labels, true)
+                    && ! in_array('Sidomukti', $labels, true)
+                    && ($totalsByLabel['Gombong'] ?? null) === 1
+                    && ($totalsByLabel['Bandung'] ?? null) === 2;
+            });
         });
     }
 
@@ -522,24 +571,26 @@ class DashboardDocumentCoverageTest extends TestCase
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $block = collect($blocks)->first();
-                    if (! is_array($block)) {
-                        return false;
-                    }
+                ->missing('dashboardBlocks');
 
-                    $monthlyValues = $block['charts']['monthly']['values'] ?? [];
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $block = collect($blocks)->first();
+                if (! is_array($block)) {
+                    return false;
+                }
 
-                    return ($block['group'] ?? null) === 'pokja-iv'
-                        && ($block['kind'] ?? null) === 'activity'
-                        && ($block['sources']['source_group'] ?? null) === 'pokja-iv'
-                        && ($block['section'] ?? null) === null
-                        && is_array($monthlyValues)
-                        && array_sum($monthlyValues) === 1;
-                });
+                $monthlyValues = $block['charts']['monthly']['values'] ?? [];
+
+                return ($block['group'] ?? null) === 'pokja-iv'
+                    && ($block['kind'] ?? null) === 'activity'
+                    && ($block['sources']['source_group'] ?? null) === 'pokja-iv'
+                    && ($block['section'] ?? null) === null
+                    && is_array($monthlyValues)
+                    && array_sum($monthlyValues) === 1;
+            });
         });
     }
 
@@ -560,17 +611,19 @@ class DashboardDocumentCoverageTest extends TestCase
         ]));
 
         $levelResponse->assertOk();
-        $levelResponse->assertInertia(function (AssertableInertia $page) {
+        $levelResponse->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $first = collect($blocks)->first();
+                ->missing('dashboardBlocks');
 
-                    return is_array($first)
-                        && ($first['sources']['filter_context']['mode'] ?? null) === 'by-level'
-                        && ($first['sources']['filter_context']['level'] ?? null) === 'desa'
-                        && ($first['sources']['filter_context']['sub_level'] ?? null) === 'all';
-                });
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $first = collect($blocks)->first();
+
+                return is_array($first)
+                    && ($first['sources']['filter_context']['mode'] ?? null) === 'by-level'
+                    && ($first['sources']['filter_context']['level'] ?? null) === 'desa'
+                    && ($first['sources']['filter_context']['sub_level'] ?? null) === 'all';
+            });
         });
 
         $subLevelResponse = $this->actingAs($user)->get(route('dashboard', [
@@ -579,17 +632,31 @@ class DashboardDocumentCoverageTest extends TestCase
         ]));
 
         $subLevelResponse->assertOk();
-        $subLevelResponse->assertInertia(function (AssertableInertia $page) {
+        $subLevelResponse->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
-                ->where('dashboardBlocks', function ($blocks): bool {
-                    $first = collect($blocks)->first();
+                ->missing('dashboardBlocks');
 
-                    return is_array($first)
-                        && ($first['sources']['filter_context']['mode'] ?? null) === 'by-level'
-                        && ($first['sources']['filter_context']['level'] ?? null) === 'desa'
-                        && ($first['sources']['filter_context']['sub_level'] ?? null) === 'all';
-                });
+            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+                $first = collect($blocks)->first();
+
+                return is_array($first)
+                    && ($first['sources']['filter_context']['mode'] ?? null) === 'by-level'
+                    && ($first['sources']['filter_context']['level'] ?? null) === 'desa'
+                    && ($first['sources']['filter_context']['sub_level'] ?? null) === 'all';
+            });
+        });
+    }
+
+    private function assertDeferredDashboardBlocks(AssertableInertia $page, callable $callback): void
+    {
+        $page->loadDeferredProps('dashboard-blocks', function (AssertableInertia $reload) use ($callback): void {
+            $reload
+                ->has('dashboardBlocks')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
+                ->missing('dashboardContext')
+                ->where('dashboardBlocks', $callback);
         });
     }
 

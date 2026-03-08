@@ -1,6 +1,6 @@
 <script setup>
 import { computed, defineAsyncComponent, ref, watch } from 'vue'
-import { router, usePage } from '@inertiajs/vue3'
+import { Deferred, router, usePage } from '@inertiajs/vue3'
 import CardBox from '@/admin-one/components/CardBox.vue'
 import BaseButton from '@/admin-one/components/BaseButton.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
@@ -235,9 +235,10 @@ const dynamicBlocks = computed(() =>
     : [],
 )
 
+const hasResolvedDashboardBlocks = computed(() => page.props?.dashboardBlocks !== undefined)
 const hasDynamicBlocks = computed(() => dynamicBlocks.value.length > 0)
 const showLegacyFallback = computed(() =>
-  !hasDynamicBlocks.value && Boolean(import.meta.env.DEV),
+  hasResolvedDashboardBlocks.value && !hasDynamicBlocks.value && Boolean(import.meta.env.DEV),
 )
 const sekretarisSection1Blocks = computed(() =>
   dynamicBlocks.value.filter((block) => block?.section?.key === 'sekretaris-section-1'),
@@ -595,6 +596,10 @@ watch(
 watch(
   hasMonthFilterAwareBlocks,
   (isMonthFilterRelevant) => {
+    if (!hasResolvedDashboardBlocks.value) {
+      return
+    }
+
     if (isMonthFilterRelevant || selectedSection1Month.value === 'all') {
       return
     }
@@ -605,9 +610,9 @@ watch(
 )
 
 watch(
-  [hasSekretarisSections, hasMonthFilterAwareBlocks, () => page.url],
-  ([isSekretarisView, isMonthFilterRelevant, url]) => {
-    if (isSekretarisView || isMonthFilterRelevant) {
+  [hasSekretarisSections, hasMonthFilterAwareBlocks, hasResolvedDashboardBlocks, () => page.url],
+  ([isSekretarisView, isMonthFilterRelevant, isBlocksResolved, url]) => {
+    if (!isBlocksResolved || isSekretarisView || isMonthFilterRelevant) {
       return
     }
 
@@ -1157,309 +1162,332 @@ const hasLegacyBookComparisonData = computed(() =>
       Tahun anggaran aktif: {{ activeBudgetYearLabel }}
     </p>
 
-    <template v-if="hasDynamicBlocks">
-      <div class="space-y-8">
-        <div v-for="section in visibleDashboardSections" :key="section.key" class="space-y-4">
-          <CardBox v-for="block in section.blocks" :key="block.key">
-            <div class="flex flex-wrap items-start justify-between gap-3">
-              <div class="min-w-0">
-                <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
-                <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
-                  {{ blockSummaryLabel(block) }}
-                </p>
-                <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
-                  {{ resolveBlockAccessModeLabel(block) }}
-                </p>
-              </div>
-              <div class="ml-auto flex items-center gap-2">
-                <button
-                  type="button"
-                  class="inline-flex min-h-[44px] items-center rounded-md border border-slate-300 px-4 py-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
-                  @click="toggleBlockExpanded(block.key)"
-                >
-                  {{ isBlockExpanded(block.key) ? 'Sembunyikan Grafik' : 'Tampilkan Grafik' }}
-                </button>
-              </div>
-            </div>
-
-            <div class="mt-4 grid gap-3 md:grid-cols-3 xl:grid-cols-5">
+    <Deferred data="dashboardBlocks">
+      <template #fallback>
+        <CardBox>
+          <div class="space-y-3">
+            <div class="h-4 w-40 animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
+            <div class="h-3 w-64 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
+            <div class="grid gap-3 md:grid-cols-3 xl:grid-cols-5">
               <div
-                v-for="tile in buildDashboardSummaryTiles(block)"
-                :key="`${block.key}-${tile.key}`"
-                class="rounded px-3 py-2"
-                :class="summaryToneClasses(tile.tone).box"
-              >
-                <p :class="summaryToneClasses(tile.tone).label">{{ tile.label }}</p>
-                <p :class="summaryToneClasses(tile.tone).value">{{ tile.value }}</p>
-              </div>
+                v-for="index in 5"
+                :key="`dashboard-block-skeleton-${index}`"
+                class="h-20 animate-pulse rounded border border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800/60"
+              />
             </div>
+            <p class="text-xs text-slate-500 dark:text-slate-400">
+              Memuat blok dashboard lanjutan.
+            </p>
+          </div>
+        </CardBox>
+      </template>
 
-            <div
-              class="mt-4 grid grid-cols-1 gap-3 rounded border border-slate-200 p-3 dark:border-slate-700"
-              :class="filterGridClassName"
-            >
-              <div v-if="showModeFilter">
-                <label
-                  :for="chartFilterControlId(block.key, 'mode')"
-                  class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
-                >
-                  Cara Tampil
-                </label>
-                <select
-                  :id="chartFilterControlId(block.key, 'mode')"
-                  v-model="selectedMode"
-                  aria-label="Cara tampil chart"
-                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
-                  @change="onChartFilterModeChange"
-                >
-                  <option v-for="modeOption in MODE_OPTIONS" :key="`block-${block.key}-${modeOption.value}`" :value="modeOption.value">
-                    {{ modeOption.label }}
-                  </option>
-                </select>
-              </div>
-
-              <div v-if="showLevelFilter">
-                <label
-                  :for="chartFilterControlId(block.key, 'level')"
-                  class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
-                >
-                  Tingkat
-                </label>
-                <select
-                  :id="chartFilterControlId(block.key, 'level')"
-                  v-model="selectedLevel"
-                  aria-label="Tingkat wilayah chart"
-                  :disabled="showModeFilter && !isByLevelMode"
-                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-                >
-                  <option v-for="levelOption in LEVEL_OPTIONS" :key="`block-level-${block.key}-${levelOption.value}`" :value="levelOption.value">
-                    {{ levelOption.label }}
-                  </option>
-                </select>
-              </div>
-
-              <div v-if="showSubLevelFilter">
-                <label
-                  :for="chartFilterControlId(block.key, 'sub-level')"
-                  class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
-                >
-                  Wilayah Turunan
-                </label>
-                <select
-                  :id="chartFilterControlId(block.key, 'sub-level')"
-                  v-if="availableSubLevelOptions.length > 1"
-                  v-model="selectedSubLevel"
-                  aria-label="Wilayah turunan chart"
-                  :disabled="!isBySubLevelMode"
-                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-                >
-                  <option
-                    v-for="subLevelOption in availableSubLevelOptions"
-                    :key="`block-sub-level-${block.key}-${subLevelOption.value}`"
-                    :value="subLevelOption.value"
-                  >
-                    {{ subLevelOption.label }}
-                  </option>
-                </select>
-                <input
-                  :id="chartFilterControlId(block.key, 'sub-level')"
-                  v-else
-                  v-model="selectedSubLevel"
-                  aria-label="Wilayah turunan chart"
-                  :disabled="!isBySubLevelMode"
-                  type="text"
-                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-                  placeholder="Ketik nama wilayah"
-                >
-              </div>
-
-              <div>
-                <label
-                  :for="chartFilterControlId(block.key, 'month')"
-                  class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
-                >
-                  Bulan
-                </label>
-                <select
-                  :id="chartFilterControlId(block.key, 'month')"
-                  v-model="selectedSection1Month"
-                  aria-label="Bulan chart"
-                  :disabled="!blockSupportsMonthFilter(block)"
-                  class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
-                >
-                  <option
-                    v-for="monthOption in SECTION1_MONTH_OPTIONS"
-                    :key="`block-month-${block.key}-${monthOption.value}`"
-                    :value="monthOption.value"
-                  >
-                    {{ monthOption.label }}
-                  </option>
-                </select>
-              </div>
-
-              <div class="flex items-end">
-                <button
-                  type="button"
-                  class="min-h-[44px] w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-                  @click="applyChartFilters"
-                >
-                  Terapkan Filter Chart
-                </button>
-              </div>
-            </div>
-
-            <template v-if="isBlockExpanded(block.key) && block.kind === 'documents'">
-              <div class="mt-6">
-                <div>
-                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Jumlah Buku vs Buku Terisi
-                  </h4>
-                  <div class="h-80">
-                    <BarChart :data="buildBookComparisonChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
+      <template #default>
+        <template v-if="hasDynamicBlocks">
+          <div class="space-y-8">
+            <div v-for="section in visibleDashboardSections" :key="section.key" class="space-y-4">
+              <CardBox v-for="block in section.blocks" :key="block.key">
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <h3 class="text-sm font-semibold text-slate-700 dark:text-slate-100">{{ block.title }}</h3>
+                    <p class="mt-2 text-xs text-slate-600 dark:text-slate-300">
+                      {{ blockSummaryLabel(block) }}
+                    </p>
+                    <p class="mt-1 text-[11px] text-slate-500 dark:text-slate-400">
+                      {{ resolveBlockAccessModeLabel(block) }}
+                    </p>
                   </div>
-                  <p v-if="!hasBookComparisonData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-                    Belum ada data untuk filter yang dipilih.
-                  </p>
+                  <div class="ml-auto flex items-center gap-2">
+                    <button
+                      type="button"
+                      class="inline-flex min-h-[44px] items-center rounded-md border border-slate-300 px-4 py-2 text-[11px] font-semibold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                      @click="toggleBlockExpanded(block.key)"
+                    >
+                      {{ isBlockExpanded(block.key) ? 'Sembunyikan Grafik' : 'Tampilkan Grafik' }}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </template>
 
-            <template v-else-if="isBlockExpanded(block.key)">
-              <template v-if="shouldShowActivityByDesaChart(block)">
-                <div class="mt-6">
-                  <div class="mb-2">
-                    <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                      Kegiatan per Desa
-                    </h4>
+                <div class="mt-4 grid gap-3 md:grid-cols-3 xl:grid-cols-5">
+                  <div
+                    v-for="tile in buildDashboardSummaryTiles(block)"
+                    :key="`${block.key}-${tile.key}`"
+                    class="rounded px-3 py-2"
+                    :class="summaryToneClasses(tile.tone).box"
+                  >
+                    <p :class="summaryToneClasses(tile.tone).label">{{ tile.label }}</p>
+                    <p :class="summaryToneClasses(tile.tone).value">{{ tile.value }}</p>
                   </div>
-                  <p class="mb-2 text-[11px] text-slate-500 dark:text-slate-400">
-                    {{ activityByDesaChartModeLabel() }}
-                  </p>
-                  <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                </div>
+
+                <div
+                  class="mt-4 grid grid-cols-1 gap-3 rounded border border-slate-200 p-3 dark:border-slate-700"
+                  :class="filterGridClassName"
+                >
+                  <div v-if="showModeFilter">
+                    <label
+                      :for="chartFilterControlId(block.key, 'mode')"
+                      class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
+                    >
+                      Cara Tampil
+                    </label>
+                    <select
+                      :id="chartFilterControlId(block.key, 'mode')"
+                      v-model="selectedMode"
+                      aria-label="Cara tampil chart"
+                      class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm dark:border-slate-600 dark:bg-slate-800"
+                      @change="onChartFilterModeChange"
+                    >
+                      <option v-for="modeOption in MODE_OPTIONS" :key="`block-${block.key}-${modeOption.value}`" :value="modeOption.value">
+                        {{ modeOption.label }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div v-if="showLevelFilter">
+                    <label
+                      :for="chartFilterControlId(block.key, 'level')"
+                      class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
+                    >
+                      Tingkat
+                    </label>
+                    <select
+                      :id="chartFilterControlId(block.key, 'level')"
+                      v-model="selectedLevel"
+                      aria-label="Tingkat wilayah chart"
+                      :disabled="showModeFilter && !isByLevelMode"
+                      class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                    >
+                      <option v-for="levelOption in LEVEL_OPTIONS" :key="`block-level-${block.key}-${levelOption.value}`" :value="levelOption.value">
+                        {{ levelOption.label }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div v-if="showSubLevelFilter">
+                    <label
+                      :for="chartFilterControlId(block.key, 'sub-level')"
+                      class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
+                    >
+                      Wilayah Turunan
+                    </label>
+                    <select
+                      :id="chartFilterControlId(block.key, 'sub-level')"
+                      v-if="availableSubLevelOptions.length > 1"
+                      v-model="selectedSubLevel"
+                      aria-label="Wilayah turunan chart"
+                      :disabled="!isBySubLevelMode"
+                      class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                    >
+                      <option
+                        v-for="subLevelOption in availableSubLevelOptions"
+                        :key="`block-sub-level-${block.key}-${subLevelOption.value}`"
+                        :value="subLevelOption.value"
+                      >
+                        {{ subLevelOption.label }}
+                      </option>
+                    </select>
+                    <input
+                      :id="chartFilterControlId(block.key, 'sub-level')"
+                      v-else
+                      v-model="selectedSubLevel"
+                      aria-label="Wilayah turunan chart"
+                      :disabled="!isBySubLevelMode"
+                      type="text"
+                      class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                      placeholder="Ketik nama wilayah"
+                    >
+                  </div>
+
+                  <div>
+                    <label
+                      :for="chartFilterControlId(block.key, 'month')"
+                      class="mb-1 block text-[11px] font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300"
+                    >
+                      Bulan
+                    </label>
+                    <select
+                      :id="chartFilterControlId(block.key, 'month')"
+                      v-model="selectedSection1Month"
+                      aria-label="Bulan chart"
+                      :disabled="!blockSupportsMonthFilter(block)"
+                      class="min-h-[44px] w-full rounded-md border border-slate-300 px-3 py-2 text-sm disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-600 dark:bg-slate-800"
+                    >
+                      <option
+                        v-for="monthOption in SECTION1_MONTH_OPTIONS"
+                        :key="`block-month-${block.key}-${monthOption.value}`"
+                        :value="monthOption.value"
+                      >
+                        {{ monthOption.label }}
+                      </option>
+                    </select>
+                  </div>
+
+                  <div class="flex items-end">
+                    <button
+                      type="button"
+                      class="min-h-[44px] w-full rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                      @click="applyChartFilters"
+                    >
+                      Terapkan Filter Chart
+                    </button>
+                  </div>
+                </div>
+
+                <template v-if="isBlockExpanded(block.key) && block.kind === 'documents'">
+                  <div class="mt-6">
                     <div>
-                      <h5 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                        Jumlah Kegiatan per Desa
-                      </h5>
+                      <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                        Jumlah Buku vs Buku Terisi
+                      </h4>
+                      <div class="h-80">
+                        <BarChart :data="buildBookComparisonChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
+                      </div>
+                      <p v-if="!hasBookComparisonData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
+                        Belum ada data untuk filter yang dipilih.
+                      </p>
+                    </div>
+                  </div>
+                </template>
+
+                <template v-else-if="isBlockExpanded(block.key)">
+                  <template v-if="shouldShowActivityByDesaChart(block)">
+                    <div class="mt-6">
+                      <div class="mb-2">
+                        <h4 class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                          Kegiatan per Desa
+                        </h4>
+                      </div>
+                      <p class="mb-2 text-[11px] text-slate-500 dark:text-slate-400">
+                        {{ activityByDesaChartModeLabel() }}
+                      </p>
+                      <div class="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                        <div>
+                          <h5 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                            Jumlah Kegiatan per Desa
+                          </h5>
+                          <div class="h-72">
+                            <ApexChart
+                              type="pie"
+                              width="100%"
+                              height="100%"
+                              :options="buildActivityByDesaKegiatanOptions(block)"
+                              :series="buildActivityByDesaKegiatanSeries(block)"
+                            />
+                          </div>
+                          <p
+                            v-if="!hasActivityByDesaActivityData(block)"
+                            class="mt-3 text-xs text-amber-700 dark:text-amber-300"
+                          >
+                            Belum ada data untuk filter yang dipilih.
+                          </p>
+                        </div>
+
+                        <div>
+                          <h5 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                            Jumlah Buku vs Buku Terisi
+                          </h5>
+                          <div class="h-72">
+                            <ApexChart
+                              type="bar"
+                              width="100%"
+                              height="100%"
+                              :options="buildActivityByDesaBookCoverageOptions(block)"
+                              :series="buildActivityByDesaBookCoverageSeries(block)"
+                            />
+                          </div>
+                          <p
+                            v-if="!hasActivityByDesaBookCoverageData(block)"
+                            class="mt-3 text-xs text-amber-700 dark:text-amber-300"
+                          >
+                            Belum ada data untuk filter yang dipilih.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+
+                  <div v-else class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+                    <div>
+                      <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                        Kegiatan Bulanan
+                      </h4>
                       <div class="h-72">
                         <ApexChart
                           type="pie"
                           width="100%"
                           height="100%"
-                          :options="buildActivityByDesaKegiatanOptions(block)"
-                          :series="buildActivityByDesaKegiatanSeries(block)"
+                          :options="buildActivityMonthlyMultiAxisOptions(block)"
+                          :series="buildActivityMonthlyMultiAxisSeries(block)"
                         />
                       </div>
-                      <p
-                        v-if="!hasActivityByDesaActivityData(block)"
-                        class="mt-3 text-xs text-amber-700 dark:text-amber-300"
-                      >
+                      <p v-if="!hasActivityMonthlyData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
                         Belum ada data untuk filter yang dipilih.
                       </p>
                     </div>
 
                     <div>
-                      <h5 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
+                      <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
                         Jumlah Buku vs Buku Terisi
-                      </h5>
+                      </h4>
                       <div class="h-72">
-                        <ApexChart
-                          type="bar"
-                          width="100%"
-                          height="100%"
-                          :options="buildActivityByDesaBookCoverageOptions(block)"
-                          :series="buildActivityByDesaBookCoverageSeries(block)"
-                        />
+                        <BarChart :data="buildBookComparisonChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
                       </div>
-                      <p
-                        v-if="!hasActivityByDesaBookCoverageData(block)"
-                        class="mt-3 text-xs text-amber-700 dark:text-amber-300"
-                      >
+                      <p v-if="!hasBookComparisonData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
                         Belum ada data untuk filter yang dipilih.
                       </p>
                     </div>
                   </div>
-                </div>
-              </template>
+                </template>
+              </CardBox>
 
-              <div v-else class="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
-                <div>
-                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Kegiatan Bulanan
-                  </h4>
-                  <div class="h-72">
-                    <ApexChart
-                      type="pie"
-                      width="100%"
-                      height="100%"
-                      :options="buildActivityMonthlyMultiAxisOptions(block)"
-                      :series="buildActivityMonthlyMultiAxisSeries(block)"
-                    />
-                  </div>
-                  <p v-if="!hasActivityMonthlyData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-                    Belum ada data untuk filter yang dipilih.
-                  </p>
-                </div>
+              <p
+                v-if="hasSekretarisSections && section.blocks.length === 0"
+                class="text-xs text-slate-500 dark:text-slate-300"
+              >
+                Belum ada data untuk pokja yang dipilih.
+              </p>
+            </div>
+          </div>
+        </template>
 
-                <div>
-                  <h4 class="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-300">
-                    Jumlah Buku vs Buku Terisi
-                  </h4>
-                  <div class="h-72">
-                    <BarChart :data="buildBookComparisonChartData(block)" :empty-text="CHART_EMPTY_STATE_TEXT" />
-                  </div>
-                  <p v-if="!hasBookComparisonData(block)" class="mt-3 text-xs text-amber-700 dark:text-amber-300">
-                    Belum ada data untuk filter yang dipilih.
-                  </p>
-                </div>
+        <template v-else-if="showLegacyFallback">
+          <div class="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+            <CardBox>
+              <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Buku</h3>
+              <div class="h-96">
+                <BarChart :data="legacyCoveragePerBukuChartData" :empty-text="CHART_EMPTY_STATE_TEXT" horizontal />
               </div>
-            </template>
-          </CardBox>
-
-          <p
-            v-if="hasSekretarisSections && section.blocks.length === 0"
-            class="text-xs text-slate-500 dark:text-slate-300"
-          >
-            Belum ada data untuk pokja yang dipilih.
-          </p>
-        </div>
-      </div>
-    </template>
-
-    <template v-else-if="showLegacyFallback">
-      <div class="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
-        <CardBox>
-          <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Buku</h3>
-          <div class="h-96">
-            <BarChart :data="legacyCoveragePerBukuChartData" :empty-text="CHART_EMPTY_STATE_TEXT" horizontal />
+            </CardBox>
+            <CardBox>
+              <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Lampiran</h3>
+              <div class="h-96">
+                <BarChart :data="legacyCoveragePerLampiranChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
+              </div>
+              <p v-if="!hasLegacyLampiranCoverageData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
+                Belum ada data terhitung pada cakupan per lampiran untuk wilayah ini.
+              </p>
+            </CardBox>
           </div>
-        </CardBox>
-        <CardBox>
-          <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Lampiran</h3>
-          <div class="h-96">
-            <BarChart :data="legacyCoveragePerLampiranChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
-          </div>
-          <p v-if="!hasLegacyLampiranCoverageData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
-            Belum ada data terhitung pada cakupan per lampiran untuk wilayah ini.
-          </p>
-        </CardBox>
-      </div>
 
-      <div class="mb-6">
-        <CardBox>
-          <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Jumlah Buku vs Buku Terisi</h3>
-          <div class="h-72">
-            <BarChart :data="legacyBookComparisonChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
+          <div class="mb-6">
+            <CardBox>
+              <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Jumlah Buku vs Buku Terisi</h3>
+              <div class="h-72">
+                <BarChart :data="legacyBookComparisonChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
+              </div>
+              <p v-if="!hasLegacyBookComparisonData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
+                Belum ada data buku terhitung untuk wilayah ini.
+              </p>
+            </CardBox>
           </div>
-          <p v-if="!hasLegacyBookComparisonData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
-            Belum ada data buku terhitung untuk wilayah ini.
-          </p>
-        </CardBox>
-      </div>
-    </template>
+        </template>
 
-    <p v-else class="text-sm text-slate-600 dark:text-slate-300">
-      Belum ada blok dashboard yang bisa ditampilkan untuk akses akun ini.
-    </p>
+        <p v-else class="text-sm text-slate-600 dark:text-slate-300">
+          Belum ada blok dashboard yang bisa ditampilkan untuk akses akun ini.
+        </p>
+      </template>
+    </Deferred>
 
   </SectionMain>
 </template>

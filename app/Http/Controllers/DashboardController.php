@@ -38,7 +38,7 @@ class DashboardController extends Controller
             return redirect()->route('super-admin.users.index');
         }
 
-        $dashboardPayload = $this->buildDashboardPayload($request);
+        $dashboardPayload = $this->buildDashboardChartPayload($request);
         $user = auth()->user()?->loadMissing('area');
         $pdf = $this->pdfViewFactory->loadView('pdf.dashboard_chart_report', [
             'stats' => $dashboardPayload['stats'],
@@ -51,29 +51,13 @@ class DashboardController extends Controller
         return $pdf->stream('dashboard-chart-report.pdf');
     }
 
-    private function buildDashboardPayload(Request $request): array
+    private function buildDashboardChartPayload(Request $request): array
     {
         $user = auth()->user();
-        $section1Month = $this->resolveSection1Month($request->query('section1_month', 'all'));
-        $activeBudgetYear = $this->activeBudgetYearContextService->resolveForUser($user);
-        $dashboardContext = [
-            'mode' => $request->query('mode', 'all'),
-            'level' => $request->query('level', 'all'),
-            'sub_level' => $request->query('sub_level', 'all'),
-            'section2_group' => $request->query('section2_group', 'all'),
-            'section3_group' => $request->query('section3_group', 'all'),
-            'section1_month' => $section1Month === null ? 'all' : (string) $section1Month,
-            'tahun_anggaran' => (string) $activeBudgetYear,
-            'block' => 'documents',
-        ];
+        $dashboardContext = $this->buildDashboardContext($request, $user);
+        $section1Month = $this->resolveSection1Month($dashboardContext['section1_month']);
         $activityData = $this->dashboardActivityChartService->buildForUser($user, $section1Month);
         $documentData = $this->buildDashboardDocumentCoverageUseCase->execute($user, $dashboardContext);
-        $dashboardBlocks = $this->buildRoleAwareDashboardBlocksUseCase->execute(
-            $user,
-            $activityData,
-            $documentData,
-            $dashboardContext
-        );
 
         $stats = array_merge(
             $activityData['stats'],
@@ -93,8 +77,9 @@ class DashboardController extends Controller
         return [
             'stats' => $stats,
             'charts' => $charts,
-            'blocks' => $dashboardBlocks,
             'context' => $dashboardContext,
+            'activityData' => $activityData,
+            'documentData' => $documentData,
         ];
     }
 
@@ -102,14 +87,41 @@ class DashboardController extends Controller
     {
         $dashboardPayload = null;
         $resolvePayload = function () use ($request, &$dashboardPayload): array {
-            return $dashboardPayload ??= $this->buildDashboardPayload($request);
+            return $dashboardPayload ??= $this->buildDashboardChartPayload($request);
+        };
+        $resolveBlocks = function () use ($resolvePayload): array {
+            $payload = $resolvePayload();
+
+            return $this->buildRoleAwareDashboardBlocksUseCase->execute(
+                auth()->user(),
+                $payload['activityData'],
+                $payload['documentData'],
+                $payload['context']
+            );
         };
 
         return [
             'dashboardStats' => fn (): array => $resolvePayload()['stats'],
             'dashboardCharts' => fn (): array => $resolvePayload()['charts'],
-            'dashboardBlocks' => fn (): array => $resolvePayload()['blocks'],
+            'dashboardBlocks' => Inertia::defer(fn (): array => $resolveBlocks(), 'dashboard-blocks'),
             'dashboardContext' => fn (): array => $resolvePayload()['context'],
+        ];
+    }
+
+    private function buildDashboardContext(Request $request, mixed $user): array
+    {
+        $section1Month = $this->resolveSection1Month($request->query('section1_month', 'all'));
+        $activeBudgetYear = $this->activeBudgetYearContextService->resolveForUser($user);
+
+        return [
+            'mode' => $request->query('mode', 'all'),
+            'level' => $request->query('level', 'all'),
+            'sub_level' => $request->query('sub_level', 'all'),
+            'section2_group' => $request->query('section2_group', 'all'),
+            'section3_group' => $request->query('section3_group', 'all'),
+            'section1_month' => $section1Month === null ? 'all' : (string) $section1Month,
+            'tahun_anggaran' => (string) $activeBudgetYear,
+            'block' => 'documents',
         ];
     }
 
