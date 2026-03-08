@@ -26,9 +26,40 @@ Aturan:
   - `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` (`planned`)
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`planned`)
+  - `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md` (`planned`)
+  - `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`planned`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
+
+### Roadmap Optimasi Inertia Bertahap (`SPA26A1`) - 2026-03-08
+
+- Status concern: `planned`.
+- Keputusan concern:
+  - stack utama tetap `Laravel + Inertia + Vue`,
+  - tidak ada migrasi ke SPA murni pada fase ini,
+  - urutan optimasi dikunci: partial reload -> lazy fetch -> komponen stateful -> endpoint JSON kecil terkontrol.
+- Baseline evidence concern:
+  - `Inertia::render` di backend: `268`,
+  - coupling frontend ke `@inertiajs/vue3` (`useForm` + `router.get` dan pola sejenis hasil audit scoped): `212`,
+  - feature test `assertInertia(...)`: `188`,
+  - `routes/api.php`: belum ada.
+
+### Pilot Dashboard Wave 1 (`DWI26A1`) - 2026-03-08
+
+- Status concern: `planned`.
+- Scope batch:
+  - `app/Http/Controllers/DashboardController.php`,
+  - `resources/js/Pages/Dashboard.vue`,
+  - `tests/Feature/DashboardActivityChartTest.php`,
+  - `tests/Feature/DashboardDocumentCoverageTest.php`.
+- Keputusan batch:
+  - tidak menambah endpoint JSON baru,
+  - fokus pada helper visit dashboard, partial reload, dan payload slimming berbasis Inertia.
+- Baseline evidence batch:
+  - `Dashboard.vue` memiliki beberapa `router.get('/dashboard', ...)` pada action filter dan watcher sinkronisasi query,
+  - kontrak dashboard saat ini dilindungi oleh feature test dashboard activity + document coverage,
+  - payload dashboard utama saat ini tetap membawa `dashboardStats`, `dashboardCharts`, `dashboardBlocks`, `dashboardContext`.
 
 ### Concern Archived
 
