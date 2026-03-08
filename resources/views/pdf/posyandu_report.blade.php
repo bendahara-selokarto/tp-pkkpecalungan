@@ -26,15 +26,15 @@
         $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
         $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $level);
         $resolvedArea = $area ?? null;
+        $defaultKecamatanName = $pdfKecamatanName ?? '-';
+        $defaultKabKotaName = $pdfKabKotaName ?? '-';
+        $defaultProvinsiName = $pdfProvinsiName ?? '-';
 
         $desaKelName = '-';
-        $kecamatanName = '-';
+        $kecamatanDisplayName = $defaultKecamatanName;
 
         if ($scopeLevel?->value === \App\Domains\Wilayah\Enums\ScopeLevel::DESA->value) {
             $desaKelName = $resolvedArea?->name ?? $areaName;
-            $kecamatanName = $resolvedArea?->parent?->name ?? '-';
-        } elseif ($scopeLevel?->value === \App\Domains\Wilayah\Enums\ScopeLevel::KECAMATAN->value) {
-            $kecamatanName = $resolvedArea?->name ?? $areaName;
         }
 
         $groupedItems = $items->groupBy(static fn ($item) => implode('|', [
@@ -58,11 +58,11 @@
             <table class="identity">
                 <tr>
                     <td class="label">DESA/KEL</td><td class="colon">:</td><td class="value">{{ $desaKelName }}</td>
-                    <td class="label-right">Kec</td><td class="colon">:</td><td class="value">{{ $kecamatanName }}</td>
+                    <td class="label-right">Kec</td><td class="colon">:</td><td class="value">{{ $kecamatanDisplayName }}</td>
                 </tr>
                 <tr>
-                    <td class="label">KEB/KOTA</td><td class="colon">:</td><td class="value">-</td>
-                    <td class="label-right">Prov</td><td class="colon">:</td><td class="value">-</td>
+                    <td class="label">KEB/KOTA</td><td class="colon">:</td><td class="value">{{ $defaultKabKotaName }}</td>
+                    <td class="label-right">Prov</td><td class="colon">:</td><td class="value">{{ $defaultProvinsiName }}</td>
                 </tr>
                 <tr><td colspan="6">&nbsp;</td></tr>
                 <tr><td class="label">Nama Posyandu</td><td class="colon">:</td><td class="value">-</td><td colspan="3"></td></tr>
@@ -123,15 +123,15 @@
             @endphp
 
             <div class="section">
-                <table class="identity">
-                    <tr>
-                        <td class="label">DESA/KEL</td><td class="colon">:</td><td class="value">{{ $desaKelName }}</td>
-                        <td class="label-right">Kec</td><td class="colon">:</td><td class="value">{{ $kecamatanName }}</td>
-                    </tr>
-                    <tr>
-                        <td class="label">KEB/KOTA</td><td class="colon">:</td><td class="value">-</td>
-                        <td class="label-right">Prov</td><td class="colon">:</td><td class="value">-</td>
-                    </tr>
+            <table class="identity">
+                <tr>
+                    <td class="label">DESA/KEL</td><td class="colon">:</td><td class="value">{{ $desaKelName }}</td>
+                    <td class="label-right">Kec</td><td class="colon">:</td><td class="value">{{ $kecamatanDisplayName }}</td>
+                </tr>
+                <tr>
+                    <td class="label">KEB/KOTA</td><td class="colon">:</td><td class="value">{{ $defaultKabKotaName }}</td>
+                    <td class="label-right">Prov</td><td class="colon">:</td><td class="value">{{ $defaultProvinsiName }}</td>
+                </tr>
                     <tr><td colspan="6">&nbsp;</td></tr>
                     <tr><td class="label">Nama Posyandu</td><td class="colon">:</td><td class="value">{{ $first->nama_posyandu }}</td><td colspan="3"></td></tr>
                     <tr><td class="label">Pengelola</td><td class="colon">:</td><td class="value">{{ $first->nama_pengelola }}</td><td colspan="3"></td></tr>
@@ -194,6 +194,5 @@
     @endif
 </body>
 </html>
-
 
 

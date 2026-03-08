@@ -151,6 +151,7 @@ use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Domains\Wilayah\Repositories\{
     AreaRepository,
@@ -414,7 +415,48 @@ class AppServiceProvider extends ServiceProvider
             ]);
         });
 
+        $this->registerPdfRegionalIdentityComposer();
         $this->registerDashboardDocumentCacheInvalidationObserver();
+    }
+
+    private function registerPdfRegionalIdentityComposer(): void
+    {
+        View::composer('pdf.*', static function ($view): void {
+            $identity = config('pdf.regional_identity', []);
+
+            if (! is_array($identity) || $identity === []) {
+                return;
+            }
+
+            $kecamatan = (string) ($identity['kecamatan'] ?? '-');
+            $kabupaten = (string) ($identity['kabupaten'] ?? '-');
+            $kabKota = (string) ($identity['kab_kota'] ?? $kabupaten);
+            $provinsi = (string) ($identity['provinsi'] ?? '-');
+            $data = $view->getData();
+            $meta = is_array($data['meta'] ?? null) ? $data['meta'] : [];
+
+            $view->with([
+                'pdfRegionalIdentity' => [
+                    'kecamatan' => $kecamatan,
+                    'kabupaten' => $kabupaten,
+                    'kab_kota' => $kabKota,
+                    'provinsi' => $provinsi,
+                ],
+                'pdfKecamatanName' => $kecamatan,
+                'pdfKabupatenName' => $kabupaten,
+                'pdfKabKotaName' => $kabKota,
+                'pdfProvinsiName' => $provinsi,
+                'kecamatanName' => $kecamatan,
+                'kabupatenName' => $kabupaten,
+                'kabKotaName' => $kabKota,
+                'provinsiName' => $provinsi,
+                'meta' => array_merge($meta, [
+                    'kecamatan' => $kecamatan,
+                    'kab_kota' => $kabKota,
+                    'provinsi' => $provinsi,
+                ]),
+            ]);
+        });
     }
 
     private function registerDashboardDocumentCacheInvalidationObserver(): void
