@@ -56,6 +56,10 @@ const emitUiRuntimeError = (error, source = 'runtime') => {
     }
 };
 
+if (typeof window !== 'undefined') {
+    window.__emitUiRuntimeError = emitUiRuntimeError;
+}
+
 const installGlobalRuntimeGuards = () => {
     if (typeof window === 'undefined') {
         return;

@@ -843,6 +843,10 @@ const ensureBlockDetailWidget = async (block) => {
       },
     }
   } catch (_error) {
+    if (typeof window !== 'undefined' && typeof window.__emitUiRuntimeError === 'function') {
+      window.__emitUiRuntimeError(_error, `dashboard.block-detail.fetch:${key}`)
+    }
+
     blockDetailWidgets.value = {
       ...blockDetailWidgets.value,
       [key]: {
