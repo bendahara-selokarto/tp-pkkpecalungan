@@ -28,13 +28,14 @@ Aturan:
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`planned`)
   - `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md` (`in-progress`)
   - `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
+  - `docs/process/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
 
 ### Roadmap Optimasi Inertia Bertahap (`SPA26A1`) - 2026-03-08
 
-- Status concern: `in-progress` (`state:wave1-dashboard-batch-active`).
+- Status concern: `in-progress` (`state:wave1-pilots-validated-wave2-pending`).
 - Keputusan concern:
   - stack utama tetap `Laravel + Inertia + Vue`,
   - tidak ada migrasi ke SPA murni pada fase ini,
@@ -68,6 +69,27 @@ Aturan:
   - `php artisan test tests/Feature/DashboardActivityChartTest.php --compact` -> `PASS` (`6` tests),
   - `php artisan test tests/Feature/DashboardDocumentCoverageTest.php --compact` -> `PASS` (`12` tests, termasuk partial reload),
   - operator lokal menjalankan `php artisan test --compact` -> `PASS` (`1154 passed`, `7730 assertions`, `89.00s`).
+
+### Pilot User Management Index Wave 1 (`USR26A1`) - 2026-03-08
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Scope batch:
+  - `app/Http/Controllers/SuperAdmin/UserManagementController.php`,
+  - `resources/js/Pages/SuperAdmin/Users/Index.vue`,
+  - `tests/Feature/SuperAdmin/UserManagementIndexPaginationTest.php`.
+- Target batch:
+  - helper visit index user management,
+  - partial reload pada paginasi/per-page,
+  - test partial reload yang spesifik.
+- Hasil batch implementasi:
+  - `UserManagementController@index` kini mengirim prop index berbasis closure untuk mendukung partial reload,
+  - `SuperAdmin/Users/Index.vue` memakai helper visit terpusat dengan partial prop `users` dan `filters`,
+  - `PaginationBar` kini menerima opsi visit Inertia opsional, dan halaman user management menggunakannya untuk menjaga klik pagination tetap partial reload,
+  - test partial reload ditambahkan pada `UserManagementIndexPaginationTest`.
+- Validasi batch:
+  - `php artisan test tests/Feature/SuperAdmin/UserManagementIndexPaginationTest.php --compact` -> `PASS` (`7` tests, `137` assertions, `15.29s`),
+  - operator lokal menjalankan `php artisan test --compact` -> `PASS` (`1155 passed`, `7760 assertions`, `85.70s`),
+  - operator lokal menjalankan `npm run build` -> `PASS` (`built in 7.82s`).
 
 ### Concern Archived
 

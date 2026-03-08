@@ -7,9 +7,25 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  only: {
+    type: Array,
+    default: null,
+  },
   from: {
     type: Number,
     default: null,
+  },
+  preserveScroll: {
+    type: Boolean,
+    default: true,
+  },
+  preserveState: {
+    type: Boolean,
+    default: true,
+  },
+  replace: {
+    type: Boolean,
+    default: false,
   },
   to: {
     type: Number,
@@ -40,6 +56,10 @@ const shouldRender = computed(() => Array.isArray(props.links) && props.links.le
         <Link
           v-else
           :href="link.url"
+          :only="only"
+          :preserve-scroll="preserveScroll"
+          :preserve-state="preserveState"
+          :replace="replace"
           class="inline-flex min-h-[44px] items-center justify-center rounded-md border px-3 py-2 text-xs"
           :class="link.active
             ? 'border-emerald-600 bg-emerald-600 text-white'

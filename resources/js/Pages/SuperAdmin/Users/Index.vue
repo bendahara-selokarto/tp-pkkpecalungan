@@ -32,6 +32,10 @@ const isDeleteModalActive = ref(false)
 const deletingId = ref(null)
 const isResponsiveTableV2Enabled = computed(() => import.meta.env.VITE_UI_RESPONSIVE_TABLE_V2 !== 'false')
 const perPage = computed(() => props.filters.per_page ?? 10)
+const USER_INDEX_PARTIAL_PROPS = Object.freeze([
+  'users',
+  'filters',
+])
 
 const userTableColumns = [
   { key: 'name', label: 'Nama', mobileLabel: 'Nama' },
@@ -65,17 +69,22 @@ const cancelDelete = () => {
   deletingId.value = null
 }
 
-const updatePerPage = (event) => {
-  const selectedPerPage = Number(event.target.value)
-
-  router.get('/super-admin/users', {
-    ...props.filters,
-    page: 1,
-    per_page: selectedPerPage,
-  }, {
+const visitUsersIndex = (query) => {
+  router.get('/super-admin/users', query, {
     preserveScroll: true,
     preserveState: true,
     replace: true,
+    only: USER_INDEX_PARTIAL_PROPS,
+  })
+}
+
+const updatePerPage = (event) => {
+  const selectedPerPage = Number(event.target.value)
+
+  visitUsersIndex({
+    ...props.filters,
+    page: 1,
+    per_page: selectedPerPage,
   })
 }
 
@@ -199,7 +208,14 @@ const updatePerPage = (event) => {
         </table>
       </div>
 
-      <PaginationBar :links="users.links" :from="users.from" :to="users.to" :total="users.total" />
+      <PaginationBar
+        :links="users.links"
+        :from="users.from"
+        :to="users.to"
+        :total="users.total"
+        :only="USER_INDEX_PARTIAL_PROPS"
+        :replace="true"
+      />
     </CardBox>
 
     <ConfirmActionModal

@@ -33,35 +33,7 @@ class UserManagementController extends Controller
 
     public function index(ListUsersRequest $request): Response
     {
-        $users = $this->listUsersForManagementUseCase
-            ->execute($request->perPage())
-            ->through(fn (User $user) => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'scope' => $this->userAreaContextService->resolveUserAreaLevel($user),
-                'area' => $user->area
-                    ? [
-                        'id' => $user->area->id,
-                        'name' => $user->area->name,
-                        'level' => $user->area->level,
-                    ]
-                    : null,
-                'roles' => $user->roles
-                    ->pluck('name')
-                    ->map(fn (string $role): string => RoleLabelFormatter::label($role))
-                    ->values(),
-            ]);
-
-        return Inertia::render('SuperAdmin/Users/Index', [
-            'users' => $users,
-            'pagination' => [
-                'perPageOptions' => [10, 25, 50],
-            ],
-            'filters' => [
-                'per_page' => $request->perPage(),
-            ],
-        ]);
+        return Inertia::render('SuperAdmin/Users/Index', $this->buildIndexProps($request));
     }
 
     public function create(): Response
@@ -138,5 +110,41 @@ class UserManagementController extends Controller
         }
 
         return redirect()->route('super-admin.users.index')->with('success', 'User berhasil dihapus');
+    }
+
+    private function buildIndexProps(ListUsersRequest $request): array
+    {
+        $users = null;
+        $resolveUsers = function () use ($request, &$users) {
+            return $users ??= $this->listUsersForManagementUseCase
+                ->execute($request->perPage())
+                ->through(fn (User $user) => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'scope' => $this->userAreaContextService->resolveUserAreaLevel($user),
+                    'area' => $user->area
+                        ? [
+                            'id' => $user->area->id,
+                            'name' => $user->area->name,
+                            'level' => $user->area->level,
+                        ]
+                        : null,
+                    'roles' => $user->roles
+                        ->pluck('name')
+                        ->map(fn (string $role): string => RoleLabelFormatter::label($role))
+                        ->values(),
+                ]);
+        };
+
+        return [
+            'users' => fn () => $resolveUsers(),
+            'pagination' => fn (): array => [
+                'perPageOptions' => [10, 25, 50],
+            ],
+            'filters' => fn (): array => [
+                'per_page' => $request->perPage(),
+            ],
+        ];
     }
 }

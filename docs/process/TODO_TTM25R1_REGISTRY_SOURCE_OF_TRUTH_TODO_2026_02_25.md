@@ -26,6 +26,7 @@ Status: `done` (`state:thin-registry-active-index`)
 | `C-QUALITY-GATE-90PLUS` | Roadmap sprint naik skor project 90+ | `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` | `planned` | Concern ini menjadi jalur eksekusi hardening quality gate (style + e2e dependency) untuk mendorong skor proyek ke 90+. |
 | `C-INERTIA-INCREMENTAL-OPTIMIZATION` | Roadmap optimasi bertahap Inertia tanpa migrasi SPA murni | `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md` | `in-progress` | Concern ini mengunci jalur optimasi UX/runtime bertahap berbasis Inertia dengan fokus partial reload, lazy fetch, komponen stateful, dan endpoint JSON kecil yang terkontrol. |
 | `C-DASHBOARD-WAVE1-PARTIAL-RELOAD` | Pilot dashboard wave 1 partial reload dan payload slimming | `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` | `done` | Concern ini adalah pilot pertama implementasi optimasi Inertia pada dashboard dengan fokus helper visit terpusat, partial reload, dan guard query contract. |
+| `C-USER-MANAGEMENT-WAVE1-PARTIAL-RELOAD` | Pilot user management index partial reload dan payload slimming | `docs/process/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` | `done` | Concern ini menutup pilot kedua wave 1 pada halaman index user management super-admin dengan partial reload paginasi/per-page yang sudah tervalidasi. |
 
 ## Registry Historis (Full Context)
 

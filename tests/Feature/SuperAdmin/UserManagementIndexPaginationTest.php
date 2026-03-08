@@ -89,6 +89,42 @@ class UserManagementIndexPaginationTest extends TestCase
         });
     }
 
+    public function test_partial_reload_user_management_hanya_mengembalikan_prop_yang_diminta(): void
+    {
+        $superAdmin = User::factory()->create(['name' => 'Super Admin']);
+        $superAdmin->assignRole('super-admin');
+
+        $kecamatan = Area::create([
+            'name' => 'Pecalungan',
+            'level' => ScopeLevel::KECAMATAN->value,
+        ]);
+
+        for ($i = 1; $i <= 12; $i++) {
+            $user = User::factory()->create([
+                'name' => sprintf('Managed User %02d', $i),
+                'scope' => ScopeLevel::KECAMATAN->value,
+                'area_id' => $kecamatan->id,
+            ]);
+            $user->assignRole('admin-kecamatan');
+        }
+
+        $response = $this->actingAs($superAdmin)
+            ->get(route('super-admin.users.index', ['per_page' => 25]));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('SuperAdmin/Users/Index')
+                ->reloadOnly(['users', 'filters'], function (AssertableInertia $reload): void {
+                    $reload
+                        ->where('filters.per_page', 25)
+                        ->where('users.per_page', 25)
+                        ->has('users.data', 13)
+                        ->missing('pagination');
+                });
+        });
+    }
+
     public function test_super_admin_per_page_invalid_user_management_fallback_ke_default(): void
     {
         $superAdmin = User::factory()->create(['name' => 'Super Admin']);

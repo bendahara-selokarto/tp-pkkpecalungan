@@ -1,7 +1,7 @@
 # TODO SPA26A1 Roadmap Optimasi Bertahap Inertia Tanpa Migrasi SPA Murni
 
 Tanggal: 2026-03-08  
-Status: `in-progress` (`state:wave1-dashboard-batch-active`)
+Status: `in-progress` (`state:wave1-pilots-validated-wave2-pending`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -53,6 +53,7 @@ Related ADR: `-`
   - prioritas pada dashboard agregat dan halaman index yang hanya mengubah filter/paginasi,
   - gunakan partial reload/prop refresh agar payload yang dikirim ulang hanya blok data yang berubah.
   - child concern pilot dashboard: `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md`.
+  - child concern pilot user management index: `docs/process/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md`.
 - [ ] L2. Wave 2: lazy data fetch untuk blok sekunder.
   - pindahkan blok non-kritis di dashboard atau halaman detail yang tidak perlu hadir pada first paint,
   - gunakan endpoint kecil berbasis auth session yang tetap lewat boundary controller/use case/repository.
