@@ -33,13 +33,14 @@ Aturan:
   - `docs/process/TODO_DBL26A1_PILOT_DASHBOARD_WAVE_2_DEFERRED_BLOCKS_DAN_LAZY_FETCH_2026_03_08.md` (`done`)
   - `docs/process/TODO_DBS26A1_PILOT_DASHBOARD_WAVE_3_STATEFUL_PRESENTATIONAL_UI_2026_03_08.md` (`done`)
   - `docs/process/TODO_DBJ26A1_PILOT_DASHBOARD_WAVE_4_JSON_DETAIL_WIDGET_PER_DESA_2026_03_08.md` (`done`)
+  - `docs/process/TODO_DBT26A1_PILOT_DASHBOARD_WAVE_5_FETCH_FAILURE_TELEMETRY_2026_03_09.md` (`done`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
 
 ### Roadmap Optimasi Inertia Bertahap (`SPA26A1`) - 2026-03-08
 
-- Status concern: `in-progress` (`state:wave4-dashboard-validated-wave5-pending`).
+- Status concern: `done` (`state:wave1-wave5-pilots-validated`).
 - Keputusan concern:
   - stack utama tetap `Laravel + Inertia + Vue`,
   - tidak ada migrasi ke SPA murni pada fase ini,
@@ -156,6 +157,26 @@ Aturan:
   - `php artisan test tests/Unit/Architecture/UnitCoverageGateTest.php --compact` -> `PASS` (operator lokal),
   - `php artisan test --compact` -> `PASS` (operator lokal),
   - `npm run build` -> `PASS` (operator lokal).
+
+### Pilot Dashboard Wave 5 Fetch Failure Telemetry (`DBT26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Scope batch:
+  - `resources/js/app.js`,
+  - `resources/js/Pages/Dashboard.vue`,
+  - `tests/Feature/UiRuntimeErrorLogTest.php`,
+  - `tests/Feature/DashboardBlockDetailWidgetTest.php`.
+- Target batch:
+  - menghubungkan fetch failure widget dashboard ke telemetry runtime existing,
+  - menjaga fallback UI tetap non-blocking.
+- Hasil batch implementasi:
+  - helper runtime error global dashboard diekspos untuk concern async fetch,
+  - widget detail dashboard mengirim telemetry dengan source sempit saat fetch gagal.
+- Validasi batch:
+  - `php artisan test tests/Feature/UiRuntimeErrorLogTest.php --compact` -> `PASS` (`2` tests, `5` assertions, `38.20s`),
+  - `php artisan test tests/Feature/DashboardBlockDetailWidgetTest.php --compact` -> `PASS` (`3` tests, `37` assertions, `40.61s`),
+  - `npm run build` -> `PASS` (`built in 3m 36s`),
+  - `php artisan test --compact` -> `PASS` (`1163 passed`, `8025 assertions`, `477.24s`).
 
 ### Concern Archived
 

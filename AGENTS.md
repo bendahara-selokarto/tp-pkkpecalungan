@@ -158,13 +158,13 @@ Flow pembacaan dokumen (wajib, terutama header tabel):
 - Diff-first: prioritaskan patch kecil dibanding regenerasi file panjang.
 - Response compression: ringkas, padat, tanpa pengulangan konteks.
 - State-aware: jangan ulang informasi yang sudah dikonfirmasi pada sesi yang sama.
-- Kontrak offload validasi berat: untuk mempercepat siklus kerja, validasi berat default dialihkan ke operator lokal via PowerShell (`php artisan test`, `php artisan migrate:fresh --seed`, `npm run build`, `npm run test:e2e:smoke`, atau command berat setara), kecuali user meminta AI menjalankannya langsung.
-- Pada kontrak offload ini, AI wajib:
-  1) menyebutkan kapan validasi berat dibutuhkan,
-  2) memberikan command yang harus dijalankan,
+- Kontrak validasi berat: AI menjalankan sendiri validasi berat yang mandatory (`php artisan test`, `php artisan migrate:fresh --seed`, `npm run build`, `npm run test:e2e:smoke`, atau command berat setara) sebagai default closure concern.
+- Offload ke operator lokal hanya dipakai jika user memintanya secara eksplisit atau ada blocker eksekusi yang nyata pada runner AI.
+- Jika validasi berat tidak bisa dijalankan AI karena blocker teknis, AI wajib:
+  1) menjelaskan blocker secara konkret,
+  2) memberikan command yang harus dijalankan operator,
   3) menyebutkan tujuan validasinya,
-  4) menunggu ringkasan hasil dari operator bila command tidak dijalankan AI langsung.
-- Jika operator melaporkan kegagalan validasi berat, AI wajib menindaklanjuti dengan analisis root cause, patch, lalu meminta rerun command yang relevan.
+  4) menindaklanjuti hasil `fail` dengan analisis root cause dan patch.
 - Saat menjalankan `php artisan test` full, defaultkan output ringkas (`--compact`) untuk laporan chat; jika butuh detail penuh, arahkan output ke file log lalu laporkan ringkasan inti (pass/fail + error utama).
 - Test tiering: saat iterasi gunakan test terarah pada file/fitur terdampak terlebih dahulu; jalankan full test untuk perubahan signifikan atau saat diwajibkan oleh quality gate/matrix.
 - Fail-fast saat debugging: gunakan `php artisan test --stop-on-failure --compact` untuk mempercepat siklus perbaikan awal.
@@ -187,7 +187,7 @@ Flow pembacaan dokumen (wajib, terutama header tabel):
 - Jika ada upgrade/migrasi legacy, wajib ada mapping dampak + fallback plan.
 - Tidak ada coupling baru yang tidak perlu.
 - Tidak ada drift `role` vs `scope` vs `areas.level`.
-- Test relevan lulus (`php artisan test` untuk perubahan signifikan), baik dijalankan AI langsung maupun dijalankan operator lokal sesuai kontrak offload validasi berat.
+- Test relevan lulus (`php artisan test` untuk perubahan signifikan), dengan eksekusi default oleh AI kecuali user meminta offload atau ada blocker teknis yang terdokumentasi.
 - Tidak ada perubahan perilaku yang tidak diminta.
 - Untuk dokumen autentik bertabel: peta header sampai level merge (`rowspan`/`colspan`) sudah tervalidasi sebelum patch implementasi.
 
@@ -223,12 +223,22 @@ Untuk modul/menu baru, minimal harus ada:
 3. Feature test tolak mismatch role-area level (stale metadata scenario).
 4. Unit test policy/scope service untuk akses inti (`view`, `update`/`delete`).
 5. Jika ada scoped query kompleks, tambah test use case/repository anti data leak.
-6. Jalankan `php artisan test` sebelum final report, baik oleh AI langsung atau oleh operator lokal sesuai kontrak offload validasi berat; hasilnya tetap wajib dicatat eksplisit.
+6. Jalankan `php artisan test` sebelum final report; default-nya dieksekusi AI dan hasilnya wajib dicatat eksplisit.
 
 ## 9. Output Contract
 
 - Laporan harus menyebut: apa yang diubah, kenapa, file terdampak, dan hasil validasi.
 - Jika gagal, laporkan root cause + opsi solusi + dampak tiap opsi.
+
+## 9A. Commit Signal Contract
+
+- AI boleh menjalankan `git commit` sebagai bagian dari closure concern/final process tanpa menunggu perintah `commit` terpisah, selama:
+  1) boundary concern yang di-commit jelas,
+  2) validasi mandatory concern sudah hijau atau blocker sudah dijelaskan eksplisit,
+  3) tidak ikut menarik file lain yang tidak terkait concern aktif.
+- Signal commit default dianggap aktif ketika satu concern sudah mencapai state closure yang stabil (`done`, `validated`, atau ekuivalen) dan tidak ada open blocker yang menuntut patch tambahan dalam turn yang sama.
+- Jika working tree mengandung perubahan lintas concern, AI wajib commit by concern secara hati-hati atau menunda commit sampai boundary-nya bisa dipisahkan dengan aman.
+- `git push` tetap di bawah kendali user. AI tidak boleh menjadikan `commit` sebagai izin implisit untuk `push`.
 
 ## 10. AI-Friendly Pattern Evolution
 

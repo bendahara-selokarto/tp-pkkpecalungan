@@ -635,34 +635,63 @@ STATUS: active
 ### P-027 - Heavy Validation Offload to Local Operator
 
 - Tanggal: 2026-03-08
-- Status: active
-- Konteks: validasi berat seperti full suite, reset seed, build frontend panjang, atau E2E smoke sering lebih cepat dijalankan operator lokal dibanding AI runner, tetapi closure concern tetap butuh evidence validasi yang eksplisit.
+- Status: deprecated
+- Konteks: pattern ini dulu dipakai saat validasi berat dianggap lebih efisien jika dijalankan operator lokal, tetapi pada praktik repo ini loop koordinasinya justru memperlambat closure concern.
 - Trigger:
-  - command validasi memakan waktu panjang atau berisiko memperlambat siklus patch AI.
-  - operator lokal siap menjalankan command di PowerShell dan mengirim balik hasil ringkas.
+  - user secara eksplisit meminta offload command berat ke operator lokal.
+  - runner AI mengalami blocker teknis nyata yang mencegah eksekusi validasi mandatory.
 - Langkah eksekusi:
-  1) AI menyelesaikan scoped read + patch minimal terlebih dahulu.
-  2) AI menentukan apakah validasi berat mandatory untuk closure concern.
-  3) AI menyebutkan command yang harus dijalankan operator, tujuan validasinya, dan hasil minimum yang harus dilaporkan kembali.
+  1) AI mencoba menjalankan validasi mandatory sendiri terlebih dahulu.
+  2) Hanya jika ada permintaan user atau blocker teknis, AI mengalihkan command ke operator lokal.
+  3) AI menyebutkan command, tujuan validasi, dan output minimum yang harus dilaporkan.
   4) operator menjalankan command lokal dan mengirim ringkasan `pass/fail`, error utama, serta file/line relevan bila ada.
   5) jika `fail`, AI kembali ke loop `analyze -> patch -> request rerun`.
   6) jika `pass`, AI mencatat evidence tersebut pada laporan akhir atau dokumen concern bila diperlukan.
 
 - Guardrail:
+  - offload hanya fallback, bukan default.
   - offload hanya mengalihkan eksekusi command, bukan tanggung jawab AI untuk menentukan kebutuhan validasi.
   - final report tidak boleh mengklaim validasi berat lulus jika operator belum mengirim hasil eksplisit.
-  - targeted test/lint ringan tetap boleh dijalankan AI langsung bila itu lebih cepat daripada koordinasi bolak-balik.
-  - jika user secara eksplisit meminta AI menjalankan command berat langsung, instruksi user mengalahkan default offload ini.
+  - jika blocker AI sudah hilang, validasi berat kembali ke jalur default dieksekusi AI.
 - Validasi minimum:
+  - AI mendokumentasikan alasan offload atau blocker teknisnya.
   - AI menyebut command dan alasan validasinya secara eksplisit.
   - operator mengirim balik hasil minimal `pass/fail` + error inti bila gagal.
   - closure concern hanya dilakukan setelah hasil mandatory validation tercatat.
 - Bukti efisiensi/akurasi:
-  - mengurangi waktu tunggu AI pada suite panjang sambil mempertahankan guardrail evidence validasi.
+  - kini dipertahankan hanya sebagai fallback untuk kasus blocker atau permintaan eksplisit user.
 - Risiko:
   - loop kerja bisa macet jika operator hanya memberi status umum tanpa potongan error yang cukup.
 - Catatan reuse lintas domain/project:
-  - cocok untuk repo yang dikerjakan kolaboratif pada mesin yang sama, terutama saat AI runner lebih lambat dari terminal lokal user.
+  - jangan dijadikan default pada repo yang closure concern-nya lebih cepat jika AI menjalankan validasi langsung.
+
+### P-031 - Fetch Failure Runtime Telemetry Hook
+
+- Tanggal: 2026-03-09
+- Status: active
+- Konteks: setelah UI menambah fetch asinkron baru di luar lifecycle Inertia utama, kegagalan request tidak cukup hanya tampil sebagai empty/error state lokal; perlu masuk ke telemetry runtime agar bisa diaudit.
+- Trigger:
+  - halaman menambah fetch manual `fetch()` atau axios di level komponen untuk widget/detail async.
+  - failure request berpotensi tersembunyi dari jalur `window.error`, `unhandledrejection`, atau handler global Vue.
+- Langkah eksekusi:
+  1) sediakan helper global yang tetap mengarah ke endpoint runtime error existing.
+  2) saat fetch async gagal, kirim telemetry dengan source yang sempit per concern/widget.
+  3) pertahankan user-facing fallback agar UX tidak tergantung telemetry.
+  4) catat concern pilot dan hasil validasinya pada TODO/log concern terkait.
+- Guardrail:
+  - telemetry tidak boleh memblokir UI atau menjadi hard dependency render.
+  - source telemetry harus cukup sempit agar mudah ditelusuri, jangan pakai label generik untuk semua fetch.
+  - jangan kirim payload detail sensitif; cukup message, source, dan URL jalur existing.
+- Validasi minimum:
+  - regression concern async fetch tetap hijau.
+  - endpoint runtime error existing tetap lulus.
+  - build frontend lulus.
+- Bukti efisiensi/akurasi:
+  - menutup blind spot observability untuk widget dashboard on-expand yang gagal fetch tetapi tetap menampilkan fallback lokal.
+- Risiko:
+  - noise log meningkat jika source terlalu umum atau retry tidak dibatasi.
+- Catatan reuse lintas domain/project:
+  - cocok untuk tabel detail, inspector panel, atau widget accordion async yang tidak memakai Inertia visit penuh.
 
 ### P-032 - Markdown Context Space Budgeting
 
@@ -696,3 +725,33 @@ STATUS: active
   - tanpa disiplin update baseline, angka budget bisa drift dari kondisi repo aktual.
 - Catatan reuse lintas domain/project:
   - cocok untuk project yang governance AI-nya sudah memakai banyak dokumen markdown dan membutuhkan batas pertumbuhan yang bisa diaudit.
+
+### P-033 - Commit by Concern at Closure
+
+- Tanggal: 2026-03-09
+- Status: active
+- Konteks: pada repo ini user mendelegasikan `git commit` ke AI sebagai bagian dari rangkaian closure concern, tetapi tetap menahan kontrol `git push`.
+- Trigger:
+  - satu concern sudah tervalidasi penuh atau cukup untuk closure sesuai quality gate.
+  - working tree bisa dipisahkan bersih per concern.
+- Langkah eksekusi:
+  1) audit `git status` dan petakan file concern aktif.
+  2) pastikan validasi mandatory concern sudah tercatat.
+  3) stage hanya file concern aktif.
+  4) buat commit message yang mewakili boundary concern.
+  5) laporkan hash commit dan residual working tree yang sengaja tidak ikut.
+- Guardrail:
+  - jangan commit file concern lain yang kebetulan sedang berubah di working tree.
+  - jangan menganggap izin commit sebagai izin `git push`.
+  - jika boundary file tidak jelas, tunda commit atau pecah concern lebih dulu.
+- Validasi minimum:
+  - concern sudah lulus validation ladder yang relevan.
+  - audit `git status --short` dilakukan sebelum commit.
+  - laporan final menyebut commit hash dan file utama yang masuk.
+- Bukti efisiensi/akurasi:
+  - mengurangi loop bolak-balik “implement -> validasi -> minta commit” pada concern yang sudah stabil.
+- Risiko:
+  - commit terlalu dini jika validation ladder belum benar-benar tertutup.
+  - working tree campuran bisa menyebabkan commit boundary bocor jika audit tidak disiplin.
+- Catatan reuse lintas domain/project:
+  - cocok untuk repo kolaboratif di mana AI dipercaya menutup batch kerja, tetapi distribusi ke remote tetap dikendalikan manusia.

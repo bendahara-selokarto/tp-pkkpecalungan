@@ -22,7 +22,12 @@ Tujuan:
 - L1: cek lokal cepat (lint/build/test targeted).
 - L2: regression area terkait.
 - L3: full suite untuk perubahan signifikan.
-- Validasi berat boleh dioffload ke operator lokal jika itu mempercepat siklus, tetapi AI tetap harus menentukan command mandatory, tujuan validasi, dan cara membaca hasilnya.
+- Validasi berat dijalankan AI sebagai default. Offload ke operator hanya fallback terkontrol jika diminta user atau runner AI benar-benar terblokir.
+
+4A. Concern-scoped commit
+- Setelah validasi mandatory selesai, AI boleh menutup batch dengan commit scoped per concern tanpa menunggu prompt `commit` terpisah.
+- Commit hanya aman jika boundary file jelas dan tidak mencampur perubahan concern lain.
+- `git push` tetap manual oleh user.
 
 5. Learning capture
 - Jika jalur baru lebih efisien/akurat, update playbook ini.
@@ -64,11 +69,13 @@ Gunakan status:
 | `P-024` | TODO Generator Canonicalization | User/AI perlu membuat TODO concern baru dengan format konsisten | Nama file + judul + metadata TODO selalu sesuai kontrak AGENTS | Dry-run generator + verifikasi output file terhadap template canonical | `active` |
 | `P-025` | UI/UX Auditability Gate via Code | Concern UI/UX membutuhkan status "auditable" yang bisa direplay lintas sesi | Jalur audit UI/UX memiliki evidence terstruktur (test + log concern) dan gap tooling terlihat eksplisit | L1 frontend contract, L2 feature regression concern, L3 runtime browser evidence jika tooling tersedia; jika belum, status `partial` + TODO follow-up | `active` |
 | `P-026` | TTY Wrapper for Non-TTY Test Runner | Environment runner tidak menampilkan progres subset/failure dengan baik | Debug subset test tetap interaktif tanpa mengubah script CI compact | `composer test:tty -- ...` atau `composer test:debug -- ...` berhasil pada shell interaktif | `active` |
-| `P-027` | Heavy Validation Offload to Local Operator | Full test/build/seed/E2E memakan waktu lebih efisien jika dijalankan operator lokal | Siklus patch lebih cepat tanpa kehilangan evidence validasi closure | AI memberi command + operator memberi ringkasan hasil + AI menindaklanjuti failure | `active` |
+| `P-027` | Heavy Validation Offload to Local Operator | User meminta offload eksplisit atau runner AI terblokir saat command mandatory | Closure concern tetap bisa berlangsung tanpa menghilangkan evidence validasi | AI menjelaskan blocker/alasan offload + operator memberi hasil + AI menindaklanjuti failure | `deprecated` |
 | `P-028` | Deferred Secondary Inertia Prop | Halaman Inertia punya payload sekunder besar yang tidak wajib ikut first paint | First paint lebih ringan tanpa memecah route menjadi pseudo-API baru | Targeted feature test initial missing + deferred reload + compile/build concern | `active` |
 | `P-029` | Remembered Presentational UI State | Halaman Inertia punya state UI lokal non-domain yang reset saat visit berikutnya | UX lebih stabil tanpa menambah query/backend state | Targeted regression concern + build frontend | `active` |
 | `P-030` | On-Expand JSON Detail Widget | Halaman Inertia punya widget detail berat yang hanya diperlukan saat panel/blok dibuka | Payload awal lebih kecil dan interaksi detail tetap tajam tanpa API generik | Targeted feature test endpoint + regression payload awal + build frontend | `active` |
+| `P-031` | Fetch Failure Runtime Telemetry Hook | UI menambah fetch asinkron baru di luar flow Inertia utama | Kegagalan fetch tetap tercatat ke jalur telemetry runtime tanpa memecah UX user | Targeted concern regression + runtime log endpoint test + build frontend | `active` |
 | `P-032` | Markdown Context Space Budgeting | Ada audit/pertumbuhan dokumen governance yang berisiko membebani context AI | Konteks markdown aktif tetap terukur, punya reserve, dan bisa diekspansi terkontrol saat context window model naik | Audit chars/tokens + sinkronisasi budget doc + registry/log/process refs | `active` |
+| `P-033` | Commit by Concern at Closure | Satu concern sudah tervalidasi dan boundary perubahan bersih | Siklus delivery lebih pendek tanpa menunggu prompt commit terpisah | Validasi concern hijau + audit `git status` scoped + no unrelated files staged | `active` |
 
 ## 3) Protocol Update Pattern
 

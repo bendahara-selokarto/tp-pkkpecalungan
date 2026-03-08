@@ -104,10 +104,10 @@ Aturan:
 - L2: regression test concern terkait.
 - L3: `php artisan test` full untuk perubahan signifikan.
 - Fast-lane `doc-only`: jika perubahan hanya `docs/**`, cukup L1 audit scoped (`rg`) + catat di validation log.
-- Default offload rule:
-  - validasi berat (`php artisan test`, `migrate:fresh --seed`, build frontend panjang, E2E smoke`) boleh dan default-nya dialihkan ke operator lokal via PowerShell untuk menghemat waktu eksekusi AI,
-  - AI tetap wajib menentukan kapan validasi tersebut mandatory, command yang harus dijalankan, dan bagaimana membaca hasilnya,
-  - closure concern tetap mensyaratkan evidence hasil validasi, meskipun command dijalankan operator lokal.
+- Default validation ownership:
+  - validasi berat (`php artisan test`, `migrate:fresh --seed`, build frontend panjang, E2E smoke`) dijalankan AI sebagai default closure concern,
+  - offload ke operator lokal hanya dipakai jika user memintanya eksplisit atau runner AI mengalami blocker teknis yang terverifikasi,
+  - closure concern tetap mensyaratkan evidence hasil validasi, siapa pun eksekutornya.
 
 7. `Doc-Hardening`
 - Wajib saat trigger canonical aktif (akses, scope, dashboard, query key, metadata sumber, atau lintas dokumen concern).
@@ -118,6 +118,11 @@ Aturan:
 
 9. `Report`
 - Laporkan: apa diubah, kenapa, file terdampak, hasil validasi, risiko residual.
+
+10. `Commit Closure`
+- Jika concern sudah tervalidasi dan boundary commit bersih, AI boleh membuat commit sebagai bagian dari closure turn.
+- Commit harus scoped per concern; jika working tree bercampur, AI wajib memisahkan batch atau menunda commit.
+- `git push` bukan bagian dari closure default dan tetap menunggu keputusan user.
 
 ## 4. Task Router (Deterministik)
 
