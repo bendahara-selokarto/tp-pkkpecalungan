@@ -97,6 +97,10 @@ Aturan:
 - L2: regression test concern terkait.
 - L3: `php artisan test` full untuk perubahan signifikan.
 - Fast-lane `doc-only`: jika perubahan hanya `docs/**`, cukup L1 audit scoped (`rg`) + catat di validation log.
+- Default offload rule:
+  - validasi berat (`php artisan test`, `migrate:fresh --seed`, build frontend panjang, E2E smoke`) boleh dan default-nya dialihkan ke operator lokal via PowerShell untuk menghemat waktu eksekusi AI,
+  - AI tetap wajib menentukan kapan validasi tersebut mandatory, command yang harus dijalankan, dan bagaimana membaca hasilnya,
+  - closure concern tetap mensyaratkan evidence hasil validasi, meskipun command dijalankan operator lokal.
 
 7. `Doc-Hardening`
 - Wajib saat trigger canonical aktif (akses, scope, dashboard, query key, metadata sumber, atau lintas dokumen concern).
@@ -160,6 +164,11 @@ Urutan validasi:
 3. Regression concern terdekat.
 4. Full suite (`php artisan test`) bila perubahan lintas domain, akses/policy/scope, dashboard agregat, atau migrasi/seeder canonical.
 5. Khusus `doc-only` process/domain/adr: boleh selesai di step 1 + log operasional, jika tidak ada perubahan runtime/backend contract.
+
+Kontrak operator lokal:
+
+- Jika validasi berat dijalankan operator lokal, AI harus meminta command secara eksplisit dan menunggu ringkasan hasil (`pass/fail`, error utama, file/line relevan bila ada).
+- Jika operator melaporkan failure, AI kembali ke langkah `Scoped Read -> Minimal Patch -> Validation Ladder`.
 
 Ladder tambahan concern `UI/UX auditability gate`:
 
@@ -228,4 +237,3 @@ Mitigasi:
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 - `docs/security/AUTH_COHERENCE_MATRIX.md`
 - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
-

@@ -158,6 +158,13 @@ Flow pembacaan dokumen (wajib, terutama header tabel):
 - Diff-first: prioritaskan patch kecil dibanding regenerasi file panjang.
 - Response compression: ringkas, padat, tanpa pengulangan konteks.
 - State-aware: jangan ulang informasi yang sudah dikonfirmasi pada sesi yang sama.
+- Kontrak offload validasi berat: untuk mempercepat siklus kerja, validasi berat default dialihkan ke operator lokal via PowerShell (`php artisan test`, `php artisan migrate:fresh --seed`, `npm run build`, `npm run test:e2e:smoke`, atau command berat setara), kecuali user meminta AI menjalankannya langsung.
+- Pada kontrak offload ini, AI wajib:
+  1) menyebutkan kapan validasi berat dibutuhkan,
+  2) memberikan command yang harus dijalankan,
+  3) menyebutkan tujuan validasinya,
+  4) menunggu ringkasan hasil dari operator bila command tidak dijalankan AI langsung.
+- Jika operator melaporkan kegagalan validasi berat, AI wajib menindaklanjuti dengan analisis root cause, patch, lalu meminta rerun command yang relevan.
 - Saat menjalankan `php artisan test` full, defaultkan output ringkas (`--compact`) untuk laporan chat; jika butuh detail penuh, arahkan output ke file log lalu laporkan ringkasan inti (pass/fail + error utama).
 - Test tiering: saat iterasi gunakan test terarah pada file/fitur terdampak terlebih dahulu; jalankan full test untuk perubahan signifikan atau saat diwajibkan oleh quality gate/matrix.
 - Fail-fast saat debugging: gunakan `php artisan test --stop-on-failure --compact` untuk mempercepat siklus perbaikan awal.
@@ -180,7 +187,7 @@ Flow pembacaan dokumen (wajib, terutama header tabel):
 - Jika ada upgrade/migrasi legacy, wajib ada mapping dampak + fallback plan.
 - Tidak ada coupling baru yang tidak perlu.
 - Tidak ada drift `role` vs `scope` vs `areas.level`.
-- Test relevan lulus (`php artisan test` untuk perubahan signifikan).
+- Test relevan lulus (`php artisan test` untuk perubahan signifikan), baik dijalankan AI langsung maupun dijalankan operator lokal sesuai kontrak offload validasi berat.
 - Tidak ada perubahan perilaku yang tidak diminta.
 - Untuk dokumen autentik bertabel: peta header sampai level merge (`rowspan`/`colspan`) sudah tervalidasi sebelum patch implementasi.
 
@@ -216,7 +223,7 @@ Untuk modul/menu baru, minimal harus ada:
 3. Feature test tolak mismatch role-area level (stale metadata scenario).
 4. Unit test policy/scope service untuk akses inti (`view`, `update`/`delete`).
 5. Jika ada scoped query kompleks, tambah test use case/repository anti data leak.
-6. Jalankan `php artisan test` sebelum final report.
+6. Jalankan `php artisan test` sebelum final report, baik oleh AI langsung atau oleh operator lokal sesuai kontrak offload validasi berat; hasilnya tetap wajib dicatat eksplisit.
 
 ## 9. Output Contract
 
@@ -277,4 +284,3 @@ Aturan markdown operasional:
 - Jika trigger doc-hardening pass aktif, pembaruan dokumen wajib mencakup sinkronisasi lintas dokumen terkait concern yang sama (bukan hanya satu file terisolasi).
 - Jika trigger ADR pass aktif, pembaruan dokumen wajib mencakup sinkronisasi TODO + ADR + dokumen process/domain concern terkait.
 - Jika trigger copywriting pass aktif, teks user-facing wajib distandardkan ke bahasa natural user dan menghindari istilah teknis internal.
-

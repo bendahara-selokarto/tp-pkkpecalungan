@@ -553,3 +553,34 @@ STATUS: active
 - Catatan reuse lintas domain/project:
   - cocok untuk repo PHP/Laravel yang memakai wrapper test ringkas di Composer tetapi tetap butuh mode inspeksi interaktif di WSL/Linux.
 
+### P-027 - Heavy Validation Offload to Local Operator
+
+- Tanggal: 2026-03-08
+- Status: active
+- Konteks: validasi berat seperti full suite, reset seed, build frontend panjang, atau E2E smoke sering lebih cepat dijalankan operator lokal dibanding AI runner, tetapi closure concern tetap butuh evidence validasi yang eksplisit.
+- Trigger:
+  - command validasi memakan waktu panjang atau berisiko memperlambat siklus patch AI.
+  - operator lokal siap menjalankan command di PowerShell dan mengirim balik hasil ringkas.
+- Langkah eksekusi:
+  1) AI menyelesaikan scoped read + patch minimal terlebih dahulu.
+  2) AI menentukan apakah validasi berat mandatory untuk closure concern.
+  3) AI menyebutkan command yang harus dijalankan operator, tujuan validasinya, dan hasil minimum yang harus dilaporkan kembali.
+  4) operator menjalankan command lokal dan mengirim ringkasan `pass/fail`, error utama, serta file/line relevan bila ada.
+  5) jika `fail`, AI kembali ke loop `analyze -> patch -> request rerun`.
+  6) jika `pass`, AI mencatat evidence tersebut pada laporan akhir atau dokumen concern bila diperlukan.
+
+- Guardrail:
+  - offload hanya mengalihkan eksekusi command, bukan tanggung jawab AI untuk menentukan kebutuhan validasi.
+  - final report tidak boleh mengklaim validasi berat lulus jika operator belum mengirim hasil eksplisit.
+  - targeted test/lint ringan tetap boleh dijalankan AI langsung bila itu lebih cepat daripada koordinasi bolak-balik.
+  - jika user secara eksplisit meminta AI menjalankan command berat langsung, instruksi user mengalahkan default offload ini.
+- Validasi minimum:
+  - AI menyebut command dan alasan validasinya secara eksplisit.
+  - operator mengirim balik hasil minimal `pass/fail` + error inti bila gagal.
+  - closure concern hanya dilakukan setelah hasil mandatory validation tercatat.
+- Bukti efisiensi/akurasi:
+  - mengurangi waktu tunggu AI pada suite panjang sambil mempertahankan guardrail evidence validasi.
+- Risiko:
+  - loop kerja bisa macet jika operator hanya memberi status umum tanpa potongan error yang cukup.
+- Catatan reuse lintas domain/project:
+  - cocok untuk repo yang dikerjakan kolaboratif pada mesin yang sama, terutama saat AI runner lebih lambat dari terminal lokal user.

@@ -22,6 +22,7 @@ Tujuan:
 - L1: cek lokal cepat (lint/build/test targeted).
 - L2: regression area terkait.
 - L3: full suite untuk perubahan signifikan.
+- Validasi berat boleh dioffload ke operator lokal jika itu mempercepat siklus, tetapi AI tetap harus menentukan command mandatory, tujuan validasi, dan cara membaca hasilnya.
 
 5. Learning capture
 - Jika jalur baru lebih efisien/akurat, update playbook ini.
@@ -63,6 +64,7 @@ Gunakan status:
 | `P-024` | TODO Generator Canonicalization | User/AI perlu membuat TODO concern baru dengan format konsisten | Nama file + judul + metadata TODO selalu sesuai kontrak AGENTS | Dry-run generator + verifikasi output file terhadap template canonical | `active` |
 | `P-025` | UI/UX Auditability Gate via Code | Concern UI/UX membutuhkan status "auditable" yang bisa direplay lintas sesi | Jalur audit UI/UX memiliki evidence terstruktur (test + log concern) dan gap tooling terlihat eksplisit | L1 frontend contract, L2 feature regression concern, L3 runtime browser evidence jika tooling tersedia; jika belum, status `partial` + TODO follow-up | `active` |
 | `P-026` | TTY Wrapper for Non-TTY Test Runner | Environment runner tidak menampilkan progres subset/failure dengan baik | Debug subset test tetap interaktif tanpa mengubah script CI compact | `composer test:tty -- ...` atau `composer test:debug -- ...` berhasil pada shell interaktif | `active` |
+| `P-027` | Heavy Validation Offload to Local Operator | Full test/build/seed/E2E memakan waktu lebih efisien jika dijalankan operator lokal | Siklus patch lebih cepat tanpa kehilangan evidence validasi closure | AI memberi command + operator memberi ringkasan hasil + AI menindaklanjuti failure | `active` |
 
 ## 3) Protocol Update Pattern
 
@@ -129,4 +131,3 @@ Aturan pakai:
 - Baca file utama ini terlebih dahulu untuk routing cepat.
 - Buka lampiran detail hanya saat perlu mengeksekusi pattern spesifik.
 - Setiap perubahan status/isi pattern wajib disinkronkan di file utama dan lampiran pada sesi yang sama.
-
