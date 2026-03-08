@@ -60,6 +60,7 @@ Superseded by: `-`
   - `Profile` menjadi entry point set tahun anggaran aktif, tetapi nilai efektif tetap di-resolve backend service.
   - repository concern yang relevan wajib menjadi jalur default untuk filter tahun anggaran.
   - concern existing, route utama, dan boundary arsitektur tidak diubah.
+  - `Arsip` dikecualikan dari isolasi default `tahun_anggaran` pada ADR ini karena fungsi bisnisnya adalah menyediakan informasi lintas tahun, bukan dataset administrasi TP PKK yang wajib terisolasi per tahun anggaran.
 
 ## Dampak
 
@@ -119,4 +120,3 @@ Catatan validasi:
 
 - 2026-03-07: `proposed` dibuat untuk mengunci keputusan awal refactor tahun anggaran sebelum implementasi runtime.
 - 2026-03-07: `proposed` -> `accepted` | contract lock, wave-1 pilot, dan target file implementasi pertama sudah dikunci sehingga concern siap dieksekusi.
-

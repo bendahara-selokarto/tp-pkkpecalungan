@@ -16,6 +16,7 @@ Aturan baca:
 
 - Kolom `field canonical` berisi field inti domain. Untuk tabel persisten, invariant wajib: `level`, `area_id`, `created_by`.
 - Untuk data administrasi TP PKK yang dikelompokkan per periode kerja, invariant transversal tambahan adalah `tahun_anggaran`; field periode domain-spesifik (`tahun_laporan`, `tahun_awal`, `tahun_akhir`, `year`, `semester`) tidak otomatis menggantikannya.
+- `Arsip` dikecualikan dari invariant transversal `tahun_anggaran` karena concern ini berfungsi sebagai penyedia informasi lintas tahun.
 - Kolom `label PDF saat ini` diambil dari judul render pada `resources/views/pdf/*.blade.php`.
 - Kolom `catatan koherensi` menandai apakah label PDF sudah identik dengan label pedoman.
 
@@ -255,4 +256,3 @@ Kontrak metadata sumber (anti label ambigu):
 - `source_area_type`: `area-sendiri|desa-turunan`.
 - `source_modules`: daftar slug modul penyusun metrik.
 - `filter_context`: wajib memuat token query aktif minimal `mode|level|sub_level|section1_month`.
-

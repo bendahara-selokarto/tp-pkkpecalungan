@@ -30,7 +30,7 @@ Aturan:
 
 ### Refactor Tahun Anggaran (`TAG26A1`) - 2026-03-07
 
-- Status concern: `in-progress` (`state:wave3-activities-monitoring-slice-implemented`).
+- Status concern: `done` (`state:wave4-hardening-complete`).
 - Fokus concern:
   - menambahkan `tahun_anggaran` sebagai context transversal administrasi TP PKK,
   - menjaga concern existing tetap utuh sambil meretrofit schema/query per wave.
@@ -50,6 +50,8 @@ Aturan:
   - slice wave-3 `ProgramPrioritas`, `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan`: `DONE`,
   - slice wave-3 `LaporanTahunanPkk`: `DONE`,
   - slice wave-3 `Activities`, monitoring kecamatan/desa, dan dashboard chart kegiatan: `DONE`,
+  - slice wave-3 dashboard/report aggregate lintas modul: `DONE`,
+  - audit concern `Arsip`: `DONE` -> dikecualikan dari retrofit `tahun_anggaran` karena fungsi bisnisnya menyediakan informasi lintas tahun,
   - unique constraint `PilotProjectKeluargaSehat` diperluas ke `tahun_anggaran + periode`: `DONE`,
   - unique constraint `LaporanTahunanPkk` diperluas ke `tahun_anggaran + tahun_laporan`: `DONE`,
   - ADR `0005` status `accepted`: `DONE`,
@@ -66,10 +68,17 @@ Aturan:
   - targeted concern tests wave-3 slice `ProgramPrioritas`, `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan` (feature + policy + report + aggregate check): `70 passed`,
   - targeted concern tests wave-3 slice `LaporanTahunanPkk` (feature + policy + report + auto-entry `AgendaSurat`): `23 passed`,
   - targeted concern tests wave-3 slice `Activities`, monitoring kecamatan/desa, dashboard chart kegiatan, `BukuDaftarHadir`, dan dependent report: `68 passed`,
+  - targeted concern tests wave-3 slice dashboard/report aggregate lintas modul (feature + repository + use case + PDF metadata): `21 passed`,
   - full suite `php artisan test --compact`: `1130 passed`,
   - full suite setelah slice wave-3 `ProgramPrioritas + PilotProject`: `1136 passed`,
   - full suite setelah slice wave-3 `LaporanTahunanPkk`: `1143 passed`,
   - full suite setelah slice wave-3 `Activities + monitoring`: `1149 passed`,
+  - full suite setelah slice wave-3 dashboard/report aggregate: `1153 passed`,
+  - hardening seed development (`DashboardNaturalBatangSeeder`, `WilayahMissingDomainSeeder`, `DashboardUiChartAccessDumpSeeder`) agar kontrak `tahun_anggaran` konsisten: `DONE`,
+  - `migrate:fresh --seed --no-interaction`: `PASS`,
+  - smoke regression lintas role/scope (`Profile`, `ModuleVisibility`, `AgendaSurat`, `Activities`, dashboard coverage, super-admin access control): `87 passed`,
+  - final full suite closure `php artisan test --compact`: `1153 passed (7702 assertions)`,
+  - frontend production build setelah slice wave-3 dashboard/report aggregate: `vite build` sukses (`8m 42s`),
   - runtime wave-1 implemented: `DONE`,
   - runtime wave-2 secretary books slice implemented: `DONE`,
   - runtime wave-2 homogeneous CRUD slice implemented: `DONE`,
@@ -81,7 +90,9 @@ Aturan:
   - runtime wave-2 bundle dependensi `DataWarga` / `DataKegiatanWarga` / `CatatanKeluarga` implemented: `DONE`.
   - runtime wave-3 `ProgramPrioritas` / `PilotProjectKeluargaSehat` / `PilotProjectNaskahPelaporan` implemented: `DONE`,
   - runtime wave-3 `LaporanTahunanPkk` implemented: `DONE`,
-  - runtime wave-3 `Activities` / monitoring kecamatan-desa / activity dashboard chart implemented: `DONE`.
+  - runtime wave-3 `Activities` / monitoring kecamatan-desa / activity dashboard chart implemented: `DONE`,
+  - runtime wave-3 dashboard/report aggregate lintas modul implemented: `DONE`,
+  - wave-4 hardening docs + seed + regression closure implemented: `DONE`.
 
 ### Hardening Struktur Folder (`SFC26A1`) - 2026-03-07
 

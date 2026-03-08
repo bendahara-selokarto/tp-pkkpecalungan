@@ -109,6 +109,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'scope' => $level,
                 'area_id' => $areaId,
+                'active_budget_year' => $this->defaultBudgetYear(),
                 'email_verified_at' => now(),
                 'remember_token' => Str::random(10),
             ]
@@ -193,6 +194,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'pendidikan' => $faker->randomElement($pendidikanList),
                 'pekerjaan' => $faker->randomElement($pekerjaanList),
                 'keterangan' => $faker->boolean(70) ? null : 'Aktif pada kegiatan PKK tingkat '.$context['level'],
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -223,6 +225,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'pendidikan' => $faker->randomElement($pendidikanList),
                 'jenis_kader_khusus' => $faker->randomElement($jenisKaderList),
                 'keterangan' => $faker->boolean(65) ? null : 'Pembinaan kader rutin',
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -263,6 +266,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'diteruskan_kepada' => $faker->boolean(30) ? 'Pokja terkait' : null,
                 'tembusan' => $faker->boolean(25) ? 'Arsip Sekretariat' : null,
                 'keterangan' => $faker->boolean(70) ? null : 'Perlu tindak lanjut minggu ini',
+                'tahun_anggaran' => $this->resolveBudgetYear(date: $tanggalSurat),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -299,7 +303,8 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'description' => $faker->boolean(65) ? null : 'Dukungan kegiatan pemberdayaan keluarga',
                 'source' => $faker->randomElement($sources),
                 'amount' => (float) random_int(500000, 25000000),
-                'received_date' => $faker->dateTimeBetween('-12 months', 'now')->format('Y-m-d'),
+                'received_date' => $receivedDate = $faker->dateTimeBetween('-12 months', 'now')->format('Y-m-d'),
+                'tahun_anggaran' => $this->resolveBudgetYear(date: $receivedDate),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -323,13 +328,14 @@ class DashboardNaturalBatangSeeder extends Seeder
             $rows[] = [
                 'name' => $faker->randomElement($items).' '.$i,
                 'asal_barang' => $faker->randomElement(['APBDes', 'Swadaya', 'Bantuan Kabupaten', 'Donasi']),
-                'tanggal_penerimaan' => $faker->dateTimeBetween('-4 years', 'now')->format('Y-m-d'),
+                'tanggal_penerimaan' => $tanggalPenerimaan = $faker->dateTimeBetween('-4 years', 'now')->format('Y-m-d'),
                 'description' => $faker->boolean(60) ? null : 'Digunakan untuk kegiatan rutin PKK',
                 'keterangan' => $faker->boolean(75) ? null : 'Perlu perawatan berkala',
                 'quantity' => random_int(1, 15),
                 'unit' => $faker->randomElement($units),
                 'tempat_penyimpanan' => $faker->randomElement(['Sekretariat PKK', 'Balai Desa', 'Gudang RT']),
                 'condition' => $faker->randomElement($conditions),
+                'tahun_anggaran' => $this->resolveBudgetYear(date: $tanggalPenerimaan),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -370,6 +376,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'jabatan_petugas' => $faker->randomElement($jabatan),
                 'description' => 'Kegiatan TP PKK '.$context['area_name'].' Kab. Batang',
                 'uraian' => $faker->sentence(8),
+                'tahun_anggaran' => $this->resolveBudgetYear(date: $activityDate),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -441,6 +448,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                     'ikut_paud' => $umur <= 6 ? $faker->boolean(65) : false,
                     'ikut_koperasi' => $umur >= 20 ? $faker->boolean(33) : false,
                     'keterangan' => $faker->boolean(80) ? null : 'Pendataan warga Dasawisma '.$context['area_name'],
+                    'tahun_anggaran' => $this->defaultBudgetYear(),
                     'level' => $context['level'],
                     'area_id' => $context['area_id'],
                     'created_by' => $context['creator_id'],
@@ -456,6 +464,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'jumlah_warga_laki_laki' => $lakiLaki,
                 'jumlah_warga_perempuan' => $perempuan,
                 'keterangan' => $faker->boolean(70) ? null : 'Pendataan rutin semester berjalan',
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -490,6 +499,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'kegiatan' => $kegiatan,
                 'aktivitas' => $faker->boolean(75),
                 'keterangan' => $faker->boolean(65) ? null : 'Jenis kegiatan PKK yang diikuti warga',
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -517,6 +527,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'kategori_keluarga' => $kategori,
                 'jumlah_keluarga' => $this->countFor($context['level'], $min, $max, (int) round($min * 1.2), (int) round($max * 1.6)),
                 'keterangan' => $faker->boolean(80) ? null : 'Rekap keluarga '.$kategori,
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -547,6 +558,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                     'kategori_pemanfaatan_lahan' => $kategori,
                     'komoditi' => $komoditi,
                     'jumlah_komoditi' => (string) random_int(8, 120).' unit',
+                    'tahun_anggaran' => $this->defaultBudgetYear(),
                     'level' => $context['level'],
                     'area_id' => $context['area_id'],
                     'created_by' => $context['creator_id'],
@@ -577,6 +589,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                     'kategori_jenis_industri' => $kategori,
                     'komoditi' => $komoditi,
                     'jumlah_komoditi' => (string) random_int(5, 95).' unit',
+                    'tahun_anggaran' => $this->defaultBudgetYear(),
                     'level' => $context['level'],
                     'area_id' => $context['area_id'],
                     'created_by' => $context['creator_id'],
@@ -616,6 +629,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'tahun_penyelenggaraan' => $tahun,
                 'institusi_penyelenggara' => $faker->randomElement($institusiList),
                 'status_sertifikat' => $faker->boolean(78) ? 'Bersertifikat' : 'Tidak',
+                'tahun_anggaran' => $this->resolveBudgetYear(year: $tahun),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -641,6 +655,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'komoditi' => $faker->randomElement($komoditiList),
                 'kategori' => $faker->randomElement($kategoriList),
                 'volume' => (string) random_int(20, 240).' item/bulan',
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -667,6 +682,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'jenis_buku' => $faker->randomElement($jenisBukuList),
                 'kategori' => $faker->randomElement($kategoriList),
                 'jumlah' => (string) random_int(15, 120).' pengunjung/bulan',
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -693,6 +709,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'belum_berbadan_hukum' => ! $berbadanHukum,
                 'jumlah_anggota_l' => random_int(8, 65),
                 'jumlah_anggota_p' => random_int(14, 120),
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -718,6 +735,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'jumlah_warga_belajar_p' => random_int(6, 56),
                 'jumlah_pengajar_l' => random_int(1, 8),
                 'jumlah_pengajar_p' => random_int(2, 10),
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -749,6 +767,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'jumlah_pengunjung_p' => random_int(35, 240),
                 'jumlah_petugas_l' => random_int(1, 8),
                 'jumlah_petugas_p' => random_int(3, 16),
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -775,6 +794,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'jumlah_kader_l' => random_int(2, 18),
                 'jumlah_kader_p' => random_int(8, 60),
                 'keterangan' => $faker->boolean(70) ? null : 'Monitoring rutin per triwulan',
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -820,5 +840,23 @@ class DashboardNaturalBatangSeeder extends Seeder
         $sampleB = random_int($min, $max);
 
         return (int) round(($sampleA + $sampleB) / 2);
+    }
+
+    private function defaultBudgetYear(): int
+    {
+        return (int) now()->format('Y');
+    }
+
+    private function resolveBudgetYear(?string $date = null, ?int $year = null): int
+    {
+        if ($year !== null) {
+            return $year;
+        }
+
+        if ($date !== null) {
+            return (int) date('Y', strtotime($date));
+        }
+
+        return $this->defaultBudgetYear();
     }
 }

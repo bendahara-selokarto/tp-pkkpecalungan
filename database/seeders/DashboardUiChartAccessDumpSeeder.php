@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildDashboardDocumentCoverageUseCase;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildRoleAwareDashboardBlocksUseCase;
+use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
@@ -20,6 +20,7 @@ use Spatie\Permission\Models\Role;
 class DashboardUiChartAccessDumpSeeder extends Seeder
 {
     private const TARGET_KECAMATAN = 'Pecalungan';
+
     private const DEFAULT_PASSWORD = 'password123';
 
     /**
@@ -173,6 +174,7 @@ class DashboardUiChartAccessDumpSeeder extends Seeder
                 'email_verified_at' => now(),
                 'scope' => $scope,
                 'area_id' => (int) $area->id,
+                'active_budget_year' => (int) now()->format('Y'),
             ]
         );
 
@@ -182,7 +184,7 @@ class DashboardUiChartAccessDumpSeeder extends Seeder
     }
 
     /**
-     * @param EloquentCollection<int, Area> $desaAreas
+     * @param  EloquentCollection<int, Area>  $desaAreas
      * @return array<string, mixed>
      */
     private function buildAccountSnapshot(
@@ -265,7 +267,7 @@ class DashboardUiChartAccessDumpSeeder extends Seeder
     }
 
     /**
-     * @param EloquentCollection<int, Area> $desaAreas
+     * @param  EloquentCollection<int, Area>  $desaAreas
      * @return list<array{token: string, label: string, source_level: string, source_area_id: int}>
      */
     private function buildSubLevelOptions(
@@ -312,7 +314,7 @@ class DashboardUiChartAccessDumpSeeder extends Seeder
     }
 
     /**
-     * @param list<array{token: string, label: string, source_level: string, source_area_id: int}> $subLevelOptions
+     * @param  list<array{token: string, label: string, source_level: string, source_area_id: int}>  $subLevelOptions
      * @return array{
      *   allowed_modes: list<string>,
      *   allowed_levels: list<string>,
@@ -331,8 +333,8 @@ class DashboardUiChartAccessDumpSeeder extends Seeder
     }
 
     /**
-     * @param list<string> $allowedLevels
-     * @param list<array{token: string, label: string, source_level: string, source_area_id: int}> $subLevelOptions
+     * @param  list<string>  $allowedLevels
+     * @param  list<array{token: string, label: string, source_level: string, source_area_id: int}>  $subLevelOptions
      * @return array<string, array{mode: string, level: string, sub_level: string}>
      */
     private function buildFilterContexts(array $allowedLevels, array $subLevelOptions): array

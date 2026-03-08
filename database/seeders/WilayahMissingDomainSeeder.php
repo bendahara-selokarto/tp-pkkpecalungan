@@ -131,6 +131,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'password' => Hash::make('password123'),
                 'scope' => $level,
                 'area_id' => $areaId,
+                'active_budget_year' => $this->defaultBudgetYear(),
                 'email_verified_at' => now(),
                 'remember_token' => Str::random(10),
             ]
@@ -186,6 +187,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'pekerjaan' => $faker->randomElement($pekerjaanList),
                 'keterangan' => $faker->boolean(70) ? null : 'Pendataan anggota pokja tingkat '.$context['level'],
                 'pokja' => $faker->randomElement($pokjaList),
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -211,6 +213,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'nama_ketua_kelompok' => $faker->name('female'),
                 'jumlah_anggota' => random_int(10, 60),
                 'kegiatan' => $faker->sentence(12),
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -236,6 +239,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'nama_ketua_kelompok' => $faker->name('female'),
                 'jumlah_anggota' => random_int(10, 55),
                 'kegiatan' => $faker->sentence(12),
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -268,7 +272,7 @@ class WilayahMissingDomainSeeder extends Seeder
             ]);
 
             $rows[] = [
-                'tahun' => random_int((int) date('Y') - 4, (int) date('Y')),
+                'tahun' => $tahun = random_int((int) date('Y') - 4, (int) date('Y')),
                 'jenis_lomba' => $faker->randomElement($jenisLombaList),
                 'lokasi' => $context['area_name'].', Kab. Batang',
                 'prestasi_kecamatan' => $prestasiFlags['prestasi_kecamatan'],
@@ -276,6 +280,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'prestasi_provinsi' => $prestasiFlags['prestasi_provinsi'],
                 'prestasi_nasional' => $prestasiFlags['prestasi_nasional'],
                 'keterangan' => $faker->boolean(65) ? null : 'Prestasi lomba kader PKK '.$context['area_name'],
+                'tahun_anggaran' => $this->resolveBudgetYear(year: $tahun),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -339,6 +344,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'sumber_dana_swd' => $sumberDanaFlags['sumber_dana_swd'],
                 'sumber_dana_bant' => $sumberDanaFlags['sumber_dana_bant'],
                 'keterangan' => $faker->boolean(70) ? null : 'Program prioritas '.$context['area_name'].' periode berjalan',
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -387,6 +393,7 @@ class WilayahMissingDomainSeeder extends Seeder
             'penutup' => 'Demikian laporan pelaksanaan pilot project disusun.',
             'tahun_awal' => $tahunAwal,
             'tahun_akhir' => $tahunAkhir,
+            'tahun_anggaran' => $this->defaultBudgetYear(),
             'level' => $context['level'],
             'area_id' => $context['area_id'],
             'created_by' => $context['creator_id'],
@@ -436,6 +443,7 @@ class WilayahMissingDomainSeeder extends Seeder
                     'value' => random_int(0, 500),
                     'evaluation_note' => $faker->boolean(65) ? null : 'Evaluasi indikator '.$context['area_name'],
                     'sort_order' => $sortOrder,
+                    'tahun_anggaran' => $this->defaultBudgetYear(),
                     'level' => $context['level'],
                     'area_id' => $context['area_id'],
                     'created_by' => $context['creator_id'],
@@ -459,6 +467,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'value' => random_int(0, 100),
                 'evaluation_note' => null,
                 'sort_order' => 1,
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -490,6 +499,7 @@ class WilayahMissingDomainSeeder extends Seeder
             'pelaksanaan_4' => $faker->sentence(14),
             'pelaksanaan_5' => $faker->sentence(14),
             'penutup' => 'Penutup naskah pelaporan.',
+            'tahun_anggaran' => $this->defaultBudgetYear(),
             'level' => $context['level'],
             'area_id' => $context['area_id'],
             'created_by' => $context['creator_id'],
@@ -518,6 +528,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'original_name' => sprintf('%s-%s.%s', $context['area_name'], $category, $extension),
                 'mime_type' => $mimeType,
                 'file_size' => random_int(150000, 900000),
+                'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
@@ -544,6 +555,16 @@ class WilayahMissingDomainSeeder extends Seeder
         $flags[$forcedKey] = true;
 
         return $flags;
+    }
+
+    private function defaultBudgetYear(): int
+    {
+        return (int) now()->format('Y');
+    }
+
+    private function resolveBudgetYear(?int $year = null): int
+    {
+        return $year ?? $this->defaultBudgetYear();
     }
 
     private function randomAddress(\Faker\Generator $faker, array $context): string

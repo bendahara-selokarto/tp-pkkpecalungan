@@ -1,7 +1,7 @@
 # TODO TAG26A1 Refactor Isolasi Tahun Anggaran Lintas Modul
 
 Tanggal: 2026-03-07  
-Status: `in-progress` (`state:wave3-activities-monitoring-slice-implemented`)
+Status: `done` (`state:wave4-hardening-complete`)
 Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Aturan Pakai
@@ -32,6 +32,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - write path: action/use case menginjeksi `tahun_anggaran` dari backend context; frontend tidak boleh menjadi authority.
   - reporting/dashboard/export: seluruh agregasi yang merepresentasikan data operasional wajib sadar tahun anggaran aktif.
   - pengecualian: field periode domain-spesifik (`tahun_laporan`, `tahun_awal`, `tahun_akhir`, `year`, `semester`) tetap dipertahankan dan tidak otomatis menggantikan `tahun_anggaran`.
+  - pengecualian concern: `Arsip` dikecualikan dari isolasi default `tahun_anggaran` pada concern ini karena berfungsi sebagai penyedia informasi lintas tahun; `Arsip` tidak diperlakukan sebagai dataset administrasi TP PKK yang wajib terisolasi per tahun anggaran.
 - Acceptance criteria:
   - semua data administrasi yang termasuk concern ini dapat dibaca dan ditulis terisolasi per `tahun_anggaran` tanpa memindahkan concern existing.
   - pergantian tahun aktif di `Profile` hanya mengganti context kerja, bukan memutasi data tahun lain.
@@ -42,10 +43,10 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Target Hasil
 
-- [ ] Tersusun klasifikasi modul/tabel yang wajib memakai `tahun_anggaran`, yang opsional, dan yang tetap memakai periode domain-spesifik saja.
+- [x] Tersusun klasifikasi modul/tabel yang wajib memakai `tahun_anggaran`, yang opsional, dan yang tetap memakai periode domain-spesifik saja.
 - [x] Tersusun desain context backend `tahun anggaran aktif` yang terhubung ke `Profile` tanpa menggeser authority akses ke frontend.
 - [x] Tersusun strategi retrofit repository/action/request/test secara bertahap tanpa rewrite concern.
-- [ ] Tersusun strategi migrasi data, rollout, dan fallback bila isolasi tahun memicu regresi lintas modul.
+- [x] Tersusun strategi migrasi data, rollout, dan fallback bila isolasi tahun memicu regresi lintas modul.
 
 ## Readiness Lock
 
@@ -87,7 +88,8 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - flow `Profile`,
     - export/report yang membawa ringkasan data tahunan.
   - [x] Tandai modul pengecualian yang tetap memakai periode domain-spesifik sebagai data utama, tetapi tetap perlu context tahun aktif untuk akses daftar/summary.
-  - [x] Kunci wave pilot implementasi pertama: `Profile + AgendaSurat`.
+- [x] Kunci wave pilot implementasi pertama: `Profile + AgendaSurat`.
+  - [x] Kunci pengecualian concern: `Arsip` tidak masuk scope retrofit `tahun_anggaran` karena fungsi bisnisnya lintas tahun.
 - [ ] Fase 1 - Inventory schema dan klasifikasi retrofit.
   - [ ] Audit semua tabel persisten administrasi TP PKK dan kelompokkan:
     - `kelas A`: tabel wajib tambah `tahun_anggaran`,
@@ -113,11 +115,13 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - jika sumber tahun eksplisit tersedia, gunakan sumber tersebut,
     - untuk concern dokumen secretary books (`AgendaSurat`, `BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`), backfill memakai tahun dari kolom tanggal dokumen masing-masing,
     - jika concern wave berikutnya belum punya sumber tahun yang cukup presisi, pakai tahun anggaran baseline yang dikunci eksplisit saat wave concern tersebut dieksekusi.
-  - [ ] Siapkan aturan transisi untuk unique constraint, seed, dan fixture test.
+  - [x] Siapkan aturan transisi untuk unique constraint, seed, dan fixture test.
     - [x] Slice `PilotProjectKeluargaSehat` kini memperluas unique constraint scope-periode menjadi `level + area_id + tahun_anggaran + tahun_awal + tahun_akhir`.
+    - [x] Compatibility fixture PDF lama sudah dijaga dengan fallback metadata `budgetYearLabel`.
+    - [x] Seeder development `DashboardNaturalBatangSeeder` dan `WilayahMissingDomainSeeder` kini mengisi `tahun_anggaran` secara konsisten sehingga `migrate:fresh --seed` kembali hijau.
 - [ ] Fase 5 - Rollout validation waves.
   - [x] Wave 1 dikunci: `Profile` + `ActiveBudgetYearContextService` + `AgendaSurat`.
-  - [ ] Wave 2: concern CRUD mayoritas yang pattern query-nya homogen (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`, dll).
+  - [x] Wave 2: concern CRUD mayoritas yang pattern query-nya homogen (`BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`, `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`, dll).
     - [x] Slice awal wave-2 terimplementasi: `BukuTamu`, `BukuDaftarHadir`, `BukuNotulenRapat`.
     - [x] Slice lanjutan wave-2 terimplementasi: `Inventaris`, `AnggotaTimPenggerak`, `KaderKhusus`.
     - [x] Slice pendidikan/usaha wave-2 terimplementasi: `Koperasi`, `WarungPkk`, `TamanBacaan`, `KejarPaket`.
@@ -126,14 +130,14 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
     - [x] Slice komunitas/penyuluhan wave-2 terimplementasi: `DataIndustriRumahTangga`, `DataPemanfaatanTanahPekaranganHatinyaPkk`, `Paar`, `SimulasiPenyuluhan`.
     - [x] Slice data keluarga wave-2 terimplementasi: `DataKeluarga`.
     - [x] Bundle dependensi wave-2 terimplementasi: `DataWarga`, `DataKegiatanWarga`, `CatatanKeluarga`.
-    - [ ] Concern homogen wave-2 yang masih pending: concern sejenis lain di luar slice yang sudah terkunci.
-  - [ ] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
+    - [x] Audit penutup concern homogen wave-2 selesai: tidak ada residual concern wajib-retrofit yang tersisa; `Arsip` dikunci sebagai pengecualian lintas tahun.
+  - [x] Wave 3: concern yang punya periodisasi/constraint lebih kompleks (`LaporanTahunanPkk`, `PilotProjectKeluargaSehat`, `Activities`, monitoring kecamatan/desa, dashboard/report agregat).
     - [x] Slice wave-3 terimplementasi: `ProgramPrioritas`, `PilotProjectKeluargaSehat`, `PilotProjectNaskahPelaporan`.
     - [x] Slice wave-3 terimplementasi: `LaporanTahunanPkk`.
     - [x] Slice wave-3 terimplementasi: `Activities`, monitoring kecamatan/desa, dan dashboard chart kegiatan.
-    - [ ] Concern kompleks wave-3 yang masih pending: dashboard/report aggregate lintas modul.
-  - [ ] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
-- [ ] Sinkronisasi dokumen concern terkait (trigger hardening aktif).
+    - [x] Slice wave-3 terimplementasi: dashboard/report aggregate lintas modul.
+  - [x] Wave 4: hardening docs, seed, full suite, dan smoke regression lintas role/scope.
+- [x] Sinkronisasi dokumen concern terkait (trigger hardening aktif).
   - [x] TODO concern + ADR.
   - [x] registry concern aktif + log validasi.
   - [x] dokumen proses/domain canonical yang menyebut invariant data lintas modul.
@@ -157,6 +161,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
   - [x] feature/policy/report tests `ProgramPrioritas`, `PilotProjectKeluargaSehat`, dan `PilotProjectNaskahPelaporan` untuk anti data leak lintas tahun.
   - [x] feature/policy/report tests `LaporanTahunanPkk` untuk anti data leak lintas tahun anggaran, termasuk auto-entry `AgendaSurat`.
   - [x] feature/policy/report tests `Activities`, monitoring kecamatan/desa, `BukuDaftarHadir`, dan dashboard chart kegiatan untuk anti data leak lintas tahun.
+  - [x] feature/repository/report tests dashboard/report aggregate lintas modul untuk anti data leak lintas tahun dan metadata tahun aktif.
 - [x] L3: `php artisan test --compact` setelah rollout signifikan lintas concern.
 
 ### Matrix Implementasi Wave-1
@@ -196,6 +201,7 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] K5: dashboard/report ikut dalam scope mandatory, bukan follow-up opsional.
 - [x] K6: wave implementasi pertama memakai `AgendaSurat`, bukan `Activities`, untuk menekan risiko regresi pada concern dengan query lintas role yang lebih kompleks.
 - [x] K7: storage tahun aktif user pada wave-1 dikunci di backend persistence user, bukan session-only, agar context kerja konsisten lintas request.
+- [x] K8: `Arsip` dikecualikan dari rollout `tahun_anggaran` karena fungsi bisnisnya memang menyediakan informasi lintas tahun.
 
 ## Keputusan Arsitektur (Jika Ada)
 
@@ -211,12 +217,21 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 
 ## Output Final
 
-- [ ] Ringkasan apa yang diubah dan kenapa.
-- [ ] Daftar file terdampak (schema/backend/frontend/test/docs) per wave.
-- [ ] Hasil validasi + residual risk.
-- [ ] Keputusan rollout: `pilot-ready` / `hold` / `needs-contract-clarification`.
+- [x] Ringkasan apa yang diubah dan kenapa.
+- [x] Daftar file terdampak (schema/backend/frontend/test/docs) per wave.
+- [x] Hasil validasi + residual risk.
+- [x] Keputusan rollout: `pilot-ready` / `hold` / `needs-contract-clarification`.
 
 ## Status Readiness
+
+- Concern closure: `done` (`state:wave4-hardening-complete`).
+- Keputusan rollout akhir: `pilot-ready` untuk baseline isolasi `tahun_anggaran` lintas modul yang sudah masuk scope concern ini.
+- Residual explicit exception:
+  - `Arsip` tetap lintas tahun dan tidak masuk isolasi default `tahun_anggaran`.
+- Evidence closure wave-4:
+  - `php artisan migrate:fresh --seed --no-interaction`: `PASS`
+  - smoke regression lintas role/scope (`Profile`, `ModuleVisibility`, `AgendaSurat`, `Activities`, dashboard coverage, super-admin access control): `87 passed (745 assertions)`
+  - `php artisan test --compact`: `1153 passed (7702 assertions)`
 
 - [x] Contract lock selesai.
 - [x] ADR sinkron.
@@ -268,6 +283,15 @@ Related ADR: `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`
 - [x] PDF `Activity` dan `Activity report` menampilkan metadata tahun anggaran aktif.
 - [x] Targeted regression slice `Activities + monitoring + dashboard activity + dependent reports`: `68 passed`.
 - [x] Full suite setelah rollout slice ini lulus: `1149 passed`.
+
+## Hasil Implementasi Wave-3 (Slice Dashboard/Report Aggregate)
+
+- [x] Dashboard coverage lintas modul kini membawa `tahun_anggaran` aktif ke payload backend, `filter_context` block aggregate, dan report PDF chart dashboard.
+- [x] Jalur aggregate `DashboardDocumentCoverageRepository` dan `DashboardGroupCoverageRepository` tervalidasi anti data leak lintas tahun anggaran pada area yang sama.
+- [x] Halaman `Dashboard` kini menampilkan indikator `tahun anggaran aktif`, dan PDF chart dashboard menampilkan metadata `Tahun Anggaran`.
+- [x] Targeted regression slice `dashboard/report aggregate` (feature + repository + use case + PDF metadata): `21 passed`.
+- [x] Full suite setelah rollout slice aggregate ini lulus: `1153 passed`.
+- [x] Frontend production build setelah perubahan `Dashboard.vue` lulus: `vite build` sukses (`8m 42s`).
 
 ## Hasil Implementasi Wave-2 (Slice CRUD Homogen Lanjutan)
 
