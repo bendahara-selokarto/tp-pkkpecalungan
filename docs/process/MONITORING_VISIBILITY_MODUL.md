@@ -71,6 +71,7 @@ Jalankan monitoring ini setiap ada:
 - [ ] Sinkronkan dokumen canonical/process concern yang terdampak.
 - [ ] Catat keputusan kontrak yang dikunci (role, scope, mode, slug modul).
 - [ ] Tambah bukti eksekusi ke `docs/process/OPERATIONAL_VALIDATION_LOG.md`.
+- [ ] Jika concern visibility berakhir no-op karena input owner belum final atau tabel target kosong, labeli histori sebagai `audit trail historis` dan tegaskan status aktif terbaru pada TODO concern.
 
 ## 5. Output Wajib per Perubahan
 
@@ -119,8 +120,11 @@ Status:
 
 Perubahan visibility dinyatakan **belum siap merge** jika salah satu kondisi ini terjadi:
 
+- concern parent/child visibility masih ambigu antara status aktif dan histori no-op,
+- TODO concern belum menegaskan apakah closure lama masih berlaku atau sudah disupersede reset state baru,
+- input owner untuk regroup/change-mode belum terkunci tetapi dokumen proses sudah terkesan seolah final.
+
 - Test visibility belum hijau.
 - Frontend menu masih bisa menampilkan slug tanpa mode backend.
 - Dokumentasi canonical/process belum sinkron.
 - Dampak role-scope-area belum dinyatakan eksplisit.
-

@@ -1814,6 +1814,11 @@ Status:
 
 ## Eksekusi TODO RGM26A1 (No-op Grouping Owner) : 2026-03-07
 
+Catatan historis:
+
+- Entri ini adalah snapshot audit pada 2026-03-07.
+- Status aktif terbaru concern dapat berubah setelah entri ini; rujuk TODO concern aktif untuk status final lintas sesi.
+
 Ruang lingkup:
 
 - Menjalankan concern `RGM26A1` berdasarkan tabel `Group Target` owner pada TODO.
@@ -1883,6 +1888,11 @@ Status:
 - `PASS` (`playwright-os-preflight-guard-active`).
 
 ## Re-eksekusi TODO RGM26A1 oleh `manto` (No-op + Full Regression): 2026-03-07
+
+Catatan historis:
+
+- Entri ini tetap valid sebagai bukti eksekusi pada tanggal 2026-03-07.
+- Jika terjadi reset concern setelahnya, status aktif terbaru tetap mengikuti TODO concern aktif, bukan arsip log kuartal ini.
 
 Ruang lingkup:
 
@@ -1999,4 +2009,3 @@ Keputusan:
 Status:
 
 - `PASS` (`sfc26a1-structure-hardened`).
-

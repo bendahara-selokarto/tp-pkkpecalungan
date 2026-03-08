@@ -4,6 +4,13 @@ Tanggal: 2026-03-04
 Status: `planned`  
 Related ADR: `-`
 
+## Dependensi Concern Aktif
+
+- Concern parent ini tetap `planned` dan belum boleh dieksekusi sebagai regroup aktif sebelum input owner pada concern turunan `RGM26A1` benar-benar terkunci.
+- Acuan child concern:
+  - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+- Selama `RGM26A1` masih `planned` dengan `state:awaiting-owner-group-target`, concern ini diperlakukan sebagai planning-only dan tidak menganggap histori no-op `RGM26A1` sebagai baseline final implementasi baru.
+
 ## Aturan Pakai
 
 - `KODE_UNIK` wajib 4-8 karakter, huruf kapital + angka (contoh: `A2B9`).
@@ -151,4 +158,3 @@ Related ADR: `-`
 - [ ] Daftar file terdampak (backend/frontend/test/docs).
 - [ ] Hasil validasi + residual risk.
 - [ ] Keputusan owner final (`go/hold/adjust`) per wave.
-
