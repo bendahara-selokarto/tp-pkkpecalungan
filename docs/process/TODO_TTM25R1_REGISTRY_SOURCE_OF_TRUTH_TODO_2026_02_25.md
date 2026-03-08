@@ -24,7 +24,6 @@ Status: `done` (`state:thin-registry-active-index`)
 | `C-MODULE-GROUPING-E2E` | Refactor grouping modul domain E2E | `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` | `planned` | Grouping menu/modul lintas domain mengikuti concern ini sebagai parent concern. |
 | `C-ROLE-BASED-GROUPING` | Penataan ulang grouping modul berdasarkan role user | `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` | `planned` | Concern ini dipakai untuk validasi rule grouping berbasis role sebelum merge ke concern parent E2E. |
 | `C-QUALITY-GATE-90PLUS` | Roadmap sprint naik skor project 90+ | `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` | `planned` | Concern ini menjadi jalur eksekusi hardening quality gate (style + e2e dependency) untuk mendorong skor proyek ke 90+. |
-| `C-BUDGET-YEAR-CONTEXT` | Refactor isolasi tahun anggaran lintas modul | `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md` | `done` (`state:wave4-hardening-complete`) | Concern ini menjadi jalur resmi refactor besar `tahun_anggaran` tanpa mengubah concern existing; `Arsip` dikunci sebagai pengecualian lintas tahun. |
 
 ## Registry Historis (Full Context)
 
@@ -33,6 +32,7 @@ Gunakan arsip berikut jika user meminta audit concern lama, jejak keputusan deta
 | Snapshot | File | Keterangan |
 | --- | --- | --- |
 | `2026-03-02` | `docs/process/archive/registry/TTM25R1_REGISTRY_FULL_2026_03_02.md` | Snapshot penuh registry sebelum thinning (berisi seluruh concern done + catatan closure). |
+| `2026-03-08` | `docs/process/archive/2026_03/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md` | Concern `C-BUDGET-YEAR-CONTEXT` diarsipkan setelah closure `done (state:wave4-hardening-complete)` agar tidak membebani context aktif AI. |
 
 ## Aturan Operasional
 
@@ -49,3 +49,4 @@ Gunakan arsip berikut jika user meminta audit concern lama, jejak keputusan deta
 - [x] Registry aktif dipangkas agar fokus concern berjalan.
 - [x] Jalur referensi concern aktif tetap deterministik (1 concern -> 1 SOT).
 - [x] Concern baru `C-BUDGET-YEAR-CONTEXT` ditambahkan untuk mengunci refactor canonical `tahun_anggaran`.
+- [x] Concern `C-BUDGET-YEAR-CONTEXT` dipindahkan ke arsip setelah closure agar registry aktif tetap ringan.

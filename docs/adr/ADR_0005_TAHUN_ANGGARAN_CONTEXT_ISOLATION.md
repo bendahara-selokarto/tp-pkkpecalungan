@@ -3,7 +3,7 @@
 Tanggal: 2026-03-07  
 Status: `accepted`  
 Owner: AI process governance  
-Related TODO: `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md`  
+Related TODO: `docs/process/archive/2026_03/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md`  
 Supersedes: `-`  
 Superseded by: `-`
 
@@ -110,7 +110,7 @@ Catatan validasi:
 
 - `AGENTS.md`
 - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
-- `docs/process/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md`
+- `docs/process/archive/2026_03/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 - Referensi dunia nyata:
   - BPK JDIH, pengelolaan keuangan desa: tahun anggaran berjalan `1 Januari sampai 31 Desember`.
