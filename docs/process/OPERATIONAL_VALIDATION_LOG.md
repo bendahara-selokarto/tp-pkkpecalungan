@@ -26,15 +26,15 @@ Aturan:
   - `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` (`planned`)
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`planned`)
-  - `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md` (`planned`)
-  - `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`planned`)
+  - `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md` (`in-progress`)
+  - `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
 
 ### Roadmap Optimasi Inertia Bertahap (`SPA26A1`) - 2026-03-08
 
-- Status concern: `planned`.
+- Status concern: `in-progress` (`state:wave1-dashboard-batch-active`).
 - Keputusan concern:
   - stack utama tetap `Laravel + Inertia + Vue`,
   - tidak ada migrasi ke SPA murni pada fase ini,
@@ -47,7 +47,7 @@ Aturan:
 
 ### Pilot Dashboard Wave 1 (`DWI26A1`) - 2026-03-08
 
-- Status concern: `planned`.
+- Status concern: `done` (`state:full-suite-validated`).
 - Scope batch:
   - `app/Http/Controllers/DashboardController.php`,
   - `resources/js/Pages/Dashboard.vue`,
@@ -60,6 +60,14 @@ Aturan:
   - `Dashboard.vue` memiliki beberapa `router.get('/dashboard', ...)` pada action filter dan watcher sinkronisasi query,
   - kontrak dashboard saat ini dilindungi oleh feature test dashboard activity + document coverage,
   - payload dashboard utama saat ini tetap membawa `dashboardStats`, `dashboardCharts`, `dashboardBlocks`, `dashboardContext`.
+- Hasil batch implementasi:
+  - `DashboardController` kini mengirim prop dashboard berbasis closure agar partial reload hanya mengevaluasi prop yang diminta,
+  - `Dashboard.vue` memakai helper visit dashboard terpusat dengan `only: ['dashboardStats', 'dashboardCharts', 'dashboardBlocks', 'dashboardContext']`,
+  - test baru partial reload ditambahkan ke `DashboardDocumentCoverageTest`.
+- Validasi batch:
+  - `php artisan test tests/Feature/DashboardActivityChartTest.php --compact` -> `PASS` (`6` tests),
+  - `php artisan test tests/Feature/DashboardDocumentCoverageTest.php --compact` -> `PASS` (`12` tests, termasuk partial reload),
+  - operator lokal menjalankan `php artisan test --compact` -> `PASS` (`1154 passed`, `7730 assertions`, `89.00s`).
 
 ### Concern Archived
 

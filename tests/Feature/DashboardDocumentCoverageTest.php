@@ -90,6 +90,38 @@ class DashboardDocumentCoverageTest extends TestCase
         });
     }
 
+    public function test_dashboard_partial_reload_hanya_mengembalikan_prop_dashboard_yang_diminta(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+        ]);
+        $user->assignRole('admin-desa');
+
+        $this->createActivity($user, 'desa', $desa->id, 'Aktivitas A');
+        $this->createAgendaSurat($user, 'desa', $desa->id, 'A-001');
+
+        $response = $this->actingAs($user)->get(route('dashboard', [
+            'section1_month' => '2',
+        ]));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Dashboard')
+                ->reloadOnly(['dashboardContext', 'dashboardBlocks'], function (AssertableInertia $reload): void {
+                    $reload
+                        ->where('dashboardContext.section1_month', '2')
+                        ->has('dashboardBlocks')
+                        ->missing('dashboardStats')
+                        ->missing('dashboardCharts');
+                });
+        });
+    }
+
     public function test_dashboard_coverage_dokumen_pengguna_kecamatan_mengikuti_kontrak_scope_per_modul(): void
     {
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);

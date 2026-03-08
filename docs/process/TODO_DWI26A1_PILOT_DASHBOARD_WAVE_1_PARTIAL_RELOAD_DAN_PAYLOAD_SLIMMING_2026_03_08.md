@@ -1,7 +1,7 @@
 # TODO DWI26A1 Pilot Dashboard Wave 1 Partial Reload Dan Payload Slimming
 
 Tanggal: 2026-03-08  
-Status: `planned`
+Status: `done` (`state:full-suite-validated`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -42,38 +42,38 @@ Related ADR: `-`
 
 ## Target Hasil
 
-- [ ] T1. Dashboard punya satu jalur visit filter yang konsisten dan mudah diaudit.
-- [ ] T2. Reload akibat perubahan filter dashboard hanya meminta prop yang relevan.
-- [ ] T3. Ada bukti test bahwa partial reload tidak merusak kontrak data dashboard lintas scope.
+- [x] T1. Dashboard punya satu jalur visit filter yang konsisten dan mudah diaudit.
+- [x] T2. Reload akibat perubahan filter dashboard hanya meminta prop yang relevan.
+- [x] T3. Ada bukti test bahwa partial reload tidak merusak kontrak data dashboard lintas scope.
 
 ## Langkah Eksekusi
 
-- [ ] L0. Audit jalur visit dan state sinkronisasi saat ini.
+- [x] L0. Audit jalur visit dan state sinkronisasi saat ini.
   - petakan semua pemanggilan `router.get('/dashboard', ...)` di `Dashboard.vue`,
   - kelompokkan mana yang berasal dari action user langsung dan mana yang hanya sinkronisasi query.
-- [ ] L1. Konsolidasi helper query dan helper visit dashboard.
+- [x] L1. Konsolidasi helper query dan helper visit dashboard.
   - buat satu helper untuk membangun query canonical,
   - buat satu helper untuk visit dashboard dengan opsi `preserveState`, `replace`, dan partial reload yang konsisten.
-- [ ] L2. Terapkan partial reload pada interaction loop utama.
+- [x] L2. Terapkan partial reload pada interaction loop utama.
   - target awal: tombol `Terapkan Filter Chart`, perubahan filter global, dan watcher sync query,
   - definisikan daftar prop reload minimum untuk dashboard interaction (`dashboardStats`, `dashboardCharts`, `dashboardBlocks`, `dashboardContext`).
-- [ ] L3. Audit payload yang tidak wajib ikut pada reload filter.
+- [x] L3. Audit payload yang tidak wajib ikut pada reload filter.
   - cek apakah sebagian prop bisa dibuat lazy/closure-backed tanpa mengubah hasil first load,
   - jika belum aman, catat item itu sebagai follow-up Wave 2 dan jangan dipaksa pada batch ini.
-- [ ] L4. Stabilkan perilaku query sync.
+- [x] L4. Stabilkan perilaku query sync.
   - cegah visit berulang saat URL sudah sinkron,
   - pastikan filter sekretaris dan filter umum memakai jalur helper yang sama.
-- [ ] L5. Hardening test dan evidence.
+- [x] L5. Hardening test dan evidence.
   - tambah/ubah test yang relevan untuk memverifikasi partial reload tetap mengembalikan prop dashboard yang dibutuhkan,
   - catat file target dan hasil validasi pada log operasional bila batch implementasi dijalankan.
 
 ## Validasi
 
-- [ ] V1. L1: targeted audit pada `DashboardController.php` dan `Dashboard.vue` memastikan query key canonical tidak drift.
-- [ ] V2. L1: `php artisan test --filter=DashboardActivityChartTest --compact`
-- [ ] V3. L1: `php artisan test --filter=DashboardDocumentCoverageTest --compact`
-- [ ] V4. L2: jika test baru partial reload ditambahkan, jalankan file test dashboard spesifik yang menyentuh jalur itu.
-- [ ] V5. L3: `php artisan test --compact` jika patch dashboard menyentuh shared payload atau query contract lintas role.
+- [x] V1. L1: targeted audit pada `DashboardController.php` dan `Dashboard.vue` memastikan query key canonical tidak drift.
+- [x] V2. L1: `php artisan test tests/Feature/DashboardActivityChartTest.php --compact`
+- [x] V3. L1: `php artisan test tests/Feature/DashboardDocumentCoverageTest.php --compact`
+- [x] V4. L2: test partial reload dashboard ditambahkan pada `DashboardDocumentCoverageTest`.
+- [x] V5. L3: `php artisan test --compact` jika patch dashboard menyentuh shared payload atau query contract lintas role.
 
 ## Risiko
 
@@ -104,6 +104,6 @@ Related ADR: `-`
 
 ## Output Final
 
-- [ ] O1. Ringkasan perubahan mekanisme visit/filter dashboard dan alasan teknisnya.
-- [ ] O2. Daftar file target batch implementasi dashboard.
-- [ ] O3. Hasil validasi dashboard targeted + residual risk yang tersisa.
+- [x] O1. Ringkasan perubahan mekanisme visit/filter dashboard dan alasan teknisnya.
+- [x] O2. Daftar file target batch implementasi dashboard.
+- [x] O3. Hasil validasi dashboard targeted + residual risk yang tersisa.

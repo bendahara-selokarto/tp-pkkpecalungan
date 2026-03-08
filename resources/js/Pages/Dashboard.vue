@@ -210,6 +210,12 @@ const resolveOptionValue = (rawValue, options, fallback) => {
 }
 
 const currentQuery = parseQuery(page.url)
+const DASHBOARD_PARTIAL_PROPS = Object.freeze([
+  'dashboardStats',
+  'dashboardCharts',
+  'dashboardBlocks',
+  'dashboardContext',
+])
 const selectedMode = ref(resolveOptionValue(currentQuery.get('mode'), MODE_OPTIONS, 'all'))
 const selectedLevel = ref(resolveOptionValue(currentQuery.get('level'), LEVEL_OPTIONS, 'all'))
 const selectedSubLevel = ref(normalizeToken(currentQuery.get('sub_level'), 'all'))
@@ -485,12 +491,26 @@ const buildGlobalFilterQuery = () => {
   }
 }
 
-const applyFilters = () => {
-  router.get('/dashboard', buildGlobalFilterQuery(), {
+const buildSekretarisFilterQuery = () => ({
+  mode: 'by-level',
+  level: resolveSekretarisLevelFilter(),
+  sub_level: 'all',
+  section1_month: normalizedSection1Month.value,
+  section2_group: selectedSection2Group.value,
+  section3_group: hasSekretarisLowerSection.value ? selectedSection3Group.value : 'all',
+})
+
+const visitDashboard = (query) => {
+  router.get('/dashboard', query, {
     preserveState: true,
     preserveScroll: true,
     replace: true,
+    only: DASHBOARD_PARTIAL_PROPS,
   })
+}
+
+const applyFilters = () => {
+  visitDashboard(buildGlobalFilterQuery())
 }
 
 const applyChartFilters = () => {
@@ -509,18 +529,7 @@ const applyChartFilters = () => {
 }
 
 const applySekretarisSectionFilters = () => {
-  router.get('/dashboard', {
-    mode: 'by-level',
-    level: resolveSekretarisLevelFilter(),
-    sub_level: 'all',
-    section1_month: normalizedSection1Month.value,
-    section2_group: selectedSection2Group.value,
-    section3_group: hasSekretarisLowerSection.value ? selectedSection3Group.value : 'all',
-  }, {
-    preserveState: true,
-    preserveScroll: true,
-    replace: true,
-  })
+  visitDashboard(buildSekretarisFilterQuery())
 }
 
 const onChartFilterModeChange = () => {
@@ -565,14 +574,7 @@ watch(
     }
 
     const params = parseQuery(url)
-    const expectedQuery = {
-      mode: 'by-level',
-      level: resolveSekretarisLevelFilter(),
-      sub_level: 'all',
-      section1_month: normalizedSection1Month.value,
-      section2_group: selectedSection2Group.value,
-      section3_group: hasSekretarisLowerSection.value ? selectedSection3Group.value : 'all',
-    }
+    const expectedQuery = buildSekretarisFilterQuery()
 
     const isSynced = normalizeToken(params.get('mode'), 'all') === expectedQuery.mode
       && normalizeToken(params.get('level'), 'all') === expectedQuery.level
@@ -585,11 +587,7 @@ watch(
       return
     }
 
-    router.get('/dashboard', expectedQuery, {
-      preserveState: true,
-      preserveScroll: true,
-      replace: true,
-    })
+    visitDashboard(expectedQuery)
   },
   { immediate: true },
 )
@@ -618,11 +616,7 @@ watch(
       return
     }
 
-    router.get('/dashboard', buildGlobalFilterQuery(), {
-      preserveState: true,
-      preserveScroll: true,
-      replace: true,
-    })
+    visitDashboard(buildGlobalFilterQuery())
   },
   { immediate: true },
 )

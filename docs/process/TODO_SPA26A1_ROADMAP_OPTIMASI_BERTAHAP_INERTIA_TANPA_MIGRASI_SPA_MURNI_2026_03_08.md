@@ -1,7 +1,7 @@
 # TODO SPA26A1 Roadmap Optimasi Bertahap Inertia Tanpa Migrasi SPA Murni
 
 Tanggal: 2026-03-08  
-Status: `planned`
+Status: `in-progress` (`state:wave1-dashboard-batch-active`)
 Related ADR: `-`
 
 ## Aturan Pakai

@@ -29,14 +29,7 @@ class DashboardController extends Controller
             return redirect()->route('super-admin.users.index');
         }
 
-        $dashboardPayload = $this->buildDashboardPayload($request);
-
-        return Inertia::render('Dashboard', [
-            'dashboardStats' => $dashboardPayload['stats'],
-            'dashboardCharts' => $dashboardPayload['charts'],
-            'dashboardBlocks' => $dashboardPayload['blocks'],
-            'dashboardContext' => $dashboardPayload['context'],
-        ]);
+        return Inertia::render('Dashboard', $this->buildDashboardProps($request));
     }
 
     public function printChartPdf(Request $request): SymfonyResponse|RedirectResponse
@@ -102,6 +95,21 @@ class DashboardController extends Controller
             'charts' => $charts,
             'blocks' => $dashboardBlocks,
             'context' => $dashboardContext,
+        ];
+    }
+
+    private function buildDashboardProps(Request $request): array
+    {
+        $dashboardPayload = null;
+        $resolvePayload = function () use ($request, &$dashboardPayload): array {
+            return $dashboardPayload ??= $this->buildDashboardPayload($request);
+        };
+
+        return [
+            'dashboardStats' => fn (): array => $resolvePayload()['stats'],
+            'dashboardCharts' => fn (): array => $resolvePayload()['charts'],
+            'dashboardBlocks' => fn (): array => $resolvePayload()['blocks'],
+            'dashboardContext' => fn (): array => $resolvePayload()['context'],
         ];
     }
 
