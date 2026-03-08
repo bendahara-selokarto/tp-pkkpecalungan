@@ -663,3 +663,36 @@ STATUS: active
   - loop kerja bisa macet jika operator hanya memberi status umum tanpa potongan error yang cukup.
 - Catatan reuse lintas domain/project:
   - cocok untuk repo yang dikerjakan kolaboratif pada mesin yang sama, terutama saat AI runner lebih lambat dari terminal lokal user.
+
+### P-032 - Markdown Context Space Budgeting
+
+- Tanggal: 2026-03-09
+- Status: active
+- Konteks: repo sudah memiliki thinning registry dan archive TODO, tetapi belum memiliki angka budget yang menjelaskan seberapa besar markdown aktif yang aman untuk dimuat bersama dalam satu sesi AI.
+- Trigger:
+  - ada audit/optimasi dokumen governance markdown.
+  - file governance aktif mulai membesar dan berisiko membebani routing AI.
+  - model/context runner berubah sehingga space markdown perlu dievaluasi ulang.
+- Langkah eksekusi:
+  1) ukur file governance aktif dengan `wc -c` atau setara.
+  2) hitung `estimated_tokens = ceil(chars / 4)` untuk tiap file dan pack baca aktif.
+  3) hitung `ideal_context_window = ceil(pack_tokens / 0.65)` agar reserve `35%` tetap tersedia.
+  4) tetapkan soft cap per artefak aktif dan jalankan thinning/archive jika terlampaui.
+  5) jika context window AI naik, ekspansi space mengikuti urutan `validation log -> thin registry -> playbook summary -> concern pack tambahan/ADR`.
+
+- Guardrail:
+  - jangan memperbesar `AGENTS.md` hanya karena context window model meningkat.
+  - budget dihitung pada level pack baca aktif, bukan hanya file tunggal.
+  - jika file melewati soft cap, utamakan pindah ke annex/arsip daripada menambah ringkasan panjang di file utama.
+  - setiap perubahan budget atau urutan load order wajib sinkron ke `AGENTS.md` dan `AI_SINGLE_PATH_ARCHITECTURE.md`.
+- Validasi minimum:
+  - baseline file aktif tercatat dengan ukuran `chars` dan estimasi token.
+  - dokumen budget context space tersedia dan direferensikan dokumen governance utama.
+  - registry/log concern sinkron dengan perubahan concern doc-only ini.
+- Bukti efisiensi/akurasi:
+  - menurunkan ambiguity saat memutuskan kapan dokumen harus di-thin, diarsip, atau boleh diperluas karena model AI yang dipakai lebih besar.
+- Risiko:
+  - heuristic `chars/4` tidak identik dengan tokenizer model tertentu.
+  - tanpa disiplin update baseline, angka budget bisa drift dari kondisi repo aktual.
+- Catatan reuse lintas domain/project:
+  - cocok untuk project yang governance AI-nya sudah memakai banyak dokumen markdown dan membutuhkan batas pertumbuhan yang bisa diaudit.

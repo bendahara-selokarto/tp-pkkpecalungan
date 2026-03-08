@@ -68,6 +68,13 @@ Aturan:
 - Dilarang memuat arsip historis sebagai context default jika task hanya concern aktif.
 - Jika task meminta investigasi lintas sesi/lintas concern lama, arsip boleh dibuka secara scoped.
 
+## 2B. Context Space Budget
+
+- Budget numerik markdown aktif mengikuti `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`.
+- Target pack harian repo: `12k-18k` estimated markdown tokens.
+- Pack governance extended (`playbook + ADR`) hanya dimuat saat trigger doc-hardening/ADR benar-benar aktif.
+- Jika pack aktif melewati budget atau file aktif melewati soft cap, lakukan thinning/archive sebelum menambah detail baru.
+
 ## 3. Jalur Tunggal Eksekusi (Mandatory)
 
 1. `Classify`

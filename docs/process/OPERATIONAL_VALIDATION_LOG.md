@@ -26,6 +26,7 @@ Aturan:
   - `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` (`planned`)
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`planned`)
+  - `docs/process/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md` (`done`)
   - `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md` (`in-progress`)
   - `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
   - `docs/process/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md` (`done`)
@@ -189,6 +190,36 @@ Aturan:
 - Snapshot penuh registry dipindahkan ke arsip:
   - `docs/process/archive/registry/TTM25R1_REGISTRY_FULL_2026_03_02.md`.
 - Single-path diperbarui dengan `Context Load Order (Anti-Bottleneck)` agar arsip historis hanya dibaca on-demand.
+
+### Audit Markdown Context Budget (`MKB26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:context-space-budget-locked`).
+- Scope batch:
+  - `AGENTS.md`,
+  - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`,
+  - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`,
+  - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md`,
+  - `docs/process/PLANNING_ARTIFACT_INDEX.md`,
+  - `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`,
+  - `docs/process/OPERATIONAL_VALIDATION_LOG.md`,
+  - `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`,
+  - `docs/adr/ADR_0006_MARKDOWN_CONTEXT_SPACE_BUDGET.md`,
+  - `docs/process/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`.
+- Hasil batch implementasi:
+  - formula canonical `estimated_tokens = ceil(chars / 4)` dikunci,
+  - reserve markdown aktif `35%` dikunci,
+  - band kerja harian repo dikunci pada `12k-18k` estimated markdown tokens,
+  - ladder ekspansi saat context window AI meningkat didokumentasikan.
+- Baseline evidence batch:
+  - minimum routing pack: `8,600` est. tokens,
+  - default execution pack: `12,114-13,194` est. tokens,
+  - extended governance pack: `14,950-17,681` est. tokens,
+  - ideal context window repo saat ini: `20k-28k` tokens.
+- Validasi batch:
+  - `wc -lcw` scoped audit artefak markdown aktif -> `PASS`,
+  - audit `chars / 4` dan kalkulasi pack context -> `PASS`,
+  - audit sinkronisasi TODO + ADR + process refs + registry/log -> `PASS`,
+  - `php artisan test` tidak dijalankan karena concern `doc-only`.
 
 ### Sprint Quality Gate 90+ (`QG90A1`) - 2026-03-07
 

@@ -20,6 +20,8 @@ Owner: process governance
   - jalur operasional default.
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
   - pattern reusable lintas concern.
+- `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`
+  - budget numerik markdown aktif + policy ekspansi saat context window AI berubah.
 - `docs/process/CODE_PLACEMENT_POLICY.md`
   - policy penempatan kode concern baru agar struktur repository konsisten.
 - `docs/process/PROCESS_TODO_ARCHIVE_STRATEGY.md`
@@ -65,7 +67,8 @@ Owner: process governance
 ### Jika update pola/proses eksekusi AI
 
 1. Ubah `AI_SINGLE_PATH_ARCHITECTURE.md` dan/atau `AI_FRIENDLY_EXECUTION_PLAYBOOK.md`.
-2. Sinkronkan referensi di dokumen index ini bila jalur berubah.
+2. Jika perubahan mempengaruhi budget markdown aktif, sinkronkan `MARKDOWN_CONTEXT_SPACE_BUDGET.md`.
+3. Sinkronkan referensi di dokumen index ini bila jalur berubah.
 
 ## Snapshot Concern Aktif (Baseline 2026-03-02)
 
@@ -81,4 +84,3 @@ Owner: process governance
 - Status concern di registry harus sama dengan status pada dokumen TODO SOT.
 - Evidence command penting (test/build/route audit) wajib dicatat di `OPERATIONAL_VALIDATION_LOG.md`.
 - TODO concern baru wajib dibuat dari template dan patuh format kode unik.
-

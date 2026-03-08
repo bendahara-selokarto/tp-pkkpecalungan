@@ -68,6 +68,7 @@ Gunakan status:
 | `P-028` | Deferred Secondary Inertia Prop | Halaman Inertia punya payload sekunder besar yang tidak wajib ikut first paint | First paint lebih ringan tanpa memecah route menjadi pseudo-API baru | Targeted feature test initial missing + deferred reload + compile/build concern | `active` |
 | `P-029` | Remembered Presentational UI State | Halaman Inertia punya state UI lokal non-domain yang reset saat visit berikutnya | UX lebih stabil tanpa menambah query/backend state | Targeted regression concern + build frontend | `active` |
 | `P-030` | On-Expand JSON Detail Widget | Halaman Inertia punya widget detail berat yang hanya diperlukan saat panel/blok dibuka | Payload awal lebih kecil dan interaksi detail tetap tajam tanpa API generik | Targeted feature test endpoint + regression payload awal + build frontend | `active` |
+| `P-032` | Markdown Context Space Budgeting | Ada audit/pertumbuhan dokumen governance yang berisiko membebani context AI | Konteks markdown aktif tetap terukur, punya reserve, dan bisa diekspansi terkontrol saat context window model naik | Audit chars/tokens + sinkronisasi budget doc + registry/log/process refs | `active` |
 
 ## 3) Protocol Update Pattern
 
