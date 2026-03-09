@@ -8,20 +8,13 @@ Related ADR: `-`
 
 - Status aktif concern ini adalah `planned` dengan `state:awaiting-owner-mode-target`.
 - Audit trail no-op historis concern ini dipindahkan ke `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md` agar file aktif tetap tipis.
-- Entri historis yang sempat menyebut concern `done` tidak lagi berlaku sebagai status aktif karena sudah disupersede oleh reset concern pada 2026-03-07.
-
-## Aturan Pakai
-
-- `KODE_UNIK` wajib 4-8 karakter, huruf kapital + angka (contoh: `A2B9`).
-- Format judul wajib: `TODO <KODE_UNIK> <Judul Ringkas>`.
-- Simpan file dengan pola: `TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
-- Gunakan checklist `- [ ]` dan ubah ke `- [x]` saat item selesai.
+- Entri historis yang sempat menyebut concern `done` tidak lagi berlaku karena sudah disupersede oleh reset concern pada 2026-03-07.
 
 ## Konteks
 
-- Pengelompokan modul untuk visibilitas role saat ini tersebar pada `RoleMenuVisibilityService`, `EnsureModuleVisibility`, dan `DashboardLayout.vue`.
-- Owner perlu menata ulang grouping modul berdasarkan role user secara sadar kontrak, bukan sekadar perubahan label/UI.
-- Perubahan ini berdampak lintas backend, middleware, payload Inertia, sidebar, test matrix, dan dokumen canonical.
+- Pengelompokan modul untuk visibilitas role tersebar pada `RoleMenuVisibilityService`, `EnsureModuleVisibility`, dan `DashboardLayout`.
+- Owner perlu menata ulang grouping modul berdasarkan role secara sadar kontrak, bukan sekadar perubahan label/UI.
+- Perubahan ini berdampak lintas backend, middleware, payload Inertia, sidebar, test matrix, dan dokumen.
 
 ## Kontrak Concern (Lock)
 
@@ -93,9 +86,7 @@ Shortlist aman tahap-1 sudah direfleksikan langsung pada kolom `Group Target` di
 | 34 | desa-activities | monitoring |  |
 | 35 | desa-arsip | monitoring |  |
 
-Catatan runtime ringkas:
-
-- `inventaris` dan `buku-tamu` tetap dianggap modul override khusus dan belum masuk shortlist aman tahap-1.
+Catatan runtime ringkas: `inventaris` dan `buku-tamu` tetap dianggap modul override khusus dan belum masuk shortlist aman tahap-1.
 
 ## Target Hasil
 

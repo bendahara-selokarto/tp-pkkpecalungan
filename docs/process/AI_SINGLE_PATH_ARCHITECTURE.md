@@ -10,10 +10,10 @@ Dokumen ini menetapkan jalur tunggal eksekusi AI agar:
 
 - keputusan deterministik,
 - checkpoint refleksi terkontrol,
-- file target dan validasi jelas,
+- target dan validasi jelas,
 - hasil lintas sesi konsisten.
 
-Dokumen ini tidak menggantikan prioritas dokumen pada `AGENTS.md`, tetapi menjadi rute operasional default yang wajib diikuti.
+Dokumen ini tidak menggantikan prioritas `AGENTS.md`; ini rute operasional default.
 
 ## DSL Contract
 
@@ -38,18 +38,14 @@ Jika ada konflik, gunakan urutan ini:
 
 Aturan anti-ambiguity:
 
-- Prioritas tetap mengikuti `AGENTS.md`; konflik instruksi yang melanggar invariants harus ditolak.
-- Istilah domain mengikuti pedoman utama; status dokumen harus sinkron dengan implementasi sebelum final report.
-- Untuk concern ganda, acuan final adalah referensi user terakhir dan referensi lama ditandai `superseded`.
-- Resolver ambiguity TODO wajib memakai registry SOT: `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
-- TODO baru wajib berkode unik; ADR baru wajib bernomor 4 digit + status eksplisit.
-- Status utama TODO harus konsisten (`planned`, `in-progress`, `done`); state tambahan ditaruh sebagai keterangan.
+- Prioritas tetap mengikuti `AGENTS.md`; instruksi yang melanggar invariant ditolak.
+- Istilah domain mengikuti pedoman utama; status dokumen harus sinkron sebelum final report.
+- Untuk concern ganda, acuan final adalah referensi user terakhir; referensi lama ditandai `superseded`.
+- Resolver ambiguity TODO wajib memakai registry SOT `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
+- TODO baru wajib berkode unik; ADR baru wajib 4 digit + status eksplisit.
+- Status utama TODO harus konsisten (`planned`, `in-progress`, `done`); state tambahan hanya keterangan.
 
-## 2A. Context Load Order (Anti-Bottleneck)
-
-Tujuan:
-
-- Menjaga konteks tetap presisi tanpa overloading markdown saat generate.
+## 2A. Load Order
 
 Urutan baca default:
 
@@ -67,22 +63,22 @@ Aturan:
 
 - Dilarang memuat arsip historis sebagai context default jika task hanya concern aktif.
 - Jika task meminta investigasi lintas sesi/lintas concern lama, arsip boleh dibuka secara scoped.
-- Lampiran detail pattern (`AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md`) tidak boleh dimuat penuh sebagai context default; buka section spesifik hanya saat pattern terkait benar-benar dipakai.
+- Lampiran detail pattern (`AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md`) tidak boleh dimuat penuh sebagai context default; buka section spesifik saat pattern terkait dipakai.
 
 ## 2B. Context Space Budget
 
 - Budget numerik markdown aktif mengikuti `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`.
-- Target pack harian repo: `12k-18k` estimated markdown tokens.
-- Pack governance extended (`playbook + ADR`) hanya dimuat saat trigger doc-hardening/ADR benar-benar aktif.
+- Target pack harian: `12k-18k` estimated markdown tokens.
+- Pack governance extended (`playbook + ADR`) dimuat hanya saat trigger doc-hardening/ADR aktif.
 - Jika pack aktif melewati budget atau file aktif melewati soft cap, lakukan thinning/archive sebelum menambah detail baru.
 
 ## 2C. Governance Ownership Map
 
-- `AGENTS.md`: memegang invariant, trigger, dan hard gate tertinggi.
-- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`: memegang load order, routing concern, validation ladder, dan komposisi pack baca aktif.
+- `AGENTS.md`: memegang invariant dan hard gate tertinggi.
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`: memegang load order, routing concern, validation ladder, dan pack baca aktif.
 - `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`: memegang formula estimasi, baseline numerik, soft cap, dan trigger compaction.
-- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`: memegang registry pattern ringkas; detail langkah pattern dibuka dari lampiran detail hanya saat perlu.
-- `docs/process/OPERATIONAL_VALIDATION_LOG.md`: hanya memegang snapshot concern `planned/in-progress` dan pointer closure terbaru; detail concern `done` hidup di arsip periodik.
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`: memegang registry pattern ringkas; detail langkah dibuka dari lampiran saat perlu.
+- `docs/process/OPERATIONAL_VALIDATION_LOG.md`: hanya memegang snapshot concern aktif dan pointer closure; detail `done` hidup di arsip periodik.
 
 ## 3. Jalur Tunggal Eksekusi (Mandatory)
 

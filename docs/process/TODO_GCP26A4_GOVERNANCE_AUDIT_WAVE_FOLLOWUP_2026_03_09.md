@@ -34,7 +34,7 @@ Related ADR: `-`
 
 - [x] Batch 1: audit global `TODO + ADR`, arsipkan concern `done`, sinkronkan referensi aktif.
 - [x] Batch 2: audit link/path markdown governance corpus aktif dan perbaiki referensi mati.
-- [ ] Batch 3: thin warning-level governance files sampai budget lebih sehat.
+- [x] Batch 3: thin warning-level governance files sampai budget lebih sehat.
 - [ ] Batch 4: shard `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` menjadi annex yang lebih ringan.
 - [ ] Batch 5: verifikasi push remote + hasil workflow GitHub Actions.
 
@@ -87,3 +87,7 @@ Related ADR: `-`
   - generator TODO dan workflow CI diperluas agar menjalankan governance audit + markdown path audit,
   - referensi drift aktif diperbaiki pada `README.md`, `docs/adr/README.md`, dan `docs/process/COMMAND_NUMBER_SHORTCUTS.md`,
   - `scripts/audit_markdown_governance.ps1` dan `scripts/audit_markdown_paths.ps1` sama-sama `PASS`.
+- 2026-03-09 batch 3:
+  - warning-level file aktif ditipiskan sampai kembali masuk soft cap: `AI_SINGLE_PATH_ARCHITECTURE`, `AI_FRIENDLY_EXECUTION_PLAYBOOK`, `IWN26B1`, dan `RGM26A1`,
+  - boilerplate TODO aktif yang berulang dihapus dari concern planning agar context pack lebih efisien,
+  - `scripts/audit_markdown_governance.ps1` kembali `PASS` tanpa warning soft cap aktif.

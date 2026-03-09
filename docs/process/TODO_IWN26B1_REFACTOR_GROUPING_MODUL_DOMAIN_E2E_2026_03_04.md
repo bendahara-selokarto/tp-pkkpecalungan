@@ -13,13 +13,6 @@ Related ADR: `-`
 - Selama `RGM26A1` masih `planned` dengan `state:awaiting-owner-group-target`, concern ini diperlakukan sebagai planning-only dan tidak menganggap histori no-op `RGM26A1` sebagai baseline final implementasi baru.
 - `SPT26A1` diperlakukan sebagai child concern IA menu/sidebar untuk flow PDF turunan; hasilnya menjadi input planning sebelum regroup menu dieksekusi lebih jauh.
 
-## Aturan Pakai
-
-- `KODE_UNIK` wajib 4-8 karakter, huruf kapital + angka (contoh: `A2B9`).
-- Format judul wajib: `TODO <KODE_UNIK> <Judul Ringkas>`.
-- Simpan file dengan pola: `TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
-- Gunakan checklist `- [ ]` dan ubah ke `- [x]` saat item selesai.
-
 ## Konteks
 
 - Perlu rencana penataan ulang grouping modul by domain yang berdampak langsung ke otorisasi backend, bukan sekadar perubahan tampilan menu.

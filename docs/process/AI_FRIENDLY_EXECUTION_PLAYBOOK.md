@@ -1,9 +1,9 @@
-# AI Friendly Execution Playbook (Domain Agnostic)
+# AI Friendly Execution Playbook
 
 Tujuan:
 
-- Menyimpan pola eksekusi yang efisien, akurat, dan valid untuk dipakai ulang lintas project.
-- Menjaga agar jalur kerja AI selalu bisa ditingkatkan saat ditemukan pendekatan yang lebih baik.
+- Menyimpan pola eksekusi efisien, akurat, dan valid untuk dipakai ulang lintas project.
+- Menjaga jalur kerja AI tetap bisa ditingkatkan saat ditemukan pendekatan yang lebih baik.
 
 ## 1) Core Loop (Wajib)
 
@@ -26,12 +26,12 @@ Tujuan:
 
 4A. Concern-scoped commit
 - Setelah validasi mandatory selesai, AI boleh menutup batch dengan commit scoped per concern tanpa menunggu prompt `commit` terpisah.
-- Commit hanya aman jika boundary file jelas dan tidak mencampur perubahan concern lain.
+- Commit aman jika boundary file jelas dan tidak mencampur concern lain.
 - `git push` tetap manual oleh user.
 
 5. Learning capture
-- Jika jalur baru lebih efisien/akurat, update playbook ini.
-- Jika jalur lama kalah efektif, tandai deprecated + alasan.
+- Jika jalur baru lebih efisien, update playbook ini.
+- Jika jalur lama kalah efektif, tandai deprecated.
 
 ## 2) Pattern Registry
 
@@ -141,6 +141,6 @@ Detail operasional lengkap setiap pattern dipindahkan ke lampiran berikut agar k
 Aturan pakai:
 
 - Baca file utama ini terlebih dahulu untuk routing cepat.
-- Buka lampiran detail hanya saat perlu mengeksekusi pattern spesifik.
+- Buka lampiran detail hanya saat mengeksekusi pattern spesifik.
 - Lampiran detail tidak masuk default pack; jika butuh lebih dari sedikit pattern, buka secara scoped per section.
 - Setiap perubahan status/isi pattern wajib disinkronkan di file utama dan lampiran pada sesi yang sama.
