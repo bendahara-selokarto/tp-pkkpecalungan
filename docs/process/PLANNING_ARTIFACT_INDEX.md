@@ -20,6 +20,8 @@ Owner: process governance
   - jalur operasional default.
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
   - pattern reusable lintas concern.
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md`
+  - lampiran detail pattern; bersifat on-demand dan tidak masuk default pack baca harian.
 - `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`
   - budget numerik markdown aktif + policy ekspansi saat context window AI berubah.
 - `docs/process/CODE_PLACEMENT_POLICY.md`
@@ -67,8 +69,9 @@ Owner: process governance
 ### Jika update pola/proses eksekusi AI
 
 1. Ubah `AI_SINGLE_PATH_ARCHITECTURE.md` dan/atau `AI_FRIENDLY_EXECUTION_PLAYBOOK.md`.
-2. Jika perubahan mempengaruhi budget markdown aktif, sinkronkan `MARKDOWN_CONTEXT_SPACE_BUDGET.md`.
-3. Sinkronkan referensi di dokumen index ini bila jalur berubah.
+2. Jika perubahan menyentuh lampiran detail pattern, pertahankan sifat `on-demand` dan sinkronkan file utama playbook.
+3. Jika perubahan mempengaruhi budget markdown aktif, sinkronkan `MARKDOWN_CONTEXT_SPACE_BUDGET.md`.
+4. Sinkronkan referensi di dokumen index ini bila jalur berubah.
 
 ## Snapshot Concern Aktif (Baseline 2026-03-02)
 

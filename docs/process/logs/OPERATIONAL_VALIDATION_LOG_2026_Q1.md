@@ -2415,3 +2415,193 @@ Keputusan:
 Status:
 
 - `PASS` (`lampiran-424-sumber-data-manual-check-documented`).
+
+## Snapshot Closure Concern Aktif yang Dipindah dari Index: 2026-03-09
+
+Catatan:
+
+- Pada 2026-03-09 `docs/process/OPERATIONAL_VALIDATION_LOG.md` dikompaksi kembali menjadi index aktif.
+- Detail concern `done` yang sebelumnya membebani index aktif diringkas dan dipindahkan ke arsip periodik ini.
+
+### Roadmap Optimasi Inertia Bertahap (`SPA26A1`) - 2026-03-08
+
+- Status concern: `done` (`state:wave1-wave5-pilots-validated`).
+- Keputusan utama:
+  - stack tetap `Laravel + Inertia + Vue`,
+  - tidak ada migrasi ke SPA murni pada fase ini,
+  - urutan optimasi dikunci: partial reload -> lazy fetch -> komponen stateful -> endpoint JSON kecil terkontrol.
+- Evidence:
+  - `Inertia::render` di backend: `268`,
+  - coupling frontend ke `@inertiajs/vue3`: `212`,
+  - feature test `assertInertia(...)`: `188`.
+
+### Pilot Dashboard Wave 1 (`DWI26A1`) - 2026-03-08
+
+- Status concern: `done` (`state:full-suite-validated`).
+- Hasil batch:
+  - prop dashboard diubah menjadi closure untuk partial reload,
+  - helper visit dashboard terpusat memakai `only: ['dashboardStats', 'dashboardCharts', 'dashboardBlocks', 'dashboardContext']`,
+  - test partial reload ditambahkan ke `DashboardDocumentCoverageTest`.
+- Validasi:
+  - `DashboardActivityChartTest` `PASS` (`6` tests),
+  - `DashboardDocumentCoverageTest` `PASS` (`12` tests),
+  - full suite operator lokal `PASS` (`1154 passed`, `7730 assertions`).
+
+### Pilot User Management Index Wave 1 (`USR26A1`) - 2026-03-08
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Hasil batch:
+  - prop index user management diubah menjadi closure,
+  - helper visit terpusat memakai partial prop `users` dan `filters`,
+  - pagination mendukung partial reload.
+- Validasi:
+  - `UserManagementIndexPaginationTest` `PASS` (`7` tests, `137` assertions),
+  - full suite operator lokal `PASS` (`1155 passed`, `7760 assertions`),
+  - `npm run build` `PASS`.
+
+### Pilot Dashboard Wave 2 Deferred Blocks (`DBL26A1`) - 2026-03-08
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Hasil batch:
+  - `dashboardBlocks` dipindah menjadi deferred prop,
+  - fallback loading dan guard test deferred prop ditambahkan.
+- Validasi:
+  - `DashboardActivityChartTest` `PASS` (`6` tests, `148` assertions),
+  - `DashboardDocumentCoverageTest` `PASS` (`13` tests, `441` assertions),
+  - `DashboardChartPdfPrintTest` `PASS` (`3` tests),
+  - full suite operator lokal `PASS` (`1156 passed`, `7975 assertions`),
+  - `npm run build` `PASS`.
+
+### Pilot Dashboard Wave 3 Stateful Presentational UI (`DBS26A1`) - 2026-03-08
+
+- Status concern: `done` (`state:targeted-and-build-validated`).
+- Hasil batch:
+  - `Dashboard.vue` memakai `useRemember` untuk `expandedBlockKeys`.
+- Validasi:
+  - `DashboardDocumentCoverageTest` `PASS` (`13` tests, `441` assertions),
+  - `DashboardActivityChartTest` `PASS` (`6` tests, `148` assertions),
+  - `npm run build` `PASS`.
+
+### Pilot Dashboard Wave 4 JSON Detail Widget (`DBJ26A1`) - 2026-03-08
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Hasil batch:
+  - nested detail `per_module` dipindahkan ke endpoint JSON kecil,
+  - detail block dimuat saat panel dibuka.
+- Validasi:
+  - `DashboardBlockDetailWidgetTest` `PASS` (`3` tests, `37` assertions),
+  - `DashboardDocumentCoverageTest` `PASS` (`13` tests, `441` assertions),
+  - unit use case + coverage gate `PASS` (operator lokal),
+  - full suite `PASS`,
+  - `npm run build` `PASS`.
+
+### Pilot Dashboard Wave 5 Fetch Failure Telemetry (`DBT26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Hasil batch:
+  - helper runtime error global dashboard diekspos untuk fetch async,
+  - widget detail dashboard mengirim telemetry saat fetch gagal.
+- Validasi:
+  - `UiRuntimeErrorLogTest` `PASS` (`2` tests),
+  - `DashboardBlockDetailWidgetTest` `PASS` (`3` tests),
+  - `npm run build` `PASS`,
+  - full suite `PASS` (`1163 passed`, `8025 assertions`).
+
+### Pilot Kecamatan Desa Activities Partial Reload (`KDA26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Hasil batch:
+  - controller mengirim `activities` dan `filters` via closure,
+  - page memakai helper visit terpusat + partial prop `activities` dan `filters`.
+- Validasi:
+  - `KecamatanDesaActivityTest` `PASS` (`10` tests, `127` assertions),
+  - `npm run build` `PASS`,
+  - full suite `PASS` (`1164 passed`, `8061 assertions`).
+
+### Pilot Kecamatan Desa Arsip Partial Reload (`KAR26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Hasil batch:
+  - controller mengirim `documents` dan `filters` via closure,
+  - page memakai helper visit terpusat + partial prop `documents` dan `filters`.
+- Validasi:
+  - `KecamatanDesaArsipTest` `PASS` (`5` tests, `57` assertions),
+  - `npm run build` `PASS`,
+  - full suite `PASS` (`1165 passed`, `8096 assertions`).
+
+### Pilot Kecamatan Activities Partial Reload (`KAC26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Hasil batch:
+  - controller mengirim `activities` dan `filters` via closure,
+  - page memakai helper visit terpusat + partial prop `activities` dan `filters`.
+- Validasi:
+  - `KecamatanActivityTest` `PASS` (`10` tests, `84` assertions),
+  - `npm run build` `PASS`,
+  - full suite `PASS` (`1166 passed`, `8128 assertions`).
+
+### Concern Archived dan Hardening Pendukung - 2026-03-09
+
+- `TAG26A1`:
+  - concern `Refactor Tahun Anggaran` tetap diarsipkan,
+  - `Arsip` tetap dikecualikan dari isolasi lintas tahun,
+  - closure validation terdokumentasi `PASS` (`migrate:fresh --seed`, smoke regression lintas role/scope, full suite).
+- `SFC26A1`:
+  - policy placement kode concern baru aktif,
+  - strategy arsip TODO aktif,
+  - artefak root/generated dipisahkan dari source tracked.
+- `MFC26A1`:
+  - migration squash selesai,
+  - `migrate:fresh --seed`, targeted test, full test, dan build tercatat `PASS`.
+- mitigasi bottleneck markdown aktif:
+  - registry `TTM25R1` dipangkas menjadi thin registry,
+  - snapshot penuh registry dipindahkan ke arsip,
+  - single-path memuat `Context Load Order (Anti-Bottleneck)`.
+
+### Audit Markdown Context Budget (`MKB26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:context-space-budget-locked`).
+- Hasil batch:
+  - formula canonical `estimated_tokens = ceil(chars / 4)` dikunci,
+  - reserve markdown aktif `35%` dikunci,
+  - band kerja harian repo dikunci pada `12k-18k` estimated markdown tokens,
+  - ladder ekspansi saat context window AI meningkat didokumentasikan.
+- Evidence:
+  - minimum routing pack: `8,600` est. tokens,
+  - default execution pack: `12,114-13,194` est. tokens,
+  - extended governance pack: `14,950-17,681` est. tokens,
+  - ideal context window repo saat ini: `20k-28k` tokens.
+- Validasi:
+  - audit ukuran file + kalkulasi pack `PASS`,
+  - audit sinkronisasi TODO + ADR + process refs + registry/log `PASS`,
+  - `php artisan test` tidak dijalankan karena concern `doc-only`.
+
+### Dedup Dan Compaction Governance Context Pack (`GCP26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:governance-pack-dedup-and-log-compacted`).
+- Hasil batch:
+  - ownership governance markdown dikunci lintas `AGENTS`, `single-path`, `budget`, dan `playbook`,
+  - `OPERATIONAL_VALIDATION_LOG.md` dipadatkan kembali menjadi index aktif,
+  - detail closure concern `done` dipindahkan ke arsip periodik ini.
+- Validasi:
+  - audit overlap referensi `PASS`,
+  - review diff lintas docs `PASS`,
+  - ukuran `OPERATIONAL_VALIDATION_LOG.md` pasca compaction turun di bawah soft cap.
+
+### Thin Registry Dan Annex Retrieval Guardrail (`GCP26A2`) - 2026-03-09
+
+- Status concern: `done` (`state:ttm-thinned-and-annex-guardrail-locked`).
+- Hasil batch:
+  - `TTM25R1` dipadatkan kembali menjadi registry concern `planned/in-progress` + pointer closure,
+  - concern `done` terbaru dipindahkan dari tabel aktif ke pointer closure/log periodik,
+  - drift struktur `P-014` pada lampiran pattern details diperbaiki,
+  - guard bahwa `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` adalah annex on-demand dikunci lintas process docs.
+- Evidence:
+  - `TTM25R1` turun menjadi `4,303` chars,
+  - `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` berada di `45,130` chars dan tetap di bawah ambang shard `50,000`,
+  - `OPERATIONAL_VALIDATION_LOG.md` tetap `3,132` chars setelah sync lanjutan.
+- Validasi:
+  - audit ukuran file pasca compaction `PASS`,
+  - audit referensi guard annex/pointer closure `PASS`,
+  - review diff lintas registry + budget + playbook + log `PASS`,
+  - `php artisan test` tidak dijalankan karena concern `doc-only`.

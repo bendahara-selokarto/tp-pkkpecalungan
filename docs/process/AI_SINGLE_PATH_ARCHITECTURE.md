@@ -67,6 +67,7 @@ Aturan:
 
 - Dilarang memuat arsip historis sebagai context default jika task hanya concern aktif.
 - Jika task meminta investigasi lintas sesi/lintas concern lama, arsip boleh dibuka secara scoped.
+- Lampiran detail pattern (`AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md`) tidak boleh dimuat penuh sebagai context default; buka section spesifik hanya saat pattern terkait benar-benar dipakai.
 
 ## 2B. Context Space Budget
 
@@ -74,6 +75,14 @@ Aturan:
 - Target pack harian repo: `12k-18k` estimated markdown tokens.
 - Pack governance extended (`playbook + ADR`) hanya dimuat saat trigger doc-hardening/ADR benar-benar aktif.
 - Jika pack aktif melewati budget atau file aktif melewati soft cap, lakukan thinning/archive sebelum menambah detail baru.
+
+## 2C. Governance Ownership Map
+
+- `AGENTS.md`: memegang invariant, trigger, dan hard gate tertinggi.
+- `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`: memegang load order, routing concern, validation ladder, dan komposisi pack baca aktif.
+- `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`: memegang formula estimasi, baseline numerik, soft cap, dan trigger compaction.
+- `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`: memegang registry pattern ringkas; detail langkah pattern dibuka dari lampiran detail hanya saat perlu.
+- `docs/process/OPERATIONAL_VALIDATION_LOG.md`: hanya memegang snapshot concern `planned/in-progress` dan pointer closure terbaru; detail concern `done` hidup di arsip periodik.
 
 ## 3. Jalur Tunggal Eksekusi (Mandatory)
 

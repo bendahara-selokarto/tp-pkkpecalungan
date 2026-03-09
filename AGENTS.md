@@ -291,7 +291,12 @@ Aturan markdown operasional:
 - Jika concern memiliki dampak arsitektur, TODO wajib menautkan ADR terkait.
 - Setiap update dokumen harus ringkas, diff-first, dan hindari pengulangan konteks yang sama.
 - Budget konteks markdown aktif mengikuti `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`.
-- Estimasi default memakai `chars / 4`; markdown governance aktif maksimal `65%` dari ideal context window dan minimal `35%` disisakan untuk prompt user, kode, diff, dan reasoning.
+- Ownership kontrak markdown governance dikunci sebagai berikut:
+  - `AGENTS.md`: invariant, trigger, hard gate, dan guardrail tertinggi.
+  - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`: load order, routing concern, validation ladder, dan active pack.
+  - `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`: formula estimasi, baseline numerik, soft cap, dan trigger compaction.
+  - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`: registry pattern ringkas; langkah detail pattern hidup di lampiran detail.
+- Estimasi numerik, band pack, dan soft cap mengikuti `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`; reserve minimum `35%` tetap wajib disisakan untuk prompt user, kode, diff, dan reasoning.
 - Perubahan dengan sinyal canonical wajib mengupdate minimal satu markdown arsitektur (`AGENTS.md` / playbook / terminology map) dan diverifikasi oleh CI gate.
 - Jika trigger doc-hardening pass aktif, pembaruan dokumen wajib mencakup sinkronisasi lintas dokumen terkait concern yang sama (bukan hanya satu file terisolasi).
 - Jika trigger ADR pass aktif, pembaruan dokumen wajib mencakup sinkronisasi TODO + ADR + dokumen process/domain concern terkait.

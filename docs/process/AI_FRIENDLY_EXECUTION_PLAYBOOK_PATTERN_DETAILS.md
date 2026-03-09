@@ -218,6 +218,19 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
 
 - Guardrail:
   - Frontend bukan authority akses; backend wajib menolak bypass URL.
+  - Matrix role harus sinkron dengan scope-area valid dari `UserAreaContextService`.
+  - Read-only harus menolak `POST/PUT/PATCH/DELETE` dan endpoint `create/edit`.
+- Validasi minimum:
+  - Unit test matrix role-menu-mode.
+  - Feature test payload Inertia untuk sekretaris/pokja/multi-role.
+  - Feature test anti bypass URL untuk lintas modul dan read-only mutation.
+  - Full suite `php artisan test`.
+- Bukti efisiensi/akurasi:
+  - Diterapkan pada `RoleMenuVisibilityService`, middleware `EnsureModuleVisibility`, share Inertia `HandleInertiaRequests`, dan `DashboardLayout`.
+- Risiko:
+  - Modul dengan slug route alias khusus (contoh route report gabungan) wajib ikut dipetakan agar tidak false-deny.
+- Catatan reuse lintas domain/project:
+  - Pattern ini direkomendasikan sebagai default untuk kebutuhan segmentasi menu lintas role dengan hardening backend.
 
 ### P-028 - Deferred Secondary Inertia Prop
 
@@ -297,19 +310,12 @@ Dokumen ini menyimpan detail langkah pattern agar file playbook utama tetap ring
   - Naming block key yang drift dapat memutus koneksi antara payload Inertia dan endpoint detail.
 - Catatan reuse lintas domain/project:
   - Cocok untuk accordions, inspector panel, atau breakdown table yang berat tetapi tidak perlu ikut payload awal.
-  - Matrix role harus sinkron dengan scope-area valid dari `UserAreaContextService`.
-  - Read-only harus menolak `POST/PUT/PATCH/DELETE` dan endpoint `create/edit`.
-- Validasi minimum:
-  - Unit test matrix role-menu-mode.
-  - Feature test payload Inertia untuk sekretaris/pokja/multi-role.
-  - Feature test anti bypass URL untuk lintas modul dan read-only mutation.
-  - Full suite `php artisan test`.
-- Bukti efisiensi/akurasi:
-  - Diterapkan pada `RoleMenuVisibilityService`, middleware `EnsureModuleVisibility`, share Inertia `HandleInertiaRequests`, dan `DashboardLayout`.
-- Risiko:
-  - Modul dengan slug route alias khusus (contoh route report gabungan) wajib ikut dipetakan agar tidak false-deny.
-- Catatan reuse lintas domain/project:
-  - Pattern ini direkomendasikan sebagai default untuk kebutuhan segmentasi menu lintas role dengan hardening backend.
+
+## Annex Retrieval Guardrail
+
+- Dokumen lampiran ini bersifat `on-demand` dan tidak masuk default pack baca harian.
+- Saat butuh detail pattern, buka section yang relevan saja; hindari memuat lampiran penuh tanpa alasan teknis.
+- Jika ukuran lampiran melewati `50,000` chars atau retrieval rutin membutuhkan lebih dari `3` pattern besar per sesi, pecah lampiran ini menjadi shard tematik atau rentang pattern.
 
 ### P-015 - Section-Scoped Query Key Contract for Role-Aware Dashboard
 
@@ -707,12 +713,14 @@ STATUS: active
   2) hitung `estimated_tokens = ceil(chars / 4)` untuk tiap file dan pack baca aktif.
   3) hitung `ideal_context_window = ceil(pack_tokens / 0.65)` agar reserve `35%` tetap tersedia.
   4) tetapkan soft cap per artefak aktif dan jalankan thinning/archive jika terlampaui.
-  5) jika context window AI naik, ekspansi space mengikuti urutan `validation log -> thin registry -> playbook summary -> concern pack tambahan/ADR`.
+  5) jika `OPERATIONAL_VALIDATION_LOG.md` melewati soft cap lebih dari `10%`, tipiskan file index menjadi snapshot concern `planned/in-progress` + pointer closure; pindahkan detail concern `done` ke arsip periodik aktif.
+  6) jika context window AI naik, ekspansi space mengikuti urutan `validation log -> thin registry -> playbook summary -> concern pack tambahan/ADR`.
 
 - Guardrail:
   - jangan memperbesar `AGENTS.md` hanya karena context window model meningkat.
   - budget dihitung pada level pack baca aktif, bukan hanya file tunggal.
   - jika file melewati soft cap, utamakan pindah ke annex/arsip daripada menambah ringkasan panjang di file utama.
+  - `OPERATIONAL_VALIDATION_LOG.md` tidak boleh menjadi tempat penyimpanan detail closure concern `done`; file itu hanya index aktif.
   - setiap perubahan budget atau urutan load order wajib sinkron ke `AGENTS.md` dan `AI_SINGLE_PATH_ARCHITECTURE.md`.
 - Validasi minimum:
   - baseline file aktif tercatat dengan ukuran `chars` dan estimasi token.

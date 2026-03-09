@@ -129,6 +129,7 @@ Artefak yang direkomendasikan untuk dibawa ke project lain:
 
 - Setiap menemukan jalur baru yang lebih efisien: update registry + protocol.
 - Setiap menemukan jalur lama tidak efektif: ubah status ke `deprecated` dan beri alternatif.
+- File utama ini menyimpan trigger/outcome/validation stub; jangan menduplikasi langkah operasional lengkap yang sudah canonical di `AGENTS.md`, `AI_SINGLE_PATH_ARCHITECTURE.md`, atau `MARKDOWN_CONTEXT_SPACE_BUDGET.md`.
 - Jangan simpan pattern hanya di chat; wajib masuk dokumen agar reusable.
 
 ## 7) Detail Pattern Tanggal
@@ -141,4 +142,5 @@ Aturan pakai:
 
 - Baca file utama ini terlebih dahulu untuk routing cepat.
 - Buka lampiran detail hanya saat perlu mengeksekusi pattern spesifik.
+- Lampiran detail tidak masuk default pack; jika butuh lebih dari sedikit pattern, buka secara scoped per section.
 - Setiap perubahan status/isi pattern wajib disinkronkan di file utama dan lampiran pada sesi yang sama.
