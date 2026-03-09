@@ -21,6 +21,7 @@ Status: `done` (`state:thin-registry-active-index`)
 | Concern ID | Concern | Source of Truth (SOT) | Status Concern | Keputusan Routing |
 | --- | --- | --- | --- | --- |
 | `C-UI-UX-RUNTIME-EVIDENCE` | Ekspansi audit UI/UX runtime evidence | `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md` | `in-progress` | Concern ini menjadi jalur utama evidence runtime lintas concern UI/UX. |
+| `C-GOVERNANCE-AUDIT-WAVE` | Audit wave lanjutan governance markdown | `docs/process/TODO_GCP26A4_GOVERNANCE_AUDIT_WAVE_FOLLOWUP_2026_03_09.md` | `in-progress` | Concern ini menjadi parent audit bertahap untuk TODO/ADR corpus, link/path, thinning, dan shard annex sebelum closure governance wave berikutnya. |
 | `C-MODULE-GROUPING-E2E` | Refactor grouping modul domain E2E | `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` | `planned` | Grouping menu/modul lintas domain mengikuti concern ini sebagai parent concern. |
 | `C-ROLE-BASED-GROUPING` | Penataan ulang grouping modul berdasarkan role user | `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` | `planned` | Concern ini dipakai untuk validasi rule grouping berbasis role sebelum merge ke concern parent E2E. |
 | `C-QUALITY-GATE-90PLUS` | Roadmap sprint naik skor project 90+ | `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` | `planned` | Concern ini menjadi jalur eksekusi hardening quality gate (style + e2e dependency) untuk mendorong skor proyek ke 90+. |
@@ -29,11 +30,11 @@ Status: `done` (`state:thin-registry-active-index`)
 
 - Concern `done` terbaru dipindahkan ke log periodik `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
 - Pointer closure penting:
-  - `C-MARKDOWN-CONTEXT-BUDGET` -> `docs/process/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`
-  - `C-GOVERNANCE-CONTEXT-PACK` -> `docs/process/TODO_GCP26A1_DEDUP_DAN_COMPACTION_GOVERNANCE_CONTEXT_PACK_2026_03_09.md`
-  - `C-GOVERNANCE-THIN-REGISTRY` -> `docs/process/TODO_GCP26A2_THIN_REGISTRY_DAN_ANNEX_RETRIEVAL_GUARDRAIL_2026_03_09.md`
-  - `C-GOVERNANCE-AUDIT-AUTOMATION` -> `docs/process/TODO_GCP26A3_AUDIT_AUTOMATION_MARKDOWN_GOVERNANCE_2026_03_09.md`
-  - `C-INERTIA-INCREMENTAL-OPTIMIZATION` -> `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md`
+  - `C-MARKDOWN-CONTEXT-BUDGET` -> `docs/process/archive/2026_03/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`
+  - `C-GOVERNANCE-CONTEXT-PACK` -> `docs/process/archive/2026_03/TODO_GCP26A1_DEDUP_DAN_COMPACTION_GOVERNANCE_CONTEXT_PACK_2026_03_09.md`
+  - `C-GOVERNANCE-THIN-REGISTRY` -> `docs/process/archive/2026_03/TODO_GCP26A2_THIN_REGISTRY_DAN_ANNEX_RETRIEVAL_GUARDRAIL_2026_03_09.md`
+  - `C-GOVERNANCE-AUDIT-AUTOMATION` -> `docs/process/archive/2026_03/TODO_GCP26A3_AUDIT_AUTOMATION_MARKDOWN_GOVERNANCE_2026_03_09.md`
+  - `C-INERTIA-INCREMENTAL-OPTIMIZATION` -> `docs/process/archive/2026_03/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md`
   - wave closure dashboard/user/kecamatan partial reload tetap hidup di log periodik Q1, bukan di tabel aktif ini.
 
 ## Registry Historis (Full Context)
@@ -64,3 +65,4 @@ Gunakan arsip berikut jika user meminta audit concern lama, jejak keputusan deta
 - [x] Concern `done` terbaru dipindah menjadi pointer closure ke log periodik.
 - [x] Concern `GCP26A2` menutup hardening thin registry dan retrieval annex on-demand.
 - [x] Concern `GCP26A3` menutup automation audit governance markdown.
+- [x] Concern `GCP26A4` diregistrasikan sebagai follow-up audit wave aktif untuk batch 1-5.

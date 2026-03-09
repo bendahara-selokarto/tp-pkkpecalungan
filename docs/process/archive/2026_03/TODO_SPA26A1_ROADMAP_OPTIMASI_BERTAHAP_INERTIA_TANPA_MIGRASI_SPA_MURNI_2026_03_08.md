@@ -52,25 +52,25 @@ Related ADR: `-`
 - [x] L1. Wave 1: partial reload untuk halaman list/filter.
   - prioritas pada dashboard agregat dan halaman index yang hanya mengubah filter/paginasi,
   - gunakan partial reload/prop refresh agar payload yang dikirim ulang hanya blok data yang berubah.
-  - child concern pilot dashboard: `docs/process/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md`.
-  - child concern pilot user management index: `docs/process/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md`.
+  - child concern pilot dashboard: `docs/process/archive/2026_03/TODO_DWI26A1_PILOT_DASHBOARD_WAVE_1_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md`.
+  - child concern pilot user management index: `docs/process/archive/2026_03/TODO_USR26A1_PILOT_USER_MANAGEMENT_INDEX_PARTIAL_RELOAD_DAN_PAYLOAD_SLIMMING_2026_03_08.md`.
 - [x] L2. Wave 2: lazy data fetch untuk blok sekunder.
   - pindahkan blok non-kritis di dashboard atau halaman detail yang tidak perlu hadir pada first paint,
   - gunakan endpoint kecil berbasis auth session yang tetap lewat boundary controller/use case/repository.
-  - child concern pilot dashboard deferred blocks: `docs/process/TODO_DBL26A1_PILOT_DASHBOARD_WAVE_2_DEFERRED_BLOCKS_DAN_LAZY_FETCH_2026_03_08.md`.
+  - child concern pilot dashboard deferred blocks: `docs/process/archive/2026_03/TODO_DBL26A1_PILOT_DASHBOARD_WAVE_2_DEFERRED_BLOCKS_DAN_LAZY_FETCH_2026_03_08.md`.
 - [x] L3. Wave 3: komponen stateful lokal.
   - pertahankan state UI seperti tab, collapse, draft filter, modal, dan helper panel di client,
   - kurangi visit Inertia hanya untuk perubahan state presentasional.
-  - child concern pilot dashboard presentational state: `docs/process/TODO_DBS26A1_PILOT_DASHBOARD_WAVE_3_STATEFUL_PRESENTATIONAL_UI_2026_03_08.md`.
+  - child concern pilot dashboard presentational state: `docs/process/archive/2026_03/TODO_DBS26A1_PILOT_DASHBOARD_WAVE_3_STATEFUL_PRESENTATIONAL_UI_2026_03_08.md`.
 - [x] L4. Wave 4: endpoint JSON kecil untuk widget sangat interaktif.
   - batasi pada use case yang memang buruk jika tetap full prop refresh,
   - gunakan kontrak response tipis, bukan API generik lintas aplikasi,
   - larang bypass policy/repository boundary.
-  - child concern pilot dashboard per-desa detail widget: `docs/process/TODO_DBJ26A1_PILOT_DASHBOARD_WAVE_4_JSON_DETAIL_WIDGET_PER_DESA_2026_03_08.md`.
+  - child concern pilot dashboard per-desa detail widget: `docs/process/archive/2026_03/TODO_DBJ26A1_PILOT_DASHBOARD_WAVE_4_JSON_DETAIL_WIDGET_PER_DESA_2026_03_08.md`.
 - [x] L5. Hardening observability dan regresi.
   - catat metrik sebelum/sesudah pada concern pilot,
   - pastikan telemetry runtime error dan smoke test tetap relevan setelah pola fetch baru ditambah.
-  - child concern pilot dashboard fetch failure telemetry: `docs/process/TODO_DBT26A1_PILOT_DASHBOARD_WAVE_5_FETCH_FAILURE_TELEMETRY_2026_03_09.md`.
+  - child concern pilot dashboard fetch failure telemetry: `docs/process/archive/2026_03/TODO_DBT26A1_PILOT_DASHBOARD_WAVE_5_FETCH_FAILURE_TELEMETRY_2026_03_09.md`.
 - [x] L6. Sinkronisasi dokumen concern terkait.
   - update registry concern aktif,
   - update log validasi operasional saat concern ini bergerak dari `planned` ke batch implementasi.

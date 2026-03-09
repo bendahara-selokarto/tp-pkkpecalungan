@@ -3,7 +3,7 @@
 Tanggal: 2026-03-09  
 Status: `accepted`  
 Owner: AI execution flow  
-Related TODO: `docs/process/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`  
+Related TODO: `docs/process/archive/2026_03/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`  
 Supersedes: `-`  
 Superseded by: `-`
 
@@ -71,7 +71,7 @@ Superseded by: `-`
 - `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`
 - `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md`
 - `docs/process/MARKDOWN_CONTEXT_SPACE_BUDGET.md`
-- `docs/process/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`
+- `docs/process/archive/2026_03/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`
 
 ## Status Log
 

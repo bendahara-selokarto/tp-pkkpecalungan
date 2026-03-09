@@ -22,10 +22,14 @@ Aturan:
 
 - Source of truth concern aktif: `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
 - Concern berjalan yang tetap berada di index aktif:
+  - `docs/process/TODO_GCP26A4_GOVERNANCE_AUDIT_WAVE_FOLLOWUP_2026_03_09.md` (`in-progress`)
   - `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md` (`in-progress`)
   - `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` (`planned`)
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`planned`)
+- Catatan sinkronisasi `GCP26A4`:
+  - gelombang audit lanjutan governance markdown dipisah ke concern parent tersendiri agar commit/push per batch tetap traceable,
+  - batch 1 dimulai dengan archiving concern `done` dari root `docs/process/` ke `docs/process/archive/2026_03/` dan sinkronisasi pointer closure terkait.
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
