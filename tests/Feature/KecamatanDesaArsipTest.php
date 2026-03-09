@@ -163,6 +163,52 @@ class KecamatanDesaArsipTest extends TestCase
                 ->where('filters.q', 'Gombong'));
     }
 
+    public function test_partial_reload_monitoring_arsip_desa_hanya_mengembalikan_prop_yang_diminta(): void
+    {
+        $kecamatanSekretaris = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+        ]);
+        $kecamatanSekretaris->assignRole('kecamatan-sekretaris');
+
+        $desaUserA = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desaA1->id,
+        ]);
+        $desaUserA->assignRole('admin-desa');
+
+        ArsipDocument::factory()->create([
+            'title' => 'Rencana Kerja Gombong',
+            'is_global' => false,
+            'level' => 'desa',
+            'area_id' => $this->desaA1->id,
+            'created_by' => $desaUserA->id,
+        ]);
+
+        $response = $this->actingAs($kecamatanSekretaris)
+            ->get(route('kecamatan.desa-arsip.index', [
+                'desa_id' => $this->desaA1->id,
+                'q' => 'Gombong',
+                'per_page' => 25,
+            ]));
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DesaArsip/Index')
+                ->reloadOnly(['documents', 'filters'], function (AssertableInertia $reload): void {
+                    $reload
+                        ->where('filters.desa_id', $this->desaA1->id)
+                        ->where('filters.q', 'Gombong')
+                        ->where('filters.per_page', 25)
+                        ->where('documents.per_page', 25)
+                        ->has('documents.data', 1)
+                        ->missing('desaOptions')
+                        ->missing('pagination');
+                });
+        });
+    }
+
     public function test_peran_non_kecamatan_tidak_dapat_mengakses_monitoring_arsip_desa(): void
     {
         $desaUser = User::factory()->create([

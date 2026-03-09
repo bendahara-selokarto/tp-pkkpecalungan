@@ -35,6 +35,7 @@ Aturan:
   - `docs/process/TODO_DBJ26A1_PILOT_DASHBOARD_WAVE_4_JSON_DETAIL_WIDGET_PER_DESA_2026_03_08.md` (`done`)
   - `docs/process/TODO_DBT26A1_PILOT_DASHBOARD_WAVE_5_FETCH_FAILURE_TELEMETRY_2026_03_09.md` (`done`)
   - `docs/process/TODO_KDA26A1_PILOT_KECAMATAN_DESA_ACTIVITIES_PARTIAL_RELOAD_2026_03_09.md` (`done`)
+  - `docs/process/TODO_KAR26A1_PILOT_KECAMATAN_DESA_ARSIP_PARTIAL_RELOAD_2026_03_09.md` (`done`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
@@ -197,6 +198,25 @@ Aturan:
   - `php artisan test tests/Feature/KecamatanDesaActivityTest.php --compact` -> `PASS` (`10` tests, `127` assertions, `54.21s`),
   - `npm run build` -> `PASS` (`built in 2m 42s`),
   - `php artisan test --compact` -> `PASS` (`1164 passed`, `8061 assertions`, `635.46s`).
+
+### Pilot Kecamatan Desa Arsip Partial Reload (`KAR26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Scope batch:
+  - `app/Domains/Wilayah/Arsip/Controllers/KecamatanDesaArsipController.php`,
+  - `resources/js/Pages/Kecamatan/DesaArsip/Index.vue`,
+  - `tests/Feature/KecamatanDesaArsipTest.php`.
+- Target batch:
+  - menggulirkan partial reload ke loop filter/paginasi monitoring arsip desa kecamatan,
+  - menjaga contract auth/scope/filter tetap sama.
+- Hasil batch implementasi:
+  - controller mengirim `documents` dan `filters` dengan closure untuk partial reload,
+  - page memakai helper visit terpusat dan pagination partial prop `documents` + `filters`,
+  - guard test partial reload concern ditambahkan.
+- Validasi batch:
+  - `php artisan test tests/Feature/KecamatanDesaArsipTest.php --compact` -> `PASS` (`5` tests, `57` assertions, `16.80s`),
+  - `npm run build` -> `PASS` (`built in 2m 47s`),
+  - `php artisan test --compact` -> `PASS` (`1165 passed`, `8096 assertions`, `676.46s`).
 
 ### Concern Archived
 

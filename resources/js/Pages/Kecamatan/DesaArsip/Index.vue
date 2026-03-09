@@ -29,6 +29,10 @@ const props = defineProps({
 })
 
 const perPage = computed(() => props.filters.per_page ?? 10)
+const DESA_ARSIP_PARTIAL_PROPS = Object.freeze([
+  'documents',
+  'filters',
+])
 const selectedCakupan = ref('desa')
 const selectedDesaId = ref(props.filters.desa_id ? String(props.filters.desa_id) : '')
 const searchKeyword = ref(props.filters.q ?? '')
@@ -47,6 +51,15 @@ const buildFilterQuery = (customPerPage = perPage.value) => {
   return query
 }
 
+const visitDesaArsip = (query) => {
+  router.get('/kecamatan/desa-arsip', query, {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+    only: DESA_ARSIP_PARTIAL_PROPS,
+  })
+}
+
 const pindahCakupan = (event) => {
   const value = String(event.target.value || 'desa')
   selectedCakupan.value = value
@@ -60,40 +73,24 @@ const pindahCakupan = (event) => {
     return
   }
 
-  router.get('/kecamatan/desa-arsip', buildFilterQuery(), {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitDesaArsip(buildFilterQuery())
 }
 
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/kecamatan/desa-arsip', buildFilterQuery(selectedPerPage), {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitDesaArsip(buildFilterQuery(selectedPerPage))
 }
 
 const terapkanFilter = () => {
-  router.get('/kecamatan/desa-arsip', buildFilterQuery(), {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitDesaArsip(buildFilterQuery())
 }
 
 const resetFilter = () => {
   selectedDesaId.value = ''
   searchKeyword.value = ''
 
-  router.get('/kecamatan/desa-arsip', { per_page: perPage.value }, {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitDesaArsip({ per_page: perPage.value })
 }
 
 const formatBytes = (sizeInBytes) => {
@@ -273,6 +270,10 @@ const formatDateTime = (isoDateTime) => {
       <PaginationBar
         :links="documents.links"
         :from="documents.from"
+        :only="DESA_ARSIP_PARTIAL_PROPS"
+        :preserve-scroll="true"
+        :preserve-state="true"
+        :replace="true"
         :to="documents.to"
         :total="documents.total"
       />

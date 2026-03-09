@@ -28,7 +28,15 @@ class KecamatanDesaArsipController extends Controller
 
         $kecamatanAreaId = (int) $user->area_id;
 
-        $documents = $this->listKecamatanDesaArsipDocumentsUseCase
+        $desaOptions = $this->areaRepository
+            ->getDesaByKecamatan($kecamatanAreaId)
+            ->map(static fn ($area) => [
+                'id' => (int) $area->id,
+                'name' => (string) $area->name,
+            ])
+            ->values();
+
+        $resolveDocuments = fn () => $this->listKecamatanDesaArsipDocumentsUseCase
             ->execute(
                 $kecamatanAreaId,
                 $request->perPage(),
@@ -58,25 +66,19 @@ class KecamatanDesaArsipController extends Controller
                 'download_url' => route('arsip.download', ['arsipDocument' => $document->id], absolute: false),
             ]);
 
-        $desaOptions = $this->areaRepository
-            ->getDesaByKecamatan($kecamatanAreaId)
-            ->map(static fn ($area) => [
-                'id' => (int) $area->id,
-                'name' => (string) $area->name,
-            ])
-            ->values();
+        $resolveFilters = fn () => [
+            'per_page' => $request->perPage(),
+            'desa_id' => $request->desaId(),
+            'q' => $request->keyword(),
+        ];
 
         return Inertia::render('Kecamatan/DesaArsip/Index', [
-            'documents' => $documents,
+            'documents' => $resolveDocuments,
             'desaOptions' => $desaOptions,
             'pagination' => [
                 'perPageOptions' => [10, 25, 50],
             ],
-            'filters' => [
-                'per_page' => $request->perPage(),
-                'desa_id' => $request->desaId(),
-                'q' => $request->keyword(),
-            ],
+            'filters' => $resolveFilters,
         ]);
     }
 }
