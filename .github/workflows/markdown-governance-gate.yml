@@ -1,0 +1,42 @@
+name: Markdown Governance Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'AGENTS.md'
+      - 'docs/process/**'
+      - 'docs/adr/**'
+      - 'scripts/generate_todo.ps1'
+      - 'scripts/audit_markdown_governance.ps1'
+      - '.github/workflows/markdown-governance-gate.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'AGENTS.md'
+      - 'docs/process/**'
+      - 'docs/adr/**'
+      - 'scripts/generate_todo.ps1'
+      - 'scripts/audit_markdown_governance.ps1'
+      - '.github/workflows/markdown-governance-gate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: markdown-governance-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  governance-audit:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run markdown governance audit
+        shell: pwsh
+        run: ./scripts/audit_markdown_governance.ps1

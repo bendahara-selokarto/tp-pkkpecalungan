@@ -35,6 +35,7 @@ Aturan:
 - Detail closure concern `SPA26A1`, `DWI26A1`, `USR26A1`, `DBL26A1`, `DBS26A1`, `DBJ26A1`, `DBT26A1`, `KDA26A1`, `KAR26A1`, `KAC26A1`, `MKB26A1`, `SFC26A1`, `MFC26A1`, dan `TAG26A1` telah dipindahkan ke `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
 - Concern `GCP26A1` menutup hardening sesi ini dengan keputusan: ownership governance markdown dikunci dan validation log aktif kembali menjadi index ringkas.
 - Concern `GCP26A2` menutup thinning `TTM25R1`, memperbaiki drift `P-014`, dan mengunci guard annex on-demand.
+- Concern `GCP26A3` menutup automation audit script + generator hook + CI gate untuk governance markdown.
 
 ### Concern Archived
 

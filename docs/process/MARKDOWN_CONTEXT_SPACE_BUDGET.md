@@ -89,6 +89,7 @@ Ukuran artefak aktif yang diukur:
 5. `OPERATIONAL_VALIDATION_LOG.md` index aktif hanya memuat concern `planned/in-progress` dan pointer closure ringkas; detail concern `done` harus dipindah ke arsip periodik.
 6. `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` adalah annex on-demand dan tidak masuk default pack; buka section yang relevan saja.
 7. Jika soft cap file atau band pack terlewati, lakukan thinning/archive pada sesi yang sama sebelum menambah detail baru.
+8. Gunakan `scripts/audit_markdown_governance.ps1` sebagai audit otomatis lokal/CI untuk soft cap, thin registry, index aktif, dan guard annex on-demand.
 
 ## Expansion Policy Saat Context Window AI Meningkat
 
@@ -121,7 +122,7 @@ Lakukan compaction pada sesi yang sama jika salah satu terjadi:
 
 ## Command Audit Ringkas
 
-Gunakan command berikut untuk audit ulang baseline:
+Gunakan command berikut untuk audit ulang baseline cepat:
 
 ```bash
 wc -lcw AGENTS.md \
@@ -132,3 +133,9 @@ wc -lcw AGENTS.md \
 ```
 
 Untuk estimasi pack, jumlahkan `chars` file terkait lalu hitung `ceil(chars / 4)`.
+
+Audit otomatis yang direkomendasikan:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/audit_markdown_governance.ps1
+```

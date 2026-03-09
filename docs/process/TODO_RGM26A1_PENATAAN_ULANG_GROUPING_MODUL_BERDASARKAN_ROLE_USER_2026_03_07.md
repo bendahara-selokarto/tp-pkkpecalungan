@@ -7,7 +7,7 @@ Related ADR: `-`
 ## Interpretasi Status Aktif
 
 - Status aktif concern ini adalah `planned` dengan `state:awaiting-owner-mode-target`.
-- Seluruh blok `Progress Update 2026-03-07` di bagian bawah dipertahankan sebagai audit trail historis.
+- Audit trail no-op historis concern ini dipindahkan ke `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md` agar file aktif tetap tipis.
 - Entri historis yang sempat menyebut concern `done` tidak lagi berlaku sebagai status aktif karena sudah disupersede oleh reset concern pada 2026-03-07.
 
 ## Aturan Pakai
@@ -19,10 +19,7 @@ Related ADR: `-`
 
 ## Konteks
 
-- Saat ini pengelompokan modul untuk visibilitas role tersebar pada:
-  - `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php` (mapping group, mode role, override modul),
-  - `app/Http/Middleware/EnsureModuleVisibility.php` (enforcement akses runtime),
-  - `resources/js/Layouts/DashboardLayout.vue` (struktur menu/sidebar yang dikonsumsi user).
+- Pengelompokan modul untuk visibilitas role saat ini tersebar pada `RoleMenuVisibilityService`, `EnsureModuleVisibility`, dan `DashboardLayout.vue`.
 - Owner perlu menata ulang grouping modul berdasarkan role user secara sadar kontrak, bukan sekadar perubahan label/UI.
 - Perubahan ini berdampak lintas backend, middleware, payload Inertia, sidebar, test matrix, dan dokumen canonical.
 
@@ -54,43 +51,9 @@ Konfirmasi owner 2026-03-08:
 
 ### Draft Input Owner Aman (Hasil Analisa 2026-03-08)
 
-Tujuan shortlist ini:
-
-- Memilih modul yang paling aman untuk dibahas lebih dulu pada sesi owner.
-- Fokus hanya pada modul yang `match langsung` dengan bahan administrasi yang sudah direkam.
-- Menghindari modul yang masih `reuse parsial/report-only`, bergantung override khusus, atau shared terlalu lebar lintas group.
-
-Rekomendasi tahap-1 paling aman:
-
-| Prioritas | Modul Slug | Group Rekomendasi | Alasan aman |
-| --- | --- | --- | --- |
-| 1 | `agenda-surat` | `sekretaris-tpk` | Match langsung dengan bahan sekretaris inti dan sudah stabil pada boundary sekretariat. |
-| 2 | `buku-daftar-hadir` | `sekretaris-tpk` | Match langsung dengan bahan sekretaris inti dan tidak bergantung override role-module. |
-| 3 | `buku-notulen-rapat` | `sekretaris-tpk` | Match langsung dengan bahan sekretaris inti; meski ekstensi lokal, grouping-nya paling jelas. |
-| 4 | `data-warga` | `pokja-i` | Match langsung dengan bahan Pokja I dan sudah menjadi kepemilikan inti Pokja I. |
-| 5 | `data-kegiatan-warga` | `pokja-i` | Match langsung dengan kebutuhan data kegiatan Pokja I dan boundary-nya sudah spesifik. |
-| 6 | `bkl` | `pokja-i` | Match langsung dengan bahan Pokja I dan tidak punya ambiguity group lintas role. |
-| 7 | `bkr` | `pokja-i` | Match langsung dengan bahan Pokja I dan stabil sebagai concern spesifik. |
-| 8 | `paar` | `pokja-i` | Match langsung dengan bahan Pokja I dan canonical label sudah terkunci. |
-| 9 | `data-keluarga` | `pokja-iii` | Match paling dekat dengan bahan Pokja III dan group saat ini sudah konsisten. |
-| 10 | `posyandu` | `pokja-iv` | Match langsung dengan bahan Pokja IV dan sudah punya boundary domain jelas. |
-| 11 | `simulasi-penyuluhan` | `pokja-iv` | Match langsung dengan bahan Pokja IV dan tidak bergantung wrapper report. |
-
-Rekomendasi yang sengaja belum diprioritaskan pada tahap aman:
-
-- `activities`: terlalu shared lintas sekretaris + semua pokja; perubahan grouping berisiko tinggi.
-- `inventaris` dan `buku-tamu`: saat ini memiliki realitas runtime khusus/override sehingga tidak cocok dijadikan batch aman pertama.
-- `program-prioritas`, `buku-keuangan`, `bantuans`, `catatan-keluarga`: lebih dekat ke `reuse parsial/report-only` atau punya dampak lintas concern lebih besar.
-- `KWT`, `Dasa Wisma`, `IVA test`, `grafik/kliping`: belum punya boundary modul input yang cukup eksplisit.
-
-Rekomendasi scope rollout paling aman:
-
-- `desa only` untuk tahap owner pertama, karena bahan yang direkam sejauh ini dominan level desa dan blast radius lebih kecil.
-
-Aturan pakai shortlist:
-
-- Jika owner setuju, isi `Group Target` pada tabel utama minimal untuk modul-modul di shortlist ini.
-- Modul di luar shortlist tetap dibiarkan kosong sampai owner memberi keputusan eksplisit.
+Shortlist aman tahap-1 sudah direfleksikan langsung pada kolom `Group Target` di tabel utama.
+- Justifikasi naratif shortlist, modul yang sengaja ditunda, dan catatan blast radius dipindahkan ke `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
+- Scope rollout aman yang masih berlaku: `desa only`.
 
 | No | Modul Slug | Group Saat Ini | Group Target |
 | --- | --- | --- | --- |
@@ -130,9 +93,9 @@ Aturan pakai shortlist:
 | 34 | desa-activities | monitoring |  |
 | 35 | desa-arsip | monitoring |  |
 
-Catatan realitas runtime saat ini:
+Catatan runtime ringkas:
 
-- `inventaris` dan `buku-tamu` memiliki override mode untuk `desa-pokja-i..iv` pada level role-module, meski baseline group asal ada di `sekretaris-tpk`.
+- `inventaris` dan `buku-tamu` tetap dianggap modul override khusus dan belum masuk shortlist aman tahap-1.
 
 ## Target Hasil
 
@@ -143,53 +106,18 @@ Catatan realitas runtime saat ini:
 
 ## Langkah Eksekusi Terstruktur (Tanpa Eksekusi Kode)
 
-- [ ] P0. Baseline audit:
-  - inventarisasi `GROUP_MODULES`, `ROLE_GROUP_MODES`, `ROLE_MODULE_MODE_OVERRIDES`,
-  - inventarisasi konsumsi di middleware `module.visibility` dan layout sidebar.
-- [ ] P1. Freeze keputusan owner:
-  - lock tabel modul target,
-  - lock mode akses target per role-scope,
-  - lock out-of-scope agar tidak terjadi creep.
-- [ ] P2. Desain mapping kontrak baru:
-  - susun matrix `role -> group -> modules -> mode`,
-  - tandai modul dengan override khusus (pengecualian dari baseline group).
-- [ ] P3. Rencana patch backend:
-  - urutan ubah `RoleMenuVisibilityService`,
-  - validasi dampak ke `EnsureModuleVisibility` + policy/scope service.
-- [ ] P4. Rencana patch frontend:
-  - sinkronisasi `DashboardLayout.vue` dengan payload backend,
-  - pastikan anti-duplicate menu + guard item hidden tetap aktif.
-- [ ] P5. Rencana test hardening:
-  - unit kontrak service,
-  - feature payload Inertia,
-  - feature middleware (allow + deny matrix),
-  - unit kontrak frontend layout menu.
-- [ ] P6. Rencana doc-hardening:
-  - update `docs/domain/DOMAIN_CONTRACT_MATRIX.md`,
-  - catat siklus di `docs/process/OPERATIONAL_VALIDATION_LOG.md`,
-  - update deviation log bila ada keputusan menyimpang dari baseline.
-- [ ] P7. Rencana rollout:
-  - urutan deploy aman,
-  - smoke checklist pasca deploy,
-  - sign-off owner.
+- [ ] P0. Audit baseline `GROUP_MODULES`, `ROLE_GROUP_MODES`, `ROLE_MODULE_MODE_OVERRIDES`, middleware `module.visibility`, dan sidebar.
+- [ ] P1. Freeze keputusan owner pada `Group Target`, `Mode Target`, scope rollout, dan out-of-scope.
+- [ ] P2. Susun matrix kontrak baru `role -> group -> modules -> mode`, termasuk override khusus.
+- [ ] P3. Rancang patch backend + frontend + test hardening dari `RoleMenuVisibilityService` sampai `DashboardLayout.vue`.
+- [ ] P4. Jalankan doc-hardening + rollout checklist setelah keputusan owner terkunci.
 
 ## Validation Gate Plan
 
-- [ ] G1. Konfirmasi matrix owner sudah lengkap dan tidak ambigu.
-- [ ] G2. Targeted test plan disetujui sebelum patch:
-  - `RoleMenuVisibilityServiceTest`,
-  - `RoleMenuVisibilityGlobalContractTest`,
-  - `MenuVisibilityPayloadTest`,
-  - `ModuleVisibilityMiddlewareTest`,
-  - `DashboardLayoutMenuContractTest`.
-- [ ] G3. Full regression plan:
-  - `php artisan test`,
-  - `npm run build`,
-  - smoke role-based navigation.
-- [ ] G4. Exit criteria:
-  - tidak ada mismatch payload vs sidebar,
-  - tidak ada privilege escalation,
-  - dokumen canonical sinkron.
+- [ ] G1. Matrix owner lengkap dan tidak ambigu.
+- [ ] G2. Targeted plan siap: `RoleMenuVisibilityServiceTest`, `RoleMenuVisibilityGlobalContractTest`, `MenuVisibilityPayloadTest`, `ModuleVisibilityMiddlewareTest`, `DashboardLayoutMenuContractTest`.
+- [ ] G3. Full regression siap: `php artisan test`, `npm run build`, dan smoke role-based navigation.
+- [ ] G4. Exit criteria tetap: tidak ada mismatch payload/sidebar, privilege escalation, atau drift dokumen canonical.
 
 ## Risiko
 
@@ -222,38 +150,10 @@ Catatan realitas runtime saat ini:
 - [ ] Daftar file terdampak backend, frontend, test, dan dokumentasi.
 - [ ] Hasil validasi otomatis + manual dan residual risk.
 
-## Progress Update 2026-03-07 (Eksekusi No-op, Historical Audit Trail)
+## Pointer Audit Historis
 
-- Hasil pembacaan tabel owner:
-  - seluruh kolom `Group Target` dikosongkan,
-  - sesuai aturan concern, seluruh modul dianggap `tetap` (tidak ada perubahan grouping).
-- Dampak eksekusi historis:
-  - tidak ada patch kontrak akses pada `RoleMenuVisibilityService`, middleware, atau payload Inertia.
-  - concern ditutup sebagai no-op terkontrol karena tidak ada target regroup aktif dari owner.
-- Validasi yang dijalankan:
-  - `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
-  - hasil: `PASS` (`49` tests, `449` assertions).
-- Hardening minor saat validasi:
-  - kontrak string test frontend diperbarui agar tidak brittle terhadap variasi label `catatan-keluarga` (`tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`), tanpa perubahan perilaku aplikasi.
-
-## Progress Update 2026-03-07 (Re-eksekusi `manto`, Historical Audit Trail)
-
-- Verifikasi input owner diulang:
-  - seluruh kolom `Group Target` masih kosong, sehingga concern tetap no-op terkontrol.
-- Validasi regresi yang dijalankan:
-  - `php artisan test tests/Unit/Services/RoleMenuVisibilityServiceTest.php tests/Unit/Services/RoleMenuVisibilityGlobalContractTest.php tests/Feature/MenuVisibilityPayloadTest.php tests/Feature/ModuleVisibilityMiddlewareTest.php tests/Unit/Frontend/DashboardLayoutMenuContractTest.php --compact`
-  - hasil: `PASS` (`49` tests, `449` assertions).
-  - `php artisan test --compact`
-  - hasil: `PASS` (`1057` tests, `7110` assertions).
-  - `npm run build`
-  - hasil: `PASS` (Vite build sukses setelah repair optional dependency melalui `npm install`).
-- Keputusan final eksekusi historis:
-  - tidak ada perubahan kontrak grouping/menu karena tidak ada target regroup dari owner.
-  - concern `RGM26A1` tetap `done` dengan status no-op tervalidasi end-to-end.
-
-## Progress Update 2026-03-07 (Reset untuk Input Owner Baru)
-
-- Bagian ini adalah penentu status aktif terbaru dan mensupersede closure no-op historis di atas.
-- Status concern dikembalikan ke `planned` dengan state `awaiting-owner-group-target`.
-- Checklist gate eksekusi (`G1-G4`), keputusan (`K1-K4`), dan output final di-reset ke `- [ ]`.
-- Seluruh histori eksekusi no-op sebelumnya dipertahankan sebagai audit trail, namun tidak lagi dianggap baseline final untuk siklus perubahan berikutnya.
+- Audit trail no-op concern `RGM26A1` pada 2026-03-07 tetap tersedia di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
+- Ringkasan historis:
+  - owner sebelumnya belum mengisi `Group Target`, sehingga concern sempat ditutup sebagai no-op tervalidasi,
+  - concern kemudian di-reset ke status aktif `planned` saat input owner baru diminta,
+  - status aktif terbaru pada file ini tetap `planned` (`state:awaiting-owner-mode-target`).

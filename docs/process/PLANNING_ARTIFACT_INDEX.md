@@ -44,6 +44,8 @@ Owner: process governance
   - rencana eksekusi per concern.
 - `docs/process/TEMPLATE_TODO_CONCERN.md`
   - template canonical TODO concern baru.
+- `scripts/generate_todo.ps1`
+  - generator TODO canonical; default menjalankan audit governance markdown setelah generate.
 
 ### Layer 3 - Keputusan dan Bukti Eksekusi
 
@@ -51,6 +53,8 @@ Owner: process governance
   - keputusan arsitektur lintas concern.
 - `docs/process/OPERATIONAL_VALIDATION_LOG.md`
   - bukti validasi operasional per siklus.
+- `scripts/audit_markdown_governance.ps1`
+  - audit otomatis soft cap, thin registry, index aktif, dan annex retrieval governance markdown.
 
 ## Jalur Update Deterministik
 

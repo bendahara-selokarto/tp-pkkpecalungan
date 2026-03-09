@@ -2605,3 +2605,16 @@ Catatan:
   - audit referensi guard annex/pointer closure `PASS`,
   - review diff lintas registry + budget + playbook + log `PASS`,
   - `php artisan test` tidak dijalankan karena concern `doc-only`.
+
+### Audit Automation Markdown Governance (`GCP26A3`) - 2026-03-09
+
+- Status concern: `done` (`state:audit-script-generator-hook-and-ci-gate-locked`).
+- Hasil batch:
+  - `scripts/audit_markdown_governance.ps1` ditambahkan untuk audit soft cap, thin registry, index aktif, dan guard annex on-demand,
+  - `scripts/generate_todo.ps1` kini menjalankan audit governance secara default setelah generate,
+  - workflow `.github/workflows/markdown-governance-gate.yml` ditambahkan sebagai CI gate khusus governance markdown.
+- Validasi:
+  - audit script lokal `PASS`,
+  - generate TODO uji sementara dengan hook audit `PASS`,
+  - review diff lintas script + workflow + docs governance `PASS`,
+  - `php artisan test` tidak dijalankan karena concern `doc+script-only`.

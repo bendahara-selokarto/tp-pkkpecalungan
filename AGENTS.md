@@ -280,6 +280,7 @@ Aturan markdown operasional:
   - `KODE_UNIK` harus mudah diketik: huruf kapital + angka saja (tanpa simbol), panjang 4-8 karakter.
   - Format nama file disarankan: `TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
   - Gunakan generator standar `scripts/generate_todo.ps1` untuk membuat TODO baru agar format judul, metadata, dan nama file tetap konsisten.
+  - Generator TODO default menjalankan `scripts/audit_markdown_governance.ps1` setelah file ditulis; skip hanya jika ada blocker teknis yang dijelaskan eksplisit.
 - Keputusan arsitektur lintas concern wajib dicatat pada ADR di `docs/adr/`.
   - Format judul: `# ADR <NOMOR4> <Judul Ringkas>`.
   - Format nama file: `ADR_<NOMOR4>_<RINGKASAN>.md`.

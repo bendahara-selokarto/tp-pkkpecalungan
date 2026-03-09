@@ -10,7 +10,8 @@ param(
     [string]$RelatedAdr = '-',
     [string]$OutputDir = 'docs/process',
     [switch]$DryRun,
-    [switch]$Force
+    [switch]$Force,
+    [switch]$SkipGovernanceAudit
 )
 
 Set-StrictMode -Version Latest
@@ -68,3 +69,14 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 [System.IO.File]::WriteAllText($outputPath, $content, $utf8NoBom)
 
 Write-Output "TODO generated: $outputPath"
+
+if (-not $SkipGovernanceAudit) {
+    $auditScriptPath = Join-Path $repoRoot 'scripts/audit_markdown_governance.ps1'
+    if (Test-Path $auditScriptPath) {
+        & $auditScriptPath -RepoRoot $repoRoot -Quiet
+        if (-not $?) {
+            throw "TODO generated tetapi audit governance markdown gagal. Tinjau output audit: $auditScriptPath"
+        }
+        Write-Output 'Governance audit: PASS'
+    }
+}

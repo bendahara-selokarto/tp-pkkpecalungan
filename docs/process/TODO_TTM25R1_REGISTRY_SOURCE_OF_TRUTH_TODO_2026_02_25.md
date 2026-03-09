@@ -32,6 +32,7 @@ Status: `done` (`state:thin-registry-active-index`)
   - `C-MARKDOWN-CONTEXT-BUDGET` -> `docs/process/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`
   - `C-GOVERNANCE-CONTEXT-PACK` -> `docs/process/TODO_GCP26A1_DEDUP_DAN_COMPACTION_GOVERNANCE_CONTEXT_PACK_2026_03_09.md`
   - `C-GOVERNANCE-THIN-REGISTRY` -> `docs/process/TODO_GCP26A2_THIN_REGISTRY_DAN_ANNEX_RETRIEVAL_GUARDRAIL_2026_03_09.md`
+  - `C-GOVERNANCE-AUDIT-AUTOMATION` -> `docs/process/TODO_GCP26A3_AUDIT_AUTOMATION_MARKDOWN_GOVERNANCE_2026_03_09.md`
   - `C-INERTIA-INCREMENTAL-OPTIMIZATION` -> `docs/process/TODO_SPA26A1_ROADMAP_OPTIMASI_BERTAHAP_INERTIA_TANPA_MIGRASI_SPA_MURNI_2026_03_08.md`
   - wave closure dashboard/user/kecamatan partial reload tetap hidup di log periodik Q1, bukan di tabel aktif ini.
 
@@ -62,3 +63,4 @@ Gunakan arsip berikut jika user meminta audit concern lama, jejak keputusan deta
 - [x] Jalur referensi concern aktif tetap deterministik (1 concern -> 1 SOT).
 - [x] Concern `done` terbaru dipindah menjadi pointer closure ke log periodik.
 - [x] Concern `GCP26A2` menutup hardening thin registry dan retrieval annex on-demand.
+- [x] Concern `GCP26A3` menutup automation audit governance markdown.
