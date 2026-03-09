@@ -9,6 +9,8 @@ import { Link, router, usePage } from '@inertiajs/vue3'
 import { mdiClipboardList } from '@mdi/js'
 import { computed, ref } from 'vue'
 
+const KECAMATAN_ACTIVITIES_PARTIAL_PROPS = Object.freeze(['activities', 'filters'])
+
 const props = defineProps({
   activities: {
     type: Object,
@@ -59,6 +61,15 @@ const cancelDelete = () => {
 
 const perPage = computed(() => props.filters.per_page ?? 10)
 
+const visitKecamatanActivities = (query = {}) => {
+  router.get('/kecamatan/activities', query, {
+    only: KECAMATAN_ACTIVITIES_PARTIAL_PROPS,
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+  })
+}
+
 const pindahCakupan = (event) => {
   const value = String(event.target.value || 'kecamatan')
   selectedCakupan.value = value
@@ -72,21 +83,13 @@ const pindahCakupan = (event) => {
     return
   }
 
-  router.get('/kecamatan/activities', { per_page: perPage.value }, {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitKecamatanActivities({ per_page: perPage.value })
 }
 
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/kecamatan/activities', { per_page: selectedPerPage }, {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitKecamatanActivities({ per_page: selectedPerPage })
 }
 
 const formatDate = (value) => formatDateForDisplay(value)
@@ -217,6 +220,10 @@ const formatDate = (value) => formatDateForDisplay(value)
       <PaginationBar
         :links="activities.links"
         :from="activities.from"
+        :only="KECAMATAN_ACTIVITIES_PARTIAL_PROPS"
+        :preserve-scroll="true"
+        :preserve-state="true"
+        :replace="true"
         :to="activities.to"
         :total="activities.total"
       />

@@ -34,6 +34,7 @@ Status: `done` (`state:thin-registry-active-index`)
 | `C-DASHBOARD-WAVE5-FETCH-TELEMETRY` | Pilot dashboard wave 5 fetch failure telemetry | `docs/process/TODO_DBT26A1_PILOT_DASHBOARD_WAVE_5_FETCH_FAILURE_TELEMETRY_2026_03_09.md` | `done` | Concern ini menutup telemetry runtime untuk fetch failure widget dashboard tanpa menambah endpoint observability baru dan sudah tervalidasi penuh. |
 | `C-KECAMATAN-DESA-ACTIVITIES-PARTIAL-RELOAD` | Pilot kecamatan desa activities partial reload | `docs/process/TODO_KDA26A1_PILOT_KECAMATAN_DESA_ACTIVITIES_PARTIAL_RELOAD_2026_03_09.md` | `done` | Concern ini menutup rollout partial reload ke halaman monitoring kegiatan desa kecamatan tanpa menambah route baru. |
 | `C-KECAMATAN-DESA-ARSIP-PARTIAL-RELOAD` | Pilot kecamatan desa arsip partial reload | `docs/process/TODO_KAR26A1_PILOT_KECAMATAN_DESA_ARSIP_PARTIAL_RELOAD_2026_03_09.md` | `done` | Concern ini menutup rollout partial reload ke halaman monitoring arsip desa kecamatan tanpa menambah route baru. |
+| `C-KECAMATAN-ACTIVITIES-PARTIAL-RELOAD` | Pilot kecamatan activities partial reload | `docs/process/TODO_KAC26A1_PILOT_KECAMATAN_ACTIVITIES_PARTIAL_RELOAD_2026_03_09.md` | `done` | Concern ini menutup rollout partial reload ke halaman buku kegiatan kecamatan utama tanpa menambah route baru. |
 
 ## Registry Historis (Full Context)
 

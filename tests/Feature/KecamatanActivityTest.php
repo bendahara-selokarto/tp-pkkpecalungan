@@ -260,6 +260,43 @@ class KecamatanActivityTest extends TestCase
     }
 
     #[Test]
+    public function daftar_kegiatan_kecamatan_mendukung_partial_reload_activities_dan_filters(): void
+    {
+        $sekretarisUser = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $sekretarisUser->assignRole('kecamatan-sekretaris');
+
+        Activity::create([
+            'title' => 'Kegiatan Kecamatan Sekretaris',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $sekretarisUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $response = $this->actingAs($sekretarisUser)->get('/kecamatan/activities?per_page=25');
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/Activities/Index')
+                ->reloadOnly(['activities', 'filters'], function (AssertableInertia $reload): void {
+                    $reload
+                        ->where('filters.per_page', 25)
+                        ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR)
+                        ->where('activities.per_page', 25)
+                        ->has('activities.data', 1)
+                        ->missing('pagination');
+                });
+        });
+    }
+
+    #[Test]
     public function admin_kecamatan_hanya_melihat_kegiatan_pada_tahun_anggaran_aktif(): void
     {
         $adminKecamatan = User::factory()->create([

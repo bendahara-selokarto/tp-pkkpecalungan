@@ -36,19 +36,21 @@ class KecamatanActivityController extends Controller
     public function index(ListActivitiesRequest $request): Response
     {
         $this->authorize('viewAny', Activity::class);
-        $activities = $this->listScopedActivitiesUseCase
+        $resolveActivities = fn () => $this->listScopedActivitiesUseCase
             ->execute('kecamatan', $request->perPage())
             ->through(fn (Activity $activity) => $this->mapActivityPayload($activity));
 
+        $resolveFilters = fn () => [
+            'per_page' => $request->perPage(),
+            'tahun_anggaran' => (int) ($request->user()->active_budget_year ?? now()->year),
+        ];
+
         return Inertia::render('Kecamatan/Activities/Index', [
-            'activities' => $activities,
+            'activities' => $resolveActivities,
             'pagination' => [
                 'perPageOptions' => [10, 25, 50],
             ],
-            'filters' => [
-                'per_page' => $request->perPage(),
-                'tahun_anggaran' => (int) ($request->user()->active_budget_year ?? now()->year),
-            ],
+            'filters' => $resolveFilters,
         ]);
     }
 
