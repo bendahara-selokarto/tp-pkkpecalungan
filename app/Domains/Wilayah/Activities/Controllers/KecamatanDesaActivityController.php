@@ -30,7 +30,16 @@ class KecamatanDesaActivityController extends Controller
         $this->authorize('viewAny', Activity::class);
 
         $kecamatanAreaId = $this->activityScopeService->requireUserAreaId();
-        $activities = $this->listKecamatanDesaActivitiesUseCase
+
+        $desaOptions = $this->areaRepository
+            ->getDesaByKecamatan($kecamatanAreaId)
+            ->map(static fn ($area) => [
+                'id' => (int) $area->id,
+                'name' => (string) $area->name,
+            ])
+            ->values();
+
+        $resolveActivities = fn () => $this->listKecamatanDesaActivitiesUseCase
             ->execute(
                 $request->perPage(),
                 $request->desaId(),
@@ -67,16 +76,16 @@ class KecamatanDesaActivityController extends Controller
                     : null,
             ]);
 
-        $desaOptions = $this->areaRepository
-            ->getDesaByKecamatan($kecamatanAreaId)
-            ->map(static fn ($area) => [
-                'id' => (int) $area->id,
-                'name' => (string) $area->name,
-            ])
-            ->values();
+        $resolveFilters = fn () => [
+            'per_page' => $request->perPage(),
+            'desa_id' => $request->desaId(),
+            'status' => $request->status(),
+            'q' => $request->keyword(),
+            'tahun_anggaran' => (int) ($request->user()->active_budget_year ?? now()->year),
+        ];
 
         return Inertia::render('Kecamatan/DesaActivities/Index', [
-            'activities' => $activities,
+            'activities' => $resolveActivities,
             'desaOptions' => $desaOptions,
             'statusOptions' => [
                 ['value' => 'draft', 'label' => 'Draft'],
@@ -85,13 +94,7 @@ class KecamatanDesaActivityController extends Controller
             'pagination' => [
                 'perPageOptions' => [10, 25, 50],
             ],
-            'filters' => [
-                'per_page' => $request->perPage(),
-                'desa_id' => $request->desaId(),
-                'status' => $request->status(),
-                'q' => $request->keyword(),
-                'tahun_anggaran' => (int) ($request->user()->active_budget_year ?? now()->year),
-            ],
+            'filters' => $resolveFilters,
         ]);
     }
 

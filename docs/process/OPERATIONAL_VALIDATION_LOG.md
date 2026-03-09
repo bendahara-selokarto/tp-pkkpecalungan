@@ -34,6 +34,7 @@ Aturan:
   - `docs/process/TODO_DBS26A1_PILOT_DASHBOARD_WAVE_3_STATEFUL_PRESENTATIONAL_UI_2026_03_08.md` (`done`)
   - `docs/process/TODO_DBJ26A1_PILOT_DASHBOARD_WAVE_4_JSON_DETAIL_WIDGET_PER_DESA_2026_03_08.md` (`done`)
   - `docs/process/TODO_DBT26A1_PILOT_DASHBOARD_WAVE_5_FETCH_FAILURE_TELEMETRY_2026_03_09.md` (`done`)
+  - `docs/process/TODO_KDA26A1_PILOT_KECAMATAN_DESA_ACTIVITIES_PARTIAL_RELOAD_2026_03_09.md` (`done`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
@@ -177,6 +178,25 @@ Aturan:
   - `php artisan test tests/Feature/DashboardBlockDetailWidgetTest.php --compact` -> `PASS` (`3` tests, `37` assertions, `40.61s`),
   - `npm run build` -> `PASS` (`built in 3m 36s`),
   - `php artisan test --compact` -> `PASS` (`1163 passed`, `8025 assertions`, `477.24s`).
+
+### Pilot Kecamatan Desa Activities Partial Reload (`KDA26A1`) - 2026-03-09
+
+- Status concern: `done` (`state:full-suite-and-build-validated`).
+- Scope batch:
+  - `app/Domains/Wilayah/Activities/Controllers/KecamatanDesaActivityController.php`,
+  - `resources/js/Pages/Kecamatan/DesaActivities/Index.vue`,
+  - `tests/Feature/KecamatanDesaActivityTest.php`.
+- Target batch:
+  - menggulirkan partial reload ke loop filter/paginasi monitoring kegiatan desa kecamatan,
+  - menjaga contract auth/scope/filter tetap sama.
+- Hasil batch implementasi:
+  - controller mengirim `activities` dan `filters` dengan closure untuk partial reload,
+  - page memakai helper visit terpusat dan pagination partial prop `activities` + `filters`,
+  - guard test partial reload concern ditambahkan.
+- Validasi batch:
+  - `php artisan test tests/Feature/KecamatanDesaActivityTest.php --compact` -> `PASS` (`10` tests, `127` assertions, `54.21s`),
+  - `npm run build` -> `PASS` (`built in 2m 42s`),
+  - `php artisan test --compact` -> `PASS` (`1164 passed`, `8061 assertions`, `635.46s`).
 
 ### Concern Archived
 

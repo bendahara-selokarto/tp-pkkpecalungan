@@ -316,6 +316,51 @@ class KecamatanDesaActivityTest extends TestCase
     }
 
     #[Test]
+    public function partial_reload_monitoring_kegiatan_desa_hanya_mengembalikan_prop_yang_diminta(): void
+    {
+        $kecamatanUser = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $kecamatanUser->assignRole('kecamatan-sekretaris');
+
+        Activity::create([
+            'title' => 'Monitoring Posyandu Gombong',
+            'description' => 'Sesuai filter',
+            'level' => 'desa',
+            'area_id' => $this->desaA1->id,
+            'created_by' => $kecamatanUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        $response = $this->actingAs($kecamatanUser)->get(
+            route('kecamatan.desa-activities.index', [
+                'desa_id' => $this->desaA1->id,
+                'status' => 'published',
+                'per_page' => 25,
+            ])
+        );
+
+        $response->assertOk();
+        $response->assertInertia(function (AssertableInertia $page): void {
+            $page
+                ->component('Kecamatan/DesaActivities/Index')
+                ->reloadOnly(['activities', 'filters'], function (AssertableInertia $reload): void {
+                    $reload
+                        ->where('filters.desa_id', $this->desaA1->id)
+                        ->where('filters.status', 'published')
+                        ->where('filters.per_page', 25)
+                        ->where('activities.per_page', 25)
+                        ->has('activities.data', 1)
+                        ->missing('desaOptions')
+                        ->missing('statusOptions')
+                        ->missing('pagination');
+                });
+        });
+    }
+
+    #[Test]
     public function filter_desa_di_luar_kecamatan_sendiri_tetap_tidak_membocorkan_data(): void
     {
         $kecamatanUser = User::factory()->create([

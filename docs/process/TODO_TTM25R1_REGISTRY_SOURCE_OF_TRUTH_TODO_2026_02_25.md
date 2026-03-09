@@ -32,6 +32,7 @@ Status: `done` (`state:thin-registry-active-index`)
 | `C-DASHBOARD-WAVE3-STATEFUL-UI` | Pilot dashboard wave 3 stateful presentational UI | `docs/process/TODO_DBS26A1_PILOT_DASHBOARD_WAVE_3_STATEFUL_PRESENTATIONAL_UI_2026_03_08.md` | `done` | Concern ini menutup persistensi state presentasional dashboard di client tanpa mengubah query atau boundary backend. |
 | `C-DASHBOARD-WAVE4-JSON-DETAIL-WIDGET` | Pilot dashboard wave 4 JSON detail widget per desa | `docs/process/TODO_DBJ26A1_PILOT_DASHBOARD_WAVE_4_JSON_DETAIL_WIDGET_PER_DESA_2026_03_08.md` | `done` | Concern ini menutup endpoint JSON kecil on-expand untuk rincian per-desa/per-modul yang sudah tervalidasi penuh tanpa membuka API dashboard generik. |
 | `C-DASHBOARD-WAVE5-FETCH-TELEMETRY` | Pilot dashboard wave 5 fetch failure telemetry | `docs/process/TODO_DBT26A1_PILOT_DASHBOARD_WAVE_5_FETCH_FAILURE_TELEMETRY_2026_03_09.md` | `done` | Concern ini menutup telemetry runtime untuk fetch failure widget dashboard tanpa menambah endpoint observability baru dan sudah tervalidasi penuh. |
+| `C-KECAMATAN-DESA-ACTIVITIES-PARTIAL-RELOAD` | Pilot kecamatan desa activities partial reload | `docs/process/TODO_KDA26A1_PILOT_KECAMATAN_DESA_ACTIVITIES_PARTIAL_RELOAD_2026_03_09.md` | `done` | Concern ini menutup rollout partial reload ke halaman monitoring kegiatan desa kecamatan tanpa menambah route baru. |
 
 ## Registry Historis (Full Context)
 

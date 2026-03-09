@@ -39,6 +39,10 @@ const props = defineProps({
 const page = usePage()
 const formatDate = (value) => formatDateForDisplay(value)
 const perPage = computed(() => props.filters.per_page ?? 10)
+const DESA_ACTIVITIES_PARTIAL_PROPS = Object.freeze([
+  'activities',
+  'filters',
+])
 const selectedCakupan = ref('desa')
 const selectedDesaId = ref(props.filters.desa_id ? String(props.filters.desa_id) : '')
 const selectedStatus = ref(props.filters.status ?? '')
@@ -64,6 +68,15 @@ const buildFilterQuery = (customPerPage = perPage.value) => {
   return query
 }
 
+const visitDesaActivities = (query) => {
+  router.get('/kecamatan/desa-activities', query, {
+    preserveScroll: true,
+    preserveState: true,
+    replace: true,
+    only: DESA_ACTIVITIES_PARTIAL_PROPS,
+  })
+}
+
 const pindahCakupan = (event) => {
   const value = String(event.target.value || 'desa')
   selectedCakupan.value = value
@@ -77,29 +90,17 @@ const pindahCakupan = (event) => {
     return
   }
 
-  router.get('/kecamatan/desa-activities', buildFilterQuery(), {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitDesaActivities(buildFilterQuery())
 }
 
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/kecamatan/desa-activities', buildFilterQuery(selectedPerPage), {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitDesaActivities(buildFilterQuery(selectedPerPage))
 }
 
 const terapkanFilter = () => {
-  router.get('/kecamatan/desa-activities', buildFilterQuery(), {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitDesaActivities(buildFilterQuery())
 }
 
 const resetFilter = () => {
@@ -107,11 +108,7 @@ const resetFilter = () => {
   selectedStatus.value = ''
   searchKeyword.value = ''
 
-  router.get('/kecamatan/desa-activities', { per_page: perPage.value }, {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
+  visitDesaActivities({ per_page: perPage.value })
 }
 </script>
 
@@ -274,6 +271,10 @@ const resetFilter = () => {
       <PaginationBar
         :links="activities.links"
         :from="activities.from"
+        :only="DESA_ACTIVITIES_PARTIAL_PROPS"
+        :preserve-scroll="true"
+        :preserve-state="true"
+        :replace="true"
         :to="activities.to"
         :total="activities.total"
       />
