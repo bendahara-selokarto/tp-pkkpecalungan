@@ -9,7 +9,9 @@ Related ADR: `-`
 - Concern parent ini tetap `planned` dan belum boleh dieksekusi sebagai regroup aktif sebelum input owner pada concern turunan `RGM26A1` benar-benar terkunci.
 - Acuan child concern:
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
+  - `docs/process/TODO_SPT26A1_PENATAAN_MENU_SIDEBAR_FLOW_PDF_TURUNAN_TANPA_FORM_INPUT_2026_03_09.md`
 - Selama `RGM26A1` masih `planned` dengan `state:awaiting-owner-group-target`, concern ini diperlakukan sebagai planning-only dan tidak menganggap histori no-op `RGM26A1` sebagai baseline final implementasi baru.
+- `SPT26A1` diperlakukan sebagai child concern IA menu/sidebar untuk flow PDF turunan; hasilnya menjadi input planning sebelum regroup menu dieksekusi lebih jauh.
 
 ## Aturan Pakai
 
