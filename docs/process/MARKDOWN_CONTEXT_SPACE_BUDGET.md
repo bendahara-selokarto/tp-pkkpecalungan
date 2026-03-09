@@ -90,6 +90,7 @@ Ukuran artefak aktif yang diukur:
 6. `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` adalah annex on-demand dan tidak masuk default pack; buka section yang relevan saja.
 7. Jika soft cap file atau band pack terlewati, lakukan thinning/archive pada sesi yang sama sebelum menambah detail baru.
 8. Gunakan `scripts/audit_markdown_governance.ps1` sebagai audit otomatis lokal/CI untuk soft cap, thin registry, index aktif, dan guard annex on-demand.
+9. Gunakan `scripts/audit_markdown_paths.ps1` untuk menjaga referensi path/link governance corpus aktif tetap hidup dan deterministik.
 
 ## Expansion Policy Saat Context Window AI Meningkat
 
@@ -138,4 +139,5 @@ Audit otomatis yang direkomendasikan:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts/audit_markdown_governance.ps1
+powershell -ExecutionPolicy Bypass -File scripts/audit_markdown_paths.ps1
 ```

@@ -11,7 +11,7 @@ Cara pakai:
 
 ## Daftar Perintah
 
-1. Eksekusi todo di `docs/process/TODO_[NAMA].md` sampai end-to-end.
+1. Eksekusi TODO concern di `docs/process/TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md` sampai end-to-end.
 2. Lanjutkan dari status terakhir, selesaikan semua task yang masih `[ ]`.
 3. Commit by concern.
 4. Implementasi concern ini end-to-end: kode, test, dokumentasi, validasi.
@@ -26,4 +26,3 @@ Cara pakai:
 13. Eksekusi todo `[file]` sampai end-to-end, commit by concern, jalankan test, dan sinkronkan dokumen kontrak.
 14. Generate TODO concern baru via `powershell -File scripts/generate_todo.ps1 -Code <KODE> -Title "<Judul>"`.
 15. Restruktur artefak perencanaan: sinkronkan `TTM25R1` + `OPERATIONAL_VALIDATION_LOG` + `PLANNING_ARTIFACT_INDEX` dengan patch minimal.
-

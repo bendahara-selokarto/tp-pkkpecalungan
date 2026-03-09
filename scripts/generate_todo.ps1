@@ -71,12 +71,26 @@ $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 Write-Output "TODO generated: $outputPath"
 
 if (-not $SkipGovernanceAudit) {
-    $auditScriptPath = Join-Path $repoRoot 'scripts/audit_markdown_governance.ps1'
-    if (Test-Path $auditScriptPath) {
-        & $auditScriptPath -RepoRoot $repoRoot -Quiet
-        if (-not $?) {
-            throw "TODO generated tetapi audit governance markdown gagal. Tinjau output audit: $auditScriptPath"
+    $auditScripts = @(
+        @{
+            Label = 'Governance audit'
+            Path = Join-Path $repoRoot 'scripts/audit_markdown_governance.ps1'
+            FailureMessage = 'TODO generated tetapi audit governance markdown gagal.'
+        },
+        @{
+            Label = 'Markdown path audit'
+            Path = Join-Path $repoRoot 'scripts/audit_markdown_paths.ps1'
+            FailureMessage = 'TODO generated tetapi audit path/link markdown gagal.'
         }
-        Write-Output 'Governance audit: PASS'
+    )
+
+    foreach ($audit in $auditScripts) {
+        if (Test-Path $audit.Path) {
+            & $audit.Path -RepoRoot $repoRoot -Quiet
+            if (-not $?) {
+                throw "$($audit.FailureMessage) Tinjau output audit: $($audit.Path)"
+            }
+            Write-Output "$($audit.Label): PASS"
+        }
     }
 }

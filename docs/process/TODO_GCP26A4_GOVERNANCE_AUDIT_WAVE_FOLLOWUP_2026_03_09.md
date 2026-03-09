@@ -33,7 +33,7 @@ Related ADR: `-`
 ## Target Hasil
 
 - [x] Batch 1: audit global `TODO + ADR`, arsipkan concern `done`, sinkronkan referensi aktif.
-- [ ] Batch 2: audit link/path markdown global dan perbaiki referensi mati.
+- [x] Batch 2: audit link/path markdown governance corpus aktif dan perbaiki referensi mati.
 - [ ] Batch 3: thin warning-level governance files sampai budget lebih sehat.
 - [ ] Batch 4: shard `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` menjadi annex yang lebih ringan.
 - [ ] Batch 5: verifikasi push remote + hasil workflow GitHub Actions.
@@ -47,7 +47,7 @@ Related ADR: `-`
 ## Validasi
 
 - [x] L1: audit `TODO + ADR` corpus dan referensi root/archive konsisten.
-- [ ] L2: audit link/path markdown + governance audit script `PASS`.
+- [x] L2: audit link/path markdown + governance audit script `PASS`.
 - [ ] L3: verifikasi workflow remote/GitHub Actions untuk gate dokumentasi.
 
 ## Risiko
@@ -82,3 +82,8 @@ Related ADR: `-`
   - pointer closure pada `TTM25R1`, `ADR_0006`, dan parent TODO `SPA26A1` disinkronkan ke jalur arsip baru,
   - `GCP26A4` diregistrasikan ke `TTM25R1` dan index aktif `OPERATIONAL_VALIDATION_LOG.md`,
   - `scripts/audit_markdown_governance.ps1` tetap `PASS` setelah archiving dan sinkronisasi.
+- 2026-03-09 batch 2:
+  - ditambahkan `scripts/audit_markdown_paths.ps1` untuk audit referensi path/link pada governance corpus aktif,
+  - generator TODO dan workflow CI diperluas agar menjalankan governance audit + markdown path audit,
+  - referensi drift aktif diperbaiki pada `README.md`, `docs/adr/README.md`, dan `docs/process/COMMAND_NUMBER_SHORTCUTS.md`,
+  - `scripts/audit_markdown_governance.ps1` dan `scripts/audit_markdown_paths.ps1` sama-sama `PASS`.

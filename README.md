@@ -277,7 +277,7 @@ Kredensial login (opsional untuk smoke terautentikasi):
 
 Provisioning akun deterministik untuk CI:
 
-- Jalankan seeder `Database\\Seeders\\E2ERuntimeUserSeeder`.
+- Jalankan seeder dari `database/seeders/E2ERuntimeUserSeeder.php`.
 - Nilai default seeder:
   - desa: `e2e.desa@pkk.local / password123`
   - kecamatan: `e2e.kecamatan@pkk.local / password123`
@@ -316,4 +316,3 @@ Catatan:
 - Selama history belum mencapai 3 run, evaluator memberi status `warmup` (bukan `ok`) agar fase pematangan data tetap terbaca eksplisit di audit CI.
 - Workflow runtime evidence dijalankan terjadwal 2x sehari (cron) agar history trend cepat terakumulasi walau tanpa push baru.
 - Artefak trend menyertakan `warmupRemainingRuns` + rekomendasi `Next Action` agar tindak lanjut audit operasional lebih cepat.
-

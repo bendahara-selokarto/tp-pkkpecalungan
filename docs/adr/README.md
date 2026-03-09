@@ -13,7 +13,7 @@ Folder ini menyimpan `Architecture Decision Record` (ADR), yaitu catatan keputus
 
 - Nama file: `ADR_<NOMOR4>_<RINGKASAN>.md`.
 - Format judul: `# ADR <NOMOR4> <Judul Ringkas>`.
-- Contoh: `ADR_0001_REPOSITORY_BOUNDARY_FOR_DASHBOARD.md`.
+- Contoh: `ADR_0001_DOCUMENTATION_GOVERNANCE_TODO_ADR.md`.
 
 ## Status ADR
 
@@ -28,4 +28,3 @@ Folder ini menyimpan `Architecture Decision Record` (ADR), yaitu catatan keputus
 2. Isi ADR dari template `docs/adr/ADR_TEMPLATE.md`.
 3. Tautkan ADR ke TODO concern, file implementasi, dan test validasi.
 4. Jika keputusan berubah, buat ADR baru lalu tandai ADR lama sebagai `superseded`.
-

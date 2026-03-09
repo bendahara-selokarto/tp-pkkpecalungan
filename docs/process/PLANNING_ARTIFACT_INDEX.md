@@ -55,6 +55,8 @@ Owner: process governance
   - bukti validasi operasional per siklus.
 - `scripts/audit_markdown_governance.ps1`
   - audit otomatis soft cap, thin registry, index aktif, dan annex retrieval governance markdown.
+- `scripts/audit_markdown_paths.ps1`
+  - audit otomatis referensi path/link pada governance corpus aktif agar routing markdown tetap deterministik.
 
 ## Jalur Update Deterministik
 

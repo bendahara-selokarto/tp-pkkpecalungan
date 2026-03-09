@@ -9,6 +9,7 @@ on:
       - 'docs/adr/**'
       - 'scripts/generate_todo.ps1'
       - 'scripts/audit_markdown_governance.ps1'
+      - 'scripts/audit_markdown_paths.ps1'
       - '.github/workflows/markdown-governance-gate.yml'
   push:
     branches: [main]
@@ -18,6 +19,7 @@ on:
       - 'docs/adr/**'
       - 'scripts/generate_todo.ps1'
       - 'scripts/audit_markdown_governance.ps1'
+      - 'scripts/audit_markdown_paths.ps1'
       - '.github/workflows/markdown-governance-gate.yml'
   workflow_dispatch:
 
@@ -40,3 +42,7 @@ jobs:
       - name: Run markdown governance audit
         shell: pwsh
         run: ./scripts/audit_markdown_governance.ps1
+
+      - name: Run markdown path audit
+        shell: pwsh
+        run: ./scripts/audit_markdown_paths.ps1
