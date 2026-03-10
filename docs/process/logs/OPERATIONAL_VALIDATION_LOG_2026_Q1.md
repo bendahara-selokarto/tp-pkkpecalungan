@@ -1631,9 +1631,9 @@ Artefak:
 - `docs/process/archive/2026_02/TODO_AUTENTIK_SEKRETARIS_INTI_2026_02_27.md`
 - `docs/process/archive/2026_02/TODO_KETERSEDIAAN_BUKU_ADMIN_PKK_2026_02_27.md`
 - `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`
-- `docs/referensi/_screenshots/rakernas-x-autentik/Screenshot Lampiran 4.10.png`
-- `docs/referensi/_screenshots/rakernas-x-autentik/Screenshot Lampiran 4.12.png`
-- `docs/referensi/_screenshots/rakernas-x-autentik/Screenshot Lampiran 4.13.png`
+- `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_10_buku_agenda_surat_masuk_keluar.png`
+- `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_12_buku_inventaris.png`
+- `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_13_buku_kegiatan.png`
 
 Perintah validasi:
 

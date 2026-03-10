@@ -26,9 +26,9 @@ Status: `source-scanned` (`unverified-local-extension`)
    - `docs/referensi/Rakernas X.pdf` (text-layer scan seluruh halaman)
    - `docs/referensi/excel/BUKU BANTU.xlsx` (scan daftar sheet)
 4. Bukti visual sumber primer (pembanding coverage lampiran sekretaris):
-   - `docs/referensi/_screenshots/rakernas-x-autentik/Screenshot Lampiran 4.10.png` (Lampiran 4.10)
-   - `docs/referensi/_screenshots/rakernas-x-autentik/Screenshot Lampiran 4.12.png` (Lampiran 4.12)
-   - `docs/referensi/_screenshots/rakernas-x-autentik/Screenshot Lampiran 4.13.png` (Lampiran 4.13)
+   - `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_10_buku_agenda_surat_masuk_keluar.png` (Lampiran 4.10)
+   - `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_12_buku_inventaris.png` (Lampiran 4.12)
+   - `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_13_buku_kegiatan.png` (Lampiran 4.13)
 
 Catatan sumber primer:
 
