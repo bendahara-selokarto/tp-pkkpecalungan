@@ -22,6 +22,7 @@ Status: `done` (`state:thin-registry-active-index`)
 | --- | --- | --- | --- | --- |
 | `C-UI-UX-RUNTIME-EVIDENCE` | Ekspansi audit UI/UX runtime evidence | `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md` | `in-progress` | Concern ini menjadi jalur utama evidence runtime lintas concern UI/UX. |
 | `C-GOVERNANCE-AUDIT-WAVE` | Audit wave lanjutan governance markdown | `docs/process/TODO_GCP26A4_GOVERNANCE_AUDIT_WAVE_FOLLOWUP_2026_03_09.md` | `in-progress` | Concern ini menjadi parent audit bertahap untuk TODO/ADR corpus, link/path, thinning, dan shard annex sebelum closure governance wave berikutnya. |
+| `C-REFERENCE-DOC-STANDARDIZATION` | Standarisasi dokumen referensi domain | `docs/process/TODO_RFD26A1_STANDARISASI_STRUKTUR_DOKUMEN_REFERENSI_DOMAIN_2026_03_10.md` | `planned` | Concern ini menjadi jalur planning untuk taxonomy folder, naming convention, dan migration map `docs/referensi` sebelum rename bertahap. |
 | `C-MODULE-GROUPING-E2E` | Refactor grouping modul domain E2E | `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` | `planned` | Grouping menu/modul lintas domain mengikuti concern ini sebagai parent concern. |
 | `C-ROLE-BASED-GROUPING` | Penataan ulang grouping modul berdasarkan role user | `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` | `planned` | Concern ini dipakai untuk validasi rule grouping berbasis role sebelum merge ke concern parent E2E. |
 | `C-QUALITY-GATE-90PLUS` | Roadmap sprint naik skor project 90+ | `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` | `planned` | Concern ini menjadi jalur eksekusi hardening quality gate (style + e2e dependency) untuk mendorong skor proyek ke 90+. |
@@ -66,3 +67,4 @@ Gunakan arsip berikut jika user meminta audit concern lama, jejak keputusan deta
 - [x] Concern `GCP26A2` menutup hardening thin registry dan retrieval annex on-demand.
 - [x] Concern `GCP26A3` menutup automation audit governance markdown.
 - [x] Concern `GCP26A4` diregistrasikan sebagai follow-up audit wave aktif untuk batch 1-5.
+- [x] Concern `RFD26A1` diregistrasikan sebagai planning concern untuk standardisasi struktur `docs/referensi`.

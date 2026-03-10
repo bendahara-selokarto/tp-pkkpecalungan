@@ -24,6 +24,7 @@ Aturan:
 - Concern berjalan yang tetap berada di index aktif:
   - `docs/process/TODO_GCP26A4_GOVERNANCE_AUDIT_WAVE_FOLLOWUP_2026_03_09.md` (`in-progress`)
   - `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md` (`in-progress`)
+  - `docs/process/TODO_RFD26A1_STANDARISASI_STRUKTUR_DOKUMEN_REFERENSI_DOMAIN_2026_03_10.md` (`planned`)
   - `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` (`planned`)
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`planned`)
@@ -33,6 +34,9 @@ Aturan:
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
+- Catatan sinkronisasi `RFD26A1`:
+  - audit baseline `docs/referensi` menemukan folder root masih mencampur PDF numerik, workbook, screenshot, dan nama file dengan pola berbeda,
+  - concern dikunci sebagai planning-only lebih dulu agar taxonomy target dan migration map path selesai sebelum rename fisik dijalankan.
 
 ### Pointer Closure Terbaru
 
