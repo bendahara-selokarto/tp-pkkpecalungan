@@ -6,7 +6,13 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
-        @vite(['resources/js/app.js'])
+        @php
+            $hasViteAssets = file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot'));
+        @endphp
+
+        @if ($hasViteAssets || !app()->environment('testing'))
+            @vite(['resources/js/app.js'])
+        @endif
         @inertiaHead
     </head>
     <body class="font-sans antialiased">
