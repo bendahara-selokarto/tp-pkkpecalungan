@@ -1,7 +1,7 @@
 # TODO NFM26A1 Audit Normalisasi Database Formal 1NF-3NF Bertahap
 
 Tanggal: 2026-03-10  
-Status: `in-progress`
+Status: `done`
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -27,10 +27,10 @@ Related ADR: `-`
 
 ## Target Hasil
 
-- [ ] Inventarisasi tabel + kunci + relasi (scope non-legacy).
-- [ ] Peta formal 1NF/2NF/3NF per tabel + temuan utama.
-- [ ] Rencana normalisasi bertahap (batch per domain) + prioritas risiko.
-- [ ] Batch 1 disiapkan (patch minimal + backfill + test) setelah audit selesai.
+- [x] Inventarisasi tabel + kunci + relasi (scope non-legacy).
+- [x] Peta formal 1NF/2NF/3NF per tabel + temuan utama.
+- [x] Rencana normalisasi bertahap (batch per domain) + prioritas risiko.
+- [x] Batch 1 disiapkan (patch minimal + backfill + test) setelah audit selesai.
 
 ## Langkah Eksekusi
 
@@ -41,7 +41,7 @@ Related ADR: `-`
 - [x] Audit 2NF: cek partial dependency pada tabel dengan kunci komposit atau natural key.
 - [x] Audit 3NF: cek transitive dependency dan atribut turunan yang bisa direlasikan.
 - [x] Klasifikasi risiko per tabel (high/medium/low) + urutan batch.
-- [ ] Susun rencana patch bertahap: migration + backfill + adapter kompatibilitas.
+- [x] Susun rencana patch bertahap: migration + backfill + adapter kompatibilitas.
 - [x] Implementasi batch 1 (program_prioritas) dengan patch minimal pada boundary arsitektur.
 - [x] Implementasi batch 2 (pilot_project_naskah_pelaporan_reports) dengan patch minimal pada boundary arsitektur.
 - [x] Implementasi batch 3 (agenda_surats lampiran/tembusan + pilot_project_naskah_pelaporan_reports surat_tembusan).
@@ -50,7 +50,7 @@ Related ADR: `-`
 ## Validasi
 
 - [x] L1: audit scoped (`rg` migrasi/kolom) + sanity check schema.
-- [ ] L2: targeted test per domain batch yang diubah.
+- [x] L2: targeted test per domain batch yang diubah (tercakup oleh full suite).
 - [x] L3: `php artisan test --compact` untuk batch migrasi/relasi signifikan.
 - [x] L4: `php artisan migrate:fresh --seed` jika batch mengubah struktur data inti.
 
@@ -66,9 +66,9 @@ Related ADR: `-`
 
 ## Keputusan
 
-- [ ] K1: Definisikan kriteria formal 1NF/2NF/3NF untuk konteks repo (termasuk JSON/array).
-- [ ] K2: Tentukan urutan batch dan tabel prioritas tinggi.
-- [ ] K3: Putuskan strategi adapter kompatibilitas (request/repository) per batch.
+- [x] K1: Definisikan kriteria formal 1NF/2NF/3NF untuk konteks repo (termasuk JSON/array).
+- [x] K2: Tentukan urutan batch dan tabel prioritas tinggi.
+- [x] K3: Putuskan strategi adapter kompatibilitas (request/repository) per batch.
 
 ## Keputusan Arsitektur (Jika Ada)
 
@@ -82,6 +82,12 @@ Related ADR: `-`
 
 ## Output Final
 
-- [ ] Ringkasan apa yang diubah dan kenapa.
-- [ ] Daftar file terdampak.
-- [ ] Hasil validasi + residual risk.
+- [x] Ringkasan apa yang diubah dan kenapa.
+- [x] Daftar file terdampak.
+- [x] Hasil validasi + residual risk.
+
+### Output Final (Ringkas)
+
+- Ringkasan: batch 1-3 normalisasi 1NF multi-value + audit 2NF/3NF selesai.
+- File terdampak: baseline audit + TODO concern + migrasi/seed/repository/model/tests batch 1-3.
+- Validasi: `php artisan test --compact`, `php artisan migrate:fresh --seed`. Residual risk: monitor kolom free-text untuk drift multi-value.
