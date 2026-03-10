@@ -35,7 +35,7 @@ Related ADR: `-`
 - [x] Batch 1: audit global `TODO + ADR`, arsipkan concern `done`, sinkronkan referensi aktif.
 - [x] Batch 2: audit link/path markdown governance corpus aktif dan perbaiki referensi mati.
 - [x] Batch 3: thin warning-level governance files sampai budget lebih sehat.
-- [ ] Batch 4: shard `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` menjadi annex yang lebih ringan.
+- [x] Batch 4: shard `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` menjadi annex yang lebih ringan.
 - [ ] Batch 5: verifikasi push remote + hasil workflow GitHub Actions.
 
 ## Langkah Eksekusi
@@ -91,3 +91,6 @@ Related ADR: `-`
   - warning-level file aktif ditipiskan sampai kembali masuk soft cap: `AI_SINGLE_PATH_ARCHITECTURE`, `AI_FRIENDLY_EXECUTION_PLAYBOOK`, `IWN26B1`, dan `RGM26A1`,
   - boilerplate TODO aktif yang berulang dihapus dari concern planning agar context pack lebih efisien,
   - `scripts/audit_markdown_governance.ps1` kembali `PASS` tanpa warning soft cap aktif.
+- 2026-03-10 batch 4:
+  - `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` dijadikan indeks ringkas dengan shard `delivery`, `governance`, dan `runtime`,
+  - detail pattern tetap hidup pada shard terpisah agar retrieval tetap ringan.
