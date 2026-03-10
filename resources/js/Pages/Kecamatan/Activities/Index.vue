@@ -154,7 +154,7 @@ const formatDate = (value) => formatDateForDisplay(value)
             href="/kecamatan/activities/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Buku Kegiatan
+            + Tambah
           </Link>
         </div>
       </div>

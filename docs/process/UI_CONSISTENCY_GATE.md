@@ -21,6 +21,7 @@ Jalankan dari root project:
 rg "flashSuccess|flashError" resources/js/Pages -l
 rg "window\\.confirm|window\\.alert|\\balert\\(" resources/js -l
 rg "border-emerald-200 bg-emerald-50|border-rose-200 bg-rose-50" resources/js/Pages -l
+rg "\\+ Tambah " resources/js/Pages resources/js/admin-one/components -n
 ```
 
 ## 3) Kriteria Lulus
@@ -28,8 +29,9 @@ rg "border-emerald-200 bg-emerald-50|border-rose-200 bg-rose-50" resources/js/Pa
 - `resources/js/Pages` tidak mengandung `flashSuccess|flashError` untuk modul dashboard.
 - `resources/js` tidak mengandung native dialog (`window.confirm`, `window.alert`, `alert(`, `confirm(`) pada flow utama aplikasi.
 - Alert feedback pada halaman dashboard menggunakan layout-level flash (`FlashMessageBar`) atau komponen reusable admin-one.
+- Tombol CRUD user-facing memakai label generik yang natural: `Tambah`, `Edit`, `Hapus`, `Detail`.
+- CTA tambah tidak menampilkan objek eksplisit pada label tombol; pola yang diizinkan untuk tombol tambah adalah `+ Tambah`.
 
 ## 4) Pengecualian Saat Ini (Tercatat)
 
 - Tidak ada pengecualian aktif.
-

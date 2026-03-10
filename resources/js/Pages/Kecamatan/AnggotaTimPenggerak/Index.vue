@@ -106,7 +106,7 @@ const updatePerPage = (event) => {
             href="/kecamatan/anggota-tim-penggerak/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
-            + Tambah Anggota Tim Penggerak PKK
+            + Tambah
           </Link>
         </div>
       </div>

@@ -212,7 +212,7 @@ const submit = () => {
             class="mt-3 inline-flex rounded-md border border-emerald-200 px-3 py-1.5 text-xs font-semibold text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/20"
             @click="addEntry"
           >
-            + Tambah Isian Pelengkap
+            + Tambah
           </button>
         </div>
 
