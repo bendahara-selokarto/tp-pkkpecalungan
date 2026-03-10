@@ -39,7 +39,7 @@ jobs:
       DB_CONNECTION: sqlite
       DB_DATABASE: database/database.sqlite
       CACHE_STORE: array
-      SESSION_DRIVER: array
+      SESSION_DRIVER: file
       QUEUE_CONNECTION: sync
       MAIL_MAILER: array
       AUTH_LOGIN_MAX_ATTEMPTS: 60
