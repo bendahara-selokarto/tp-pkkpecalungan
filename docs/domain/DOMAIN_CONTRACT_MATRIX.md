@@ -86,6 +86,7 @@ Label berikut dikunci sebagai istilah canonical lintas domain/process. Kolom sta
 ## Jejak Teknis (Acuan Verifikasi)
 
 - Route modul utama: `routes/web.php`
+- Auth login route (relative URL untuk mencegah host drift E2E): `app/Http/Controllers/Auth/AuthenticatedSessionController.php`
 - Migration kontrak field:
   - `database/migrations/2026_02_20_120000_create_anggota_tim_penggeraks_table.php`
   - `database/migrations/2026_02_20_210000_create_kader_khusus_table.php`
