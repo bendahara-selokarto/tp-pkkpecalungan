@@ -27,5 +27,10 @@ interface PilotProjectNaskahPelaporanRepositoryInterface
 
     public function deleteAttachmentsByIds(PilotProjectNaskahPelaporanReport $report, array $ids): void;
 
+    /**
+     * @param  array<string, string>  $payload
+     */
+    public function syncPelaksanaanItems(PilotProjectNaskahPelaporanReport $report, array $payload): void;
+
     public function deleteReport(PilotProjectNaskahPelaporanReport $report): void;
 }

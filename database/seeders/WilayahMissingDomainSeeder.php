@@ -549,6 +549,14 @@ class WilayahMissingDomainSeeder extends Seeder
 
     private function seedPilotProjectNaskahPelaporan(\Faker\Generator $faker, array $context): void
     {
+        $pelaksanaan = [
+            1 => $faker->sentence(14),
+            2 => $faker->sentence(14),
+            3 => $faker->sentence(14),
+            4 => $faker->sentence(14),
+            5 => $faker->sentence(14),
+        ];
+
         $reportId = DB::table('pilot_project_naskah_pelaporan_reports')->insertGetId([
             'judul_laporan' => 'Naskah Pelaporan Pilot Project '.$context['area_name'],
             'surat_kepada' => 'Ketua TP PKK Kabupaten Batang',
@@ -561,11 +569,11 @@ class WilayahMissingDomainSeeder extends Seeder
             'surat_hal' => 'Penyampaian naskah pelaporan pilot project',
             'dasar_pelaksanaan' => 'Pelaksanaan berdasarkan rencana kerja TP PKK.',
             'pendahuluan' => 'Pendahuluan naskah pelaporan pilot project.',
-            'pelaksanaan_1' => $faker->sentence(14),
-            'pelaksanaan_2' => $faker->sentence(14),
-            'pelaksanaan_3' => $faker->sentence(14),
-            'pelaksanaan_4' => $faker->sentence(14),
-            'pelaksanaan_5' => $faker->sentence(14),
+            'pelaksanaan_1' => $pelaksanaan[1],
+            'pelaksanaan_2' => $pelaksanaan[2],
+            'pelaksanaan_3' => $pelaksanaan[3],
+            'pelaksanaan_4' => $pelaksanaan[4],
+            'pelaksanaan_5' => $pelaksanaan[5],
             'penutup' => 'Penutup naskah pelaporan.',
             'tahun_anggaran' => $this->defaultBudgetYear(),
             'level' => $context['level'],
@@ -574,6 +582,12 @@ class WilayahMissingDomainSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        $this->seedPilotProjectNaskahPelaporanPelaksanaanItems(
+            reportId: $reportId,
+            pelaksanaan: $pelaksanaan,
+            context: $context
+        );
 
         $attachments = [];
         $categories = ['6a_photo', '6b_photo', '6d_document', '6e_photo'];
@@ -606,6 +620,34 @@ class WilayahMissingDomainSeeder extends Seeder
         }
 
         DB::table('pilot_project_naskah_pelaporan_attachments')->insert($attachments);
+    }
+
+    /**
+     * @param  array<int, string>  $pelaksanaan
+     * @param  array<string, mixed>  $context
+     */
+    private function seedPilotProjectNaskahPelaporanPelaksanaanItems(
+        int $reportId,
+        array $pelaksanaan,
+        array $context
+    ): void {
+        $now = now();
+        $rows = [];
+
+        foreach ($pelaksanaan as $sequence => $description) {
+            $rows[] = [
+                'report_id' => $reportId,
+                'sequence' => $sequence,
+                'description' => $description,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $context['creator_id'],
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        DB::table('pilot_project_naskah_pelaporan_pelaksanaan_items')->insert($rows);
     }
 
     private function atLeastOneTrue(array $keys): array

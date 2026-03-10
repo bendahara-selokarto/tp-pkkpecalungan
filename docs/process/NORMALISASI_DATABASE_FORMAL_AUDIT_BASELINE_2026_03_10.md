@@ -57,6 +57,7 @@ Tabel domain aktif:
 - pilot_project_keluarga_sehat_reports
 - pilot_project_keluarga_sehat_values
 - pilot_project_naskah_pelaporan_attachments
+- pilot_project_naskah_pelaporan_pelaksanaan_items
 - pilot_project_naskah_pelaporan_reports
 - posyandus
 - prestasi_lombas
@@ -95,3 +96,4 @@ Tabel sistem/framework (di luar audit formal):
 ## Status Batch
 
 - Batch 1: implementasi awal (tabel `program_prioritas_jadwal_months` + `program_prioritas_funding_sources`, backfill, dan adapter repository/seeder).
+- Batch 2: implementasi awal (tabel `pilot_project_naskah_pelaporan_pelaksanaan_items`, backfill, dan adapter repository/action/seeder).

@@ -105,6 +105,16 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'category' => '6d_document',
             'mime_type' => 'application/pdf',
         ]);
+        $this->assertDatabaseHas('pilot_project_naskah_pelaporan_pelaksanaan_items', [
+            'report_id' => $report->id,
+            'sequence' => 1,
+            'description' => 'Pelaksanaan 1',
+        ]);
+        $this->assertDatabaseHas('pilot_project_naskah_pelaporan_pelaksanaan_items', [
+            'report_id' => $report->id,
+            'sequence' => 5,
+            'description' => 'Pelaksanaan 5',
+        ]);
 
         $attachmentToRemove = PilotProjectNaskahPelaporanAttachment::query()
             ->where('report_id', $report->id)
@@ -133,6 +143,11 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'report_id' => $report->id,
             'category' => '6e_photo',
             'original_name' => '6e-baru.jpg',
+        ]);
+        $this->assertDatabaseHas('pilot_project_naskah_pelaporan_pelaksanaan_items', [
+            'report_id' => $report->id,
+            'sequence' => 2,
+            'description' => 'Pelaksanaan 2 revisi',
         ]);
 
         $this->actingAs($adminDesa)

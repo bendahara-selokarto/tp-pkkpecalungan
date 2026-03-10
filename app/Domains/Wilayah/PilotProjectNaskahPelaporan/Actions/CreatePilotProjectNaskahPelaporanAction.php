@@ -22,6 +22,7 @@ class CreatePilotProjectNaskahPelaporanAction
         $areaId = $this->scopeService->requireUserAreaId();
         $createdBy = (int) auth()->id();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
+        $pelaksanaanPayload = $this->buildPelaksanaanPayload($payload);
 
         $report = $this->repository->storeReport([
             'judul_laporan' => (string) ($payload['judul_laporan'] ?? config('pilot_project_naskah_pelaporan.module.label')),
@@ -35,17 +36,19 @@ class CreatePilotProjectNaskahPelaporanAction
             'surat_hal' => $this->textOrNull($payload['surat_hal'] ?? null),
             'dasar_pelaksanaan' => (string) ($payload['dasar_pelaksanaan'] ?? ''),
             'pendahuluan' => (string) ($payload['pendahuluan'] ?? ''),
-            'pelaksanaan_1' => (string) ($payload['pelaksanaan_1'] ?? ''),
-            'pelaksanaan_2' => (string) ($payload['pelaksanaan_2'] ?? ''),
-            'pelaksanaan_3' => (string) ($payload['pelaksanaan_3'] ?? ''),
-            'pelaksanaan_4' => (string) ($payload['pelaksanaan_4'] ?? ''),
-            'pelaksanaan_5' => (string) ($payload['pelaksanaan_5'] ?? ''),
+            'pelaksanaan_1' => $pelaksanaanPayload['pelaksanaan_1'],
+            'pelaksanaan_2' => $pelaksanaanPayload['pelaksanaan_2'],
+            'pelaksanaan_3' => $pelaksanaanPayload['pelaksanaan_3'],
+            'pelaksanaan_4' => $pelaksanaanPayload['pelaksanaan_4'],
+            'pelaksanaan_5' => $pelaksanaanPayload['pelaksanaan_5'],
             'penutup' => (string) ($payload['penutup'] ?? ''),
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => $createdBy,
             'tahun_anggaran' => $tahunAnggaran,
         ]);
+
+        $this->repository->syncPelaksanaanItems($report, $pelaksanaanPayload);
 
         $rows = $this->attachmentService->buildAttachmentRows($report, $payload, $level, $areaId, $createdBy);
         $this->repository->storeAttachments($report, $rows);
@@ -58,5 +61,19 @@ class CreatePilotProjectNaskahPelaporanAction
         $text = trim((string) ($value ?? ''));
 
         return $text !== '' ? $text : null;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function buildPelaksanaanPayload(array $payload): array
+    {
+        return [
+            'pelaksanaan_1' => (string) ($payload['pelaksanaan_1'] ?? ''),
+            'pelaksanaan_2' => (string) ($payload['pelaksanaan_2'] ?? ''),
+            'pelaksanaan_3' => (string) ($payload['pelaksanaan_3'] ?? ''),
+            'pelaksanaan_4' => (string) ($payload['pelaksanaan_4'] ?? ''),
+            'pelaksanaan_5' => (string) ($payload['pelaksanaan_5'] ?? ''),
+        ];
     }
 }

@@ -15,6 +15,8 @@ class UpdatePilotProjectNaskahPelaporanAction
 
     public function execute(PilotProjectNaskahPelaporanReport $report, array $payload): PilotProjectNaskahPelaporanReport
     {
+        $pelaksanaanPayload = $this->buildPelaksanaanPayload($payload, $report);
+
         $updated = $this->repository->updateReport($report, [
             'judul_laporan' => (string) ($payload['judul_laporan'] ?? $report->judul_laporan),
             'surat_kepada' => $this->textOrCurrent($payload, 'surat_kepada', $report->surat_kepada),
@@ -27,14 +29,16 @@ class UpdatePilotProjectNaskahPelaporanAction
             'surat_hal' => $this->textOrCurrent($payload, 'surat_hal', $report->surat_hal),
             'dasar_pelaksanaan' => (string) ($payload['dasar_pelaksanaan'] ?? $report->dasar_pelaksanaan),
             'pendahuluan' => (string) ($payload['pendahuluan'] ?? $report->pendahuluan),
-            'pelaksanaan_1' => (string) ($payload['pelaksanaan_1'] ?? $report->pelaksanaan_1),
-            'pelaksanaan_2' => (string) ($payload['pelaksanaan_2'] ?? $report->pelaksanaan_2),
-            'pelaksanaan_3' => (string) ($payload['pelaksanaan_3'] ?? $report->pelaksanaan_3),
-            'pelaksanaan_4' => (string) ($payload['pelaksanaan_4'] ?? $report->pelaksanaan_4),
-            'pelaksanaan_5' => (string) ($payload['pelaksanaan_5'] ?? $report->pelaksanaan_5),
+            'pelaksanaan_1' => $pelaksanaanPayload['pelaksanaan_1'],
+            'pelaksanaan_2' => $pelaksanaanPayload['pelaksanaan_2'],
+            'pelaksanaan_3' => $pelaksanaanPayload['pelaksanaan_3'],
+            'pelaksanaan_4' => $pelaksanaanPayload['pelaksanaan_4'],
+            'pelaksanaan_5' => $pelaksanaanPayload['pelaksanaan_5'],
             'penutup' => (string) ($payload['penutup'] ?? $report->penutup),
             'tahun_anggaran' => (int) $report->tahun_anggaran,
         ]);
+
+        $this->repository->syncPelaksanaanItems($updated, $pelaksanaanPayload);
 
         $removeIds = collect($payload['remove_attachment_ids'] ?? [])
             ->filter(fn ($id) => is_numeric($id))
@@ -70,5 +74,19 @@ class UpdatePilotProjectNaskahPelaporanAction
         $text = trim((string) ($payload[$key] ?? ''));
 
         return $text !== '' ? $text : null;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function buildPelaksanaanPayload(array $payload, PilotProjectNaskahPelaporanReport $report): array
+    {
+        return [
+            'pelaksanaan_1' => (string) ($payload['pelaksanaan_1'] ?? $report->pelaksanaan_1),
+            'pelaksanaan_2' => (string) ($payload['pelaksanaan_2'] ?? $report->pelaksanaan_2),
+            'pelaksanaan_3' => (string) ($payload['pelaksanaan_3'] ?? $report->pelaksanaan_3),
+            'pelaksanaan_4' => (string) ($payload['pelaksanaan_4'] ?? $report->pelaksanaan_4),
+            'pelaksanaan_5' => (string) ($payload['pelaksanaan_5'] ?? $report->pelaksanaan_5),
+        ];
     }
 }

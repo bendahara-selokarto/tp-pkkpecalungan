@@ -42,6 +42,7 @@ Related ADR: `-`
 - [ ] Klasifikasi risiko per tabel (high/medium/low) + urutan batch.
 - [ ] Susun rencana patch bertahap: migration + backfill + adapter kompatibilitas.
 - [x] Implementasi batch 1 (program_prioritas) dengan patch minimal pada boundary arsitektur.
+- [x] Implementasi batch 2 (pilot_project_naskah_pelaporan_reports) dengan patch minimal pada boundary arsitektur.
 - [ ] Sinkronisasi dokumen concern terkait bila trigger hardening aktif.
 
 ## Validasi
@@ -49,7 +50,7 @@ Related ADR: `-`
 - [x] L1: audit scoped (`rg` migrasi/kolom) + sanity check schema.
 - [ ] L2: targeted test per domain batch yang diubah.
 - [x] L3: `php artisan test --compact` untuk batch migrasi/relasi signifikan.
-- [ ] L4: `php artisan migrate:fresh --seed` jika batch mengubah struktur data inti.
+- [x] L4: `php artisan migrate:fresh --seed` jika batch mengubah struktur data inti.
 
 ## Artefak
 

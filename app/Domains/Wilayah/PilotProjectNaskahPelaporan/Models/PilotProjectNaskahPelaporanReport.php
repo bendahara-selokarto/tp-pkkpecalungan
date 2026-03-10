@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models;
 
 use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanPelaksanaanItem;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -61,6 +62,12 @@ class PilotProjectNaskahPelaporanReport extends Model
         return $this->hasMany(PilotProjectNaskahPelaporanAttachment::class, 'report_id');
     }
 
+    public function pelaksanaanItems(): HasMany
+    {
+        return $this->hasMany(PilotProjectNaskahPelaporanPelaksanaanItem::class, 'report_id')
+            ->orderBy('sequence');
+    }
+
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class);
@@ -69,5 +76,42 @@ class PilotProjectNaskahPelaporanReport extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function getPelaksanaan1Attribute($value): string
+    {
+        return $this->resolvePelaksanaan(1, $value);
+    }
+
+    public function getPelaksanaan2Attribute($value): string
+    {
+        return $this->resolvePelaksanaan(2, $value);
+    }
+
+    public function getPelaksanaan3Attribute($value): string
+    {
+        return $this->resolvePelaksanaan(3, $value);
+    }
+
+    public function getPelaksanaan4Attribute($value): string
+    {
+        return $this->resolvePelaksanaan(4, $value);
+    }
+
+    public function getPelaksanaan5Attribute($value): string
+    {
+        return $this->resolvePelaksanaan(5, $value);
+    }
+
+    private function resolvePelaksanaan(int $sequence, $fallback): string
+    {
+        if ($this->relationLoaded('pelaksanaanItems') && $this->pelaksanaanItems->isNotEmpty()) {
+            $item = $this->pelaksanaanItems->firstWhere('sequence', $sequence);
+            if ($item) {
+                return (string) $item->description;
+            }
+        }
+
+        return (string) ($fallback ?? '');
     }
 }

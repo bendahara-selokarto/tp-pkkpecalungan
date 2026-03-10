@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories;
 
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanReport;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanPelaksanaanItem;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -28,6 +29,7 @@ class PilotProjectNaskahPelaporanRepository implements PilotProjectNaskahPelapor
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran)
+            ->with('pelaksanaanItems')
             ->withCount('attachments')
             ->latest('id')
             ->get();
@@ -39,6 +41,7 @@ class PilotProjectNaskahPelaporanRepository implements PilotProjectNaskahPelapor
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran)
+            ->with('pelaksanaanItems')
             ->withCount('attachments')
             ->latest('id')
             ->paginate($perPage)
@@ -48,7 +51,10 @@ class PilotProjectNaskahPelaporanRepository implements PilotProjectNaskahPelapor
     public function findReport(int $id): PilotProjectNaskahPelaporanReport
     {
         return PilotProjectNaskahPelaporanReport::query()
-            ->with(['attachments' => fn ($query) => $query->orderBy('id')])
+            ->with([
+                'attachments' => fn ($query) => $query->orderBy('id'),
+                'pelaksanaanItems',
+            ])
             ->findOrFail($id);
     }
 
@@ -81,6 +87,38 @@ class PilotProjectNaskahPelaporanRepository implements PilotProjectNaskahPelapor
         $report->attachments()
             ->whereIn('id', $ids)
             ->delete();
+    }
+
+    public function syncPelaksanaanItems(PilotProjectNaskahPelaporanReport $report, array $payload): void
+    {
+        PilotProjectNaskahPelaporanPelaksanaanItem::query()
+            ->where('report_id', $report->id)
+            ->delete();
+
+        $now = now();
+        $rows = [];
+
+        for ($sequence = 1; $sequence <= 5; $sequence++) {
+            $value = trim((string) ($payload["pelaksanaan_{$sequence}"] ?? ''));
+            if ($value === '') {
+                continue;
+            }
+
+            $rows[] = [
+                'report_id' => $report->id,
+                'sequence' => $sequence,
+                'description' => $value,
+                'level' => $report->level,
+                'area_id' => $report->area_id,
+                'created_by' => $report->created_by,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        if ($rows !== []) {
+            PilotProjectNaskahPelaporanPelaksanaanItem::query()->insert($rows);
+        }
     }
 
     public function deleteReport(PilotProjectNaskahPelaporanReport $report): void
