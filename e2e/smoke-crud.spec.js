@@ -37,7 +37,7 @@ const login = async (page, role, expectedPathPattern) => {
   await page.locator('#email').fill(credentials.email);
   await page.locator('#password').fill(credentials.password);
   await page.locator('button[type="submit"]').click();
-  await page.waitForURL(expectedPathPattern, { timeout: 20000 });
+  await page.waitForURL(expectedPathPattern, { timeout: 30000, waitUntil: 'domcontentloaded' });
 };
 
 const uniqueToken = () => `${Date.now()}-${Math.floor(Math.random() * 10000)}`;

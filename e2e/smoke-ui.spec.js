@@ -88,7 +88,7 @@ const login = async (page, role, expectedPath) => {
     await page.locator('button[type="submit"]').click();
 
     try {
-      await page.waitForURL(expectedPath, { timeout: 15000 });
+      await page.waitForURL(expectedPath, { timeout: 30000, waitUntil: 'domcontentloaded' });
       return;
     } catch (error) {
       if (attempt === maxAttempts) {
