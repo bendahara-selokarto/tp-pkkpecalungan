@@ -103,3 +103,20 @@ Tabel sistem/framework (di luar audit formal):
 - Batch 1: implementasi awal (tabel `program_prioritas_jadwal_months` + `program_prioritas_funding_sources`, backfill, dan adapter repository/seeder).
 - Batch 2: implementasi awal (tabel `pilot_project_naskah_pelaporan_pelaksanaan_items`, backfill, dan adapter repository/action/seeder).
 - Batch 3: implementasi awal (tabel `pilot_project_naskah_pelaporan_tembusan_items`, `agenda_surat_lampiran_items`, `agenda_surat_tembusan_items`, backfill, dan adapter repository/action/seeder).
+
+## Audit 2NF (Ringkas)
+
+- Tidak ada primary key komposit pada tabel domain aktif; 2NF umumnya N/A karena `id` surrogate.
+- Unique komposit yang ada (`level/area_id/kategori` atau `.../indikator/komoditi`) tidak menunjukkan partial dependency; atribut non-key bergantung pada seluruh key.
+- Redundansi `level/area_id/created_by` pada child table dinilai kontrak canonical, bukan pelanggaran 2NF.
+
+## Audit 3NF (Ringkas)
+
+- Redundansi `level` terhadap `areas.level` dan `tahun_anggaran` terhadap tanggal/context adalah redundansi terkontrol untuk kebutuhan scope/filter.
+- Tidak ditemukan dependensi transitif lain yang memerlukan pemecahan tabel pada domain aktif.
+
+## Klasifikasi Risiko (Pasca Batch 3)
+
+- High: tidak ada temuan aktif.
+- Medium: tidak ada temuan aktif (monitor kolom free-text seperti `keterangan` bila mulai menampung daftar).
+- Low: seluruh tabel domain aktif setelah batch 1-3; urutan batch berhenti di batch 3 kecuali muncul kandidat multi-value baru.
