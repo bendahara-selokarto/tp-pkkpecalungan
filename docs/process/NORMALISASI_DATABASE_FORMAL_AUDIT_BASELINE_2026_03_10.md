@@ -61,6 +61,8 @@ Tabel domain aktif:
 - posyandus
 - prestasi_lombas
 - program_prioritas
+- program_prioritas_funding_sources
+- program_prioritas_jadwal_months
 - simulasi_penyuluhans
 - taman_bacaans
 - users
@@ -89,3 +91,7 @@ Tabel sistem/framework (di luar audit formal):
 - Batch 1: normalisasi `program_prioritas` (jadwal + sumber dana) ke tabel anak/pivot.
 - Batch 2: normalisasi `pilot_project_naskah_pelaporan_reports` (pelaksanaan) ke tabel anak berurutan.
 - Batch 3: evaluasi field multi-value lain setelah konfirmasi kontrak domain.
+
+## Status Batch
+
+- Batch 1: implementasi awal (tabel `program_prioritas_jadwal_months` + `program_prioritas_funding_sources`, backfill, dan adapter repository/seeder).

@@ -3,6 +3,8 @@
 namespace App\Domains\Wilayah\ProgramPrioritas\Models;
 
 use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritasJadwalBulan;
+use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritasSumberDana;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -89,5 +91,150 @@ class ProgramPrioritas extends Model
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function jadwalBulans()
+    {
+        return $this->hasMany(ProgramPrioritasJadwalBulan::class);
+    }
+
+    public function sumberDanas()
+    {
+        return $this->hasMany(ProgramPrioritasSumberDana::class);
+    }
+
+    public function getJadwalBulan1Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(1, $value);
+    }
+
+    public function getJadwalBulan2Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(2, $value);
+    }
+
+    public function getJadwalBulan3Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(3, $value);
+    }
+
+    public function getJadwalBulan4Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(4, $value);
+    }
+
+    public function getJadwalBulan5Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(5, $value);
+    }
+
+    public function getJadwalBulan6Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(6, $value);
+    }
+
+    public function getJadwalBulan7Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(7, $value);
+    }
+
+    public function getJadwalBulan8Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(8, $value);
+    }
+
+    public function getJadwalBulan9Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(9, $value);
+    }
+
+    public function getJadwalBulan10Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(10, $value);
+    }
+
+    public function getJadwalBulan11Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(11, $value);
+    }
+
+    public function getJadwalBulan12Attribute($value): bool
+    {
+        return $this->resolveMonthlyFlag(12, $value);
+    }
+
+    public function getJadwalIAttribute($value): bool
+    {
+        return $this->resolveQuarterFlag(1);
+    }
+
+    public function getJadwalIiAttribute($value): bool
+    {
+        return $this->resolveQuarterFlag(4);
+    }
+
+    public function getJadwalIiiAttribute($value): bool
+    {
+        return $this->resolveQuarterFlag(7);
+    }
+
+    public function getJadwalIvAttribute($value): bool
+    {
+        return $this->resolveQuarterFlag(10);
+    }
+
+    public function getSumberDanaPusatAttribute($value): bool
+    {
+        return $this->resolveFundingFlag('pusat', $value);
+    }
+
+    public function getSumberDanaApbdAttribute($value): bool
+    {
+        return $this->resolveFundingFlag('apbd', $value);
+    }
+
+    public function getSumberDanaSwdAttribute($value): bool
+    {
+        return $this->resolveFundingFlag('swd', $value);
+    }
+
+    public function getSumberDanaBantAttribute($value): bool
+    {
+        return $this->resolveFundingFlag('bant', $value);
+    }
+
+    private function resolveMonthlyFlag(int $month, $fallback): bool
+    {
+        if ($this->shouldUseNormalizedJadwal()) {
+            return $this->jadwalBulans->contains('month', $month);
+        }
+
+        return (bool) $fallback;
+    }
+
+    private function resolveQuarterFlag(int $startMonth): bool
+    {
+        return $this->resolveMonthlyFlag($startMonth, $this->attributes["jadwal_bulan_{$startMonth}"] ?? false)
+            || $this->resolveMonthlyFlag($startMonth + 1, $this->attributes['jadwal_bulan_'.($startMonth + 1)] ?? false)
+            || $this->resolveMonthlyFlag($startMonth + 2, $this->attributes['jadwal_bulan_'.($startMonth + 2)] ?? false);
+    }
+
+    private function resolveFundingFlag(string $source, $fallback): bool
+    {
+        if ($this->shouldUseNormalizedFunding()) {
+            return $this->sumberDanas->contains('source', $source);
+        }
+
+        return (bool) $fallback;
+    }
+
+    private function shouldUseNormalizedJadwal(): bool
+    {
+        return $this->relationLoaded('jadwalBulans') && $this->jadwalBulans->isNotEmpty();
+    }
+
+    private function shouldUseNormalizedFunding(): bool
+    {
+        return $this->relationLoaded('sumberDanas') && $this->sumberDanas->isNotEmpty();
     }
 }

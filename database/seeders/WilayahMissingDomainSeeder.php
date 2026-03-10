@@ -295,7 +295,6 @@ class WilayahMissingDomainSeeder extends Seeder
     private function seedProgramPrioritas(\Faker\Generator $faker, array $context): void
     {
         $count = $this->countFor($context['level'], 4, 10, 6, 14);
-        $rows = [];
         $programList = ['Pokja I', 'Pokja II', 'Pokja III', 'Pokja IV'];
         $prioritasList = [
             'Penguatan administrasi',
@@ -318,7 +317,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'sumber_dana_bant',
             ]);
 
-            $rows[] = [
+            $programPrioritasId = DB::table('program_prioritas')->insertGetId([
                 'program' => $faker->randomElement($programList),
                 'prioritas_program' => $faker->randomElement($prioritasList),
                 'kegiatan' => $faker->sentence(14),
@@ -350,10 +349,15 @@ class WilayahMissingDomainSeeder extends Seeder
                 'created_by' => $context['creator_id'],
                 'created_at' => now(),
                 'updated_at' => now(),
-            ];
-        }
+            ]);
 
-        DB::table('program_prioritas')->insert($rows);
+            $this->seedProgramPrioritasNormalized(
+                programPrioritasId: $programPrioritasId,
+                monthlyJadwalFlags: $monthlyJadwalFlags,
+                sumberDanaFlags: $sumberDanaFlags,
+                context: $context
+            );
+        }
     }
 
     /**
@@ -376,6 +380,70 @@ class WilayahMissingDomainSeeder extends Seeder
                 || ($monthlyFlags['jadwal_bulan_11'] ?? false)
                 || ($monthlyFlags['jadwal_bulan_12'] ?? false),
         ];
+    }
+
+    /**
+     * @param  array<string, bool>  $monthlyJadwalFlags
+     * @param  array<string, bool>  $sumberDanaFlags
+     * @param  array<string, mixed>  $context
+     */
+    private function seedProgramPrioritasNormalized(
+        int $programPrioritasId,
+        array $monthlyJadwalFlags,
+        array $sumberDanaFlags,
+        array $context
+    ): void {
+        $now = now();
+        $jadwalRows = [];
+
+        for ($month = 1; $month <= 12; $month++) {
+            $key = "jadwal_bulan_{$month}";
+            if (! ($monthlyJadwalFlags[$key] ?? false)) {
+                continue;
+            }
+
+            $jadwalRows[] = [
+                'program_prioritas_id' => $programPrioritasId,
+                'month' => $month,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $context['creator_id'],
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        if ($jadwalRows !== []) {
+            DB::table('program_prioritas_jadwal_months')->insert($jadwalRows);
+        }
+
+        $sourceMap = [
+            'pusat' => $sumberDanaFlags['sumber_dana_pusat'] ?? false,
+            'apbd' => $sumberDanaFlags['sumber_dana_apbd'] ?? false,
+            'swd' => $sumberDanaFlags['sumber_dana_swd'] ?? false,
+            'bant' => $sumberDanaFlags['sumber_dana_bant'] ?? false,
+        ];
+
+        $sourceRows = [];
+        foreach ($sourceMap as $source => $flag) {
+            if (! $flag) {
+                continue;
+            }
+
+            $sourceRows[] = [
+                'program_prioritas_id' => $programPrioritasId,
+                'source' => $source,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $context['creator_id'],
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        if ($sourceRows !== []) {
+            DB::table('program_prioritas_funding_sources')->insert($sourceRows);
+        }
     }
 
     private function seedPilotProjectKeluargaSehat(\Faker\Generator $faker, array $context): void

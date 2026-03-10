@@ -140,6 +140,19 @@ class DesaProgramPrioritasTest extends TestCase
 
         $program = ProgramPrioritas::where('program', 'Program Ketahanan Pangan')->firstOrFail();
 
+        $this->assertDatabaseHas('program_prioritas_jadwal_months', [
+            'program_prioritas_id' => $program->id,
+            'month' => 1,
+        ]);
+        $this->assertDatabaseHas('program_prioritas_jadwal_months', [
+            'program_prioritas_id' => $program->id,
+            'month' => 2,
+        ]);
+        $this->assertDatabaseHas('program_prioritas_funding_sources', [
+            'program_prioritas_id' => $program->id,
+            'source' => 'pusat',
+        ]);
+
         $this->actingAs($adminDesa)->put(route('desa.program-prioritas.update', $program->id), [
             'program' => 'Program Ketahanan Pangan',
             'prioritas_program' => 'Prioritas Utama',
@@ -171,6 +184,18 @@ class DesaProgramPrioritasTest extends TestCase
             'jadwal_ii' => true,
             'sumber_dana_apbd' => true,
             'keterangan' => 'Tahap lanjutan',
+        ]);
+        $this->assertDatabaseHas('program_prioritas_jadwal_months', [
+            'program_prioritas_id' => $program->id,
+            'month' => 4,
+        ]);
+        $this->assertDatabaseHas('program_prioritas_funding_sources', [
+            'program_prioritas_id' => $program->id,
+            'source' => 'apbd',
+        ]);
+        $this->assertDatabaseMissing('program_prioritas_funding_sources', [
+            'program_prioritas_id' => $program->id,
+            'source' => 'bant',
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.program-prioritas.destroy', $program->id))

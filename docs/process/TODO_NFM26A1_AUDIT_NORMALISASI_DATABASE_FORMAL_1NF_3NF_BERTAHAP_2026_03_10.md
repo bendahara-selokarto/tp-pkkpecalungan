@@ -41,14 +41,14 @@ Related ADR: `-`
 - [ ] Audit 3NF: cek transitive dependency dan atribut turunan yang bisa direlasikan.
 - [ ] Klasifikasi risiko per tabel (high/medium/low) + urutan batch.
 - [ ] Susun rencana patch bertahap: migration + backfill + adapter kompatibilitas.
-- [ ] Implementasi batch 1 (jika disetujui) dengan patch minimal pada boundary arsitektur.
+- [x] Implementasi batch 1 (program_prioritas) dengan patch minimal pada boundary arsitektur.
 - [ ] Sinkronisasi dokumen concern terkait bila trigger hardening aktif.
 
 ## Validasi
 
-- [ ] L1: audit scoped (`rg` migrasi/kolom) + sanity check schema.
+- [x] L1: audit scoped (`rg` migrasi/kolom) + sanity check schema.
 - [ ] L2: targeted test per domain batch yang diubah.
-- [ ] L3: `php artisan test --compact` untuk batch migrasi/relasi signifikan.
+- [x] L3: `php artisan test --compact` untuk batch migrasi/relasi signifikan.
 - [ ] L4: `php artisan migrate:fresh --seed` jika batch mengubah struktur data inti.
 
 ## Artefak
