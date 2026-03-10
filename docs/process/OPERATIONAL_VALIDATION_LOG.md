@@ -22,6 +22,7 @@ Aturan:
 
 - Source of truth concern aktif: `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
 - Concern berjalan yang tetap berada di index aktif:
+  - `docs/process/TODO_NFM26A1_AUDIT_NORMALISASI_DATABASE_FORMAL_1NF_3NF_BERTAHAP_2026_03_10.md` (`in-progress`)
   - `docs/process/TODO_GCP26A4_GOVERNANCE_AUDIT_WAVE_FOLLOWUP_2026_03_09.md` (`in-progress`)
   - `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md` (`in-progress`)
   - `docs/process/TODO_RFD26A1_STANDARISASI_STRUKTUR_DOKUMEN_REFERENSI_DOMAIN_2026_03_10.md` (`planned`)
