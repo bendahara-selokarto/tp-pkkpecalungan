@@ -69,6 +69,7 @@ Legacy artifacts (historical; non-canonical):
 ## 2. Hard Invariants
 
 - `areas` tetap single source of truth wilayah.
+- Setiap migrasi database wajib mempertimbangkan normalisasi dan mengikuti canonical set.
 - Data domain wilayah wajib punya `level`, `area_id`, `created_by`.
 - `level` data harus konsisten dengan `areas.level`.
 - `role`, `scope`, `area_id` user harus konsisten.
