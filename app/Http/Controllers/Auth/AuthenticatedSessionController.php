@@ -24,8 +24,8 @@ class AuthenticatedSessionController extends Controller
             'status' => $request->session()->get('status'),
             'canResetPassword' => $canResetPassword,
             'routes' => [
-                'login' => route('login'),
-                'passwordRequest' => $canResetPassword ? route('password.request') : null,
+                'login' => route('login', absolute: false),
+                'passwordRequest' => $canResetPassword ? route('password.request', absolute: false) : null,
             ],
             'labels' => [
                 'email' => __('Email'),
