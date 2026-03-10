@@ -32,5 +32,7 @@ interface PilotProjectNaskahPelaporanRepositoryInterface
      */
     public function syncPelaksanaanItems(PilotProjectNaskahPelaporanReport $report, array $payload): void;
 
+    public function syncTembusanItems(PilotProjectNaskahPelaporanReport $report, ?string $value): void;
+
     public function deleteReport(PilotProjectNaskahPelaporanReport $report): void;
 }

@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models;
 
 use App\Domains\Wilayah\Models\Area;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanPelaksanaanItem;
+use Illuminate\Support\Collection;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -68,6 +69,12 @@ class PilotProjectNaskahPelaporanReport extends Model
             ->orderBy('sequence');
     }
 
+    public function tembusanItems(): HasMany
+    {
+        return $this->hasMany(PilotProjectNaskahPelaporanTembusanItem::class, 'report_id')
+            ->orderBy('sequence');
+    }
+
     public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class);
@@ -103,6 +110,11 @@ class PilotProjectNaskahPelaporanReport extends Model
         return $this->resolvePelaksanaan(5, $value);
     }
 
+    public function getSuratTembusanAttribute($value): ?string
+    {
+        return $this->resolveTembusan($value);
+    }
+
     private function resolvePelaksanaan(int $sequence, $fallback): string
     {
         if ($this->relationLoaded('pelaksanaanItems') && $this->pelaksanaanItems->isNotEmpty()) {
@@ -113,5 +125,29 @@ class PilotProjectNaskahPelaporanReport extends Model
         }
 
         return (string) ($fallback ?? '');
+    }
+
+    private function resolveTembusan($fallback): ?string
+    {
+        if ($this->relationLoaded('tembusanItems')) {
+            /** @var Collection $items */
+            $items = $this->getRelation('tembusanItems');
+            if ($items->isNotEmpty()) {
+                $values = $items
+                    ->pluck('value')
+                    ->map(static fn ($value) => trim((string) $value))
+                    ->filter(static fn (string $value): bool => $value !== '')
+                    ->values()
+                    ->all();
+
+                if ($values !== []) {
+                    return implode("\n", $values);
+                }
+            }
+        }
+
+        $text = trim((string) ($fallback ?? ''));
+
+        return $text !== '' ? $text : null;
     }
 }

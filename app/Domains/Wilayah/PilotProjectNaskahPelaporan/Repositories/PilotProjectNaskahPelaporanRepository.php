@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories;
 
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanReport;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanPelaksanaanItem;
+use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanTembusanItem;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -29,7 +30,7 @@ class PilotProjectNaskahPelaporanRepository implements PilotProjectNaskahPelapor
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran)
-            ->with('pelaksanaanItems')
+            ->with(['pelaksanaanItems', 'tembusanItems'])
             ->withCount('attachments')
             ->latest('id')
             ->get();
@@ -41,7 +42,7 @@ class PilotProjectNaskahPelaporanRepository implements PilotProjectNaskahPelapor
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran)
-            ->with('pelaksanaanItems')
+            ->with(['pelaksanaanItems', 'tembusanItems'])
             ->withCount('attachments')
             ->latest('id')
             ->paginate($perPage)
@@ -54,6 +55,7 @@ class PilotProjectNaskahPelaporanRepository implements PilotProjectNaskahPelapor
             ->with([
                 'attachments' => fn ($query) => $query->orderBy('id'),
                 'pelaksanaanItems',
+                'tembusanItems',
             ])
             ->findOrFail($id);
     }
@@ -121,8 +123,55 @@ class PilotProjectNaskahPelaporanRepository implements PilotProjectNaskahPelapor
         }
     }
 
+    public function syncTembusanItems(PilotProjectNaskahPelaporanReport $report, ?string $value): void
+    {
+        PilotProjectNaskahPelaporanTembusanItem::query()
+            ->where('report_id', $report->id)
+            ->delete();
+
+        $values = $this->splitLines($value);
+        if ($values === []) {
+            return;
+        }
+
+        $now = now();
+        $rows = [];
+        $sequence = 1;
+
+        foreach ($values as $item) {
+            $rows[] = [
+                'report_id' => $report->id,
+                'sequence' => $sequence,
+                'value' => $item,
+                'level' => $report->level,
+                'area_id' => $report->area_id,
+                'created_by' => $report->created_by,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+            $sequence++;
+        }
+
+        PilotProjectNaskahPelaporanTembusanItem::query()->insert($rows);
+    }
+
     public function deleteReport(PilotProjectNaskahPelaporanReport $report): void
     {
         $report->delete();
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function splitLines(?string $value): array
+    {
+        $text = trim((string) ($value ?? ''));
+        if ($text === '') {
+            return [];
+        }
+
+        $parts = preg_split('/\\r\\n|\\r|\\n/', $text) ?: [];
+
+        return array_values(array_filter(array_map('trim', $parts), static fn (string $part): bool => $part !== ''));
     }
 }

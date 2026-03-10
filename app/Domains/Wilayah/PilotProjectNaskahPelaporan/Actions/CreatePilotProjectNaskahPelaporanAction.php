@@ -23,12 +23,13 @@ class CreatePilotProjectNaskahPelaporanAction
         $createdBy = (int) auth()->id();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
         $pelaksanaanPayload = $this->buildPelaksanaanPayload($payload);
+        $suratTembusan = $this->textOrNull($payload['surat_tembusan'] ?? null);
 
         $report = $this->repository->storeReport([
             'judul_laporan' => (string) ($payload['judul_laporan'] ?? config('pilot_project_naskah_pelaporan.module.label')),
             'surat_kepada' => $this->textOrNull($payload['surat_kepada'] ?? null),
             'surat_dari' => $this->textOrNull($payload['surat_dari'] ?? null),
-            'surat_tembusan' => $this->textOrNull($payload['surat_tembusan'] ?? null),
+            'surat_tembusan' => $suratTembusan,
             'surat_tanggal' => $payload['surat_tanggal'] ?? null,
             'surat_nomor' => $this->textOrNull($payload['surat_nomor'] ?? null),
             'surat_sifat' => $this->textOrNull($payload['surat_sifat'] ?? null),
@@ -49,6 +50,7 @@ class CreatePilotProjectNaskahPelaporanAction
         ]);
 
         $this->repository->syncPelaksanaanItems($report, $pelaksanaanPayload);
+        $this->repository->syncTembusanItems($report, $suratTembusan);
 
         $rows = $this->attachmentService->buildAttachmentRows($report, $payload, $level, $areaId, $createdBy);
         $this->repository->storeAttachments($report, $rows);

@@ -27,6 +27,8 @@ Tabel domain aktif:
 
 - activities
 - agenda_surats
+- agenda_surat_lampiran_items
+- agenda_surat_tembusan_items
 - anggota_pokjas
 - anggota_tim_penggeraks
 - areas
@@ -59,6 +61,7 @@ Tabel domain aktif:
 - pilot_project_naskah_pelaporan_attachments
 - pilot_project_naskah_pelaporan_pelaksanaan_items
 - pilot_project_naskah_pelaporan_reports
+- pilot_project_naskah_pelaporan_tembusan_items
 - posyandus
 - prestasi_lombas
 - program_prioritas
@@ -83,19 +86,20 @@ Tabel sistem/framework (di luar audit formal):
 
 - 1NF high: `program_prioritas` memiliki repeating group `jadwal_bulan_1..12`, `jadwal_i..iv`, dan multi-value `sumber_dana_*`.
 - 1NF high: `pilot_project_naskah_pelaporan_reports` memiliki repeating group `pelaksanaan_1..5`.
-- 1NF possible: `pilot_project_naskah_pelaporan_reports.surat_tembusan` berpotensi multi-value (butuh konfirmasi kontrak domain).
+- 1NF resolved: `pilot_project_naskah_pelaporan_reports.surat_tembusan` dinormalisasi ke tabel tembusan items.
 - 2NF: tidak ditemukan primary key komposit pada tabel domain aktif (2NF umumnya N/A karena `id` surrogate).
 - 3NF: kolom `level` bersama `area_id` adalah redundansi yang disetujui oleh kontrak canonical dan wajib konsisten.
  - Scan repeating group pada migrasi aktif tidak menemukan pola lain selain batch 1/2 di atas.
- - Multi-value possible (butuh konfirmasi kontrak domain): `agenda_surats.tembusan` dan `agenda_surats.lampiran` masih diperlakukan sebagai free-text.
+ - 1NF resolved: `agenda_surats.tembusan` dan `agenda_surats.lampiran` dinormalisasi ke tabel items.
 
 ## Prioritas Batch (Usulan Awal)
 
 - Batch 1: normalisasi `program_prioritas` (jadwal + sumber dana) ke tabel anak/pivot.
 - Batch 2: normalisasi `pilot_project_naskah_pelaporan_reports` (pelaksanaan) ke tabel anak berurutan.
-- Batch 3: evaluasi field multi-value lain setelah konfirmasi kontrak domain.
+- Batch 3: normalisasi `pilot_project_naskah_pelaporan_reports.surat_tembusan` dan `agenda_surats.lampiran/tembusan`.
 
 ## Status Batch
 
 - Batch 1: implementasi awal (tabel `program_prioritas_jadwal_months` + `program_prioritas_funding_sources`, backfill, dan adapter repository/seeder).
 - Batch 2: implementasi awal (tabel `pilot_project_naskah_pelaporan_pelaksanaan_items`, backfill, dan adapter repository/action/seeder).
+- Batch 3: implementasi awal (tabel `pilot_project_naskah_pelaporan_tembusan_items`, `agenda_surat_lampiran_items`, `agenda_surat_tembusan_items`, backfill, dan adapter repository/action/seeder).

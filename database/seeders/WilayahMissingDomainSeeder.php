@@ -556,12 +556,13 @@ class WilayahMissingDomainSeeder extends Seeder
             4 => $faker->sentence(14),
             5 => $faker->sentence(14),
         ];
+        $suratTembusan = 'Arsip Sekretariat TP PKK';
 
         $reportId = DB::table('pilot_project_naskah_pelaporan_reports')->insertGetId([
             'judul_laporan' => 'Naskah Pelaporan Pilot Project '.$context['area_name'],
             'surat_kepada' => 'Ketua TP PKK Kabupaten Batang',
             'surat_dari' => 'TP PKK '.$context['area_name'],
-            'surat_tembusan' => 'Arsip Sekretariat TP PKK',
+            'surat_tembusan' => $suratTembusan,
             'surat_tanggal' => now()->format('Y-m-d'),
             'surat_nomor' => sprintf('NP/%s/%d', strtoupper($context['level']), random_int(100, 999)),
             'surat_sifat' => 'Biasa',
@@ -586,6 +587,11 @@ class WilayahMissingDomainSeeder extends Seeder
         $this->seedPilotProjectNaskahPelaporanPelaksanaanItems(
             reportId: $reportId,
             pelaksanaan: $pelaksanaan,
+            context: $context
+        );
+        $this->seedPilotProjectNaskahPelaporanTembusanItems(
+            reportId: $reportId,
+            tembusan: $suratTembusan,
             context: $context
         );
 
@@ -650,6 +656,40 @@ class WilayahMissingDomainSeeder extends Seeder
         DB::table('pilot_project_naskah_pelaporan_pelaksanaan_items')->insert($rows);
     }
 
+    /**
+     * @param  array<string, mixed>  $context
+     */
+    private function seedPilotProjectNaskahPelaporanTembusanItems(
+        int $reportId,
+        ?string $tembusan,
+        array $context
+    ): void {
+        $items = $this->splitLines($tembusan);
+        if ($items === []) {
+            return;
+        }
+
+        $now = now();
+        $rows = [];
+        $sequence = 1;
+
+        foreach ($items as $value) {
+            $rows[] = [
+                'report_id' => $reportId,
+                'sequence' => $sequence,
+                'value' => $value,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $context['creator_id'],
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+            $sequence++;
+        }
+
+        DB::table('pilot_project_naskah_pelaporan_tembusan_items')->insert($rows);
+    }
+
     private function atLeastOneTrue(array $keys): array
     {
         $flags = [];
@@ -665,6 +705,21 @@ class WilayahMissingDomainSeeder extends Seeder
         $flags[$forcedKey] = true;
 
         return $flags;
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function splitLines(?string $value): array
+    {
+        $text = trim((string) ($value ?? ''));
+        if ($text === '') {
+            return [];
+        }
+
+        $parts = preg_split('/\\r\\n|\\r|\\n/', $text) ?: [];
+
+        return array_values(array_filter(array_map('trim', $parts), static fn (string $part): bool => $part !== ''));
     }
 
     private function defaultBudgetYear(): int

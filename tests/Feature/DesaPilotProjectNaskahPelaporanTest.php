@@ -66,6 +66,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'judul_laporan' => 'Naskah Pelaporan Desa A',
             'surat_kepada' => 'TP PKK Kecamatan Pecalungan',
             'surat_dari' => 'Tim Penggerak PKK Desa Gombong',
+            'surat_tembusan' => 'Arsip Sekretariat',
             'surat_tanggal' => '2026-02-22',
             'surat_nomor' => '001/PKK/II/2026',
             'dasar_pelaksanaan' => 'Dasar pelaksanaan contoh',
@@ -115,6 +116,11 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'sequence' => 5,
             'description' => 'Pelaksanaan 5',
         ]);
+        $this->assertDatabaseHas('pilot_project_naskah_pelaporan_tembusan_items', [
+            'report_id' => $report->id,
+            'sequence' => 1,
+            'value' => 'Arsip Sekretariat',
+        ]);
 
         $attachmentToRemove = PilotProjectNaskahPelaporanAttachment::query()
             ->where('report_id', $report->id)
@@ -125,6 +131,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'judul_laporan' => 'Naskah Pelaporan Desa A Revisi',
             'dasar_pelaksanaan' => 'Dasar pelaksanaan revisi',
             'pendahuluan' => 'Pendahuluan revisi',
+            'surat_tembusan' => 'Arsip Revisi',
             'pelaksanaan_1' => 'Pelaksanaan 1 revisi',
             'pelaksanaan_2' => 'Pelaksanaan 2 revisi',
             'pelaksanaan_3' => 'Pelaksanaan 3 revisi',
@@ -148,6 +155,11 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'report_id' => $report->id,
             'sequence' => 2,
             'description' => 'Pelaksanaan 2 revisi',
+        ]);
+        $this->assertDatabaseHas('pilot_project_naskah_pelaporan_tembusan_items', [
+            'report_id' => $report->id,
+            'sequence' => 1,
+            'value' => 'Arsip Revisi',
         ]);
 
         $this->actingAs($adminDesa)

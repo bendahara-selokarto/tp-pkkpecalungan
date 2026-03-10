@@ -242,6 +242,11 @@ class DesaAgendaSuratTest extends TestCase
 
         $this->assertNotNull($oldAttachmentPath);
         Storage::disk('public')->assertExists($oldAttachmentPath);
+        $this->assertDatabaseHas('agenda_surat_lampiran_items', [
+            'agenda_surat_id' => $agenda->id,
+            'sequence' => 1,
+            'value' => '1 lembar',
+        ]);
 
         $this->actingAs($adminDesa)->post(route('desa.agenda-surat.update', $agenda->id), [
             '_method' => 'put',
@@ -262,6 +267,11 @@ class DesaAgendaSuratTest extends TestCase
         $this->assertNotSame($oldAttachmentPath, $newAttachmentPath);
         Storage::disk('public')->assertMissing($oldAttachmentPath);
         Storage::disk('public')->assertExists($newAttachmentPath);
+        $this->assertDatabaseHas('agenda_surat_tembusan_items', [
+            'agenda_surat_id' => $agenda->id,
+            'sequence' => 1,
+            'value' => 'Arsip Desa',
+        ]);
 
         $this->assertDatabaseHas('agenda_surats', [
             'id' => $agenda->id,

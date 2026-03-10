@@ -240,7 +240,6 @@ class DashboardNaturalBatangSeeder extends Seeder
     private function seedAgendaSurat(\Faker\Generator $faker, array $context): void
     {
         $count = $this->countFor($context['level'], 12, 24, 18, 36);
-        $rows = [];
         $perihalList = [
             'Undangan Rapat Koordinasi PKK',
             'Laporan Kegiatan Bulanan',
@@ -248,12 +247,15 @@ class DashboardNaturalBatangSeeder extends Seeder
             'Pemberitahuan Jadwal Monitoring',
             'Penyampaian Data Administrasi',
         ];
+        $now = now();
 
         for ($i = 1; $i <= $count; $i++) {
             $jenisSurat = $faker->randomElement(['masuk', 'keluar']);
             $tanggalSurat = $faker->dateTimeBetween('-12 months', 'now')->format('Y-m-d');
+            $lampiran = $faker->boolean(40) ? (string) random_int(1, 5).' berkas' : null;
+            $tembusan = $faker->boolean(25) ? 'Arsip Sekretariat' : null;
 
-            $rows[] = [
+            $agendaId = DB::table('agenda_surats')->insertGetId([
                 'jenis_surat' => $jenisSurat,
                 'tanggal_terima' => $jenisSurat === 'masuk' ? $faker->dateTimeBetween($tanggalSurat, 'now')->format('Y-m-d') : null,
                 'tanggal_surat' => $tanggalSurat,
@@ -262,20 +264,69 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'dari' => $jenisSurat === 'masuk' ? $faker->company() : 'TP PKK '.$context['area_name'],
                 'kepada' => $jenisSurat === 'keluar' ? $faker->randomElement(['TP PKK Kecamatan', 'TP PKK Kabupaten Batang', 'Kepala Desa']) : 'TP PKK '.$context['area_name'],
                 'perihal' => $faker->randomElement($perihalList),
-                'lampiran' => $faker->boolean(40) ? (string) random_int(1, 5).' berkas' : null,
+                'lampiran' => $lampiran,
                 'diteruskan_kepada' => $faker->boolean(30) ? 'Pokja terkait' : null,
-                'tembusan' => $faker->boolean(25) ? 'Arsip Sekretariat' : null,
+                'tembusan' => $tembusan,
                 'keterangan' => $faker->boolean(70) ? null : 'Perlu tindak lanjut minggu ini',
                 'tahun_anggaran' => $this->resolveBudgetYear(date: $tanggalSurat),
                 'level' => $context['level'],
                 'area_id' => $context['area_id'],
                 'created_by' => $context['creator_id'],
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
+                'created_at' => $now,
+                'updated_at' => $now,
+            ]);
+
+            $this->seedAgendaSuratItems(
+                table: 'agenda_surat_lampiran_items',
+                agendaId: $agendaId,
+                value: $lampiran,
+                context: $context,
+                now: $now
+            );
+
+            $this->seedAgendaSuratItems(
+                table: 'agenda_surat_tembusan_items',
+                agendaId: $agendaId,
+                value: $tembusan,
+                context: $context,
+                now: $now
+            );
+        }
+    }
+
+    /**
+     * @param  array<string, mixed>  $context
+     */
+    private function seedAgendaSuratItems(
+        string $table,
+        int $agendaId,
+        ?string $value,
+        array $context,
+        $now
+    ): void {
+        $items = $this->splitLines($value);
+        if ($items === []) {
+            return;
         }
 
-        DB::table('agenda_surats')->insert($rows);
+        $rows = [];
+        $sequence = 1;
+
+        foreach ($items as $item) {
+            $rows[] = [
+                'agenda_surat_id' => $agendaId,
+                'sequence' => $sequence,
+                'value' => $item,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $context['creator_id'],
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+            $sequence++;
+        }
+
+        DB::table($table)->insert($rows);
     }
 
     private function seedBantuan(\Faker\Generator $faker, array $context): void
@@ -804,6 +855,21 @@ class DashboardNaturalBatangSeeder extends Seeder
         }
 
         DB::table('simulasi_penyuluhans')->insert($rows);
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function splitLines(?string $value): array
+    {
+        $text = trim((string) ($value ?? ''));
+        if ($text === '') {
+            return [];
+        }
+
+        $parts = preg_split('/\\r\\n|\\r|\\n/', $text) ?: [];
+
+        return array_values(array_filter(array_map('trim', $parts), static fn (string $part): bool => $part !== ''));
     }
 
     private function randomAddress(\Faker\Generator $faker, array $context): string

@@ -16,12 +16,13 @@ class UpdatePilotProjectNaskahPelaporanAction
     public function execute(PilotProjectNaskahPelaporanReport $report, array $payload): PilotProjectNaskahPelaporanReport
     {
         $pelaksanaanPayload = $this->buildPelaksanaanPayload($payload, $report);
+        $suratTembusan = $this->textOrCurrent($payload, 'surat_tembusan', $report->surat_tembusan);
 
         $updated = $this->repository->updateReport($report, [
             'judul_laporan' => (string) ($payload['judul_laporan'] ?? $report->judul_laporan),
             'surat_kepada' => $this->textOrCurrent($payload, 'surat_kepada', $report->surat_kepada),
             'surat_dari' => $this->textOrCurrent($payload, 'surat_dari', $report->surat_dari),
-            'surat_tembusan' => $this->textOrCurrent($payload, 'surat_tembusan', $report->surat_tembusan),
+            'surat_tembusan' => $suratTembusan,
             'surat_tanggal' => $payload['surat_tanggal'] ?? $report->surat_tanggal,
             'surat_nomor' => $this->textOrCurrent($payload, 'surat_nomor', $report->surat_nomor),
             'surat_sifat' => $this->textOrCurrent($payload, 'surat_sifat', $report->surat_sifat),
@@ -39,6 +40,7 @@ class UpdatePilotProjectNaskahPelaporanAction
         ]);
 
         $this->repository->syncPelaksanaanItems($updated, $pelaksanaanPayload);
+        $this->repository->syncTembusanItems($updated, $suratTembusan);
 
         $removeIds = collect($payload['remove_attachment_ids'] ?? [])
             ->filter(fn ($id) => is_numeric($id))

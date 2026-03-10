@@ -36,7 +36,7 @@ Related ADR: `-`
 
 - [x] Inventarisasi tabel dari `database/migrations` dan identifikasi PK/FK/candidate keys.
 - [x] Catat temuan awal risk-based pada baseline audit.
-- [ ] Audit 1NF: cek repeating group, multi-value column (CSV/JSON/array), dan nullable yang mengindikasikan entitas terpisah.
+- [x] Audit 1NF: cek repeating group, multi-value column (CSV/JSON/array), dan nullable yang mengindikasikan entitas terpisah.
 - [x] Audit 1NF (partial): repeating group pada migrasi aktif dipetakan; kandidat multi-value menunggu konfirmasi kontrak domain.
 - [ ] Audit 2NF: cek partial dependency pada tabel dengan kunci komposit atau natural key.
 - [ ] Audit 3NF: cek transitive dependency dan atribut turunan yang bisa direlasikan.
@@ -44,7 +44,8 @@ Related ADR: `-`
 - [ ] Susun rencana patch bertahap: migration + backfill + adapter kompatibilitas.
 - [x] Implementasi batch 1 (program_prioritas) dengan patch minimal pada boundary arsitektur.
 - [x] Implementasi batch 2 (pilot_project_naskah_pelaporan_reports) dengan patch minimal pada boundary arsitektur.
-- [ ] Sinkronisasi dokumen concern terkait bila trigger hardening aktif.
+- [x] Implementasi batch 3 (agenda_surats lampiran/tembusan + pilot_project_naskah_pelaporan_reports surat_tembusan).
+- [x] Sinkronisasi dokumen concern terkait bila trigger hardening aktif.
 
 ## Validasi
 
