@@ -118,6 +118,7 @@ Related ADR: `-`
   - `php artisan test tests/Unit/Frontend/DashboardLayoutMenuContractTest.php --compact`
   - `npm run build`
 - [ ] L3: jika penataan menu berdampak lintas concern/otorisasi, lanjutkan ke `php artisan test --compact`.
+- [ ] L4: evidence runtime UI/UX untuk perubahan sidebar/menu tersedia dan ditautkan (smoke/a11y/visual/perf).
 
 ## Risiko
 

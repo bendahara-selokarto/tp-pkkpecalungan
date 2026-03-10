@@ -1,7 +1,7 @@
 # TODO IWN26A1 Roadmap Ekspansi Audit UI UX Runtime Evidence
 
 Tanggal: 2026-03-03  
-Status: `in-progress` (`batch:P1-P2-P3-P4-P5-P6-P8-P9-P10-P11-P12-P13-P14-implemented`)
+Status: `in-progress` (`batch:P1-P2-P3-P4-P5-P6-P7-P8-P9-P10-P11-P12-P13-P14-implemented`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -78,7 +78,7 @@ Related ADR: `-`
 - [x] `P14` Actionability trend artifact:
   - tambahkan `warmupRemainingRuns` pada hasil evaluasi trend,
   - tampilkan rekomendasi `Next Action` pada markdown report + CI step summary.
-- [ ] `P7` Sinkronisasi TODO concern UI aktif agar setiap concern menyertakan evidence runtime.
+- [x] `P7` Sinkronisasi TODO concern UI aktif agar setiap concern menyertakan evidence runtime.
 
 ## Validasi
 
@@ -124,4 +124,3 @@ Related ADR: `-`
 - [x] Ringkasan roadmap fase + deliverable per fase.
 - [x] Daftar concern UI yang masuk batch eksekusi pertama.
 - [x] Hasil dry-run gate CI + residual risk flakiness.
-

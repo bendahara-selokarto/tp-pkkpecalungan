@@ -117,6 +117,7 @@ Related ADR: `-`
   - `php artisan test tests/Unit/Frontend/DashboardLayoutMenuContractTest.php`
   - `php artisan test tests/Unit/Dashboard/DashboardCoverageMenuSyncTest.php`
 - [ ] L3: `php artisan test` jika perubahan lintas domain/akses/dashboard signifikan.
+- [ ] L4: evidence runtime UI/UX untuk perubahan menu/sidebar tersedia dan ditautkan (smoke/a11y/visual/perf).
 
 ## Risiko
 
