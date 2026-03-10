@@ -2618,3 +2618,10 @@ Catatan:
   - generate TODO uji sementara dengan hook audit `PASS`,
   - review diff lintas script + workflow + docs governance `PASS`,
   - `php artisan test` tidak dijalankan karena concern `doc+script-only`.
+
+### Audit Baseline P0 RGM26A1 - 2026-03-10
+
+- Ringkasan: baseline grouping/mode/middleware/sidebar tervalidasi konsisten.
+- Source of truth grouping & mode berada di `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php` (`GROUP_MODULES`, `GROUPS_BY_SCOPE`, `ROLE_GROUP_MODES`, `ROLE_MODULE_MODE_OVERRIDES`).
+- Middleware `module.visibility` diregistrasi di `bootstrap/app.php`, dipakai pada route group `desa` dan `kecamatan` di `routes/web.php`, dan menolak write intent bila mode bukan `read-write` (`app/Http/Middleware/EnsureModuleVisibility.php`).
+- Sidebar `resources/js/Layouts/DashboardLayout.vue` menggunakan `menuGroupModes`/`moduleModes` dari `HandleInertiaRequests`, memfilter item via `withMode()`, dan group `monitoring` hanya tampil di scope `kecamatan` (item default `uiVisibility: 'disabled'`).

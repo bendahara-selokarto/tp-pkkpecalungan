@@ -106,17 +106,8 @@ Catatan runtime ringkas: `inventaris` dan `buku-tamu` tetap dianggap modul overr
 
 ### Hasil Audit Baseline P0 (2026-03-10)
 
-- Source of truth grouping & mode ada di `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`.
-- `GROUP_MODULES` memetakan modul per group (`sekretaris-tpk`, `pokja-i`..`pokja-iv`, `monitoring`).
-- `GROUPS_BY_SCOPE` mengizinkan `monitoring` hanya pada scope `kecamatan`.
-- `ROLE_GROUP_MODES` memberi mode group per role (desa/kecamatan + legacy `admin-*` + `super-admin`).
-- `ROLE_MODULE_MODE_OVERRIDES` berisi grant khusus (`inventaris`, `buku-tamu` untuk pokja desa) dan null untuk sembunyikan modul pada pokja kecamatan.
-- Middleware `module.visibility` terdaftar di `bootstrap/app.php` dan dieksekusi pada route group `desa` + `kecamatan` di `routes/web.php`.
-- `app/Http/Middleware/EnsureModuleVisibility.php` menentukan module slug dari segment URL ke-2 dan memblokir write intent jika mode bukan `read-write`.
-- Sidebar memakai `resources/js/Layouts/DashboardLayout.vue`.
-- `menuGroupModes` + `moduleModes` berasal dari `app/Http/Middleware/HandleInertiaRequests.php`.
-- `withMode()` hanya menampilkan group yang ada di payload, menyaring item dengan `uiVisibility`, `moduleModes`, dan dedup href internal.
-- Group `monitoring` hanya muncul di kecamatan dan itemnya default `uiVisibility: 'disabled'`.
+- Ringkasan: baseline grouping, mode, middleware `module.visibility`, dan sidebar tervalidasi konsisten.
+- Detail audit dipindahkan ke `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md` (section "Audit Baseline P0 RGM26A1").
 
 ## Validation Gate Plan
 
