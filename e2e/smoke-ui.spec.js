@@ -178,7 +178,10 @@ for (const roleConfig of roleMatrix) {
       await expect(page.getByText('Terjadi gangguan antarmuka karena error JavaScript.')).toBeHidden();
       await roleConfig.shellAssertion(page);
 
-      await page.getByRole('button', { name: 'Keluar' }).click();
+      const logoutButton = page.getByRole('button', { name: 'Keluar' });
+      await logoutButton.scrollIntoViewIfNeeded();
+      await logoutButton.focus();
+      await page.keyboard.press('Enter');
       await expect(page).toHaveURL(/\/login$/);
       expect(runtimeErrors).toEqual([]);
     });
