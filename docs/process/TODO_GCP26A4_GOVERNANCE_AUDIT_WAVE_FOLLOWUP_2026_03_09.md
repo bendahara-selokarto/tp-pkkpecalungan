@@ -49,6 +49,8 @@ Related ADR: `-`
 - [x] L1: audit `TODO + ADR` corpus dan referensi root/archive konsisten.
 - [x] L2: audit link/path markdown + governance audit script `PASS`.
 - [ ] L3: verifikasi workflow remote/GitHub Actions untuk gate dokumentasi.
+  - 2026-03-10: Domain Contract Gate run `22890639031` gagal pada step `Run mandatory domain/PDF gates` (workflow `domain-contract-gate.yml`).
+  - Repro lokal `PASS`: `php artisan route:list --name=report`, `php -d memory_limit=512M artisan test --filter=PdfBaselineFixtureComplianceTest --compact`, `php -d memory_limit=512M artisan test --filter=scope_metadata_tidak_sinkron --compact`.
 
 ## Risiko
 
@@ -94,3 +96,5 @@ Related ADR: `-`
 - 2026-03-10 batch 4:
   - `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` dijadikan indeks ringkas dengan shard `delivery`, `governance`, dan `runtime`,
   - detail pattern tetap hidup pada shard terpisah agar retrieval tetap ringan.
+- 2026-03-10 batch 5:
+  - verifikasi workflow remote dicoba; run `22890639031` gagal pada step `Run mandatory domain/PDF gates` (butuh rerun/inspeksi log remote).
