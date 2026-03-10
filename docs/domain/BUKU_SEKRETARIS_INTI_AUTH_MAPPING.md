@@ -26,9 +26,9 @@ Status: `source-scanned` (`unverified-local-extension`)
    - `docs/referensi/Rakernas X.pdf` (text-layer scan seluruh halaman)
    - `docs/referensi/excel/BUKU BANTU.xlsx` (scan daftar sheet)
 4. Bukti visual sumber primer (pembanding coverage lampiran sekretaris):
-   - `docs/referensi/_screenshots/rakernas-x-secretariat-core/rakernas_x_page_20.png` (Lampiran 4.10)
-   - `docs/referensi/_screenshots/rakernas-x-secretariat-core/rakernas_x_page_24.png` (Lampiran 4.12)
-   - `docs/referensi/_screenshots/rakernas-x-secretariat-core/rakernas_x_page_26.png` (Lampiran 4.13)
+   - `docs/referensi/_screenshots/rakernas-x-autentik/Screenshot Lampiran 4.10.png` (Lampiran 4.10)
+   - `docs/referensi/_screenshots/rakernas-x-autentik/Screenshot Lampiran 4.12.png` (Lampiran 4.12)
+   - `docs/referensi/_screenshots/rakernas-x-autentik/Screenshot Lampiran 4.13.png` (Lampiran 4.13)
 
 Catatan sumber primer:
 
@@ -100,4 +100,3 @@ Catatan sumber primer:
 2. Perubahan urutan/label header wajib melalui test update + sinkronisasi dokumen ini.
 3. Status autentik saat ini dikunci `unverified-local-extension`.
 4. Kenaikan status ke `verified` hanya boleh dilakukan bila sumber primer resmi untuk tiga buku ini tersedia dan tervalidasi (`text-layer + bukti visual header + mapping merge cell`).
-

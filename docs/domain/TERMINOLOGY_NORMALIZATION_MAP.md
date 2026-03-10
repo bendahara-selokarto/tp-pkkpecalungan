@@ -33,7 +33,7 @@ Tujuan:
 | Lampiran | Istilah teknis | Label canonical pedoman | Label saat ini (terdeteksi) | Normalisasi target | Status |
 | --- | --- | --- | --- | --- | --- |
 | 4.9a | `anggota-tim-penggerak` | Buku Daftar Anggota Tim Penggerak PKK | Sidebar masih memakai `Buku Daftar Anggota TP PKK`; PDF sudah mengikuti pedoman | Sinkronkan label sidebar ke istilah canonical `Tim Penggerak` | partial |
-| 4.9b | `kader-khusus` | Buku Daftar Kader Tim Penggerak PKK | Sidebar masih memakai `Buku Daftar Kader TP PKK`; PDF sudah mengikuti pedoman | Sinkronkan label sidebar ke istilah canonical `Tim Penggerak` | partial |
+| 4.9b | `kader-khusus` | Buku Daftar Anggota TP PKK dan Kader | Sidebar/modul masih memakai `Buku Kader Khusus`; struktur autentik gabungan belum diadopsi | Selaraskan label + struktur modul sesuai lampiran 4.9b | mismatch |
 | 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | Sidebar/menu/index sudah memakai `Agenda Surat Masuk/Keluar`; form tambah/edit memakai label natural `Data Dukung (Unggah Berkas)` untuk lampiran file | Pertahankan label canonical pedoman + label upload natural user-facing | match |
 | 4.11 | `buku-keuangan` | Buku Keuangan | UI/PDF sudah mengarah ke label pedoman; alias route legacy `bantuans.keuangan` tetap aktif untuk transisi | Pertahankan domain dedicated + alias kompatibilitas | match |
 | 4.12 | `inventaris` | Buku Inventaris | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
@@ -78,7 +78,7 @@ Tujuan:
 - `Laporan Posyandu` -> gunakan `Data Isian Posyandu oleh TP PKK`
 - `Data Warga` (sebagai judul modul/PDF 4.14.1a) -> gunakan `Daftar Warga TP PKK`
 - `Buku Daftar Anggota TP PKK` -> gunakan `Buku Daftar Anggota Tim Penggerak PKK`
-- `Buku Daftar Kader TP PKK` -> gunakan `Buku Daftar Kader Tim Penggerak PKK`
+- `Buku Daftar Kader TP PKK` -> gunakan `Buku Daftar Anggota TP PKK dan Kader`
 - `Buku Agenda Surat` -> gunakan `Buku Agenda Surat Masuk/Keluar`
 - `Koperasi Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Koperasi Desa/Kecamatan`
 - `Kejar Paket Desa/Kecamatan` (sebagai judul modul) -> gunakan `Data Isian Kejar Paket/KF/PAUD Desa/Kecamatan`

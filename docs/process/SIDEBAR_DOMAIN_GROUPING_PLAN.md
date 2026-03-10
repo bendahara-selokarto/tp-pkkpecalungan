@@ -37,7 +37,7 @@ Sumber acuan:
 | L2 | L3 (Domain) | Slug/Route Prefix |
 | --- | --- | --- |
 | Sekretaris TP-PKK | Buku Daftar Anggota Tim Penggerak PKK | `/{scope}/anggota-tim-penggerak` |
-| Sekretaris TP-PKK | Buku Daftar Kader Tim Penggerak PKK | `/{scope}/kader-khusus` |
+| Sekretaris TP-PKK | Buku Daftar Anggota TP PKK dan Kader | `/{scope}/kader-khusus` |
 | Sekretaris TP-PKK | Buku Agenda Surat Masuk/Keluar | `/{scope}/agenda-surat` |
 | Sekretaris TP-PKK | Buku Keuangan | `/{scope}/buku-keuangan` |
 | Sekretaris TP-PKK | Buku Inventaris | `/{scope}/inventaris` |
@@ -145,4 +145,3 @@ Checklist tindak lanjut (opsional, jika nanti disetujui refactor):
 - [x] Struktur organisasi sidebar `L1/L2/L3` terdokumentasi.
 - [x] Mapping domain sidebar ke slug route terdokumentasi.
 - [x] Catatan audit teks sidebar dan checklist audit lanjutan ditambahkan.
-
