@@ -86,6 +86,8 @@ Tabel sistem/framework (di luar audit formal):
 - 1NF possible: `pilot_project_naskah_pelaporan_reports.surat_tembusan` berpotensi multi-value (butuh konfirmasi kontrak domain).
 - 2NF: tidak ditemukan primary key komposit pada tabel domain aktif (2NF umumnya N/A karena `id` surrogate).
 - 3NF: kolom `level` bersama `area_id` adalah redundansi yang disetujui oleh kontrak canonical dan wajib konsisten.
+ - Scan repeating group pada migrasi aktif tidak menemukan pola lain selain batch 1/2 di atas.
+ - Multi-value possible (butuh konfirmasi kontrak domain): `agenda_surats.tembusan` dan `agenda_surats.lampiran` masih diperlakukan sebagai free-text.
 
 ## Prioritas Batch (Usulan Awal)
 
