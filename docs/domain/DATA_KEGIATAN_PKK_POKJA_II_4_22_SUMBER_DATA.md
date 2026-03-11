@@ -12,7 +12,7 @@
 - Status cek manual sumber data report: **belum**.
 - Tanggal cek manual terakhir (header): `2026-03-11`.
 - Bukti acuan visual: screenshot Lampiran `4.22` di `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_22_data_kegiatan_pkk_pokja_ii.png`.
-- Referensi cara pengisian: `docs/referensi/Cara Pengisian Lampiran 4.22.pdf` (kolom 1-36).
+- Referensi cara pengisian: `docs/referensi/supporting/lampiran-4-22-cara-pengisian.pdf` (kolom 1-36).
 
 ## Jalur Eksekusi Report (Planned)
 

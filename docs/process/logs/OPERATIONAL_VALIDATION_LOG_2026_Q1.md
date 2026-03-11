@@ -2650,3 +2650,15 @@ Catatan:
   - `npm run test:e2e:smoke`, `npm run test:e2e:a11y`, `npm run test:e2e:visual`, `npm run test:e2e:perf`,
   - `npm run test:e2e:perf:summary` + `npm run test:e2e:perf:trend`,
   - `php artisan test --filter=DashboardLayoutMenuContractTest` `PASS`.
+
+### Standarisasi Struktur Dokumen Referensi Domain (`RFD26A1`) - 2026-03-11
+
+- Status concern: `done` (`state:taxonomy-naming-manifest-pilot-rename-closed`).
+- Hasil batch:
+  - taxonomy `canonical/`, `supporting/`, `evidence/screenshots/`, `_local/` dikunci,
+  - naming convention `doc-key` lower-case dikunci,
+  - `MIGRATION_MANIFEST.md` disusun + pilot rename `lampiran-4-22-cara-pengisian.pdf`,
+  - referensi path pilot disinkronkan pada `docs/domain/**` terkait.
+- Validasi:
+  - `pwsh -File scripts/audit_markdown_paths.ps1` `PASS`,
+  - `php artisan test` tidak dijalankan (doc-only).

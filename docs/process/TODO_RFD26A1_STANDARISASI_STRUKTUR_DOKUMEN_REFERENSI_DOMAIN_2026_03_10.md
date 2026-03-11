@@ -1,7 +1,7 @@
 # TODO RFD26A1 Standarisasi Struktur Dokumen Referensi Domain
 
 Tanggal: 2026-03-10  
-Status: `planned`
+Status: `done` (`state:taxonomy-naming-manifest-pilot-rename-closed`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -39,33 +39,33 @@ Related ADR: `-`
 
 ## Target Hasil
 
-- [ ] Struktur target `docs/referensi` terkunci minimal pada zonasi:
+- [x] Struktur target `docs/referensi` terkunci minimal pada zonasi:
   - top-level hanya dokumen kontrol,
   - `canonical/` untuk sumber referensi utama,
   - `supporting/` untuk workbook/docx/bahan pendamping,
   - `evidence/screenshots/` untuk bukti visual,
   - `_local/` tetap untuk artefak non-tracked.
-- [ ] Konvensi nama file baru terkunci:
+- [x] Konvensi nama file baru terkunci:
   - huruf kecil,
   - tanpa spasi,
   - berbasis `doc-key` yang manusiawi,
   - evidence screenshot memakai pola turunan dari `doc-key`.
-- [ ] Inventaris aktif dan migration map path referensi tersedia untuk seluruh file yang saat ini dipakai `docs/domain/**`.
-- [ ] Tersusun urutan rollout aman: audit -> taxonomy -> manifest -> pilot rename -> wave rollout.
+- [x] Inventaris aktif dan migration map path referensi tersedia untuk seluruh file yang saat ini dipakai `docs/domain/**`.
+- [x] Tersusun urutan rollout aman: audit -> taxonomy -> manifest -> pilot rename -> wave rollout.
 
 ## Langkah Eksekusi
 
 - [x] Audit scoped inventaris `docs/referensi` dan pola referensi silang di `docs/domain/**`.
-- [ ] Tetapkan taxonomy folder final dan guard top-level `docs/referensi/`.
-- [ ] Tetapkan naming convention canonical untuk:
+- [x] Tetapkan taxonomy folder final dan guard top-level `docs/referensi/`.
+- [x] Tetapkan naming convention canonical untuk:
   - dokumen referensi utama,
   - dokumen pendamping,
   - screenshot evidence,
   - artefak lokal non-tracked.
-- [ ] Susun manifest migrasi `old-path -> new-path` beserta kategori setiap dokumen.
-- [ ] Jalankan pilot rename concern kecil pada subset referensi yang dampaknya rendah.
-- [ ] Sinkronkan seluruh referensi path pada `docs/domain/**`, `docs/process/**`, dan README terkait setelah pilot tervalidasi.
-- [ ] Hardening akhir:
+- [x] Susun manifest migrasi `old-path -> new-path` beserta kategori setiap dokumen.
+- [x] Jalankan pilot rename concern kecil pada subset referensi yang dampaknya rendah.
+- [x] Sinkronkan seluruh referensi path pada `docs/domain/**`, `docs/process/**`, dan README terkait setelah pilot tervalidasi (scope pilot).
+- [x] Hardening akhir:
   - `docs/referensi/README.md`,
   - indeks/katalog referensi,
   - guard governance path bila diperlukan.
@@ -73,8 +73,8 @@ Related ADR: `-`
 ## Validasi
 
 - [x] L1: audit inventory folder + audit scoped referensi path markdown.
-- [ ] L2: regression audit referensi markdown setelah pilot rename (`audit_markdown_paths.ps1` + scoped grep).
-- [ ] L3: `php artisan test` jika concern meluas ke path runtime/test fixture yang dibaca aplikasi.
+- [x] L2: regression audit referensi markdown setelah pilot rename (`audit_markdown_paths.ps1` + scoped grep).
+- [x] L3: `php artisan test` tidak diperlukan (doc-only, tidak menyentuh runtime fixture).
 
 ## Risiko
 
@@ -90,8 +90,8 @@ Related ADR: `-`
 
 ## Keputusan Arsitektur (Jika Ada)
 
-- [ ] Buat/tautkan ADR di `docs/adr/ADR_<NOMOR4>_<RINGKASAN>.md`.
-- [ ] Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern.
+- [x] Tidak perlu ADR baru (concern doc-only, tanpa perubahan boundary runtime).
+- [x] Status ADR tidak berubah.
 
 ## Fallback Plan
 
@@ -103,6 +103,10 @@ Related ADR: `-`
 
 ## Output Final
 
-- [ ] Ringkasan taxonomy target + naming convention yang dikunci.
-- [ ] Daftar file referensi yang masuk batch pilot dan mapping path lamanya.
-- [ ] Hasil audit referensi markdown + residual risk rename bertahap.
+- [x] Ringkasan taxonomy target + naming convention yang dikunci.
+- [x] Daftar file referensi yang masuk batch pilot dan mapping path lamanya.
+- [x] Hasil audit referensi markdown + residual risk rename bertahap.
+
+## Progress Log
+
+- 2026-03-11: taxonomy + naming convention dikunci, `MIGRATION_MANIFEST.md` dibuat, pilot rename `Cara Pengisian Lampiran 4.22.pdf` -> `docs/referensi/supporting/lampiran-4-22-cara-pengisian.pdf`, referensi path pilot disinkronkan, `docs/referensi/README.md` dihardening, `audit_markdown_paths.ps1` `PASS`.

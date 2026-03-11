@@ -2,19 +2,25 @@
 
 Folder ini menyimpan bahan referensi domain (PDF/Excel/screenshot) yang dipakai untuk sinkronisasi kontrak.
 
-Aturan repo:
+## Struktur Target
 
-- File referensi besar **tidak** di-versioning secara default.
-- Yang di-track hanya dokumen kontrol ini dan marker `.gitkeep`.
-- Simpan artefak lokal pada `docs/referensi/_local/`.
+- `docs/referensi/canonical/` untuk dokumen referensi utama (pedoman/lampiran PDF).
+- `docs/referensi/supporting/` untuk bahan pendamping (cara pengisian, workbook, docx).
+- `docs/referensi/evidence/screenshots/` untuk bukti visual/screenshot.
+- `docs/referensi/_local/` tetap untuk artefak non-tracked.
 
-Dokumen canonical aktif yang wajib tersedia di environment kerja:
+## Konvensi Nama
 
-- `docs/referensi/Rakernas X.pdf`
+- Huruf kecil, tanpa spasi (gunakan `-`).
+- Berbasis `doc-key` yang deskriptif.
+- Contoh: `rakernas-x.pdf`, `lampiran-4-22-cara-pengisian.pdf`, `laporan-tahunan-pkk-2025.docx`.
 
-Jika file canonical belum tersedia:
+## Manifest Migrasi
 
-1. Ambil dari sumber internal tim.
-2. Simpan ke path persis `docs/referensi/Rakernas X.pdf`.
-3. Jangan commit file referensi biner ke git kecuali diputuskan eksplisit di concern terpisah.
+- Source of truth migrasi path ada di `docs/referensi/MIGRATION_MANIFEST.md`.
+- Path lama tetap dipakai sampai entry manifest dipindahkan dan seluruh referensi sudah disinkronkan.
 
+## Catatan Transisi
+
+- Saat ini beberapa dokumen masih berada di root `docs/referensi/` (mis. `Rakernas X.pdf`).
+- Jangan memindahkan file referensi tanpa memperbarui manifest dan referensi di `docs/domain/**`/`docs/process/**`.

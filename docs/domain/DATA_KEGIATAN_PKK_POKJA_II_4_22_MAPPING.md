@@ -138,7 +138,7 @@ Peta merge header (detail):
 
 ## Referensi Cara Pengisian (Makna Kolom 1-25)
 
-Sumber: `docs/referensi/Cara Pengisian Lampiran 4.22.pdf`.
+Sumber: `docs/referensi/supporting/lampiran-4-22-cara-pengisian.pdf`.
 
 | Kolom | Makna (Cara Pengisian) |
 | --- | --- |
@@ -183,7 +183,7 @@ Sumber: `docs/referensi/Cara Pengisian Lampiran 4.22.pdf`.
 ## Status Presisi
 
 - Status header merge: **terverifikasi visual (final)**.
-- Makna kolom `1-25` tervalidasi dari dokumen `Cara Pengisian Lampiran 4.22.pdf`.
+- Makna kolom `1-25` tervalidasi dari dokumen `docs/referensi/supporting/lampiran-4-22-cara-pengisian.pdf`.
 - Status sinkronisasi kontrak domain: **not implemented** (belum ada modul/report khusus).
 
 ## Dampak ke Kontrak Domain Saat Ini
