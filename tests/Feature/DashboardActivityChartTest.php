@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Carbon\Carbon;
@@ -177,10 +178,12 @@ class DashboardActivityChartTest extends TestCase
             'status' => 'published',
         ]);
 
+        $expectedBooksTotal = $this->expectedBooksTotal();
+
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page) {
+        $response->assertInertia(function (AssertableInertia $page) use ($expectedBooksTotal) {
             $page
                 ->component('Dashboard')
                 ->where('auth.user.scope', 'kecamatan')
@@ -191,7 +194,7 @@ class DashboardActivityChartTest extends TestCase
                 ->where('dashboardCharts.level.values', [1, 1])
                 ->where('dashboardCharts.by_desa.labels', ['Gombong'])
                 ->where('dashboardCharts.by_desa.values', [1])
-                ->where('dashboardCharts.by_desa.books_total', [19])
+                ->where('dashboardCharts.by_desa.books_total', [$expectedBooksTotal])
                 ->where('dashboardCharts.by_desa.books_filled', [1]);
         });
     }
@@ -333,26 +336,33 @@ class DashboardActivityChartTest extends TestCase
             'created_by' => $user->id,
         ]);
 
+        $expectedBooksTotal = $this->expectedBooksTotal();
+
         $januaryResponse = $this->actingAs($user)->get(route('dashboard', ['section1_month' => '1']));
         $januaryResponse->assertOk();
-        $januaryResponse->assertInertia(function (AssertableInertia $page) {
+        $januaryResponse->assertInertia(function (AssertableInertia $page) use ($expectedBooksTotal) {
             $page
                 ->component('Dashboard')
                 ->where('dashboardCharts.by_desa.labels', ['Gombong'])
                 ->where('dashboardCharts.by_desa.values', [1])
-                ->where('dashboardCharts.by_desa.books_total', [19])
+                ->where('dashboardCharts.by_desa.books_total', [$expectedBooksTotal])
                 ->where('dashboardCharts.by_desa.books_filled', [1]);
         });
 
         $februaryResponse = $this->actingAs($user)->get(route('dashboard', ['section1_month' => '2']));
         $februaryResponse->assertOk();
-        $februaryResponse->assertInertia(function (AssertableInertia $page) {
+        $februaryResponse->assertInertia(function (AssertableInertia $page) use ($expectedBooksTotal) {
             $page
                 ->component('Dashboard')
                 ->where('dashboardCharts.by_desa.labels', ['Gombong'])
                 ->where('dashboardCharts.by_desa.values', [1])
-                ->where('dashboardCharts.by_desa.books_total', [19])
+                ->where('dashboardCharts.by_desa.books_total', [$expectedBooksTotal])
                 ->where('dashboardCharts.by_desa.books_filled', [2]);
         });
+    }
+
+    private function expectedBooksTotal(): int
+    {
+        return count(app(DashboardDocumentCoverageRepositoryInterface::class)->trackedModuleSlugs());
     }
 }

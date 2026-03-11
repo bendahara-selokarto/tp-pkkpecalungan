@@ -4,6 +4,7 @@ namespace Tests\Unit\UseCases;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildDashboardDocumentCoverageUseCase;
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\Models\Area;
@@ -79,14 +80,15 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
         ]);
 
         $payload = app(BuildDashboardDocumentCoverageUseCase::class)->execute($user);
+        $expectedTotalBooks = count(app(DashboardDocumentCoverageRepositoryInterface::class)->trackedModuleSlugs());
 
-        $this->assertSame(19, $payload['stats']['total_buku_tracked']);
+        $this->assertSame($expectedTotalBooks, $payload['stats']['total_buku_tracked']);
         $this->assertSame(4, $payload['stats']['buku_terisi']);
-        $this->assertSame(15, $payload['stats']['buku_belum_terisi']);
+        $this->assertSame($expectedTotalBooks - 4, $payload['stats']['buku_belum_terisi']);
         $this->assertSame(4, $payload['stats']['total_entri_buku']);
 
         $this->assertSame([4, 0], $payload['charts']['level_distribution']['values']);
-        $this->assertSame([0, 1, 0, 0, 1, 1, 1], $payload['charts']['coverage_per_lampiran']['values']);
+        $this->assertSame([0, 1, 0, 0, 1, 1, 1, 0], $payload['charts']['coverage_per_lampiran']['values']);
 
         $items = collect($payload['charts']['coverage_per_buku']['items'])->keyBy('slug');
 

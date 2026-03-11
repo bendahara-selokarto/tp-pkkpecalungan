@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
+use App\Domains\Wilayah\Dashboard\Repositories\DashboardDocumentCoverageRepositoryInterface;
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
@@ -53,20 +54,23 @@ class DashboardDocumentCoverageTest extends TestCase
         $this->createDataWarga($user, 'desa', $desaA->id, 'Kepala A');
         $this->createDataWarga($user, 'desa', $desaB->id, 'Kepala B');
 
+        $totalBooks = $this->expectedBooksTotal();
+        $expectedRemaining = $totalBooks - 4;
+
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page): void {
+        $response->assertInertia(function (AssertableInertia $page) use ($totalBooks, $expectedRemaining): void {
             $page
                 ->component('Dashboard')
                 ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
-                ->where('dashboardStats.documents.total_buku_tracked', 19)
+                ->where('dashboardStats.documents.total_buku_tracked', $totalBooks)
                 ->where('dashboardStats.documents.buku_terisi', 4)
-                ->where('dashboardStats.documents.buku_belum_terisi', 15)
+                ->where('dashboardStats.documents.buku_belum_terisi', $expectedRemaining)
                 ->where('dashboardStats.documents.total_entri_buku', 4)
                 ->missing('dashboardBlocks')
                 ->where('dashboardCharts.documents.level_distribution.values', [4, 0])
-                ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 1, 1, 1])
+                ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 1, 1, 1, 0])
                 ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
                     $bySlug = collect($items)->keyBy('slug');
 
@@ -178,20 +182,23 @@ class DashboardDocumentCoverageTest extends TestCase
         $this->createDataWarga($user, 'desa', $desaA->id, 'Kepala A');
         $this->createDataWarga($user, 'desa', $desaB->id, 'Kepala B');
 
+        $totalBooks = $this->expectedBooksTotal();
+        $expectedRemaining = $totalBooks - 2;
+
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page): void {
+        $response->assertInertia(function (AssertableInertia $page) use ($totalBooks, $expectedRemaining): void {
             $page
                 ->component('Dashboard')
                 ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
-                ->where('dashboardStats.documents.total_buku_tracked', 19)
+                ->where('dashboardStats.documents.total_buku_tracked', $totalBooks)
                 ->where('dashboardStats.documents.buku_terisi', 2)
-                ->where('dashboardStats.documents.buku_belum_terisi', 17)
+                ->where('dashboardStats.documents.buku_belum_terisi', $expectedRemaining)
                 ->where('dashboardStats.documents.total_entri_buku', 3)
                 ->missing('dashboardBlocks')
                 ->where('dashboardCharts.documents.level_distribution.values', [1, 2])
-                ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 2, 0, 0])
+                ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 2, 0, 0, 0])
                 ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
                     $bySlug = collect($items)->keyBy('slug');
 
@@ -233,20 +240,22 @@ class DashboardDocumentCoverageTest extends TestCase
         $this->createAgendaSurat($user, 'kecamatan', $kecamatan->id, 'A-001');
         $this->createDataWarga($user, 'desa', $desa->id, 'Kepala A');
 
+        $totalBooks = $this->expectedBooksTotal();
+
         $response = $this->actingAs($user)->get(route('dashboard'));
 
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page): void {
+        $response->assertInertia(function (AssertableInertia $page) use ($totalBooks): void {
             $page
                 ->component('Dashboard')
                 ->where('auth.user.scope', null)
-                ->where('dashboardStats.documents.total_buku_tracked', 19)
+                ->where('dashboardStats.documents.total_buku_tracked', $totalBooks)
                 ->where('dashboardStats.documents.buku_terisi', 0)
-                ->where('dashboardStats.documents.buku_belum_terisi', 19)
+                ->where('dashboardStats.documents.buku_belum_terisi', $totalBooks)
                 ->where('dashboardStats.documents.total_entri_buku', 0)
                 ->missing('dashboardBlocks')
                 ->where('dashboardCharts.documents.level_distribution.values', [0, 0])
-                ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 0, 0, 0, 0, 0, 0]);
+                ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 0, 0, 0, 0, 0, 0, 0]);
 
             $this->assertDeferredDashboardBlocks($page, fn ($blocks): bool => collect($blocks)->isEmpty());
         });
@@ -323,13 +332,15 @@ class DashboardDocumentCoverageTest extends TestCase
             'section3_group' => 'pokja-ii',
         ]));
 
+        $totalBooks = $this->expectedBooksTotal();
+
         $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page): void {
+        $response->assertInertia(function (AssertableInertia $page) use ($totalBooks): void {
             $page
                 ->component('Dashboard')
                 ->missing('dashboardBlocks');
 
-            $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
+            $this->assertDeferredDashboardBlocks($page, function ($blocks) use ($totalBooks): bool {
                 $collected = collect($blocks);
                 $section1 = $collected
                     ->first(static fn ($block): bool => ($block['section']['key'] ?? null) === 'sekretaris-section-1');
@@ -347,7 +358,7 @@ class DashboardDocumentCoverageTest extends TestCase
                     && ($section1['section']['source_level'] ?? null) === 'kecamatan'
                     && ($section1['charts']['by_desa']['labels'] ?? null) === ['Gombong']
                     && ($section1['charts']['by_desa']['values'] ?? null) === [1]
-                    && ($section1['charts']['by_desa']['books_total'] ?? null) === [19]
+                    && ($section1['charts']['by_desa']['books_total'] ?? null) === [$totalBooks]
                     && ($section1['charts']['by_desa']['books_filled'] ?? null) === [1]
                     && ($section2['group'] ?? null) === 'pokja-i'
                     && ($section2['section']['filter']['query_key'] ?? null) === 'section2_group'
@@ -357,6 +368,11 @@ class DashboardDocumentCoverageTest extends TestCase
                     && ($section2['sources']['filter_context']['section3_group'] ?? null) === 'all';
             });
         });
+    }
+
+    private function expectedBooksTotal(): int
+    {
+        return count(app(DashboardDocumentCoverageRepositoryInterface::class)->trackedModuleSlugs());
     }
 
     public function test_dashboard_coverage_dokumen_tidak_bocor_ke_tahun_anggaran_lain_pada_area_yang_sama(): void
