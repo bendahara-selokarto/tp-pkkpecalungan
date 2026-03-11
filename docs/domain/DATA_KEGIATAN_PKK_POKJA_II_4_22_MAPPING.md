@@ -143,3 +143,4 @@ Peta merge header (detail):
 
 - Mapping header sudah lengkap dan siap dipakai jika modul/report Pokja II dibangun.
 - Belum ada modul/report khusus untuk Lampiran 4.22.
+- Rencana sumber data: `docs/domain/DATA_KEGIATAN_PKK_POKJA_II_4_22_SUMBER_DATA.md` (belum diimplementasikan).
