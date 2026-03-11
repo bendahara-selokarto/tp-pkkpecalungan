@@ -94,47 +94,47 @@ const isModuleAllowedForCurrentUser = (item) => {
 
 const buildScopedPdfReportItemsByGroup = (scope) => ({
   'sekretaris-tpk': [
-    { href: '/dashboard/charts/report/pdf', label: 'Laporan PDF Grafik Dashboard', external: true },
-    { href: `/${scope}/activities/report/pdf`, label: 'Laporan PDF Buku Kegiatan' },
-    { href: `/${scope}/agenda-surat/report/pdf`, label: 'Laporan PDF Agenda Surat Masuk/Keluar' },
-    { href: `/${scope}/agenda-surat/ekspedisi/report/pdf`, label: 'Laporan PDF Ekspedisi Agenda Surat' },
-    { href: `/${scope}/anggota-pokja/report/pdf`, label: 'Laporan PDF Buku Anggota Pokja' },
-    { href: `/${scope}/anggota-tim-penggerak/report/pdf`, label: 'Laporan PDF Anggota Tim Penggerak PKK' },
-    { href: `/${scope}/anggota-tim-penggerak-kader/report/pdf`, label: 'Laporan PDF Anggota dan Kader Tim Penggerak PKK' },
-    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Laporan PDF Kader Khusus' },
-    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Laporan PDF Prestasi Lomba' },
-    { href: `/${scope}/buku-notulen-rapat/report/pdf`, label: 'Laporan PDF Buku Notulen Rapat' },
-    { href: `/${scope}/buku-daftar-hadir/report/pdf`, label: 'Laporan PDF Buku Daftar Hadir' },
-    { href: `/${scope}/buku-tamu/report/pdf`, label: 'Laporan PDF Buku Tamu' },
-    { href: `/${scope}/buku-keuangan/report/pdf`, label: 'Laporan PDF Buku Keuangan' },
-    { href: `/${scope}/bantuans/report/pdf`, label: 'Laporan PDF Buku Bantuan' },
-    { href: `/${scope}/bantuans/keuangan/report/pdf`, label: 'Laporan PDF Keuangan Bantuan' },
-    { href: `/${scope}/inventaris/report/pdf`, label: 'Laporan PDF Buku Inventaris' },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Laporan PDF Buku Program Kerja TP PKK' },
-    { href: `/${scope}/data-warga/report/pdf`, label: 'Laporan PDF Data Warga' },
-    { href: `/${scope}/data-kegiatan-warga/report/pdf`, label: 'Laporan PDF Data Kegiatan Warga' },
+    { href: '/dashboard/charts/report/pdf', label: 'Grafik Dashboard', external: true },
+    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan | 4.13' },
+    { href: `/${scope}/agenda-surat/report/pdf`, label: 'Agenda Surat Masuk/Keluar | 4.10' },
+    { href: `/${scope}/agenda-surat/ekspedisi/report/pdf`, label: 'Ekspedisi Agenda Surat | 4.10' },
+    { href: `/${scope}/anggota-pokja/report/pdf`, label: 'Buku Anggota Pokja | -' },
+    { href: `/${scope}/anggota-tim-penggerak/report/pdf`, label: 'Anggota Tim Penggerak PKK | 4.9a' },
+    { href: `/${scope}/anggota-tim-penggerak-kader/report/pdf`, label: 'Anggota dan Kader Tim Penggerak PKK | -' },
+    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Kader Khusus | -' },
+    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Prestasi Lomba | -' },
+    { href: `/${scope}/buku-notulen-rapat/report/pdf`, label: 'Buku Notulen Rapat | -' },
+    { href: `/${scope}/buku-daftar-hadir/report/pdf`, label: 'Buku Daftar Hadir | -' },
+    { href: `/${scope}/buku-tamu/report/pdf`, label: 'Buku Tamu | -' },
+    { href: `/${scope}/buku-keuangan/report/pdf`, label: 'Buku Keuangan | 4.11' },
+    { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
+    { href: `/${scope}/bantuans/keuangan/report/pdf`, label: 'Keuangan Bantuan | -' },
+    { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris | 4.12' },
+    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
+    { href: `/${scope}/data-warga/report/pdf`, label: 'Data Warga | 4.14.1a' },
+    { href: `/${scope}/data-kegiatan-warga/report/pdf`, label: 'Data Kegiatan Warga | 4.14.1b' },
   ],
   'pokja-i': [
-    { href: `/${scope}/simulasi-penyuluhan/report/pdf`, label: 'Laporan PDF Kelompok Simulasi dan Penyuluhan' },
-    { href: `/${scope}/bkr/report/pdf`, label: 'Laporan PDF BKR' },
-    { href: `/${scope}/paar/report/pdf`, label: 'Laporan PDF Buku PAAR' },
+    { href: `/${scope}/simulasi-penyuluhan/report/pdf`, label: 'Kelompok Simulasi dan Penyuluhan | 4.14.4f' },
+    { href: `/${scope}/bkr/report/pdf`, label: 'BKR | -' },
+    { href: `/${scope}/paar/report/pdf`, label: 'Buku PAAR | -' },
   ],
   'pokja-ii': [
-    { href: `/${scope}/data-pelatihan-kader/report/pdf`, label: 'Laporan PDF Data Pelatihan Kader' },
+    { href: `/${scope}/data-pelatihan-kader/report/pdf`, label: 'Data Pelatihan Kader | 4.14.3' },
     { href: `/${scope}/taman-bacaan/report/pdf`, label: 'Taman Bacaan/Perpustakaan | 4.14.4b' },
     { href: `/${scope}/koperasi/report/pdf`, label: 'Koperasi | 4.14.4c' },
     { href: `/${scope}/kejar-paket/report/pdf`, label: 'Kejar Paket/KF/PAUD | 4.14.4d' },
-    { href: `/${scope}/bkl/report/pdf`, label: 'Laporan PDF BKL' },
+    { href: `/${scope}/bkl/report/pdf`, label: 'BKL | -' },
   ],
   'pokja-iii': [
-    { href: `/${scope}/data-keluarga/report/pdf`, label: 'Laporan PDF Data Keluarga' },
-    { href: `/${scope}/data-industri-rumah-tangga/report/pdf`, label: 'Laporan PDF Buku Industri Rumah Tangga' },
-    { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf`, label: 'Laporan PDF Buku HATINYA PKK' },
-    { href: `/${scope}/warung-pkk/report/pdf`, label: 'Laporan PDF Data Aset Sarana Desa/Kelurahan' },
+    { href: `/${scope}/data-keluarga/report/pdf`, label: 'Data Keluarga | 4.14.2a' },
+    { href: `/${scope}/data-industri-rumah-tangga/report/pdf`, label: 'Industri Rumah Tangga | 4.14.2c' },
+    { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf`, label: 'HATINYA PKK | 4.14.2b' },
+    { href: `/${scope}/warung-pkk/report/pdf`, label: 'Data Aset Sarana Desa/Kelurahan | 4.14.4' },
   ],
   'pokja-iv': [
     { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Kegiatan PKK Pokja IV | 4.24' },
-    { href: `/${scope}/catatan-keluarga/report/pdf`, label: 'Catatan Keluarga' },
+    { href: `/${scope}/catatan-keluarga/report/pdf`, label: 'Catatan Keluarga | 4.15' },
     { href: `/${scope}/posyandu/report/pdf`, label: 'Data Isian Posyandu oleh TP PKK | 4.14.4e' },
     { href: `/${scope}/catatan-keluarga/rekap-dasa-wisma/report/pdf`, label: 'Kelompok Dasa Wisma | 4.16a' },
     { href: `/${scope}/catatan-keluarga/rekap-pkk-rt/report/pdf`, label: 'Kelompok PKK RT | 4.16b' },
@@ -151,8 +151,8 @@ const buildScopedPdfReportItemsByGroup = (scope) => ({
     { href: `/${scope}/catatan-keluarga/rekap-ibu-hamil-tp-pkk-kecamatan/report/pdf`, label: 'Kelompok PKK Kecamatan | 4.19b' },
     { href: `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`, label: 'Data Umum PKK | 4.20a' },
     { href: `/${scope}/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf`, label: 'Data Umum PKK Kecamatan | 4.20b' },
-    { href: `/${scope}/pilot-project-naskah-pelaporan/report/pdf`, label: 'Naskah Pelaporan Pilot Project Pokja IV' },
-    { href: `/${scope}/pilot-project-keluarga-sehat/report/pdf`, label: 'Laporan Pilot Project Keluarga Sehat' },
+    { href: `/${scope}/pilot-project-naskah-pelaporan/report/pdf`, label: 'Naskah Pelaporan Pilot Project Pokja IV | -' },
+    { href: `/${scope}/pilot-project-keluarga-sehat/report/pdf`, label: 'Pilot Project Keluarga Sehat | -' },
   ],
 })
 
@@ -259,10 +259,8 @@ const buildScopedMenuGroups = (scope) => {
 
   return groups.map((group) => ({
     ...group,
-    items: [
-      ...group.items,
-      ...(pdfReportItemsByGroup[group.key] ?? []),
-    ],
+    items: group.items,
+    printItems: pdfReportItemsByGroup[group.key] ?? [],
   }))
 }
 
@@ -304,6 +302,26 @@ const isMenuItemVisibleByExperimentalPlacement = (item) => {
   return true
 }
 
+const filterMenuItems = (items, seenInternalHrefs) => items.filter((item) => {
+  if (!isMenuItemVisibleByExperimentalPlacement(item)) {
+    return false
+  }
+
+  if (!isModuleAllowedForCurrentUser(item)) {
+    return false
+  }
+
+  if (!isExternalItem(item) && seenInternalHrefs.has(item.href)) {
+    return false
+  }
+
+  if (!isExternalItem(item)) {
+    seenInternalHrefs.add(item.href)
+  }
+
+  return true
+})
+
 const withMode = (groups) => {
   const seenInternalHrefs = new Set()
 
@@ -312,24 +330,7 @@ const withMode = (groups) => {
     .map((group) => ({
       ...group,
       mode: menuGroupModes.value[group.key],
-      items: group.items.filter((item) => {
-        if (!isMenuItemVisibleByExperimentalPlacement(item)) {
-          return false
-        }
-
-        if (!isModuleAllowedForCurrentUser(item)) {
-          return false
-        }
-
-        if (!isExternalItem(item) && seenInternalHrefs.has(item.href)) {
-          return false
-        }
-
-        if (!isExternalItem(item)) {
-          seenInternalHrefs.add(item.href)
-        }
-        return true
-      }),
+      items: filterMenuItems(group.items, seenInternalHrefs),
     }))
     .filter((group) => group.items.length > 0)
 }
@@ -626,6 +627,15 @@ onBeforeUnmount(() => {
 
           <div v-if="!isProfilePage && !hasRole('super-admin')" class="space-y-1">
             <p v-show="!isAsideDesktopCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Menu Domain</p>
+
+            <Link
+              href="/cetak-lampiran"
+              :class="[isAsideDesktopCollapsed ? 'justify-center' : '', isActive('/cetak-lampiran') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
+              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
+            >
+              <span v-show="!isAsideDesktopCollapsed">Cetak Lampiran</span>
+              <span v-show="isAsideDesktopCollapsed">CL</span>
+            </Link>
 
             <template v-if="isDesaScope">
               <div v-for="group in desaVisibleMenuGroups" :key="`desa-${group.key}`" class="space-y-1">
