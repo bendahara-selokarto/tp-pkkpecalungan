@@ -2625,3 +2625,15 @@ Catatan:
 - Source of truth grouping & mode berada di `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php` (`GROUP_MODULES`, `GROUPS_BY_SCOPE`, `ROLE_GROUP_MODES`, `ROLE_MODULE_MODE_OVERRIDES`).
 - Middleware `module.visibility` diregistrasi di `bootstrap/app.php`, dipakai pada route group `desa` dan `kecamatan` di `routes/web.php`, dan menolak write intent bila mode bukan `read-write` (`app/Http/Middleware/EnsureModuleVisibility.php`).
 - Sidebar `resources/js/Layouts/DashboardLayout.vue` menggunakan `menuGroupModes`/`moduleModes` dari `HandleInertiaRequests`, memfilter item via `withMode()`, dan group `monitoring` hanya tampil di scope `kecamatan` (item default `uiVisibility: 'disabled'`).
+
+### Audit Normalisasi Database Formal 1NF-3NF Bertahap (`NFM26A1`) - 2026-03-11
+
+- Status concern: `done` (`state:batch-1-3-normalization-closed`).
+- Hasil batch:
+  - peta formal 1NF/2NF/3NF lintas tabel non-legacy + klasifikasi risiko,
+  - batch 1-3 normalisasi multi-value dan transitive dependency selesai,
+  - kontrak adapter kompatibilitas dan rencana batch berikutnya dikunci di TODO concern.
+- Validasi (evidence tercatat di TODO):
+  - L1: audit scoped migrasi/kolom `PASS`,
+  - L3: `php artisan test --compact` `PASS`,
+  - L4: `php artisan migrate:fresh --seed` `PASS`.

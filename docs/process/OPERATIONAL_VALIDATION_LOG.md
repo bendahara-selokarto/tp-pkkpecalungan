@@ -22,7 +22,6 @@ Aturan:
 
 - Source of truth concern aktif: `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
 - Concern berjalan yang tetap berada di index aktif:
-  - `docs/process/TODO_NFM26A1_AUDIT_NORMALISASI_DATABASE_FORMAL_1NF_3NF_BERTAHAP_2026_03_10.md` (`in-progress`)
   - `docs/process/TODO_GCP26A4_GOVERNANCE_AUDIT_WAVE_FOLLOWUP_2026_03_09.md` (`in-progress`)
   - `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md` (`in-progress`)
   - `docs/process/TODO_RFD26A1_STANDARISASI_STRUKTUR_DOKUMEN_REFERENSI_DOMAIN_2026_03_10.md` (`planned`)
@@ -43,6 +42,7 @@ Aturan:
 ### Pointer Closure Terbaru
 
 - Detail closure concern `SPA26A1`, `DWI26A1`, `USR26A1`, `DBL26A1`, `DBS26A1`, `DBJ26A1`, `DBT26A1`, `KDA26A1`, `KAR26A1`, `KAC26A1`, `MKB26A1`, `SFC26A1`, `MFC26A1`, dan `TAG26A1` telah dipindahkan ke `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
+- Concern `NFM26A1` (Audit Normalisasi Database Formal) ditutup dan dicatat di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
 - Concern `GCP26A1` menutup hardening sesi ini dengan keputusan: ownership governance markdown dikunci dan validation log aktif kembali menjadi index ringkas.
 - Concern `GCP26A2` menutup thinning `TTM25R1`, memperbaiki drift `P-014`, dan mengunci guard annex on-demand.
 - Concern `GCP26A3` menutup automation audit script + generator hook + CI gate untuk governance markdown.
