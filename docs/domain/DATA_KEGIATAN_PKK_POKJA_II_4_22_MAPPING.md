@@ -28,10 +28,11 @@ Struktur umum:
 Struktur merge (ringkas):
 
 - `NO` dan `NAMA WILAYAH (...)` memakai `rowspan=4`.
-- Grup `PAKET A/B/C`, `KF`, `PAUD SEJENIS`, `JUMLAH TAMAN BACA PERPUSTAKAAN` berada pada blok awal pendidikan.
-- Grup `PENDIDIKAN KETERAMPILAN` terdiri dari `BKB`, `TUTOR`, `KADER KHUSUS`.
+- `JML. WARGA YANG MASIH 3 (TIGA) BUTA` memakai `rowspan=4`.
+- Blok `PAKET A/B/C` dan `KF` berada di sisi kiri (dua kolom per paket).
+- Grup `PENDIDIKAN KETERAMPILAN` mencakup `PAUD SEJENIS`, `JUMLAH TAMAN BACAAN/PERPUSTAKAAN`, `BKB`, `TUTOR`, `KADER KHUSUS`, `JUMLAH KADER YANG SUDAH DILATIH`.
 - Grup `JUMLAH KADER YANG SUDAH DILATIH` berisi `LP3`, `TPK 3 PKK`, `DAMAS PKK`.
-- Grup `PENGEMBANGAN KEAHLIAN BERKOPERASI` memiliki layer `PRA KOPERASI/USAHA BERSAMA/UP2K` dan sublayer `PEMULA/MADYA/UTAMA/MANDIRI` dengan leaf `JML. KLP` + `PESERTA`.
+- Grup `PENGEMBANGAN KEHIDUPAN BERKOPERASI` memiliki layer `PRA KOPERASI/USAHA BERSAMA/UP2K` dan sublayer `PEMULA/MADYA/UTAMA/MANDIRI` dengan leaf `JML. KLP` + `PESERTA`.
 - `KOPERASI BERBADAN HUKUM` berisi `JML. KLP` dan `JML. ANGGOTA`.
 
 Peta merge header (detail):
@@ -40,36 +41,32 @@ Peta merge header (detail):
   - `1` (`NO`) `rowspan=4`
   - `2` (`NAMA WILAYAH (Dusun/Lingk/Desa/Kel/Kec/Kab/Kota/Pro)`) `rowspan=4`
   - `3` (`JML. WARGA YANG MASIH 3 (TIGA) BUTA`) `rowspan=4`
+  - `4-11` `colspan=8` (spacer untuk blok paket)
+  - `12-25` `colspan=14` (`PENDIDIKAN KETERAMPILAN`)
+  - `26-35` `colspan=10` (`PENGEMBANGAN KEHIDUPAN BERKOPERASI`)
+  - `36` (`KET.`) `rowspan=4`
+- Baris 2:
   - `4-5` `colspan=2` (`PAKET A`)
   - `6-7` `colspan=2` (`PAKET B`)
   - `8-9` `colspan=2` (`PAKET C`)
   - `10-11` `colspan=2` (`KF`)
-  - `12` (`PAUD SEJENIS`) `rowspan=4`
-  - `13` (`JUMLAH TAMAN BACA PERPUSTAKAAN`) `rowspan=4`
-  - `14-22` `colspan=9` (`PENDIDIKAN KETERAMPILAN`)
+  - `12` (`PAUD SEJENIS`) `rowspan=3`
+  - `13` (`JUMLAH TAMAN BACAAN/PERPUSTAKAAN`) `rowspan=3`
+  - `14-17` `colspan=4` (`BKB`)
+  - `18-19` `colspan=2` (`TUTOR`)
+  - `20-22` `colspan=3` (`KADER KHUSUS`)
   - `23-25` `colspan=3` (`JUMLAH KADER YANG SUDAH DILATIH`)
-  - `26-33` `colspan=8` (`PENGEMBANGAN KEAHLIAN BERKOPERASI`)
-  - `34-35` `colspan=2` (`KOPERASI BERBADAN HUKUM`)
-  - `36` (`KET.`) `rowspan=4`
-- Baris 2:
-  - `4` (`JML. KLP BELAJAR`) `rowspan=3`
-  - `5` (`WARGA BELAJAR`) `rowspan=3`
-  - `6` (`JML. KLP BELAJAR`) `rowspan=3`
-  - `7` (`WARGA BELAJAR`) `rowspan=3`
-  - `8` (`JML. KLP BELAJAR`) `rowspan=3`
-  - `9` (`WARGA BELAJAR`) `rowspan=3`
-  - `10` (`JML. KLP BELAJAR`) `rowspan=3`
-  - `11` (`WARGA BELAJAR`) `rowspan=3`
-  - `14-16` `colspan=3` (`BKB`)
-  - `17` (`TUTOR`)
-  - `18-22` `colspan=5` (`KADER KHUSUS`)
-  - `23` (`LP3`) `rowspan=3`
-  - `24` (`TPK 3 PKK`) `rowspan=3`
-  - `25` (`DAMAS PKK`) `rowspan=3`
   - `26-33` `colspan=8` (`PRA KOPERASI/USAHA BERSAMA/UP2K`)
-  - `34` (`JML. KLP`) `rowspan=3`
-  - `35` (`JML. ANGGOTA`) `rowspan=3`
+  - `34-35` `colspan=2` (`KOPERASI BERBADAN HUKUM`)
 - Baris 3:
+  - `4` (`JML. KLP BELAJAR`) `rowspan=2`
+  - `5` (`WARGA BELAJAR`) `rowspan=2`
+  - `6` (`JML. KLP BELAJAR`) `rowspan=2`
+  - `7` (`WARGA BELAJAR`) `rowspan=2`
+  - `8` (`JML. KLP BELAJAR`) `rowspan=2`
+  - `9` (`WARGA BELAJAR`) `rowspan=2`
+  - `10` (`JML. KLP BELAJAR`) `rowspan=2`
+  - `11` (`WARGA BELAJAR`) `rowspan=2`
   - `14` (`JML. KLP`) `rowspan=2`
   - `15` (`JML. IBU PESERTA`) `rowspan=2`
   - `16` (`JML. APE (SET)`) `rowspan=2`
@@ -79,10 +76,15 @@ Peta merge header (detail):
   - `20` (`BKB`) `rowspan=2`
   - `21` (`KOPERASI`) `rowspan=2`
   - `22` (`KETERAMPILAN`) `rowspan=2`
+  - `23` (`LP3 PKK`) `rowspan=2`
+  - `24` (`TPK 3 PKK`) `rowspan=2`
+  - `25` (`DAMAS PKK`) `rowspan=2`
   - `26-27` `colspan=2` (`PEMULA`)
   - `28-29` `colspan=2` (`MADYA`)
   - `30-31` `colspan=2` (`UTAMA`)
   - `32-33` `colspan=2` (`MANDIRI`)
+  - `34` (`JML. KLP`) `rowspan=2`
+  - `35` (`JML. ANGGOTA`) `rowspan=2`
 - Baris 4:
   - `26` (`JML. KLP`)
   - `27` (`PESERTA`)
@@ -113,13 +115,13 @@ Peta merge header (detail):
 | 14 | BKB - JML. KLP |
 | 15 | BKB - JML. IBU PESERTA |
 | 16 | BKB - JML. APE (SET) |
-| 17 | TUTOR - JML. KLP SIMULASI |
-| 18 | KADER KHUSUS - KF |
-| 19 | KADER KHUSUS - PAUD SEJENIS |
+| 17 | BKB - JML. KLP SIMULASI |
+| 18 | TUTOR - KF |
+| 19 | TUTOR - PAUD SEJENIS |
 | 20 | KADER KHUSUS - BKB |
 | 21 | KADER KHUSUS - KOPERASI |
 | 22 | KADER KHUSUS - KETERAMPILAN |
-| 23 | JUMLAH KADER YANG SUDAH DILATIH - LP3 |
+| 23 | JUMLAH KADER YANG SUDAH DILATIH - LP3 PKK |
 | 24 | JUMLAH KADER YANG SUDAH DILATIH - TPK 3 PKK |
 | 25 | JUMLAH KADER YANG SUDAH DILATIH - DAMAS PKK |
 | 26 | PENGEMBANGAN KEAHLIAN BERKOPERASI (PRA KOPERASI/USAHA BERSAMA/UP2K) - PEMULA - JML. KLP |

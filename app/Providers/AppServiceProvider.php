@@ -83,6 +83,21 @@ use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Repositories\Da
 use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
 use App\Domains\Wilayah\TamanBacaan\Repositories\TamanBacaanRepository;
 use App\Domains\Wilayah\TamanBacaan\Repositories\TamanBacaanRepositoryInterface;
+use App\Domains\Wilayah\LiterasiWarga\Models\LiterasiWarga;
+use App\Domains\Wilayah\LiterasiWarga\Repositories\LiterasiWargaRepository;
+use App\Domains\Wilayah\LiterasiWarga\Repositories\LiterasiWargaRepositoryInterface;
+use App\Domains\Wilayah\BkbKegiatan\Models\BkbKegiatan;
+use App\Domains\Wilayah\BkbKegiatan\Repositories\BkbKegiatanRepository;
+use App\Domains\Wilayah\BkbKegiatan\Repositories\BkbKegiatanRepositoryInterface;
+use App\Domains\Wilayah\TutorKhusus\Models\TutorKhusus;
+use App\Domains\Wilayah\TutorKhusus\Repositories\TutorKhususRepository;
+use App\Domains\Wilayah\TutorKhusus\Repositories\TutorKhususRepositoryInterface;
+use App\Domains\Wilayah\PelatihanKaderPokjaIi\Models\PelatihanKaderPokjaIi;
+use App\Domains\Wilayah\PelatihanKaderPokjaIi\Repositories\PelatihanKaderPokjaIiRepository;
+use App\Domains\Wilayah\PelatihanKaderPokjaIi\Repositories\PelatihanKaderPokjaIiRepositoryInterface;
+use App\Domains\Wilayah\PraKoperasiUp2k\Models\PraKoperasiUp2k;
+use App\Domains\Wilayah\PraKoperasiUp2k\Repositories\PraKoperasiUp2kRepository;
+use App\Domains\Wilayah\PraKoperasiUp2k\Repositories\PraKoperasiUp2kRepositoryInterface;
 use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
 use App\Domains\Wilayah\KejarPaket\Repositories\KejarPaketRepository;
 use App\Domains\Wilayah\KejarPaket\Repositories\KejarPaketRepositoryInterface;
@@ -138,6 +153,11 @@ use App\Policies\DataPelatihanKaderPolicy;
 use App\Policies\CatatanKeluargaPolicy;
 use App\Policies\DataPemanfaatanTanahPekaranganHatinyaPkkPolicy;
 use App\Policies\TamanBacaanPolicy;
+use App\Policies\LiterasiWargaPolicy;
+use App\Policies\BkbKegiatanPolicy;
+use App\Policies\TutorKhususPolicy;
+use App\Policies\PelatihanKaderPokjaIiPolicy;
+use App\Policies\PraKoperasiUp2kPolicy;
 use App\Policies\KejarPaketPolicy;
 use App\Policies\PosyanduPolicy;
 use App\Policies\SimulasiPenyuluhanPolicy;
@@ -306,6 +326,31 @@ class AppServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            LiterasiWargaRepositoryInterface::class,
+            LiterasiWargaRepository::class
+        );
+
+        $this->app->bind(
+            BkbKegiatanRepositoryInterface::class,
+            BkbKegiatanRepository::class
+        );
+
+        $this->app->bind(
+            TutorKhususRepositoryInterface::class,
+            TutorKhususRepository::class
+        );
+
+        $this->app->bind(
+            PelatihanKaderPokjaIiRepositoryInterface::class,
+            PelatihanKaderPokjaIiRepository::class
+        );
+
+        $this->app->bind(
+            PraKoperasiUp2kRepositoryInterface::class,
+            PraKoperasiUp2kRepository::class
+        );
+
+        $this->app->bind(
             KejarPaketRepositoryInterface::class,
             KejarPaketRepository::class
         );
@@ -393,6 +438,11 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(CatatanKeluarga::class, CatatanKeluargaPolicy::class);
         Gate::policy(DataPemanfaatanTanahPekaranganHatinyaPkk::class, DataPemanfaatanTanahPekaranganHatinyaPkkPolicy::class);
         Gate::policy(TamanBacaan::class, TamanBacaanPolicy::class);
+        Gate::policy(LiterasiWarga::class, LiterasiWargaPolicy::class);
+        Gate::policy(BkbKegiatan::class, BkbKegiatanPolicy::class);
+        Gate::policy(TutorKhusus::class, TutorKhususPolicy::class);
+        Gate::policy(PelatihanKaderPokjaIi::class, PelatihanKaderPokjaIiPolicy::class);
+        Gate::policy(PraKoperasiUp2k::class, PraKoperasiUp2kPolicy::class);
         Gate::policy(KejarPaket::class, KejarPaketPolicy::class);
         Gate::policy(Posyandu::class, PosyanduPolicy::class);
         Gate::policy(SimulasiPenyuluhan::class, SimulasiPenyuluhanPolicy::class);
@@ -492,6 +542,11 @@ class AppServiceProvider extends ServiceProvider
             Posyandu::class,
             SimulasiPenyuluhan::class,
             TamanBacaan::class,
+            LiterasiWarga::class,
+            BkbKegiatan::class,
+            TutorKhusus::class,
+            PelatihanKaderPokjaIi::class,
+            PraKoperasiUp2k::class,
             WarungPkk::class,
         ];
     }

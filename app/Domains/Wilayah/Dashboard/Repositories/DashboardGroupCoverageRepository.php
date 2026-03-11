@@ -20,6 +20,11 @@ use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
 use App\Domains\Wilayah\Koperasi\Models\Koperasi;
+use App\Domains\Wilayah\LiterasiWarga\Models\LiterasiWarga;
+use App\Domains\Wilayah\BkbKegiatan\Models\BkbKegiatan;
+use App\Domains\Wilayah\TutorKhusus\Models\TutorKhusus;
+use App\Domains\Wilayah\PelatihanKaderPokjaIi\Models\PelatihanKaderPokjaIi;
+use App\Domains\Wilayah\PraKoperasiUp2k\Models\PraKoperasiUp2k;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
@@ -162,6 +167,11 @@ class DashboardGroupCoverageRepository implements DashboardGroupCoverageReposito
             'taman-bacaan' => TamanBacaan::class,
             'koperasi' => Koperasi::class,
             'kejar-paket' => KejarPaket::class,
+            'literasi-warga' => LiterasiWarga::class,
+            'bkb-kegiatan' => BkbKegiatan::class,
+            'tutor-khusus' => TutorKhusus::class,
+            'pelatihan-kader-pokja-ii' => PelatihanKaderPokjaIi::class,
+            'pra-koperasi-up2k' => PraKoperasiUp2k::class,
             'posyandu' => Posyandu::class,
             'simulasi-penyuluhan' => SimulasiPenyuluhan::class,
             'catatan-keluarga' => DataWarga::class,

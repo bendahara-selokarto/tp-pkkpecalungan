@@ -5,9 +5,11 @@ import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineW
 import { Link, useForm } from '@inertiajs/vue3'
 import { mdiStore } from '@mdi/js'
 
+const jenisOptions = ['Paket A', 'Paket B', 'Paket C', 'KF', 'PAUD']
+
 const form = useForm({
   nama_kejar_paket: '',
-  jenis_kejar_paket: '',
+  jenis_kejar_paket: jenisOptions[0] ?? '',
   jumlah_warga_belajar_l: '',
   jumlah_warga_belajar_p: '',
   jumlah_pengajar_l: '',
@@ -33,7 +35,9 @@ const submit = () => {
           </div>
           <div>
             <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Kejar Paket/KF/PAUD</label>
-            <input v-model="form.jenis_kejar_paket" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <select v-model="form.jenis_kejar_paket" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+              <option v-for="option in jenisOptions" :key="option" :value="option">{{ option }}</option>
+            </select>
             <p v-if="form.errors.jenis_kejar_paket" class="mt-1 text-xs text-rose-600">{{ form.errors.jenis_kejar_paket }}</p>
           </div>
           <div>
@@ -73,7 +77,6 @@ const submit = () => {
     </CardBox>
   </SectionMain>
 </template>
-
 
 
 

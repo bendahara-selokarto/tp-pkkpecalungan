@@ -17,6 +17,11 @@ use App\Domains\Wilayah\Inventaris\Models\Inventaris;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
 use App\Domains\Wilayah\Koperasi\Models\Koperasi;
+use App\Domains\Wilayah\LiterasiWarga\Models\LiterasiWarga;
+use App\Domains\Wilayah\BkbKegiatan\Models\BkbKegiatan;
+use App\Domains\Wilayah\TutorKhusus\Models\TutorKhusus;
+use App\Domains\Wilayah\PelatihanKaderPokjaIi\Models\PelatihanKaderPokjaIi;
+use App\Domains\Wilayah\PraKoperasiUp2k\Models\PraKoperasiUp2k;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
@@ -163,6 +168,7 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
             '4.13' => 0,
             '4.14' => 0,
             '4.15' => 0,
+            '4.22' => 0,
         ];
 
         foreach ($moduleItems as $moduleItem) {
@@ -423,6 +429,46 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
                 'slug' => 'kejar-paket',
                 'label' => 'Data Isian Kejar Paket/KF/PAUD',
                 'model' => KejarPaket::class,
+                'include_descendant_for_kecamatan' => false,
+            ],
+            [
+                'lampiran' => '4.22',
+                'lampiran_group' => '4.22',
+                'slug' => 'literasi-warga',
+                'label' => 'Literasi Warga (3 Buta)',
+                'model' => LiterasiWarga::class,
+                'include_descendant_for_kecamatan' => false,
+            ],
+            [
+                'lampiran' => '4.22',
+                'lampiran_group' => '4.22',
+                'slug' => 'bkb-kegiatan',
+                'label' => 'Data BKB (Kegiatan)',
+                'model' => BkbKegiatan::class,
+                'include_descendant_for_kecamatan' => false,
+            ],
+            [
+                'lampiran' => '4.22',
+                'lampiran_group' => '4.22',
+                'slug' => 'tutor-khusus',
+                'label' => 'Tutor Khusus KF/PAUD',
+                'model' => TutorKhusus::class,
+                'include_descendant_for_kecamatan' => false,
+            ],
+            [
+                'lampiran' => '4.22',
+                'lampiran_group' => '4.22',
+                'slug' => 'pelatihan-kader-pokja-ii',
+                'label' => 'Rekap Pelatihan Kader Pokja II',
+                'model' => PelatihanKaderPokjaIi::class,
+                'include_descendant_for_kecamatan' => false,
+            ],
+            [
+                'lampiran' => '4.22',
+                'lampiran_group' => '4.22',
+                'slug' => 'pra-koperasi-up2k',
+                'label' => 'Pra Koperasi/UP2K',
+                'model' => PraKoperasiUp2k::class,
                 'include_descendant_for_kecamatan' => false,
             ],
             [

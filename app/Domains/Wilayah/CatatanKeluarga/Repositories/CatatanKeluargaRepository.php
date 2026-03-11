@@ -4,16 +4,24 @@ namespace App\Domains\Wilayah\CatatanKeluarga\Repositories;
 
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
+use App\Domains\Wilayah\BkbKegiatan\Models\BkbKegiatan;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPemanfaatanTanahPekaranganHatinyaPkk;
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\DataWarga\Models\DataWargaAnggota;
+use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
+use App\Domains\Wilayah\Koperasi\Models\Koperasi;
+use App\Domains\Wilayah\LiterasiWarga\Models\LiterasiWarga;
 use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\PelatihanKaderPokjaIi\Models\PelatihanKaderPokjaIi;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
+use App\Domains\Wilayah\PraKoperasiUp2k\Models\PraKoperasiUp2k;
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
 use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
+use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
+use App\Domains\Wilayah\TutorKhusus\Models\TutorKhusus;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
@@ -877,6 +885,245 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         }
 
         return $result;
+    }
+
+    public function getDataKegiatanPkkPokjaIiByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $scopeArea = Area::query()->find($areaId);
+        $wilayahLabel = trim((string) ($scopeArea?->name ?? '')) !== ''
+            ? trim((string) $scopeArea?->name)
+            : 'SEBUTAN LAIN';
+
+        $keteranganNotes = [];
+
+        $literasiItems = $this->scopedModelQuery(LiterasiWarga::class, $level, $areaId)
+            ->get(['jumlah_tiga_buta', 'keterangan']);
+        $jumlahTigaButa = (int) $literasiItems->sum('jumlah_tiga_buta');
+
+        foreach ($literasiItems as $item) {
+            $keterangan = trim((string) $item->keterangan);
+            if ($keterangan !== '') {
+                $keteranganNotes[] = $keterangan;
+            }
+        }
+
+        $kejarPaketItems = $this->scopedModelQuery(KejarPaket::class, $level, $areaId)
+            ->get(['jenis_kejar_paket', 'jumlah_warga_belajar_l', 'jumlah_warga_belajar_p']);
+
+        $paketAklp = 0;
+        $paketAwarga = 0;
+        $paketBklp = 0;
+        $paketBwarga = 0;
+        $paketCklp = 0;
+        $paketCwarga = 0;
+        $kfKlp = 0;
+        $kfWarga = 0;
+        $paudKlp = 0;
+
+        foreach ($kejarPaketItems as $item) {
+            $jenis = $this->normalizeJenisKejarPaket($item->jenis_kejar_paket);
+            if (! $jenis) {
+                continue;
+            }
+
+            $wargaBelajar = (int) $item->jumlah_warga_belajar_l + (int) $item->jumlah_warga_belajar_p;
+
+            if ($jenis === 'Paket A') {
+                $paketAklp++;
+                $paketAwarga += $wargaBelajar;
+            } elseif ($jenis === 'Paket B') {
+                $paketBklp++;
+                $paketBwarga += $wargaBelajar;
+            } elseif ($jenis === 'Paket C') {
+                $paketCklp++;
+                $paketCwarga += $wargaBelajar;
+            } elseif ($jenis === 'KF') {
+                $kfKlp++;
+                $kfWarga += $wargaBelajar;
+            } elseif ($jenis === 'PAUD') {
+                $paudKlp++;
+            }
+        }
+
+        $jumlahTamanBaca = (int) $this->scopedModelQuery(TamanBacaan::class, $level, $areaId)
+            ->whereNotNull('nama_taman_bacaan')
+            ->where('nama_taman_bacaan', '!=', '')
+            ->distinct()
+            ->count('nama_taman_bacaan');
+
+        $bkbItems = $this->scopedModelQuery(BkbKegiatan::class, $level, $areaId)
+            ->get([
+                'jumlah_kelompok',
+                'jumlah_ibu_peserta',
+                'jumlah_ape_set',
+                'jumlah_kelompok_simulasi',
+                'keterangan',
+            ]);
+
+        $bkbKelompok = (int) $bkbItems->sum('jumlah_kelompok');
+        $bkbIbuPeserta = (int) $bkbItems->sum('jumlah_ibu_peserta');
+        $bkbApeSet = (int) $bkbItems->sum('jumlah_ape_set');
+        $bkbKelompokSimulasi = (int) $bkbItems->sum('jumlah_kelompok_simulasi');
+
+        foreach ($bkbItems as $item) {
+            $keterangan = trim((string) $item->keterangan);
+            if ($keterangan !== '') {
+                $keteranganNotes[] = $keterangan;
+            }
+        }
+
+        $tutorItems = $this->scopedModelQuery(TutorKhusus::class, $level, $areaId)
+            ->get(['jenis_tutor', 'jumlah_tutor', 'keterangan']);
+
+        $tutorKf = 0;
+        $tutorPaud = 0;
+
+        foreach ($tutorItems as $item) {
+            $jenisTutor = Str::lower(trim((string) $item->jenis_tutor));
+
+            if ($jenisTutor === 'kf' || str_contains($jenisTutor, 'keaksaraan')) {
+                $tutorKf += (int) $item->jumlah_tutor;
+            } elseif ($jenisTutor === 'paud' || str_contains($jenisTutor, 'paud')) {
+                $tutorPaud += (int) $item->jumlah_tutor;
+            }
+
+            $keterangan = trim((string) $item->keterangan);
+            if ($keterangan !== '') {
+                $keteranganNotes[] = $keterangan;
+            }
+        }
+
+        $kaderItems = $this->scopedModelQuery(KaderKhusus::class, $level, $areaId)
+            ->get(['jenis_kader_khusus', 'keterangan']);
+
+        $kaderBkb = 0;
+        $kaderKoperasi = 0;
+        $kaderKeterampilan = 0;
+
+        foreach ($kaderItems as $item) {
+            $jenisKader = Str::lower(trim((string) $item->jenis_kader_khusus));
+
+            if ($this->containsAnyKeyword($jenisKader, ['bkb', 'bina keluarga balita'])) {
+                $kaderBkb++;
+            } elseif ($this->containsAnyKeyword($jenisKader, ['koperasi', 'usaha bersama', 'up2k', 'up2k-pkk'])) {
+                $kaderKoperasi++;
+            } elseif ($this->containsAnyKeyword($jenisKader, ['keterampilan', 'kerajinan'])) {
+                $kaderKeterampilan++;
+            }
+
+            $keterangan = trim((string) $item->keterangan);
+            if ($keterangan !== '') {
+                $keteranganNotes[] = $keterangan;
+            }
+        }
+
+        $pelatihanItems = $this->scopedModelQuery(PelatihanKaderPokjaIi::class, $level, $areaId)
+            ->get(['kategori_pelatihan', 'jumlah_kader', 'keterangan']);
+
+        $pelatihanLp3 = 0;
+        $pelatihanTpk3Pkk = 0;
+        $pelatihanDamas = 0;
+
+        foreach ($pelatihanItems as $item) {
+            $kategori = Str::lower(trim((string) $item->kategori_pelatihan));
+
+            if ($kategori === 'lp3') {
+                $pelatihanLp3 += (int) $item->jumlah_kader;
+            } elseif ($kategori === 'tpk_3_pkk' || str_contains($kategori, 'tpk')) {
+                $pelatihanTpk3Pkk += (int) $item->jumlah_kader;
+            } elseif ($kategori === 'damas_pkk' || str_contains($kategori, 'damas')) {
+                $pelatihanDamas += (int) $item->jumlah_kader;
+            }
+
+            $keterangan = trim((string) $item->keterangan);
+            if ($keterangan !== '') {
+                $keteranganNotes[] = $keterangan;
+            }
+        }
+
+        $praItems = $this->scopedModelQuery(PraKoperasiUp2k::class, $level, $areaId)
+            ->get(['tingkat', 'jumlah_kelompok', 'jumlah_peserta', 'keterangan']);
+
+        $praPemulaKlp = 0;
+        $praPemulaPeserta = 0;
+        $praMadyaKlp = 0;
+        $praMadyaPeserta = 0;
+        $praUtamaKlp = 0;
+        $praUtamaPeserta = 0;
+        $praMandiriKlp = 0;
+        $praMandiriPeserta = 0;
+
+        foreach ($praItems as $item) {
+            $tingkat = Str::lower(trim((string) $item->tingkat));
+
+            if ($tingkat === 'pemula') {
+                $praPemulaKlp += (int) $item->jumlah_kelompok;
+                $praPemulaPeserta += (int) $item->jumlah_peserta;
+            } elseif ($tingkat === 'madya') {
+                $praMadyaKlp += (int) $item->jumlah_kelompok;
+                $praMadyaPeserta += (int) $item->jumlah_peserta;
+            } elseif ($tingkat === 'utama') {
+                $praUtamaKlp += (int) $item->jumlah_kelompok;
+                $praUtamaPeserta += (int) $item->jumlah_peserta;
+            } elseif ($tingkat === 'mandiri') {
+                $praMandiriKlp += (int) $item->jumlah_kelompok;
+                $praMandiriPeserta += (int) $item->jumlah_peserta;
+            }
+
+            $keterangan = trim((string) $item->keterangan);
+            if ($keterangan !== '') {
+                $keteranganNotes[] = $keterangan;
+            }
+        }
+
+        $koperasiItems = $this->scopedModelQuery(Koperasi::class, $level, $areaId)
+            ->where('berbadan_hukum', true)
+            ->get(['jumlah_anggota_l', 'jumlah_anggota_p']);
+
+        $koperasiBerbadanHukumKlp = $koperasiItems->count();
+        $koperasiBerbadanHukumAnggota = (int) $koperasiItems
+            ->sum(fn (Koperasi $item): int => (int) $item->jumlah_anggota_l + (int) $item->jumlah_anggota_p);
+
+        return collect([
+            [
+                'nomor_urut' => 1,
+                'nama_wilayah' => $wilayahLabel,
+                'jumlah_warga_tiga_buta' => $jumlahTigaButa,
+                'paket_a_klp' => $paketAklp,
+                'paket_a_warga' => $paketAwarga,
+                'paket_b_klp' => $paketBklp,
+                'paket_b_warga' => $paketBwarga,
+                'paket_c_klp' => $paketCklp,
+                'paket_c_warga' => $paketCwarga,
+                'kf_klp' => $kfKlp,
+                'kf_warga' => $kfWarga,
+                'paud_klp' => $paudKlp,
+                'taman_baca' => $jumlahTamanBaca,
+                'bkb_klp' => $bkbKelompok,
+                'bkb_ibu_peserta' => $bkbIbuPeserta,
+                'bkb_ape_set' => $bkbApeSet,
+                'bkb_kelompok_simulasi' => $bkbKelompokSimulasi,
+                'tutor_kf' => $tutorKf,
+                'tutor_paud' => $tutorPaud,
+                'kader_bkb' => $kaderBkb,
+                'kader_koperasi' => $kaderKoperasi,
+                'kader_keterampilan' => $kaderKeterampilan,
+                'pelatihan_lp3' => $pelatihanLp3,
+                'pelatihan_tpk_3_pkk' => $pelatihanTpk3Pkk,
+                'pelatihan_damas' => $pelatihanDamas,
+                'pra_koperasi_pemula_klp' => $praPemulaKlp,
+                'pra_koperasi_pemula_peserta' => $praPemulaPeserta,
+                'pra_koperasi_madya_klp' => $praMadyaKlp,
+                'pra_koperasi_madya_peserta' => $praMadyaPeserta,
+                'pra_koperasi_utama_klp' => $praUtamaKlp,
+                'pra_koperasi_utama_peserta' => $praUtamaPeserta,
+                'pra_koperasi_mandiri_klp' => $praMandiriKlp,
+                'pra_koperasi_mandiri_peserta' => $praMandiriPeserta,
+                'koperasi_berbadan_hukum_klp' => $koperasiBerbadanHukumKlp,
+                'koperasi_berbadan_hukum_anggota' => $koperasiBerbadanHukumAnggota,
+                'keterangan' => $this->composeScalarFieldLabel(collect($keteranganNotes)),
+            ],
+        ]);
     }
 
     public function getDataKegiatanPkkPokjaIiiByLevelAndArea(string $level, int $areaId): Collection
@@ -2058,6 +2305,40 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         }
 
         return false;
+    }
+
+    private function normalizeJenisKejarPaket(?string $value): ?string
+    {
+        $normalized = Str::lower(trim((string) $value));
+
+        if ($normalized === '') {
+            return null;
+        }
+
+        $normalized = str_replace(['-', '_'], ' ', $normalized);
+        $normalized = preg_replace('/\s+/', ' ', $normalized) ?? $normalized;
+
+        if (preg_match('/\bpaket\s*a\b/', $normalized) === 1 || $normalized === 'a') {
+            return 'Paket A';
+        }
+
+        if (preg_match('/\bpaket\s*b\b/', $normalized) === 1 || $normalized === 'b') {
+            return 'Paket B';
+        }
+
+        if (preg_match('/\bpaket\s*c\b/', $normalized) === 1 || $normalized === 'c') {
+            return 'Paket C';
+        }
+
+        if (preg_match('/\b(kf|keaksaraan\s*fungsional)\b/', $normalized) === 1) {
+            return 'KF';
+        }
+
+        if (preg_match('/\bpaud\b/', $normalized) === 1) {
+            return 'PAUD';
+        }
+
+        return null;
     }
 
     private function compareRtNumbers(string $left, string $right): int

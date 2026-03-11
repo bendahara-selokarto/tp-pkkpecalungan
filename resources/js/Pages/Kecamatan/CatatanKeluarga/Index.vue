@@ -184,6 +184,14 @@ const updatePerPage = (event) => {
           Cetak 4.20b
         </a>
         <a
+          href="/kecamatan/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf"
+          target="_blank"
+          rel="noopener"
+          class="inline-flex items-center rounded-md border border-slate-400 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-900/20"
+        >
+          Cetak 4.22
+        </a>
+        <a
           href="/kecamatan/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf"
           target="_blank"
           rel="noopener"

@@ -15,7 +15,7 @@ class UpdateKejarPaketRequest extends FormRequest
     {
         return [
             'nama_kejar_paket' => 'required|string|max:255',
-            'jenis_kejar_paket' => 'required|string|max:255',
+            'jenis_kejar_paket' => 'required|string|in:Paket A,Paket B,Paket C,KF,PAUD',
             'jumlah_warga_belajar_l' => 'required|integer|min:0',
             'jumlah_warga_belajar_p' => 'required|integer|min:0',
             'jumlah_pengajar_l' => 'required|integer|min:0',
@@ -23,7 +23,6 @@ class UpdateKejarPaketRequest extends FormRequest
         ];
     }
 }
-
 
 
 

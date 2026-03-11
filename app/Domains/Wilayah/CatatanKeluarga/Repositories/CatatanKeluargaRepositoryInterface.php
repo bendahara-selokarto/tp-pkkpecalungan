@@ -51,6 +51,9 @@ interface CatatanKeluargaRepositoryInterface
     // 4.20b data umum PKK tingkat kecamatan
     public function getDataUmumPkkKecamatanByLevelAndArea(string $level, int $areaId): Collection;
 
+    // 4.22 data kegiatan PKK pokja II
+    public function getDataKegiatanPkkPokjaIiByLevelAndArea(string $level, int $areaId): Collection;
+
     // 4.23 data kegiatan PKK pokja III
     public function getDataKegiatanPkkPokjaIiiByLevelAndArea(string $level, int $areaId): Collection;
 

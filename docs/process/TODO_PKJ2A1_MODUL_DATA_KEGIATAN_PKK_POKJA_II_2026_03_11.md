@@ -68,7 +68,7 @@ Related ADR: `-`
 ## Keputusan
 
 - [x] K1: Tetapkan `JML KLP` Kejar Paket = count record per jenis (A/B/C/KF).
-- [ ] K2: Tentukan sumber resmi untuk kolom `PAUD Sejenis`.
+- [x] K2: Sumber resmi `PAUD Sejenis` memakai `kejar_pakets` (jenis = PAUD).
 - [x] K3: Sumber tutor `KF/PAUD` memakai tabel tutor khusus.
 - [x] K4: `Jumlah Kader yang sudah dilatih` memakai tabel rekap pelatihan kader per kategori (LP3/TPK 3 PKK/DAMAS).
 - [ ] K5: Putuskan struktur data `Pra Koperasi/Usaha Bersama/UP2K` (level Pemula/Madya/Utama/Mandiri + peserta).

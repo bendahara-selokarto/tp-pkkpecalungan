@@ -38,7 +38,7 @@
 | 9 | `PAKET C - WARGA BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket C) | - | gunakan `jumlah_warga_belajar_l/p` |
 | 10 | `KF - JML KLP BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = KF) | `JML KLP` = count record per jenis | tambah tabel referensi jenis kejar paket |
 | 11 | `KF - WARGA BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = KF) | - | gunakan `jumlah_warga_belajar_l/p` |
-| 12 | `PAUD SEJENIS` | `kejar_pakets` (jenis = PAUD) atau `data_warga_anggotas.ikut_paud` | **belum terdefinisi** (butuh keputusan sumber resmi) | pilih sumber tunggal + normalisasi jenis |
+| 12 | `PAUD SEJENIS` | `kejar_pakets` (`jenis_kejar_paket` = PAUD) | sumber resmi ditetapkan | normalisasi jenis kejar paket untuk token PAUD |
 | 13 | `JUMLAH TAMAN BACA PERPUSTAKAAN` | `taman_bacaans` | definisi `jumlah` | gunakan count record scoped |
 | 14 | `BKB - JML KLP` | belum ada modul | butuh modul baru | buat tabel `bkb_kelompoks` dengan jumlah kelompok |
 | 15 | `BKB - JML IBU PESERTA` | belum ada modul | butuh modul baru | tambah kolom jumlah peserta |
@@ -72,7 +72,6 @@
 
 ## Keputusan yang Butuh Konfirmasi
 
-- Sumber resmi kolom `PAUD SEJENIS`.
 - Skema detail tabel `tutor_khusus` (field + validasi).
 - Skema detail tabel pelatihan kader (per kategori + jumlah, apakah perlu L/P).
 - Bentuk tabel baru untuk `Pra Koperasi/UP2K`.

@@ -220,6 +220,11 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/taman-bacaan`, label: 'Data Taman Bacaan/Perpustakaan' },
         { href: `/${scope}/koperasi`, label: 'Data Koperasi' },
         { href: `/${scope}/kejar-paket`, label: 'Data Kejar Paket/KF/PAUD' },
+        { href: `/${scope}/literasi-warga`, label: 'Literasi Warga (3 Buta)' },
+        { href: `/${scope}/bkb-kegiatan`, label: 'Data BKB (Kegiatan)' },
+        { href: `/${scope}/tutor-khusus`, label: 'Tutor Khusus KF/PAUD' },
+        { href: `/${scope}/pelatihan-kader-pokja-ii`, label: 'Rekap Pelatihan Kader Pokja II' },
+        { href: `/${scope}/pra-koperasi-up2k`, label: 'Pra Koperasi/UP2K' },
       ],
     },
     {
