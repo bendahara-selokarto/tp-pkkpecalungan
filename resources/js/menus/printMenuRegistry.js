@@ -1,5 +1,11 @@
 export const lampiranPlaceholder = '-'
 
+const PRINT_SOURCE_OVERRIDES = {
+  'agenda-surat/ekspedisi': 'agenda-surat',
+  'bantuans/keuangan': 'buku-keuangan',
+  'anggota-tim-penggerak-kader': 'anggota-tim-penggerak',
+}
+
 const extractLampiranCode = (label) => {
   if (typeof label !== 'string' || label.length === 0) {
     return null
@@ -242,11 +248,39 @@ const formatPrintLabel = (label) => {
   return cleanedLabel.split('|')[0].trim()
 }
 
+const formatMenuLabel = (label) => formatPrintLabel(label)
+
+const resolvePrintSourceSlug = (href) => {
+  if (typeof href !== 'string' || href.length === 0 || href.startsWith('http')) {
+    return null
+  }
+
+  const normalizedPath = href.split('?')[0]
+  const segments = normalizedPath.split('/').filter(Boolean)
+  const scope = segments[0]
+
+  if (!['desa', 'kecamatan'].includes(scope)) {
+    return null
+  }
+
+  const moduleSlug = segments[1] ?? null
+  if (!moduleSlug) {
+    return null
+  }
+
+  const subSlug = segments[2] ?? null
+  const overrideKey = subSlug ? `${moduleSlug}/${subSlug}` : moduleSlug
+
+  return PRINT_SOURCE_OVERRIDES[overrideKey] ?? moduleSlug
+}
+
 export {
   buildLampiranMap,
   buildScopedMenuGroups,
   extractLampiranCode,
   formatPrintLabel,
+  formatMenuLabel,
+  resolvePrintSourceSlug,
   resolveLampiran,
   resolveModuleSlugFromHref,
 }

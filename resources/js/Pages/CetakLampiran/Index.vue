@@ -5,10 +5,12 @@ import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineW
 import {
   buildLampiranMap,
   buildScopedMenuGroups,
+  formatMenuLabel,
   formatPrintLabel,
   lampiranPlaceholder,
   resolveLampiran,
   resolveModuleSlugFromHref,
+  resolvePrintSourceSlug,
 } from '@/menus/printMenuRegistry'
 import { usePage } from '@inertiajs/vue3'
 import { mdiPrinter } from '@mdi/js'
@@ -98,6 +100,23 @@ const baseGroups = computed(() => {
   return []
 })
 
+const inputLabelBySlug = computed(() => {
+  const map = {}
+
+  baseGroups.value.forEach((group) => {
+    group.items.forEach((item) => {
+      const slug = resolveModuleSlugFromHref(item.href)
+      if (!slug || map[slug]) {
+        return
+      }
+
+      map[slug] = formatMenuLabel(item.label)
+    })
+  })
+
+  return map
+})
+
 const lampiranBySlug = computed(() => buildLampiranMap(baseGroups.value))
 
 const visibleGroups = computed(() => {
@@ -110,7 +129,25 @@ const visibleGroups = computed(() => {
         .map((item) => ({
           ...item,
           lampiran: resolveLampiran(item, lampiranBySlug.value),
+          sourceSlug: resolvePrintSourceSlug(item.href),
         }))
+        .map((item) => {
+          if (!item.sourceSlug) {
+            return {
+              ...item,
+              sourceLabel: item.external ? 'Dashboard' : null,
+              sourceHref: null,
+              isOrphan: !item.external,
+            }
+          }
+
+          return {
+            ...item,
+            sourceLabel: inputLabelBySlug.value[item.sourceSlug] ?? item.sourceSlug,
+            sourceHref: `/${userScope.value}/${item.sourceSlug}`,
+            isOrphan: false,
+          }
+        })
 
       return {
         ...group,
@@ -122,6 +159,9 @@ const visibleGroups = computed(() => {
 })
 
 const hasVisiblePrintItems = computed(() => visibleGroups.value.length > 0)
+
+const orphanCount = computed(() => visibleGroups.value.reduce((total, group) =>
+  total + group.printItems.filter((item) => item.isOrphan).length, 0))
 </script>
 
 <template>
@@ -142,6 +182,19 @@ const hasVisiblePrintItems = computed(() => visibleGroups.value.length > 0)
       <CardBox v-if="!hasVisiblePrintItems">
         <p class="text-sm text-slate-600 dark:text-slate-300">
           Belum ada modul cetak lampiran yang tersedia untuk akses ini.
+        </p>
+      </CardBox>
+
+      <CardBox v-else-if="orphanCount">
+        <p class="text-sm text-amber-700 dark:text-amber-300">
+          Ada {{ orphanCount }} laporan yang belum memiliki sumber input yang jelas.
+          Mohon konfirmasi modul sumbernya agar tidak ada data yatim.
+        </p>
+      </CardBox>
+
+      <CardBox v-else>
+        <p class="text-sm text-slate-600 dark:text-slate-300">
+          Semua laporan ditautkan ke sumber input. Beberapa laporan adalah rekap otomatis.
         </p>
       </CardBox>
 
@@ -169,6 +222,7 @@ const hasVisiblePrintItems = computed(() => visibleGroups.value.length > 0)
               <tr>
                 <th class="px-3 py-2 font-semibold">Modul</th>
                 <th class="px-3 py-2 font-semibold w-28">Lampiran</th>
+                <th class="px-3 py-2 font-semibold w-48">Sumber Input</th>
                 <th class="px-3 py-2 font-semibold w-24 text-right">Aksi</th>
               </tr>
             </thead>
@@ -183,6 +237,18 @@ const hasVisiblePrintItems = computed(() => visibleGroups.value.length > 0)
                 </td>
                 <td class="px-3 py-2 text-slate-500 dark:text-slate-300">
                   {{ item.lampiran || lampiranPlaceholder }}
+                </td>
+                <td class="px-3 py-2">
+                  <a
+                    v-if="item.sourceHref"
+                    :href="item.sourceHref"
+                    class="text-emerald-700 hover:underline dark:text-emerald-300"
+                  >
+                    {{ item.sourceLabel }}
+                  </a>
+                  <span v-else class="text-slate-400">
+                    {{ item.sourceLabel || 'Belum ada sumber' }}
+                  </span>
                 </td>
                 <td class="px-3 py-2 text-right">
                   <a
