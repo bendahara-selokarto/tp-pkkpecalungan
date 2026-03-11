@@ -67,11 +67,12 @@ Related ADR: `-`
 
 ## Keputusan
 
-- [ ] K1: Tetapkan mapping jenis `kejar_paket` ke Paket A/B/C/KF/PAUD (atau tabel referensi baru).
-- [ ] K2: Tentukan sumber resmi untuk kolom `PAUD Sejenis` dan `Tutor (Jml KLP Simulasi)`.
-- [ ] K3: Putuskan struktur data untuk `Jumlah Kader yang sudah dilatih` (LP3/TPK 3 PKK/DAMAS).
-- [ ] K4: Putuskan struktur data `Pra Koperasi/Usaha Bersama/UP2K` (level Pemula/Madya/Utama/Mandiri + peserta).
-- [ ] K5: Tentukan cara capture `Jml Warga yang masih 3 (tiga) buta`.
+- [x] K1: Tetapkan `JML KLP` Kejar Paket = count record per jenis (A/B/C/KF).
+- [ ] K2: Tentukan sumber resmi untuk kolom `PAUD Sejenis`.
+- [x] K3: Sumber tutor `KF/PAUD` memakai tabel tutor khusus.
+- [x] K4: `Jumlah Kader yang sudah dilatih` memakai tabel rekap pelatihan kader per kategori (LP3/TPK 3 PKK/DAMAS).
+- [ ] K5: Putuskan struktur data `Pra Koperasi/Usaha Bersama/UP2K` (level Pemula/Madya/Utama/Mandiri + peserta).
+- [ ] K6: Tentukan cara capture `Jml Warga yang masih 3 (tiga) buta`.
 
 ## Keputusan Arsitektur (Jika Ada)
 

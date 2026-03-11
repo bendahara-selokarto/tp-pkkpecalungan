@@ -30,28 +30,28 @@
 | 1 | `NO` | hasil agregasi report | - | - |
 | 2 | `NAMA WILAYAH` | `areas` (area aktif user) | - | - |
 | 3 | `JML WARGA YANG MASIH 3 (TIGA) BUTA` | belum ada field | definisi sudah jelas, sumber belum ada | tambah flag di `data_warga_anggotas` atau tabel khusus literasi |
-| 4 | `PAKET A - JML KLP BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket A) | definisi `JML KLP` perlu dipastikan | tambah `jumlah_kelompok` atau hitung jumlah record per jenis |
+| 4 | `PAKET A - JML KLP BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket A) | `JML KLP` = count record per jenis | tidak perlu kolom tambahan jika count record dipakai |
 | 5 | `PAKET A - WARGA BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket A) | pastikan kolom warga belajar tersedia | tambah `jumlah_warga_belajar_l/p` sudah tersedia |
-| 6 | `PAKET B - JML KLP BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket B) | definisi `JML KLP` perlu dipastikan | sama seperti Paket A |
+| 6 | `PAKET B - JML KLP BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket B) | `JML KLP` = count record per jenis | sama seperti Paket A |
 | 7 | `PAKET B - WARGA BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket B) | - | gunakan `jumlah_warga_belajar_l/p` |
-| 8 | `PAKET C - JML KLP BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket C) | definisi `JML KLP` perlu dipastikan | sama seperti Paket A |
+| 8 | `PAKET C - JML KLP BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket C) | `JML KLP` = count record per jenis | sama seperti Paket A |
 | 9 | `PAKET C - WARGA BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = Paket C) | - | gunakan `jumlah_warga_belajar_l/p` |
-| 10 | `KF - JML KLP BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = KF) | butuh kamus jenis baku | tambah tabel referensi jenis kejar paket |
+| 10 | `KF - JML KLP BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = KF) | `JML KLP` = count record per jenis | tambah tabel referensi jenis kejar paket |
 | 11 | `KF - WARGA BELAJAR` | `kejar_pakets` (`jenis_kejar_paket` = KF) | - | gunakan `jumlah_warga_belajar_l/p` |
-| 12 | `PAUD SEJENIS` | `kejar_pakets` (jenis = PAUD) atau `data_warga_anggotas.ikut_paud` | butuh keputusan sumber resmi | pilih sumber tunggal + normalisasi jenis |
+| 12 | `PAUD SEJENIS` | `kejar_pakets` (jenis = PAUD) atau `data_warga_anggotas.ikut_paud` | **belum terdefinisi** (butuh keputusan sumber resmi) | pilih sumber tunggal + normalisasi jenis |
 | 13 | `JUMLAH TAMAN BACA PERPUSTAKAAN` | `taman_bacaans` | definisi `jumlah` | gunakan count record scoped |
 | 14 | `BKB - JML KLP` | belum ada modul | butuh modul baru | buat tabel `bkb_kelompoks` dengan jumlah kelompok |
 | 15 | `BKB - JML IBU PESERTA` | belum ada modul | butuh modul baru | tambah kolom jumlah peserta |
 | 16 | `BKB - JML APE (SET)` | belum ada modul | butuh modul baru | tambah kolom jumlah APE set |
 | 17 | `TUTOR - JML KLP SIMULASI (BKB)` | `simulasi_penyuluhans` (`jumlah_kelompok`) | pastikan kategori simulasi BKB | tambah klasifikasi `jenis_simulasi_penyuluhan` ter-normalisasi |
-| 18 | `TUTOR - KF` | belum ada field | butuh sumber resmi | extend `simulasi_penyuluhans` atau tabel tutor tersendiri |
-| 19 | `TUTOR - PAUD SEJENIS` | belum ada field | butuh sumber resmi | extend `simulasi_penyuluhans` atau tabel tutor tersendiri |
+| 18 | `TUTOR - KF` | tabel tutor khusus (baru) | butuh skema tabel | tabel `tutor_khusus` dengan `jenis_tutor` + `jumlah_tutor` |
+| 19 | `TUTOR - PAUD SEJENIS` | tabel tutor khusus (baru) | butuh skema tabel | tabel `tutor_khusus` dengan `jenis_tutor` + `jumlah_tutor` |
 | 20 | `KADER KHUSUS - BKB` | `kader_khusus` (`jenis_kader_khusus`) | perlu mapping jenis | tambah kamus jenis kader khusus + normalizer |
 | 21 | `KADER KHUSUS - KOPERASI` | `kader_khusus` (`jenis_kader_khusus`) | perlu mapping jenis | tambah kamus jenis kader khusus + normalizer |
 | 22 | `KADER KHUSUS - KETERAMPILAN` | `kader_khusus` (`jenis_kader_khusus`) | perlu mapping jenis | tambah kamus jenis kader khusus + normalizer |
-| 23 | `JUMLAH KADER DILATIH - LP3` | `data_pelatihan_kaders` | belum ada jumlah peserta | tambah kolom jumlah peserta (L/P) + kategori pelatihan |
-| 24 | `JUMLAH KADER DILATIH - TPK 3 PKK` | `data_pelatihan_kaders` | belum ada jumlah peserta | tambah kolom jumlah peserta (L/P) + kategori pelatihan |
-| 25 | `JUMLAH KADER DILATIH - DAMAS PKK` | `data_pelatihan_kaders` | belum ada jumlah peserta | tambah kolom jumlah peserta (L/P) + kategori pelatihan |
+| 23 | `JUMLAH KADER DILATIH - LP3` | tabel pelatihan kader (baru) | butuh skema tabel | tabel rekap pelatihan kader per kategori + jumlah kader |
+| 24 | `JUMLAH KADER DILATIH - TPK 3 PKK` | tabel pelatihan kader (baru) | butuh skema tabel | tabel rekap pelatihan kader per kategori + jumlah kader |
+| 25 | `JUMLAH KADER DILATIH - DAMAS PKK` | tabel pelatihan kader (baru) | butuh skema tabel | tabel rekap pelatihan kader per kategori + jumlah kader |
 | 26 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - PEMULA - JML KLP` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
 | 27 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - PEMULA - PESERTA` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
 | 28 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - MADYA - JML KLP` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
@@ -73,9 +73,9 @@
 ## Keputusan yang Butuh Konfirmasi
 
 - Sumber resmi kolom `PAUD SEJENIS`.
-- Definisi `JML KLP` pada Kejar Paket (count record vs field explicit).
-- Sumber data `Tutor KF` dan `Tutor PAUD sejenis`.
-- Bentuk tabel baru untuk `Pelatihan Kader` dan `Pra Koperasi/UP2K`.
+- Skema detail tabel `tutor_khusus` (field + validasi).
+- Skema detail tabel pelatihan kader (per kategori + jumlah, apakah perlu L/P).
+- Bentuk tabel baru untuk `Pra Koperasi/UP2K`.
 - Penentuan sumber kolom `JML WARGA YANG MASIH 3 (TIGA) BUTA`.
 
 ## Status Sinkronisasi
