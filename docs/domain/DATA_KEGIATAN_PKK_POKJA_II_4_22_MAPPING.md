@@ -134,9 +134,43 @@ Peta merge header (detail):
 | 35 | KOPERASI BERBADAN HUKUM - JML. ANGGOTA |
 | 36 | KET. |
 
+## Referensi Cara Pengisian (Makna Kolom 1-25)
+
+Sumber: `docs/referensi/Cara Pengisian Lampiran 4.22.pdf`.
+
+| Kolom | Makna (Cara Pengisian) |
+| --- | --- |
+| TP-PKK, Tahun | Nama tingkatan TP PKK dan tahun pendataan. |
+| 1 | Nomor urut penulisan. |
+| 2 | Nama tingkatan kepengurusan TP PKK sesuai tingkat: provinsi = nama kab/kota, kab/kota = nama kecamatan, kecamatan = nama desa/kelurahan, desa/kelurahan = nama dusun/lingkungan. |
+| 3 | Jumlah warga yang masih mengalami 3 (tiga) buta. |
+| 4 | Jumlah kelompok belajar Paket A. |
+| 5 | Jumlah warga belajar Paket A. |
+| 6 | Jumlah kelompok belajar Paket B. |
+| 7 | Jumlah warga belajar Paket B. |
+| 8 | Jumlah kelompok belajar Paket C. |
+| 9 | Jumlah warga belajar Paket C. |
+| 10 | Jumlah kelompok belajar Paket Keaksaraan Fungsional (KF). |
+| 11 | Jumlah warga belajar Keaksaraan Fungsional (KF). |
+| 12 | Jumlah kelompok PAUD sejenis. |
+| 13 | Jumlah Taman Bacaan/Perpustakaan. |
+| 14 | Jumlah Kelompok Bina Keluarga Balita (BKB). |
+| 15 | Jumlah peserta Kelompok Bina Keluarga Balita (BKB). |
+| 16 | Jumlah (set) Alat Permainan Edukatif (APE) BKB. |
+| 17 | Jumlah kelompok simulasi BKB. |
+| 18 | Jumlah tutor KF. |
+| 19 | Jumlah tutor PAUD sejenis. |
+| 20 | Jumlah kader BKB. |
+| 21 | Jumlah kelompok kader koperasi. |
+| 22 | Jumlah kader keterampilan. |
+| 23 | Jumlah kader yang sudah dilatih latihan pengelolaan program dan penyuluhan bagi TP PKK. |
+| 24 | Jumlah kader yang sudah dilatih Tim Penggerak dan Ketua-Ketua Kelompok PKK. |
+| 25 | Jumlah kader yang sudah dilatih Pemberdayaan Masyarakat (DAMAS) PKK. |
+
 ## Status Presisi
 
 - Status header merge: **terverifikasi visual (final)**.
+- Makna kolom `1-25` tervalidasi dari dokumen `Cara Pengisian Lampiran 4.22.pdf`.
 - Status sinkronisasi kontrak domain: **not implemented** (belum ada modul/report khusus).
 
 ## Dampak ke Kontrak Domain Saat Ini
