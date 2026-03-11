@@ -2662,3 +2662,13 @@ Catatan:
 - Validasi:
   - `pwsh -File scripts/audit_markdown_paths.ps1` `PASS`,
   - `php artisan test` tidak dijalankan (doc-only).
+
+### Modul Data Kegiatan PKK Pokja II (`PKJ2A1`) - 2026-03-11
+
+- Status concern: `done` (`state:report-docs-tests-synced`).
+- Hasil batch:
+  - sumber data Lampiran 4.22 disinkronkan ke implementasi aktif,
+  - test header + agregasi report Pokja II ditambahkan,
+  - validasi report berbasis `CatatanKeluargaRepository` terjaga.
+- Validasi:
+  - `php artisan test --filter=RekapCatatanDataKegiatanWargaReportPrintTest --compact` `PASS` (29 tests).

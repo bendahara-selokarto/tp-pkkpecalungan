@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
+use App\Domains\Wilayah\BkbKegiatan\Models\BkbKegiatan;
 use App\Domains\Wilayah\CatatanKeluarga\Repositories\CatatanKeluargaRepositoryInterface;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
@@ -11,9 +12,16 @@ use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Models\DataPema
 use App\Domains\Wilayah\DataWarga\Models\DataWarga;
 use App\Domains\Wilayah\DataWarga\Models\DataWargaAnggota;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
+use App\Domains\Wilayah\KejarPaket\Models\KejarPaket;
+use App\Domains\Wilayah\Koperasi\Models\Koperasi;
+use App\Domains\Wilayah\LiterasiWarga\Models\LiterasiWarga;
 use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\PelatihanKaderPokjaIi\Models\PelatihanKaderPokjaIi;
 use App\Domains\Wilayah\Posyandu\Models\Posyandu;
+use App\Domains\Wilayah\PraKoperasiUp2k\Models\PraKoperasiUp2k;
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
+use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
+use App\Domains\Wilayah\TutorKhusus\Models\TutorKhusus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
@@ -529,6 +537,64 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
             'KHUSUS',
             'HONORER',
             'BANTUAN',
+        ]);
+    }
+
+    public function test_header_kolom_pdf_data_kegiatan_pkk_pokja_ii_tetap_sesuai_mapping_autentik_422(): void
+    {
+        $this->assertPdfReportHeadersInOrder('pdf.data_kegiatan_pkk_pokja_ii_report', [
+            'NO',
+            'NAMA WILAYAH(DUSUN/DESA/KEL./KEC/KAB/KOTA/PROV)',
+            'JML WARGAYANG MASIH 3 (TIGA) BUTA',
+            'PENDIDIKAN KETERAMPILAN',
+            'PENGEMBANGAN KEHIDUPAN BERKOPERASI',
+            'KET.',
+            'PAKET A',
+            'PAKET B',
+            'PAKET C',
+            'KF',
+            'PAUDSEJENIS',
+            'JUMLAH TAMAN BACAAN/PERPUSTAKAAN',
+            'BKB',
+            'TUTOR',
+            'KADER KHUSUS',
+            'JUMLAH KADER YANG SUDAH DILATIH',
+            'PRA KOPERASI/USAHA BERSAMA/UP2K',
+            'KOPERASI BERBADAN HUKUM',
+            'JML KLPBELAJAR',
+            'WARGABELAJAR',
+            'JML KLPBELAJAR',
+            'WARGABELAJAR',
+            'JML KLPBELAJAR',
+            'WARGABELAJAR',
+            'JML KLPBELAJAR',
+            'WARGABELAJAR',
+            'JML KLP',
+            'JML IBUPESERTA',
+            'JML APE(SET)',
+            'JML KLPSIMULASI',
+            'KF',
+            'PAUDSEJENIS',
+            'BKB',
+            'KOPERASI',
+            'KETERAMPILAN',
+            'LP3 PKK',
+            'TPK 3 PKK',
+            'DAMAS PKK',
+            'PEMULA',
+            'MADYA',
+            'UTAMA',
+            'MANDIRI',
+            'JML KLP',
+            'JML ANGGOTA',
+            'JML KLP',
+            'PESERTA',
+            'JML KLP',
+            'PESERTA',
+            'JML KLP',
+            'PESERTA',
+            'JML KLP',
+            'PESERTA',
         ]);
     }
 
@@ -1286,6 +1352,234 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
         $this->assertSame(2, $row['jumlah_industri_pangan']);
         $this->assertSame(1, $row['jumlah_industri_sandang']);
         $this->assertSame(3, $row['jumlah_industri_jasa']);
+    }
+
+    public function test_data_kegiatan_pkk_pokja_ii_mengagregasi_data_scope_aktif(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+
+        LiterasiWarga::create([
+            'jumlah_tiga_buta' => 2,
+            'keterangan' => 'Literasi',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        KejarPaket::create([
+            'nama_kejar_paket' => 'Paket A',
+            'jenis_kejar_paket' => 'Paket A',
+            'jumlah_warga_belajar_l' => 1,
+            'jumlah_warga_belajar_p' => 2,
+            'jumlah_pengajar_l' => 0,
+            'jumlah_pengajar_p' => 0,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        KejarPaket::create([
+            'nama_kejar_paket' => 'Keaksaraan',
+            'jenis_kejar_paket' => 'KF',
+            'jumlah_warga_belajar_l' => 1,
+            'jumlah_warga_belajar_p' => 1,
+            'jumlah_pengajar_l' => 0,
+            'jumlah_pengajar_p' => 0,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        KejarPaket::create([
+            'nama_kejar_paket' => 'PAUD Sejenis',
+            'jenis_kejar_paket' => 'PAUD',
+            'jumlah_warga_belajar_l' => 0,
+            'jumlah_warga_belajar_p' => 0,
+            'jumlah_pengajar_l' => 0,
+            'jumlah_pengajar_p' => 0,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        TamanBacaan::create([
+            'nama_taman_bacaan' => 'TB Melati',
+            'nama_pengelola' => 'Ibu Sari',
+            'jumlah_buku_bacaan' => '10',
+            'jenis_buku' => 'Majalah',
+            'kategori' => 'Umum',
+            'jumlah' => '10',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        BkbKegiatan::create([
+            'jumlah_kelompok' => 2,
+            'jumlah_ibu_peserta' => 3,
+            'jumlah_ape_set' => 1,
+            'jumlah_kelompok_simulasi' => 1,
+            'keterangan' => 'BKB',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        TutorKhusus::create([
+            'jenis_tutor' => 'kf',
+            'jumlah_tutor' => 2,
+            'keterangan' => 'Tutor KF',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        TutorKhusus::create([
+            'jenis_tutor' => 'paud',
+            'jumlah_tutor' => 1,
+            'keterangan' => 'Tutor PAUD',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        KaderKhusus::create([
+            'nama' => 'Kader BKB',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'BKB',
+            'keterangan' => 'Kader BKB',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        KaderKhusus::create([
+            'nama' => 'Kader Koperasi',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1991-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Koperasi',
+            'keterangan' => 'Kader Koperasi',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        KaderKhusus::create([
+            'nama' => 'Kader Keterampilan',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1992-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Dusun Anggrek',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Keterampilan',
+            'keterangan' => 'Kader Keterampilan',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        PelatihanKaderPokjaIi::create([
+            'kategori_pelatihan' => 'lp3',
+            'jumlah_kader' => 5,
+            'keterangan' => 'Pelatihan LP3',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        PelatihanKaderPokjaIi::create([
+            'kategori_pelatihan' => 'tpk_3_pkk',
+            'jumlah_kader' => 4,
+            'keterangan' => 'Pelatihan TPK',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        PelatihanKaderPokjaIi::create([
+            'kategori_pelatihan' => 'damas_pkk',
+            'jumlah_kader' => 3,
+            'keterangan' => 'Pelatihan DAMAS',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        PraKoperasiUp2k::create([
+            'tingkat' => 'pemula',
+            'jumlah_kelompok' => 2,
+            'jumlah_peserta' => 10,
+            'keterangan' => 'Pra Pemula',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        PraKoperasiUp2k::create([
+            'tingkat' => 'mandiri',
+            'jumlah_kelompok' => 1,
+            'jumlah_peserta' => 5,
+            'keterangan' => 'Pra Mandiri',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        Koperasi::create([
+            'nama_koperasi' => 'Koperasi Sejahtera',
+            'jenis_usaha' => 'Simpan pinjam',
+            'berbadan_hukum' => true,
+            'belum_berbadan_hukum' => false,
+            'jumlah_anggota_l' => 2,
+            'jumlah_anggota_p' => 3,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $user->id,
+        ]);
+
+        $repository = app(CatatanKeluargaRepositoryInterface::class);
+        $rows = $repository->getDataKegiatanPkkPokjaIiByLevelAndArea('desa', $this->desaA->id);
+
+        $this->assertCount(1, $rows);
+        $row = $rows->first();
+
+        $this->assertSame(2, $row['jumlah_warga_tiga_buta']);
+        $this->assertSame(1, $row['paket_a_klp']);
+        $this->assertSame(3, $row['paket_a_warga']);
+        $this->assertSame(1, $row['kf_klp']);
+        $this->assertSame(2, $row['kf_warga']);
+        $this->assertSame(1, $row['paud_klp']);
+        $this->assertSame(1, $row['taman_baca']);
+        $this->assertSame(2, $row['bkb_klp']);
+        $this->assertSame(3, $row['bkb_ibu_peserta']);
+        $this->assertSame(1, $row['bkb_ape_set']);
+        $this->assertSame(1, $row['bkb_kelompok_simulasi']);
+        $this->assertSame(2, $row['tutor_kf']);
+        $this->assertSame(1, $row['tutor_paud']);
+        $this->assertSame(1, $row['kader_bkb']);
+        $this->assertSame(1, $row['kader_koperasi']);
+        $this->assertSame(1, $row['kader_keterampilan']);
+        $this->assertSame(5, $row['pelatihan_lp3']);
+        $this->assertSame(4, $row['pelatihan_tpk_3_pkk']);
+        $this->assertSame(3, $row['pelatihan_damas']);
+        $this->assertSame(2, $row['pra_koperasi_pemula_klp']);
+        $this->assertSame(10, $row['pra_koperasi_pemula_peserta']);
+        $this->assertSame(1, $row['pra_koperasi_mandiri_klp']);
+        $this->assertSame(5, $row['pra_koperasi_mandiri_peserta']);
+        $this->assertSame(1, $row['koperasi_berbadan_hukum_klp']);
+        $this->assertSame(5, $row['koperasi_berbadan_hukum_anggota']);
+        $this->assertStringContainsString('Literasi', $row['keterangan']);
+        $this->assertStringContainsString('BKB', $row['keterangan']);
     }
 
     public function test_data_kegiatan_pkk_pokja_iv_mengagregasi_data_scope_aktif(): void

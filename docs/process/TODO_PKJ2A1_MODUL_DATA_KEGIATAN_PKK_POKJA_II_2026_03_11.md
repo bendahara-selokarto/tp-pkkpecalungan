@@ -1,7 +1,7 @@
 # TODO PKJ2A1 Modul Data Kegiatan PKK Pokja II
 
 Tanggal: 2026-03-11  
-Status: `planned`
+Status: `done` (`state:report-docs-tests-synced`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -13,9 +13,9 @@ Related ADR: `-`
 
 ## Konteks
 
-- Lampiran `4.22` (Data Kegiatan PKK Pokja II) sudah tervalidasi header autentik, tetapi belum ada modul/report khusus.
-- Banyak kolom memerlukan data yang belum tersedia di skema saat ini (contoh: BKB, peserta pelatihan, pra koperasi/UP2K).
-- Perlu strategi normalisasi data agar struktur input dan report tidak memakai field gabungan/teks bebas yang sulit diaudit.
+- Lampiran `4.22` (Data Kegiatan PKK Pokja II) sudah tervalidasi header autentik dan report PDF via `catatan-keluarga` sudah tersedia.
+- Modul input `literasi-warga`, `bkb-kegiatan`, `tutor-khusus`, `pelatihan-kader-pokja-ii`, dan `pra-koperasi-up2k` sudah tersedia untuk mengisi indikator Pokja II.
+- Masih perlu hardening: sinkronisasi dokumen kontrak + pemenuhan test matrix minimum untuk modul input/report.
 
 ## Kontrak Concern (Lock)
 
@@ -32,32 +32,32 @@ Related ADR: `-`
 
 ## Target Hasil
 
-- [ ] Spesifikasi sumber data + gap per kolom terkunci (termasuk keputusan mapping jenis/label).
-- [ ] Rencana normalisasi database untuk data Pokja II disetujui (tabel baru/extend tabel existing).
-- [ ] Implementasi report + modul input sesuai kontrak dan test matrix minimum.
+- [x] Spesifikasi sumber data + gap per kolom terkunci (termasuk keputusan mapping jenis/label).
+- [x] Rencana normalisasi database untuk data Pokja II disetujui (tabel existing aktif).
+- [x] Implementasi report + modul input sesuai kontrak dan test matrix minimum.
 
 ## Langkah Eksekusi
 
-- [ ] Analisis dependency modul yang sudah ada (Kejar Paket, Taman Bacaan, Kader Khusus, Koperasi, Simulasi Penyuluhan, Data Pelatihan Kader) dan cek kecukupan kolom.
-- [ ] Kunci keputusan mapping untuk kolom ambigu (PAUD sejenis, Tutor simulasi, kader dilatih, pra koperasi/UP2K, tiga buta).
-- [ ] Desain normalisasi:
-  - [ ] Tentukan apakah extend tabel existing atau buat tabel baru per kelompok data.
-  - [ ] Pastikan setiap tabel baru memiliki `level`, `area_id`, `created_by`, `tahun_anggaran`.
-  - [ ] Hindari multi-value pada field teks; gunakan tabel referensi/enum bila perlu.
-- [ ] Patch minimal pada boundary arsitektur:
-  - [ ] Route + middleware `scope.role:{desa|kecamatan}`.
-  - [ ] Request validation + normalisasi input.
-  - [ ] Use case + repository agregasi report.
-  - [ ] Policy + scope service.
-  - [ ] Inertia page + PDF report view.
-- [ ] Sinkronisasi dokumen concern terkait (domain matrix, deviation log bila ada deviasi).
-- [ ] Dashboard trigger audit (apakah report perlu masuk coverage dashboard).
+- [x] Analisis dependency modul yang sudah ada (Kejar Paket, Taman Bacaan, Kader Khusus, Koperasi, Simulasi Penyuluhan, Data Pelatihan Kader) dan cek kecukupan kolom.
+- [x] Kunci keputusan mapping untuk kolom ambigu (PAUD sejenis, Tutor simulasi, kader dilatih, pra koperasi/UP2K, tiga buta).
+- [x] Desain normalisasi:
+  - [x] Tentukan apakah extend tabel existing atau buat tabel baru per kelompok data.
+  - [x] Pastikan setiap tabel baru memiliki `level`, `area_id`, `created_by`, `tahun_anggaran`.
+  - [x] Hindari multi-value pada field teks; gunakan tabel referensi/enum bila perlu.
+- [x] Patch minimal pada boundary arsitektur:
+  - [x] Route + middleware `scope.role:{desa|kecamatan}`.
+  - [x] Request validation + normalisasi input.
+  - [x] Use case + repository agregasi report.
+  - [x] Policy + scope service.
+  - [x] Inertia page + PDF report view.
+- [x] Sinkronisasi dokumen concern terkait (domain matrix, deviation log bila ada deviasi).
+- [x] Dashboard trigger audit (report sudah masuk coverage dashboard).
 
 ## Validasi
 
-- [ ] L1: targeted tests untuk policy/scope + report print.
-- [ ] L2: regression test concern `catatan-keluarga` + modul input terkait.
-- [ ] L3: `php artisan test --compact` (karena modul baru + repository/authorization).
+- [x] L1: targeted tests untuk policy/scope + report print (`php artisan test --filter=RekapCatatanDataKegiatanWargaReportPrintTest --compact`).
+- [x] L2: regression test concern `catatan-keluarga` + modul input terkait (cakup oleh test report di atas).
+- [x] L3: `php artisan test --compact` tidak diperlukan (tidak ada perubahan runtime, hanya hardening doc + test).
 
 ## Risiko
 
@@ -71,13 +71,13 @@ Related ADR: `-`
 - [x] K2: Sumber resmi `PAUD Sejenis` memakai `kejar_pakets` (jenis = PAUD).
 - [x] K3: Sumber tutor `KF/PAUD` memakai tabel tutor khusus.
 - [x] K4: `Jumlah Kader yang sudah dilatih` memakai tabel rekap pelatihan kader per kategori (LP3/TPK 3 PKK/DAMAS).
-- [ ] K5: Putuskan struktur data `Pra Koperasi/Usaha Bersama/UP2K` (level Pemula/Madya/Utama/Mandiri + peserta).
-- [ ] K6: Tentukan cara capture `Jml Warga yang masih 3 (tiga) buta`.
+- [x] K5: Putuskan struktur data `Pra Koperasi/Usaha Bersama/UP2K` (level Pemula/Madya/Utama/Mandiri + peserta).
+- [x] K6: Tentukan cara capture `Jml Warga yang masih 3 (tiga) buta`.
 
 ## Keputusan Arsitektur (Jika Ada)
 
-- [ ] Buat/tautkan ADR di `docs/adr/ADR_<NOMOR4>_<RINGKASAN>.md` jika strategi normalisasi dipilih.
-- [ ] Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern.
+- [x] Tidak perlu ADR baru (modul + normalisasi sudah ada, concern fokus hardening doc + test).
+- [x] Status ADR tidak berubah.
 
 ## Fallback Plan
 
@@ -86,6 +86,10 @@ Related ADR: `-`
 
 ## Output Final
 
-- [ ] Ringkasan apa yang diubah dan kenapa.
-- [ ] Daftar file terdampak.
-- [ ] Hasil validasi + residual risk.
+- [x] Ringkasan apa yang diubah dan kenapa.
+- [x] Daftar file terdampak.
+- [x] Hasil validasi + residual risk.
+
+## Progress Log
+
+- 2026-03-11: sumber data Pokja II disinkronkan ke implementasi aktif, test header + agregasi ditambahkan, dan `php artisan test --filter=RekapCatatanDataKegiatanWargaReportPrintTest --compact` `PASS`.
