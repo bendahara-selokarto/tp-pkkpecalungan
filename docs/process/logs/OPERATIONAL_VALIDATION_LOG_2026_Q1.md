@@ -2637,3 +2637,16 @@ Catatan:
   - L1: audit scoped migrasi/kolom `PASS`,
   - L3: `php artisan test --compact` `PASS`,
   - L4: `php artisan migrate:fresh --seed` `PASS`.
+
+### Roadmap Ekspansi Audit UI/UX Runtime Evidence (`IWN26A1`) - 2026-03-11
+
+- Status concern: `done` (`state:batch-P1-P14-implemented-and-validated`).
+- Hasil batch:
+  - roadmap 3 fase ekspansi runtime evidence terkunci,
+  - lane smoke/a11y mandatory + visual/perf candidate gate terimplementasi,
+  - trend evaluation + history cache + schedule 2x sehari aktif,
+  - sinkronisasi TODO concern UI agar evidence runtime masuk ke setiap concern UI.
+- Validasi (evidence tercatat di TODO):
+  - `npm run test:e2e:smoke`, `npm run test:e2e:a11y`, `npm run test:e2e:visual`, `npm run test:e2e:perf`,
+  - `npm run test:e2e:perf:summary` + `npm run test:e2e:perf:trend`,
+  - `php artisan test --filter=DashboardLayoutMenuContractTest` `PASS`.

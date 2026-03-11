@@ -20,7 +20,6 @@ Status: `done` (`state:thin-registry-active-index`)
 
 | Concern ID | Concern | Source of Truth (SOT) | Status Concern | Keputusan Routing |
 | --- | --- | --- | --- | --- |
-| `C-UI-UX-RUNTIME-EVIDENCE` | Ekspansi audit UI/UX runtime evidence | `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md` | `in-progress` | Concern ini menjadi jalur utama evidence runtime lintas concern UI/UX. |
 | `C-GOVERNANCE-AUDIT-WAVE` | Audit wave lanjutan governance markdown | `docs/process/TODO_GCP26A4_GOVERNANCE_AUDIT_WAVE_FOLLOWUP_2026_03_09.md` | `in-progress` | Concern ini menjadi parent audit bertahap untuk TODO/ADR corpus, link/path, thinning, dan shard annex sebelum closure governance wave berikutnya. |
 | `C-REFERENCE-DOC-STANDARDIZATION` | Standarisasi dokumen referensi domain | `docs/process/TODO_RFD26A1_STANDARISASI_STRUKTUR_DOKUMEN_REFERENSI_DOMAIN_2026_03_10.md` | `planned` | Concern ini menjadi jalur planning untuk taxonomy folder, naming convention, dan migration map `docs/referensi` sebelum rename bertahap. |
 | `C-POKJA-II-MODULE` | Modul Data Kegiatan PKK Pokja II (Lampiran 4.22) | `docs/process/TODO_PKJ2A1_MODUL_DATA_KEGIATAN_PKK_POKJA_II_2026_03_11.md` | `planned` | Concern ini menjadi jalur utama perancangan modul/report Pokja II + strategi normalisasi data. |
@@ -33,6 +32,7 @@ Status: `done` (`state:thin-registry-active-index`)
 - Concern `done` terbaru dipindahkan ke log periodik `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
 - Pointer closure penting:
   - `C-DATABASE-NORMALIZATION-FORMAL` -> `docs/process/TODO_NFM26A1_AUDIT_NORMALISASI_DATABASE_FORMAL_1NF_3NF_BERTAHAP_2026_03_10.md`
+  - `C-UI-UX-RUNTIME-EVIDENCE` -> `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md`
   - `C-MARKDOWN-CONTEXT-BUDGET` -> `docs/process/archive/2026_03/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`
   - `C-GOVERNANCE-CONTEXT-PACK` -> `docs/process/archive/2026_03/TODO_GCP26A1_DEDUP_DAN_COMPACTION_GOVERNANCE_CONTEXT_PACK_2026_03_09.md`
   - `C-GOVERNANCE-THIN-REGISTRY` -> `docs/process/archive/2026_03/TODO_GCP26A2_THIN_REGISTRY_DAN_ANNEX_RETRIEVAL_GUARDRAIL_2026_03_09.md`

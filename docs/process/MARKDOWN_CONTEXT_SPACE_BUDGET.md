@@ -38,7 +38,7 @@ Ukuran artefak aktif yang diukur:
 | `docs/process/AI_FRIENDLY_EXECUTION_PLAYBOOK.md` | `12,562` | `3,141` | registry pattern ringkas |
 | `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md` | `4,303` | `1,076` | thin registry aktif pasca compaction |
 | `docs/process/OPERATIONAL_VALIDATION_LOG.md` | `3,132` | `783` | index aktif ringkas pasca compaction |
-| `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md` | `6,949` | `1,738` | contoh child concern aktif |
+| `docs/process/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md` | `6,949` | `1,738` | contoh child concern (closed; baseline size) |
 | `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` | `8,238` | `2,060` | contoh parent concern aktif |
 | `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md` | `6,602` | `1,651` | contoh ADR concern strategis |
 
