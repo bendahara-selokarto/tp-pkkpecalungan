@@ -12,7 +12,7 @@
 - Status cek manual sumber data report: **belum**.
 - Tanggal cek manual terakhir (header): `2026-03-11`.
 - Bukti acuan visual: screenshot Lampiran `4.22` di `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_22_data_kegiatan_pkk_pokja_ii.png`.
-- Referensi cara pengisian: `docs/referensi/Cara Pengisian Lampiran 4.22.pdf` (kolom 1-25).
+- Referensi cara pengisian: `docs/referensi/Cara Pengisian Lampiran 4.22.pdf` (kolom 1-36).
 
 ## Jalur Eksekusi Report (Planned)
 
@@ -52,8 +52,16 @@
 | 23 | `JUMLAH KADER DILATIH - LP3` | `data_pelatihan_kaders` | belum ada jumlah peserta | tambah kolom jumlah peserta (L/P) + kategori pelatihan |
 | 24 | `JUMLAH KADER DILATIH - TPK 3 PKK` | `data_pelatihan_kaders` | belum ada jumlah peserta | tambah kolom jumlah peserta (L/P) + kategori pelatihan |
 | 25 | `JUMLAH KADER DILATIH - DAMAS PKK` | `data_pelatihan_kaders` | belum ada jumlah peserta | tambah kolom jumlah peserta (L/P) + kategori pelatihan |
-| 26-33 | `PENGEMBANGAN KEAHLIAN BERKOPERASI` (Pemula/Madya/Utama/Mandiri, JML KLP + Peserta) | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
-| 34-35 | `KOPERASI BERBADAN HUKUM` (JML KLP, JML ANGGOTA) | `koperasis` (`berbadan_hukum`) | definisi `JML KLP` | count koperasi berbadan hukum + sum anggota |
+| 26 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - PEMULA - JML KLP` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
+| 27 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - PEMULA - PESERTA` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
+| 28 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - MADYA - JML KLP` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
+| 29 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - MADYA - PESERTA` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
+| 30 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - UTAMA - JML KLP` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
+| 31 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - UTAMA - PESERTA` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
+| 32 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - MANDIRI - JML KLP` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
+| 33 | `PENGEMBANGAN KEAHLIAN BERKOPERASI - MANDIRI - PESERTA` | belum ada modul | butuh modul baru | buat tabel `pra_koperasi_usaha_bersama_up2k` dengan level + peserta |
+| 34 | `KOPERASI BERBADAN HUKUM - JML KLP` | `koperasis` (`berbadan_hukum`) | definisi `JML KLP` | count koperasi berbadan hukum + sum anggota |
+| 35 | `KOPERASI BERBADAN HUKUM - JML ANGGOTA` | `koperasis` (`berbadan_hukum`) | definisi `JML ANGGOTA` | sum anggota (L/P) dari koperasi berbadan hukum |
 | 36 | `KET.` | agregasi catatan | standar format | gunakan concat keterangan dari sumber terkait |
 
 ## Catatan Normalisasi
@@ -69,7 +77,6 @@
 - Sumber data `Tutor KF` dan `Tutor PAUD sejenis`.
 - Bentuk tabel baru untuk `Pelatihan Kader` dan `Pra Koperasi/UP2K`.
 - Penentuan sumber kolom `JML WARGA YANG MASIH 3 (TIGA) BUTA`.
-- Cara pengisian kolom `26-36` (halaman lanjutan belum tersedia).
 
 ## Status Sinkronisasi
 

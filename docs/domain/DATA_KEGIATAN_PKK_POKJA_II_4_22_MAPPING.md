@@ -166,6 +166,17 @@ Sumber: `docs/referensi/Cara Pengisian Lampiran 4.22.pdf`.
 | 23 | Jumlah kader yang sudah dilatih latihan pengelolaan program dan penyuluhan bagi TP PKK. |
 | 24 | Jumlah kader yang sudah dilatih Tim Penggerak dan Ketua-Ketua Kelompok PKK. |
 | 25 | Jumlah kader yang sudah dilatih Pemberdayaan Masyarakat (DAMAS) PKK. |
+| 26 | Jumlah kelompok pra Koperasi/Usaha Bersama/Usaha Peningkatan Pendapatan (UP2K-PKK) tingkat Pemula. |
+| 27 | Jumlah peserta pra Koperasi/Usaha Bersama/Usaha Peningkatan Pendapatan (UP2K-PKK) tingkat Pemula. |
+| 28 | Jumlah kelompok pra Koperasi/Usaha Bersama/Usaha Peningkatan Pendapatan (UP2K-PKK) tingkat Madya. |
+| 29 | Jumlah peserta pra Koperasi/Usaha Bersama/Usaha Peningkatan Pendapatan (UP2K-PKK) tingkat Madya. |
+| 30 | Jumlah kelompok pra Koperasi/Usaha Bersama/Usaha Peningkatan Pendapatan (UP2K-PKK) tingkat Utama. |
+| 31 | Jumlah peserta pra Koperasi/Usaha Bersama/Usaha Peningkatan Pendapatan (UP2K-PKK) tingkat Utama. |
+| 32 | Jumlah kelompok pra Koperasi/Usaha Bersama/Usaha Peningkatan Pendapatan (UP2K-PKK) tingkat Mandiri. |
+| 33 | Jumlah peserta pra Koperasi/Usaha Bersama/Usaha Peningkatan Pendapatan (UP2K-PKK) tingkat Mandiri. |
+| 34 | Jumlah kelompok Koperasi yang berbadan hukum. |
+| 35 | Jumlah anggota Koperasi yang berbadan hukum. |
+| 36 | Hal-hal yang belum tercantum dalam kolom lainnya. |
 
 ## Status Presisi
 
