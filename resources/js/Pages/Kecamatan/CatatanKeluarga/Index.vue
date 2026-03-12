@@ -3,7 +3,7 @@ import CardBox from '@/admin-one/components/CardBox.vue'
 import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
-import { router } from '@inertiajs/vue3'
+import { Link, router, usePage } from '@inertiajs/vue3'
 import { mdiBookOpenVariant } from '@mdi/js'
 import { computed } from 'vue'
 
@@ -25,6 +25,12 @@ const props = defineProps({
 })
 
 const perPage = computed(() => props.filters.per_page ?? 10)
+const page = usePage()
+const moduleModes = computed(() => page.props.auth?.user?.moduleModes ?? {})
+const canWriteDataWarga = computed(() => moduleModes.value['data-warga'] === 'read-write')
+const canReadDataWarga = computed(() => ['read-write', 'read-only'].includes(moduleModes.value['data-warga']))
+const canWriteDataKegiatanWarga = computed(() => moduleModes.value['data-kegiatan-warga'] === 'read-write')
+const canReadDataKegiatanWarga = computed(() => ['read-write', 'read-only'].includes(moduleModes.value['data-kegiatan-warga']))
 
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
@@ -55,6 +61,34 @@ const updatePerPage = (event) => {
             </option>
           </select>
         </label>
+        <Link
+          v-if="canWriteDataWarga"
+          href="/kecamatan/data-warga/create"
+          class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+        >
+          Tambah Data Warga
+        </Link>
+        <Link
+          v-else-if="canReadDataWarga"
+          href="/kecamatan/data-warga"
+          class="inline-flex items-center rounded-md border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/20"
+        >
+          Buka Data Warga
+        </Link>
+        <Link
+          v-if="canWriteDataKegiatanWarga"
+          href="/kecamatan/data-kegiatan-warga/create"
+          class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+        >
+          Tambah Data Kegiatan Warga
+        </Link>
+        <Link
+          v-else-if="canReadDataKegiatanWarga"
+          href="/kecamatan/data-kegiatan-warga"
+          class="inline-flex items-center rounded-md border border-emerald-300 px-4 py-2 text-sm font-medium text-emerald-700 hover:bg-emerald-50 dark:border-emerald-900/50 dark:text-emerald-300 dark:hover:bg-emerald-900/20"
+        >
+          Buka Data Kegiatan Warga
+        </Link>
         <a
           href="/kecamatan/catatan-keluarga/report/pdf"
           target="_blank"

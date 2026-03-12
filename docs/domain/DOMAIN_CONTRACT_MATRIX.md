@@ -194,7 +194,7 @@ Mapping grup sidebar:
 | --- | --- |
 | Sekretaris TP-PKK | `anggota-tim-penggerak`, `kader-khusus`, `agenda-surat`, `buku-daftar-hadir`, `buku-tamu`, `buku-notulen-rapat`, `buku-keuangan`, `inventaris`, `activities`, `program-prioritas`, `anggota-pokja`, `prestasi-lomba`, `laporan-tahunan-pkk` |
 | Pokja I | `activities`, `inventaris`, `buku-tamu`, `data-warga`, `data-kegiatan-warga`, `bkl`, `bkr`, `paar` |
-| Pokja II | `activities`, `inventaris`, `buku-tamu`, `data-pelatihan-kader`, `taman-bacaan`, `koperasi`, `kejar-paket` |
+| Pokja II | `activities`, `inventaris`, `buku-tamu`, `data-pelatihan-kader`, `literasi-warga`, `bkb-kegiatan`, `tutor-khusus`, `pelatihan-kader-pokja-ii`, `pra-koperasi-up2k`, `taman-bacaan`, `koperasi`, `kejar-paket` |
 | Pokja III | `activities`, `inventaris`, `buku-tamu`, `data-keluarga`, `data-industri-rumah-tangga`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `warung-pkk` |
 | Pokja IV | `activities`, `inventaris`, `buku-tamu`, `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga`, `pilot-project-naskah-pelaporan`, `pilot-project-keluarga-sehat` |
 

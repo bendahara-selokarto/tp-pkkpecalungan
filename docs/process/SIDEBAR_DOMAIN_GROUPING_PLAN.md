@@ -53,6 +53,11 @@ Sumber acuan:
 | Pokja I | Buku PAAR | `/{scope}/paar` |
 | Pokja II | Buku Kegiatan | `/{scope}/activities` |
 | Pokja II | Data Pelatihan Kader | `/{scope}/data-pelatihan-kader` |
+| Pokja II | Literasi Warga (3 Buta) | `/{scope}/literasi-warga` |
+| Pokja II | Data BKB (Kegiatan) | `/{scope}/bkb-kegiatan` |
+| Pokja II | Tutor Khusus KF/PAUD | `/{scope}/tutor-khusus` |
+| Pokja II | Rekap Pelatihan Kader Pokja II | `/{scope}/pelatihan-kader-pokja-ii` |
+| Pokja II | Pra Koperasi/UP2K | `/{scope}/pra-koperasi-up2k` |
 | Pokja II | Data Isian Taman Bacaan/Perpustakaan | `/{scope}/taman-bacaan` |
 | Pokja II | Data Isian Koperasi | `/{scope}/koperasi` |
 | Pokja II | Data Isian Kejar Paket/KF/PAUD | `/{scope}/kejar-paket` |

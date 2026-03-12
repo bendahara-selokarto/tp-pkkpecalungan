@@ -57,7 +57,7 @@ Related ADR: `-`
 
 - [x] L1: targeted tests untuk policy/scope + report print (`php artisan test --filter=RekapCatatanDataKegiatanWargaReportPrintTest --compact`).
 - [x] L2: regression test concern `catatan-keluarga` + modul input terkait (cakup oleh test report di atas).
-- [x] L3: `php artisan test --compact` tidak diperlukan (tidak ada perubahan runtime, hanya hardening doc + test).
+- [x] L3: `php artisan test --compact` (2026-03-12).
 
 ## Risiko
 
@@ -93,3 +93,4 @@ Related ADR: `-`
 ## Progress Log
 
 - 2026-03-11: sumber data Pokja II disinkronkan ke implementasi aktif, test header + agregasi ditambahkan, dan `php artisan test --filter=RekapCatatanDataKegiatanWargaReportPrintTest --compact` `PASS`.
+- 2026-03-12: doc-hardening sidebar/terminologi/coverage + test matrix modul Pokja II ditambahkan, `php artisan test --compact` `PASS`.

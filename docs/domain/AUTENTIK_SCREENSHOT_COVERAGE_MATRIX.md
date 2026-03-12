@@ -55,7 +55,7 @@ Sumber folder utama:
 | 4.20a | `lampiran_4_20a_data_umum_pkk.png` | match | Report 20 kolom; report-only via `catatan-keluarga`. |
 | 4.20b | `lampiran_4_20b_data_umum_pkk_kecamatan.png` | match | Report 21 kolom; report-only via `catatan-keluarga`. |
 | 4.21 | `lampiran_4_21_data_kegiatan_pkk_pokja_i.png` | not implemented | Belum ada modul/report khusus Pokja I. |
-| 4.22 | `lampiran_4_22_data_kegiatan_pkk_pokja_ii.png` | not implemented | Belum ada modul/report khusus Pokja II; mapping header autentik sudah lengkap. |
+| 4.22 | `lampiran_4_22_data_kegiatan_pkk_pokja_ii.png` | match | Report + modul input Pokja II sudah aktif; mapping header autentik terkunci. |
 | 4.23 | `lampiran_4_23_data_kegiatan_pkk_pokja_iii.png` | match | Report-only via `catatan-keluarga`. |
 | 4.24 | `lampiran_4_24_data_kegiatan_pkk_pokja_iv.png` | match | Report-only via `catatan-keluarga`. |
 
