@@ -1,7 +1,7 @@
 # TODO SPT26A1 Penataan Menu Sidebar Flow PDF Turunan Tanpa Form Input
 
 Tanggal: 2026-03-09  
-Status: `planned` (`state:planning-only-sidebar-ia`)
+Status: `in-progress` (`state:hub-catatan-keluarga-implemented`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -101,14 +101,15 @@ Related ADR: `-`
   - `Varian print satu modul`,
   - `Alias lintas-modul`,
   - `Hub report agregasi`.
-- [ ] Tetapkan target IA:
+- [x] Tetapkan target IA:
   - opsi A: tetap di halaman sumber sebagai CTA sekunder,
   - opsi B: submenu `Laporan Turunan` di bawah modul asal,
   - opsi C: hub `Laporan Agregasi` terpusat untuk cluster `catatan-keluarga`.
 - [ ] Definisikan aturan copywriting:
   - label sidebar harus menunjukkan sumber data asal,
   - item alias lintas-modul wajib menghindari label yang memberi kesan ada form input baru.
-- [ ] Rencanakan patch frontend terarah pada `resources/js/Layouts/DashboardLayout.vue` dan halaman sumber yang terdampak.
+- [x] Rencanakan patch frontend terarah pada `resources/js/menus/printMenuRegistry.js` dan `resources/js/Pages/CetakLampiran/Index.vue`.
+- [x] Implementasi hub `catatan-keluarga` pada `Cetak Lampiran` (print menu) untuk menutup cluster laporan agregasi.
 - [ ] Sinkronkan concern parent/menu grouping bila owner sudah memilih pola IA final.
 
 ## Validasi
@@ -131,8 +132,12 @@ Related ADR: `-`
 
 - [x] K1: concern ini dikunci sebagai planning-only; belum mengubah backend, route, atau authority akses.
 - [x] K2: pengelompokan dilakukan berdasarkan source data dan keberadaan form input, bukan berdasarkan nama route PDF semata.
-- [ ] K3: owner memilih pola IA final per cluster sebelum patch kode dimulai.
+- [x] K3: owner memilih pola IA final untuk cluster `catatan-keluarga` -> opsi C (hub khusus).
 - [ ] K4: gap `4.23` wajib diputuskan bersamaan dengan desain cluster `catatan-keluarga`, bukan ditambal terpisah tanpa arah IA.
+
+Catatan keputusan:
+
+- 2026-03-12: owner mengunci cluster `catatan-keluarga` sebagai hub khusus (opsi C).
 
 ## Keputusan Arsitektur (Jika Ada)
 
@@ -150,3 +155,7 @@ Related ADR: `-`
 - [ ] Keputusan IA final per cluster dan daftar item yang dipindah/ditahan.
 - [ ] Daftar file UI/docs yang terdampak saat implementasi dimulai.
 - [ ] Hasil validasi frontend contract + residual risk.
+
+## Progress Log
+
+- 2026-03-12: hub `catatan-keluarga` diterapkan di `Cetak Lampiran` sebagai pusat laporan agregasi.

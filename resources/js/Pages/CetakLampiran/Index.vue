@@ -205,7 +205,7 @@ const orphanCount = computed(() => visibleGroups.value.reduce((total, group) =>
               {{ group.label }}
             </h3>
             <p class="text-xs text-slate-500 dark:text-slate-400">
-              Daftar modul tanpa input untuk dicetak.
+              Daftar modul tanpa input dan pusat laporan agregasi.
             </p>
           </div>
           <span
@@ -252,6 +252,14 @@ const orphanCount = computed(() => visibleGroups.value.reduce((total, group) =>
                 </td>
                 <td class="px-3 py-2 text-right">
                   <a
+                    v-if="item.hub"
+                    :href="item.href"
+                    class="inline-flex items-center rounded-md border border-slate-200 px-2.5 py-1 text-xs font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+                  >
+                    Buka Pusat
+                  </a>
+                  <a
+                    v-else
                     :href="item.href"
                     target="_blank"
                     rel="noopener noreferrer"

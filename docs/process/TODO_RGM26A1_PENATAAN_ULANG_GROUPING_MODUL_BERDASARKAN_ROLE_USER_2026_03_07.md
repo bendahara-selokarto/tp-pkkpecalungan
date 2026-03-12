@@ -42,6 +42,7 @@ Konfirmasi owner 2026-03-08:
 - Shortlist aman tahap-1 disetujui untuk dipindahkan ke tabel utama.
 - Scope rollout owner dikunci ke `desa only` untuk tahap pertama.
 - `Mode Target` belum dikunci; state aktif concern bergerak ke `awaiting-owner-mode-target`.
+ - 2026-03-12: owner mengonfirmasi 5 modul Pokja II baru ikut masuk tabel mapping.
 
 ### Draft Input Owner Aman (Hasil Analisa 2026-03-08)
 
@@ -75,17 +76,22 @@ Shortlist aman tahap-1 sudah direfleksikan langsung pada kolom `Group Target` di
 | 22 | taman-bacaan | pokja-ii |  |
 | 23 | koperasi | pokja-ii |  |
 | 24 | kejar-paket | pokja-ii |  |
-| 25 | data-keluarga | pokja-iii | pokja-iii |
-| 26 | data-industri-rumah-tangga | pokja-iii |  |
-| 27 | data-pemanfaatan-tanah-pekarangan-hatinya-pkk | pokja-iii |  |
-| 28 | warung-pkk | pokja-iii |  |
-| 29 | posyandu | pokja-iv | pokja-iv |
-| 30 | simulasi-penyuluhan | pokja-iv | pokja-iv |
-| 31 | catatan-keluarga | pokja-iv |  |
-| 32 | pilot-project-naskah-pelaporan | pokja-iv |  |
-| 33 | pilot-project-keluarga-sehat | pokja-iv |  |
-| 34 | desa-activities | monitoring |  |
-| 35 | desa-arsip | monitoring |  |
+| 25 | literasi-warga | pokja-ii |  |
+| 26 | bkb-kegiatan | pokja-ii |  |
+| 27 | tutor-khusus | pokja-ii |  |
+| 28 | pelatihan-kader-pokja-ii | pokja-ii |  |
+| 29 | pra-koperasi-up2k | pokja-ii |  |
+| 30 | data-keluarga | pokja-iii | pokja-iii |
+| 31 | data-industri-rumah-tangga | pokja-iii |  |
+| 32 | data-pemanfaatan-tanah-pekarangan-hatinya-pkk | pokja-iii |  |
+| 33 | warung-pkk | pokja-iii |  |
+| 34 | posyandu | pokja-iv | pokja-iv |
+| 35 | simulasi-penyuluhan | pokja-iv | pokja-iv |
+| 36 | catatan-keluarga | pokja-iv |  |
+| 37 | pilot-project-naskah-pelaporan | pokja-iv |  |
+| 38 | pilot-project-keluarga-sehat | pokja-iv |  |
+| 39 | desa-activities | monitoring |  |
+| 40 | desa-arsip | monitoring |  |
 
 Catatan runtime ringkas: `inventaris` dan `buku-tamu` tetap dianggap modul override khusus dan belum masuk shortlist aman tahap-1.
 
