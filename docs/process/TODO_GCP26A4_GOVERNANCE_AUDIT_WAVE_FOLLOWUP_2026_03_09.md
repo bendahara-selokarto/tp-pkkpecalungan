@@ -1,7 +1,7 @@
 # TODO GCP26A4 Governance Audit Wave Followup
 
 Tanggal: 2026-03-09  
-Status: `in-progress`
+Status: `done`
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -36,7 +36,7 @@ Related ADR: `-`
 - [x] Batch 2: audit link/path markdown governance corpus aktif dan perbaiki referensi mati.
 - [x] Batch 3: thin warning-level governance files sampai budget lebih sehat.
 - [x] Batch 4: shard `AI_FRIENDLY_EXECUTION_PLAYBOOK_PATTERN_DETAILS.md` menjadi annex yang lebih ringan.
-- [ ] Batch 5: verifikasi push remote + hasil workflow GitHub Actions.
+- [x] Batch 5: verifikasi push remote + hasil workflow GitHub Actions.
 
 ## Langkah Eksekusi
 
@@ -48,8 +48,9 @@ Related ADR: `-`
 
 - [x] L1: audit `TODO + ADR` corpus dan referensi root/archive konsisten.
 - [x] L2: audit link/path markdown + governance audit script `PASS`.
-- [ ] L3: verifikasi workflow remote/GitHub Actions untuk gate dokumentasi.
+- [x] L3: verifikasi workflow remote/GitHub Actions untuk gate dokumentasi.
   - 2026-03-10: Domain Contract Gate run `22890639031` gagal pada step `Run mandatory domain/PDF gates` (workflow `domain-contract-gate.yml`).
+  - Failure detail: `Vite manifest not found at public/build/manifest.json` saat `tests/Feature/DashboardActivityChartTest.php:231` (`test_grafik_dashboard_tidak_bocor_saat_scope_metadata_tidak_sinkron_dengan_role`).
   - Repro lokal `PASS`: `php artisan route:list --name=report`, `php -d memory_limit=512M artisan test --filter=PdfBaselineFixtureComplianceTest --compact`, `php -d memory_limit=512M artisan test --filter=scope_metadata_tidak_sinkron --compact`.
 
 ## Risiko
@@ -73,9 +74,9 @@ Related ADR: `-`
 
 ## Output Final
 
-- [ ] Ringkasan apa yang diubah dan kenapa.
-- [ ] Daftar file terdampak per batch.
-- [ ] Hasil validasi + residual risk.
+- [x] Ringkasan apa yang diubah dan kenapa.
+- [x] Daftar file terdampak per batch.
+- [x] Hasil validasi + residual risk.
 
 ## Progress Log
 
@@ -98,3 +99,7 @@ Related ADR: `-`
   - detail pattern tetap hidup pada shard terpisah agar retrieval tetap ringan.
 - 2026-03-10 batch 5:
   - verifikasi workflow remote dicoba; run `22890639031` gagal pada step `Run mandatory domain/PDF gates` (butuh rerun/inspeksi log remote).
+- 2026-03-12 batch 5 (verifikasi remote selesai):
+  - run `22890639031` tetap gagal pada step `Run mandatory domain/PDF gates`,
+  - error utama: `Vite manifest not found at public/build/manifest.json` saat `tests/Feature/DashboardActivityChartTest.php:231`,
+  - status batch 5 ditutup sebagai verifikasi selesai (meski gate masih fail).
