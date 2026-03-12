@@ -1,7 +1,7 @@
 # TODO TBH26A1 Bahan Aktual dan Terjemahan Berkala
 
 Tanggal: 2026-03-08  
-Status: `in-progress`  
+Status: `done`  
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -34,8 +34,8 @@ Related ADR: `-`
 
 - [x] Tersedia template TODO hidup untuk bahan aktual dan terjemahan berkala.
 - [x] Tersedia protokol update append-only yang konsisten untuk sesi lanjutan.
-- [ ] Setiap informasi baru dari owner ditambahkan sebagai update baru.
-- [ ] Status concern diubah ke `done` hanya setelah owner menyatakan rangkaian update selesai.
+- [x] Setiap informasi baru dari owner ditambahkan sebagai update baru.
+- [x] Status concern diubah ke `done` hanya setelah owner menyatakan rangkaian update selesai.
 
 ## Langkah Eksekusi
 
@@ -467,3 +467,17 @@ Related ADR: `-`
 - Status `match langsung/reuse parsial/gap` adalah peta kerja awal untuk membaca kesesuaian project existing terhadap bahan yang sudah Anda berikan.
 - Jika diperlukan, langkah berikutnya yang paling logis adalah menurunkan matriks ini menjadi tabel `bahan admin -> slug modul -> status -> tindak lanjut`.
 - Update berikutnya dimulai dari `U011`.
+
+## Update 2026-03-12 16:12 WIB (U011)
+
+### Input Aktual (Asli)
+
+- tidak ada tambahan
+
+### Terjemahan Bahan (Formal)
+
+- Tidak ada tambahan informasi pada pembaruan ini.
+
+### Catatan (Opsional)
+
+- Owner menyatakan rangkaian update sudah selesai.
