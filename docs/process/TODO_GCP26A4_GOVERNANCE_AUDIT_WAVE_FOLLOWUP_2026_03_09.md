@@ -41,8 +41,8 @@ Related ADR: `-`
 ## Langkah Eksekusi
 
 - [x] Analisis scoped dependency + side effect.
-- [ ] Patch minimal per batch dengan boundary commit yang terpisah.
-- [ ] Sinkronisasi dokumen concern terkait (registry/index/log/budget/router) saat trigger hardening aktif.
+- [x] Patch minimal per batch dengan boundary commit yang terpisah.
+- [x] Sinkronisasi dokumen concern terkait (registry/index/log/budget/router) saat trigger hardening aktif.
 
 ## Validasi
 
@@ -103,3 +103,6 @@ Related ADR: `-`
   - run `22890639031` tetap gagal pada step `Run mandatory domain/PDF gates`,
   - error utama: `Vite manifest not found at public/build/manifest.json` saat `tests/Feature/DashboardActivityChartTest.php:231`,
   - status batch 5 ditutup sebagai verifikasi selesai (meski gate masih fail).
+- 2026-03-13 closure sync:
+  - status concern ditegaskan `done`,
+  - registry/index/log periodik disinkronkan agar status aktif tidak drift.

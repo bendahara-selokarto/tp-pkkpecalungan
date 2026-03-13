@@ -2672,3 +2672,14 @@ Catatan:
   - validasi report berbasis `CatatanKeluargaRepository` terjaga.
 - Validasi:
   - `php artisan test --filter=RekapCatatanDataKegiatanWargaReportPrintTest --compact` `PASS` (29 tests).
+
+### Governance Audit Wave Followup (`GCP26A4`) - 2026-03-13
+
+- Status concern: `done` (`state:batch-1-5-closed`).
+- Hasil batch:
+  - batch 1-4: audit governance markdown + thinning + shard annex diselesaikan dengan boundary commit terpisah,
+  - batch 5: verifikasi remote workflow dilakukan; run `22890639031` gagal pada step `Run mandatory domain/PDF gates`,
+  - error utama: `Vite manifest not found at public/build/manifest.json` saat `tests/Feature/DashboardActivityChartTest.php:231`.
+- Validasi:
+  - verifikasi workflow GitHub Actions `domain-contract-gate.yml` selesai (status `failed` pada gate domain/PDF),
+  - reproduksi lokal targeted test terkait `PASS` (tercatat di TODO concern).

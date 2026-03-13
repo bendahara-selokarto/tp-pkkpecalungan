@@ -22,13 +22,9 @@ Aturan:
 
 - Source of truth concern aktif: `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
 - Concern berjalan yang tetap berada di index aktif:
-  - `docs/process/TODO_GCP26A4_GOVERNANCE_AUDIT_WAVE_FOLLOWUP_2026_03_09.md` (`in-progress`)
   - `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` (`planned`)
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`planned`)
-- Catatan sinkronisasi `GCP26A4`:
-  - gelombang audit lanjutan governance markdown dipisah ke concern parent tersendiri agar commit/push per batch tetap traceable,
-  - batch 1 dimulai dengan archiving concern `done` dari root `docs/process/` ke `docs/process/archive/2026_03/` dan sinkronisasi pointer closure terkait.
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
   - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
@@ -40,6 +36,7 @@ Aturan:
 - Concern `IWN26A1` (Roadmap Ekspansi Audit UI/UX Runtime Evidence) ditutup dan dicatat di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
 - Concern `RFD26A1` (Standarisasi Struktur Dokumen Referensi Domain) ditutup dan dicatat di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
 - Concern `PKJ2A1` (Modul Data Kegiatan PKK Pokja II) ditutup dan dicatat di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
+- Concern `GCP26A4` (Governance Audit Wave Followup) ditutup dan dicatat di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md` (catatan gate remote masih fail).
 - Concern `GCP26A1` menutup hardening sesi ini dengan keputusan: ownership governance markdown dikunci dan validation log aktif kembali menjadi index ringkas.
 - Concern `GCP26A2` menutup thinning `TTM25R1`, memperbaiki drift `P-014`, dan mengunci guard annex on-demand.
 - Concern `GCP26A3` menutup automation audit script + generator hook + CI gate untuk governance markdown.
