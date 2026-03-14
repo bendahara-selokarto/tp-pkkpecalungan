@@ -4,21 +4,12 @@ Tanggal: 2026-03-09
 Status: `in-progress` (`state:hub-catatan-keluarga-implemented`)
 Related ADR: `-`
 
-## Aturan Pakai
-
-- `KODE_UNIK` wajib 4-8 karakter, huruf kapital + angka (contoh: `A2B9`).
-- Format judul wajib: `TODO <KODE_UNIK> <Judul Ringkas>`.
-- Simpan file dengan pola: `TODO_<KODE_UNIK>_<RINGKASAN>_<YYYY_MM_DD>.md`.
-- Gunakan checklist `- [ ]` dan ubah ke `- [x]` saat item selesai.
-
 ## Konteks
 
-- Sidebar aktif di `resources/js/Layouts/DashboardLayout.vue` menempelkan semua item `report/pdf` langsung ke group domain asal.
-- Pola ini sudah mencampur dua jenis item:
-  - modul input utama yang memang punya halaman create/edit/store sendiri,
-  - flow PDF turunan yang tidak punya form input mandiri dan hanya mengambil data dari modul lain.
-- Hasil audit scoped pada route, controller, dan halaman index menunjukkan ada `21` item sidebar yang masuk kategori flow PDF turunan/report-only, plus `1` gap visibilitas (`4.23`) yang ada di halaman index `catatan-keluarga` tetapi belum muncul di sidebar.
-- Concern ini khusus menyiapkan task penataan IA menu/sidebar agar flow report-only tidak lagi bercampur tanpa pola dengan modul input utama.
+- Sidebar di `resources/js/Layouts/DashboardLayout.vue` menempelkan semua item `report/pdf` langsung ke group domain asal.
+- Pola ini mencampur modul input utama (punya create/edit/store) dengan flow PDF turunan tanpa form input mandiri yang hanya mengambil data dari modul lain.
+- Hasil audit scoped pada route/controller/index menunjukkan `21` item sidebar kategori flow PDF turunan/report-only, plus `1` gap (`4.23`) di index `catatan-keluarga` yang belum muncul di sidebar.
+- Concern ini khusus menyiapkan task penataan IA menu/sidebar untuk flow report-only.
 
 ## Kontrak Concern (Lock)
 
@@ -31,7 +22,7 @@ Related ADR: `-`
 - Acceptance criteria:
   - seluruh flow PDF tanpa form input mandiri sudah terkelompok per source modul,
   - gap sidebar vs halaman sumber (`4.23`) terdokumentasi eksplisit,
-  - tersedia opsi penataan menu yang bisa diputuskan owner tanpa mengubah authority backend,
+  - tersedia opsi penataan menu yang bisa diputuskan owner,
   - tidak ada rekomendasi yang menambah coupling baru atau memindahkan business logic ke frontend.
 - Dampak keputusan arsitektur: `tidak` (planning IA menu, belum mengubah boundary akses/backend).
 
@@ -43,7 +34,7 @@ Related ADR: `-`
 | B | `agenda-surat/ekspedisi/report/pdf` | `app/Domains/Wilayah/AgendaSurat/Controllers/AgendaSuratReportPrintController.php` `streamEkspedisiReport()` | subset `AgendaSurat` dengan filter `jenis_surat = keluar` | tampil sebagai item sidebar sendiri, padahal hanya varian print dari modul `agenda-surat` |
 | B | `anggota-tim-penggerak-kader/report/pdf` | `app/Domains/Wilayah/AnggotaTimPenggerak/Controllers/AnggotaTimPenggerakReportPrintController.php` dan `app/Domains/Wilayah/AnggotaTimPenggerak/UseCases/ListScopedAnggotaDanKaderUseCase.php` | gabungan `anggota-tim-penggerak` + `kader-khusus` | item sidebar sendiri, padahal tidak punya form input mandiri |
 | C | `buku-keuangan/report/pdf` | `app/Domains/Wilayah/BukuKeuangan/Controllers/BukuKeuanganReportPrintController.php` | `buku-keuangan` | alias `bantuans/keuangan/report/pdf` sudah dihapus (2026-03-15) untuk mencegah drift label |
-| D | `catatan-keluarga/report/pdf` + turunan `4.16a-4.24` | `app/Domains/Wilayah/CatatanKeluarga/Controllers/DesaCatatanKeluargaController.php`, `app/Domains/Wilayah/CatatanKeluarga/Controllers/CatatanKeluargaPrintController.php`, `app/Domains/Wilayah/CatatanKeluarga/Repositories/CatatanKeluargaRepository.php` | agregasi lintas `data-warga`, `data-kegiatan-warga`, `anggota_tim_penggerak`, `anggota_pokja`, `kader_khusus`, `posyandu`, `program_prioritas`, dan sumber turunan lain di repository | cluster report-only terbesar, saat ini tersebar sebagai banyak item datar dalam group `pokja-iv` |
+| D | `catatan-keluarga/report/pdf` + turunan `4.16a-4.24` | `app/Domains/Wilayah/CatatanKeluarga/Controllers/DesaCatatanKeluargaController.php`, `app/Domains/Wilayah/CatatanKeluarga/Controllers/CatatanKeluargaPrintController.php`, `app/Domains/Wilayah/CatatanKeluarga/Repositories/CatatanKeluargaRepository.php` | agregasi lintas `data-warga`, `data-kegiatan-warga`, `anggota_tim_penggerak`, `anggota_pokja`, `kader_khusus`, `posyandu`, `program_prioritas`, dan sumber turunan lain | cluster report-only terbesar, saat ini tersebar sebagai banyak item datar dalam group `pokja-iv` |
 
 ## Inventaris Cluster Yang Perlu Ditata
 
@@ -66,25 +57,8 @@ Related ADR: `-`
 
 ### 4. Hub Report Agregasi Lintas Modul
 
-- `Catatan Keluarga | 4.15`
-- `Kelompok Dasa Wisma | 4.16a`
-- `Kelompok PKK RT | 4.16b`
-- `Catatan PKK RW | 4.16c`
-- `Kelompok PKK Dusun | 4.16d`
-- `Catatan TP PKK Desa/Kelurahan | 4.17a`
-- `Catatan TP PKK Kecamatan | 4.17b`
-- `Catatan TP PKK Kabupaten/Kota | 4.17c`
-- `Catatan TP PKK Provinsi | 4.17d`
-- `Kelompok Dasawisma | 4.18a`
-- `Kelompok PKK RT | 4.18b`
-- `Kelompok PKK RW | 4.18c`
-- `Kelompok PKK Dusun | 4.18d`
-- `Kelompok PKK Kecamatan | 4.19b`
-- `Data Umum PKK | 4.20a`
-- `Data Umum PKK Kecamatan | 4.20b`
-- `Kegiatan PKK Pokja IV | 4.24`
-- Gap audit:
-  - `Kegiatan PKK Pokja III | 4.23` tersedia pada halaman index `resources/js/Pages/Desa/CatatanKeluarga/Index.vue` dan `resources/js/Pages/Kecamatan/CatatanKeluarga/Index.vue`, tetapi belum ada di sidebar aktif.
+- Cluster `catatan-keluarga` mencakup `4.15`, `4.16a-4.16d`, `4.17a-4.17d`, `4.18a-4.18d`, `4.19b`, `4.20a-4.20b`, dan `4.24`.
+- Gap audit: `4.23` tersedia pada index `resources/js/Pages/Desa/CatatanKeluarga/Index.vue` dan `resources/js/Pages/Kecamatan/CatatanKeluarga/Index.vue`, tetapi belum ada di sidebar aktif.
 - Karakter: seluruh cluster ini tidak memiliki form input mandiri; `catatan-keluarga` sendiri hanya punya route `index`, sementara PDF turunannya dibangun dari repository agregasi lintas modul.
 
 ## Target Hasil
@@ -96,18 +70,12 @@ Related ADR: `-`
 ## Langkah Eksekusi
 
 - [x] Analisis scoped dependency + side effect.
-- [ ] Kunci keputusan owner per cluster:
-  - `Dashboard utility`,
-  - `Varian print satu modul`,
-  - `Alias lintas-modul`,
-  - `Hub report agregasi`.
+- [ ] Kunci keputusan owner per cluster: `Dashboard utility`, `Varian print satu modul`, `Alias lintas-modul`, `Hub report agregasi`.
 - [x] Tetapkan target IA:
   - opsi A: tetap di halaman sumber sebagai CTA sekunder,
   - opsi B: submenu `Laporan Turunan` di bawah modul asal,
   - opsi C: hub `Laporan Agregasi` terpusat untuk cluster `catatan-keluarga`.
-- [ ] Definisikan aturan copywriting:
-  - label sidebar harus menunjukkan sumber data asal,
-  - item alias lintas-modul wajib menghindari label yang memberi kesan ada form input baru.
+- [ ] Definisikan aturan copywriting: label sidebar menunjukkan sumber data asal; item alias lintas-modul wajib menghindari label yang memberi kesan ada form input baru.
 - [x] Rencanakan patch frontend terarah pada `resources/js/menus/printMenuRegistry.js` dan `resources/js/Pages/CetakLampiran/Index.vue`.
 - [x] Implementasi hub `catatan-keluarga` pada `Cetak Lampiran` (print menu) untuk menutup cluster laporan agregasi.
 - [ ] Sinkronkan concern parent/menu grouping bila owner sudah memilih pola IA final.
@@ -115,9 +83,7 @@ Related ADR: `-`
 ## Validasi
 
 - [x] L1: validasi analisis scoped via audit file route/controller/page sumber.
-- [ ] L2: saat implementasi, jalankan targeted test/frontend contract:
-  - `php artisan test tests/Unit/Frontend/DashboardLayoutMenuContractTest.php --compact`
-  - `npm run build`
+- [ ] L2: saat implementasi, jalankan targeted test/frontend contract: `php artisan test tests/Unit/Frontend/DashboardLayoutMenuContractTest.php --compact` dan `npm run build`.
 - [ ] L3: jika penataan menu berdampak lintas concern/otorisasi, lanjutkan ke `php artisan test --compact`.
 - [ ] L4: evidence runtime UI/UX untuk perubahan sidebar/menu tersedia dan ditautkan (smoke/a11y/visual/perf).
 

@@ -173,6 +173,7 @@ Gate B - Authorization:
 Gate C - Repository Boundary:
 
 - Query domain baru hanya melalui repository boundary; query ad-hoc di controller/view/helper dilarang.
+- Exception terbatas: flow auth framework yang memodifikasi user sendiri boleh bypass repository sesuai ADR `0008` (lihat `docs/adr/ADR_0008_SINGLE_PATH_AUTH_FLOW_EXCEPTIONS.md`).
 
 Gate D - Legacy Control:
 
