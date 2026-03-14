@@ -18,14 +18,14 @@ class SimulasiPenyuluhanPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_simulasi_penyuluhan_pada_desanya_sendiri(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-pokja-i']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-i');
 
         $milikSendiri = SimulasiPenyuluhan::create([
             'nama_kegiatan' => 'Penyuluhan A',
@@ -62,13 +62,13 @@ class SimulasiPenyuluhanPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_simulasi_penyuluhan_kecamatan_lain(): void
     {
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-i');
 
         $simulasiLuar = SimulasiPenyuluhan::create([
             'nama_kegiatan' => 'Simulasi Luar',

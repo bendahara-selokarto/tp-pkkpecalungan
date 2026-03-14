@@ -23,8 +23,8 @@ class WilayahScopeTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         // Kecamatan
         $this->kecamatan = Area::create([
@@ -53,7 +53,7 @@ class WilayahScopeTest extends TestCase
             'scope'   => ScopeLevel::KECAMATAN->value,
             'area_id' => $this->kecamatan->id,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($user);
 
@@ -70,7 +70,7 @@ class WilayahScopeTest extends TestCase
             'scope'   => ScopeLevel::DESA->value,
             'area_id' => $this->desa1->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $this->actingAs($user);
 

@@ -6,23 +6,12 @@ use Tests\TestCase;
 
 class DashboardResponsiveInteractionContractTest extends TestCase
 {
-    public function test_dashboard_memiliki_toggle_responsive_table_dengan_fallback_legacy(): void
+    public function test_dashboard_tidak_memuat_fallback_legacy(): void
     {
         $content = file_get_contents(base_path('resources/js/Pages/Dashboard.vue'));
 
         $this->assertNotFalse($content, 'File Dashboard.vue tidak dapat dibaca.');
-        $this->assertStringContainsString(
-            'const showLegacyFallback = computed(() =>',
-            $content
-        );
-        $this->assertStringContainsString(
-            'Boolean(import.meta.env.DEV)',
-            $content
-        );
-        $this->assertStringContainsString(
-            '<template v-else-if="showLegacyFallback">',
-            $content
-        );
+        $this->assertStringNotContainsString('showLegacyFallback', $content);
     }
 
     public function test_dashboard_filter_utama_memenuhi_target_sentuh_minimum_44px(): void

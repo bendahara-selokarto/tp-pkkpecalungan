@@ -28,7 +28,7 @@ class DesaActivityTest extends TestCase
         parent::setUp();
 
         // Buat role desa
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'desa-pokja-i']);
         Role::create(['name' => 'desa-pokja-ii']);
@@ -58,7 +58,7 @@ class DesaActivityTest extends TestCase
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
         $this->actingAs($user);
 
         $response = $this->post('/desa/activities', [
@@ -95,7 +95,7 @@ class DesaActivityTest extends TestCase
             'area_id' => $this->desa->id,
             'scope' => 'desa',
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($user)->post('/desa/activities', [
             'title' => 'Kegiatan dengan Lampiran Desa',
@@ -125,7 +125,7 @@ class DesaActivityTest extends TestCase
             'area_id' => $this->desa->id,
             'scope' => 'desa',
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $imagePath = sprintf('activities/desa/%d/images/activity-image.jpg', $this->desa->id);
         $documentPath = sprintf('activities/desa/%d/documents/activity-document.pdf', $this->desa->id);
@@ -169,7 +169,7 @@ class DesaActivityTest extends TestCase
             'scope' => 'desa',
         ]);
 
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
         $this->actingAs($user);
 
         $activity = Activity::create([
@@ -222,7 +222,7 @@ class DesaActivityTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $desaUser->assignRole('admin-desa');
+        $desaUser->assignRole('desa-sekretaris');
 
         // Desa lain
         $desaLain = Area::create([
@@ -269,7 +269,7 @@ class DesaActivityTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $desaUser->assignRole('admin-desa');
+        $desaUser->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Kegiatan Tahun Aktif',
@@ -323,7 +323,7 @@ class DesaActivityTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $this->actingAs($user);
 
@@ -339,7 +339,7 @@ class DesaActivityTest extends TestCase
             'area_id' => $this->desa->id,
             'scope' => 'desa',
         ]);
-        $desaUser->assignRole('admin-desa');
+        $desaUser->assignRole('desa-sekretaris');
 
         $desaLain = Area::create([
             'name' => 'Bandung',
@@ -389,7 +389,7 @@ class DesaActivityTest extends TestCase
             'area_id' => $this->desa->id,
             'scope' => 'desa',
         ]);
-        $desaUser->assignRole('admin-desa');
+        $desaUser->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Kegiatan Default Per Page',
@@ -419,7 +419,7 @@ class DesaActivityTest extends TestCase
             'scope' => 'desa',
         ]);
 
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
         $this->actingAs($user);
 
         $response = $this->post('/desa/activities', [

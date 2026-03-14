@@ -25,8 +25,8 @@ class KecamatanBukuNotulenRapatTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -47,7 +47,7 @@ class KecamatanBukuNotulenRapatTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         BukuNotulenRapat::create([
             'entry_date' => '2026-02-26',
@@ -124,7 +124,7 @@ class KecamatanBukuNotulenRapatTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $bukuNotulenRapat = BukuNotulenRapat::create([
             'entry_date' => '2025-02-26',
@@ -157,7 +157,7 @@ class KecamatanBukuNotulenRapatTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->actingAs($adminDesa)->get('/kecamatan/buku-notulen-rapat')
             ->assertStatus(403);
@@ -177,7 +177,7 @@ class KecamatanBukuNotulenRapatTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $staleUser->assignRole('admin-kecamatan');
+        $staleUser->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($staleUser)->get('/kecamatan/buku-notulen-rapat')
             ->assertStatus(403);

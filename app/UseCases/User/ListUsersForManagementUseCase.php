@@ -9,12 +9,10 @@ class ListUsersForManagementUseCase
 {
     public function __construct(
         private readonly UserManagementRepositoryInterface $userManagementRepository
-    ) {
-    }
+    ) {}
 
     public function execute(int $perPage = 10): LengthAwarePaginator
     {
         return $this->userManagementRepository->paginateUsers($perPage);
     }
 }
-

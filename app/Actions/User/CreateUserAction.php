@@ -1,19 +1,19 @@
 <?php
+
 namespace App\Actions\User;
 
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Models\User;
 use App\Support\RoleScopeMatrix;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class CreateUserAction
 {
     public function __construct(
         private readonly AreaRepositoryInterface $areaRepository
-    ) {
-    }
+    ) {}
 
     public function execute(array $data): User
     {

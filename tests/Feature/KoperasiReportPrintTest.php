@@ -23,8 +23,8 @@ class KoperasiReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -38,7 +38,7 @@ class KoperasiReportPrintTest extends TestCase
             'area_id' => $this->desaA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-ii');
 
         Koperasi::create([
             'nama_koperasi' => 'Koperasi Mawar',
@@ -66,7 +66,7 @@ class KoperasiReportPrintTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-ii');
 
         Koperasi::create([
             'nama_koperasi' => 'Koperasi Melati',
@@ -94,7 +94,7 @@ class KoperasiReportPrintTest extends TestCase
             'area_id' => $this->kecamatanB->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-ii');
 
         $response = $this->actingAs($user)->get(route('desa.koperasi.report'));
 

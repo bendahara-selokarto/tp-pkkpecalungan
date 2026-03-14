@@ -23,8 +23,8 @@ class DataWargaReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -63,7 +63,7 @@ class DataWargaReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_laporan_pdf_data_warga_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-i');
 
         DataWarga::create([
             'dasawisma' => 'Mawar 01',
@@ -86,7 +86,7 @@ class DataWargaReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_data_warga_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-i');
 
         DataWarga::create([
             'dasawisma' => 'Anyelir 02',
@@ -109,7 +109,7 @@ class DataWargaReportPrintTest extends TestCase
     public function test_laporan_pdf_data_warga_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-i');
 
         $response = $this->actingAs($user)->get(route('desa.data-warga.report'));
 

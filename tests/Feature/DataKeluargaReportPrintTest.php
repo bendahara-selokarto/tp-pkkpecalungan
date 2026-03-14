@@ -27,8 +27,8 @@ class DataKeluargaReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-iii']);
+        Role::create(['name' => 'kecamatan-pokja-iii']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -52,7 +52,7 @@ class DataKeluargaReportPrintTest extends TestCase
             'area_id' => $this->desaA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-iii');
 
         DataKeluarga::create([
             'kategori_keluarga' => 'Sejahtera I',
@@ -77,7 +77,7 @@ class DataKeluargaReportPrintTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-iii');
 
         DataKeluarga::create([
             'kategori_keluarga' => 'Sejahtera II',
@@ -102,7 +102,7 @@ class DataKeluargaReportPrintTest extends TestCase
             'area_id' => $this->kecamatanB->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-iii');
 
         $response = $this->actingAs($user)->get(route('desa.data-keluarga.report'));
 

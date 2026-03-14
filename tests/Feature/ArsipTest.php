@@ -27,7 +27,7 @@ class ArsipTest extends TestCase
     {
         parent::setUp();
 
-        foreach (['super-admin', 'admin-desa', 'kecamatan-sekretaris', 'admin-kecamatan'] as $roleName) {
+        foreach (['super-admin', 'desa-sekretaris', 'kecamatan-sekretaris', 'kecamatan-sekretaris'] as $roleName) {
             Role::create(['name' => $roleName]);
         }
 
@@ -68,13 +68,13 @@ class ArsipTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $owner->assignRole('admin-desa');
+        $owner->assignRole('desa-sekretaris');
 
         $otherUser = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $otherUser->assignRole('admin-desa');
+        $otherUser->assignRole('desa-sekretaris');
 
         $globalDocument = ArsipDocument::factory()->create([
             'title' => 'Pedoman Global',
@@ -124,7 +124,7 @@ class ArsipTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $globalDocument = ArsipDocument::factory()->create([
             'original_name' => 'pedoman-global.pdf',
@@ -159,13 +159,13 @@ class ArsipTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $owner->assignRole('admin-desa');
+        $owner->assignRole('desa-sekretaris');
 
         $otherUser = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $otherUser->assignRole('admin-desa');
+        $otherUser->assignRole('desa-sekretaris');
 
         $ownedDocument = ArsipDocument::factory()->create([
             'original_name' => 'arsip-pribadi.pdf',
@@ -201,13 +201,13 @@ class ArsipTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $desaUserInArea->assignRole('admin-desa');
+        $desaUserInArea->assignRole('desa-sekretaris');
 
         $desaUserOutsideArea = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $this->desaB->id,
         ]);
-        $desaUserOutsideArea->assignRole('admin-desa');
+        $desaUserOutsideArea->assignRole('desa-sekretaris');
 
         $inAreaDocument = ArsipDocument::factory()->create([
             'original_name' => 'arsip-gombong.pdf',
@@ -252,7 +252,7 @@ class ArsipTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $desaUser->assignRole('admin-desa');
+        $desaUser->assignRole('desa-sekretaris');
 
         $privateDocument = ArsipDocument::factory()->create([
             'original_name' => 'arsip-pribadi-desa.pdf',
@@ -283,7 +283,7 @@ class ArsipTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $desaUser->assignRole('admin-desa');
+        $desaUser->assignRole('desa-sekretaris');
 
         $privateDocument = ArsipDocument::factory()->create([
             'title' => 'Arsip Pribadi Desa',

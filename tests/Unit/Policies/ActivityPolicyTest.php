@@ -19,8 +19,8 @@ class ActivityPolicyTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_admin_desa_hanya_dapat_mengakses_kegiatan_desanya_sendiri(): void
@@ -30,7 +30,7 @@ class ActivityPolicyTest extends TestCase
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $ownActivity = Activity::create([
             'title' => 'Own',
@@ -64,7 +64,7 @@ class ActivityPolicyTest extends TestCase
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatan->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $desaActivity = Activity::create([
             'title' => 'Desa',
@@ -97,7 +97,7 @@ class ActivityPolicyTest extends TestCase
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $oldBudgetYearActivity = Activity::create([
             'title' => 'Old',

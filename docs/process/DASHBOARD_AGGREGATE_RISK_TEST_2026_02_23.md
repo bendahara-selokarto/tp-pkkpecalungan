@@ -94,8 +94,8 @@ Hasil:
 - Semua test tetap lulus (`19 tests`, `250 assertions`).
 - Risiko high #1 dinyatakan ditutup:
   - cache key kini memuat `role-signature + filter-signature + block-signature` (`BuildDashboardDocumentCoverageUseCase` v2 key).
-- Risiko high #2 masih aktif:
-  - kontrak payload dashboard masih generik (`dashboardStats/dashboardCharts`) dan belum role-aware block + metadata source.
+- Risiko high #2 ditutup (2026-03-15):
+  - payload legacy `dashboardStats/dashboardCharts` sudah dihapus dari runtime; kontrak hanya `dashboardBlocks[]`.
 
 ## Re-Test 3 (2026-02-23, setelah mitigasi payload role-aware block)
 
@@ -120,7 +120,7 @@ Hasil:
 
 Catatan residual:
 
-- Rendering UI utama masih memakai payload lama; adopsi penuh `dashboardBlocks[]` di frontend dijadwalkan pada fase refactor berikutnya untuk menutup gap keterbacaan end-user.
+- Tidak ada payload legacy di UI; pastikan semua dashboard consumers mengandalkan `dashboardBlocks[]`.
 
 ## Re-Test 4 (2026-02-23, setelah mitigasi invalidasi cache event-based)
 
@@ -186,4 +186,3 @@ Hasil:
 - Semua test lulus (`7 tests`, `99 assertions`).
 - Risiko medium #3 dinyatakan ditutup:
   - baseline query agregat kecamatan banyak desa kini dijaga oleh benchmark test otomatis.
-

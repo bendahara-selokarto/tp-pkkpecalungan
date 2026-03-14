@@ -25,8 +25,8 @@ class DesaAnggotaTimPenggerakTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -54,7 +54,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         AnggotaTimPenggerak::create([
             'nama' => 'Siti Aminah',
@@ -112,7 +112,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         for ($index = 1; $index <= 12; $index++) {
             AnggotaTimPenggerak::create([
@@ -174,7 +174,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         AnggotaTimPenggerak::create([
             'nama' => 'Anggota Aktif',
@@ -226,7 +226,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         AnggotaTimPenggerak::create([
             'nama' => 'Default Per Page',
@@ -265,7 +265,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->actingAs($adminDesa)->post('/desa/anggota-tim-penggerak', [
             'nama' => 'Dewi Sartika',
@@ -317,7 +317,7 @@ class DesaAnggotaTimPenggerakTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/anggota-tim-penggerak');
 

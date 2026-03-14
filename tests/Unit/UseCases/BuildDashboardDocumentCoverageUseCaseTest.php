@@ -23,7 +23,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
         parent::setUp();
 
         Cache::flush();
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'desa-sekretaris']);
     }
 
@@ -37,7 +37,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
             'area_id' => $desa->id,
             'active_budget_year' => (int) now()->format('Y'),
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Aktivitas A',
@@ -108,7 +108,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
             'area_id' => $desa->id,
             'active_budget_year' => (int) now()->format('Y'),
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Aktivitas A',
@@ -150,7 +150,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
             'area_id' => $desa->id,
             'active_budget_year' => (int) now()->format('Y'),
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Aktivitas A',
@@ -217,7 +217,7 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
             'area_id' => $desa->id,
             'active_budget_year' => $activeBudgetYear,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Aktivitas 2026',

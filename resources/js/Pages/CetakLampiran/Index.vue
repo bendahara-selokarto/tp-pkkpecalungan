@@ -30,9 +30,7 @@ const scopeLabel = computed(() => (isDesaScope.value ? 'Desa' : (isKecamatanScop
 const hasRole = (role) => roles.value.includes(role)
 const isSekretarisRole = computed(() =>
   hasRole('desa-sekretaris')
-  || hasRole('kecamatan-sekretaris')
-  || hasRole('admin-desa')
-  || hasRole('admin-kecamatan'),
+  || hasRole('kecamatan-sekretaris'),
 )
 
 const isExternalItem = (item) => item.external === true

@@ -18,14 +18,14 @@ class AnggotaPokjaPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_anggota_pokja_pada_desanya_sendiri()
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $milikSendiri = AnggotaPokja::create([
             'nama' => 'Nisa Khairunnisa',
@@ -70,13 +70,13 @@ class AnggotaPokjaPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_anggota_pokja_kecamatan_lain()
     {
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $anggotaPokjaLuar = AnggotaPokja::create([
             'nama' => 'Joko Widodo',

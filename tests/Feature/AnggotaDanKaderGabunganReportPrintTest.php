@@ -22,8 +22,8 @@ class AnggotaDanKaderGabunganReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -33,7 +33,7 @@ class AnggotaDanKaderGabunganReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_laporan_pdf_gabungan_anggota_dan_kader_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         AnggotaTimPenggerak::create([
             'nama' => 'Anggota Desa',
@@ -75,7 +75,7 @@ class AnggotaDanKaderGabunganReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_gabungan_anggota_dan_kader_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         AnggotaTimPenggerak::create([
             'nama' => 'Anggota Kecamatan',
@@ -117,7 +117,7 @@ class AnggotaDanKaderGabunganReportPrintTest extends TestCase
     public function test_pengguna_dengan_role_scope_tidak_valid_ditolak_mengakses_laporan_pdf_gabungan(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($user)->get(route('desa.anggota-tim-penggerak-kader.report'));
 
@@ -127,7 +127,7 @@ class AnggotaDanKaderGabunganReportPrintTest extends TestCase
     public function test_laporan_pdf_gabungan_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($user)->get(route('desa.anggota-tim-penggerak-kader.report'));
 

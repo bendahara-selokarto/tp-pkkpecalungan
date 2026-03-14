@@ -29,8 +29,8 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-iv']);
+        Role::create(['name' => 'kecamatan-pokja-iv']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -60,7 +60,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iv');
 
         $this->actingAs($adminDesa)->post('/desa/pilot-project-naskah-pelaporan', [
             'judul_laporan' => 'Naskah Pelaporan Desa A',
@@ -179,7 +179,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iv');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/pilot-project-naskah-pelaporan');
 
@@ -194,7 +194,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $invalidUser->assignRole('admin-desa');
+        $invalidUser->assignRole('desa-pokja-iv');
 
         $response = $this->actingAs($invalidUser)->get('/desa/pilot-project-naskah-pelaporan');
 
@@ -209,7 +209,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iv');
 
         $this->actingAs($adminDesa)->post('/desa/pilot-project-naskah-pelaporan', [
             'judul_laporan' => 'Naskah Tanggal Invalid',
@@ -235,7 +235,7 @@ class DesaPilotProjectNaskahPelaporanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iv');
 
         PilotProjectNaskahPelaporanReport::create([
             'judul_laporan' => 'Naskah Tahun Aktif',

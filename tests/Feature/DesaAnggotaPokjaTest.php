@@ -23,8 +23,8 @@ class DesaAnggotaPokjaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -51,7 +51,7 @@ class DesaAnggotaPokjaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         AnggotaPokja::create([
             'nama' => 'Siti Aminah',
@@ -107,7 +107,7 @@ class DesaAnggotaPokjaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         for ($index = 1; $index <= 12; $index++) {
             AnggotaPokja::create([
@@ -167,7 +167,7 @@ class DesaAnggotaPokjaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         AnggotaPokja::create([
             'nama' => 'Default Per Page',
@@ -204,7 +204,7 @@ class DesaAnggotaPokjaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->actingAs($adminDesa)->post('/desa/anggota-pokja', [
             'nama' => 'Dewi Sartika',
@@ -256,7 +256,7 @@ class DesaAnggotaPokjaTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/anggota-pokja');
 

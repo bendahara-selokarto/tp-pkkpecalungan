@@ -10,7 +10,7 @@ Tujuan: referensi implementasi dashboard role lain dengan pola yang sama seperti
 - Akses backend tetap authority:
   - scope efektif ditentukan dari kombinasi `role + area.level` (bukan frontend),
   - jika metadata stale (role/scope/area tidak sinkron), payload aman menjadi nol/kosong.
-- `dashboardBlocks[]` adalah source utama rendering dinamis; payload legacy (`dashboardStats/dashboardCharts`) hanya fallback transisi.
+- `dashboardBlocks[]` adalah source utama rendering dinamis; payload legacy (`dashboardStats/dashboardCharts`) sudah dihapus dari runtime (2026-03-15).
 
 ## Alur End-to-End (Aktual)
 
@@ -22,7 +22,7 @@ Tujuan: referensi implementasi dashboard role lain dengan pola yang sama seperti
 2. `DashboardActivityChartService` membangun blok activity sesuai scope user.
 3. `BuildDashboardDocumentCoverageUseCase` membangun coverage dokumen + cache berdasarkan scope/area/role/filter signature.
 4. `BuildRoleAwareDashboardBlocksUseCase` menggabungkan data activity + documents menjadi `dashboardBlocks[]` role-aware.
-5. Inertia mengirim `dashboardStats`, `dashboardCharts`, `dashboardBlocks` ke `Dashboard.vue`.
+5. Inertia mengirim `dashboardBlocks` + `dashboardContext` ke `Dashboard.vue`.
 
 ## Struktur Section Khusus Sekretaris Kecamatan
 
@@ -274,4 +274,3 @@ Mode akses group per role berasal dari `ROLE_GROUP_MODES` dan di-resolve per sco
 - `tests/Feature/DashboardDocumentCoverageTest.php`
 - `tests/Feature/DashboardActivityChartTest.php`
 - `tests/Unit/Dashboard/DashboardCoverageMenuSyncTest.php`
-

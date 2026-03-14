@@ -241,7 +241,6 @@ Route::prefix('desa')
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printDesaReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printDesaReport'])->name('bantuans.report');
         Route::get('buku-keuangan/report/pdf', [BukuKeuanganReportPrintController::class, 'printDesaReport'])->name('buku-keuangan.report');
-        Route::get('bantuans/keuangan/report/pdf', [BukuKeuanganReportPrintController::class, 'printDesaReport'])->name('bantuans.keuangan.report');
         Route::get('anggota-pokja/report/pdf', [AnggotaPokjaReportPrintController::class, 'printDesaReport'])->name('anggota-pokja.report');
         Route::get('anggota-tim-penggerak/report/pdf', [AnggotaTimPenggerakReportPrintController::class, 'printDesaReport'])->name('anggota-tim-penggerak.report');
         Route::get('anggota-tim-penggerak-kader/report/pdf', [AnggotaTimPenggerakReportPrintController::class, 'printDesaAnggotaDanKaderReport'])->name('anggota-tim-penggerak-kader.report');
@@ -347,7 +346,6 @@ Route::prefix('kecamatan')
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printKecamatanReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printKecamatanReport'])->name('bantuans.report');
         Route::get('buku-keuangan/report/pdf', [BukuKeuanganReportPrintController::class, 'printKecamatanReport'])->name('buku-keuangan.report');
-        Route::get('bantuans/keuangan/report/pdf', [BukuKeuanganReportPrintController::class, 'printKecamatanReport'])->name('bantuans.keuangan.report');
         Route::get('anggota-pokja/report/pdf', [AnggotaPokjaReportPrintController::class, 'printKecamatanReport'])->name('anggota-pokja.report');
         Route::get('anggota-tim-penggerak/report/pdf', [AnggotaTimPenggerakReportPrintController::class, 'printKecamatanReport'])->name('anggota-tim-penggerak.report');
         Route::get('anggota-tim-penggerak-kader/report/pdf', [AnggotaTimPenggerakReportPrintController::class, 'printKecamatanAnggotaDanKaderReport'])->name('anggota-tim-penggerak-kader.report');

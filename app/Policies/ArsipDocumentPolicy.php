@@ -70,7 +70,7 @@ class ArsipDocumentPolicy
     private function canMonitorDesaArsip(User $authUser, ArsipDocument $arsipDocument): bool
     {
         if (
-            ! $authUser->hasAnyRole(['kecamatan-sekretaris', 'admin-kecamatan'])
+            ! $authUser->hasRole('kecamatan-sekretaris')
             || $authUser->scope !== 'kecamatan'
             || ! is_numeric($authUser->area_id)
             || $arsipDocument->level !== 'desa'

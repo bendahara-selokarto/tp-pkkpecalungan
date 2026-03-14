@@ -22,8 +22,8 @@ class KecamatanBantuanTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -43,7 +43,7 @@ class KecamatanBantuanTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         Bantuan::create([
             'name' => 'Desa Gombong',
@@ -89,7 +89,7 @@ class KecamatanBantuanTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         for ($index = 1; $index <= 11; $index++) {
             Bantuan::create([
@@ -139,7 +139,7 @@ class KecamatanBantuanTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $bantuanLuar = Bantuan::create([
             'name' => 'Desa Limpung',
@@ -165,7 +165,7 @@ class KecamatanBantuanTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($adminKecamatan)->post('/kecamatan/bantuans', [
             'lokasi_penerima' => 'Desa Randu',
@@ -214,7 +214,7 @@ class KecamatanBantuanTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/bantuans');
 

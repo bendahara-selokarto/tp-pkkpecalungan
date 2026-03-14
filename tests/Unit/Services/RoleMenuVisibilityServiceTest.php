@@ -32,8 +32,8 @@ class RoleMenuVisibilityServiceTest extends TestCase
             'desa-pokja-i',
             'kecamatan-pokja-iii',
             'kecamatan-pokja-iv',
-            'admin-desa',
-            'admin-kecamatan',
+            'desa-sekretaris',
+            'kecamatan-sekretaris',
             'super-admin',
         ] as $roleName) {
             Role::create(['name' => $roleName]);
@@ -156,15 +156,15 @@ class RoleMenuVisibilityServiceTest extends TestCase
         }
     }
 
-    public function test_admin_kecamatan_kompatibel_rw_dengan_monitoring_ro(): void
+    public function test_kecamatan_sekretaris_memiliki_monitoring_ro(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $visibility = $this->service->resolveForScope($user, 'kecamatan');
 
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['sekretaris-tpk'] ?? null);
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['pokja-ii'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['pokja-ii'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['monitoring'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['desa-activities'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['desa-arsip'] ?? null);
@@ -183,8 +183,8 @@ class RoleMenuVisibilityServiceTest extends TestCase
             ['role' => 'kecamatan-pokja-ii', 'scope' => 'kecamatan'],
             ['role' => 'kecamatan-pokja-iii', 'scope' => 'kecamatan'],
             ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
-            ['role' => 'admin-desa', 'scope' => 'desa'],
-            ['role' => 'admin-kecamatan', 'scope' => 'kecamatan'],
+            ['role' => 'desa-sekretaris', 'scope' => 'desa'],
+            ['role' => 'kecamatan-sekretaris', 'scope' => 'kecamatan'],
             ['role' => 'super-admin', 'scope' => 'desa'],
             ['role' => 'super-admin', 'scope' => 'kecamatan'],
         ];

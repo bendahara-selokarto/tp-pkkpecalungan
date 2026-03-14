@@ -27,8 +27,8 @@ class DesaPaarTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -55,7 +55,7 @@ class DesaPaarTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         Paar::create([
             'indikator' => 'akte_kelahiran',
@@ -95,7 +95,7 @@ class DesaPaarTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         foreach (Paar::indicatorKeys() as $index => $indikator) {
             Paar::create([
@@ -139,7 +139,7 @@ class DesaPaarTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         Paar::create([
             'indikator' => 'akte_kelahiran',
@@ -168,7 +168,7 @@ class DesaPaarTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         $this->actingAs($adminDesa)->post('/desa/paar', [
             'indikator' => 'akte_kelahiran',
@@ -203,7 +203,7 @@ class DesaPaarTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/paar');
 
@@ -218,7 +218,7 @@ class DesaPaarTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         Paar::create([
             'indikator' => 'akte_kelahiran',
@@ -260,7 +260,7 @@ class DesaPaarTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         $this->actingAs($adminDesa)->post('/desa/paar', [
             'indikator' => 'akte_kelahiran',

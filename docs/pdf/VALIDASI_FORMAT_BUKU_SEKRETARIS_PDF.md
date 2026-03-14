@@ -56,12 +56,12 @@ Sumber validasi:
 ## Item yang belum tervalidasi penuh (berisiko asumsi)
 
 1. `LAMPIRAN 4.11` (hal. 7-8) - Buku Tabungan/Keuangan.
-- Status terbaru: `implemented` sebagai domain dedicated `buku-keuangan` (dengan alias route legacy untuk kompatibilitas).
+- Status terbaru: `implemented` sebagai domain dedicated `buku-keuangan` (alias legacy sudah dihapus dari runtime).
 - Endpoint report:
   - `/desa/buku-keuangan/report/pdf`
   - `/kecamatan/buku-keuangan/report/pdf`
 - File report: `resources/views/pdf/buku_keuangan_report.blade.php`.
-- Catatan: route legacy `/desa|kecamatan/bantuans/keuangan/report/pdf` tetap tersedia sebagai alias transisi.
+- Catatan: route legacy `/desa|kecamatan/bantuans/keuangan/report/pdf` sudah dinonaktifkan (2026-03-15).
 
 2. `LAMPIRAN 4.9b` (hal. 3-4) - Daftar anggota TP PKK dan kader (format gabungan).
 - Status terbaru: `implemented` via reuse domain existing (tanpa tabel baru).
@@ -89,4 +89,3 @@ Sumber validasi:
   - `resources/views/pdf/simulasi_penyuluhan_report.blade.php`
   - `resources/views/pdf/program_prioritas_report.blade.php`
   - `resources/views/pdf/prestasi_lomba_report.blade.php`
-

@@ -19,8 +19,8 @@ class UserScopePresentationTest extends TestCase
         parent::setUp();
 
         Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'kecamatan-sekretaris']);
     }
@@ -39,7 +39,7 @@ class UserScopePresentationTest extends TestCase
             'scope' => ScopeLevel::DESA->value,
             'area_id' => $kecamatan->id,
         ]);
-        $managedUser->assignRole('admin-kecamatan');
+        $managedUser->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($superAdmin)
             ->get(route('super-admin.users.index'));
@@ -76,7 +76,7 @@ class UserScopePresentationTest extends TestCase
             'scope' => ScopeLevel::KECAMATAN->value,
             'area_id' => $desa->id,
         ]);
-        $managedUser->assignRole('admin-desa');
+        $managedUser->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($superAdmin)
             ->get(route('super-admin.users.edit', $managedUser));
@@ -118,7 +118,7 @@ class UserScopePresentationTest extends TestCase
             'scope' => ScopeLevel::KECAMATAN->value,
             'area_id' => $kecamatan->id,
         ]);
-        $managedUser->assignRole('admin-kecamatan');
+        $managedUser->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($superAdmin)
             ->get(route('super-admin.users.edit', $managedUser));

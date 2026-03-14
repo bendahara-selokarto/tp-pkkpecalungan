@@ -29,8 +29,8 @@ class KecamatanPokjaIiModulesTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
+        Role::create(['name' => 'desa-pokja-ii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -86,7 +86,7 @@ class KecamatanPokjaIiModulesTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         $keteranganSendiri = "Keterangan {$slug} Kecamatan A";
         $keteranganLuar = "Keterangan {$slug} Kecamatan B";
@@ -110,7 +110,7 @@ class KecamatanPokjaIiModulesTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         $response = $this->actingAs($adminDesa)->get("/kecamatan/{$slug}");
 
@@ -126,7 +126,7 @@ class KecamatanPokjaIiModulesTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('admin-kecamatan');
+        $userStale->assignRole('kecamatan-pokja-ii');
 
         $response = $this->actingAs($userStale)->get("/kecamatan/{$slug}");
 

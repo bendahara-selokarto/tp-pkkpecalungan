@@ -24,8 +24,8 @@ class KecamatanKaderKhususTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
+        Role::create(['name' => 'desa-pokja-i']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -46,7 +46,7 @@ class KecamatanKaderKhususTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         KaderKhusus::create([
             'nama' => 'Agus Setiawan',
@@ -102,7 +102,7 @@ class KecamatanKaderKhususTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         for ($index = 1; $index <= 11; $index++) {
             KaderKhusus::create([
@@ -162,7 +162,7 @@ class KecamatanKaderKhususTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         KaderKhusus::create([
             'nama' => 'Kader Default',
@@ -200,7 +200,7 @@ class KecamatanKaderKhususTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $kaderKhususLuar = KaderKhusus::create([
             'nama' => 'Tono Saputra',
@@ -231,7 +231,7 @@ class KecamatanKaderKhususTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $kaderKhusus = KaderKhusus::create([
             'nama' => 'Kader Lama',
@@ -262,7 +262,7 @@ class KecamatanKaderKhususTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $this->actingAs($adminKecamatan)->post('/kecamatan/kader-khusus', [
             'nama' => 'Lina Marlina',
@@ -318,7 +318,7 @@ class KecamatanKaderKhususTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/kader-khusus');
 

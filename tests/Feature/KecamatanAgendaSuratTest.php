@@ -26,8 +26,8 @@ class KecamatanAgendaSuratTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -48,7 +48,7 @@ class KecamatanAgendaSuratTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         AgendaSurat::create([
             'jenis_surat' => 'masuk',
@@ -107,7 +107,7 @@ class KecamatanAgendaSuratTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         for ($index = 1; $index <= 11; $index++) {
             AgendaSurat::create([
@@ -170,7 +170,7 @@ class KecamatanAgendaSuratTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $agendaLuar = AgendaSurat::create([
             'jenis_surat' => 'masuk',
@@ -205,7 +205,7 @@ class KecamatanAgendaSuratTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($adminKecamatan)->post('/kecamatan/agenda-surat', [
             'jenis_surat' => 'masuk',
@@ -281,7 +281,7 @@ class KecamatanAgendaSuratTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $agenda = AgendaSurat::create([
             'jenis_surat' => 'masuk',
@@ -323,7 +323,7 @@ class KecamatanAgendaSuratTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/agenda-surat');
 
@@ -338,7 +338,7 @@ class KecamatanAgendaSuratTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $agendaTahunLain = AgendaSurat::create([
             'jenis_surat' => 'masuk',

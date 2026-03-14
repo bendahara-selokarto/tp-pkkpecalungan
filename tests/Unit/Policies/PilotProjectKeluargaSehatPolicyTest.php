@@ -20,14 +20,14 @@ class PilotProjectKeluargaSehatPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_laporan_di_desanya_sendiri(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-pokja-iv']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-iv');
 
         $milikSendiri = PilotProjectKeluargaSehatReport::create([
             'judul_laporan' => 'Laporan Desa A',
@@ -70,13 +70,13 @@ class PilotProjectKeluargaSehatPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_laporan_kecamatan_lain(): void
     {
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'kecamatan-pokja-iv']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-iv');
 
         $laporanLuar = PilotProjectKeluargaSehatReport::create([
             'judul_laporan' => 'Laporan Luar',
@@ -102,7 +102,7 @@ class PilotProjectKeluargaSehatPolicyTest extends TestCase
     #[Test]
     public function admin_desa_tidak_boleh_melihat_laporan_pilot_project_tahun_anggaran_lain_di_area_yang_sama(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-pokja-iv']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -112,7 +112,7 @@ class PilotProjectKeluargaSehatPolicyTest extends TestCase
             'area_id' => $desa->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-iv');
 
         $laporanTahunLama = PilotProjectKeluargaSehatReport::create([
             'judul_laporan' => 'Laporan Tahun Lama',

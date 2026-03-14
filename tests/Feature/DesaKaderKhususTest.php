@@ -25,8 +25,8 @@ class DesaKaderKhususTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -54,7 +54,7 @@ class DesaKaderKhususTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         KaderKhusus::create([
             'nama' => 'Siti Aminah',
@@ -110,7 +110,7 @@ class DesaKaderKhususTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         for ($index = 1; $index <= 12; $index++) {
             KaderKhusus::create([
@@ -170,7 +170,7 @@ class DesaKaderKhususTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         KaderKhusus::create([
             'nama' => 'Kader Aktif',
@@ -220,7 +220,7 @@ class DesaKaderKhususTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         KaderKhusus::create([
             'nama' => 'Kader Default',
@@ -258,7 +258,7 @@ class DesaKaderKhususTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         $this->actingAs($adminDesa)->post('/desa/kader-khusus', [
             'nama' => 'Dewi Sartika',
@@ -308,7 +308,7 @@ class DesaKaderKhususTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/kader-khusus');
 

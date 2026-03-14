@@ -19,14 +19,14 @@ class ListScopedCatatanKeluargaUseCaseTest extends TestCase
     #[Test]
     public function use_case_hanya_mengembalikan_rekap_dari_area_pengguna_sendiri(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-pokja-iv']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-iv');
 
         DataWarga::create([
             'dasawisma' => 'Melati 1',

@@ -24,8 +24,8 @@ class KecamatanBklTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
+        Role::create(['name' => 'desa-pokja-i']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -46,7 +46,7 @@ class KecamatanBklTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         Bkl::create([
             'desa' => 'Gombong',
@@ -96,7 +96,7 @@ class KecamatanBklTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         for ($index = 1; $index <= 11; $index++) {
             Bkl::create([
@@ -150,7 +150,7 @@ class KecamatanBklTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $bklTahunLain = Bkl::create([
             'desa' => 'Gombong',
@@ -178,7 +178,7 @@ class KecamatanBklTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $bklLuar = Bkl::create([
             'desa' => 'Kragan',
@@ -213,7 +213,7 @@ class KecamatanBklTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/bkl');
 

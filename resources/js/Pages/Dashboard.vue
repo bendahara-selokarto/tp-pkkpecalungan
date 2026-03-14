@@ -15,42 +15,6 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
-  dashboardStats: {
-    type: Object,
-    default: () => ({
-      total: 0,
-      this_month: 0,
-      activity: {
-        total: 0,
-        this_month: 0,
-      },
-      documents: {
-        total_buku_tracked: 0,
-        buku_terisi: 0,
-        buku_belum_terisi: 0,
-        total_entri_buku: 0,
-      },
-    }),
-  },
-  dashboardCharts: {
-    type: Object,
-    default: () => ({
-      documents: {
-        coverage_per_buku: {
-          labels: [],
-          values: [],
-        },
-        coverage_per_lampiran: {
-          labels: [],
-          values: [],
-        },
-        level_distribution: {
-          labels: ['Desa', 'Kecamatan'],
-          values: [0, 0],
-        },
-      },
-    }),
-  },
   dashboardContext: {
     type: Object,
     default: () => ({
@@ -91,14 +55,11 @@ const isKecamatanPokjaUser = computed(() =>
   && authRoles.value.some((role) => role.startsWith('kecamatan-pokja-')),
 )
 const isKecamatanSekretarisUser = computed(() =>
-  authRoles.value.includes('kecamatan-sekretaris')
-  || authRoles.value.includes('admin-kecamatan'),
+  authRoles.value.includes('kecamatan-sekretaris'),
 )
 const isSekretarisUser = computed(() =>
   authRoles.value.includes('desa-sekretaris')
   || authRoles.value.includes('kecamatan-sekretaris')
-  || authRoles.value.includes('admin-desa')
-  || authRoles.value.includes('admin-kecamatan'),
 )
 const useMonthOnlyFilters = computed(() =>
   isDesaScopeUser.value || isKecamatanPokjaUser.value,
@@ -211,8 +172,6 @@ const resolveOptionValue = (rawValue, options, fallback) => {
 
 const currentQuery = parseQuery(page.url)
 const DASHBOARD_PARTIAL_PROPS = Object.freeze([
-  'dashboardStats',
-  'dashboardCharts',
   'dashboardBlocks',
   'dashboardContext',
 ])
@@ -237,9 +196,6 @@ const dynamicBlocks = computed(() =>
 
 const hasResolvedDashboardBlocks = computed(() => page.props?.dashboardBlocks !== undefined)
 const hasDynamicBlocks = computed(() => dynamicBlocks.value.length > 0)
-const showLegacyFallback = computed(() =>
-  hasResolvedDashboardBlocks.value && !hasDynamicBlocks.value && Boolean(import.meta.env.DEV),
-)
 const sekretarisSection1Blocks = computed(() =>
   dynamicBlocks.value.filter((block) => block?.section?.key === 'sekretaris-section-1'),
 )
@@ -1232,63 +1188,6 @@ const hasBookComparisonData = (block) => {
 
   return totalBooks > 0 || filledBooks > 0
 }
-
-const documentStats = computed(() => props.dashboardStats.documents ?? {
-  total_buku_tracked: 0,
-  buku_terisi: 0,
-  buku_belum_terisi: 0,
-  total_entri_buku: 0,
-})
-
-const documentCharts = computed(() => props.dashboardCharts.documents ?? {
-  coverage_per_buku: { labels: [], values: [] },
-  coverage_per_lampiran: { labels: [], values: [] },
-  level_distribution: { labels: ['Desa', 'Kecamatan'], values: [0, 0] },
-})
-
-const legacyCoveragePerBukuItems = computed(() => {
-  const rawItems = documentCharts.value.coverage_per_buku?.items
-  if (Array.isArray(rawItems) && rawItems.length > 0) {
-    return rawItems.map((item, index) => ({
-      label: String(item?.label ?? humanizeLabel(item?.slug ?? `Buku ${index + 1}`)),
-      total: toNumber(item?.total ?? 0),
-    }))
-  }
-
-  const labels = documentCharts.value.coverage_per_buku?.labels ?? []
-  const values = documentCharts.value.coverage_per_buku?.values ?? []
-
-  return labels.map((label, index) => ({
-    label: humanizeLabel(label),
-    total: toNumber(values[index] ?? 0),
-  }))
-})
-
-const legacyCoveragePerBukuChartData = computed(() => buildSingleDataset(
-  legacyCoveragePerBukuItems.value.map((item) => item.label),
-  legacyCoveragePerBukuItems.value.map((item) => item.total),
-  '#10b981',
-))
-
-const legacyCoveragePerLampiranChartData = computed(() => buildSingleDataset(
-  documentCharts.value.coverage_per_lampiran?.labels ?? [],
-  (documentCharts.value.coverage_per_lampiran?.values ?? []).map((value) => toNumber(value)),
-  '#0ea5e9',
-))
-
-const legacyBookComparisonChartData = computed(() => buildSingleDataset(
-  ['Jumlah Buku', 'Buku Terisi'],
-  [toNumber(documentStats.value.total_buku_tracked), toNumber(documentStats.value.buku_terisi)],
-  [CHART_BOOK_TOTAL_COLOR, CHART_BOOK_FILLED_COLOR],
-))
-
-const hasLegacyLampiranCoverageData = computed(() =>
-  (documentCharts.value.coverage_per_lampiran?.values ?? []).some((value) => toNumber(value) > 0),
-)
-
-const hasLegacyBookComparisonData = computed(() =>
-  toNumber(documentStats.value.total_buku_tracked) > 0 || toNumber(documentStats.value.buku_terisi) > 0,
-)
 </script>
 
 <template>
@@ -1634,38 +1533,6 @@ const hasLegacyBookComparisonData = computed(() =>
                 Belum ada data untuk pokja yang dipilih.
               </p>
             </div>
-          </div>
-        </template>
-
-        <template v-else-if="showLegacyFallback">
-          <div class="mb-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
-            <CardBox>
-              <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Buku</h3>
-              <div class="h-96">
-                <BarChart :data="legacyCoveragePerBukuChartData" :empty-text="CHART_EMPTY_STATE_TEXT" horizontal />
-              </div>
-            </CardBox>
-            <CardBox>
-              <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Cakupan per Lampiran</h3>
-              <div class="h-96">
-                <BarChart :data="legacyCoveragePerLampiranChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
-              </div>
-              <p v-if="!hasLegacyLampiranCoverageData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
-                Belum ada data terhitung pada cakupan per lampiran untuk wilayah ini.
-              </p>
-            </CardBox>
-          </div>
-
-          <div class="mb-6">
-            <CardBox>
-              <h3 class="mb-3 text-sm font-semibold text-slate-700 dark:text-slate-100">Jumlah Buku vs Buku Terisi</h3>
-              <div class="h-72">
-                <BarChart :data="legacyBookComparisonChartData" :empty-text="CHART_EMPTY_STATE_TEXT" />
-              </div>
-              <p v-if="!hasLegacyBookComparisonData" class="mt-4 text-xs text-amber-700 dark:text-amber-300">
-                Belum ada data buku terhitung untuk wilayah ini.
-              </p>
-            </CardBox>
           </div>
         </template>
 

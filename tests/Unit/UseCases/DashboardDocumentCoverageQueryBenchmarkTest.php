@@ -21,7 +21,7 @@ class DashboardDocumentCoverageQueryBenchmarkTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_query_agregat_dashboard_kecamatan_tetap_terkendali_pada_banyak_desa(): void
@@ -59,7 +59,7 @@ class DashboardDocumentCoverageQueryBenchmarkTest extends TestCase
             'scope' => 'kecamatan',
             'area_id' => $kecamatan->id,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         for ($i = 1; $i <= $desaCount; $i++) {
             $desa = Area::create([

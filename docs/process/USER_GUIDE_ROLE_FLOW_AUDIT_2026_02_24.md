@@ -39,7 +39,7 @@
 
 Catatan:
 
-- Role legacy `admin-*` masih ada di compatibility layer, tetapi bukan model akses utama user guide.
+- Role legacy `admin-*` sudah dinonaktifkan dari runtime (2026-03-15) dan hanya dicatat sebagai histori.
 
 ## Aturan Enforcement yang Mempengaruhi User Guide
 
@@ -63,5 +63,4 @@ Catatan:
 
 - Struktur user guide pada TODO `U4` dinyatakan valid dan dapat dipakai sebagai skeleton final tahap awal.
 - Penulisan konten fase berikutnya harus mengikuti matrix akses di atas agar tidak terjadi mismatch panduan vs sistem.
-
 

@@ -23,7 +23,7 @@ class ArsipManagementTest extends TestCase
         parent::setUp();
 
         Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -151,7 +151,7 @@ class ArsipManagementTest extends TestCase
             'scope' => 'desa',
             'area_id' => $desa->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $this->actingAs($user)
             ->get(route('super-admin.arsip.index'))
@@ -164,7 +164,7 @@ class ArsipManagementTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->kecamatan->id,
         ]);
-        $staleUser->assignRole('admin-desa');
+        $staleUser->assignRole('desa-sekretaris');
 
         $this->actingAs($staleUser)
             ->get(route('super-admin.arsip.index'))

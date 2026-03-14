@@ -37,7 +37,7 @@ Tujuan:
 | 4.9a | `anggota-tim-penggerak` | Buku Daftar Anggota Tim Penggerak PKK | Sidebar masih memakai `Buku Daftar Anggota TP PKK`; PDF sudah mengikuti pedoman | Sinkronkan label sidebar ke istilah canonical `Tim Penggerak` | partial |
 | 4.9b | `kader-khusus` | Buku Daftar Anggota TP PKK dan Kader | Sidebar/menu sudah memakai `Buku Daftar Anggota TP PKK dan Kader`; struktur autentik gabungan belum diadopsi | Selaraskan struktur modul sesuai lampiran 4.9b | partial |
 | 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | Sidebar/menu/index sudah memakai `Agenda Surat Masuk/Keluar`; form tambah/edit memakai label natural `Data Dukung (Unggah Berkas)` untuk lampiran file | Pertahankan label canonical pedoman + label upload natural user-facing | match |
-| 4.11 | `buku-keuangan` | Buku Keuangan | UI/PDF sudah mengarah ke label pedoman; alias route legacy `bantuans.keuangan` tetap aktif untuk transisi | Pertahankan domain dedicated + alias kompatibilitas | match |
+| 4.11 | `buku-keuangan` | Buku Keuangan | UI/PDF sudah mengarah ke label pedoman; alias route legacy `bantuans.keuangan` dinonaktifkan (2026-03-15) | Pertahankan domain dedicated | match |
 | 4.12 | `inventaris` | Buku Inventaris | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
 | 4.13 | `activities` | Buku Kegiatan | PDF judul utama sudah `BUKU KEGIATAN TP PKK` | Pertahankan | match |
 | 4.14.1a | `data-warga` | Daftar Warga TP PKK | PDF sudah memakai judul autentik `Daftar Warga TP PKK`; menu/index masih mempertahankan label slug `Data Warga` | Pertahankan PDF autentik + evaluasi rename label menu/index di siklus UI terpisah agar tidak mengganggu kebiasaan operator | partial |
@@ -107,12 +107,12 @@ Tujuan:
 
 Tujuan:
 
-- Mencegah slug teknis (`super-admin`, `admin-kecamatan`, `desa`) tampil mentah pada UI end-user.
+- Mencegah slug teknis (`super-admin`, `desa`, slug legacy historis) tampil mentah pada UI end-user.
 
 Aturan canonical:
 
 - Role `super-admin` -> tampil sebagai `Super Admin`.
-- Role slug kebijakan (`admin-desa`, `admin-kecamatan`) -> tampil title-case (`Admin Desa`, `Admin Kecamatan`).
+- Role legacy `admin-*` sudah dinonaktifkan di runtime; jika muncul di arsip, tampil title-case (`Admin Desa`, `Admin Kecamatan`).
 - Role scope baru (`desa-sekretaris`, `kecamatan-pokja-ii`, dst) -> tampil format `<Nama Role> (<Scope>)`.
 - Scope wilayah -> tampil `Desa` / `Kecamatan`.
 - Label area -> tampil format `<Scope Label> - <Nama Area>`.

@@ -28,7 +28,7 @@ class KecamatanDesaArsipTest extends TestCase
     {
         parent::setUp();
 
-        foreach (['admin-kecamatan', 'kecamatan-sekretaris', 'admin-desa'] as $roleName) {
+        foreach (['kecamatan-sekretaris', 'kecamatan-sekretaris', 'desa-sekretaris'] as $roleName) {
             Role::create(['name' => $roleName]);
         }
 
@@ -67,19 +67,19 @@ class KecamatanDesaArsipTest extends TestCase
             'scope' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
         ]);
-        $kecamatanUser->assignRole('admin-kecamatan');
+        $kecamatanUser->assignRole('kecamatan-sekretaris');
 
         $desaUserA = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $this->desaA1->id,
         ]);
-        $desaUserA->assignRole('admin-desa');
+        $desaUserA->assignRole('desa-sekretaris');
 
         $desaUserB = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $this->desaB1->id,
         ]);
-        $desaUserB->assignRole('admin-desa');
+        $desaUserB->assignRole('desa-sekretaris');
 
         ArsipDocument::factory()->create([
             'title' => 'Arsip Desa Gombong',
@@ -125,13 +125,13 @@ class KecamatanDesaArsipTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA1->id,
         ]);
-        $desaUserA->assignRole('admin-desa');
+        $desaUserA->assignRole('desa-sekretaris');
 
         $desaUserA2 = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $this->desaA2->id,
         ]);
-        $desaUserA2->assignRole('admin-desa');
+        $desaUserA2->assignRole('desa-sekretaris');
 
         ArsipDocument::factory()->create([
             'title' => 'Rencana Kerja Gombong',
@@ -175,7 +175,7 @@ class KecamatanDesaArsipTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA1->id,
         ]);
-        $desaUserA->assignRole('admin-desa');
+        $desaUserA->assignRole('desa-sekretaris');
 
         ArsipDocument::factory()->create([
             'title' => 'Rencana Kerja Gombong',
@@ -215,7 +215,7 @@ class KecamatanDesaArsipTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA1->id,
         ]);
-        $desaUser->assignRole('admin-desa');
+        $desaUser->assignRole('desa-sekretaris');
 
         $this->actingAs($desaUser)
             ->get(route('kecamatan.desa-arsip.index'))
@@ -228,7 +228,7 @@ class KecamatanDesaArsipTest extends TestCase
             'scope' => 'kecamatan',
             'area_id' => $this->desaA1->id,
         ]);
-        $staleKecamatanUser->assignRole('admin-kecamatan');
+        $staleKecamatanUser->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($staleKecamatanUser)
             ->get(route('kecamatan.desa-arsip.index'))

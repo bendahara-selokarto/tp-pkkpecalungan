@@ -21,8 +21,8 @@ class SimulasiPenyuluhanReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -32,7 +32,7 @@ class SimulasiPenyuluhanReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_laporan_pdf_simulasi_penyuluhan_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-i');
 
         SimulasiPenyuluhan::create([
             'nama_kegiatan' => 'Penyuluhan Gizi Balita',
@@ -56,7 +56,7 @@ class SimulasiPenyuluhanReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_simulasi_penyuluhan_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-i');
 
         SimulasiPenyuluhan::create([
             'nama_kegiatan' => 'Simulasi Evakuasi Gempa',
@@ -80,7 +80,7 @@ class SimulasiPenyuluhanReportPrintTest extends TestCase
     public function test_laporan_pdf_simulasi_penyuluhan_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-i');
 
         $response = $this->actingAs($user)->get(route('desa.simulasi-penyuluhan.report'));
 

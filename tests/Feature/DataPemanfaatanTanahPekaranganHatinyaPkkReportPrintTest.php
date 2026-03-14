@@ -23,8 +23,8 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-iii']);
+        Role::create(['name' => 'kecamatan-pokja-iii']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -44,7 +44,7 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_laporan_pdf_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-iii');
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
             'kategori_pemanfaatan_lahan' => 'Peternakan',
@@ -64,7 +64,7 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-iii');
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
             'kategori_pemanfaatan_lahan' => 'Perikanan',
@@ -84,7 +84,7 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
     public function test_laporan_pdf_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-iii');
 
         $response = $this->actingAs($user)->get(route('desa.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report'));
 

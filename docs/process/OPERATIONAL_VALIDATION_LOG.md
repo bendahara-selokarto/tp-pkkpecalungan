@@ -48,15 +48,17 @@ Aturan:
 
 ### Sprint Quality Gate 90+ (`QG90A1`) - 2026-03-07
 
-- Status concern: `planned`.
+- Status concern: `in-progress` (`state:style-scope-fixed-e2e-sandbox-blocked`).
 - Fokus concern:
   - menurunkan style debt secara bertahap pada scope prioritas sprint,
   - memastikan jalur E2E smoke tidak gagal karena dependency OS browser.
-- Baseline evidence concern:
-  - `php artisan test --compact`: `1057 passed`,
-  - `./vendor/bin/pint --test`: `907 files`, `633 style issues`,
+- Evidence baseline + update (2026-03-15):
+  - scope sprint `pint --test` (Actions/User, UseCases/User, Controllers/SuperAdmin, Feature/SuperAdmin, Feature/Auth): `20 files`, `14 style issues` -> `PASS`,
+  - `npm run test:e2e:doctor`: `PASS`,
+  - `npm run test:e2e:smoke`: `FAIL` (Chromium sandbox host `Operation not permitted`, tetap gagal setelah `chromiumSandbox: false` + `--disable-setuid-sandbox`),
   - `npm run build`: `PASS`,
-  - `npm run test:e2e:smoke`: `FAIL` (missing `libnspr4.so`).
+  - `php artisan test tests/Unit/Frontend --compact`: `PASS` (user-reported; perlu konfirmasi command),
+  - `php artisan test --compact`: `PASS` (`1263 passed`, `8764 assertions`).
 
 ## Protokol Update
 

@@ -151,5 +151,4 @@ Validasi pengujian:
 
 Catatan residual risk:
 
-- Migrasi user role legacy (`admin-*` dan role historis non-operasional) belum dieksekusi pada sesi ini; kompatibilitas sementara masih dipertahankan sampai migrasi dijalankan terkontrol.
-
+- Kompatibilitas role legacy (`admin-*`) dihentikan di runtime (2026-03-15); pastikan migrasi user legacy selesai sebelum rollout produksi.

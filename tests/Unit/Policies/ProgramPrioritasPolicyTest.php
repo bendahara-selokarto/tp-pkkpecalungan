@@ -20,14 +20,14 @@ class ProgramPrioritasPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_program_prioritas_pada_desanya_sendiri(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $milikSendiri = ProgramPrioritas::create([
             'program' => 'Program A',
@@ -78,13 +78,13 @@ class ProgramPrioritasPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_program_prioritas_kecamatan_lain(): void
     {
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $programLuar = ProgramPrioritas::create([
             'program' => 'Program Luar',
@@ -114,7 +114,7 @@ class ProgramPrioritasPolicyTest extends TestCase
     #[Test]
     public function admin_desa_tidak_boleh_melihat_program_prioritas_tahun_anggaran_lain_di_area_yang_sama(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -124,7 +124,7 @@ class ProgramPrioritasPolicyTest extends TestCase
             'area_id' => $desa->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $programTahunLama = ProgramPrioritas::create([
             'program' => 'Program Tahun Lama',

@@ -25,8 +25,8 @@ class DataPelatihanKaderReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -53,7 +53,7 @@ class DataPelatihanKaderReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_laporan_pdf_data_pelatihan_kader_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-ii');
 
         DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-DESA-1',
@@ -81,7 +81,7 @@ class DataPelatihanKaderReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_data_pelatihan_kader_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id, 'active_budget_year' => 2025]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-ii');
 
         DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-KEC-1',
@@ -109,7 +109,7 @@ class DataPelatihanKaderReportPrintTest extends TestCase
     public function test_laporan_pdf_data_pelatihan_kader_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-ii');
 
         $response = $this->actingAs($user)->get(route('desa.data-pelatihan-kader.report'));
 

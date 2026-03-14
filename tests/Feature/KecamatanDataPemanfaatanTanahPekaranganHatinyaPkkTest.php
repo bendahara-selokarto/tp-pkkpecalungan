@@ -22,8 +22,8 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-pokja-iii']);
+        Role::create(['name' => 'desa-pokja-iii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -43,7 +43,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
             'kategori_pemanfaatan_lahan' => 'Peternakan',
@@ -83,7 +83,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         for ($index = 1; $index <= 11; $index++) {
             DataPemanfaatanTanahPekaranganHatinyaPkk::create([
@@ -127,7 +127,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         DataPemanfaatanTanahPekaranganHatinyaPkk::create([
             'kategori_pemanfaatan_lahan' => 'Peternakan',
@@ -156,7 +156,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         $DataPemanfaatanTanahPekaranganHatinyaPkkLuar = DataPemanfaatanTanahPekaranganHatinyaPkk::create([
             'kategori_pemanfaatan_lahan' => 'Lainnya',
@@ -186,7 +186,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk');
 
@@ -206,7 +206,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
         ]);
-        $userStale->assignRole('admin-kecamatan');
+        $userStale->assignRole('kecamatan-pokja-iii');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk');
 

@@ -31,7 +31,7 @@
                 </div>
                 @endrole
 
-                @hasanyrole('admin-desa|desa-sekretaris|desa-bendahara|desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv')
+                @hasanyrole('desa-sekretaris|desa-bendahara|desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="url('/desa/activities')" :active="request()->is('desa/activities*')">
                         {{ __('Activities') }}
@@ -39,7 +39,7 @@
                 </div>
                 @endhasanyrole
 
-                @hasanyrole('admin-kecamatan|kecamatan-sekretaris|kecamatan-bendahara|kecamatan-pokja-i|kecamatan-pokja-ii|kecamatan-pokja-iii|kecamatan-pokja-iv')
+                @hasanyrole('kecamatan-sekretaris|kecamatan-bendahara|kecamatan-pokja-i|kecamatan-pokja-ii|kecamatan-pokja-iii|kecamatan-pokja-iv')
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="url('/kecamatan/activities')" :active="request()->is('kecamatan/activities*')">
                         {{ __('Activities Kecamatan') }}
@@ -109,13 +109,13 @@
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
 
-            @hasanyrole('admin-desa|desa-sekretaris|desa-bendahara|desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv')
+            @hasanyrole('desa-sekretaris|desa-bendahara|desa-pokja-i|desa-pokja-ii|desa-pokja-iii|desa-pokja-iv')
             <x-responsive-nav-link :href="url('/desa/activities')" :active="request()->is('desa/activities*')">
                 {{ __('Activities') }}
             </x-responsive-nav-link>
             @endhasanyrole
 
-            @hasanyrole('admin-kecamatan|kecamatan-sekretaris|kecamatan-bendahara|kecamatan-pokja-i|kecamatan-pokja-ii|kecamatan-pokja-iii|kecamatan-pokja-iv')
+            @hasanyrole('kecamatan-sekretaris|kecamatan-bendahara|kecamatan-pokja-i|kecamatan-pokja-ii|kecamatan-pokja-iii|kecamatan-pokja-iv')
             <x-responsive-nav-link :href="url('/kecamatan/activities')" :active="request()->is('kecamatan/activities*')">
                 {{ __('Activities Kecamatan') }}
             </x-responsive-nav-link>
@@ -153,4 +153,3 @@
         </div>
     </div>
 </nav>
-

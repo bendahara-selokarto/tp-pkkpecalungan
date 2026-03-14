@@ -18,14 +18,14 @@ class PaarPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_paar_pada_desanya_sendiri(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-pokja-i']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
         $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
 
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-i');
 
         $milikSendiri = Paar::create([
             'indikator' => 'akte_kelahiran',
@@ -54,13 +54,13 @@ class PaarPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_paar_kecamatan_lain(): void
     {
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
 
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-i');
 
         $paarLuar = Paar::create([
             'indikator' => 'narkoba',

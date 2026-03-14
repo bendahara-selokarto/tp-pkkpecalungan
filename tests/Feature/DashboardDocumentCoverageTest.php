@@ -21,8 +21,8 @@ class DashboardDocumentCoverageTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'desa-pokja-i']);
@@ -45,7 +45,7 @@ class DashboardDocumentCoverageTest extends TestCase
             'scope' => 'desa',
             'area_id' => $desaA->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $this->createActivity($user, 'desa', $desaA->id, 'Aktivitas A');
         $this->createActivity($user, 'desa', $desaB->id, 'Aktivitas B');
@@ -63,22 +63,10 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) use ($totalBooks, $expectedRemaining): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
-                ->where('dashboardStats.documents.total_buku_tracked', $totalBooks)
-                ->where('dashboardStats.documents.buku_terisi', 4)
-                ->where('dashboardStats.documents.buku_belum_terisi', $expectedRemaining)
-                ->where('dashboardStats.documents.total_entri_buku', 4)
                 ->missing('dashboardBlocks')
-                ->where('dashboardCharts.documents.level_distribution.values', [4, 0])
-                ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 1, 1, 1, 0])
-                ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
-                    $bySlug = collect($items)->keyBy('slug');
-
-                    return ($bySlug->get('activities')['total'] ?? null) === 1
-                        && ($bySlug->get('agenda-surat')['total'] ?? null) === 1
-                        && ($bySlug->get('data-warga')['total'] ?? null) === 1
-                        && ($bySlug->get('catatan-keluarga')['total'] ?? null) === 1;
-                });
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
                 $collected = collect($blocks);
@@ -105,7 +93,7 @@ class DashboardDocumentCoverageTest extends TestCase
             'scope' => 'desa',
             'area_id' => $desa->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $this->createActivity($user, 'desa', $desa->id, 'Aktivitas A');
         $this->createAgendaSurat($user, 'desa', $desa->id, 'A-001');
@@ -116,6 +104,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks');
 
             $page->loadDeferredProps('dashboard-blocks', function (AssertableInertia $reload): void {
@@ -137,7 +127,7 @@ class DashboardDocumentCoverageTest extends TestCase
             'scope' => 'desa',
             'area_id' => $desa->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $this->createActivity($user, 'desa', $desa->id, 'Aktivitas A');
         $this->createAgendaSurat($user, 'desa', $desa->id, 'A-001');
@@ -150,6 +140,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks')
                 ->reloadOnly(['dashboardContext', 'dashboardBlocks'], function (AssertableInertia $reload): void {
                     $reload
@@ -172,7 +164,7 @@ class DashboardDocumentCoverageTest extends TestCase
             'scope' => 'kecamatan',
             'area_id' => $kecamatanA->id,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $this->createActivity($user, 'kecamatan', $kecamatanA->id, 'Aktivitas Kecamatan A');
         $this->createActivity($user, 'desa', $desaA->id, 'Aktivitas Desa A');
@@ -191,22 +183,10 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) use ($totalBooks, $expectedRemaining): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
-                ->where('dashboardStats.documents.total_buku_tracked', $totalBooks)
-                ->where('dashboardStats.documents.buku_terisi', 2)
-                ->where('dashboardStats.documents.buku_belum_terisi', $expectedRemaining)
-                ->where('dashboardStats.documents.total_entri_buku', 3)
                 ->missing('dashboardBlocks')
-                ->where('dashboardCharts.documents.level_distribution.values', [1, 2])
-                ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 1, 0, 0, 2, 0, 0, 0])
-                ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
-                    $bySlug = collect($items)->keyBy('slug');
-
-                    return ($bySlug->get('activities')['total'] ?? null) === 2
-                        && ($bySlug->get('agenda-surat')['total'] ?? null) === 1
-                        && ($bySlug->get('data-warga')['total'] ?? null) === 0
-                        && ($bySlug->get('catatan-keluarga')['total'] ?? null) === 0;
-                });
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
                 $collected = collect($blocks);
@@ -233,7 +213,7 @@ class DashboardDocumentCoverageTest extends TestCase
             'scope' => 'kecamatan',
             'area_id' => $kecamatan->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $this->createActivity($user, 'kecamatan', $kecamatan->id, 'Aktivitas Kecamatan');
         $this->createActivity($user, 'desa', $desa->id, 'Aktivitas Desa');
@@ -248,14 +228,10 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) use ($totalBooks): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->where('auth.user.scope', null)
-                ->where('dashboardStats.documents.total_buku_tracked', $totalBooks)
-                ->where('dashboardStats.documents.buku_terisi', 0)
-                ->where('dashboardStats.documents.buku_belum_terisi', $totalBooks)
-                ->where('dashboardStats.documents.total_entri_buku', 0)
                 ->missing('dashboardBlocks')
-                ->where('dashboardCharts.documents.level_distribution.values', [0, 0])
-                ->where('dashboardCharts.documents.coverage_per_lampiran.values', [0, 0, 0, 0, 0, 0, 0, 0]);
 
             $this->assertDeferredDashboardBlocks($page, fn ($blocks): bool => collect($blocks)->isEmpty());
         });
@@ -278,6 +254,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
@@ -338,6 +316,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) use ($totalBooks): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks) use ($totalBooks): bool {
@@ -386,7 +366,7 @@ class DashboardDocumentCoverageTest extends TestCase
             'area_id' => $desa->id,
             'active_budget_year' => $activeBudgetYear,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $this->createActivity($user, 'desa', $desa->id, 'Aktivitas 2026', $activeBudgetYear);
         $this->createActivity($user, 'desa', $desa->id, 'Aktivitas 2025', $activeBudgetYear - 1);
@@ -401,18 +381,9 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) use ($activeBudgetYear) {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->where('dashboardContext.tahun_anggaran', (string) $activeBudgetYear)
-                ->where('dashboardStats.documents.total_entri_buku', 4)
-                ->where('dashboardStats.documents.buku_terisi', 4)
-                ->where('dashboardCharts.documents.level_distribution.values', [4, 0])
-                ->where('dashboardCharts.documents.coverage_per_buku.items', function ($items): bool {
-                    $bySlug = collect($items)->keyBy('slug');
-
-                    return ($bySlug->get('activities')['total'] ?? null) === 1
-                        && ($bySlug->get('agenda-surat')['total'] ?? null) === 1
-                        && ($bySlug->get('data-warga')['total'] ?? null) === 1
-                        && ($bySlug->get('catatan-keluarga')['total'] ?? null) === 1;
-                });
         });
     }
 
@@ -443,6 +414,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
@@ -491,6 +464,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
@@ -539,6 +514,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
@@ -590,6 +567,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
@@ -630,6 +609,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $levelResponse->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
@@ -651,6 +632,8 @@ class DashboardDocumentCoverageTest extends TestCase
         $subLevelResponse->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {

@@ -25,8 +25,8 @@ class KecamatanDataKeluargaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-pokja-iii']);
+        Role::create(['name' => 'desa-pokja-iii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -46,7 +46,7 @@ class KecamatanDataKeluargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         DataKeluarga::create([
             'kategori_keluarga' => 'Sejahtera III',
@@ -86,7 +86,7 @@ class KecamatanDataKeluargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         for ($index = 1; $index <= 11; $index++) {
             DataKeluarga::create([
@@ -130,7 +130,7 @@ class KecamatanDataKeluargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         DataKeluarga::create([
             'kategori_keluarga' => 'Kategori Default',
@@ -159,7 +159,7 @@ class KecamatanDataKeluargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         $dataKeluargaLuar = DataKeluarga::create([
             'kategori_keluarga' => 'Pra Sejahtera',
@@ -189,7 +189,7 @@ class KecamatanDataKeluargaTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/data-keluarga');
 
@@ -209,7 +209,7 @@ class KecamatanDataKeluargaTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
         ]);
-        $userStale->assignRole('admin-kecamatan');
+        $userStale->assignRole('kecamatan-pokja-iii');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/data-keluarga');
 
@@ -224,7 +224,7 @@ class KecamatanDataKeluargaTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         $dataKeluargaArsip = DataKeluarga::create([
             'kategori_keluarga' => 'Pra Sejahtera',

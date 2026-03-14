@@ -23,8 +23,8 @@ class StructuredDomainReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -34,7 +34,7 @@ class StructuredDomainReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_laporan_pdf_bantuan(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Bantuan::create([
             'name' => 'Dusun Krajan',
@@ -57,7 +57,7 @@ class StructuredDomainReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_inventaris(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         Inventaris::create([
             'name' => 'Laptop',
@@ -79,7 +79,7 @@ class StructuredDomainReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_laporan_pdf_anggota_pokja(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         AnggotaPokja::create([
             'nama' => 'Siti Aminah',
@@ -107,7 +107,7 @@ class StructuredDomainReportPrintTest extends TestCase
     public function test_laporan_pdf_bantuan_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($user)->get(route('desa.bantuans.report'));
 

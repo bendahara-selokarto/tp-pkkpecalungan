@@ -12,8 +12,7 @@ class GetUserManagementFormOptionsUseCase
 {
     public function __construct(
         private readonly UserManagementRepositoryInterface $userManagementRepository
-    ) {
-    }
+    ) {}
 
     public function roles(): Collection
     {

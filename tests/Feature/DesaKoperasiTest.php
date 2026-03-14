@@ -24,8 +24,8 @@ class DesaKoperasiTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -53,7 +53,7 @@ class DesaKoperasiTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         Koperasi::create([
             'nama_koperasi' => 'Koperasi Mawar',
@@ -96,7 +96,7 @@ class DesaKoperasiTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         Koperasi::create([
             'nama_koperasi' => 'Koperasi Aktif',
@@ -138,7 +138,7 @@ class DesaKoperasiTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         $this->actingAs($adminDesa)->post('/desa/koperasi', [
             'nama_koperasi' => 'Koperasi Anggrek',
@@ -184,7 +184,7 @@ class DesaKoperasiTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/koperasi');
 
@@ -199,7 +199,7 @@ class DesaKoperasiTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('admin-desa');
+        $userStale->assignRole('desa-pokja-ii');
 
         $response = $this->actingAs($userStale)->get('/desa/koperasi');
 

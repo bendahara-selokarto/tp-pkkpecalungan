@@ -23,8 +23,8 @@ class PaginationNormalizationWilayahTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -41,13 +41,13 @@ class PaginationNormalizationWilayahTest extends TestCase
             'scope' => ScopeLevel::DESA->value,
             'area_id' => $desa->id,
         ]);
-        $this->adminDesa->assignRole('admin-desa');
+        $this->adminDesa->assignRole('desa-sekretaris');
 
         $this->adminKecamatan = User::factory()->create([
             'scope' => ScopeLevel::KECAMATAN->value,
             'area_id' => $kecamatan->id,
         ]);
-        $this->adminKecamatan->assignRole('admin-kecamatan');
+        $this->adminKecamatan->assignRole('kecamatan-sekretaris');
     }
 
     #[Test]

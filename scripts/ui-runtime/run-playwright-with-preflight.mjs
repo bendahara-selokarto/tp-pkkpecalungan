@@ -98,6 +98,7 @@ function printLinuxDependencyHelp(missingLibraries) {
   if (suggestedPackages.length > 0) {
     console.error(`[e2e-preflight] Install package (Ubuntu/Debian): sudo apt-get install -y ${suggestedPackages.join(' ')}`);
   }
+  console.error('[e2e-preflight] Status: dependency-missing (preflight).');
   console.error('[e2e-preflight] Setelah install, ulangi: npm run test:e2e');
 }
 
@@ -142,6 +143,7 @@ function main() {
     process.exit(0);
   }
 
+  console.log('[e2e-preflight] Preflight OK: menjalankan Playwright.');
   const playwrightArgs = (() => {
     if (forwardedArgs.length === 0) {
       return DEFAULT_PLAYWRIGHT_ARGS;
@@ -158,10 +160,21 @@ function main() {
     env,
   });
 
+  if (run.error) {
+    console.error('[e2e-preflight] Gagal menjalankan Playwright CLI (tooling).');
+    console.error(`[e2e-preflight] Detail: ${run.error.message}`);
+    console.error('[e2e-preflight] Status: tooling-error (bukan test).');
+    process.exit(1);
+  }
+
   if (typeof run.status === 'number') {
+    if (run.status !== 0) {
+      console.error('[e2e-preflight] Status: test-failure (preflight ok).');
+    }
     process.exit(run.status);
   }
 
+  console.error('[e2e-preflight] Status: tooling-error (unknown).');
   process.exit(1);
 }
 

@@ -14,7 +14,7 @@ class UserServiceTest extends TestCase
 
     public function test_layanan_membuat_pengguna(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
         $area = Area::create([
             'name' => 'Gombong',
             'level' => 'desa',
@@ -28,13 +28,13 @@ class UserServiceTest extends TestCase
             'password' => 'password',
             'scope' => 'desa',
             'area_id' => $area->id,
-            'role' => 'admin-desa',
+            'role' => 'desa-sekretaris',
         ]);
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertSame('desa', $user->scope);
         $this->assertSame($area->id, $user->area_id);
-        $this->assertTrue($user->hasRole('admin-desa'));
+        $this->assertTrue($user->hasRole('desa-sekretaris'));
     }
 }
 

@@ -20,7 +20,6 @@ class DatabaseSeeder extends Seeder
             SyncUserScopeAreaSeeder::class,
             DashboardNaturalBatangSeeder::class,
             WilayahMissingDomainSeeder::class,
-            MigrateLegacyRoleAssignmentsSeeder::class,
         ]);
     }
 }

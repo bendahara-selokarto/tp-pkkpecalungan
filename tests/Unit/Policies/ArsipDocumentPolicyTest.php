@@ -27,7 +27,7 @@ class ArsipDocumentPolicyTest extends TestCase
     {
         parent::setUp();
 
-        foreach (['super-admin', 'admin-desa', 'kecamatan-sekretaris', 'admin-kecamatan'] as $roleName) {
+        foreach (['super-admin', 'desa-sekretaris', 'kecamatan-sekretaris', 'kecamatan-sekretaris'] as $roleName) {
             Role::create(['name' => $roleName]);
         }
 
@@ -61,7 +61,7 @@ class ArsipDocumentPolicyTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $owner->assignRole('admin-desa');
+        $owner->assignRole('desa-sekretaris');
 
         $document = ArsipDocument::factory()->create([
             'is_global' => false,
@@ -85,13 +85,13 @@ class ArsipDocumentPolicyTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $owner->assignRole('admin-desa');
+        $owner->assignRole('desa-sekretaris');
 
         $otherUser = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $otherUser->assignRole('admin-desa');
+        $otherUser->assignRole('desa-sekretaris');
 
         $document = ArsipDocument::factory()->create([
             'is_global' => false,
@@ -114,7 +114,7 @@ class ArsipDocumentPolicyTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $creator = User::factory()->create([
             'scope' => 'kecamatan',
@@ -175,13 +175,13 @@ class ArsipDocumentPolicyTest extends TestCase
             'scope' => 'desa',
             'area_id' => $this->desaA->id,
         ]);
-        $desaUserA->assignRole('admin-desa');
+        $desaUserA->assignRole('desa-sekretaris');
 
         $desaUserB = User::factory()->create([
             'scope' => 'desa',
             'area_id' => $this->desaB->id,
         ]);
-        $desaUserB->assignRole('admin-desa');
+        $desaUserB->assignRole('desa-sekretaris');
 
         $inAreaDocument = ArsipDocument::factory()->create([
             'is_global' => false,

@@ -23,8 +23,8 @@ class DesaBantuanTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -51,7 +51,7 @@ class DesaBantuanTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         Bantuan::create([
             'name' => 'Dusun Krajan',
@@ -97,7 +97,7 @@ class DesaBantuanTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         for ($index = 1; $index <= 12; $index++) {
             Bantuan::create([
@@ -147,7 +147,7 @@ class DesaBantuanTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         Bantuan::create([
             'name' => 'Dusun Default',
@@ -179,7 +179,7 @@ class DesaBantuanTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->actingAs($adminDesa)->post('/desa/bantuans', [
             'lokasi_penerima' => 'Dusun Jatirejo',
@@ -220,7 +220,7 @@ class DesaBantuanTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/bantuans');
 

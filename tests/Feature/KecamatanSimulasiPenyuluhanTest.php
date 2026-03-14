@@ -21,8 +21,8 @@ class KecamatanSimulasiPenyuluhanTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
+        Role::create(['name' => 'desa-pokja-i']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -42,7 +42,7 @@ class KecamatanSimulasiPenyuluhanTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         SimulasiPenyuluhan::create([
             'nama_kegiatan' => 'Simulasi Evakuasi Bencana',
@@ -84,7 +84,7 @@ class KecamatanSimulasiPenyuluhanTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $simulasiLuar = SimulasiPenyuluhan::create([
             'nama_kegiatan' => 'Simulasi Luar Area',
@@ -118,7 +118,7 @@ class KecamatanSimulasiPenyuluhanTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/simulasi-penyuluhan');
 

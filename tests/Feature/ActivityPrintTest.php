@@ -28,8 +28,8 @@ class ActivityPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -40,7 +40,7 @@ class ActivityPrintTest extends TestCase
     public function test_pengguna_desa_dapat_mencetak_pdf_kegiatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $activity = Activity::create([
             'title' => 'Musyawarah',
@@ -61,7 +61,7 @@ class ActivityPrintTest extends TestCase
     public function test_pengguna_desa_dapat_mencetak_pdf_daftar_kegiatan_all_pada_scopenya(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Kegiatan A',
@@ -92,7 +92,7 @@ class ActivityPrintTest extends TestCase
     public function test_pengguna_desa_tidak_dapat_mencetak_pdf_kegiatan_tahun_anggaran_lain(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $activity = Activity::create([
             'title' => 'Kegiatan Tahun Lama',
@@ -112,7 +112,7 @@ class ActivityPrintTest extends TestCase
     public function test_pengguna_desa_tidak_dapat_mencetak_kegiatan_desa_lain(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $activity = Activity::create([
             'title' => 'Kegiatan Desa Lain',
@@ -131,7 +131,7 @@ class ActivityPrintTest extends TestCase
     public function test_pengguna_kecamatan_dapat_mencetak_kegiatan_kecamatan_sendiri_dan_desa_turunan(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $kecamatanActivity = Activity::create([
             'title' => 'Rapat Kecamatan',
@@ -165,7 +165,7 @@ class ActivityPrintTest extends TestCase
     public function test_pengguna_kecamatan_dapat_mencetak_pdf_daftar_kegiatan_all_pada_scopenya(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         Activity::create([
             'title' => 'Rapat Kecamatan',
@@ -194,7 +194,7 @@ class ActivityPrintTest extends TestCase
     public function test_cetak_tetap_mengikuti_peran_dan_area_saat_kolom_scope_belum_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $activity = Activity::create([
             'title' => 'Kegiatan Scope Tidak Sinkron',

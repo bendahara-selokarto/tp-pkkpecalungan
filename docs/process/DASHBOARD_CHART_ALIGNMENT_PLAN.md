@@ -61,9 +61,9 @@ Dashboard menampilkan:
   - `DashboardDocumentCoverageRepositoryInterface`
   - `DashboardDocumentCoverageRepository`
 - Output canonical Inertia:
-  - `dashboardStats.documents`
-  - `dashboardCharts.documents`
-- Pertahankan `dashboardStats.activity` + `dashboardCharts.activity` untuk backward compatibility transisi.
+  - `dashboardBlocks[]`
+  - `dashboardContext`
+- Payload legacy `dashboardStats/dashboardCharts` sudah dihapus dari runtime (2026-03-15).
 
 Acceptance:
 
@@ -188,7 +188,7 @@ Status:
 
 Kontrak tambahan:
 
-- Dashboard utama kini memakai payload `dashboardBlocks[]` sebagai jalur utama (payload legacy tetap fallback transisi).
+- Dashboard utama kini memakai payload `dashboardBlocks[]` sebagai jalur utama (payload legacy sudah dihapus dari runtime).
 - Struktur sekretaris dikunci:
   - section 1: domain sekretaris.
   - section 2: pokja level aktif (query key `section2_group`).
@@ -207,4 +207,3 @@ Validasi minimum tambahan:
 
 - `DashboardDocumentCoverageTest` memverifikasi `section2_group`/`section3_group` masuk ke `sources.filter_context`.
 - Audit dokumen dashboard memastikan kontrak query key konsisten lintas rencana UI, rencana refactor, dan skenario khusus.
-

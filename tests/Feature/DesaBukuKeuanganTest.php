@@ -23,8 +23,8 @@ class DesaBukuKeuanganTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -51,7 +51,7 @@ class DesaBukuKeuanganTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         BukuKeuangan::create([
             'transaction_date' => '2026-02-01',
@@ -97,7 +97,7 @@ class DesaBukuKeuanganTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         for ($index = 1; $index <= 12; $index++) {
             BukuKeuangan::create([
@@ -147,7 +147,7 @@ class DesaBukuKeuanganTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         BukuKeuangan::create([
             'transaction_date' => '2026-02-01',
@@ -179,7 +179,7 @@ class DesaBukuKeuanganTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->actingAs($adminDesa)->post('/desa/buku-keuangan', [
             'transaction_date' => '2026-02-10',
@@ -221,7 +221,7 @@ class DesaBukuKeuanganTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/buku-keuangan');
 

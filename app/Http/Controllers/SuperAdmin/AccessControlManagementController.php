@@ -9,8 +9,8 @@ use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SuperAdmin\RollbackPilotCatatanKeluargaOverrideRequest;
 use App\Http\Requests\SuperAdmin\UpdatePilotCatatanKeluargaOverrideRequest;
-use App\Support\RoleScopeMatrix;
 use App\Support\RoleLabelFormatter;
+use App\Support\RoleScopeMatrix;
 use App\UseCases\SuperAdmin\ListAccessControlMatrixUseCase;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,8 +24,7 @@ class AccessControlManagementController extends Controller
         private readonly ListAccessControlMatrixUseCase $listAccessControlMatrixUseCase,
         private readonly UpsertPilotCatatanKeluargaOverrideAction $upsertPilotCatatanKeluargaOverrideAction,
         private readonly RollbackPilotCatatanKeluargaOverrideAction $rollbackPilotCatatanKeluargaOverrideAction
-    ) {
-    }
+    ) {}
 
     public function index(Request $request): Response
     {

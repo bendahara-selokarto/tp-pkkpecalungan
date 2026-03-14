@@ -15,14 +15,6 @@ class RoleScopeMatrix
     ];
 
     /**
-     * @var list<string>
-     */
-    private const HIDDEN_LEGACY_ASSIGNABLE_ROLES = [
-        'admin-desa',
-        'admin-kecamatan',
-    ];
-
-    /**
      * @return array<string, list<string>>
      */
     public static function scopedRoles(): array
@@ -34,8 +26,6 @@ class RoleScopeMatrix
                 'desa-pokja-ii',
                 'desa-pokja-iii',
                 'desa-pokja-iv',
-                // Backward compatibility.
-                'admin-desa',
             ],
             ScopeLevel::KECAMATAN->value => [
                 'kecamatan-sekretaris',
@@ -43,8 +33,6 @@ class RoleScopeMatrix
                 'kecamatan-pokja-ii',
                 'kecamatan-pokja-iii',
                 'kecamatan-pokja-iv',
-                // Backward compatibility.
-                'admin-kecamatan',
                 'super-admin',
             ],
         ];
@@ -67,13 +55,13 @@ class RoleScopeMatrix
     {
         $roles = self::scopedRoles()[$scope] ?? [];
 
-        // Legacy admin roles and super-admin are accepted by compatibility checks,
+        // Super-admin is accepted by compatibility checks,
         // but hidden from new assignment UI and blocked in managed assignment flow.
         return array_values(array_filter(
             $roles,
             static fn (string $role) => ! in_array(
                 $role,
-                array_merge(self::HIDDEN_LEGACY_ASSIGNABLE_ROLES, self::RESTRICTED_ASSIGNABLE_ROLES),
+                self::RESTRICTED_ASSIGNABLE_ROLES,
                 true
             )
         ));

@@ -19,8 +19,8 @@ class UserManagementIndexPaginationTest extends TestCase
         parent::setUp();
 
         Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_super_admin_melihat_index_user_management_dengan_pagination_default_10(): void
@@ -41,7 +41,7 @@ class UserManagementIndexPaginationTest extends TestCase
                 'scope' => ScopeLevel::KECAMATAN->value,
                 'area_id' => $kecamatan->id,
             ]);
-            $user->assignRole('admin-kecamatan');
+            $user->assignRole('kecamatan-sekretaris');
         }
 
         $response = $this->actingAs($superAdmin)
@@ -73,7 +73,7 @@ class UserManagementIndexPaginationTest extends TestCase
                 'scope' => ScopeLevel::KECAMATAN->value,
                 'area_id' => $kecamatan->id,
             ]);
-            $user->assignRole('admin-kecamatan');
+            $user->assignRole('kecamatan-sekretaris');
         }
 
         $response = $this->actingAs($superAdmin)
@@ -105,7 +105,7 @@ class UserManagementIndexPaginationTest extends TestCase
                 'scope' => ScopeLevel::KECAMATAN->value,
                 'area_id' => $kecamatan->id,
             ]);
-            $user->assignRole('admin-kecamatan');
+            $user->assignRole('kecamatan-sekretaris');
         }
 
         $response = $this->actingAs($superAdmin)
@@ -141,7 +141,7 @@ class UserManagementIndexPaginationTest extends TestCase
                 'scope' => ScopeLevel::KECAMATAN->value,
                 'area_id' => $kecamatan->id,
             ]);
-            $user->assignRole('admin-kecamatan');
+            $user->assignRole('kecamatan-sekretaris');
         }
 
         $response = $this->actingAs($superAdmin)
@@ -173,7 +173,7 @@ class UserManagementIndexPaginationTest extends TestCase
                 'scope' => ScopeLevel::KECAMATAN->value,
                 'area_id' => $kecamatan->id,
             ]);
-            $user->assignRole('admin-kecamatan');
+            $user->assignRole('kecamatan-sekretaris');
         }
 
         $pageOneResponse = $this->actingAs($superAdmin)
@@ -229,7 +229,7 @@ class UserManagementIndexPaginationTest extends TestCase
             'scope' => ScopeLevel::DESA->value,
             'area_id' => null,
         ]);
-        $targetUser->assignRole('admin-desa');
+        $targetUser->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($superAdmin)
             ->get(route('super-admin.users.index'));
@@ -251,7 +251,7 @@ class UserManagementIndexPaginationTest extends TestCase
     public function test_non_super_admin_ditolak_mengakses_index_user_management(): void
     {
         $nonSuperAdmin = User::factory()->create();
-        $nonSuperAdmin->assignRole('admin-desa');
+        $nonSuperAdmin->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($nonSuperAdmin)
             ->get(route('super-admin.users.index'));

@@ -2683,3 +2683,23 @@ Catatan:
 - Validasi:
   - verifikasi workflow GitHub Actions `domain-contract-gate.yml` selesai (status `failed` pada gate domain/PDF),
   - reproduksi lokal targeted test terkait `PASS` (tercatat di TODO concern).
+
+### Roadmap Sprint Naik Skor Project 90 Plus (`QG90A1`) - 2026-03-15
+
+- Status concern: `in-progress` (`state:style-scope-fixed-e2e-sandbox-blocked`).
+- Scope hardening:
+  - `app/Actions/User/*`, `app/UseCases/User/*`, `app/Http/Controllers/SuperAdmin/*`,
+  - `tests/Feature/SuperAdmin/*`, `tests/Feature/Auth/*`,
+  - `playwright.config.mjs` (sandbox mitigation flags),
+  - `scripts/ui-runtime/run-playwright-with-preflight.mjs` (pesan status eksplisit).
+- Evidence:
+  - `./vendor/bin/pint --test app/Actions/User app/UseCases/User app/Http/Controllers/SuperAdmin tests/Feature/SuperAdmin tests/Feature/Auth`
+    - baseline: `20 files`, `14 style issues`,
+    - post-fix: `PASS` (0 issue pada scope).
+  - `npm run test:e2e:doctor`: `PASS`.
+  - `npm run test:e2e:smoke`: `FAIL` — Chromium sandbox host `Operation not permitted` (preflight OK; tetap gagal setelah `chromiumSandbox: false` + `--disable-setuid-sandbox`).
+  - `npm run build`: `PASS` (Vite build).
+  - `php artisan test tests/Unit/Frontend --compact`: `PASS` (user-reported).
+  - `php artisan test --compact`: `PASS` (`1263 passed`, `8764 assertions`).
+- Risiko residual:
+  - Evidence E2E smoke masih terblokir sandbox host pada environment ini.

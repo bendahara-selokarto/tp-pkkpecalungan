@@ -15,7 +15,7 @@ class MigrateLegacyRoleAssignmentsSeederTest extends TestCase
     public function test_migrasi_role_legacy_mempertahankan_role_non_legacy_dan_menambah_target_scope(): void
     {
         foreach ([
-            'admin-desa',
+            'desa-sekretaris',
             'desa-bendahara',
             'desa-pokja-i',
             'desa-sekretaris',
@@ -28,13 +28,13 @@ class MigrateLegacyRoleAssignmentsSeederTest extends TestCase
             'scope' => 'desa',
             'area_id' => null,
         ]);
-        $desaUser->syncRoles(['admin-desa', 'desa-pokja-i']);
+        $desaUser->syncRoles(['desa-sekretaris', 'desa-pokja-i']);
 
         $kecamatanUser = User::factory()->create([
             'scope' => 'kecamatan',
             'area_id' => null,
         ]);
-        $kecamatanUser->syncRoles(['admin-desa']);
+        $kecamatanUser->syncRoles(['desa-sekretaris']);
 
         $bendaharaDesaUser = User::factory()->create([
             'scope' => 'desa',

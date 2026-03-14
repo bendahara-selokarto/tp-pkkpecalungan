@@ -20,7 +20,7 @@ class PrestasiLombaPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_prestasi_lomba_pada_desanya_sendiri(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -31,7 +31,7 @@ class PrestasiLombaPolicyTest extends TestCase
             'area_id' => $desaA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $milikSendiri = PrestasiLomba::create([
             'tahun' => self::ACTIVE_BUDGET_YEAR,
@@ -70,7 +70,7 @@ class PrestasiLombaPolicyTest extends TestCase
     #[Test]
     public function admin_desa_tidak_boleh_melihat_prestasi_lomba_di_tahun_anggaran_lain(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -80,7 +80,7 @@ class PrestasiLombaPolicyTest extends TestCase
             'area_id' => $desa->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $prestasiTahunLama = PrestasiLomba::create([
             'tahun' => self::ACTIVE_BUDGET_YEAR - 1,
@@ -105,7 +105,7 @@ class PrestasiLombaPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_prestasi_lomba_kecamatan_lain(): void
     {
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -115,7 +115,7 @@ class PrestasiLombaPolicyTest extends TestCase
             'area_id' => $kecamatanA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $prestasiLuar = PrestasiLomba::create([
             'tahun' => self::ACTIVE_BUDGET_YEAR,

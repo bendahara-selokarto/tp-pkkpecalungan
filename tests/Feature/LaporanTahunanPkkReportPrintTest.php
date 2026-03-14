@@ -29,8 +29,8 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -44,7 +44,7 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
             'area_id' => $this->desaA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Rapat Koordinasi Desa',
@@ -83,7 +83,7 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $report = LaporanTahunanPkkReport::create([
             'judul_laporan' => 'Laporan Tahunan Kecamatan',
@@ -109,7 +109,7 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
             'area_id' => $this->kecamatanB->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $report = LaporanTahunanPkkReport::create([
             'judul_laporan' => 'Laporan Tidak Valid',
@@ -132,7 +132,7 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
             'area_id' => $this->desaA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         AgendaSurat::create([
             'jenis_surat' => 'masuk',
@@ -190,7 +190,7 @@ class LaporanTahunanPkkReportPrintTest extends TestCase
             'area_id' => $this->desaA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $report = LaporanTahunanPkkReport::create([
             'judul_laporan' => 'Laporan Tahun Lama',

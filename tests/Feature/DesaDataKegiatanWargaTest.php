@@ -27,8 +27,8 @@ class DesaDataKegiatanWargaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -55,7 +55,7 @@ class DesaDataKegiatanWargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         DataKegiatanWarga::create([
             'kegiatan' => 'Penghayatan dan Pengamalan Pancasila',
@@ -96,7 +96,7 @@ class DesaDataKegiatanWargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         for ($index = 1; $index <= 12; $index++) {
             DataKegiatanWarga::create([
@@ -140,7 +140,7 @@ class DesaDataKegiatanWargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         DataKegiatanWarga::create([
             'kegiatan' => 'Kegiatan Default',
@@ -170,7 +170,7 @@ class DesaDataKegiatanWargaTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         $this->actingAs($adminDesa)->post('/desa/data-kegiatan-warga', [
             'kegiatan' => 'Rukun Kematian',
@@ -206,7 +206,7 @@ class DesaDataKegiatanWargaTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/data-kegiatan-warga');
 
@@ -220,7 +220,7 @@ class DesaDataKegiatanWargaTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
         ]);
-        $userStale->assignRole('admin-desa');
+        $userStale->assignRole('desa-pokja-i');
 
         $response = $this->actingAs($userStale)->get('/desa/data-kegiatan-warga');
 
@@ -235,7 +235,7 @@ class DesaDataKegiatanWargaTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         DataKegiatanWarga::create([
             'kegiatan' => 'Kerja Bakti',

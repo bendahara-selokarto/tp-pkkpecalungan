@@ -26,8 +26,8 @@ class BukuDaftarHadirReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -53,7 +53,7 @@ class BukuDaftarHadirReportPrintTest extends TestCase
             'area_id' => $this->desaA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $activity = Activity::create([
             'title' => 'Kegiatan Pokja Desa',
@@ -89,7 +89,7 @@ class BukuDaftarHadirReportPrintTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $activity = Activity::create([
             'title' => 'Kegiatan Pokja Kecamatan',
@@ -125,7 +125,7 @@ class BukuDaftarHadirReportPrintTest extends TestCase
             'area_id' => $this->kecamatanB->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($user)->get(route('desa.buku-daftar-hadir.report'));
 

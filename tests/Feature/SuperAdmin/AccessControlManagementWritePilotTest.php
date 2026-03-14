@@ -22,7 +22,7 @@ class AccessControlManagementWritePilotTest extends TestCase
         Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'kecamatan-pokja-iv']);
         Role::create(['name' => 'kecamatan-pokja-ii']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -122,7 +122,7 @@ class AccessControlManagementWritePilotTest extends TestCase
             'scope' => 'desa',
             'area_id' => $desa->id,
         ]);
-        $nonSuperAdmin->assignRole('admin-desa');
+        $nonSuperAdmin->assignRole('desa-sekretaris');
 
         $this->actingAs($nonSuperAdmin)
             ->put(route('super-admin.access-control.override.update'), [

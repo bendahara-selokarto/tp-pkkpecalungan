@@ -25,8 +25,8 @@ class DesaTamanBacaanTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -54,7 +54,7 @@ class DesaTamanBacaanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         TamanBacaan::create([
             'nama_taman_bacaan' => 'Taman Bacaan Mawar',
@@ -104,7 +104,7 @@ class DesaTamanBacaanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         for ($index = 1; $index <= 12; $index++) {
             TamanBacaan::create([
@@ -158,7 +158,7 @@ class DesaTamanBacaanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         TamanBacaan::create([
             'nama_taman_bacaan' => 'Taman Aktif',
@@ -202,7 +202,7 @@ class DesaTamanBacaanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         TamanBacaan::create([
             'nama_taman_bacaan' => 'Taman Default',
@@ -237,7 +237,7 @@ class DesaTamanBacaanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         $this->actingAs($adminDesa)->post('/desa/taman-bacaan', [
             'nama_taman_bacaan' => 'Taman Bacaan Anggrek',
@@ -281,7 +281,7 @@ class DesaTamanBacaanTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/taman-bacaan');
 
@@ -296,7 +296,7 @@ class DesaTamanBacaanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('admin-desa');
+        $userStale->assignRole('desa-pokja-ii');
 
         $response = $this->actingAs($userStale)->get('/desa/taman-bacaan');
 

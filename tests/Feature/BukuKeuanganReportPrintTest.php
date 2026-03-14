@@ -21,8 +21,8 @@ class BukuKeuanganReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -32,7 +32,7 @@ class BukuKeuanganReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_buku_keuangan_dari_data_transaksi_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         BukuKeuangan::create([
             'transaction_date' => now()->toDateString(),
@@ -55,7 +55,7 @@ class BukuKeuanganReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_buku_keuangan_dari_data_transaksi_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         BukuKeuangan::create([
             'transaction_date' => now()->toDateString(),
@@ -78,7 +78,7 @@ class BukuKeuanganReportPrintTest extends TestCase
     public function test_pengguna_dengan_role_scope_tidak_valid_ditolak_mengakses_buku_keuangan(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($user)->get(route('desa.buku-keuangan.report'));
 
@@ -88,7 +88,7 @@ class BukuKeuanganReportPrintTest extends TestCase
     public function test_buku_keuangan_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($user)->get(route('desa.buku-keuangan.report'));
 
@@ -98,7 +98,7 @@ class BukuKeuanganReportPrintTest extends TestCase
     public function test_route_alias_lama_tetap_mengarahkan_ke_report_buku_keuangan_baru(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         BukuKeuangan::create([
             'transaction_date' => now()->toDateString(),

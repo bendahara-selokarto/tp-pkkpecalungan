@@ -53,9 +53,7 @@ const isCurrentModuleReadOnly = computed(() => currentModuleMode.value === 'read
 const hasRole = (role) => roles.value.includes(role)
 const isSekretarisRole = computed(() =>
   hasRole('desa-sekretaris')
-  || hasRole('kecamatan-sekretaris')
-  || hasRole('admin-desa')
-  || hasRole('admin-kecamatan'),
+  || hasRole('kecamatan-sekretaris'),
 )
 
 const isActive = (prefix) => page.url.startsWith(prefix)
@@ -108,7 +106,6 @@ const buildScopedPdfReportItemsByGroup = (scope) => ({
     { href: `/${scope}/buku-tamu/report/pdf`, label: 'Buku Tamu | -' },
     { href: `/${scope}/buku-keuangan/report/pdf`, label: 'Buku Keuangan | 4.11' },
     { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-    { href: `/${scope}/bantuans/keuangan/report/pdf`, label: 'Keuangan Bantuan | -' },
     { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris | 4.12' },
     { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
     { href: `/${scope}/data-warga/report/pdf`, label: 'Data Warga | 4.14.1a' },

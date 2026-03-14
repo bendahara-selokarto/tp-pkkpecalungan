@@ -34,8 +34,6 @@ class ActivityScopeService
      */
     private const ROLE_SCOPED_ACTIVITY_BYPASS_ROLES = [
         'super-admin',
-        'admin-desa',
-        'admin-kecamatan',
     ];
 
     public function __construct(

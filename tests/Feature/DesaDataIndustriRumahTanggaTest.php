@@ -27,8 +27,8 @@ class DesaDataIndustriRumahTanggaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-iii']);
+        Role::create(['name' => 'kecamatan-pokja-iii']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -55,7 +55,7 @@ class DesaDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         DataIndustriRumahTangga::create([
             'kategori_jenis_industri' => 'Pangan',
@@ -95,7 +95,7 @@ class DesaDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         for ($index = 1; $index <= 12; $index++) {
             DataIndustriRumahTangga::create([
@@ -139,7 +139,7 @@ class DesaDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         DataIndustriRumahTangga::create([
             'kategori_jenis_industri' => 'Pangan',
@@ -168,7 +168,7 @@ class DesaDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         $this->actingAs($adminDesa)->post('/desa/data-industri-rumah-tangga', [
             'kategori_jenis_industri' => 'Pangan',
@@ -202,7 +202,7 @@ class DesaDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/data-industri-rumah-tangga');
 
@@ -216,7 +216,7 @@ class DesaDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
         ]);
-        $userStale->assignRole('admin-desa');
+        $userStale->assignRole('desa-pokja-iii');
 
         $response = $this->actingAs($userStale)->get('/desa/data-industri-rumah-tangga');
 
@@ -231,7 +231,7 @@ class DesaDataIndustriRumahTanggaTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         DataIndustriRumahTangga::create([
             'kategori_jenis_industri' => 'Pangan',

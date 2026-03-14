@@ -120,14 +120,14 @@ Catatan runtime ringkas: `inventaris` dan `buku-tamu` tetap dianggap modul overr
 - [ ] G1. Matrix owner lengkap dan tidak ambigu.
 - [ ] G2. Targeted plan siap: `RoleMenuVisibilityServiceTest`, `RoleMenuVisibilityGlobalContractTest`, `MenuVisibilityPayloadTest`, `ModuleVisibilityMiddlewareTest`, `DashboardLayoutMenuContractTest`.
 - [ ] G3. Full regression siap: `php artisan test`, `npm run build`, dan smoke role-based navigation.
-- [ ] G4. Exit criteria tetap: tidak ada mismatch payload/sidebar, privilege escalation, atau drift dokumen canonical.
+- [ ] G4. Exit criteria: tidak ada mismatch payload/sidebar, privilege escalation, atau drift dokumen canonical.
 - [ ] G5. Evidence runtime UI/UX untuk perubahan menu/sidebar tersedia dan ditautkan (smoke/a11y/visual/perf).
 
 ## Risiko
 
 - Risiko 1: drift kontrak antara mapping backend dan struktur sidebar frontend.
 - Risiko 2: privilege escalation jika override role-module tidak dipetakan ulang dengan benar.
-- Risiko 3: regressi role legacy (`admin-*`) bila compatibility mapping tidak diuji.
+- Risiko 3: regressi role canonical (sekretaris/pokja) bila mapping grouping tidak diuji.
 - Risiko 4: keputusan owner berubah di tengah eksekusi tanpa freeze baseline.
 
 ## Keputusan

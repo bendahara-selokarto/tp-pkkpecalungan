@@ -21,8 +21,8 @@ class KecamatanProgramPrioritasTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::create(['name' => 'desa-sekretaris']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -42,7 +42,7 @@ class KecamatanProgramPrioritasTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         ProgramPrioritas::create([
             'program' => 'Program Kecamatan A',
@@ -96,7 +96,7 @@ class KecamatanProgramPrioritasTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $programLuar = ProgramPrioritas::create([
             'program' => 'Program Luar Area',
@@ -136,7 +136,7 @@ class KecamatanProgramPrioritasTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/program-prioritas');
 
@@ -156,7 +156,7 @@ class KecamatanProgramPrioritasTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
         ]);
-        $staleUser->assignRole('admin-kecamatan');
+        $staleUser->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($staleUser)->get('/kecamatan/program-prioritas');
 

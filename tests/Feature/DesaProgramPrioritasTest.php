@@ -26,8 +26,8 @@ class DesaProgramPrioritasTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -55,7 +55,7 @@ class DesaProgramPrioritasTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         ProgramPrioritas::create([
             'program' => 'Program Desa A',
@@ -112,7 +112,7 @@ class DesaProgramPrioritasTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->actingAs($adminDesa)->post('/desa/program-prioritas', [
             'program' => 'Program Ketahanan Pangan',
@@ -212,7 +212,7 @@ class DesaProgramPrioritasTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/program-prioritas');
 
@@ -227,7 +227,7 @@ class DesaProgramPrioritasTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $staleUser->assignRole('admin-desa');
+        $staleUser->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($staleUser)->get('/desa/program-prioritas');
 
@@ -242,7 +242,7 @@ class DesaProgramPrioritasTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         ProgramPrioritas::create([
             'program' => 'Program Tahun Aktif',

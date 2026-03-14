@@ -2,26 +2,24 @@
 
 namespace App\Http\Controllers\SuperAdmin;
 
-
+use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\ListUsersRequest;
 use App\Http\Requests\User\StoreUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-use App\Domains\Wilayah\Models\Area;
-use App\Domains\Wilayah\Services\UserAreaContextService;
+use App\Models\User;
 use App\Services\User\UserService;
 use App\Support\RoleLabelFormatter;
 use App\UseCases\User\GetUserManagementFormOptionsUseCase;
 use App\UseCases\User\ListUsersForManagementUseCase;
 use DomainException;
 use Illuminate\Http\RedirectResponse;
-use App\Models\User;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class UserManagementController extends Controller
 {
-    
     public function __construct(
         protected UserService $userService,
         private readonly ListUsersForManagementUseCase $listUsersForManagementUseCase,
@@ -85,7 +83,7 @@ class UserManagementController extends Controller
             ])->values(),
         ]);
     }
-    
+
     public function update(UpdateUserRequest $request, User $user): RedirectResponse
     {
         try {

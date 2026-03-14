@@ -42,10 +42,6 @@ class UpdateProgramPrioritasRequest extends FormRequest
             'jadwal_bulan_10' => 'required|boolean',
             'jadwal_bulan_11' => 'required|boolean',
             'jadwal_bulan_12' => 'required|boolean',
-            'jadwal_i' => 'required|boolean',
-            'jadwal_ii' => 'required|boolean',
-            'jadwal_iii' => 'required|boolean',
-            'jadwal_iv' => 'required|boolean',
             'sumber_dana_pusat' => 'required|boolean',
             'sumber_dana_apbd' => 'required|boolean',
             'sumber_dana_swd' => 'required|boolean',
@@ -56,45 +52,13 @@ class UpdateProgramPrioritasRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        $legacyJadwalFlags = [
-            'jadwal_i' => $this->boolean('jadwal_i'),
-            'jadwal_ii' => $this->boolean('jadwal_ii'),
-            'jadwal_iii' => $this->boolean('jadwal_iii'),
-            'jadwal_iv' => $this->boolean('jadwal_iv'),
-        ];
-
         $monthlyJadwalFlags = [];
         foreach ($this->monthlyJadwalKeys() as $key) {
             $monthlyJadwalFlags[$key] = $this->boolean($key);
         }
 
-        if (! $this->hasAnyTruthyValue($monthlyJadwalFlags) && $this->hasAnyTruthyValue($legacyJadwalFlags)) {
-            $monthlyJadwalFlags = [
-                'jadwal_bulan_1' => $legacyJadwalFlags['jadwal_i'],
-                'jadwal_bulan_2' => $legacyJadwalFlags['jadwal_i'],
-                'jadwal_bulan_3' => $legacyJadwalFlags['jadwal_i'],
-                'jadwal_bulan_4' => $legacyJadwalFlags['jadwal_ii'],
-                'jadwal_bulan_5' => $legacyJadwalFlags['jadwal_ii'],
-                'jadwal_bulan_6' => $legacyJadwalFlags['jadwal_ii'],
-                'jadwal_bulan_7' => $legacyJadwalFlags['jadwal_iii'],
-                'jadwal_bulan_8' => $legacyJadwalFlags['jadwal_iii'],
-                'jadwal_bulan_9' => $legacyJadwalFlags['jadwal_iii'],
-                'jadwal_bulan_10' => $legacyJadwalFlags['jadwal_iv'],
-                'jadwal_bulan_11' => $legacyJadwalFlags['jadwal_iv'],
-                'jadwal_bulan_12' => $legacyJadwalFlags['jadwal_iv'],
-            ];
-        }
-
-        $normalizedLegacyJadwalFlags = [
-            'jadwal_i' => $monthlyJadwalFlags['jadwal_bulan_1'] || $monthlyJadwalFlags['jadwal_bulan_2'] || $monthlyJadwalFlags['jadwal_bulan_3'],
-            'jadwal_ii' => $monthlyJadwalFlags['jadwal_bulan_4'] || $monthlyJadwalFlags['jadwal_bulan_5'] || $monthlyJadwalFlags['jadwal_bulan_6'],
-            'jadwal_iii' => $monthlyJadwalFlags['jadwal_bulan_7'] || $monthlyJadwalFlags['jadwal_bulan_8'] || $monthlyJadwalFlags['jadwal_bulan_9'],
-            'jadwal_iv' => $monthlyJadwalFlags['jadwal_bulan_10'] || $monthlyJadwalFlags['jadwal_bulan_11'] || $monthlyJadwalFlags['jadwal_bulan_12'],
-        ];
-
         $this->merge([
             ...$monthlyJadwalFlags,
-            ...$normalizedLegacyJadwalFlags,
             'sumber_dana_pusat' => $this->boolean('sumber_dana_pusat'),
             'sumber_dana_apbd' => $this->boolean('sumber_dana_apbd'),
             'sumber_dana_swd' => $this->boolean('sumber_dana_swd'),

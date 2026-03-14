@@ -24,8 +24,8 @@ class DesaWarungPkkTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-iii']);
+        Role::create(['name' => 'kecamatan-pokja-iii']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -53,7 +53,7 @@ class DesaWarungPkkTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         WarungPkk::create([
             'nama_warung_pkk' => 'Warung PKK Mawar',
@@ -94,7 +94,7 @@ class DesaWarungPkkTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         WarungPkk::create([
             'nama_warung_pkk' => 'Warung Aktif',
@@ -134,7 +134,7 @@ class DesaWarungPkkTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         $this->actingAs($adminDesa)->post('/desa/warung-pkk', [
             'nama_warung_pkk' => 'Warung PKK Anggrek',
@@ -175,7 +175,7 @@ class DesaWarungPkkTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/warung-pkk');
 
@@ -190,7 +190,7 @@ class DesaWarungPkkTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('admin-desa');
+        $userStale->assignRole('desa-pokja-iii');
 
         $response = $this->actingAs($userStale)->get('/desa/warung-pkk');
 

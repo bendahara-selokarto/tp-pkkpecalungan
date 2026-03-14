@@ -21,8 +21,8 @@ class PilotProjectNaskahPelaporanReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-iv']);
+        Role::create(['name' => 'kecamatan-pokja-iv']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -32,7 +32,7 @@ class PilotProjectNaskahPelaporanReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_pdf_naskah_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-iv');
 
         PilotProjectNaskahPelaporanReport::create([
             'judul_laporan' => 'Naskah Desa',
@@ -57,7 +57,7 @@ class PilotProjectNaskahPelaporanReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_pdf_naskah_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-pokja-iv');
 
         PilotProjectNaskahPelaporanReport::create([
             'judul_laporan' => 'Naskah Kecamatan',
@@ -82,7 +82,7 @@ class PilotProjectNaskahPelaporanReportPrintTest extends TestCase
     public function test_pdf_naskah_tetap_aman_saat_scope_metadata_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-pokja-iv');
 
         $response = $this->actingAs($user)->get(route('desa.pilot-project-naskah-pelaporan.report'));
 

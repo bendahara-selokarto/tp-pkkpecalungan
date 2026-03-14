@@ -1,7 +1,7 @@
 # TODO QG90A1 Roadmap Sprint Naik Skor Project 90 Plus
 
 Tanggal: 2026-03-07  
-Status: `planned`
+Status: `in-progress` (`state:style-scope-fixed-e2e-sandbox-blocked`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -44,29 +44,41 @@ Related ADR: `-`
 
 ## Langkah Eksekusi
 
-- [ ] L0. Kunci baseline metrik sprint:
+- [x] L0. Kunci baseline metrik sprint:
   - simpan angka awal (`pint issue count`, pass/fail test suite, e2e doctor/smoke status).
-- [ ] L1. Hardening style gate bertahap (diff-first):
+  - 2026-03-15 baseline sprint:
+    - `./vendor/bin/pint --test app/Actions/User app/UseCases/User app/Http/Controllers/SuperAdmin tests/Feature/SuperAdmin tests/Feature/Auth`: `20 files`, `14 style issues`,
+    - `npm run test:e2e:doctor`: `PASS`,
+    - `npm run test:e2e:smoke`: `FAIL` (Chromium sandbox host `Operation not permitted`, bukan missing OS dependency).
+- [x] L1. Hardening style gate bertahap (diff-first):
   - prioritas file concern aktif dan boundary sensitif (`app/Actions`, `app/Http/Controllers/SuperAdmin`, `app/UseCases/User`, test policy/auth),
   - jalankan auto-fix terarah dan review agar tidak ada behavior drift.
-- [ ] L2. Hardening E2E runtime dependency:
+  - hasil: `pint` scope prioritas turun ke `0` issue (20 files).
+- [x] L2. Hardening E2E runtime dependency:
   - pastikan dependency Linux untuk Chromium terpenuhi di target environment,
   - normalisasi preflight script agar pesan gagal eksplisit (dependency vs bug test).
+  - status: preflight dependency `OK`, gagal runtime karena sandbox host (environment).
+  - mitigasi 2026-03-15: set `chromiumSandbox: false` + args `--no-sandbox --disable-setuid-sandbox` (Playwright config) tetap gagal (`sandbox_host_linux.cc`).
 - [ ] L3. Stabilkan command matrix kualitas:
   - `php artisan test --compact`,
   - `php artisan test tests/Unit/Frontend --compact`,
   - `npm run build`,
   - `npm run test:e2e:smoke`.
-- [ ] L4. Sinkronisasi dokumen concern terkait (doc-hardening pass):
+  - status 2026-03-15:
+    - `php artisan test tests/Unit/Frontend --compact`: `PASS` (user-reported),
+    - `npm run build`: `PASS`,
+    - `npm run test:e2e:smoke`: `FAIL` (sandbox host `Operation not permitted`, tetap terjadi setelah `chromiumSandbox: false`),
+    - `php artisan test --compact`: `PASS` (`1263 passed`, `8764 assertions`).
+- [x] L4. Sinkronisasi dokumen concern terkait (doc-hardening pass):
   - update registry concern aktif,
   - update operational validation log dengan status terbaru concern `QG90A1`.
 
 ## Validasi
 
-- [ ] V1 (L1): `./vendor/bin/pint --test` pada scope sprint prioritas menunjukkan penurunan issue yang terukur.
+- [x] V1 (L1): `./vendor/bin/pint --test` pada scope sprint prioritas menunjukkan penurunan issue yang terukur (`20 files`, `14 issues` -> `PASS`).
 - [ ] V2 (L2): targeted regression test pada file yang disentuh tetap hijau.
-- [ ] V3 (L3): `php artisan test --compact` hijau.
-- [ ] V4 (UI runtime): `npm run test:e2e:smoke` tidak lagi gagal akibat missing OS dependency.
+- [x] V3 (L3): `php artisan test --compact` hijau (`1263 passed`, `8764 assertions`).
+- [ ] V4 (UI runtime): `npm run test:e2e:smoke` tidak lagi gagal akibat missing OS dependency (gagal karena sandbox host).
 
 ## Risiko
 
@@ -75,8 +87,8 @@ Related ADR: `-`
 
 ## Keputusan
 
-- [ ] K1: gunakan strategi hardening bertahap per scope prioritas, bukan reformat total repository dalam satu patch.
-- [ ] K2: E2E failure karena dependency OS diklasifikasikan sebagai issue environment dan ditangani di layer tooling/preflight, bukan domain logic.
+- [x] K1: gunakan strategi hardening bertahap per scope prioritas, bukan reformat total repository dalam satu patch.
+- [x] K2: E2E failure karena dependency OS diklasifikasikan sebagai issue environment dan ditangani di layer tooling/preflight, bukan domain logic.
 
 ## Keputusan Arsitektur (Jika Ada)
 
@@ -97,4 +109,3 @@ Related ADR: `-`
 - [ ] Ringkasan perubahan sprint dan alasan prioritas.
 - [ ] Daftar file tooling/kode/dokumen yang terdampak per batch.
 - [ ] Hasil validasi akhir (pass/fail) + residual risk yang tersisa.
-

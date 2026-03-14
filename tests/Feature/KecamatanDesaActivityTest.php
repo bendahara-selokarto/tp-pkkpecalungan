@@ -29,8 +29,8 @@ class KecamatanDesaActivityTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create([
@@ -64,7 +64,7 @@ class KecamatanDesaActivityTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $kecamatanUser->assignRole('admin-kecamatan');
+        $kecamatanUser->assignRole('kecamatan-sekretaris');
 
         Activity::create([
             'title' => 'Kegiatan Desa Gombong',
@@ -105,7 +105,7 @@ class KecamatanDesaActivityTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $kecamatanUser->assignRole('admin-kecamatan');
+        $kecamatanUser->assignRole('kecamatan-sekretaris');
 
         Activity::create([
             'title' => 'Monitoring Tahun Aktif',
@@ -146,7 +146,7 @@ class KecamatanDesaActivityTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $kecamatanUser->assignRole('admin-kecamatan');
+        $kecamatanUser->assignRole('kecamatan-sekretaris');
 
         $outsideActivity = Activity::create([
             'title' => 'Kegiatan Desa Kalisalak',
@@ -172,7 +172,7 @@ class KecamatanDesaActivityTest extends TestCase
             'area_id' => $this->desaA1->id,
             'scope' => 'desa',
         ]);
-        $desaUser->assignRole('admin-desa');
+        $desaUser->assignRole('desa-sekretaris');
 
         $this->actingAs($desaUser);
 
@@ -188,7 +188,7 @@ class KecamatanDesaActivityTest extends TestCase
             'area_id' => $this->desaA1->id,
             'scope' => 'kecamatan',
         ]);
-        $invalidKecamatanUser->assignRole('admin-kecamatan');
+        $invalidKecamatanUser->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($invalidKecamatanUser);
 
@@ -204,7 +204,7 @@ class KecamatanDesaActivityTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $kecamatanUser->assignRole('admin-kecamatan');
+        $kecamatanUser->assignRole('kecamatan-sekretaris');
 
         for ($index = 1; $index <= 11; $index++) {
             Activity::create([
@@ -367,7 +367,7 @@ class KecamatanDesaActivityTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $kecamatanUser->assignRole('admin-kecamatan');
+        $kecamatanUser->assignRole('kecamatan-sekretaris');
 
         Activity::create([
             'title' => 'Kegiatan Desa Gombong',

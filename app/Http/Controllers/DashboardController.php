@@ -118,8 +118,6 @@ class DashboardController extends Controller
         };
 
         return [
-            'dashboardStats' => fn (): array => $resolvePayload()['stats'],
-            'dashboardCharts' => fn (): array => $resolvePayload()['charts'],
             'dashboardBlocks' => Inertia::defer(fn (): array => $resolveBlocks(), 'dashboard-blocks'),
             'dashboardContext' => fn (): array => $resolvePayload()['context'],
         ];

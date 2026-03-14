@@ -17,7 +17,7 @@ class AccessControlManagementReadOnlyTest extends TestCase
         parent::setUp();
 
         Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
     }
 
     public function test_super_admin_dapat_melihat_matrix_read_only(): void
@@ -108,7 +108,7 @@ class AccessControlManagementReadOnlyTest extends TestCase
     public function test_non_super_admin_ditolak_mengakses_matrix_read_only(): void
     {
         $user = User::factory()->create();
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $this->actingAs($user)
             ->get(route('super-admin.access-control.index'))

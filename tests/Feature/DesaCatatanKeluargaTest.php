@@ -28,8 +28,8 @@ class DesaCatatanKeluargaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-iv']);
+        Role::create(['name' => 'kecamatan-pokja-iv']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -56,7 +56,7 @@ class DesaCatatanKeluargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iv');
 
         DataWarga::create([
             'dasawisma' => 'Melati 1',
@@ -112,7 +112,7 @@ class DesaCatatanKeluargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iv');
 
         for ($index = 1; $index <= 12; $index++) {
             DataWarga::create([
@@ -162,7 +162,7 @@ class DesaCatatanKeluargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iv');
 
         DataWarga::create([
             'dasawisma' => 'Melati 1',
@@ -194,7 +194,7 @@ class DesaCatatanKeluargaTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iv');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/catatan-keluarga');
 
@@ -208,7 +208,7 @@ class DesaCatatanKeluargaTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
         ]);
-        $userStale->assignRole('admin-desa');
+        $userStale->assignRole('desa-pokja-iv');
 
         $response = $this->actingAs($userStale)->get('/desa/catatan-keluarga');
 
@@ -223,7 +223,7 @@ class DesaCatatanKeluargaTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iv');
 
         DataWarga::create([
             'dasawisma' => 'Melati Aktif',

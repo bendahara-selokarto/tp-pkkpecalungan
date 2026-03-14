@@ -79,4 +79,3 @@ class AuthenticationTest extends TestCase
         $response->assertRedirect('/');
     }
 }
-

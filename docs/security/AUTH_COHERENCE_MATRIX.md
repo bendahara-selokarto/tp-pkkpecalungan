@@ -37,14 +37,12 @@ Kunci:
 | `desa-pokja-ii` | `desa` | `desa` | `V/C/U/D/P` | `V/P` |
 | `desa-pokja-iii` | `desa` | `desa` | `V/C/U/D/P` | `V/P` |
 | `desa-pokja-iv` | `desa` | `desa` | `V/C/U/D/P` | `V/P` |
-| `admin-desa` (compat) | `desa` | `desa` | `V/C/U/D/P` | `V/P` |
 | `kecamatan-sekretaris` | `kecamatan` | `kecamatan` | `V/C/U/D/P` | `V/P` |
 | `kecamatan-bendahara` | `kecamatan` | `kecamatan` | `V/C/U/D/P` | `V/P` |
 | `kecamatan-pokja-i` | `kecamatan` | `kecamatan` | `V/C/U/D/P` | `V/P` |
 | `kecamatan-pokja-ii` | `kecamatan` | `kecamatan` | `V/C/U/D/P` | `V/P` |
 | `kecamatan-pokja-iii` | `kecamatan` | `kecamatan` | `V/C/U/D/P` | `V/P` |
 | `kecamatan-pokja-iv` | `kecamatan` | `kecamatan` | `V/C/U/D/P` | `V/P` |
-| `admin-kecamatan` (compat) | `kecamatan` | `kecamatan` | `V/C/U/D/P` | `V/P` |
 | `super-admin` | `kecamatan` | `kecamatan` | `V/C/U/D/P` | `V/P` |
 
 Catatan penting:
@@ -52,6 +50,7 @@ Catatan penting:
 - Role di luar matrix (`RoleScopeMatrix`) ditolak oleh middleware `scope.role`.
 - Jika `role` valid tapi `area_id` tidak sesuai level scope, akses ditolak (`EnsureScopeRole` + `UserAreaContextService`).
 - `super-admin` tetap harus punya `area_id` yang mengarah ke area level `kecamatan` untuk masuk modul scope `kecamatan`.
+- Role legacy `admin-*` dinonaktifkan di runtime sejak 2026-03-15 (tidak masuk matrix aktif).
 
 ## 2) Matrix Operasi per Modul 4.9-4.15
 
@@ -60,7 +59,7 @@ Catatan penting:
 | 4.9a | `anggota-tim-penggerak` | `Route::resource` + report pdf | `AnggotaTimPenggerakPolicy` | `V/C/U/D/P` | Level + area harus sama user |
 | 4.9b | `kader-khusus` | `Route::resource` + report pdf | `KaderKhususPolicy` | `V/C/U/D/P` | Level + area harus sama user |
 | 4.10 | `agenda-surat` | `Route::resource` + report + ekspedisi report | `AgendaSuratPolicy` | `V/C/U/D/P` | Level + area harus sama user |
-| 4.11 | `buku-keuangan` | `Route::resource` + report (+ alias `bantuans.keuangan.report`) | `BukuKeuanganPolicy` | `V/C/U/D/P` | Level + area harus sama user |
+| 4.11 | `buku-keuangan` | `Route::resource` + report | `BukuKeuanganPolicy` | `V/C/U/D/P` | Level + area harus sama user |
 | 4.12 | `inventaris` | `Route::resource` + report pdf | `InventarisPolicy` | `V/C/U/D/P` | Level + area harus sama user |
 | 4.13 | `activities` | `Route::resource` + print per item | `ActivityPolicy` | `V/C/U/D/P` | Desa: same area. Kecamatan: same area untuk data kecamatan, plus boleh view/print data desa dalam kecamatannya (monitoring) |
 | 4.14.1a | `data-warga` | `Route::resource` + report pdf | `DataWargaPolicy` | `V/C/U/D/P` | Level + area harus sama user |
@@ -113,4 +112,3 @@ Ringkasan hasil route (name-based count):
 - `posyandu`: desa=8, kecamatan=8
 - `simulasi-penyuluhan`: desa=8, kecamatan=8
 - `catatan-keluarga`: desa=2, kecamatan=2
-

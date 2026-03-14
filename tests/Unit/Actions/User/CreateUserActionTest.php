@@ -17,8 +17,8 @@ class CreateUserActionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'super-admin']);
     }
 
@@ -37,7 +37,7 @@ class CreateUserActionTest extends TestCase
             'password' => 'password123',
             'scope' => 'desa',
             'area_id' => $area->id,
-            'role' => 'admin-desa',
+            'role' => 'desa-sekretaris',
         ]);
 
         $this->assertDatabaseHas('users', [
@@ -46,7 +46,7 @@ class CreateUserActionTest extends TestCase
             'area_id' => $area->id,
         ]);
 
-        $this->assertTrue($user->hasRole('admin-desa'));
+        $this->assertTrue($user->hasRole('desa-sekretaris'));
     }
 
     public function test_gagal_membuat_pengguna_jika_role_tidak_sesuai_scope(): void
@@ -66,7 +66,7 @@ class CreateUserActionTest extends TestCase
             'password' => 'password123',
             'scope' => 'desa',
             'area_id' => $area->id,
-            'role' => 'admin-kecamatan',
+            'role' => 'kecamatan-sekretaris',
         ]);
     }
 
@@ -84,7 +84,7 @@ class CreateUserActionTest extends TestCase
             'email' => 'canonical-scope@example.com',
             'password' => 'password123',
             'area_id' => $area->id,
-            'role' => 'admin-desa',
+            'role' => 'desa-sekretaris',
         ]);
 
         $this->assertSame('desa', $user->fresh()->scope);

@@ -24,8 +24,8 @@ class DesaKejarPaketTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -53,7 +53,7 @@ class DesaKejarPaketTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         KejarPaket::create([
             'nama_kejar_paket' => 'PKBM Mawar',
@@ -96,7 +96,7 @@ class DesaKejarPaketTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         KejarPaket::create([
             'nama_kejar_paket' => 'PKBM Aktif',
@@ -138,7 +138,7 @@ class DesaKejarPaketTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         $this->actingAs($adminDesa)->post('/desa/kejar-paket', [
             'nama_kejar_paket' => 'PKBM Anggrek',
@@ -183,7 +183,7 @@ class DesaKejarPaketTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/kejar-paket');
 
@@ -198,7 +198,7 @@ class DesaKejarPaketTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('admin-desa');
+        $userStale->assignRole('desa-pokja-ii');
 
         $response = $this->actingAs($userStale)->get('/desa/kejar-paket');
 

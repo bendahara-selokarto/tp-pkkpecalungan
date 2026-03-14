@@ -16,7 +16,7 @@ class UserPolicyTest extends TestCase
         parent::setUp();
 
         Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
     }
 
     public function test_hanya_super_admin_dapat_membuat_pengguna_melalui_kebijakan(): void
@@ -25,7 +25,7 @@ class UserPolicyTest extends TestCase
         $superAdmin->assignRole('super-admin');
 
         $adminDesa = User::factory()->create();
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->assertTrue($superAdmin->can('create', User::class));
         $this->assertFalse($adminDesa->can('create', User::class));

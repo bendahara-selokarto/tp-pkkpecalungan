@@ -20,8 +20,8 @@ class GetWilayahByUserTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::create(['name' => 'desa-sekretaris']);
     }
 
     #[Test]
@@ -48,7 +48,7 @@ class GetWilayahByUserTest extends TestCase
             'scope'   => ScopeLevel::KECAMATAN->value,
             'area_id' => $kecamatan->id,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $usecase = app(GetWilayahByUser::class);
 
@@ -81,7 +81,7 @@ class GetWilayahByUserTest extends TestCase
             'scope'   => ScopeLevel::DESA->value,
             'area_id' => $desa->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $usecase = app(GetWilayahByUser::class);
 
@@ -110,7 +110,7 @@ class GetWilayahByUserTest extends TestCase
             'scope'   => ScopeLevel::KECAMATAN->value,
             'area_id' => $kecamatan->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $usecase = app(GetWilayahByUser::class);
 

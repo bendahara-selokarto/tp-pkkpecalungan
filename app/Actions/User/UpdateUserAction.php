@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Actions\User;
 
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
@@ -12,8 +13,7 @@ class UpdateUserAction
 {
     public function __construct(
         private readonly AreaRepositoryInterface $areaRepository
-    ) {
-    }
+    ) {}
 
     public function execute(User $user, array $data): User
     {

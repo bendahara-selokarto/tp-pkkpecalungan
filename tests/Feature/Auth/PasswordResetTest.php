@@ -71,4 +71,3 @@ class PasswordResetTest extends TestCase
         });
     }
 }
-

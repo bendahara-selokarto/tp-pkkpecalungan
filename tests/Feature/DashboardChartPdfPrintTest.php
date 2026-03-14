@@ -19,8 +19,8 @@ class DashboardChartPdfPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'super-admin']);
     }
 
@@ -34,7 +34,7 @@ class DashboardChartPdfPrintTest extends TestCase
             'area_id' => $desa->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Rapat PKK',

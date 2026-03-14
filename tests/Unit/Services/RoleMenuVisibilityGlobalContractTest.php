@@ -151,21 +151,6 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
         'kecamatan-pokja-iv' => [
             'pokja-iv' => RoleMenuVisibilityService::MODE_READ_WRITE,
         ],
-        'admin-desa' => [
-            'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-i' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_WRITE,
-        ],
-        'admin-kecamatan' => [
-            'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-i' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_WRITE,
-            'monitoring' => RoleMenuVisibilityService::MODE_READ_ONLY,
-        ],
         'super-admin' => [
             'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'pokja-i' => RoleMenuVisibilityService::MODE_READ_WRITE,
@@ -274,8 +259,8 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             ['role' => 'kecamatan-pokja-ii', 'scope' => 'kecamatan'],
             ['role' => 'kecamatan-pokja-iii', 'scope' => 'kecamatan'],
             ['role' => 'kecamatan-pokja-iv', 'scope' => 'kecamatan'],
-            ['role' => 'admin-desa', 'scope' => 'desa'],
-            ['role' => 'admin-kecamatan', 'scope' => 'kecamatan'],
+            ['role' => 'desa-sekretaris', 'scope' => 'desa'],
+            ['role' => 'kecamatan-sekretaris', 'scope' => 'kecamatan'],
             ['role' => 'super-admin', 'scope' => 'desa'],
             ['role' => 'super-admin', 'scope' => 'kecamatan'],
         ];

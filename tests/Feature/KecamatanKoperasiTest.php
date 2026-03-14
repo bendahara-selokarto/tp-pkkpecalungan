@@ -23,8 +23,8 @@ class KecamatanKoperasiTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
+        Role::create(['name' => 'desa-pokja-ii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -45,7 +45,7 @@ class KecamatanKoperasiTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         Koperasi::create([
             'nama_koperasi' => 'Koperasi Anyelir',
@@ -88,7 +88,7 @@ class KecamatanKoperasiTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         $koperasiLuar = Koperasi::create([
             'nama_koperasi' => 'Koperasi Luar Area',
@@ -117,7 +117,7 @@ class KecamatanKoperasiTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         $koperasi = Koperasi::create([
             'nama_koperasi' => 'Koperasi Lama',
@@ -151,7 +151,7 @@ class KecamatanKoperasiTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/koperasi');
 
@@ -172,7 +172,7 @@ class KecamatanKoperasiTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('admin-kecamatan');
+        $userStale->assignRole('kecamatan-pokja-ii');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/koperasi');
 

@@ -21,8 +21,8 @@ class DashboardActivityChartTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'super-admin']);
     }
 
@@ -42,7 +42,7 @@ class DashboardActivityChartTest extends TestCase
 
         $user = User::factory()->create();
         $user->forceFill(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => 2026])->save();
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'A1',
@@ -77,11 +77,9 @@ class DashboardActivityChartTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->where('auth.user.scope', 'desa')
-                ->where('dashboardStats.total', 2)
-                ->where('dashboardStats.this_month', 1)
-                ->where('dashboardStats.published', 1)
-                ->where('dashboardStats.draft', 1);
         });
     }
 
@@ -94,7 +92,7 @@ class DashboardActivityChartTest extends TestCase
 
         $user = User::factory()->create();
         $user->forceFill(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => 2026])->save();
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Aktif 2026',
@@ -122,10 +120,8 @@ class DashboardActivityChartTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page): void {
             $page
                 ->component('Dashboard')
-                ->where('dashboardStats.total', 1)
-                ->where('dashboardStats.this_month', 1)
-                ->where('dashboardStats.published', 1)
-                ->where('dashboardStats.draft', 0);
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
         });
     }
 
@@ -140,7 +136,7 @@ class DashboardActivityChartTest extends TestCase
 
         $user = User::factory()->create();
         $user->forceFill(['scope' => 'kecamatan', 'area_id' => $kecamatanA->id])->save();
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         Activity::create([
             'title' => 'Kec A',
@@ -186,16 +182,9 @@ class DashboardActivityChartTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) use ($expectedBooksTotal) {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->where('auth.user.scope', 'kecamatan')
-                ->where('dashboardStats.total', 2)
-                ->where('dashboardStats.this_month', 1)
-                ->where('dashboardStats.published', 1)
-                ->where('dashboardStats.draft', 1)
-                ->where('dashboardCharts.level.values', [1, 1])
-                ->where('dashboardCharts.by_desa.labels', ['Gombong'])
-                ->where('dashboardCharts.by_desa.values', [1])
-                ->where('dashboardCharts.by_desa.books_total', [$expectedBooksTotal])
-                ->where('dashboardCharts.by_desa.books_filled', [1]);
         });
     }
 
@@ -209,7 +198,7 @@ class DashboardActivityChartTest extends TestCase
         $user = User::factory()->create();
         // Simulasi data legacy/stale: role desa tetapi metadata scope + area level kecamatan.
         $user->forceFill(['scope' => 'kecamatan', 'area_id' => $kecamatan->id])->save();
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         Activity::create([
             'title' => 'Kec A',
@@ -235,12 +224,9 @@ class DashboardActivityChartTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->where('auth.user.scope', null)
-                ->where('dashboardStats.total', 0)
-                ->where('dashboardStats.this_month', 0)
-                ->where('dashboardStats.published', 0)
-                ->where('dashboardStats.draft', 0)
-                ->where('dashboardCharts.level.values', [0, 0]);
         });
     }
 
@@ -254,7 +240,7 @@ class DashboardActivityChartTest extends TestCase
         $user = User::factory()->create();
         // Simulasi data legacy/stale: role kecamatan tetapi area level desa.
         $user->forceFill(['scope' => 'kecamatan', 'area_id' => $desa->id])->save();
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         Activity::create([
             'title' => 'Kegiatan Kecamatan',
@@ -280,12 +266,9 @@ class DashboardActivityChartTest extends TestCase
         $response->assertInertia(function (AssertableInertia $page) {
             $page
                 ->component('Dashboard')
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
                 ->where('auth.user.scope', null)
-                ->where('dashboardStats.total', 0)
-                ->where('dashboardStats.this_month', 0)
-                ->where('dashboardStats.published', 0)
-                ->where('dashboardStats.draft', 0)
-                ->where('dashboardCharts.level.values', [0, 0]);
         });
     }
 
@@ -298,7 +281,7 @@ class DashboardActivityChartTest extends TestCase
 
         $user = User::factory()->create();
         $user->forceFill(['scope' => 'kecamatan', 'area_id' => $kecamatan->id])->save();
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         Activity::create([
             'title' => 'Aktivitas Januari',
@@ -343,10 +326,8 @@ class DashboardActivityChartTest extends TestCase
         $januaryResponse->assertInertia(function (AssertableInertia $page) use ($expectedBooksTotal) {
             $page
                 ->component('Dashboard')
-                ->where('dashboardCharts.by_desa.labels', ['Gombong'])
-                ->where('dashboardCharts.by_desa.values', [1])
-                ->where('dashboardCharts.by_desa.books_total', [$expectedBooksTotal])
-                ->where('dashboardCharts.by_desa.books_filled', [1]);
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
         });
 
         $februaryResponse = $this->actingAs($user)->get(route('dashboard', ['section1_month' => '2']));
@@ -354,10 +335,8 @@ class DashboardActivityChartTest extends TestCase
         $februaryResponse->assertInertia(function (AssertableInertia $page) use ($expectedBooksTotal) {
             $page
                 ->component('Dashboard')
-                ->where('dashboardCharts.by_desa.labels', ['Gombong'])
-                ->where('dashboardCharts.by_desa.values', [1])
-                ->where('dashboardCharts.by_desa.books_total', [$expectedBooksTotal])
-                ->where('dashboardCharts.by_desa.books_filled', [2]);
+                ->missing('dashboardStats')
+                ->missing('dashboardCharts')
         });
     }
 

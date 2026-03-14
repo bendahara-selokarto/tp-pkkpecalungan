@@ -28,8 +28,8 @@ class DesaBukuDaftarHadirTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -57,7 +57,7 @@ class DesaBukuDaftarHadirTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $activityA = Activity::create([
             'title' => 'Kegiatan Desa A',
@@ -158,7 +158,7 @@ class DesaBukuDaftarHadirTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $activityAktif = Activity::create([
             'title' => 'Kegiatan 2026',
@@ -220,7 +220,7 @@ class DesaBukuDaftarHadirTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $activityLama = Activity::create([
             'title' => 'Kegiatan 2025',
@@ -250,7 +250,7 @@ class DesaBukuDaftarHadirTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($adminKecamatan)->get('/desa/buku-daftar-hadir')
             ->assertStatus(403);
@@ -264,7 +264,7 @@ class DesaBukuDaftarHadirTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $staleUser->assignRole('admin-desa');
+        $staleUser->assignRole('desa-sekretaris');
 
         $this->actingAs($staleUser)->get('/desa/buku-daftar-hadir')
             ->assertStatus(403);

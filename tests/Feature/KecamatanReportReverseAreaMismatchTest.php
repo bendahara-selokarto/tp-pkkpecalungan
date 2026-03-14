@@ -20,7 +20,7 @@ class KecamatanReportReverseAreaMismatchTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $this->kecamatanA->id]);
@@ -33,7 +33,7 @@ class KecamatanReportReverseAreaMismatchTest extends TestCase
             'scope' => 'kecamatan',
             'area_id' => $this->desaA->id,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($user)->get(route($routeName));
 

@@ -30,8 +30,8 @@ class KecamatanActivityTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'kecamatan-pokja-i']);
         Role::create(['name' => 'kecamatan-pokja-ii']);
@@ -57,7 +57,7 @@ class KecamatanActivityTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($adminKecamatan)->post('/kecamatan/activities', [
             'title' => 'Rapat Koordinasi Kecamatan',
@@ -111,7 +111,7 @@ class KecamatanActivityTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $oldImagePath = sprintf('activities/kecamatan/%d/images/old-image.jpg', $this->kecamatanA->id);
         $oldDocumentPath = sprintf('activities/kecamatan/%d/documents/old-doc.pdf', $this->kecamatanA->id);
@@ -159,7 +159,7 @@ class KecamatanActivityTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $imagePath = sprintf('activities/kecamatan/%d/images/activity-image.jpg', $this->kecamatanA->id);
         $documentPath = sprintf('activities/kecamatan/%d/documents/activity-document.pdf', $this->kecamatanA->id);
@@ -202,7 +202,7 @@ class KecamatanActivityTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($adminKecamatan)->post('/kecamatan/activities', [
             'title' => 'Kegiatan Invalid',
@@ -221,7 +221,7 @@ class KecamatanActivityTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         for ($index = 1; $index <= 11; $index++) {
             Activity::create([
@@ -304,7 +304,7 @@ class KecamatanActivityTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         Activity::create([
             'title' => 'Kegiatan Tahun Aktif',

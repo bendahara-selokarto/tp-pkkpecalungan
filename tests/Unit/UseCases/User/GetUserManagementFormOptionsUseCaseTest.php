@@ -17,15 +17,12 @@ class GetUserManagementFormOptionsUseCaseTest extends TestCase
         Role::create(['name' => 'desa-sekretaris']);
         Role::create(['name' => 'kecamatan-sekretaris']);
         Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'admin-desa']);
 
         $useCase = app(GetUserManagementFormOptionsUseCase::class);
         $options = $useCase->roleOptionsByScope();
 
         $this->assertSame(['desa-sekretaris'], $options['desa']);
         $this->assertSame(['kecamatan-sekretaris'], $options['kecamatan']);
-        $this->assertNotContains('admin-desa', $options['desa']);
-        $this->assertNotContains('admin-kecamatan', $options['kecamatan']);
         $this->assertNotContains('super-admin', $options['kecamatan']);
     }
 

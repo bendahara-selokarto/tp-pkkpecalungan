@@ -21,8 +21,8 @@ class ProgramPrioritasReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -32,7 +32,7 @@ class ProgramPrioritasReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_laporan_pdf_program_prioritas_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         ProgramPrioritas::create([
             'program' => 'Program Desa',
@@ -62,7 +62,7 @@ class ProgramPrioritasReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_program_prioritas_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         ProgramPrioritas::create([
             'program' => 'Program Kecamatan',
@@ -92,7 +92,7 @@ class ProgramPrioritasReportPrintTest extends TestCase
     public function test_laporan_pdf_tetap_aman_saat_role_dan_level_area_tidak_sinkron(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->kecamatanB->id]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($user)->get(route('desa.program-prioritas.report'));
 

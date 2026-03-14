@@ -23,8 +23,8 @@ class KecamatanKejarPaketTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
+        Role::create(['name' => 'desa-pokja-ii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -45,7 +45,7 @@ class KecamatanKejarPaketTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         KejarPaket::create([
             'nama_kejar_paket' => 'PKBM Anyelir',
@@ -88,7 +88,7 @@ class KecamatanKejarPaketTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         $kejarPaketLuar = KejarPaket::create([
             'nama_kejar_paket' => 'PKBM Luar Area',
@@ -117,7 +117,7 @@ class KecamatanKejarPaketTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         $kejarPaket = KejarPaket::create([
             'nama_kejar_paket' => 'PKBM Lama',
@@ -151,7 +151,7 @@ class KecamatanKejarPaketTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/kejar-paket');
 
@@ -172,7 +172,7 @@ class KecamatanKejarPaketTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('admin-kecamatan');
+        $userStale->assignRole('kecamatan-pokja-ii');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/kejar-paket');
 

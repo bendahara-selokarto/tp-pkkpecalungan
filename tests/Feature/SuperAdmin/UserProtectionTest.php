@@ -1,11 +1,11 @@
 <?php
 
 namespace Tests\Feature\SuperAdmin;
-use PHPUnit\Framework\Attributes\Test;
 
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Test;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
@@ -18,11 +18,11 @@ class UserProtectionTest extends TestCase
         parent::setUp();
 
         Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
     }
 
-   #[Test]
+    #[Test]
     public function super_admin_tidak_dapat_menghapus_super_admin_lain()
     {
         $superAdmin = User::factory()->create();
@@ -66,7 +66,7 @@ class UserProtectionTest extends TestCase
                 'email' => 'baru@example.com',
                 'scope' => 'desa',
                 'area_id' => $desa->id,
-                'role' => 'admin-desa',
+                'role' => 'desa-sekretaris',
             ]);
 
         $response
@@ -124,7 +124,7 @@ class UserProtectionTest extends TestCase
             'scope' => 'kecamatan',
             'area_id' => $kecamatan->id,
         ]);
-        $target->assignRole('admin-kecamatan');
+        $target->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($superAdmin)
             ->put(route('super-admin.users.update', $target), [
@@ -140,6 +140,6 @@ class UserProtectionTest extends TestCase
 
         $target->refresh();
         $this->assertFalse($target->hasRole('super-admin'));
-        $this->assertTrue($target->hasRole('admin-kecamatan'));
+        $this->assertTrue($target->hasRole('kecamatan-sekretaris'));
     }
 }

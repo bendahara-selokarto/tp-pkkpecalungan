@@ -72,7 +72,6 @@ IU = input utama. Untuk laporan rekap lintas modul, detail sumber data per kolom
 | Sekretaris PKK | `/${scope}/buku-tamu/report/pdf` | `/${scope}/buku-tamu` | Buku Tamu. |
 | Sekretaris PKK | `/${scope}/buku-keuangan/report/pdf` | `/${scope}/buku-keuangan` | Buku Keuangan. |
 | Sekretaris PKK | `/${scope}/bantuans/report/pdf` | `/${scope}/bantuans` | Buku Bantuan. |
-| Sekretaris PKK | `/${scope}/bantuans/keuangan/report/pdf` | `/${scope}/buku-keuangan` | Rekap keuangan bantuan dari buku keuangan. |
 | Sekretaris PKK | `/${scope}/inventaris/report/pdf` | `/${scope}/inventaris` | Buku Inventaris. |
 | Sekretaris PKK | `/${scope}/program-prioritas/report/pdf` | `/${scope}/program-prioritas` | Buku Program Kerja TP PKK. |
 | Sekretaris PKK | `/${scope}/data-warga/report/pdf` | `/${scope}/data-warga` | Data Warga. |

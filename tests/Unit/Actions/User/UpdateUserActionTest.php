@@ -17,8 +17,8 @@ class UpdateUserActionTest extends TestCase
 
     public function test_memperbarui_pengguna_dan_peran(): void
     {
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-sekretaris']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
         $oldArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
         $newArea = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
 
@@ -26,7 +26,7 @@ class UpdateUserActionTest extends TestCase
             'scope' => 'desa',
             'area_id' => $oldArea->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $action = app(UpdateUserAction::class);
 
@@ -35,20 +35,20 @@ class UpdateUserActionTest extends TestCase
             'email' => 'updated@email.com',
             'scope' => 'kecamatan',
             'area_id' => $newArea->id,
-            'role' => 'admin-kecamatan',
+            'role' => 'kecamatan-sekretaris',
         ]);
 
         $this->assertEquals('Updated Name', $user->fresh()->name);
         $this->assertEquals('kecamatan', $user->fresh()->scope);
         $this->assertEquals($newArea->id, $user->fresh()->area_id);
-        $this->assertTrue($user->fresh()->hasRole('admin-kecamatan'));
+        $this->assertTrue($user->fresh()->hasRole('kecamatan-sekretaris'));
     }
 
     public function test_gagal_memperbarui_pengguna_jika_area_tidak_sesuai_scope(): void
     {
         $this->expectException(ValidationException::class);
 
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
         $desaArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
         $kecamatanArea = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
 
@@ -56,7 +56,7 @@ class UpdateUserActionTest extends TestCase
             'scope' => 'desa',
             'area_id' => $desaArea->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $action = app(UpdateUserAction::class);
         $action->execute($user, [
@@ -64,20 +64,20 @@ class UpdateUserActionTest extends TestCase
             'email' => 'updated@email.com',
             'scope' => 'desa',
             'area_id' => $kecamatanArea->id,
-            'role' => 'admin-desa',
+            'role' => 'desa-sekretaris',
         ]);
     }
 
     public function test_memperbarui_pengguna_memulihkan_scope_stale_berdasarkan_area(): void
     {
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
         $desaArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
 
         $user = User::factory()->create([
             'scope' => 'kecamatan',
             'area_id' => $desaArea->id,
         ]);
-        $user->assignRole('admin-desa');
+        $user->assignRole('desa-sekretaris');
 
         $action = app(UpdateUserAction::class);
 
@@ -85,7 +85,7 @@ class UpdateUserActionTest extends TestCase
             'name' => 'Normalized Scope',
             'email' => 'normalized-scope@email.com',
             'area_id' => $desaArea->id,
-            'role' => 'admin-desa',
+            'role' => 'desa-sekretaris',
         ]);
 
         $this->assertSame('desa', $user->fresh()->scope);
@@ -96,7 +96,7 @@ class UpdateUserActionTest extends TestCase
         $this->expectException(DomainException::class);
 
         Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'desa-sekretaris']);
         $desaArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
 
         $user = User::factory()->create([
@@ -111,7 +111,7 @@ class UpdateUserActionTest extends TestCase
             'email' => 'should-not-update@email.com',
             'scope' => 'desa',
             'area_id' => $desaArea->id,
-            'role' => 'admin-desa',
+            'role' => 'desa-sekretaris',
         ]);
     }
 
@@ -120,14 +120,14 @@ class UpdateUserActionTest extends TestCase
         $this->expectException(ValidationException::class);
 
         Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'kecamatan-sekretaris']);
         $kecamatanArea = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
 
         $user = User::factory()->create([
             'scope' => 'kecamatan',
             'area_id' => $kecamatanArea->id,
         ]);
-        $user->assignRole('admin-kecamatan');
+        $user->assignRole('kecamatan-sekretaris');
 
         $action = app(UpdateUserAction::class);
         $action->execute($user, [

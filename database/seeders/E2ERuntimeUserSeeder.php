@@ -27,7 +27,7 @@ class E2ERuntimeUserSeeder extends Seeder
                 'name' => 'E2E Desa User',
                 'scope' => 'desa',
                 'area_id' => (int) $desaArea->id,
-                'role' => 'admin-desa',
+                'role' => 'desa-sekretaris',
             ],
             [
                 'email' => (string) env('E2E_KECAMATAN_EMAIL', 'e2e.kecamatan@pkk.local'),
@@ -35,7 +35,7 @@ class E2ERuntimeUserSeeder extends Seeder
                 'name' => 'E2E Kecamatan User',
                 'scope' => 'kecamatan',
                 'area_id' => (int) $kecamatanArea->id,
-                'role' => 'admin-kecamatan',
+                'role' => 'kecamatan-sekretaris',
             ],
             [
                 'email' => (string) env('E2E_SUPERADMIN_EMAIL', 'e2e.superadmin@pkk.local'),

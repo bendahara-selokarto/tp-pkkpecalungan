@@ -27,8 +27,8 @@ class DesaSimulasiPenyuluhanTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-i']);
+        Role::create(['name' => 'kecamatan-pokja-i']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -55,7 +55,7 @@ class DesaSimulasiPenyuluhanTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         SimulasiPenyuluhan::create([
             'nama_kegiatan' => 'Penyuluhan Kesehatan Ibu',
@@ -97,7 +97,7 @@ class DesaSimulasiPenyuluhanTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         $this->actingAs($adminDesa)->post('/desa/simulasi-penyuluhan', [
             'nama_kegiatan' => 'Penyuluhan Posyandu',
@@ -140,7 +140,7 @@ class DesaSimulasiPenyuluhanTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-i');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/simulasi-penyuluhan');
 
@@ -155,7 +155,7 @@ class DesaSimulasiPenyuluhanTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-i');
 
         SimulasiPenyuluhan::create([
             'nama_kegiatan' => 'Penyuluhan Kesehatan Ibu',

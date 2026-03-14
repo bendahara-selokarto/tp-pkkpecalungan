@@ -25,8 +25,8 @@ class DesaDataPelatihanKaderTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-desa']);
-        Role::create(['name' => 'admin-kecamatan']);
+        Role::create(['name' => 'desa-pokja-ii']);
+        Role::create(['name' => 'kecamatan-pokja-ii']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -54,7 +54,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-001',
@@ -112,7 +112,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         for ($index = 1; $index <= 12; $index++) {
             DataPelatihanKader::create([
@@ -174,7 +174,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-AKTIF',
@@ -225,7 +225,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-DEFAULT',
@@ -262,7 +262,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-ii');
 
         $this->actingAs($adminDesa)->post('/desa/data-pelatihan-kader', [
             'nomor_registrasi' => 'REG-010',
@@ -313,7 +313,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-ii');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/data-pelatihan-kader');
 
@@ -328,7 +328,7 @@ class DesaDataPelatihanKaderTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('admin-desa');
+        $userStale->assignRole('desa-pokja-ii');
 
         $response = $this->actingAs($userStale)->get('/desa/data-pelatihan-kader');
 

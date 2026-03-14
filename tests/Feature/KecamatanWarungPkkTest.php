@@ -23,8 +23,8 @@ class KecamatanWarungPkkTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'admin-kecamatan']);
-        Role::create(['name' => 'admin-desa']);
+        Role::create(['name' => 'kecamatan-pokja-iii']);
+        Role::create(['name' => 'desa-pokja-iii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -45,7 +45,7 @@ class KecamatanWarungPkkTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         WarungPkk::create([
             'nama_warung_pkk' => 'Warung PKK Anyelir',
@@ -86,7 +86,7 @@ class KecamatanWarungPkkTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         $warungPkkLuar = WarungPkk::create([
             'nama_warung_pkk' => 'Warung PKK Luar Area',
@@ -114,7 +114,7 @@ class KecamatanWarungPkkTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('admin-kecamatan');
+        $adminKecamatan->assignRole('kecamatan-pokja-iii');
 
         $warungPkk = WarungPkk::create([
             'nama_warung_pkk' => 'Warung Lama',
@@ -147,7 +147,7 @@ class KecamatanWarungPkkTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('admin-desa');
+        $adminDesa->assignRole('desa-pokja-iii');
 
         $response = $this->actingAs($adminDesa)->get('/kecamatan/warung-pkk');
 
@@ -168,7 +168,7 @@ class KecamatanWarungPkkTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('admin-kecamatan');
+        $userStale->assignRole('kecamatan-pokja-iii');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/warung-pkk');
 
