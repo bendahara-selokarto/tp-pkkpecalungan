@@ -50,11 +50,16 @@
         ],
         "test": [
             "@php artisan config:clear --ansi",
+            "bash scripts/validate-php-syntax.sh",
             "@php -d memory_limit=512M artisan test --compact"
         ],
         "test:full": [
             "@php artisan config:clear --ansi",
+            "bash scripts/validate-php-syntax.sh",
             "@php -d memory_limit=512M artisan test --compact"
+        ],
+        "test:syntax": [
+            "bash scripts/validate-php-syntax.sh"
         ],
         "test:full:unit": [
             "@php artisan config:clear --ansi",
