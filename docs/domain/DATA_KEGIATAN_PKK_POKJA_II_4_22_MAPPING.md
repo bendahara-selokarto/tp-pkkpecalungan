@@ -14,8 +14,8 @@ Catatan identitas dokumen:
 
 ## Hasil Baca Awal (Text-Layer)
 
-- Text-layer PDF belum tersedia untuk lampiran 4.22.
-- Identitas dokumen dan struktur header dikunci dari verifikasi visual screenshot.
+- Ekstraksi text-layer `Rakernas X.pdf` (2026-03-14) menemukan token `LAMPIRAN 4.22`, `DATA KEGIATAN PKK`, dan `CARA PENGISIAN DATA KEGIATAN POKJA II`.
+- Struktur header tetap dikunci dari verifikasi visual screenshot.
 
 ## Hasil Verifikasi Visual Header Tabel
 
@@ -183,11 +183,12 @@ Sumber: `docs/referensi/supporting/lampiran-4-22-cara-pengisian.pdf`.
 ## Status Presisi
 
 - Status header merge: **terverifikasi visual (final)**.
+- Identitas dokumen terkonfirmasi via text-layer `Rakernas X.pdf` (2026-03-14).
 - Makna kolom `1-25` tervalidasi dari dokumen `docs/referensi/supporting/lampiran-4-22-cara-pengisian.pdf`.
-- Status sinkronisasi kontrak domain: **not implemented** (belum ada modul/report khusus).
+- Status sinkronisasi kontrak domain: **implemented** (report + input aktif; rujuk `docs/domain/DATA_KEGIATAN_PKK_POKJA_II_4_22_SUMBER_DATA.md`).
 
 ## Dampak ke Kontrak Domain Saat Ini
 
-- Mapping header sudah lengkap dan siap dipakai jika modul/report Pokja II dibangun.
-- Belum ada modul/report khusus untuk Lampiran 4.22.
-- Rencana sumber data: `docs/domain/DATA_KEGIATAN_PKK_POKJA_II_4_22_SUMBER_DATA.md` (belum diimplementasikan).
+- Mapping header dipakai oleh report aktif Lampiran 4.22 (jalur `catatan-keluarga`).
+- Sumber data report terkunci di `docs/domain/DATA_KEGIATAN_PKK_POKJA_II_4_22_SUMBER_DATA.md`.
+- Modul input Pokja II aktif sebagai sumber agregasi data report.

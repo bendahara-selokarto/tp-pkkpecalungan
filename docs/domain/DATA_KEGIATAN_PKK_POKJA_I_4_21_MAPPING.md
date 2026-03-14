@@ -14,8 +14,8 @@ Catatan identitas dokumen:
 
 ## Hasil Baca Awal (Text-Layer)
 
-- Text-layer PDF belum tersedia untuk lampiran 4.21.
-- Identitas dokumen dan struktur header dikunci dari verifikasi visual screenshot.
+- Ekstraksi text-layer `Rakernas X.pdf` (2026-03-14) menemukan token `LAMPIRAN 4.21` dan `DATA KEGIATAN PKK`.
+- Struktur header tetap dikunci dari verifikasi visual screenshot.
 
 ## Hasil Verifikasi Visual Header Tabel
 
