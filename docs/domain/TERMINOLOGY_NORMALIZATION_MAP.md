@@ -33,7 +33,7 @@ Tujuan:
 | Lampiran | Istilah teknis | Label canonical pedoman | Label saat ini (terdeteksi) | Normalisasi target | Status |
 | --- | --- | --- | --- | --- | --- |
 | 4.9a | `anggota-tim-penggerak` | Buku Daftar Anggota Tim Penggerak PKK | Sidebar masih memakai `Buku Daftar Anggota TP PKK`; PDF sudah mengikuti pedoman | Sinkronkan label sidebar ke istilah canonical `Tim Penggerak` | partial |
-| 4.9b | `kader-khusus` | Buku Daftar Anggota TP PKK dan Kader | Sidebar/modul masih memakai `Buku Kader Khusus`; struktur autentik gabungan belum diadopsi | Selaraskan label + struktur modul sesuai lampiran 4.9b | mismatch |
+| 4.9b | `kader-khusus` | Buku Daftar Anggota TP PKK dan Kader | Sidebar/menu sudah memakai `Buku Daftar Anggota TP PKK dan Kader`; struktur autentik gabungan belum diadopsi | Selaraskan struktur modul sesuai lampiran 4.9b | partial |
 | 4.10 | `agenda-surat` | Buku Agenda Surat Masuk/Keluar | Sidebar/menu/index sudah memakai `Agenda Surat Masuk/Keluar`; form tambah/edit memakai label natural `Data Dukung (Unggah Berkas)` untuk lampiran file | Pertahankan label canonical pedoman + label upload natural user-facing | match |
 | 4.11 | `buku-keuangan` | Buku Keuangan | UI/PDF sudah mengarah ke label pedoman; alias route legacy `bantuans.keuangan` tetap aktif untuk transisi | Pertahankan domain dedicated + alias kompatibilitas | match |
 | 4.12 | `inventaris` | Buku Inventaris | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
@@ -50,6 +50,11 @@ Tujuan:
 | 4.14.4d | `kejar-paket` | Data Isian Kejar Paket/KF/PAUD | UI/PDF sudah memakai `Data Isian Kejar Paket/KF/PAUD` | Pertahankan | match |
 | 4.14.4e | `posyandu` | Data Isian Posyandu oleh TP PKK | UI/PDF sudah memakai `Data Isian Posyandu oleh TP PKK` | Pertahankan | match |
 | 4.14.4f | `simulasi-penyuluhan` | Kelompok Simulasi dan Penyuluhan | UI/PDF sudah mengarah ke label pedoman | Pertahankan | match |
+| Ekstensi Lokal 2026 | `bantuans` | Buku Bantuan | UI/PDF sudah memakai `Buku Bantuan` | Pertahankan; alias Pokja I `Buku Bantu` dipetakan ke `Buku Bantuan` | match |
+| Ekstensi Lokal 2026 | `prestasi-lomba` | Buku Prestasi | Sidebar/menu sudah memakai `Buku Prestasi` | Pertahankan | match |
+| Ekstensi Lokal 2026 | `bkr` | Buku Kegiatan BKR | Sidebar/menu sudah memakai `Buku Kegiatan BKR` | Pertahankan | match |
+| Ekstensi Lokal 2026 | `bkl` | Buku Kegiatan BKL | Sidebar/menu sudah memakai `Buku Kegiatan BKL` | Pertahankan | match |
+| Ekstensi Lokal 2026 | `paar` | Data Pola Asuh Anak dan Remaja (PAAR) | Sidebar/menu memakai `Buku PAAR` | Pertahankan label operasional `Buku PAAR`, catat alias `Buku Administrasi PAAR` | match |
 | 4.15 | `catatan-keluarga` | Catatan Keluarga | UI/PDF sudah mengarah ke label pedoman; struktur autentik 19 kolom diproyeksikan operasional ke report 10 kolom | Pertahankan label pedoman + kunci transformasi 19->10 di dokumen mapping domain | match (with projection) |
 | 4.16a | `rekap-catatan-data-kegiatan-warga-dasawisma` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok Dasa Wisma | Report PDF 29 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + kunci flow baca header tabel kompleks sebagai guardrail implementasi | implemented (report-only) |
 | 4.16b | `rekap-catatan-data-kegiatan-warga-pkk-rt` | Rekapitulasi Catatan Data dan Kegiatan Warga Kelompok PKK RT | Report PDF 30 kolom dengan merge-header autentik sudah tersedia pada flow `catatan-keluarga` (desa/kecamatan) | Pertahankan label autentik + kunci flow baca header tabel kompleks sebagai guardrail implementasi | implemented (report-only) |

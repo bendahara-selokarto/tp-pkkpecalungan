@@ -44,13 +44,17 @@ Sumber acuan:
 | Sekretaris TP-PKK | Buku Kegiatan | `/{scope}/activities` |
 | Sekretaris TP-PKK | Buku Program Kerja TP PKK | `/{scope}/program-prioritas` |
 | Sekretaris TP-PKK | Buku Anggota Pokja | `/{scope}/anggota-pokja` |
-| Sekretaris TP-PKK | Prestasi Lomba | `/{scope}/prestasi-lomba` |
+| Sekretaris TP-PKK | Buku Prestasi | `/{scope}/prestasi-lomba` |
 | Pokja I | Buku Kegiatan | `/{scope}/activities` |
 | Pokja I | Daftar Warga TP PKK | `/{scope}/data-warga` |
 | Pokja I | Data Kegiatan Warga | `/{scope}/data-kegiatan-warga` |
-| Pokja I | BKL | `/{scope}/bkl` |
-| Pokja I | BKR | `/{scope}/bkr` |
+| Pokja I | Buku Daftar Anggota TP PKK dan Kader | `/{scope}/kader-khusus` |
+| Pokja I | Buku Bantuan | `/{scope}/bantuans` |
+| Pokja I | Buku Prestasi | `/{scope}/prestasi-lomba` |
+| Pokja I | Buku Kegiatan BKL | `/{scope}/bkl` |
+| Pokja I | Buku Kegiatan BKR | `/{scope}/bkr` |
 | Pokja I | Buku PAAR | `/{scope}/paar` |
+| Pokja I | Kelompok Simulasi dan Penyuluhan | `/{scope}/simulasi-penyuluhan` |
 | Pokja II | Buku Kegiatan | `/{scope}/activities` |
 | Pokja II | Data Pelatihan Kader | `/{scope}/data-pelatihan-kader` |
 | Pokja II | Literasi Warga (3 Buta) | `/{scope}/literasi-warga` |
@@ -68,7 +72,6 @@ Sumber acuan:
 | Pokja III | Data Aset (Sarana) Desa/Kelurahan | `/{scope}/warung-pkk` |
 | Pokja IV | Buku Kegiatan | `/{scope}/activities` |
 | Pokja IV | Data Isian Posyandu oleh TP PKK | `/{scope}/posyandu` |
-| Pokja IV | Kelompok Simulasi dan Penyuluhan | `/{scope}/simulasi-penyuluhan` |
 | Pokja IV | Catatan Keluarga | `/{scope}/catatan-keluarga` |
 | Pokja IV | Naskah Pelaporan Pilot Project | `/{scope}/pilot-project-naskah-pelaporan` |
 | Pokja IV | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana | `/{scope}/pilot-project-keluarga-sehat` |

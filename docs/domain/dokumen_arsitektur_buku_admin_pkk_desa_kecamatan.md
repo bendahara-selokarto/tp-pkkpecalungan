@@ -85,10 +85,18 @@ Gunakan status autentikasi:
 | Sekretaris | Buku Tamu | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; ekstensi lokal (`unverified-local-extension`) sampai template primer resmi tersedia |
 | Sekretaris | Buku Program Kerja TP PKK | Sekretaris Desa/Kelurahan | partial | partial | Belum ada bukti autentik: text-layer `Rakernas X.pdf` (scan 2026-03-14) tidak menemukan token “PROGRAM KERJA/PRIORITAS”; belum ada screenshot lampiran khusus. |
 | Sekretaris | Rekap Data Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Desa/Kelurahan | available | verified | Pertahankan chain rekap berjenjang |
-| Pokja I | Buku Rencana Kerja Pokja I | Pokja I Desa | partial | partial | Belum ada bukti autentik: text-layer `Rakernas X.pdf` (scan 2026-03-14) tidak menemukan token “RENCANA KERJA”; belum ada screenshot lampiran khusus. |
-| Pokja I | Buku Kegiatan Pokja I | Pokja I Desa | available | verified | Format autentik 4.13 tervalidasi; lanjut audit coverage field kegiatan |
+| Pokja I | Buku Rencana Kerja Pokja I | Pokja I Desa | partial | partial | Disetarakan dengan istilah baseline `Buku Program Kerja` Pokja I; belum ada bukti autentik: text-layer `Rakernas X.pdf` (scan 2026-03-14) tidak menemukan token “RENCANA KERJA”; belum ada screenshot lampiran khusus. |
+| Pokja I | Buku Kegiatan Pokja I | Pokja I Desa | available | verified | Mencakup istilah baseline `Buku Pelaksanaan Program Kerja`; format autentik 4.13 tervalidasi; lanjut audit coverage field kegiatan |
 | Pokja I | Buku Daftar Hadir Kegiatan | Pokja I Desa | missing | unverified | Reuse model daftar hadir lintas pokja |
-| Pokja I | Buku Data Kegiatan | Pokja I Desa | available | verified | Bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.21 (`DATA_KEGIATAN_PKK_POKJA_I_4_21_MAPPING.md`). |
+| Pokja I | Buku Data Kegiatan Pokja I | Pokja I Desa | planned | verified | Bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.21 (`DATA_KEGIATAN_PKK_POKJA_I_4_21_MAPPING.md`); modul/report khusus belum tersedia. |
+| Pokja I | Buku Bantuan | Pokja I Desa | available | verified | Modul `bantuans` tersedia; akses/menu Pokja I belum aktif. |
+| Pokja I | Buku Prestasi | Pokja I Desa | available | verified | Modul `prestasi-lomba` tersedia; label menu Pokja I belum ditampilkan. |
+| Pokja I | Buku Daftar Kader Khusus Pokja I | Pokja I Desa | available | partial | Modul `kader-khusus` tersedia (label canonical 4.9b); akses/menu Pokja I belum aktif. |
+| Pokja I | Buku Kegiatan Simulasi | Pokja I Desa | available | verified | Modul `simulasi-penyuluhan` tersedia; akses Pokja I belum aktif. |
+| Pokja I | Buku Kegiatan BKR | Pokja I Desa | available | partial | Modul `bkr` tersedia; status autentikasi belum tervalidasi. |
+| Pokja I | Buku Kegiatan BKL | Pokja I Desa | available | partial | Modul `bkl` tersedia; status autentikasi belum tervalidasi. |
+| Pokja I | Buku Administrasi PAAR | Pokja I Desa | available | partial | Modul `paar` tersedia; status autentikasi belum tervalidasi. |
+| Pokja I | Buku Grafik | Pokja I Desa | available | unverified | Tersedia sebagai report `Grafik Dashboard` (external PDF); belum ada domain input mandiri. |
 | Pokja I | Buku Evaluasi Program | Pokja I Desa | planned | unverified | Tambah struktur evaluasi periodik |
 | Pokja II | Buku Rencana Kerja Pokja II | Pokja II Desa | partial | partial | Belum ada bukti autentik: text-layer `Rakernas X.pdf` (scan 2026-03-14) tidak menemukan token “RENCANA KERJA”; belum ada screenshot lampiran khusus. |
 | Pokja II | Buku Kegiatan Pendidikan dan Keterampilan | Pokja II Desa | available | verified | Bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.22 (`DATA_KEGIATAN_PKK_POKJA_II_4_22_MAPPING.md`). |
