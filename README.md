@@ -42,6 +42,18 @@ Target utama:
 - Build tool: Vite
 - Styling: Tailwind CSS
 
+## 2.1 Setup Environment Developer Modern (AI Coding)
+
+Tujuan: tooling konsisten untuk AI coding + E2E testing.
+
+Checklist minimum:
+
+- Codex CLI terpasang dan bisa dijalankan: `codex --version`.
+- Node.js + npm aktif: `node -v`, `npm -v`.
+- Playwright browser binary terpasang: `npx playwright install`.
+- Dependency OS Playwright (Linux): `sudo npx playwright install-deps`.
+- `OPENAI_API_KEY` tersedia di environment (disarankan lewat `.env`, jangan commit key).
+
 ## 3. Arsitektur Backend
 
 Layer wajib:
