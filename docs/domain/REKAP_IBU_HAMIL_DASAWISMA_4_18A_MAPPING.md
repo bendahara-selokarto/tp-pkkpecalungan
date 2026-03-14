@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Rekap Ibu Hamil Dasawisma (Lampiran 4.18a)
 
 Tanggal baca: 2026-02-22

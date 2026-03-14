@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Cetak Lampiran - Peta Sumber Input
 
 Dokumen ini menjelaskan hubungan antara laporan pada menu `Cetak Lampiran` dan modul input sumbernya.

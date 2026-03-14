@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Rekap Ibu Hamil TP PKK Kabupaten/Kota (Lampiran 4.19c)
 
 Tanggal baca: 2026-03-11

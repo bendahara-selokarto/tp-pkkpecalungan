@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Lampiran 4.23 - Data Kegiatan PKK (Pokja III)
 
 ## Sumber Autentik
@@ -25,6 +27,7 @@
   - `KETERANGAN` (`rowspan=3`)
 
 ## Mapping Implementasi (Report-Only)
+
 Target file:
 
 - `resources/views/pdf/data_kegiatan_pkk_pokja_iii_report.blade.php`

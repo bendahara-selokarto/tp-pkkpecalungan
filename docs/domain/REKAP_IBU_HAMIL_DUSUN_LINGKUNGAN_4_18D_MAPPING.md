@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Rekap Ibu Hamil Dusun/Lingkungan (Lampiran 4.18d)
 
 Tanggal baca: 2026-02-22

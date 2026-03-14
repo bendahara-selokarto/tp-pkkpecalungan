@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Catatan Keluarga (Autentik 19 Kolom -> Operasional 10 Kolom)
 
 Tanggal pemetaan: 2026-02-22

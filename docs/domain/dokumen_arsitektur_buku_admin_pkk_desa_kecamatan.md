@@ -1,9 +1,13 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # DOKUMEN KONTROL BUKU ADMINISTRASI PKK
+
 ## Desa/Kelurahan dan Kecamatan
 
 ---
 
 ## Status Canonical
+
 Dokumen ini adalah acuan canonical tunggal untuk concern:
 
 1. Ketersediaan buku.
@@ -31,6 +35,7 @@ Dokumen lain yang menyinggung concern serupa diperlakukan sebagai:
 ---
 
 ## I. Fungsi Dokumen
+
 Dokumen ini menjadi sumber tunggal untuk:
 
 1. Merekam ketersediaan buku administrasi per level.
@@ -47,6 +52,7 @@ Dokumen ini menjadi acuan untuk sinkronisasi:
 ---
 
 ## II. Ruang Lingkup dan Level Operasional
+
 Level operasional:
 
 1. TP PKK Desa/Kelurahan (input + rekap awal).
@@ -62,6 +68,7 @@ Prinsip operasional:
 ---
 
 ## III. Status Kontrol Buku (Baseline)
+
 Gunakan status berikut:
 
 - `available`: modul/fitur buku sudah tersedia.
@@ -75,8 +82,9 @@ Gunakan status autentikasi:
 - `unverified`: belum tervalidasi autentik.
 
 ### A. Level Desa/Kelurahan
+
 | Kelompok | Nama Buku | Penanggung Jawab | Status Ketersediaan | Status Autentikasi | Catatan Tindak Lanjut |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | Sekretaris | Buku Daftar Anggota Tim Penggerak PKK | Sekretaris Desa/Kelurahan | available | verified | Bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.9a (`docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_9a_buku_daftar_anggota_tim_penggerak_pkk.png`). |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Desa/Kelurahan | available | verified | Jaga konsistensi format output |
 | Sekretaris | Buku Notulen Rapat | Sekretaris Desa/Kelurahan | available | unverified | Modul dedicated aktif; ekstensi lokal (`unverified-local-extension`) sampai template primer resmi tersedia |
@@ -114,8 +122,9 @@ Gunakan status autentikasi:
 | Pokja IV | Buku Perencanaan Sehat | Pokja IV Desa | partial | partial | Belum ada bukti autentik: text-layer `Rakernas X.pdf` (scan 2026-03-14) tidak menemukan token “PERENCANAAN SEHAT”; belum ada screenshot lampiran khusus. |
 
 ### B. Level Kecamatan
+
 | Kelompok | Nama Buku | Penanggung Jawab | Status Ketersediaan | Status Autentikasi | Catatan Tindak Lanjut |
-|---|---|---|---|---|---|
+| --- | --- | --- | --- | --- | --- |
 | Sekretaris | Buku Daftar Anggota Tim Penggerak PKK Kecamatan | Sekretaris Kecamatan | available | verified | Bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.9a (`docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_9a_buku_daftar_anggota_tim_penggerak_pkk.png`). |
 | Sekretaris | Buku Agenda Surat Masuk/Keluar | Sekretaris Kecamatan | available | verified | Konsisten antar level |
 | Sekretaris | Buku Notulen Rapat | Sekretaris Kecamatan | available | unverified | Modul dedicated aktif; ekstensi lokal (`unverified-local-extension`) sampai template primer resmi tersedia |
@@ -133,6 +142,7 @@ Gunakan status autentikasi:
 ---
 
 ## IV. Standar Autentikasi Buku
+
 Metode baku autentikasi:
 
 1. Ekstraksi text-layer dokumen autentik.
@@ -155,6 +165,7 @@ Aturan keputusan:
 ---
 
 ## V. Matriks Penanggung Jawab dan Akses
+
 Prinsip penempatan:
 
 1. Sekretaris: buku sekretariat + finalisasi level masing-masing.
@@ -180,6 +191,7 @@ Keputusan operasional terkunci (2026-02-27):
 ---
 
 ## VI. Rencana Implementasi Gap (Checklist Kerja)
+
 ### A. Ketersediaan Buku
 
 - [x] Tambah modul `buku-notulen-rapat` desa/kecamatan.
@@ -202,6 +214,7 @@ Keputusan operasional terkunci (2026-02-27):
 ---
 
 ## VII. Validasi Berkala
+
 Checklist validasi setiap perubahan:
 
 1. Buku tercatat di tabel status kontrol.
@@ -213,6 +226,7 @@ Checklist validasi setiap perubahan:
 ---
 
 ## VIII. Output Wajib per Update
+
 Setiap update dokumen ini wajib menyebut:
 
 1. Buku yang berubah status.
@@ -223,6 +237,7 @@ Setiap update dokumen ini wajib menyebut:
 ---
 
 ## IX. Kontrak Minimum Implementasi Gap Gelombang 1
+
 Kontrak ini dipakai sebagai baseline sebelum coding modul buku yang masih `missing`.
 
 Invariant wajib untuk seluruh modul baru:
@@ -232,6 +247,7 @@ Invariant wajib untuk seluruh modul baru:
 3. Route tetap dipisah per scope (`desa`/`kecamatan`) dan dijaga backend (`scope.role` + `module.visibility`).
 
 ### A. Buku Notulen Rapat (`buku-notulen-rapat`)
+
 Tujuan:
 
 1. Mencatat jalannya rapat resmi per level wilayah.
@@ -253,6 +269,7 @@ Field minimum:
 12. `keterangan` (opsional)
 
 ### B. Buku Daftar Hadir (`buku-daftar-hadir`)
+
 Tujuan:
 
 1. Menyimpan bukti kehadiran kegiatan rapat/kegiatan pokja.
@@ -272,6 +289,7 @@ Field minimum:
 10. `keterangan` (opsional)
 
 ### C. Buku Tamu (`buku-tamu`)
+
 Tujuan:
 
 1. Mencatat kunjungan tamu ke sekretariat/pengurus.

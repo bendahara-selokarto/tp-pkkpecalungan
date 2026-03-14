@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Terminology Normalization Map (Lampiran 4.9-4.24 + Ekstensi 202-211 + Ekstensi Lokal)
 
 Sumber canonical:

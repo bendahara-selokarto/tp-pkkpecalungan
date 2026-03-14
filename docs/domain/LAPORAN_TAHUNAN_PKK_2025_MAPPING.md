@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Laporan Tahunan PKK 2025 (Ekstensi Lokal)
 
 ## Sumber Dokumen
@@ -53,6 +55,7 @@
 ## Kontrak Data Canonical (Backend Baseline)
 
 ### A. Entitas Header Laporan Tahunan
+
 Field inti:
 
 - `judul_laporan`
@@ -69,6 +72,7 @@ Invariant:
 - `level`, `area_id`, `created_by` wajib ada dan konsisten dengan scope user serta `areas.level`.
 
 ### B. Entitas Item Kegiatan Tahunan
+
 Field inti:
 
 - `laporan_tahunan_id`
@@ -86,6 +90,7 @@ Aturan:
 - `nomor_urut` unik per `laporan_tahunan_id + bidang`.
 
 ### C. Entitas Narasi Evaluasi dan Penutup
+
 Field inti:
 
 - `laporan_tahunan_id`

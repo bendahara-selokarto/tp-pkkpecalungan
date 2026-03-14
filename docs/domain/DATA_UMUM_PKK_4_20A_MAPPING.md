@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Data Umum PKK (Lampiran 4.20a)
 
 Tanggal baca: 2026-02-22

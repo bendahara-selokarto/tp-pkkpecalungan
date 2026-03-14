@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Catatan PKK RW (Lampiran 4.16c)
 
 Tanggal baca: 2026-02-22

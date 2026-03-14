@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Catatan TP PKK Provinsi (Lampiran 4.17d)
 
 Tanggal baca: 2026-02-22

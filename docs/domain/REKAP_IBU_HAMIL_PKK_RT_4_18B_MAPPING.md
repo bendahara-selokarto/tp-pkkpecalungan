@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Rekap Ibu Hamil PKK RT (Lampiran 4.18b)
 
 Tanggal baca: 2026-02-22

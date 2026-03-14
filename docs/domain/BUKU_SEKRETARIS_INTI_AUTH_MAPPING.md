@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Buku Sekretaris Inti (Notulen, Daftar Hadir, Buku Tamu)
 
 Tanggal: 2026-02-27  

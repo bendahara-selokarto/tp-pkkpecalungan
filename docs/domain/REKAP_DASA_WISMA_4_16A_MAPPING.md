@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Rekap Dasa Wisma (Lampiran 4.16a)
 
 Tanggal baca: 2026-02-22

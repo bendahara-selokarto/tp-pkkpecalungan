@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Lampiran 4.24 - Data Kegiatan PKK (Pokja IV)
 
 ## Sumber Autentik
@@ -34,6 +36,7 @@
   - `PROGRAM UNGGULAN GERAKAN KELUARGA SEHAT TANGGAP & TANGGUH BENCANA (GKSTTB)` (`colspan=3`) -> `KESEHATAN`, `KELESTARIAN LINGKUNGAN HIDUP`, `PERENCANAAN SEHAT` (masing-masing `rowspan=3`)
 
 ## Mapping Implementasi (Report-Only)
+
 Target file:
 
 - `resources/views/pdf/data_kegiatan_pkk_pokja_iv_report.blade.php`

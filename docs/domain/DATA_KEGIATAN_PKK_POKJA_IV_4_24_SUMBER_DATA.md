@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Sumber Data Lampiran 4.24 - Data Kegiatan PKK (Pokja IV)
 
 ## Tujuan

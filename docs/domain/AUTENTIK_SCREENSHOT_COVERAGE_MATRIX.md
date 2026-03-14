@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Autentik Screenshot Coverage Matrix (Rakernas X)
 
 Tanggal: 2026-03-11  

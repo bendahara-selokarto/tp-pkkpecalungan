@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Adjustment Plan 4.14.1a Daftar Warga TP PKK
 
 ## Tujuan

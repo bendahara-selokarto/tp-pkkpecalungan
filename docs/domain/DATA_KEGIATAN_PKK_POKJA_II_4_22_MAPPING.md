@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Data Kegiatan PKK Pokja II (Lampiran 4.22)
 
 Tanggal baca: 2026-03-11

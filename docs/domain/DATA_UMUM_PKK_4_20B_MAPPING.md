@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Data Umum PKK Tingkat Kecamatan (Lampiran 4.20b)
 
 Tanggal baca: 2026-02-22

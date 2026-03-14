@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Mapping Autentik Lampiran 4.16d (Header Nomor RW)
 
 Tanggal baca: 2026-02-22

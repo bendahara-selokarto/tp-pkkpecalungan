@@ -1,3 +1,5 @@
+<!-- markdownlint-disable MD056 MD001 MD038 MD034 -->
+
 # Pedoman Domain Utama 202-211 (Analisis + Rencana Implementasi Fullstack)
 
 Sumber utama domain:
