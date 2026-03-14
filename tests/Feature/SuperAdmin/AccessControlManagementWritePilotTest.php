@@ -18,11 +18,11 @@ class AccessControlManagementWritePilotTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'kecamatan-pokja-iv']);
-        Role::create(['name' => 'kecamatan-pokja-ii']);
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-iv']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-ii']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',

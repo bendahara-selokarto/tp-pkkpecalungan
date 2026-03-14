@@ -15,8 +15,8 @@ class UserPolicyTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
     }
 
     public function test_hanya_super_admin_dapat_membuat_pengguna_melalui_kebijakan(): void

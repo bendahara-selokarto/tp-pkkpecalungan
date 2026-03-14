@@ -18,11 +18,11 @@ class DashboardBlockDetailWidgetTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'kecamatan-pokja-i']);
-        Role::create(['name' => 'kecamatan-pokja-ii']);
-        Role::create(['name' => 'kecamatan-pokja-iii']);
-        Role::create(['name' => 'kecamatan-pokja-iv']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-i']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-ii']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-iii']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-iv']);
     }
 
     public function test_dashboard_block_per_desa_memuat_metadata_detail_tanpa_payload_per_module_pada_first_load(): void

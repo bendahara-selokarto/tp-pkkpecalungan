@@ -27,8 +27,8 @@ class InventarisReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);

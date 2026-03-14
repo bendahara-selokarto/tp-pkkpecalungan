@@ -22,9 +22,9 @@ class DataKegiatanPkkPokjaIReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-pokja-i']);
-        Role::create(['name' => 'kecamatan-pokja-i']);
-        Role::create(['name' => 'desa-pokja-ii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-ii']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -65,7 +65,7 @@ class DataKegiatanPkkPokjaIReportPrintTest extends TestCase
     public function test_kecamatan_pokja_i_dapat_mencetak_laporan_pdf_data_kegiatan_pkk_pokja_i_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('kecamatan-pokja-i');
+        $user->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($user)->get(route('kecamatan.data-kegiatan-pkk-pokja-i.report'));
 

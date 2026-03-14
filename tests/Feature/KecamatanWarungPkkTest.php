@@ -23,8 +23,8 @@ class KecamatanWarungPkkTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-iii']);
-        Role::create(['name' => 'desa-pokja-iii']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -45,7 +45,7 @@ class KecamatanWarungPkkTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         WarungPkk::create([
             'nama_warung_pkk' => 'Warung PKK Anyelir',
@@ -86,7 +86,7 @@ class KecamatanWarungPkkTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $warungPkkLuar = WarungPkk::create([
             'nama_warung_pkk' => 'Warung PKK Luar Area',
@@ -114,7 +114,7 @@ class KecamatanWarungPkkTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $warungPkk = WarungPkk::create([
             'nama_warung_pkk' => 'Warung Lama',
@@ -168,7 +168,7 @@ class KecamatanWarungPkkTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('kecamatan-pokja-iii');
+        $userStale->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/warung-pkk');
 

@@ -18,7 +18,7 @@ class CatatanKeluargaPolicyTest extends TestCase
     #[Test]
     public function admin_desa_dengan_area_desa_valid_boleh_melihat_catatan_keluarga(): void
     {
-        Role::create(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -35,7 +35,7 @@ class CatatanKeluargaPolicyTest extends TestCase
     #[Test]
     public function admin_desa_dengan_area_bukan_desa_tidak_boleh_melihat_catatan_keluarga(): void
     {
-        Role::create(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
 

@@ -24,8 +24,8 @@ class KecamatanDataPelatihanKaderTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-ii']);
-        Role::create(['name' => 'desa-pokja-ii']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-ii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -46,7 +46,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-ii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-KEC-01',
@@ -104,7 +104,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-ii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         for ($index = 1; $index <= 11; $index++) {
             DataPelatihanKader::create([
@@ -166,7 +166,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-ii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-DEFAULT',
@@ -204,7 +204,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-ii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $arsip = DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-ARSIP',
@@ -236,7 +236,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-ii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $dataPelatihanLuar = DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-OUT-1',
@@ -296,7 +296,7 @@ class KecamatanDataPelatihanKaderTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('kecamatan-pokja-ii');
+        $userStale->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/data-pelatihan-kader');
 

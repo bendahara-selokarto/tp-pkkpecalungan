@@ -22,8 +22,8 @@ class KecamatanPaarTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-i']);
-        Role::create(['name' => 'desa-pokja-i']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -43,7 +43,7 @@ class KecamatanPaarTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         Paar::create([
             'indikator' => 'akte_kelahiran',
@@ -83,7 +83,7 @@ class KecamatanPaarTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         foreach (Paar::indicatorKeys() as $index => $indikator) {
             Paar::create([
@@ -127,7 +127,7 @@ class KecamatanPaarTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         Paar::create([
             'indikator' => 'akte_kelahiran',
@@ -156,7 +156,7 @@ class KecamatanPaarTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $paarKecamatanLain = Paar::create([
             'indikator' => 'narkoba',

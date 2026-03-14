@@ -28,12 +28,12 @@ class DesaActivityTest extends TestCase
         parent::setUp();
 
         // Buat role desa
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'desa-pokja-i']);
-        Role::create(['name' => 'desa-pokja-ii']);
-        Role::create(['name' => 'desa-pokja-iii']);
-        Role::create(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+        Role::firstOrCreate(['name' => 'desa-pokja-ii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
 
         // Buat Kecamatan
         $this->kecamatan = Area::create([

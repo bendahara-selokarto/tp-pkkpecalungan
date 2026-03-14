@@ -16,8 +16,8 @@ class AccessControlManagementReadOnlyTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
     }
 
     public function test_super_admin_dapat_melihat_matrix_read_only(): void

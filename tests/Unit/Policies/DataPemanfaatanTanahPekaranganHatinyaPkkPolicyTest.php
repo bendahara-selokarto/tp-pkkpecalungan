@@ -18,7 +18,7 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_pada_desanya_sendiri(): void
     {
-        Role::create(['name' => 'desa-pokja-iii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iii']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -54,7 +54,7 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_kecamatan_lain(): void
     {
-        Role::create(['name' => 'kecamatan-pokja-iii']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-iii']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);

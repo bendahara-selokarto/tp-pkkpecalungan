@@ -32,7 +32,7 @@ class ModuleVisibilityMiddlewareTest extends TestCase
             'kecamatan-pokja-iii',
             'kecamatan-pokja-iv',
         ] as $roleName) {
-            Role::create(['name' => $roleName]);
+            Role::firstOrCreate(['name' => $roleName]);
         }
 
         $this->kecamatan = Area::create([

@@ -18,11 +18,11 @@ class UserScopePresentationTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_index_menggunakan_scope_canonical_dari_level_area(): void

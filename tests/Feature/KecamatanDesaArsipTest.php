@@ -29,7 +29,7 @@ class KecamatanDesaArsipTest extends TestCase
         parent::setUp();
 
         foreach (['kecamatan-sekretaris', 'kecamatan-sekretaris', 'desa-sekretaris'] as $roleName) {
-            Role::create(['name' => $roleName]);
+            Role::firstOrCreate(['name' => $roleName]);
         }
 
         $this->kecamatanA = Area::create([

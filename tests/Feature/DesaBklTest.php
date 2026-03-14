@@ -25,8 +25,8 @@ class DesaBklTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-pokja-i']);
-        Role::create(['name' => 'kecamatan-pokja-i']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-i']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',

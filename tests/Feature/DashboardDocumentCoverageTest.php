@@ -21,18 +21,20 @@ class DashboardDocumentCoverageTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'desa-pokja-i']);
-        Role::create(['name' => 'desa-pokja-ii']);
-        Role::create(['name' => 'desa-pokja-iii']);
-        Role::create(['name' => 'desa-pokja-iv']);
-        Role::create(['name' => 'kecamatan-pokja-i']);
-        Role::create(['name' => 'kecamatan-pokja-ii']);
-        Role::create(['name' => 'kecamatan-pokja-iii']);
-        Role::create(['name' => 'kecamatan-pokja-iv']);
+        foreach ([
+            'desa-sekretaris',
+            'kecamatan-sekretaris',
+            'desa-pokja-i',
+            'desa-pokja-ii',
+            'desa-pokja-iii',
+            'desa-pokja-iv',
+            'kecamatan-pokja-i',
+            'kecamatan-pokja-ii',
+            'kecamatan-pokja-iii',
+            'kecamatan-pokja-iv',
+        ] as $roleName) {
+            Role::firstOrCreate(['name' => $roleName]);
+        }
     }
 
     public function test_dashboard_coverage_dokumen_pengguna_desa_hanya_menghitung_data_desanya_sendiri(): void
@@ -66,7 +68,7 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->missing('dashboardStats')
                 ->missing('dashboardCharts')
                 ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
-                ->missing('dashboardBlocks')
+                ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
                 $collected = collect($blocks);
@@ -186,7 +188,7 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->missing('dashboardStats')
                 ->missing('dashboardCharts')
                 ->where('dashboardContext.tahun_anggaran', (string) now()->format('Y'))
-                ->missing('dashboardBlocks')
+                ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, function ($blocks): bool {
                 $collected = collect($blocks);
@@ -231,7 +233,7 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->missing('dashboardStats')
                 ->missing('dashboardCharts')
                 ->where('auth.user.scope', null)
-                ->missing('dashboardBlocks')
+                ->missing('dashboardBlocks');
 
             $this->assertDeferredDashboardBlocks($page, fn ($blocks): bool => collect($blocks)->isEmpty());
         });
@@ -383,7 +385,7 @@ class DashboardDocumentCoverageTest extends TestCase
                 ->component('Dashboard')
                 ->missing('dashboardStats')
                 ->missing('dashboardCharts')
-                ->where('dashboardContext.tahun_anggaran', (string) $activeBudgetYear)
+                ->where('dashboardContext.tahun_anggaran', (string) $activeBudgetYear);
         });
     }
 

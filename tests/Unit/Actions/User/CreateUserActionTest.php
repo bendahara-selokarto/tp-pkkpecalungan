@@ -17,9 +17,9 @@ class CreateUserActionTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
     }
 
     public function test_membuat_pengguna_dengan_peran(): void

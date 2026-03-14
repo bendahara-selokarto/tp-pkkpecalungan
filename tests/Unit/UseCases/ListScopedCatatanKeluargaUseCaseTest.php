@@ -19,7 +19,7 @@ class ListScopedCatatanKeluargaUseCaseTest extends TestCase
     #[Test]
     public function use_case_hanya_mengembalikan_rekap_dari_area_pengguna_sendiri(): void
     {
-        Role::create(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);

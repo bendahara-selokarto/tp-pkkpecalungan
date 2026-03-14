@@ -18,7 +18,7 @@ class BukuKeuanganPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_buku_keuangan_pada_desanya_sendiri(): void
     {
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -60,7 +60,7 @@ class BukuKeuanganPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_buku_keuangan_kecamatan_lain(): void
     {
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);

@@ -22,8 +22,8 @@ class KecamatanDataIndustriRumahTanggaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-iii']);
-        Role::create(['name' => 'desa-pokja-iii']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -43,7 +43,7 @@ class KecamatanDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         DataIndustriRumahTangga::create([
             'kategori_jenis_industri' => 'Pangan',
@@ -83,7 +83,7 @@ class KecamatanDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         for ($index = 1; $index <= 11; $index++) {
             DataIndustriRumahTangga::create([
@@ -127,7 +127,7 @@ class KecamatanDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         DataIndustriRumahTangga::create([
             'kategori_jenis_industri' => 'Pangan',
@@ -156,7 +156,7 @@ class KecamatanDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $DataIndustriRumahTanggaLuar = DataIndustriRumahTangga::create([
             'kategori_jenis_industri' => 'Lain-lain',
@@ -206,7 +206,7 @@ class KecamatanDataIndustriRumahTanggaTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
         ]);
-        $userStale->assignRole('kecamatan-pokja-iii');
+        $userStale->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/data-industri-rumah-tangga');
 

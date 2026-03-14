@@ -35,7 +35,7 @@ class AuthenticationTest extends TestCase
 
     public function test_root_mengarahkan_super_admin_ke_halaman_manajemen_pengguna(): void
     {
-        Role::create(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'super-admin']);
         $user = User::factory()->create();
         $user->assignRole('super-admin');
 

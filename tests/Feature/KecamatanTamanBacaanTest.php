@@ -23,8 +23,8 @@ class KecamatanTamanBacaanTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-ii']);
-        Role::create(['name' => 'desa-pokja-ii']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-ii']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -45,7 +45,7 @@ class KecamatanTamanBacaanTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-ii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         TamanBacaan::create([
             'nama_taman_bacaan' => 'Taman Bacaan Anyelir',
@@ -88,7 +88,7 @@ class KecamatanTamanBacaanTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-ii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $tamanBacaanLuar = TamanBacaan::create([
             'nama_taman_bacaan' => 'Taman Bacaan Luar Area',
@@ -117,7 +117,7 @@ class KecamatanTamanBacaanTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-ii');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $tamanBacaan = TamanBacaan::create([
             'nama_taman_bacaan' => 'Taman Lama',
@@ -172,7 +172,7 @@ class KecamatanTamanBacaanTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('kecamatan-pokja-ii');
+        $userStale->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/taman-bacaan');
 

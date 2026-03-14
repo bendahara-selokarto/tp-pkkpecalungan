@@ -27,8 +27,8 @@ class DesaDataIndustriRumahTanggaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-pokja-iii']);
-        Role::create(['name' => 'kecamatan-pokja-iii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iii']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-iii']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',

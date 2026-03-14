@@ -20,7 +20,7 @@ class PelatihanKaderPokjaIiPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_pelatihan_kader_pokja_ii_pada_desanya_sendiri(): void
     {
-        Role::create(['name' => 'desa-pokja-ii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-ii']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -62,7 +62,7 @@ class PelatihanKaderPokjaIiPolicyTest extends TestCase
     #[Test]
     public function admin_desa_tidak_boleh_memperbarui_pelatihan_kader_pokja_ii_tahun_anggaran_lain(): void
     {
-        Role::create(['name' => 'desa-pokja-ii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-ii']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);

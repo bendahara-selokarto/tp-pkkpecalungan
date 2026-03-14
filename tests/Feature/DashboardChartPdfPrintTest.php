@@ -19,9 +19,9 @@ class DashboardChartPdfPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
     }
 
     public function test_pengguna_desa_bisa_mencetak_chart_dashboard_ke_pdf(): void

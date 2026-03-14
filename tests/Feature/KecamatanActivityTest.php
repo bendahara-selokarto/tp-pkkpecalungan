@@ -30,13 +30,14 @@ class KecamatanActivityTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'kecamatan-pokja-i']);
-        Role::create(['name' => 'kecamatan-pokja-ii']);
-        Role::create(['name' => 'kecamatan-pokja-iii']);
-        Role::create(['name' => 'kecamatan-pokja-iv']);
+        foreach ([
+            'kecamatan-sekretaris',
+            'desa-sekretaris',
+            'kecamatan-pokja-i',
+            'kecamatan-pokja-ii',
+        ] as $roleName) {
+            Role::firstOrCreate(['name' => $roleName]);
+        }
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',

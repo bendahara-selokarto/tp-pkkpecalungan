@@ -21,9 +21,9 @@ class DashboardActivityChartTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
     }
 
     protected function tearDown(): void
@@ -79,7 +79,7 @@ class DashboardActivityChartTest extends TestCase
                 ->component('Dashboard')
                 ->missing('dashboardStats')
                 ->missing('dashboardCharts')
-                ->where('auth.user.scope', 'desa')
+                ->where('auth.user.scope', 'desa');
         });
     }
 
@@ -121,7 +121,7 @@ class DashboardActivityChartTest extends TestCase
             $page
                 ->component('Dashboard')
                 ->missing('dashboardStats')
-                ->missing('dashboardCharts')
+                ->missing('dashboardCharts');
         });
     }
 
@@ -184,7 +184,7 @@ class DashboardActivityChartTest extends TestCase
                 ->component('Dashboard')
                 ->missing('dashboardStats')
                 ->missing('dashboardCharts')
-                ->where('auth.user.scope', 'kecamatan')
+                ->where('auth.user.scope', 'kecamatan');
         });
     }
 
@@ -226,7 +226,7 @@ class DashboardActivityChartTest extends TestCase
                 ->component('Dashboard')
                 ->missing('dashboardStats')
                 ->missing('dashboardCharts')
-                ->where('auth.user.scope', null)
+                ->where('auth.user.scope', null);
         });
     }
 
@@ -268,7 +268,7 @@ class DashboardActivityChartTest extends TestCase
                 ->component('Dashboard')
                 ->missing('dashboardStats')
                 ->missing('dashboardCharts')
-                ->where('auth.user.scope', null)
+                ->where('auth.user.scope', null);
         });
     }
 
@@ -327,7 +327,7 @@ class DashboardActivityChartTest extends TestCase
             $page
                 ->component('Dashboard')
                 ->missing('dashboardStats')
-                ->missing('dashboardCharts')
+                ->missing('dashboardCharts');
         });
 
         $februaryResponse = $this->actingAs($user)->get(route('dashboard', ['section1_month' => '2']));
@@ -336,7 +336,7 @@ class DashboardActivityChartTest extends TestCase
             $page
                 ->component('Dashboard')
                 ->missing('dashboardStats')
-                ->missing('dashboardCharts')
+                ->missing('dashboardCharts');
         });
     }
 

@@ -14,9 +14,9 @@ class GetUserManagementFormOptionsUseCaseTest extends TestCase
 
     public function test_opsi_role_per_scope_hanya_memuat_role_assignable_yang_tersedia(): void
     {
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
 
         $useCase = app(GetUserManagementFormOptionsUseCase::class);
         $options = $useCase->roleOptionsByScope();
@@ -29,10 +29,10 @@ class GetUserManagementFormOptionsUseCaseTest extends TestCase
     public function test_label_role_dibentuk_dari_opsi_scope(): void
     {
         foreach (RoleScopeMatrix::assignableRolesForScope('desa') as $roleName) {
-            Role::create(['name' => $roleName]);
+            Role::firstOrCreate(['name' => $roleName]);
         }
         foreach (RoleScopeMatrix::assignableRolesForScope('kecamatan') as $roleName) {
-            Role::create(['name' => $roleName]);
+            Role::firstOrCreate(['name' => $roleName]);
         }
 
         $useCase = app(GetUserManagementFormOptionsUseCase::class);

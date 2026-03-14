@@ -235,7 +235,7 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
         $this->service = $this->app->make(RoleMenuVisibilityService::class);
 
         foreach (array_keys(self::BASELINE_ROLE_GROUP_MODES) as $roleName) {
-            Role::create(['name' => $roleName]);
+            Role::firstOrCreate(['name' => $roleName]);
         }
     }
 

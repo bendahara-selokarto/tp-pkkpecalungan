@@ -26,8 +26,8 @@ class DesaProgramPrioritasTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',

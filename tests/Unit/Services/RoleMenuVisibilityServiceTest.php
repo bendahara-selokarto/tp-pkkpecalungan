@@ -36,7 +36,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
             'kecamatan-sekretaris',
             'super-admin',
         ] as $roleName) {
-            Role::create(['name' => $roleName]);
+            Role::firstOrCreate(['name' => $roleName]);
         }
     }
 

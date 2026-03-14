@@ -23,8 +23,8 @@ class KejarPaketReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-pokja-ii']);
-        Role::create(['name' => 'kecamatan-pokja-ii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-ii']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -66,7 +66,7 @@ class KejarPaketReportPrintTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('kecamatan-pokja-ii');
+        $user->assignRole('kecamatan-sekretaris');
 
         KejarPaket::create([
             'nama_kejar_paket' => 'PKBM Melati',

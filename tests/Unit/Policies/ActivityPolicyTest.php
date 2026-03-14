@@ -19,8 +19,8 @@ class ActivityPolicyTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_admin_desa_hanya_dapat_mengakses_kegiatan_desanya_sendiri(): void

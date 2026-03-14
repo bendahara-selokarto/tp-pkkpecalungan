@@ -25,8 +25,8 @@ class KecamatanDataKegiatanWargaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-i']);
-        Role::create(['name' => 'desa-pokja-i']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -46,7 +46,7 @@ class KecamatanDataKegiatanWargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         DataKegiatanWarga::create([
             'kegiatan' => 'Kegiatan Keagamaan',
@@ -87,7 +87,7 @@ class KecamatanDataKegiatanWargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         for ($index = 1; $index <= 11; $index++) {
             DataKegiatanWarga::create([
@@ -131,7 +131,7 @@ class KecamatanDataKegiatanWargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         DataKegiatanWarga::create([
             'kegiatan' => 'Kegiatan Default',
@@ -160,7 +160,7 @@ class KecamatanDataKegiatanWargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $dataKegiatanWargaLuar = DataKegiatanWarga::create([
             'kegiatan' => 'Arisan',
@@ -210,7 +210,7 @@ class KecamatanDataKegiatanWargaTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
         ]);
-        $userStale->assignRole('kecamatan-pokja-i');
+        $userStale->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/data-kegiatan-warga');
 
@@ -225,7 +225,7 @@ class KecamatanDataKegiatanWargaTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $dataKegiatanTahunLalu = DataKegiatanWarga::create([
             'kegiatan' => 'Arisan',

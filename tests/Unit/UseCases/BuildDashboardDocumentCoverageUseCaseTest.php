@@ -23,8 +23,8 @@ class BuildDashboardDocumentCoverageUseCaseTest extends TestCase
         parent::setUp();
 
         Cache::flush();
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
     }
 
     public function test_use_case_menghitung_agregasi_per_modul_dan_per_lampiran(): void

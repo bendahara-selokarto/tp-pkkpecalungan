@@ -26,7 +26,7 @@ class SuperAdminAuthorizationTest extends TestCase
         Permission::create(['name' => 'manage roles']);
 
         // Buat role super-admin
-        $role = Role::create(['name' => 'super-admin']);
+        $role = Role::firstOrCreate(['name' => 'super-admin']);
         $role->givePermissionTo(Permission::all());
     }
 

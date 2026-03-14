@@ -23,8 +23,8 @@ class KecamatanPosyanduTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-iv']);
-        Role::create(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -45,7 +45,7 @@ class KecamatanPosyanduTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iv');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         Posyandu::create([
             'nama_posyandu' => 'Posyandu Anyelir',
@@ -100,7 +100,7 @@ class KecamatanPosyanduTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iv');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $arsip = Posyandu::create([
             'nama_posyandu' => 'Posyandu Arsip',
@@ -134,7 +134,7 @@ class KecamatanPosyanduTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iv');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $posyanduLuar = Posyandu::create([
             'nama_posyandu' => 'Posyandu Luar Area',
@@ -196,7 +196,7 @@ class KecamatanPosyanduTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $userStale->assignRole('kecamatan-pokja-iv');
+        $userStale->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/posyandu');
 

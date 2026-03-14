@@ -20,7 +20,7 @@ class KecamatanReportReverseAreaMismatchTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $this->kecamatanA->id]);
@@ -48,7 +48,6 @@ class KecamatanReportReverseAreaMismatchTest extends TestCase
             ['kecamatan.agenda-surat.report'],
             ['kecamatan.agenda-surat.ekspedisi.report'],
             ['kecamatan.buku-keuangan.report'],
-            ['kecamatan.bantuans.keuangan.report'],
             ['kecamatan.inventaris.report'],
             ['kecamatan.data-warga.report'],
             ['kecamatan.data-kegiatan-warga.report'],

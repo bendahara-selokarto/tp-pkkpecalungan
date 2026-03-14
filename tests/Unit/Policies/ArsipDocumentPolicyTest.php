@@ -28,7 +28,7 @@ class ArsipDocumentPolicyTest extends TestCase
         parent::setUp();
 
         foreach (['super-admin', 'desa-sekretaris', 'kecamatan-sekretaris', 'kecamatan-sekretaris'] as $roleName) {
-            Role::create(['name' => $roleName]);
+            Role::firstOrCreate(['name' => $roleName]);
         }
 
         $this->kecamatanA = Area::create([

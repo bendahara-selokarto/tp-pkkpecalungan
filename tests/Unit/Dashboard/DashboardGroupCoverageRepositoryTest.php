@@ -18,8 +18,8 @@ class DashboardGroupCoverageRepositoryTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-i']);
-        Role::create(['name' => 'desa-pokja-i']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-i']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
     }
 
     public function test_breakdown_per_desa_hanya_mengambil_desa_dalam_kecamatan_pengguna(): void

@@ -21,8 +21,8 @@ class BukuKeuanganReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -95,7 +95,7 @@ class BukuKeuanganReportPrintTest extends TestCase
         $response->assertStatus(403);
     }
 
-    public function test_route_alias_lama_tetap_mengarahkan_ke_report_buku_keuangan_baru(): void
+    public function test_route_alias_lama_dihapus_dan_mengembalikan_404(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
         $user->assignRole('desa-sekretaris');
@@ -112,9 +112,8 @@ class BukuKeuanganReportPrintTest extends TestCase
             'created_by' => $user->id,
         ]);
 
-        $response = $this->actingAs($user)->get(route('desa.bantuans.keuangan.report'));
+        $response = $this->actingAs($user)->get('/desa/bantuans/keuangan/report/pdf');
 
-        $response->assertOk();
-        $response->assertHeader('content-type', 'application/pdf');
+        $response->assertStatus(404);
     }
 }

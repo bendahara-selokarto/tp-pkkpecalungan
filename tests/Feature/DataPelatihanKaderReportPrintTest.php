@@ -25,8 +25,8 @@ class DataPelatihanKaderReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-pokja-ii']);
-        Role::create(['name' => 'kecamatan-pokja-ii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-ii']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -81,7 +81,7 @@ class DataPelatihanKaderReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_data_pelatihan_kader_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id, 'active_budget_year' => 2025]);
-        $user->assignRole('kecamatan-pokja-ii');
+        $user->assignRole('kecamatan-sekretaris');
 
         DataPelatihanKader::create([
             'nomor_registrasi' => 'REG-KEC-1',

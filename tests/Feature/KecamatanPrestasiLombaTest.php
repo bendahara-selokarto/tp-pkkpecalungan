@@ -25,8 +25,8 @@ class KecamatanPrestasiLombaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-sekretaris']);
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',

@@ -21,8 +21,8 @@ class KecamatanPilotProjectKeluargaSehatTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-iv']);
-        Role::create(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -35,7 +35,7 @@ class KecamatanPilotProjectKeluargaSehatTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iv');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         PilotProjectKeluargaSehatReport::create([
             'judul_laporan' => 'Laporan Kecamatan A',

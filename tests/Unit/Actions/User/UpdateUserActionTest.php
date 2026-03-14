@@ -17,8 +17,8 @@ class UpdateUserActionTest extends TestCase
 
     public function test_memperbarui_pengguna_dan_peran(): void
     {
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
         $oldArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
         $newArea = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
 
@@ -48,7 +48,7 @@ class UpdateUserActionTest extends TestCase
     {
         $this->expectException(ValidationException::class);
 
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
         $desaArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
         $kecamatanArea = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
 
@@ -70,7 +70,7 @@ class UpdateUserActionTest extends TestCase
 
     public function test_memperbarui_pengguna_memulihkan_scope_stale_berdasarkan_area(): void
     {
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
         $desaArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
 
         $user = User::factory()->create([
@@ -95,8 +95,8 @@ class UpdateUserActionTest extends TestCase
     {
         $this->expectException(DomainException::class);
 
-        Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
         $desaArea = Area::create(['name' => 'Gombong', 'level' => 'desa']);
 
         $user = User::factory()->create([
@@ -119,8 +119,8 @@ class UpdateUserActionTest extends TestCase
     {
         $this->expectException(ValidationException::class);
 
-        Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
         $kecamatanArea = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
 
         $user = User::factory()->create([

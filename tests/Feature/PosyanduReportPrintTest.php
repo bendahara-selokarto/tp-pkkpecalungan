@@ -23,8 +23,8 @@ class PosyanduReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-pokja-iv']);
-        Role::create(['name' => 'kecamatan-pokja-iv']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -64,7 +64,7 @@ class PosyanduReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_posyandu_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('kecamatan-pokja-iv');
+        $user->assignRole('kecamatan-sekretaris');
 
         Posyandu::create([
             'nama_posyandu' => 'Posyandu Melati',

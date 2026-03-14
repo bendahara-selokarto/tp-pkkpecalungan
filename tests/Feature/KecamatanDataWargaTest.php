@@ -25,8 +25,8 @@ class KecamatanDataWargaTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-i']);
-        Role::create(['name' => 'desa-pokja-i']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -46,7 +46,7 @@ class KecamatanDataWargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         DataWarga::create([
             'dasawisma' => 'Anyelir 01',
@@ -92,7 +92,7 @@ class KecamatanDataWargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         for ($index = 1; $index <= 11; $index++) {
             DataWarga::create([
@@ -142,7 +142,7 @@ class KecamatanDataWargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         DataWarga::create([
             'dasawisma' => 'Default 01',
@@ -174,7 +174,7 @@ class KecamatanDataWargaTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $dataWargaLuar = DataWarga::create([
             'dasawisma' => 'Luar 01',
@@ -195,13 +195,13 @@ class KecamatanDataWargaTest extends TestCase
     }
 
     #[Test]
-    public function admin_kecamatan_dapat_menambah_dan_memperbarui_data_warga(): void
+    public function admin_kecamatan_tidak_boleh_menambah_dan_memperbarui_data_warga(): void
     {
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($adminKecamatan)->post('/kecamatan/data-warga', [
             'dasawisma' => 'Anyelir 02',
@@ -217,12 +217,19 @@ class KecamatanDataWargaTest extends TestCase
                     'tanggal_lahir' => '1998-02-22',
                 ],
             ],
-        ])->assertStatus(302);
+        ])->assertStatus(403);
 
-        $dataWarga = DataWarga::query()
-            ->where('area_id', $this->kecamatanA->id)
-            ->where('nama_kepala_keluarga', 'Nuryanti')
-            ->firstOrFail();
+        $dataWarga = DataWarga::query()->create([
+            'dasawisma' => 'Anyelir 02',
+            'nama_kepala_keluarga' => 'Nuryanti',
+            'alamat' => 'RW 02',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => 'Input awal',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
 
         $this->actingAs($adminKecamatan)->put(route('kecamatan.data-warga.update', $dataWarga->id), [
             'dasawisma' => 'Anyelir 02',
@@ -243,13 +250,13 @@ class KecamatanDataWargaTest extends TestCase
                     'tanggal_lahir' => '1996-01-10',
                 ],
             ],
-        ])->assertStatus(302);
+        ])->assertStatus(403);
 
         $this->assertDatabaseHas('data_wargas', [
             'id' => $dataWarga->id,
-            'jumlah_warga_laki_laki' => 1,
-            'jumlah_warga_perempuan' => 1,
-            'keterangan' => 'Input revisi',
+            'jumlah_warga_laki_laki' => 0,
+            'jumlah_warga_perempuan' => 0,
+            'keterangan' => 'Input awal',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
         ]);
@@ -288,7 +295,7 @@ class KecamatanDataWargaTest extends TestCase
             'area_id' => $desa->id,
             'scope' => 'kecamatan',
         ]);
-        $userStale->assignRole('kecamatan-pokja-i');
+        $userStale->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($userStale)->get('/kecamatan/data-warga');
 
@@ -303,7 +310,7 @@ class KecamatanDataWargaTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $dataWargaTahunLalu = DataWarga::create([
             'dasawisma' => 'Lama 01',

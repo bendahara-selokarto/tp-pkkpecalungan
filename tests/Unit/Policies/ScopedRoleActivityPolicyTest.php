@@ -17,8 +17,8 @@ class ScopedRoleActivityPolicyTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_role_desa_sekretaris_hanya_bisa_data_desa_sendiri(): void

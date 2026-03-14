@@ -20,7 +20,7 @@ class PilotProjectNaskahPelaporanPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_naskah_di_desanya_sendiri(): void
     {
-        Role::create(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -68,7 +68,7 @@ class PilotProjectNaskahPelaporanPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_naskah_kecamatan_lain(): void
     {
-        Role::create(['name' => 'kecamatan-pokja-iv']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-iv']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -99,7 +99,7 @@ class PilotProjectNaskahPelaporanPolicyTest extends TestCase
     #[Test]
     public function admin_desa_tidak_boleh_melihat_naskah_tahun_anggaran_lain_di_area_yang_sama(): void
     {
-        Role::create(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);

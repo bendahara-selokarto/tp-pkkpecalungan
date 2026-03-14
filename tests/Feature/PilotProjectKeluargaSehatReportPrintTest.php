@@ -24,8 +24,8 @@ class PilotProjectKeluargaSehatReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-pokja-iv']);
-        Role::create(['name' => 'kecamatan-pokja-iv']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -110,7 +110,7 @@ class PilotProjectKeluargaSehatReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_pilot_project_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('kecamatan-pokja-iv');
+        $user->assignRole('kecamatan-sekretaris');
 
         $report = PilotProjectKeluargaSehatReport::create([
             'judul_laporan' => 'Laporan Kecamatan',

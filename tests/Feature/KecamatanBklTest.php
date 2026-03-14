@@ -24,8 +24,8 @@ class KecamatanBklTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-i']);
-        Role::create(['name' => 'desa-pokja-i']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -46,7 +46,7 @@ class KecamatanBklTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         Bkl::create([
             'desa' => 'Gombong',
@@ -96,7 +96,7 @@ class KecamatanBklTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         for ($index = 1; $index <= 11; $index++) {
             Bkl::create([
@@ -150,7 +150,7 @@ class KecamatanBklTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $bklTahunLain = Bkl::create([
             'desa' => 'Gombong',
@@ -178,7 +178,7 @@ class KecamatanBklTest extends TestCase
             'scope' => 'kecamatan',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $bklLuar = Bkl::create([
             'desa' => 'Kragan',

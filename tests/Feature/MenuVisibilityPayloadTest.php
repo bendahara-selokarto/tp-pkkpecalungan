@@ -27,7 +27,7 @@ class MenuVisibilityPayloadTest extends TestCase
             'kecamatan-sekretaris',
             'kecamatan-pokja-ii',
         ] as $roleName) {
-            Role::create(['name' => $roleName]);
+            Role::firstOrCreate(['name' => $roleName]);
         }
 
         $this->kecamatan = Area::create([

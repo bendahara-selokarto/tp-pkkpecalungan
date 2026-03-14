@@ -18,9 +18,9 @@ class UserManagementIndexPaginationTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'super-admin']);
-        Role::create(['name' => 'desa-sekretaris']);
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'super-admin']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_super_admin_melihat_index_user_management_dengan_pagination_default_10(): void

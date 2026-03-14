@@ -41,8 +41,9 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-pokja-i']);
-        Role::create(['name' => 'kecamatan-pokja-i']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -1780,7 +1781,7 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
     public function test_admin_desa_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_418b_418c_418d_419b_420a_420b_423_dan_424_desanya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
-        $user->assignRole('desa-pokja-i');
+        $user->assignRole('desa-pokja-iv');
 
         $this->seedDataWargaDenganAnggota($user, 'desa', $this->desaA->id, 'Melati', 'Kepala Desa');
 
@@ -1856,7 +1857,7 @@ class RekapCatatanDataKegiatanWargaReportPrintTest extends TestCase
     public function test_admin_kecamatan_dapat_mencetak_pdf_rekap_416a_416b_416c_416d_417a_417b_417c_417d_418a_418b_418c_418d_419b_420a_420b_423_dan_424_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
-        $user->assignRole('kecamatan-pokja-i');
+        $user->assignRole('kecamatan-sekretaris');
 
         $this->seedDataWargaDenganAnggota($user, 'kecamatan', $this->kecamatanA->id, 'Mawar', 'Kepala Kecamatan');
 

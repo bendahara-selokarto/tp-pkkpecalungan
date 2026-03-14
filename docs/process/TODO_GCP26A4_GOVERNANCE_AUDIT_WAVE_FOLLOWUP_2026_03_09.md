@@ -50,7 +50,7 @@ Related ADR: `-`
 - [x] L2: audit link/path markdown + governance audit script `PASS`.
 - [x] L3: verifikasi workflow remote/GitHub Actions untuk gate dokumentasi.
   - 2026-03-10: Domain Contract Gate run `22890639031` gagal pada step `Run mandatory domain/PDF gates` (workflow `domain-contract-gate.yml`).
-  - Failure detail: `Vite manifest not found at public/build/manifest.json` saat `tests/Feature/DashboardActivityChartTest.php:231` (`test_grafik_dashboard_tidak_bocor_saat_scope_metadata_tidak_sinkron_dengan_role`).
+  - Failure detail: `Vite manifest not found at public/build/manifest.json` saat `tests/Feature/DashboardActivityChartTest.php` (`test_grafik_dashboard_tidak_bocor_saat_scope_metadata_tidak_sinkron_dengan_role`).
   - Repro lokal `PASS`: `php artisan route:list --name=report`, `php -d memory_limit=512M artisan test --filter=PdfBaselineFixtureComplianceTest --compact`, `php -d memory_limit=512M artisan test --filter=scope_metadata_tidak_sinkron --compact`.
 
 ## Risiko
@@ -101,7 +101,7 @@ Related ADR: `-`
   - verifikasi workflow remote dicoba; run `22890639031` gagal pada step `Run mandatory domain/PDF gates` (butuh rerun/inspeksi log remote).
 - 2026-03-12 batch 5 (verifikasi remote selesai):
   - run `22890639031` tetap gagal pada step `Run mandatory domain/PDF gates`,
-  - error utama: `Vite manifest not found at public/build/manifest.json` saat `tests/Feature/DashboardActivityChartTest.php:231`,
+  - error utama: `Vite manifest not found at public/build/manifest.json` saat `tests/Feature/DashboardActivityChartTest.php`,
   - status batch 5 ditutup sebagai verifikasi selesai (meski gate masih fail).
 - 2026-03-13 closure sync:
   - status concern ditegaskan `done`,

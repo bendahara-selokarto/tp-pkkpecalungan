@@ -21,8 +21,8 @@ class KecamatanPilotProjectNaskahPelaporanTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-pokja-iv']);
-        Role::create(['name' => 'desa-pokja-iv']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iv']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -35,7 +35,7 @@ class KecamatanPilotProjectNaskahPelaporanTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iv');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         PilotProjectNaskahPelaporanReport::create([
             'judul_laporan' => 'Naskah Kecamatan A',
@@ -73,13 +73,13 @@ class KecamatanPilotProjectNaskahPelaporanTest extends TestCase
     }
 
     #[Test]
-    public function admin_kecamatan_dapat_menambah_dan_memperbarui_naskah_pelaporan(): void
+    public function admin_kecamatan_tidak_boleh_menambah_dan_memperbarui_naskah_pelaporan(): void
     {
         $adminKecamatan = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-iv');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $this->actingAs($adminKecamatan)->post('/kecamatan/pilot-project-naskah-pelaporan', [
             'judul_laporan' => 'Naskah Kecamatan A',
@@ -94,12 +94,25 @@ class KecamatanPilotProjectNaskahPelaporanTest extends TestCase
             'pelaksanaan_4' => 'Pelaksanaan 4',
             'pelaksanaan_5' => 'Pelaksanaan 5',
             'penutup' => 'Penutup awal',
-        ])->assertStatus(302);
+        ])->assertStatus(403);
 
-        $report = PilotProjectNaskahPelaporanReport::query()
-            ->where('area_id', $this->kecamatanA->id)
-            ->where('judul_laporan', 'Naskah Kecamatan A')
-            ->firstOrFail();
+        $report = PilotProjectNaskahPelaporanReport::query()->create([
+            'judul_laporan' => 'Naskah Kecamatan A',
+            'surat_kepada' => 'Tim Penggerak PKK Kabupaten',
+            'surat_dari' => 'Tim Penggerak PKK Kecamatan Pecalungan',
+            'surat_tanggal' => '2026-02-22',
+            'dasar_pelaksanaan' => 'Dasar pelaksanaan awal',
+            'pendahuluan' => 'Pendahuluan awal',
+            'pelaksanaan_1' => 'Pelaksanaan 1',
+            'pelaksanaan_2' => 'Pelaksanaan 2',
+            'pelaksanaan_3' => 'Pelaksanaan 3',
+            'pelaksanaan_4' => 'Pelaksanaan 4',
+            'pelaksanaan_5' => 'Pelaksanaan 5',
+            'penutup' => 'Penutup awal',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $adminKecamatan->id,
+        ]);
 
         $this->actingAs($adminKecamatan)->put(route('kecamatan.pilot-project-naskah-pelaporan.update', $report->id), [
             'judul_laporan' => 'Naskah Kecamatan A Revisi',
@@ -114,11 +127,12 @@ class KecamatanPilotProjectNaskahPelaporanTest extends TestCase
             'pelaksanaan_4' => 'Pelaksanaan 4 revisi',
             'pelaksanaan_5' => 'Pelaksanaan 5 revisi',
             'penutup' => 'Penutup revisi',
-        ])->assertStatus(302);
+        ])->assertStatus(403);
 
         $this->assertDatabaseHas('pilot_project_naskah_pelaporan_reports', [
             'id' => $report->id,
-            'judul_laporan' => 'Naskah Kecamatan A Revisi',
+            'judul_laporan' => 'Naskah Kecamatan A',
+            'penutup' => 'Penutup awal',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
         ]);

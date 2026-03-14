@@ -21,7 +21,7 @@ class DashboardDocumentCoverageQueryBenchmarkTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
     }
 
     public function test_query_agregat_dashboard_kecamatan_tetap_terkendali_pada_banyak_desa(): void

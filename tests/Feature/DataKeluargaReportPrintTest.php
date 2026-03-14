@@ -27,8 +27,8 @@ class DataKeluargaReportPrintTest extends TestCase
     {
         parent::setUp();
 
-        Role::create(['name' => 'desa-pokja-iii']);
-        Role::create(['name' => 'kecamatan-pokja-iii']);
+        Role::firstOrCreate(['name' => 'desa-pokja-iii']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $this->kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -77,7 +77,7 @@ class DataKeluargaReportPrintTest extends TestCase
             'area_id' => $this->kecamatanA->id,
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $user->assignRole('kecamatan-pokja-iii');
+        $user->assignRole('kecamatan-sekretaris');
 
         DataKeluarga::create([
             'kategori_keluarga' => 'Sejahtera II',

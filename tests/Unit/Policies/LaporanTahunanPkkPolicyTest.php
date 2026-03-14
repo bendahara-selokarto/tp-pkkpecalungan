@@ -20,7 +20,7 @@ class LaporanTahunanPkkPolicyTest extends TestCase
     #[Test]
     public function admin_desa_hanya_boleh_melihat_laporan_di_desanya_sendiri(): void
     {
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
@@ -60,7 +60,7 @@ class LaporanTahunanPkkPolicyTest extends TestCase
     #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_laporan_kecamatan_lain(): void
     {
-        Role::create(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $kecamatanA = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $kecamatanB = Area::create(['name' => 'Limpung', 'level' => 'kecamatan']);
@@ -89,7 +89,7 @@ class LaporanTahunanPkkPolicyTest extends TestCase
     #[Test]
     public function admin_desa_tidak_boleh_melihat_laporan_tahun_anggaran_lain_meski_area_sama(): void
     {
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
 
         $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
         $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);

@@ -14,7 +14,7 @@ class UserServiceTest extends TestCase
 
     public function test_layanan_membuat_pengguna(): void
     {
-        Role::create(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
         $area = Area::create([
             'name' => 'Gombong',
             'level' => 'desa',
