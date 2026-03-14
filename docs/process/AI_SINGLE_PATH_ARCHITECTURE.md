@@ -104,6 +104,16 @@ Aturan:
   - `Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`
   - `Policy -> Scope Service`
 
+5A. `Anti-Hallucination Guardrail`
+- Setiap perubahan wajib punya explicit contract dari file rujukan (AGENTS/TODO/ADR).
+- Sebelum patch, klasifikasikan task ke concern tertentu; cegah asumsi multi-concern.
+- Lakukan self-reflective checkpoint: 
+  1) Apakah file target dan batasan sudah jelas? 
+  2) Apakah ada istilah ambigu yang perlu dicatat? 
+  3) Apakah data source (areas/role/scope) konsisten? 
+- Jika ada ketidakpastian, beri tag `[PERLU KONFIRMASI]` dan jangan lanjut patch.
+- Final patch hanya dengan “evidence validasi” (tes atau audit scoped) di catatan.
+
 6. `Validation Ladder`
 - L1: lint/syntax/test targeted concern.
 - L2: regression test concern terkait.
