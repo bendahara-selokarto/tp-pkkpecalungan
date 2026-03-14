@@ -1,7 +1,7 @@
 # AI EXECUTION CONTRACT (RATE-LIMIT OPTIMIZED)
 
-Dokumen ini adalah source of truth AI untuk repository ini.
-Dokumen manusia ada di `README.md`.
+Dokumen ini adalah sumber kebenaran eksekusi AI untuk repository ini.
+Dokumen rujukan pengguna ada di `README.md`.
 Dokumen pedoman domain utama ada di `PEDOMAN_DOMAIN_UTAMA_RAKERNAS_X.md` (sumber: `docs/referensi/Rakernas X.pdf`).
 Dokumen jalur tunggal eksekusi AI ada di `docs/process/AI_SINGLE_PATH_ARCHITECTURE.md`.
 Dokumen keputusan arsitektur ada di `docs/adr/` (`ADR_*` + `README.md`).
@@ -15,9 +15,9 @@ Alias role aktif:
 - `santoso`: `LLM Optimization Engineer`
 - `manto`: `Technical Implementer`
 
-Aturan switch:
+Aturan pergantian peran:
 
-- Untuk mempermudah switch role, cukup panggil nama alias.
+- Untuk mempermudah pergantian role, cukup panggil nama alias.
 
 ## 0. Priority
 

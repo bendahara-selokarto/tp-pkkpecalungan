@@ -13,7 +13,7 @@ Dokumen ini menetapkan jalur tunggal eksekusi AI agar:
 - target dan validasi jelas,
 - hasil lintas sesi konsisten.
 
-Dokumen ini tidak menggantikan prioritas `AGENTS.md`; ini rute operasional default.
+Dokumen ini tidak menggantikan prioritas `AGENTS.md`; ini adalah rute operasional default.
 
 ## DSL Contract
 
