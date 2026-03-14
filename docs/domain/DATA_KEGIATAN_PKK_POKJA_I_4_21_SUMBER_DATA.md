@@ -12,6 +12,7 @@
 - Status cek manual sumber data report: **selesai** (repository + view).
 - Tanggal cek manual terakhir (header): `2026-03-11`.
 - Tanggal cek manual terakhir (sumber data): `2026-03-14`.
+- Bukti verifikasi PDF (lokal): `docs/referensi/evidence/screenshots/4_21_data_kegiatan_pkk_pokja_i_pdf.png`.
 - Bukti acuan visual: screenshot Lampiran `4.21` di `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_21_data_kegiatan_pkk_pokja_i.png`.
 
 ## Jalur Eksekusi Report (Aktif)

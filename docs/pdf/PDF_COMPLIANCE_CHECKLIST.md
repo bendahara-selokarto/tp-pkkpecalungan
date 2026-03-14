@@ -95,7 +95,7 @@ Tujuan:
 | --- | --- | --- | --- | --- |
 | 2026-02-22 | Semua endpoint print/report PDF (`desa` + `kecamatan`) | Route scan -> mapping `PrintController -> UseCase -> Repository -> Model -> Table` -> verifikasi tabel eksis | 90 route print/report teraudit, 46 view PDF teraudit, tidak ada mismatch tabel sumber data, tidak ditemukan query domain langsung di print controller | `pass` |
 | 2026-03-08 | Lampiran `4.24` / `data-kegiatan-pkk-pokja-iv` | Verifikasi manual screenshot header + telusur manual jalur sumber data `route -> controller -> use case -> repository -> model` | Header autentik 27 kolom terkunci; sumber data per kolom terdokumentasi; concern dinyatakan sesuai untuk implementasi aktif `report-only via catatan-keluarga` | `pass` |
-| 2026-03-14 | Lampiran `4.21` / `data-kegiatan-pkk-pokja-i` | Render PDF sample + konversi screenshot header (pdftoppm) + inspeksi visual | Header 27 kolom sesuai mapping autentik 4.21; metadata cetak tampil | `pass` |
+| 2026-03-14 | Lampiran `4.21` / `data-kegiatan-pkk-pokja-i` | Render PDF sample + konversi screenshot header (pdftoppm) + inspeksi visual | Header 27 kolom sesuai mapping autentik 4.21; metadata cetak tampil; bukti lokal `docs/referensi/evidence/screenshots/4_21_data_kegiatan_pkk_pokja_i_pdf.png` | `pass` |
 
 ### Ringkasan Baseline Audit 2026-02-22
 
