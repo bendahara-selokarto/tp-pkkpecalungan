@@ -82,7 +82,7 @@ Kontrak transversal aktif:
 | 4.22 | `data-kegiatan-pkk-pokja-ii` | Data Kegiatan PKK (Pokja II) | Report bertingkat multi-kolom dengan grup `Pendidikan Keterampilan`, `Kader Khusus`, `Jumlah Kader yang sudah dilatih`, dan `Pengembangan Keahlian Berkoperasi`; referensi mapping: `docs/domain/DATA_KEGIATAN_PKK_POKJA_II_4_22_MAPPING.md`; sumber data: `docs/domain/DATA_KEGIATAN_PKK_POKJA_II_4_22_SUMBER_DATA.md` | `DATA KEGIATAN PKK` | Screenshot autentik `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_22_data_kegiatan_pkk_pokja_ii.png` | implemented (report-only via `catatan-keluarga`) |
 | 4.23 | `data-kegiatan-pkk-pokja-iii` | Data Kegiatan PKK (Pokja III) | Report 20 kolom dengan merge-header autentik; agregasi operasional lintas modul (`anggota_pokjas`, `data_pemanfaatan_tanah_pekarangan_hatinya_pkks`, `data_industri_rumah_tanggas`, `data_wargas`, `data_warga_anggotas`); referensi mapping: `docs/domain/DATA_KEGIATAN_PKK_POKJA_III_4_23_MAPPING.md` | `DATA KEGIATAN PKK` | Dokumen autentik `docs/referensi/229-230.pdf` + screenshot `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_23_data_kegiatan_pkk_pokja_iii.png` | implemented (report-only via `catatan-keluarga`) |
 | 4.24 | `data-kegiatan-pkk-pokja-iv` | Data Kegiatan PKK (Pokja IV) | Report 27 kolom dengan merge-header autentik; grup puncak `KESEHATAN`, `KELESTARIAN LINGKUNGAN HIDUP`, `PERENCANAAN SEHAT`, dan `PROGRAM UNGGULAN GERAKAN KELUARGA SEHAT TANGGAP & TANGGUH BENCANA (GKSTTB)`; agregasi operasional lintas modul (`kader_khusus`, `posyandus`, `data_kegiatan_wargas`, `data_wargas`, `data_warga_anggotas`, `program_prioritas`); referensi mapping: `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md` | `DATA KEGIATAN PKK` | Dokumen autentik `docs/referensi/232.pdf` + screenshot `docs/referensi/_screenshots/rakernas-x-autentik/lampiran_4_24_data_kegiatan_pkk_pokja_iv.png` | implemented (report-only via `catatan-keluarga`) |
-| Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana (Pokja IV) | Header laporan: `judul_laporan`, `dasar_hukum`, `pendahuluan`, `maksud_tujuan`, `pelaksanaan`, `dokumentasi`, `penutup`; nilai indikator periodik: `section`, `cluster_code`, `indicator_code`, `year`, `semester`, `value`, `evaluation_note`, `sort_order` | `LAPORAN PELAKSANAAN PILOT PROJECT GERAKAN KELUARGA SEHAT TANGGAP DAN TANGGUH BENCANA` | Rakernas X (Halaman 202-211) | implemented (catalog tahap awal) |
+| Ekstensi 202-211 | `pilot-project-keluarga-sehat` | Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana (Pokja IV) | Header laporan: `judul_laporan`, `dasar_hukum`, `pendahuluan`, `maksud_tujuan`, `pelaksanaan`, `dokumentasi`, `penutup`; nilai indikator periodik: `section`, `cluster_code`, `indicator_code`, `year`, `semester`, `value`, `evaluation_note`, `sort_order` | `LAPORAN PELAKSANAAN PILOT PROJECT GERAKAN KELUARGA SEHAT TANGGAP DAN TANGGUH BENCANA` | `docs/referensi/Rakernas X.pdf` (Halaman 202-211) | implemented (catalog tahap awal) |
 | Ekstensi Lokal 2025 | `laporan-tahunan-pkk` | Laporan Tahunan Tim Penggerak PKK Kecamatan | Kontrak data baseline terdiri dari metadata laporan tahunan, item kegiatan per bidang (`sekretariat`, `pokja-i` s.d `pokja-iv`), dan narasi evaluasi/penutup; struktur visual diambil dari template dokumen contoh, sedangkan isi runtime wajib diambil dari database aplikasi dan boleh agregasi lintas tabel dalam boundary repository scoped; bila data tidak ditemukan, sistem memakai form isian pelengkap terpersistensi dengan guardrail scope; kontrak output wajib `single-file .docx` dengan urutan konten identik dokumen contoh; tabel OOXML diperlakukan sebagai layout naskah tanpa border; referensi mapping: `docs/domain/LAPORAN_TAHUNAN_PKK_2025_MAPPING.md` | `LAPORAN TAHUNAN TIM PENGGERAK PKK` | Dokumen contoh lokal `docs/referensi/LAPORAN TAHUNAN PKK th 2025.docx` | implemented (menu sekretaris + CRUD + docx generator; dashboard coverage dikecualikan eksplisit karena ekstensi lokal) |
 
 ### Normalisasi Label Canonical (Gelombang 1 - Baseline Backlog Awal, Status Terkini)
@@ -228,7 +228,7 @@ Kontrak mode:
 Catatan:
 
 - `super-admin` bypass policy dan tidak dibatasi matrix ini.
-- Role legacy (`admin-*`) dipertahankan sementara untuk kompatibilitas sampai migrasi role legacy selesai.
+- Role legacy (`admin-*`) dinonaktifkan di runtime sejak 2026-03-15 dan hanya dicatat sebagai histori.
 - Pengecualian akses modul `inventaris`:
   - `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv` memiliki mode `read-write` via override modul backend.
   - `kecamatan-pokja-i..iv` tetap tidak memiliki akses `inventaris` (tidak muncul di `moduleModes` scope `kecamatan`).
@@ -245,7 +245,7 @@ Status kontrak:
 Payload utama:
 
 - `dashboardBlocks[]` menjadi source utama representasi dashboard.
-- Payload legacy (`dashboardStats`/`dashboardCharts`) hanya fallback transisi.
+- Payload legacy (`dashboardStats`/`dashboardCharts`) sudah dihapus dari runtime (2026-03-15).
 
 Struktur section sekretaris:
 

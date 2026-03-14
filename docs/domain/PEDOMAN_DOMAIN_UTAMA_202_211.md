@@ -2,9 +2,13 @@
 
 # Pedoman Domain Utama 202-211 (Analisis + Rencana Implementasi Fullstack)
 
-Sumber utama domain:
+Sumber utama domain (canonical):
 
-- https://pubhtml5.com/zsnqq/vjcf/basic/201-241
+- `docs/referensi/Rakernas X.pdf` (halaman `202-211`)
+
+Sumber historis (non-canonical):
+
+- https://pubhtml5.com/zsnqq/vjcf/basic/201-241 (Rakernas IX, sudah digantikan Rakernas X)
 
 Catatan penting:
 
