@@ -13,7 +13,7 @@ Related ADR: `-`
 
 ## Konteks
 
-- Baseline input autentik Pokja I desa tercatat pada `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md` (U002).
+- Baseline input autentik Pokja I desa tercatat pada `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md` (U002).
 - Setelah audit artefak, sejumlah buku yang ada pada baseline Pokja I belum muncul sebagai menu atau belum mendapat kontrak domain yang setara.
 - Concern ini fokus pada sinkronisasi dokumen canonical + rencana penyesuaian menu/akses agar konsisten dengan buku autentik.
 
@@ -22,7 +22,7 @@ Related ADR: `-`
 - Domain: sinkronisasi artefak menu Pokja I (desa) terhadap buku autentik.
 - Role/scope target: `desa-pokja-i` (utama), `kecamatan-pokja-i` (monitoring bila relevan).
 - Boundary data:
-  - `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md` (baseline buku autentik).
+  - `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md` (baseline buku autentik).
   - `docs/domain/dokumen_arsitektur_buku_admin_pkk_desa_kecamatan.md` (status ketersediaan).
   - `docs/domain/DOMAIN_CONTRACT_MATRIX.md` (kontrak domain + status implementasi).
   - `docs/domain/TERMINOLOGY_NORMALIZATION_MAP.md` (label canonical UI/PDF).

@@ -2019,15 +2019,15 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 
 Perintah validasi:
 
-- `rg -n "^# TODO TBH26A1 " docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^# TODO TBH26A1 " docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "^Status:\s*`in-progress`" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^Status:\s*`in-progress`" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "^## Update " docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update " docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2048,13 +2048,13 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 
 Perintah validasi:
 
-- `rg -n "^## Update .*\\(U002\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update .*\\(U002\\)" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "Pokja I tingkat desa memiliki dokumen administrasi" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "Pokja I tingkat desa memiliki dokumen administrasi" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2076,15 +2076,15 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 
 Perintah validasi:
 
-- `rg -n "^## Update .*\\(U003\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update .*\\(U003\\)" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "Pokja III juga memiliki administrasi KWT" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "Pokja III juga memiliki administrasi KWT" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "\\[PERLU KONFIRMASI: item ini muncul kembali setelah nomor 2\\]" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "\\[PERLU KONFIRMASI: item ini muncul kembali setelah nomor 2\\]" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2105,15 +2105,15 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 
 Perintah validasi:
 
-- `rg -n "^## Update .*\\(U004\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update .*\\(U004\\)" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "Administrasi Pokja IV pada baseline ini dicatat sebagai berikut" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "Administrasi Pokja IV pada baseline ini dicatat sebagai berikut" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "menggabungkan potongan input Pokja IV dari dua pesan terakhir" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "menggabungkan potongan input Pokja IV dari dua pesan terakhir" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2134,15 +2134,15 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 
 Perintah validasi:
 
-- `rg -n "^## Update .*\\(U005\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update .*\\(U005\\)" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "Administrasi Dasa Wisma pada baseline ini dicatat" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "Administrasi Dasa Wisma pada baseline ini dicatat" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "\\[PERLU KONFIRMASI: item ini muncul kembali seperti nomor 1\\]" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "\\[PERLU KONFIRMASI: item ini muncul kembali seperti nomor 1\\]" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2163,13 +2163,13 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 
 Perintah validasi:
 
-- `rg -n "^## Update .*\\(U006\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update .*\\(U006\\)" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "Administrasi bendahara pada baseline ini meliputi" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "Administrasi bendahara pada baseline ini meliputi" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2190,13 +2190,13 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 
 Perintah validasi:
 
-- `rg -n "^## Update .*\\(U007\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update .*\\(U007\\)" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "Administrasi sekretaris pada baseline ini dicatat sebagai berikut" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "Administrasi sekretaris pada baseline ini dicatat sebagai berikut" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2217,13 +2217,13 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 
 Perintah validasi:
 
-- `rg -n "^## Update .*\\(U008\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update .*\\(U008\\)" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "Lanjutan administrasi sekretaris pada bagian" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "Lanjutan administrasi sekretaris pada bagian" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2244,15 +2244,15 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 
 Perintah validasi:
 
-- `rg -n "^## Update .*\\(U009\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update .*\\(U009\\)" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "Lanjutan administrasi sekretaris pada bagian" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "Lanjutan administrasi sekretaris pada bagian" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "Buku Grafik TP PKK Desa" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "Buku Grafik TP PKK Desa" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2273,18 +2273,18 @@ Ruang lingkup:
 
 Artefak:
 
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 - `docs/process/SIDEBAR_DOMAIN_GROUPING_PLAN.md`
 - `routes/web.php`
 
 Perintah validasi:
 
-- `rg -n "^## Update .*\\(U010\\)" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "^## Update .*\\(U010\\)" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "match langsung|reuse parsial/report-only|gap/perlu concern baru" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "match langsung|reuse parsial/report-only|gap/perlu concern baru" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
-- `rg -n "KWT|Dasa Wisma|Bendahara|Pokja IV" docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `rg -n "KWT|Dasa Wisma|Bendahara|Pokja IV" docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
   - hasil: `PASS`.
 
 Keputusan:
@@ -2306,7 +2306,7 @@ Ruang lingkup:
 Artefak:
 
 - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md`
-- `docs/process/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
+- `docs/process/archive/2026_03/TODO_TBH26A1_BAHAN_AKTUAL_DAN_TERJEMAHAN_BERKALA_2026_03_08.md`
 - `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
 - `docs/process/SIDEBAR_DOMAIN_GROUPING_PLAN.md`
 - `routes/web.php`
