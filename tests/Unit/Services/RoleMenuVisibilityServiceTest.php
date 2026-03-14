@@ -248,25 +248,42 @@ class RoleMenuVisibilityServiceTest extends TestCase
         }
     }
 
-    public function test_semua_pokja_kecamatan_hanya_memiliki_tiga_menu(): void
+    public function test_menu_pokja_kecamatan_mengikuti_daftar_menu_baseline(): void
     {
-        $kecamatanPokjaRoles = [
-            'kecamatan-pokja-i',
-            'kecamatan-pokja-ii',
-            'kecamatan-pokja-iii',
-            'kecamatan-pokja-iv',
+        $expectedModulesByRole = [
+            'kecamatan-pokja-i' => [
+                'activities',
+                'anggota-pokja',
+                'prestasi-lomba',
+                'data-kegiatan-pkk-pokja-i',
+            ],
+            'kecamatan-pokja-ii' => [
+                'activities',
+                'anggota-pokja',
+                'prestasi-lomba',
+            ],
+            'kecamatan-pokja-iii' => [
+                'activities',
+                'anggota-pokja',
+                'prestasi-lomba',
+            ],
+            'kecamatan-pokja-iv' => [
+                'activities',
+                'anggota-pokja',
+                'prestasi-lomba',
+            ],
         ];
 
-        foreach ($kecamatanPokjaRoles as $role) {
+        foreach ($expectedModulesByRole as $role => $expectedModules) {
             $user = User::factory()->create();
             $user->assignRole($role);
 
             $visibility = $this->service->resolveForScope($user, 'kecamatan');
 
             $this->assertSame(
-                ['activities', 'anggota-pokja', 'prestasi-lomba'],
+                $expectedModules,
                 array_keys($visibility['modules']),
-                sprintf('Role %s harus hanya memiliki 3 menu modul.', $role)
+                sprintf('Role %s harus sesuai daftar menu modul baseline.', $role)
             );
         }
     }

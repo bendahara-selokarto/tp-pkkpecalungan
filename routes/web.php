@@ -253,6 +253,8 @@ Route::prefix('desa')
         Route::get('koperasi/report/pdf', [KoperasiPrintController::class, 'printDesaReport'])->name('koperasi.report');
         Route::get('data-warga/report/pdf', [DataWargaPrintController::class, 'printDesaReport'])->name('data-warga.report');
         Route::get('data-kegiatan-warga/report/pdf', [DataKegiatanWargaPrintController::class, 'printDesaReport'])->name('data-kegiatan-warga.report');
+        Route::get('data-kegiatan-pkk-pokja-i/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaDataKegiatanPkkPokjaIReport'])
+            ->name('data-kegiatan-pkk-pokja-i.report');
         Route::get('data-keluarga/report/pdf', [DataKeluargaPrintController::class, 'printDesaReport'])->name('data-keluarga.report');
         Route::get('data-industri-rumah-tangga/report/pdf', [DataIndustriRumahTanggaPrintController::class, 'printDesaReport'])->name('data-industri-rumah-tangga.report');
         Route::get('data-pelatihan-kader/report/pdf', [DataPelatihanKaderPrintController::class, 'printDesaReport'])->name('data-pelatihan-kader.report');
@@ -357,6 +359,8 @@ Route::prefix('kecamatan')
         Route::get('koperasi/report/pdf', [KoperasiPrintController::class, 'printKecamatanReport'])->name('koperasi.report');
         Route::get('data-warga/report/pdf', [DataWargaPrintController::class, 'printKecamatanReport'])->name('data-warga.report');
         Route::get('data-kegiatan-warga/report/pdf', [DataKegiatanWargaPrintController::class, 'printKecamatanReport'])->name('data-kegiatan-warga.report');
+        Route::get('data-kegiatan-pkk-pokja-i/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanDataKegiatanPkkPokjaIReport'])
+            ->name('data-kegiatan-pkk-pokja-i.report');
         Route::get('data-keluarga/report/pdf', [DataKeluargaPrintController::class, 'printKecamatanReport'])->name('data-keluarga.report');
         Route::get('data-industri-rumah-tangga/report/pdf', [DataIndustriRumahTanggaPrintController::class, 'printKecamatanReport'])->name('data-industri-rumah-tangga.report');
         Route::get('data-pelatihan-kader/report/pdf', [DataPelatihanKaderPrintController::class, 'printKecamatanReport'])->name('data-pelatihan-kader.report');

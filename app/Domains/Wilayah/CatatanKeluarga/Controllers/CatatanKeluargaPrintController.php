@@ -9,6 +9,7 @@ use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkDesaKelur
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkKabupatenKotaUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkKecamatanUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedCatatanTpPkkProvinsiUseCase;
+use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIiUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIiiUseCase;
 use App\Domains\Wilayah\CatatanKeluarga\UseCases\ListScopedDataKegiatanPkkPokjaIvUseCase;
@@ -45,6 +46,7 @@ class CatatanKeluargaPrintController extends Controller
         private readonly ListScopedRekapIbuHamilTpPkkKecamatanUseCase $listScopedRekapIbuHamilTpPkkKecamatanUseCase,
         private readonly ListScopedDataUmumPkkUseCase $listScopedDataUmumPkkUseCase,
         private readonly ListScopedDataUmumPkkKecamatanUseCase $listScopedDataUmumPkkKecamatanUseCase,
+        private readonly ListScopedDataKegiatanPkkPokjaIUseCase $listScopedDataKegiatanPkkPokjaIUseCase,
         private readonly ListScopedDataKegiatanPkkPokjaIiUseCase $listScopedDataKegiatanPkkPokjaIiUseCase,
         private readonly ListScopedDataKegiatanPkkPokjaIiiUseCase $listScopedDataKegiatanPkkPokjaIiiUseCase,
         private readonly ListScopedDataKegiatanPkkPokjaIvUseCase $listScopedDataKegiatanPkkPokjaIvUseCase,
@@ -143,6 +145,16 @@ class CatatanKeluargaPrintController extends Controller
     public function printKecamatanDataUmumPkkKecamatanReport(): Response
     {
         return $this->streamDataUmumPkkKecamatanReport(ScopeLevel::KECAMATAN->value);
+    }
+
+    public function printDesaDataKegiatanPkkPokjaIReport(): Response
+    {
+        return $this->streamDataKegiatanPkkPokjaIReport(ScopeLevel::DESA->value);
+    }
+
+    public function printKecamatanDataKegiatanPkkPokjaIReport(): Response
+    {
+        return $this->streamDataKegiatanPkkPokjaIReport(ScopeLevel::KECAMATAN->value);
     }
 
     public function printDesaDataKegiatanPkkPokjaIiReport(): Response
@@ -762,6 +774,56 @@ class CatatanKeluargaPrintController extends Controller
         ]);
 
         return $pdf->stream("data-umum-pkk-kecamatan-{$level}-report.pdf");
+    }
+
+    private function streamDataKegiatanPkkPokjaIReport(string $level): Response
+    {
+        $this->authorize('viewAny', CatatanKeluarga::class);
+
+        $items = $this->listScopedDataKegiatanPkkPokjaIUseCase
+            ->execute($level)
+            ->values();
+
+        $totals = [
+            'jumlah_kader' => (int) $items->sum('jumlah_kader'),
+            'kisah_kegiatan' => (int) $items->sum('kisah_kegiatan'),
+            'kisah_volume' => (int) $items->sum('kisah_volume'),
+            'kisah_metode' => (int) $items->sum('kisah_metode'),
+            'kisah_sasaran' => (int) $items->sum('kisah_sasaran'),
+            'krisan_kegiatan' => (int) $items->sum('krisan_kegiatan'),
+            'krisan_volume' => (int) $items->sum('krisan_volume'),
+            'krisan_metode' => (int) $items->sum('krisan_metode'),
+            'krisan_sasaran' => (int) $items->sum('krisan_sasaran'),
+            'kilas_kegiatan' => (int) $items->sum('kilas_kegiatan'),
+            'kilas_volume' => (int) $items->sum('kilas_volume'),
+            'kilas_metode' => (int) $items->sum('kilas_metode'),
+            'kilas_sasaran' => (int) $items->sum('kilas_sasaran'),
+            'ktiat_kegiatan' => (int) $items->sum('ktiat_kegiatan'),
+            'ktiat_volume' => (int) $items->sum('ktiat_volume'),
+            'ktiat_metode' => (int) $items->sum('ktiat_metode'),
+            'ktiat_sasaran' => (int) $items->sum('ktiat_sasaran'),
+            'kisak_kegiatan' => (int) $items->sum('kisak_kegiatan'),
+            'kisak_volume' => (int) $items->sum('kisak_volume'),
+            'kisak_metode' => (int) $items->sum('kisak_metode'),
+            'kisak_sasaran' => (int) $items->sum('kisak_sasaran'),
+            'pkbn_kegiatan' => (int) $items->sum('pkbn_kegiatan'),
+            'pkbn_volume' => (int) $items->sum('pkbn_volume'),
+            'pkbn_metode' => (int) $items->sum('pkbn_metode'),
+            'pkbn_sasaran' => (int) $items->sum('pkbn_sasaran'),
+        ];
+
+        $user = auth()->user()->loadMissing('area');
+        $pdf = $this->pdfViewFactory->loadView('pdf.data_kegiatan_pkk_pokja_i_report', [
+            'items' => $items,
+            'level' => $level,
+            'areaName' => $user->area?->name ?? '-',
+            'totals' => $totals,
+            'printedBy' => $user,
+            'printedAt' => now(),
+            'tahun' => $this->currentBudgetYear(),
+        ]);
+
+        return $pdf->stream("data-kegiatan-pkk-pokja-i-{$level}-report.pdf");
     }
 
     private function streamDataKegiatanPkkPokjaIiReport(string $level): Response

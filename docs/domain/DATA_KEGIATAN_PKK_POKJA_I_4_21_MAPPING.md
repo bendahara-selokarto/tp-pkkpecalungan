@@ -76,10 +76,11 @@ Peta merge header:
 
 ## Status Presisi
 
-- Status header merge: **terverifikasi visual**.
-- Status sinkronisasi kontrak domain: **not implemented**.
+- Status header merge: **terverifikasi visual (final)**.
+- Identitas dokumen terkonfirmasi via text-layer `Rakernas X.pdf` (2026-03-14).
+- Status sinkronisasi kontrak domain: **implemented (report-only)**; rujuk `docs/domain/DATA_KEGIATAN_PKK_POKJA_I_4_21_SUMBER_DATA.md`.
 
 ## Dampak ke Kontrak Domain Saat Ini
 
-- Belum ada modul/report khusus untuk Lampiran 4.21.
-- Perlu mapping repository + report sebelum sinkronisasi implementasi.
+- Mapping header dipakai oleh report aktif Lampiran 4.21 (route `desa.data-kegiatan-pkk-pokja-i.report`, `kecamatan.data-kegiatan-pkk-pokja-i.report`).
+- Sumber data report terkunci di `docs/domain/DATA_KEGIATAN_PKK_POKJA_I_4_21_SUMBER_DATA.md`.

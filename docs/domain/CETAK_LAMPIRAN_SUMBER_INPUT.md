@@ -47,6 +47,7 @@ IU = input utama. Untuk laporan rekap lintas modul, detail sumber data per kolom
 | 4.19b | `/${scope}/catatan-keluarga/rekap-ibu-hamil-tp-pkk-kecamatan/report/pdf` | Rekap via `catatan-keluarga` | `docs/domain/DOMAIN_CONTRACT_MATRIX.md`. |
 | 4.20a | `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf` | Rekap via `catatan-keluarga` | `docs/domain/DOMAIN_CONTRACT_MATRIX.md`. |
 | 4.20b | `/${scope}/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf` | Rekap via `catatan-keluarga` | `docs/domain/DOMAIN_CONTRACT_MATRIX.md`. |
+| 4.21 | `/${scope}/data-kegiatan-pkk-pokja-i/report/pdf` | Rekap lintas `activities` + `anggota-pokja` | `docs/domain/DATA_KEGIATAN_PKK_POKJA_I_4_21_SUMBER_DATA.md`. |
 | 4.22 | `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf` | Rekap lintas modul Pokja II | `docs/domain/DATA_KEGIATAN_PKK_POKJA_II_4_22_SUMBER_DATA.md`. |
 | 4.23 | `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf` | Rekap lintas `anggota-pokja`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `data-industri-rumah-tangga`, `data-warga` | `docs/domain/DATA_KEGIATAN_PKK_POKJA_III_4_23_MAPPING.md`. |
 | 4.24 | `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf` | Rekap lintas modul Pokja IV | `docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_SUMBER_DATA.md`. |
@@ -100,6 +101,7 @@ Catatan: jika kolom `Sumber Input Utama` menampilkan `catatan-keluarga`, itu ber
 | Laporan (href) | Sumber Input Utama | Catatan |
 | --- | --- | --- |
 | `/${scope}/catatan-keluarga/report/pdf` | `/${scope}/data-warga`, `/${scope}/data-kegiatan-warga` | Catatan Keluarga adalah rekap dari data warga dan kegiatan warga. |
+| `/${scope}/data-kegiatan-pkk-pokja-i/report/pdf` | `/${scope}/activities`, `/${scope}/anggota-pokja` | Rekap kegiatan Pokja I; detail sumber data per kolom di `docs/domain/DATA_KEGIATAN_PKK_POKJA_I_4_21_SUMBER_DATA.md`. |
 | `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf` | `/${scope}/catatan-keluarga` + modul Pokja II terkait | Rekap kegiatan Pokja II; detail sumber data per kolom di `docs/domain/DATA_KEGIATAN_PKK_POKJA_II_4_22_SUMBER_DATA.md`. |
 | `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf` | `/${scope}/catatan-keluarga` + modul Pokja III terkait | Rekap kegiatan Pokja III; detail sumber data per kolom di `docs/domain/DATA_KEGIATAN_PKK_POKJA_III_4_23_MAPPING.md`. |
 | `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf` | `/${scope}/catatan-keluarga` + modul pendukung | Rekap kegiatan Pokja IV dari data lintas modul. |

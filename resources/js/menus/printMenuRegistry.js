@@ -55,6 +55,7 @@ const buildScopedPdfReportItemsByGroup = (scope) => ({
     { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Daftar Anggota TP PKK dan Kader | -' },
     { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
     { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
+    { href: `/${scope}/data-kegiatan-pkk-pokja-i/report/pdf`, label: 'Data Kegiatan PKK Pokja I | 4.21' },
     { href: `/${scope}/simulasi-penyuluhan/report/pdf`, label: 'Kelompok Simulasi dan Penyuluhan | 4.14.4f' },
     { href: `/${scope}/bkl/report/pdf`, label: 'Buku Kegiatan BKL | -' },
     { href: `/${scope}/bkr/report/pdf`, label: 'Buku Kegiatan BKR | -' },

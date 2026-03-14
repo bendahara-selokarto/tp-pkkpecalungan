@@ -88,11 +88,11 @@ Gunakan status autentikasi:
 | Pokja I | Buku Rencana Kerja Pokja I | Pokja I Desa | partial | partial | Disetarakan dengan istilah baseline `Buku Program Kerja` Pokja I; belum ada bukti autentik: text-layer `Rakernas X.pdf` (scan 2026-03-14) tidak menemukan token “RENCANA KERJA”; belum ada screenshot lampiran khusus. |
 | Pokja I | Buku Kegiatan Pokja I | Pokja I Desa | available | verified | Mencakup istilah baseline `Buku Pelaksanaan Program Kerja`; format autentik 4.13 tervalidasi; lanjut audit coverage field kegiatan |
 | Pokja I | Buku Daftar Hadir Kegiatan | Pokja I Desa | missing | unverified | Reuse model daftar hadir lintas pokja |
-| Pokja I | Buku Data Kegiatan Pokja I | Pokja I Desa | planned | verified | Bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.21 (`DATA_KEGIATAN_PKK_POKJA_I_4_21_MAPPING.md`); modul/report khusus belum tersedia. |
-| Pokja I | Buku Bantuan | Pokja I Desa | available | verified | Modul `bantuans` tersedia; akses/menu Pokja I belum aktif. |
-| Pokja I | Buku Prestasi | Pokja I Desa | available | verified | Modul `prestasi-lomba` tersedia; label menu Pokja I belum ditampilkan. |
-| Pokja I | Buku Daftar Kader Khusus Pokja I | Pokja I Desa | available | partial | Modul `kader-khusus` tersedia (label canonical 4.9b); akses/menu Pokja I belum aktif. |
-| Pokja I | Buku Kegiatan Simulasi | Pokja I Desa | available | verified | Modul `simulasi-penyuluhan` tersedia; akses Pokja I belum aktif. |
+| Pokja I | Buku Data Kegiatan Pokja I | Pokja I Desa | available | verified | Report-only Lampiran 4.21 tersedia via `data-kegiatan-pkk-pokja-i`; referensi mapping `DATA_KEGIATAN_PKK_POKJA_I_4_21_MAPPING.md`. |
+| Pokja I | Buku Bantuan | Pokja I Desa | available | verified | Modul `bantuans` tersedia; menu Pokja I aktif. |
+| Pokja I | Buku Prestasi | Pokja I Desa | available | verified | Modul `prestasi-lomba` tersedia; menu Pokja I aktif. |
+| Pokja I | Buku Daftar Kader Khusus Pokja I | Pokja I Desa | available | partial | Modul `kader-khusus` tersedia (label canonical 4.9b); menu Pokja I aktif. |
+| Pokja I | Buku Kegiatan Simulasi | Pokja I Desa | available | verified | Modul `simulasi-penyuluhan` tersedia; akses Pokja I aktif. |
 | Pokja I | Buku Kegiatan BKR | Pokja I Desa | available | partial | Modul `bkr` tersedia; status autentikasi belum tervalidasi. |
 | Pokja I | Buku Kegiatan BKL | Pokja I Desa | available | partial | Modul `bkl` tersedia; status autentikasi belum tervalidasi. |
 | Pokja I | Buku Administrasi PAAR | Pokja I Desa | available | partial | Modul `paar` tersedia; status autentikasi belum tervalidasi. |
@@ -125,7 +125,7 @@ Gunakan status autentikasi:
 | Sekretaris | Buku Inventaris | Sekretaris Kecamatan | available | verified | Pertahankan validasi autentik |
 | Sekretaris | Rekapitulasi Ibu Hamil/Melahirkan/Nifas/Kelahiran/Kematian | Sekretaris Kecamatan | available | verified | Pertahankan rekap lintas desa |
 | Sekretaris | Rekap Catatan Data dan Kegiatan Warga | Sekretaris Kecamatan | available | verified | Pertahankan konsistensi agregasi |
-| Pokja I | Buku Rekap Kegiatan Pokja I dari Desa | Pokja I Kecamatan | available | verified | Bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.21 (`DATA_KEGIATAN_PKK_POKJA_I_4_21_MAPPING.md`). |
+| Pokja I | Buku Rekap Kegiatan Pokja I dari Desa | Pokja I Kecamatan | available | verified | Report-only Lampiran 4.21 tersedia via `data-kegiatan-pkk-pokja-i`; bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.21 (`DATA_KEGIATAN_PKK_POKJA_I_4_21_MAPPING.md`). |
 | Pokja II | Buku Rekap Kegiatan Pokja II dari Desa | Pokja II Kecamatan | available | verified | Bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.22 (`DATA_KEGIATAN_PKK_POKJA_II_4_22_MAPPING.md`). |
 | Pokja III | Buku Rekap Kegiatan Pokja III dari Desa | Pokja III Kecamatan | available | verified | Bukti autentik: text-layer `docs/referensi/229-230.pdf` + screenshot Lampiran 4.23 (`docs/domain/DATA_KEGIATAN_PKK_POKJA_III_4_23_MAPPING.md`). |
 | Pokja IV | Buku Rekap Kegiatan Pokja IV dari Desa | Pokja IV Kecamatan | available | verified | Bukti autentik: text-layer `docs/referensi/232.pdf` + screenshot Lampiran 4.24 (`docs/domain/DATA_KEGIATAN_PKK_POKJA_IV_4_24_MAPPING.md`). |

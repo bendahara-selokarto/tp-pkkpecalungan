@@ -111,6 +111,10 @@ Checklist audit sidebar berikutnya:
 - [x] Verifikasi penempatan domain baru selalu masuk group organisasi yang benar.
 - [x] Jika ada label baru/non-canonical, catat deviasi di `DOMAIN_DEVIATION_LOG` (hasil: tidak ada deviasi baru pada batch ini).
 
+## Catatan Audit Teks Sidebar (2026-03-14)
+
+- Report-only Lampiran 4.21 (`data-kegiatan-pkk-pokja-i`) hanya muncul pada menu Cetak Lampiran; tidak ditampilkan sebagai item `L3` karena tidak ada modul input khusus.
+
 ## Catatan Audit Metode Collapse Sidebar (2026-02-22)
 
 Scope audit:

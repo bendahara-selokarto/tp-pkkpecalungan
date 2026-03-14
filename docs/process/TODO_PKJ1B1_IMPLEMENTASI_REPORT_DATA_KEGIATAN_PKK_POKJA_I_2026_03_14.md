@@ -1,7 +1,7 @@
 # TODO PKJ1B1 Implementasi Report Data Kegiatan PKK Pokja I
 
 Tanggal: 2026-03-14  
-Status: `planned`
+Status: `done`
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -35,33 +35,33 @@ Related ADR: `-`
   - Akses mengikuti scope + area + tahun anggaran aktif.
   - Dokumen canonical (contract matrix + compliance + cetak lampiran) tersinkron.
   - Dashboard coverage diaudit saat menu domain baru aktif.
-- Dampak keputusan arsitektur: `tidak` (reuse report-only via `catatan-keluarga`).
+- Dampak keputusan arsitektur: `tidak` (reuse `CatatanKeluargaPrintController` untuk report-only tanpa CRUD baru).
 
 ## Target Hasil
 
-- [ ] Report PDF 4.21 tersedia untuk desa/kecamatan dengan sumber data terpetakan.
-- [ ] Sinkronisasi dokumen canonical + sidebar + access selesai.
+- [x] Report PDF 4.21 tersedia untuk desa/kecamatan dengan sumber data terpetakan.
+- [x] Sinkronisasi dokumen canonical + sidebar + access selesai.
 
 ## Langkah Eksekusi
 
-- [ ] Analisis scoped dependency + side effect.
+- [x] Analisis scoped dependency + side effect.
 - [ ] Implementasi report-only:
-  - [ ] Tambah route report desa/kecamatan di `routes/web.php`.
-  - [ ] Tambah method print di `CatatanKeluargaPrintController`.
-  - [ ] Tambah view PDF `resources/views/pdf/data_kegiatan_pkk_pokja_i_report.blade.php`.
-  - [ ] Tambah mapping data pada `CatatanKeluargaRepository` sesuai 4.21.
-- [ ] Sinkronisasi dokumen canonical (trigger doc-hardening aktif):
-  - [ ] Update `DOMAIN_CONTRACT_MATRIX.md` status `implemented (report-only)`.
-  - [ ] Update `TERMINOLOGY_NORMALIZATION_MAP.md` untuk label menu/PDF.
-  - [ ] Update `SIDEBAR_DOMAIN_GROUPING_PLAN.md` dan menu runtime.
-  - [ ] Update `PDF_COMPLIANCE_CHECKLIST.md` + `CETAK_LAMPIRAN_SUMBER_INPUT.md`.
-- [ ] Audit dashboard coverage untuk domain baru.
+  - [x] Tambah route report desa/kecamatan di `routes/web.php`.
+  - [x] Tambah method print di `CatatanKeluargaPrintController`.
+  - [x] Tambah view PDF `resources/views/pdf/data_kegiatan_pkk_pokja_i_report.blade.php`.
+  - [x] Tambah mapping data pada `CatatanKeluargaRepository` sesuai 4.21.
+- [x] Sinkronisasi dokumen canonical (trigger doc-hardening aktif):
+  - [x] Update `DOMAIN_CONTRACT_MATRIX.md` status `implemented (report-only)`.
+  - [x] Update `TERMINOLOGY_NORMALIZATION_MAP.md` untuk label menu/PDF.
+  - [x] Update `SIDEBAR_DOMAIN_GROUPING_PLAN.md` dan menu runtime.
+  - [x] Update `PDF_COMPLIANCE_CHECKLIST.md` + `CETAK_LAMPIRAN_SUMBER_INPUT.md`.
+- [x] Audit dashboard coverage untuk domain baru (report-only, tidak menambah KPI/chart baru).
 
 ## Validasi
 
-- [ ] L1: targeted feature test report 4.21 (akses valid).
-- [ ] L2: tolak role tidak valid + tolak mismatch role-area-level.
-- [ ] L3: `php artisan test` (mandatory jika concern baru diaktifkan).
+- [x] L1: targeted feature test report 4.21 (akses valid).
+- [x] L2: tolak role tidak valid + tolak mismatch role-area-level.
+- [x] L3: `php artisan test` (mandatory jika concern baru diaktifkan).
 
 ## Risiko
 
@@ -70,8 +70,8 @@ Related ADR: `-`
 
 ## Keputusan
 
-- [ ] K1: Implementasi report-only via `catatan-keluarga` (tanpa CRUD baru).
-- [ ] K2: Dashboard coverage perlu diaudit saat menu domain aktif.
+- [x] K1: Implementasi report-only via `CatatanKeluargaPrintController` (tanpa CRUD baru).
+- [x] K2: Dashboard coverage perlu diaudit saat menu domain aktif.
 
 ## Keputusan Arsitektur (Jika Ada)
 
@@ -84,6 +84,6 @@ Related ADR: `-`
 
 ## Output Final
 
-- [ ] Ringkasan apa yang diubah dan kenapa.
-- [ ] Daftar file terdampak.
-- [ ] Hasil validasi + residual risk.
+- [x] Ringkasan apa yang diubah dan kenapa.
+- [x] Daftar file terdampak.
+- [x] Hasil validasi + residual risk.

@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\CatatanKeluarga\Repositories;
 
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
 use App\Domains\Wilayah\AnggotaTimPenggerak\Models\AnggotaTimPenggerak;
+use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\BkbKegiatan\Models\BkbKegiatan;
 use App\Domains\Wilayah\DataIndustriRumahTangga\Models\DataIndustriRumahTangga;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
@@ -885,6 +886,102 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         }
 
         return $result;
+    }
+
+    public function getDataKegiatanPkkPokjaIByLevelAndArea(string $level, int $areaId): Collection
+    {
+        $scopeArea = Area::query()->find($areaId);
+        $wilayahLabel = trim((string) ($scopeArea?->name ?? '')) !== ''
+            ? trim((string) $scopeArea?->name)
+            : 'SEBUTAN LAIN';
+
+        $jumlahKader = 0;
+        $anggotaPokjaItems = $this->scopedModelQuery(AnggotaPokja::class, $level, $areaId)
+            ->get(['pokja']);
+
+        foreach ($anggotaPokjaItems as $item) {
+            if (! $this->isPokjaI($item->pokja ?? null)) {
+                continue;
+            }
+
+            $jumlahKader++;
+        }
+
+        $keywordMap = [
+            'kisah' => ['kisah'],
+            'krisan' => ['krisan'],
+            'kilas' => ['kilas'],
+            'ktiat' => ['ktiat'],
+            'kisak' => ['kisak'],
+            'pkbn' => ['pkbn'],
+        ];
+
+        $metrics = [];
+        foreach (array_keys($keywordMap) as $key) {
+            $metrics[$key] = [
+                'kegiatan' => 0,
+                'volume' => 0,
+                'metode' => 0,
+                'sasaran' => 0,
+            ];
+        }
+
+        $activityItems = $this->scopedModelQuery(Activity::class, $level, $areaId)
+            ->get(['title', 'description', 'uraian']);
+
+        foreach ($activityItems as $activity) {
+            $payload = trim(sprintf(
+                '%s %s %s',
+                (string) $activity->title,
+                (string) $activity->description,
+                (string) $activity->uraian
+            ));
+
+            if ($payload === '') {
+                continue;
+            }
+
+            foreach ($keywordMap as $key => $keywords) {
+                if (! $this->containsAnyKeyword($payload, $keywords)) {
+                    continue;
+                }
+
+                $metrics[$key]['kegiatan']++;
+                $metrics[$key]['volume']++;
+            }
+        }
+
+        return collect([
+            [
+                'nomor_urut' => 1,
+                'nama_wilayah' => $wilayahLabel,
+                'jumlah_kader' => $jumlahKader,
+                'kisah_kegiatan' => $metrics['kisah']['kegiatan'],
+                'kisah_volume' => $metrics['kisah']['volume'],
+                'kisah_metode' => $metrics['kisah']['metode'],
+                'kisah_sasaran' => $metrics['kisah']['sasaran'],
+                'krisan_kegiatan' => $metrics['krisan']['kegiatan'],
+                'krisan_volume' => $metrics['krisan']['volume'],
+                'krisan_metode' => $metrics['krisan']['metode'],
+                'krisan_sasaran' => $metrics['krisan']['sasaran'],
+                'kilas_kegiatan' => $metrics['kilas']['kegiatan'],
+                'kilas_volume' => $metrics['kilas']['volume'],
+                'kilas_metode' => $metrics['kilas']['metode'],
+                'kilas_sasaran' => $metrics['kilas']['sasaran'],
+                'ktiat_kegiatan' => $metrics['ktiat']['kegiatan'],
+                'ktiat_volume' => $metrics['ktiat']['volume'],
+                'ktiat_metode' => $metrics['ktiat']['metode'],
+                'ktiat_sasaran' => $metrics['ktiat']['sasaran'],
+                'kisak_kegiatan' => $metrics['kisak']['kegiatan'],
+                'kisak_volume' => $metrics['kisak']['volume'],
+                'kisak_metode' => $metrics['kisak']['metode'],
+                'kisak_sasaran' => $metrics['kisak']['sasaran'],
+                'pkbn_kegiatan' => $metrics['pkbn']['kegiatan'],
+                'pkbn_volume' => $metrics['pkbn']['volume'],
+                'pkbn_metode' => $metrics['pkbn']['metode'],
+                'pkbn_sasaran' => $metrics['pkbn']['sasaran'],
+            ],
+        ]);
     }
 
     public function getDataKegiatanPkkPokjaIiByLevelAndArea(string $level, int $areaId): Collection
@@ -2645,5 +2742,22 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         }
 
         return $normalized->implode('; ');
+    }
+
+    private function isPokjaI(?string $value): bool
+    {
+        $normalized = Str::lower(trim((string) $value));
+        if ($normalized === '') {
+            return false;
+        }
+
+        $normalized = str_replace(['-', '_'], ' ', $normalized);
+        $normalized = preg_replace('/\s+/', ' ', $normalized) ?? $normalized;
+
+        if (preg_match('/\bpokja\s*(i|1)\b/', $normalized) === 1) {
+            return true;
+        }
+
+        return in_array($normalized, ['i', '1'], true);
     }
 }

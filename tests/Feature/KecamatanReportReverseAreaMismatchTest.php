@@ -52,6 +52,7 @@ class KecamatanReportReverseAreaMismatchTest extends TestCase
             ['kecamatan.inventaris.report'],
             ['kecamatan.data-warga.report'],
             ['kecamatan.data-kegiatan-warga.report'],
+            ['kecamatan.data-kegiatan-pkk-pokja-i.report'],
             ['kecamatan.data-keluarga.report'],
             ['kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report'],
             ['kecamatan.data-industri-rumah-tangga.report'],

@@ -1,7 +1,7 @@
 # TODO PKJ1A1 Sinkronisasi Menu Pokja I Desa dari Buku Autentik
 
 Tanggal: 2026-03-14  
-Status: `in-progress`
+Status: `done`
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -39,9 +39,9 @@ Related ADR: `-`
 
 ## Target Hasil
 
-- [ ] Matriks audit Pokja I lengkap untuk 8 item missing vs artefak existing.
-- [ ] Rencana sinkronisasi lintas dokumen + menu + akses disepakati.
-- [ ] Daftar keputusan mapping istilah ambigu terdokumentasi.
+- [x] Matriks audit Pokja I lengkap untuk 8 item missing vs artefak existing.
+- [x] Rencana sinkronisasi lintas dokumen + menu + akses disepakati.
+- [x] Daftar keputusan mapping istilah ambigu terdokumentasi.
 
 ## Matriks Audit Pokja I (Baseline vs Artefak)
 
@@ -49,11 +49,11 @@ Related ADR: `-`
 | --- | --- | --- | --- |
 | Buku Program Kerja | `rencana-kerja` (dokumen) | Belum ada modul khusus | Disetarakan dengan `Buku Rencana Kerja Pokja I` (dokumen canonical). |
 | Buku Pelaksanaan Program Kerja | `activities` | Menu tersedia | Disetarakan dengan `Buku Kegiatan` (alias pelaksanaan). |
-| Buku Data Kegiatan Pokja | `data-kegiatan-pkk-pokja-i` | Belum ada modul/report | Kontrak autentik 4.21 tersedia, implementasi belum ada. |
-| Buku Bantuan | `bantuans` | Akses `desa-pokja-i` belum aktif | Modul ada, perlu aktivasi akses/menu Pokja I. |
-| Buku Prestasi | `prestasi-lomba` | Menu Pokja I belum ada | Akses `desa-pokja-i` sudah RW. |
-| Buku Daftar Kader Khusus Pokja I | `kader-khusus` | Akses `desa-pokja-i` belum aktif | Label canonical 4.9b tetap dipakai. |
-| Buku Kegiatan Simulasi | `simulasi-penyuluhan` | Akses `desa-pokja-i` belum aktif | Menu ada namun bergantung `moduleModes`. |
+| Buku Data Kegiatan Pokja | `data-kegiatan-pkk-pokja-i` | Report-only tersedia | Lampiran 4.21 sudah aktif sebagai report-only (desa/kecamatan). |
+| Buku Bantuan | `bantuans` | Akses `desa-pokja-i` aktif | Modul ada, menu Pokja I sudah aktif. |
+| Buku Prestasi | `prestasi-lomba` | Menu Pokja I aktif | Akses `desa-pokja-i` RW. |
+| Buku Daftar Kader Khusus Pokja I | `kader-khusus` | Akses `desa-pokja-i` aktif | Label canonical 4.9b tetap dipakai. |
+| Buku Kegiatan Simulasi | `simulasi-penyuluhan` | Akses `desa-pokja-i` aktif | Menu ada namun bergantung `moduleModes`. |
 | Buku Grafik | `dashboard/charts` | Report external tersedia | Report-only; belum domain input mandiri. |
 | Buku Kegiatan BKR | `bkr` | Menu tersedia | Label canonical perlu normalisasi. |
 | Buku Kegiatan BKL | `bkl` | Menu tersedia | Label canonical perlu normalisasi. |
@@ -82,13 +82,13 @@ Related ADR: `-`
   - [x] Tambahkan/ubah akses di `RoleMenuVisibilityService.php` jika buku Pokja I harus RW/RO.
   - [x] Evaluasi `printMenuRegistry.js` untuk buku baru (report-only).
   - [x] Sinkronkan baseline akses di `docs/referensi/MATRIX_AKSES_MODULE_2026_03_11.md`.
-- [ ] Jika butuh domain baru (contoh: `data-kegiatan-pkk-pokja-i` atau `pelaksanaan-program`), buat TODO turunan via `scripts/generate_todo.ps1` dan catat trigger audit dashboard.
+- [x] Jika butuh domain baru (contoh: `data-kegiatan-pkk-pokja-i` atau `pelaksanaan-program`), buat TODO turunan via `scripts/generate_todo.ps1` dan catat trigger audit dashboard.
 
 ## Validasi
 
 - [x] L1: audit `rg` untuk memastikan semua artefak terpetakan.
 - [x] L2: verifikasi manual konsistensi label menu vs terminology map (doc-only).
-- [ ] L3: eksekusi test hanya saat implementasi runtime dilakukan.
+- [x] L3: eksekusi test hanya saat implementasi runtime dilakukan.
 
 ## Risiko
 
@@ -98,7 +98,7 @@ Related ADR: `-`
 ## Keputusan
 
 - [x] K1: `Buku Program Kerja` Pokja I = `Buku Rencana Kerja Pokja I`; `Buku Pelaksanaan Program Kerja` = `Buku Kegiatan`.
-- [ ] K2: Item Pokja I yang ditetapkan sebagai domain baru wajib memicu audit dashboard.
+- [x] K2: Item Pokja I yang ditetapkan sebagai domain baru wajib memicu audit dashboard.
  
 ### Catatan Keputusan
 - `Buku Bantu` Pokja I dipetakan ke `Buku Bantuan` (`bantuans`).
@@ -114,6 +114,6 @@ Related ADR: `-`
 
 ## Output Final
 
-- [ ] Ringkasan audit + rencana sinkronisasi.
-- [ ] Daftar file terdampak dan statusnya (doc vs runtime).
-- [ ] Hasil validasi doc-only + residual risk.
+- [x] Ringkasan audit + rencana sinkronisasi.
+- [x] Daftar file terdampak dan statusnya (doc vs runtime).
+- [x] Hasil validasi doc-only + residual risk.

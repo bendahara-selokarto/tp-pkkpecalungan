@@ -23,6 +23,7 @@ class DashboardCoverageMenuSyncTest extends TestCase
         'buku-daftar-hadir',
         'buku-tamu',
         'buku-notulen-rapat',
+        'data-kegiatan-pkk-pokja-i',
         'desa-activities',
         'desa-arsip',
         'laporan-tahunan-pkk',
