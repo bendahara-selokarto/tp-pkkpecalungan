@@ -2,7 +2,7 @@
 
 ## Tujuan Halaman Ini
 
-- Anda dapat mengelola akun pengguna tanpa menimbulkan salah akses role/scope/wilayah.
+- Anda dapat mengelola akun pengguna tanpa menimbulkan salah akses peran, wilayah kerja, dan wilayah.
 
 ## Tugas Utama Anda
 
@@ -13,23 +13,26 @@
 ## Langkah Kerja Harian
 
 1. Buka menu Manajemen User.
-2. Periksa data user yang aktif.
+2. Periksa data akun yang aktif.
 3. Tambah atau ubah akun sesuai kebutuhan organisasi.
-4. Pastikan role, scope, dan wilayah user sudah tepat.
+4. Pastikan peran, wilayah kerja, dan wilayah akun sudah tepat.
 5. Simpan perubahan dan lakukan verifikasi cepat login akun bila dibutuhkan.
 
 ## Hasil yang Harus Terlihat
 
-- Akun baru muncul di daftar user.
-- Label role tampil jelas dan tidak ambigu.
-- User hanya melihat menu sesuai role/scope yang diset.
+- Akun baru muncul di daftar akun.
+- Label peran tampil jelas dan tidak ambigu.
+- Akun hanya melihat menu sesuai peran dan wilayah kerja yang ditetapkan.
 
 ## Skenario Sukses
 
-- Anda membuat akun `desa-pokja-ii`, set scope `desa`, pilih wilayah desa yang benar, dan akun langsung hanya menampilkan menu Pokja II.
+- Anda membuat akun `desa-pokja-ii`, atur wilayah kerja `desa`, pilih wilayah desa yang benar, dan akun langsung hanya menampilkan menu Pokja II.
+
+## Contoh Praktis
+
+- Anda menambahkan akun baru untuk Pokja, menetapkan wilayah kerja, lalu mengecek menu yang tampil sesuai.
 
 ## Jika Terkendala
 
-- Pilihan role tidak sesuai scope: ubah scope dulu, lalu pilih role yang muncul.
-- User melapor menu kurang/lebih: cek ulang kombinasi role, scope, dan area pada profil user.
-
+- Pilihan peran tidak sesuai: ubah wilayah kerja dulu, lalu pilih peran yang muncul.
+- Akun melapor menu kurang/lebih: cek ulang kombinasi peran, wilayah kerja, dan wilayah pada profil akun.

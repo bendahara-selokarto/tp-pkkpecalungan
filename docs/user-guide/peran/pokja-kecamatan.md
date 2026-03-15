@@ -12,7 +12,7 @@
 
 ## Langkah Kerja Harian
 
-1. Masuk ke modul pokja sesuai bidang akun Anda.
+1. Masuk ke menu pokja sesuai bidang akun Anda.
 2. Lakukan input atau pembaruan data.
 3. Buka dashboard untuk melihat rincian nilai per desa.
 4. Cetak laporan jika diperlukan untuk rapat atau evaluasi.
@@ -20,15 +20,18 @@
 ## Hasil yang Harus Terlihat
 
 - Hanya blok pokja Anda yang muncul di dashboard.
-- Chart dokumen menampilkan dimensi `per desa`.
+- Grafik menampilkan rincian `per desa`.
 - Data desa di luar kecamatan Anda tidak ikut terhitung.
 
 ## Skenario Sukses
 
 - Akun `kecamatan-pokja-i` melihat rincian Pokja I per desa, dan desa dari kecamatan lain tidak tampil.
 
+## Contoh Praktis
+
+- Anda menginput data dari dua desa, lalu mengecek grafik per desa untuk memastikan angkanya sesuai.
+
 ## Jika Terkendala
 
 - Daftar desa tidak muncul: pastikan kecamatan Anda sudah memiliki data desa turunan.
-- Nilai per desa terlihat nol semua: periksa apakah data modul pokja sudah diinput pada desa terkait.
-
+- Nilai per desa terlihat nol semua: periksa apakah data menu pokja sudah diinput pada desa terkait.

@@ -6,7 +6,7 @@
 
 ## Tugas Utama Anda
 
-- Input data rutin sesuai pokja.
+- Input data rutin sesuai bidang pokja.
 - Memperbarui data yang berubah.
 - Mencetak laporan berkala untuk rapat evaluasi.
 
@@ -21,14 +21,17 @@
 
 - Data yang disimpan langsung masuk daftar.
 - Dashboard menampilkan ringkasan pokja Anda.
-- Laporan modul Anda bisa dicetak tanpa membuka modul lain.
+- Laporan menu Anda bisa dicetak tanpa membuka menu lain.
 
 ## Skenario Sukses
 
 - Akun `desa-pokja-i` hanya melihat menu Pokja I, berhasil tambah data, dan dashboard menampilkan blok Pokja I saja.
 
+## Contoh Praktis
+
+- Anda mengisi data kegiatan Pokja minggu ini, lalu memastikan ringkasan di dashboard ikut terbarui.
+
 ## Jika Terkendala
 
-- Modul pokja lain tidak terlihat: ini normal karena akses dibatasi sesuai peran.
+- Menu pokja lain tidak terlihat: ini normal karena akses dibatasi sesuai peran.
 - Simpan gagal: cek kolom wajib dan format tanggal.
-

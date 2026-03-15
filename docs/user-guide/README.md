@@ -1,6 +1,6 @@
 # User Guide Sistem TP PKK Pecalungan
 
-Panduan ini membantu Anda bekerja lebih cepat dengan bahasa sederhana dan langkah yang langsung bisa dipraktikkan.
+Panduan ini ditulis untuk pengguna akhir agar pekerjaan harian terasa lebih ringan. Bahasanya sederhana, langkahnya praktis, dan bisa langsung dipraktikkan.
 
 Tujuan utama panduan:
 
@@ -8,9 +8,30 @@ Tujuan utama panduan:
 - Anda bisa input data dengan benar.
 - Anda bisa membaca dashboard dan mencetak laporan tanpa pendamping.
 
+## Untuk Siapa Panduan Ini
+
+- Sekretaris Desa
+- Sekretaris Kecamatan
+- Pokja Desa
+- Pokja Kecamatan
+- Super Admin
+
+## Yang Anda Perlukan
+
+- Email dan kata sandi akun.
+- Akses internet yang stabil.
+- Browser terbaru agar tampilan stabil.
+
 ## Mulai dari Sini
 
 - [Mulai Cepat](./mulai-cepat.md)
+
+## Urutan Pakai yang Disarankan
+
+1. Baca [Mulai Cepat](./mulai-cepat.md).
+2. Buka panduan peran Anda.
+3. Gunakan panduan alur saat bekerja harian.
+4. Pakai FAQ jika menemui kendala.
 
 ## Panduan Berdasarkan Peran
 
@@ -36,10 +57,6 @@ Tujuan utama panduan:
 - `print/00-user-guide-lengkap-siap-cetak.html`
 - `print/01-login-siap-cetak.html`
 
-## Urutan Pakai yang Disarankan
+## Catatan Singkat
 
-1. Baca [Mulai Cepat](./mulai-cepat.md).
-2. Buka panduan peran Anda.
-3. Gunakan panduan alur saat bekerja harian.
-4. Pakai FAQ jika menemui kendala.
-
+- Jika melihat label `RO`, artinya menu hanya bisa dibaca.
