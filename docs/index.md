@@ -9,6 +9,7 @@ Selamat datang di panduan pengguna Sistem TP PKK Pecalungan. Panduan ini ditulis
 
 - [Buka User Guide](./user-guide/)
 - [Mulai Cepat](./user-guide/mulai-cepat.md)
+- [Daftar Menu Sistem](./user-guide/daftar-menu.md)
 
 ## Panduan Berdasarkan Peran
 

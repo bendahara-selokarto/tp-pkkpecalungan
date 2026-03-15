@@ -25,6 +25,7 @@ Tujuan utama panduan:
 ## Mulai dari Sini
 
 - [Mulai Cepat](./mulai-cepat.md)
+- [Daftar Menu Sistem](./daftar-menu.md)
 
 ## Urutan Pakai yang Disarankan
 
