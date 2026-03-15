@@ -1,6 +1,6 @@
 title: Panduan Pengguna TP PKK Pecalungan
 description: Panduan end user dengan bahasa sederhana dan langkah praktis.
-theme: minima
+theme: jekyll-theme-architect
 header_pages: []
 defaults:
   - scope:
