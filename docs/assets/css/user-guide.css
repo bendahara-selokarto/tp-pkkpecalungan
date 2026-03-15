@@ -16,6 +16,26 @@
   font-size: 1.4rem;
 }
 
+.page-header nav,
+.page-header .btn,
+.page-header .project-tagline + a,
+.page-header .project-tagline ~ a {
+  display: none !important;
+}
+
+.page-header {
+  padding: 1.6rem 1rem;
+}
+
+.project-tagline {
+  max-width: 56rem;
+  margin: 0.5rem auto 0;
+}
+
+.main-content {
+  padding-top: 1.5rem;
+}
+
 .user-guide-layout {
   display: flex;
   gap: 24px;

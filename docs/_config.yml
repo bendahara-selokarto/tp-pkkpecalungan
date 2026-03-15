@@ -2,6 +2,17 @@ title: Panduan Pengguna TP PKK Pecalungan
 description: Panduan end user dengan bahasa sederhana dan langkah praktis.
 theme: jekyll-theme-architect
 header_pages: []
+exclude:
+  - README.md
+  - adr
+  - discussion
+  - domain
+  - legacy
+  - pdf
+  - process
+  - referensi
+  - security
+  - ui
 defaults:
   - scope:
       path: "user-guide"
