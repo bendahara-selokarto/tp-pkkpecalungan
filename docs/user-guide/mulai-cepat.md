@@ -38,8 +38,8 @@
 
 ## Lanjutkan Ke
 
-- Sekretaris Desa: [peran/sekretaris-desa.md](./peran/sekretaris-desa.md)
-- Sekretaris Kecamatan: [peran/sekretaris-kecamatan.md](./peran/sekretaris-kecamatan.md)
-- Pokja Desa: [peran/pokja-desa.md](./peran/pokja-desa.md)
-- Pokja Kecamatan: [peran/pokja-kecamatan.md](./peran/pokja-kecamatan.md)
-- Super Admin: [peran/super-admin.md](./peran/super-admin.md)
+- Sekretaris Desa: [peran/sekretaris-desa](./peran/sekretaris-desa/)
+- Sekretaris Kecamatan: [peran/sekretaris-kecamatan](./peran/sekretaris-kecamatan/)
+- Pokja Desa: [peran/pokja-desa](./peran/pokja-desa/)
+- Pokja Kecamatan: [peran/pokja-kecamatan](./peran/pokja-kecamatan/)
+- Super Admin: [peran/super-admin](./peran/super-admin/)
