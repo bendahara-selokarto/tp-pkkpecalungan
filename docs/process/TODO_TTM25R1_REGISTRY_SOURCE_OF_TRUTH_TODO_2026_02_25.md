@@ -24,7 +24,6 @@ Status: `done` (`state:thin-registry-active-index`)
 | `C-ROLE-BASED-GROUPING` | Penataan ulang grouping modul berdasarkan role user | `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` | `planned` | Concern ini dipakai untuk validasi rule grouping berbasis role sebelum merge ke concern parent E2E. |
 | `C-QUALITY-GATE-90PLUS` | Roadmap sprint naik skor project 90+ | `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` | `in-progress` | Concern ini menjadi jalur eksekusi hardening quality gate (style + e2e dependency) untuk mendorong skor proyek ke 90+. |
 | `C-LEGACY-RUNTIME-DEPRECATION` | Deprecate legacy runtime compatibility | `docs/process/TODO_LGC26A1_DEPRECATE_LEGACY_RUNTIME_COMPATIBILITY_2026_03_15.md` | `in-progress` | Semua jalur kompatibilitas legacy dipindahkan dari runtime ke dokumentasi saja. |
-| `C-NON-TEKNIS-CORRECTION-PLAN` | Rencana perbaikan koreksi non teknis | `docs/process/TODO_RPB26A1_RENCANA_PERBAIKAN_KOREKSI_NON_TEKNIS_2026_03_10.md` | `planned` | Concern ini menjadi jalur perencanaan koreksi non-teknis yang perlu sinkron sebelum eksekusi teknis terkait. |
 | `C-SIDEBAR-PDF-FLOW` | Penataan menu sidebar flow PDF turunan tanpa form input | `docs/process/TODO_SPT26A1_PENATAAN_MENU_SIDEBAR_FLOW_PDF_TURUNAN_TANPA_FORM_INPUT_2026_03_09.md` | `in-progress` | Concern ini menjadi jalur sinkron flow PDF turunan tanpa form input agar navigasi tetap konsisten. |
 | `C-SINGLE-PATH-AUTH-EXCEPTION` | Exception single path flow auth framework | `docs/process/TODO_SPA26B1_EXCEPTION_SINGLE_PATH_FLOW_AUTH_FRAMEWORK_2026_03_15.md` | `planned` | Concern ini mengunci pengecualian auth framework agar tidak melebar ke flow non-auth. |
 
@@ -36,6 +35,7 @@ Status: `done` (`state:thin-registry-active-index`)
   - `C-UI-UX-RUNTIME-EVIDENCE` -> `docs/process/archive/2026_03/TODO_IWN26A1_ROADMAP_EKSPANSI_AUDIT_UI_UX_RUNTIME_EVIDENCE_2026_03_03.md`
   - `C-REFERENCE-DOC-STANDARDIZATION` -> `docs/process/archive/2026_03/TODO_RFD26A1_STANDARISASI_STRUKTUR_DOKUMEN_REFERENSI_DOMAIN_2026_03_10.md`
   - `C-GOVERNANCE-AUDIT-WAVE` -> `docs/process/archive/2026_03/TODO_GCP26A4_GOVERNANCE_AUDIT_WAVE_FOLLOWUP_2026_03_09.md`
+  - `C-NON-TEKNIS-CORRECTION-PLAN` -> `docs/process/archive/2026_03/TODO_RPB26A1_RENCANA_PERBAIKAN_KOREKSI_NON_TEKNIS_2026_03_10.md` (`done`, `state:archived-not-relevant`)
   - `C-POKJA-II-MODULE` -> `docs/process/archive/2026_03/TODO_PKJ2A1_MODUL_DATA_KEGIATAN_PKK_POKJA_II_2026_03_11.md`
   - `C-MARKDOWN-CONTEXT-BUDGET` -> `docs/process/archive/2026_03/TODO_MKB26A1_AUDIT_OPTIMASI_MARKDOWN_CONTEXT_BUDGET_2026_03_09.md`
   - `C-GOVERNANCE-CONTEXT-PACK` -> `docs/process/archive/2026_03/TODO_GCP26A1_DEDUP_DAN_COMPACTION_GOVERNANCE_CONTEXT_PACK_2026_03_09.md`

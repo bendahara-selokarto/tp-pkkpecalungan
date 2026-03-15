@@ -1,7 +1,7 @@
 # TODO RPB26A1 Rencana Perbaikan Koreksi Non-Teknis
 
 Tanggal: 2026-03-10  
-Status: `planned`
+Status: `done` (`state:archived-not-relevant`)
 Related ADR: `-`
 
 ## Aturan Pakai
@@ -15,6 +15,7 @@ Related ADR: `-`
 
 - Ada beberapa catatan perbaikan yang bersifat non-teknis agar proyek makin mudah dipahami dan konsisten di lapangan.
 - Fokus utama: merapikan warisan lama, menyatukan istilah/aturan, memperkuat konsistensi data antar bagian, dan menyiapkan komunikasi perubahan.
+- Status diarsipkan karena tidak ada dependensi aktif pada roadmap saat ini (2026-03-15).
 
 ## Kontrak Concern (Lock)
 

@@ -26,7 +26,6 @@ Aturan:
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`in-progress`)
   - `docs/process/TODO_LGC26A1_DEPRECATE_LEGACY_RUNTIME_COMPATIBILITY_2026_03_15.md` (`in-progress`)
-  - `docs/process/TODO_RPB26A1_RENCANA_PERBAIKAN_KOREKSI_NON_TEKNIS_2026_03_10.md` (`planned`)
   - `docs/process/TODO_SPT26A1_PENATAAN_MENU_SIDEBAR_FLOW_PDF_TURUNAN_TANPA_FORM_INPUT_2026_03_09.md` (`in-progress`)
   - `docs/process/TODO_SPA26B1_EXCEPTION_SINGLE_PATH_FLOW_AUTH_FRAMEWORK_2026_03_15.md` (`planned`)
 - Catatan sinkronisasi `RGM26A1`:
@@ -41,6 +40,7 @@ Aturan:
 - Concern `RFD26A1` (Standarisasi Struktur Dokumen Referensi Domain) ditutup dan dicatat di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
 - Concern `PKJ2A1` (Modul Data Kegiatan PKK Pokja II) ditutup dan dicatat di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
 - Concern `GCP26A4` (Governance Audit Wave Followup) ditutup dan dicatat di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md` (catatan gate remote masih fail).
+- Concern `RPB26A1` (Rencana Perbaikan Koreksi Non-Teknis) diarsipkan dan dicatat di `docs/process/logs/OPERATIONAL_VALIDATION_LOG_2026_Q1.md`.
 - Concern `GCP26A1` menutup hardening sesi ini dengan keputusan: ownership governance markdown dikunci dan validation log aktif kembali menjadi index ringkas.
 - Concern `GCP26A2` menutup thinning `TTM25R1`, memperbaiki drift `P-014`, dan mengunci guard annex on-demand.
 - Concern `GCP26A3` menutup automation audit script + generator hook + CI gate untuk governance markdown.
@@ -48,7 +48,8 @@ Aturan:
 ### Concern Archived
 
 - `TAG26A1` (`Refactor Tahun Anggaran`) tetap diarsipkan di `docs/process/archive/2026_03/TODO_TAG26A1_REFACTOR_ISOLASI_TAHUN_ANGGARAN_LINTAS_MODUL_2026_03_07.md`.
-- ADR terkait tetap `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`.
+- `RPB26A1` (`Rencana Perbaikan Koreksi Non-Teknis`) diarsipkan ke `docs/process/archive/2026_03/TODO_RPB26A1_RENCANA_PERBAIKAN_KOREKSI_NON_TEKNIS_2026_03_10.md` (`done`, `state:archived-not-relevant`).
+- ADR terkait `TAG26A1` tetap `docs/adr/ADR_0005_TAHUN_ANGGARAN_CONTEXT_ISOLATION.md`.
 
 ### Sprint Quality Gate 90+ (`QG90A1`) - 2026-03-07
 

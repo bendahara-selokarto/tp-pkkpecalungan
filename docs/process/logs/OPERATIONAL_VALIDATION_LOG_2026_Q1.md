@@ -2703,3 +2703,13 @@ Catatan:
   - `php artisan test --compact`: `PASS` (`1263 passed`, `8764 assertions`).
 - Risiko residual:
   - Evidence E2E smoke masih terblokir sandbox host pada environment ini.
+
+### Rencana Perbaikan Koreksi Non-Teknis (`RPB26A1`) - 2026-03-15
+
+- Status concern: `done` (`state:archived-not-relevant`).
+- Ringkasan:
+  - concern non-teknis ini tidak memiliki dependensi aktif pada roadmap berjalan,
+  - dipindahkan ke arsip periodik untuk menjaga registry concern aktif tetap tipis.
+- Validasi:
+  - review pointer registry + log `PASS`,
+  - `php artisan test` tidak dijalankan karena concern `doc-only`.
