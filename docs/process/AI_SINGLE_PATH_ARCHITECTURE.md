@@ -53,6 +53,7 @@ Urutan baca default:
 2. `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md` (thin registry aktif)
 3. `docs/process/OPERATIONAL_VALIDATION_LOG.md` (index aktif)
 4. TODO concern aktif yang dirujuk registry
+5. `docs/process/DOC_TODO_ADR_SYNC_MAP_2026_03_15.md` (snapshot sinkronisasi TODO/ADR, generated)
 
 Buka arsip detail hanya saat diperlukan:
 

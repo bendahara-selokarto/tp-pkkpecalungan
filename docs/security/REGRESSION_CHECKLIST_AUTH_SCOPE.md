@@ -10,6 +10,7 @@ Sumber acuan:
 - `AGENTS.md` (hard invariants role/scope/area)
 - `docs/security/AUTH_COHERENCE_MATRIX.md`
 - `docs/security/POLICY_SCOPE_AUDIT_REPORT.md`
+- `docs/security/AUTH_SCOPE_ROUTE_POLICY_MAP_2026_03_15.md`
 
 ## 1) Skenario Wajib (Stale Metadata)
 

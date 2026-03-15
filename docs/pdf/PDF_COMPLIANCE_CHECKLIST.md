@@ -10,6 +10,7 @@ Sumber acuan:
 - Pedoman domain utama: `docs/referensi/Rakernas X.pdf`
 - Validasi awal format: `docs/pdf/VALIDASI_FORMAT_BUKU_SEKRETARIS_PDF.md`
 - Kontrak domain: `docs/domain/DOMAIN_CONTRACT_MATRIX.md`
+- Peta audit jalur PDF (route -> controller -> view): `docs/pdf/PDF_ROUTE_CONTROLLER_VIEW_MAP_2026_03_15.md`
 
 ## A. Checklist Global (Wajib untuk semua modul)
 

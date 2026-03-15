@@ -21,6 +21,7 @@ Aturan:
 ### Registry SOT (`TTM25R1`)
 
 - Source of truth concern aktif: `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
+- Snapshot sinkronisasi TODO/ADR: `docs/process/DOC_TODO_ADR_SYNC_MAP_2026_03_15.md` (generated).
 - Concern berjalan yang tetap berada di index aktif:
   - `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` (`planned`)
   - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
@@ -44,6 +45,12 @@ Aturan:
 - Concern `GCP26A1` menutup hardening sesi ini dengan keputusan: ownership governance markdown dikunci dan validation log aktif kembali menjadi index ringkas.
 - Concern `GCP26A2` menutup thinning `TTM25R1`, memperbaiki drift `P-014`, dan mengunci guard annex on-demand.
 - Concern `GCP26A3` menutup automation audit script + generator hook + CI gate untuk governance markdown.
+
+### Update Operasional (2026-03-15)
+
+- Regenerate peta audit: `python3 scripts/generate_pdf_route_map.py`.
+- Regenerate peta audit: `python3 scripts/generate_auth_scope_route_map.py`.
+- Regenerate peta audit: `python3 scripts/generate_doc_sync_map.py`.
 
 ### Concern Archived
 
