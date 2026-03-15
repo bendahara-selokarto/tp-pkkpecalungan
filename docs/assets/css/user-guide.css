@@ -1,0 +1,50 @@
+.user-guide-layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.user-guide-sidebar {
+  position: sticky;
+  top: 24px;
+  min-width: 220px;
+  max-width: 260px;
+  padding: 16px;
+  border: 1px solid #e5e7eb;
+  background: #fafafa;
+}
+
+.user-guide-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.sidebar-block + .sidebar-block {
+  margin-top: 16px;
+}
+
+.sidebar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar-list li + li {
+  margin-top: 6px;
+}
+
+@media (max-width: 900px) {
+  .user-guide-layout {
+    flex-direction: column;
+  }
+
+  .user-guide-sidebar {
+    position: static;
+    width: 100%;
+  }
+}

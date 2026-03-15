@@ -1,0 +1,13 @@
+---
+layout: default
+---
+
+<link rel="stylesheet" href="{{ '/assets/css/user-guide.css' | relative_url }}">
+<div class="user-guide-layout">
+  <aside class="user-guide-sidebar">
+    {% include user-guide-sidebar.html %}
+  </aside>
+  <main class="user-guide-main">
+    {{ content }}
+  </main>
+</div>
