@@ -62,8 +62,37 @@
   padding: 24px;
 }
 
-.sidebar-title {
+.user-guide-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.breadcrumb-link {
+  color: #0f766e;
+  text-decoration: none;
   font-weight: 600;
+}
+
+.breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-sep {
+  color: #9ca3af;
+}
+
+.sidebar-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
   margin-bottom: 8px;
 }
 
@@ -79,6 +108,86 @@
 
 .sidebar-list li + li {
   margin-top: 6px;
+}
+
+.sidebar-list a {
+  display: block;
+  padding: 6px 10px;
+  border-radius: 6px;
+  color: #0f172a;
+  text-decoration: none;
+}
+
+.sidebar-list a:hover {
+  background: #e2e8f0;
+  color: #0f766e;
+}
+
+.user-guide-main h1,
+.user-guide-main h2,
+.user-guide-main h3,
+.user-guide-main h4 {
+  color: #0f172a;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+
+.user-guide-main h1 {
+  font-size: 1.6rem;
+}
+
+.user-guide-main h2 {
+  font-size: 1.3rem;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: 6px;
+}
+
+.user-guide-main h3 {
+  font-size: 1.1rem;
+}
+
+.user-guide-main p {
+  margin: 0 0 12px;
+  color: #374151;
+}
+
+.user-guide-main a {
+  color: #0f766e;
+  text-decoration: none;
+}
+
+.user-guide-main a:hover {
+  text-decoration: underline;
+}
+
+.user-guide-main code {
+  background: #f1f5f9;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.user-guide-main table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 0.95rem;
+}
+
+.user-guide-main th,
+.user-guide-main td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 10px;
+  text-align: left;
+}
+
+.user-guide-main blockquote {
+  margin: 12px 0;
+  padding: 8px 12px;
+  border-left: 4px solid #0f766e;
+  background: #f0fdfa;
+  color: #134e4a;
 }
 
 .user-guide-main ul,
@@ -99,6 +208,16 @@
   .user-guide-sidebar {
     position: static;
     width: 100%;
+  }
+
+  .sidebar-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 6px;
+  }
+
+  .sidebar-list li + li {
+    margin-top: 0;
   }
 
   .user-guide-main {

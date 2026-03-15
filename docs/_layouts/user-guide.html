@@ -9,6 +9,11 @@ layout: default
       {% include user-guide-sidebar.html %}
     </aside>
     <main class="user-guide-main">
+      <div class="user-guide-breadcrumb">
+        <a class="breadcrumb-link" href="{{ '/' | relative_url }}">Beranda</a>
+        <span class="breadcrumb-sep">/</span>
+        <a class="breadcrumb-link" href="{{ '/user-guide/' | relative_url }}">Menu Utama</a>
+      </div>
       {{ content }}
     </main>
   </div>
