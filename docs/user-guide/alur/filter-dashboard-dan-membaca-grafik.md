@@ -10,7 +10,8 @@
 2. Pilih filter yang tersedia untuk akun Anda.
 3. Baca kartu ringkasan angka terlebih dahulu.
 4. Buka grafik dan lihat perubahan per bulan/per desa/per tingkat wilayah.
-5. Jika blok banyak, gunakan tombol `Tampilkan Grafik` atau `Sembunyikan Grafik` agar fokus.
+5. Setelah memilih bulan, klik tombol terapkan filter.
+6. Jika blok banyak, gunakan tombol untuk menyembunyikan grafik agar fokus.
 
 ## Hasil yang Diharapkan
 

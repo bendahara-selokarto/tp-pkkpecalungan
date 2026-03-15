@@ -60,4 +60,4 @@ Tujuan utama panduan:
 
 ## Catatan Singkat
 
-- Jika melihat label `RO`, artinya menu hanya bisa dibaca.
+- Jika melihat tanda hanya-baca, artinya menu hanya bisa dilihat.

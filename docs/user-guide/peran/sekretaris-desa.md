@@ -23,6 +23,13 @@
 - Dashboard menampilkan ringkasan sesuai data terakhir.
 - Laporan bisa dicetak dari menu yang relevan.
 
+## Label UI Sekretaris Desa
+
+- Di panel kiri tertulis `Menu Domain` dengan daftar Sekretaris PKK dan Pokja.
+- Menu Pokja biasanya berlabel `BACA` untuk menandakan hanya bisa dilihat.
+- Di bagian atas tersedia tombol `Dashboard`, `Arsip`, `Dark mode`, `Profil`, dan `Keluar`.
+- Di dashboard tersedia tombol `Cetak Chart PDF`, serta tombol `Terapkan Filter Chart` dan `Sembunyikan Grafik`.
+
 ## Skenario Sukses
 
 - Anda menambah data pada `Buku Agenda Surat Masuk/Keluar`, data langsung muncul di tabel, lalu laporan berhasil dicetak.

@@ -5,7 +5,7 @@ Berikut peta menu yang tersedia di sistem. Daftar ini dipakai sebagai acuan saat
 ## Catatan
 
 - Menu yang tampil mengikuti peran, wilayah kerja, dan akses akun Anda.
-- Label `RO` atau `Baca` menandakan menu hanya bisa dibaca.
+- Tanda hanya-baca menandakan menu hanya bisa dilihat.
 - Beberapa menu hanya muncul untuk peran tertentu (contoh: sekretaris atau pokja tertentu).
 
 ## Menu Umum (Desa/Kecamatan)

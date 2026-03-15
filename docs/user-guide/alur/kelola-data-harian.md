@@ -23,6 +23,6 @@
 
 ## Jika Terkendala
 
-- Tidak bisa simpan: cek apakah menu Anda mode baca (`RO`).
+- Tidak bisa simpan: cek apakah menu Anda hanya-baca.
 - Data tidak muncul: cek pencarian/filter tanggal pada tabel.
 - Muncul penolakan akses: pastikan Anda membuka menu sesuai peran.

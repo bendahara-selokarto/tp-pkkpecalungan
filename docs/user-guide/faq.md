@@ -3,8 +3,8 @@
 ## 1. Kenapa menu saya berbeda dengan rekan saya?
 Akses menu mengikuti peran dan wilayah kerja akun Anda. Jika perlu perubahan, minta update ke super admin.
 
-## 2. Kenapa ada label `RO` di beberapa menu?
-`RO` artinya menu hanya bisa dibaca. Anda tetap bisa melihat data, tetapi tidak bisa mengubah.
+## 2. Kenapa ada tanda hanya-baca di beberapa menu?
+Tanda hanya-baca artinya menu hanya bisa dilihat. Anda tetap bisa melihat data, tetapi tidak bisa mengubah.
 
 ## 3. Kenapa saya tidak bisa menyimpan data?
 Kemungkinan:

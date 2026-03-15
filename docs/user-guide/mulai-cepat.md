@@ -20,9 +20,9 @@
 
 ## Langkah 2: Kenali Area Kerja
 
-1. Di bagian atas, Anda melihat `Dashboard`, `Mode`, `Profil`, dan `Keluar`.
+1. Di bagian atas, Anda melihat menu utama seperti `Dashboard`, `Arsip`, `Profil`, dan `Keluar`.
 2. Di sisi kiri, Anda melihat menu kerja sesuai peran Anda.
-3. Jika ada label `RO`, menu itu hanya bisa dibaca.
+3. Jika ada tanda hanya-baca, menu itu tidak bisa diubah.
 
 ## Langkah 3: Jalankan 3 Tugas Inti
 
@@ -34,7 +34,7 @@
 
 - Tidak bisa login: cek ulang email dan kata sandi.
 - Menu Anda berbeda dengan rekan kerja: akun Anda memang berbeda peran.
-- Tombol simpan tidak ada: menu Anda sedang mode baca (`RO`).
+- Tombol simpan tidak ada: menu Anda bersifat hanya-baca.
 
 ## Lanjutkan Ke
 
