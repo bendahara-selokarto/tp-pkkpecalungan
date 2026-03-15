@@ -4,6 +4,18 @@
   padding: 0 16px 32px;
 }
 
+.site-nav {
+  display: none;
+}
+
+.site-header {
+  border-bottom: none;
+}
+
+.site-title {
+  font-size: 1.4rem;
+}
+
 .user-guide-layout {
   display: flex;
   gap: 24px;
