@@ -1,44 +1,107 @@
-# Panduan Peran: Sekretaris Desa
+# Pendahuluan
 
-## Tujuan Halaman Ini
+Panduan ini membantu Anda menyelesaikan tugas **Sekretaris Desa** di aplikasi.
 
-- Anda dapat menyelesaikan pekerjaan sekretaris desa dari awal sampai laporan.
+# Navigasi Aplikasi
 
-## Tugas Utama Anda
+### Kenali Menu Sekretaris
 
-- Mengelola buku administrasi sekretaris di tingkat desa.
-- Memantau data pokja sebagai bahan evaluasi.
-- Menyiapkan data untuk cetak laporan.
+Menemukan menu kerja utama yang Anda kelola.
 
-## Langkah Kerja Harian
+#### Langkah Penggunaan
 
-1. Cek dashboard untuk ringkasan kondisi data.
-2. Selesaikan input atau pembaruan data di menu sekretaris.
-3. Tinjau menu pokja untuk memastikan data sudah terisi.
-4. Cetak laporan bila dibutuhkan.
+1. Buka **Dashboard**.
+2. Lihat panel kiri **Menu Domain**.
+3. Pilih menu di bagian **Sekretaris PKK**.
+4. Gunakan menu **Pokja** untuk melihat data jika diperlukan.
 
-## Hasil yang Harus Terlihat
+#### Hasil
 
-- Data baru muncul di daftar data.
-- Dashboard menampilkan ringkasan sesuai data terakhir.
-- Laporan bisa dicetak dari menu yang relevan.
+Anda mengetahui menu sekretaris dan menu pantau pokja.
 
-## Label UI Sekretaris Desa
+# Fitur-Fitur
 
-- Di panel kiri tertulis `Menu Domain` dengan daftar Sekretaris PKK dan Pokja.
-- Menu Pokja biasanya berlabel `BACA` untuk menandakan hanya bisa dilihat.
-- Di bagian atas tersedia tombol `Dashboard`, `Arsip`, `Dark mode`, `Profil`, dan `Keluar`.
-- Di dashboard tersedia tombol `Cetak Chart PDF`, serta tombol `Terapkan Filter Chart` dan `Sembunyikan Grafik`.
+### Input Data Sekretaris
 
-## Skenario Sukses
+Menambahkan atau memperbarui data administrasi sekretaris.
 
-- Anda menambah data pada `Buku Agenda Surat Masuk/Keluar`, data langsung muncul di tabel, lalu laporan berhasil dicetak.
+#### Langkah Penggunaan
 
-## Contoh Praktis
+1. Klik salah satu menu sekretaris, misalnya **Agenda Surat Masuk/Keluar**.
+2. Klik **Tambah**.
+3. Isi kolom wajib.
+4. Klik **Simpan**.
 
-- Anda mencatat satu surat masuk hari ini, lalu mencetak laporan bulan berjalan untuk arsip.
+#### Hasil
 
-## Jika Terkendala
+Data baru muncul di tabel.
 
-- Tombol tambah/ubah/hapus tidak muncul di menu pokja: itu normal karena menu pokja untuk sekretaris bersifat baca.
-- Data sudah disimpan tetapi tidak terlihat: cek pencarian, filter, dan urutan tanggal.
+### Cek Ringkasan di Dashboard
+
+Memastikan ringkasan data sudah terbarui.
+
+#### Langkah Penggunaan
+
+1. Kembali ke **Dashboard**.
+2. Periksa kartu ringkasan sesuai menu yang Anda isi.
+
+#### Hasil
+
+Ringkasan **Dashboard** menampilkan data terbaru.
+
+### Pantau Data Pokja
+
+Melihat data pokja sebagai bahan pemantauan.
+
+#### Langkah Penggunaan
+
+1. Klik salah satu menu **Pokja** yang ingin dilihat.
+2. Baca data pada tabel yang tampil.
+
+#### Hasil
+
+Anda mengetahui kondisi data pokja tanpa mengubahnya.
+
+### Cetak Laporan Sekretaris
+
+Mencetak laporan dari menu sekretaris.
+
+#### Langkah Penggunaan
+
+1. Buka menu sekretaris yang ingin dicetak.
+2. Klik **Cetak**.
+3. Simpan file atau lanjutkan cetak.
+
+#### Hasil
+
+Laporan sekretaris tersedia untuk arsip.
+
+# Troubleshooting
+
+### Tidak Bisa Mengubah Data Pokja
+
+Gunakan menu sekretaris untuk perubahan data.
+
+#### Langkah Penggunaan
+
+1. Pindah ke menu **Sekretaris PKK** yang relevan.
+2. Klik **Tambah** atau pilih data yang ingin diubah.
+3. Jika perlu akses tambahan, hubungi **Super Admin**.
+
+#### Hasil
+
+Anda mengubah data dari menu yang benar.
+
+### Data Tidak Terlihat
+
+Periksa filter pada tabel.
+
+#### Langkah Penggunaan
+
+1. Gunakan **Pencarian** atau **Filter Tanggal**.
+2. Muat ulang daftar data.
+3. Pastikan data tersimpan.
+
+#### Hasil
+
+Data tampil sesuai filter yang dipakai.

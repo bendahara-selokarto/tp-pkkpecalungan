@@ -1,37 +1,95 @@
-# Panduan Peran: Pokja Kecamatan
+# Pendahuluan
 
-## Tujuan Halaman Ini
+Panduan ini membantu Anda menyelesaikan tugas **Pokja Kecamatan** di aplikasi.
 
-- Anda dapat memantau dan mengelola data pokja kecamatan berbasis desa turunan.
+# Navigasi Aplikasi
 
-## Tugas Utama Anda
+### Kenali Menu Pokja
 
-- Mengelola input pokja kecamatan.
-- Membaca breakdown data per desa pada dashboard pokja Anda.
-- Menyiapkan laporan untuk koordinasi kecamatan.
+Menemukan menu pokja sesuai bidang Anda.
 
-## Langkah Kerja Harian
+#### Langkah Penggunaan
 
-1. Masuk ke menu pokja sesuai bidang akun Anda.
-2. Lakukan input atau pembaruan data.
-3. Buka dashboard untuk melihat rincian nilai per desa.
-4. Cetak laporan jika diperlukan untuk rapat atau evaluasi.
+1. Buka **Dashboard**.
+2. Lihat panel kiri **Menu Domain**.
+3. Klik **Pokja I**, **Pokja II**, **Pokja III**, atau **Pokja IV** sesuai akun Anda.
 
-## Hasil yang Harus Terlihat
+#### Hasil
 
-- Hanya blok pokja Anda yang muncul di dashboard.
-- Grafik menampilkan rincian `per desa`.
-- Data desa di luar kecamatan Anda tidak ikut terhitung.
+Anda berada di menu pokja yang benar.
 
-## Skenario Sukses
+# Fitur-Fitur
 
-- Akun `kecamatan-pokja-i` melihat rincian Pokja I per desa, dan desa dari kecamatan lain tidak tampil.
+### Input Data Pokja Kecamatan
 
-## Contoh Praktis
+Mengisi data pokja kecamatan berdasarkan desa.
 
-- Anda menginput data dari dua desa, lalu mengecek grafik per desa untuk memastikan angkanya sesuai.
+#### Langkah Penggunaan
 
-## Jika Terkendala
+1. Klik menu pokja yang Anda kelola.
+2. Klik **Tambah**.
+3. Isi kolom wajib.
+4. Klik **Simpan**.
 
-- Daftar desa tidak muncul: pastikan kecamatan Anda sudah memiliki data desa turunan.
-- Nilai per desa terlihat nol semua: periksa apakah data menu pokja sudah diinput pada desa terkait.
+#### Hasil
+
+Data pokja kecamatan tersimpan di tabel.
+
+### Baca Rincian per Desa
+
+Melihat rincian nilai pokja per desa di **Dashboard**.
+
+#### Langkah Penggunaan
+
+1. Kembali ke **Dashboard**.
+2. Pilih **Filter Bulan** jika tersedia.
+3. Klik **Terapkan Filter Chart**.
+4. Baca grafik per desa yang tampil.
+
+#### Hasil
+
+Anda melihat rincian pokja per desa di wilayah kecamatan.
+
+### Cetak Laporan Pokja Kecamatan
+
+Mencetak laporan untuk koordinasi kecamatan.
+
+#### Langkah Penggunaan
+
+1. Buka menu pokja yang ingin dicetak.
+2. Klik **Cetak**.
+3. Simpan file atau lanjutkan cetak.
+
+#### Hasil
+
+Laporan pokja kecamatan tersedia.
+
+# Troubleshooting
+
+### Daftar Desa Tidak Muncul
+
+Pastikan data desa sudah tersedia.
+
+#### Langkah Penggunaan
+
+1. Buka **Dashboard**.
+2. Periksa apakah desa di wilayah Anda sudah muncul.
+3. Jika belum ada, hubungi **Super Admin** untuk pengecekan data desa.
+
+#### Hasil
+
+Daftar desa tampil pada grafik.
+
+### Nilai per Desa Nol Semua
+
+Pastikan data pokja sudah diisi.
+
+#### Langkah Penggunaan
+
+1. Buka menu pokja terkait.
+2. Pastikan data sudah tersimpan.
+3. Kembali ke **Dashboard** dan klik **Terapkan Filter Chart**.
+
+#### Hasil
+
+Nilai per desa muncul sesuai data.

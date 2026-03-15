@@ -1,45 +1,108 @@
-# Mulai Cepat
+# Cara Login
 
-## Tujuan
+### Masuk ke Aplikasi
 
-- Anda bisa masuk ke sistem.
-- Anda tahu posisi menu utama.
-- Anda bisa menjalankan 3 tugas inti pertama.
+Masuk ke aplikasi untuk mulai bekerja.
 
-## Sebelum Mulai
+#### Langkah Penggunaan
 
-- Pastikan Anda sudah punya email dan kata sandi akun.
-- Gunakan browser terbaru agar tampilan stabil.
+1. Buka halaman login aplikasi.
+2. Masukkan **Email**.
+3. Masukkan **Kata Sandi**.
+4. Klik **Masuk**.
+5. Pastikan halaman **Dashboard** terbuka.
 
-## Langkah 1: Masuk ke Sistem
+#### Hasil
 
-1. Buka halaman login sistem.
-2. Masukkan email dan kata sandi akun Anda.
-3. Tekan tombol masuk.
-4. Jika berhasil, Anda akan masuk ke halaman dashboard.
+Anda berada di **Dashboard**.
 
-## Langkah 2: Kenali Area Kerja
+# Navigasi Aplikasi
 
-1. Di bagian atas, Anda melihat menu utama seperti `Dashboard`, `Arsip`, `Profil`, dan `Keluar`.
-2. Di sisi kiri, Anda melihat menu kerja sesuai peran Anda.
-3. Jika ada tanda hanya-baca, menu itu tidak bisa diubah.
+### Kenali Menu Utama
 
-## Langkah 3: Jalankan 3 Tugas Inti
+Mengenali lokasi menu agar Anda cepat bekerja.
 
-1. Buka satu menu kerja yang menjadi tanggung jawab Anda.
-2. Tambah atau ubah satu data.
-3. Kembali ke dashboard untuk memastikan ringkasan data ikut berubah.
+#### Langkah Penggunaan
 
-## Jika Terkendala
+1. Lihat bar menu atas.
+2. Kenali menu **Dashboard**, **Arsip**, **Profil**, dan **Keluar**.
+3. Lihat panel kiri untuk **Menu Domain** sesuai peran Anda.
 
-- Tidak bisa login: cek ulang email dan kata sandi.
-- Menu Anda berbeda dengan rekan kerja: akun Anda memang berbeda peran.
-- Tombol simpan tidak ada: menu Anda bersifat hanya-baca.
+#### Hasil
 
-## Lanjutkan Ke
+Anda tahu lokasi menu utama dan menu kerja.
 
-- Sekretaris Desa: [peran/sekretaris-desa](./peran/sekretaris-desa/)
-- Sekretaris Kecamatan: [peran/sekretaris-kecamatan](./peran/sekretaris-kecamatan/)
-- Pokja Desa: [peran/pokja-desa](./peran/pokja-desa/)
-- Pokja Kecamatan: [peran/pokja-kecamatan](./peran/pokja-kecamatan/)
-- Super Admin: [peran/super-admin](./peran/super-admin/)
+# Fitur-Fitur
+
+### Jalankan Tugas Pertama
+
+Melakukan satu input awal agar alur kerja berjalan.
+
+#### Langkah Penggunaan
+
+1. Klik salah satu menu kerja yang menjadi tanggung jawab Anda.
+2. Klik **Tambah**.
+3. Isi kolom wajib.
+4. Klik **Simpan**.
+5. Kembali ke **Dashboard** untuk melihat ringkasan.
+
+#### Hasil
+
+Data baru muncul di daftar dan ringkasan **Dashboard** ikut berubah.
+
+### Buka Panduan Peran
+
+Lanjutkan ke panduan peran agar tugas harian Anda terarah.
+
+#### Langkah Penggunaan
+
+1. Tentukan peran Anda.
+2. Klik salah satu panduan berikut: [Sekretaris Desa](./peran/sekretaris-desa/), [Sekretaris Kecamatan](./peran/sekretaris-kecamatan/), [Pokja Desa](./peran/pokja-desa/), [Pokja Kecamatan](./peran/pokja-kecamatan/), [Super Admin](./peran/super-admin/).
+
+#### Hasil
+
+Anda memiliki panduan langkah kerja sesuai peran.
+
+# Troubleshooting
+
+### Tidak Bisa Login
+
+Pastikan data login sudah benar.
+
+#### Langkah Penggunaan
+
+1. Pastikan **Email** dan **Kata Sandi** sudah sesuai.
+2. Klik **Masuk** lagi.
+3. Jika tetap gagal, minta reset ke **Super Admin**.
+
+#### Hasil
+
+Anda bisa masuk atau memiliki solusi lanjutan.
+
+### Menu Tidak Sesuai Peran
+
+Cocokkan menu dengan peran akun Anda.
+
+#### Langkah Penggunaan
+
+1. Buka **Profil**.
+2. Periksa peran akun.
+3. Jika peran tidak sesuai, hubungi **Super Admin** untuk pembaruan.
+
+#### Hasil
+
+Menu tampil sesuai peran.
+
+### Tombol Simpan Tidak Ada
+
+Pastikan Anda berada di menu yang bisa diubah.
+
+#### Langkah Penggunaan
+
+1. Periksa apakah menu bertanda **Hanya Baca**.
+2. Pindah ke menu yang bisa diubah.
+3. Jika perlu akses ubah, hubungi **Super Admin**.
+
+#### Hasil
+
+Anda menggunakan menu yang tepat untuk menyimpan data.

@@ -1,29 +1,63 @@
-# Alur: Filter Dashboard dan Membaca Grafik
+# Fitur-Fitur
 
-## Tujuan
+### Filter Dashboard dan Membaca Grafik
 
-- Membantu Anda membaca kondisi data dengan cepat melalui dashboard.
+Membaca kondisi data dengan ringkas melalui **Dashboard**.
 
-## Langkah Praktis
+#### Langkah Penggunaan
 
-1. Buka halaman Dashboard.
-2. Pilih filter yang tersedia untuk akun Anda.
-3. Baca kartu ringkasan angka terlebih dahulu.
-4. Buka grafik dan lihat perubahan per bulan/per desa/per tingkat wilayah.
-5. Setelah memilih bulan, klik tombol terapkan filter.
-6. Jika blok banyak, gunakan tombol untuk menyembunyikan grafik agar fokus.
+1. Buka **Dashboard**.
+2. Pilih **Filter Bulan** yang tersedia.
+3. Pilih **Filter Wilayah** jika muncul.
+4. Klik **Terapkan Filter Chart**.
+5. Baca kartu ringkasan dan grafik yang tampil.
+6. Klik **Sembunyikan Grafik** jika perlu fokus pada ringkasan.
 
-## Hasil yang Diharapkan
+#### Hasil
 
-- Anda memahami kondisi data terbaru tanpa membuka satu per satu menu.
-- Anda bisa menentukan area yang perlu ditindaklanjuti.
+Ringkasan dan grafik menampilkan data sesuai filter aktif.
 
-## Contoh Praktis
+# Troubleshooting
 
-- Anda memilih bulan berjalan dan wilayah kerja Anda, lalu ringkasan angka dan grafik otomatis menyesuaikan.
+### Grafik Kosong
 
-## Jika Terkendala
+Pastikan data sumber sudah terisi.
 
-- Grafik kosong: cek apakah data pada menu sumber sudah terisi.
-- Filter tidak muncul: cek hak akses akun Anda.
-- Nilai terlihat tidak sesuai: cek bulan aktif dan filter wilayah di alamat halaman dashboard.
+#### Langkah Penggunaan
+
+1. Buka menu sumber data yang terkait.
+2. Pastikan data sudah tersimpan.
+3. Kembali ke **Dashboard** dan klik **Terapkan Filter Chart**.
+
+#### Hasil
+
+Grafik menampilkan data yang tersedia.
+
+### Filter Tidak Muncul
+
+Periksa akses akun dan pilihan wilayah.
+
+#### Langkah Penggunaan
+
+1. Buka **Profil**.
+2. Periksa peran dan wilayah kerja.
+3. Muat ulang **Dashboard**.
+4. Jika tetap tidak muncul, hubungi **Super Admin**.
+
+#### Hasil
+
+Filter tampil sesuai akses akun.
+
+### Nilai Terlihat Tidak Sesuai
+
+Samakan filter dengan periode yang Anda butuhkan.
+
+#### Langkah Penggunaan
+
+1. Pastikan **Filter Bulan** sudah benar.
+2. Klik **Terapkan Filter Chart**.
+3. Bandingkan hasil dengan data sumber di menu terkait.
+
+#### Hasil
+
+Nilai **Dashboard** sesuai dengan data sumber.

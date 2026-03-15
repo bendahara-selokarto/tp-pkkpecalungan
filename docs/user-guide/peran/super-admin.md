@@ -1,38 +1,112 @@
-# Panduan Peran: Super Admin
+# Pendahuluan
 
-## Tujuan Halaman Ini
+Panduan ini membantu Anda menjalankan tugas **Super Admin** di aplikasi.
 
-- Anda dapat mengelola akun pengguna tanpa menimbulkan salah akses peran, wilayah kerja, dan wilayah.
+# Navigasi Aplikasi
 
-## Tugas Utama Anda
+### Kenali Menu Super Admin
 
-- Membuat akun baru.
-- Memperbarui akun aktif.
-- Menonaktifkan akun yang tidak dipakai.
+Menemukan menu pengelolaan akun dan akses.
 
-## Langkah Kerja Harian
+#### Langkah Penggunaan
 
-1. Buka menu Manajemen User.
-2. Periksa data akun yang aktif.
-3. Tambah atau ubah akun sesuai kebutuhan organisasi.
-4. Pastikan peran, wilayah kerja, dan wilayah akun sudah tepat.
-5. Simpan perubahan dan lakukan verifikasi cepat login akun bila dibutuhkan.
+1. Buka **Dashboard**.
+2. Lihat panel kiri **Menu Domain**.
+3. Klik **Manajemen User**, **Manajemen Ijin Akses**, atau **Manajemen Arsip** sesuai kebutuhan.
 
-## Hasil yang Harus Terlihat
+#### Hasil
 
-- Akun baru muncul di daftar akun.
-- Label peran tampil jelas dan tidak ambigu.
-- Akun hanya melihat menu sesuai peran dan wilayah kerja yang ditetapkan.
+Anda berada di menu pengelolaan yang benar.
 
-## Skenario Sukses
+# Fitur-Fitur
 
-- Anda membuat akun `desa-pokja-ii`, atur wilayah kerja `desa`, pilih wilayah desa yang benar, dan akun langsung hanya menampilkan menu Pokja II.
+### Membuat Akun Baru
 
-## Contoh Praktis
+Menambahkan akun sesuai peran dan wilayah kerja.
 
-- Anda menambahkan akun baru untuk Pokja, menetapkan wilayah kerja, lalu mengecek menu yang tampil sesuai.
+#### Langkah Penggunaan
 
-## Jika Terkendala
+1. Buka **Manajemen User**.
+2. Klik **Tambah**.
+3. Isi **Nama**, **Email**, **Peran**, **Wilayah Kerja**, dan **Wilayah**.
+4. Klik **Simpan**.
 
-- Pilihan peran tidak sesuai: ubah wilayah kerja dulu, lalu pilih peran yang muncul.
-- Akun melapor menu kurang/lebih: cek ulang kombinasi peran, wilayah kerja, dan wilayah pada profil akun.
+#### Hasil
+
+Akun baru muncul di daftar.
+
+### Memperbarui Akun
+
+Mengubah data akun yang sudah ada.
+
+#### Langkah Penggunaan
+
+1. Buka **Manajemen User**.
+2. Pilih akun yang ingin diubah.
+3. Perbarui **Peran**, **Wilayah Kerja**, atau **Wilayah**.
+4. Klik **Simpan**.
+
+#### Hasil
+
+Perubahan akun tersimpan.
+
+### Menonaktifkan Akun
+
+Menonaktifkan akun yang tidak lagi dipakai.
+
+#### Langkah Penggunaan
+
+1. Buka **Manajemen User**.
+2. Pilih akun yang akan dinonaktifkan.
+3. Ubah **Status** menjadi **Nonaktif**.
+4. Klik **Simpan**.
+
+#### Hasil
+
+Akun nonaktif tidak bisa digunakan untuk login.
+
+### Verifikasi Akses Akun
+
+Memastikan menu sesuai peran dan wilayah kerja.
+
+#### Langkah Penggunaan
+
+1. Buka **Manajemen User**.
+2. Periksa **Peran**, **Wilayah Kerja**, dan **Wilayah** pada akun.
+3. Jika perlu, lakukan penyesuaian dan klik **Simpan**.
+
+#### Hasil
+
+Akses akun sesuai peran dan wilayah kerja.
+
+# Troubleshooting
+
+### Peran Tidak Sesuai Pilihan
+
+Sesuaikan wilayah kerja terlebih dahulu.
+
+#### Langkah Penggunaan
+
+1. Buka **Manajemen User**.
+2. Pilih **Wilayah Kerja** yang benar.
+3. Pilih **Peran** yang muncul.
+4. Klik **Simpan**.
+
+#### Hasil
+
+Peran yang tepat bisa dipilih.
+
+### Laporan Menu Tidak Sesuai
+
+Cek kombinasi peran dan wilayah.
+
+#### Langkah Penggunaan
+
+1. Buka **Manajemen User**.
+2. Periksa **Peran**, **Wilayah Kerja**, dan **Wilayah** akun.
+3. Perbarui jika diperlukan.
+4. Klik **Simpan**.
+
+#### Hasil
+
+Menu akun sesuai peran dan wilayah kerja.

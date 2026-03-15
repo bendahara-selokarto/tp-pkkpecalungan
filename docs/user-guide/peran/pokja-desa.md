@@ -1,53 +1,106 @@
-# Panduan Peran: Pokja Desa
+# Pendahuluan
 
-## Tujuan Halaman Ini
+Panduan ini membantu Anda menyelesaikan tugas **Pokja Desa** di aplikasi.
 
-- Anda dapat menyelesaikan input dan pembaruan data pada pokja Anda sendiri.
+# Navigasi Aplikasi
 
-## Tugas Utama Anda
+### Kenali Menu Pokja
 
-- Input data rutin sesuai bidang pokja.
-- Memperbarui data yang berubah.
-- Mencetak laporan berkala untuk rapat evaluasi.
+Menemukan menu pokja sesuai bidang Anda.
 
-## Langkah Kerja Harian
+#### Langkah Penggunaan
 
-1. Buka menu pokja sesuai bidang Anda.
-2. Isi data baru atau perbarui data yang berubah.
-3. Periksa kembali data sebelum disimpan.
-4. Cetak laporan untuk rekap berkala.
+1. Buka **Dashboard**.
+2. Lihat panel kiri **Menu Domain**.
+3. Klik **Pokja I**, **Pokja II**, **Pokja III**, atau **Pokja IV** sesuai akun Anda.
 
-## Hasil yang Harus Terlihat
+#### Hasil
 
-- Data yang disimpan langsung masuk daftar.
-- Dashboard menampilkan ringkasan pokja Anda.
-- Laporan menu Anda bisa dicetak tanpa membuka menu lain.
+Anda berada di menu pokja yang benar.
 
-## Label UI Pokja I Desa
+# Fitur-Fitur
 
-- Di panel kiri tertulis `Menu Domain` dengan item `Cetak Lampiran` dan `Pokja I`.
-- Di bagian atas tersedia tombol `Dashboard`, `Arsip`, `Dark mode`, `Profil`, dan `Keluar`.
-- Di dashboard terlihat judul `Dashboard Pokja I - DESA`.
-- Tombol yang sering dipakai: `Terapkan Filter Chart`, `Sembunyikan Grafik`, dan `Cetak Chart PDF`.
-- Jika data belum ada, muncul pesan `Belum ada data untuk filter yang dipilih.`.
+### Input Data Pokja
 
-## Label UI Pokja II Desa
+Mengisi data pokja sesuai bidang kerja.
 
-- Di panel kiri tertulis `Menu Domain` dengan item `Cetak Lampiran` dan `Pokja II`.
-- Di bagian atas tersedia tombol `Dashboard`, `Arsip`, `Dark mode`, `Profil`, dan `Keluar`.
-- Di dashboard terlihat judul `Dashboard Pokja II - DESA`.
-- Tombol yang sering dipakai: `Terapkan Filter Chart`, `Sembunyikan Grafik`, dan `Cetak Chart PDF`.
-- Jika data belum ada, muncul pesan `Belum ada data untuk filter yang dipilih.`.
+#### Langkah Penggunaan
 
-## Skenario Sukses
+1. Klik menu pokja yang Anda kelola.
+2. Klik **Tambah**.
+3. Isi kolom wajib.
+4. Klik **Simpan**.
 
-- Akun `desa-pokja-i` hanya melihat menu Pokja I, berhasil tambah data, dan dashboard menampilkan blok Pokja I saja.
+#### Hasil
 
-## Contoh Praktis
+Data pokja tersimpan dan muncul di tabel.
 
-- Anda mengisi data kegiatan Pokja minggu ini, lalu memastikan ringkasan di dashboard ikut terbarui.
+### Cek Ringkasan di Dashboard
 
-## Jika Terkendala
+Memastikan ringkasan pokja sudah terbarui.
 
-- Menu pokja lain tidak terlihat: ini normal karena akses dibatasi sesuai peran.
-- Simpan gagal: cek kolom wajib dan format tanggal.
+#### Langkah Penggunaan
+
+1. Kembali ke **Dashboard**.
+2. Periksa kartu ringkasan pokja Anda.
+
+#### Hasil
+
+Ringkasan **Dashboard** menampilkan data terbaru.
+
+### Cetak Laporan Pokja
+
+Mencetak laporan pokja untuk rekap berkala.
+
+#### Langkah Penggunaan
+
+1. Buka menu pokja yang ingin dicetak.
+2. Klik **Cetak**.
+3. Simpan file atau lanjutkan cetak.
+
+#### Hasil
+
+Laporan pokja tersedia untuk rekap.
+
+# Troubleshooting
+
+### Menu Pokja Lain Tidak Terlihat
+
+Gunakan menu pokja sesuai akun Anda.
+
+#### Langkah Penggunaan
+
+1. Pastikan Anda membuka **Pokja I**, **Pokja II**, **Pokja III**, atau **Pokja IV** sesuai akun.
+2. Jika perlu akses tambahan, hubungi **Super Admin**.
+
+#### Hasil
+
+Menu yang tampil sesuai peran Anda.
+
+### Simpan Gagal
+
+Periksa kolom wajib dan format isian.
+
+#### Langkah Penggunaan
+
+1. Pastikan semua kolom wajib terisi.
+2. Periksa format tanggal pada kolom **Tanggal**.
+3. Klik **Simpan** kembali.
+
+#### Hasil
+
+Data berhasil tersimpan.
+
+### Pesan Data Kosong Muncul
+
+Sesuaikan filter agar data terlihat.
+
+#### Langkah Penggunaan
+
+1. Buka **Dashboard**.
+2. Atur **Filter Bulan** dan **Filter Wilayah**.
+3. Klik **Terapkan Filter Chart**.
+
+#### Hasil
+
+**Dashboard** menampilkan data sesuai filter.

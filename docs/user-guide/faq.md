@@ -1,30 +1,99 @@
-# FAQ (Pertanyaan yang Sering Muncul)
+# Troubleshooting
 
-## 1. Kenapa menu saya berbeda dengan rekan saya?
-Akses menu mengikuti peran dan wilayah kerja akun Anda. Jika perlu perubahan, minta update ke super admin.
+### Menu Berbeda dengan Rekan Kerja
 
-## 2. Kenapa ada tanda hanya-baca di beberapa menu?
-Tanda hanya-baca artinya menu hanya bisa dilihat. Anda tetap bisa melihat data, tetapi tidak bisa mengubah.
+Menyesuaikan menu dengan peran dan wilayah kerja.
 
-## 3. Kenapa saya tidak bisa menyimpan data?
-Kemungkinan:
+#### Langkah Penggunaan
 
-- akun Anda memang tidak punya izin ubah pada menu itu,
-- data wajib belum lengkap,
-- format isian belum sesuai.
+1. Buka **Profil**.
+2. Periksa **Peran** dan **Wilayah Kerja** akun.
+3. Jika perlu perubahan, hubungi **Super Admin**.
 
-## 4. Kenapa dashboard saya masih kosong?
-Dashboard membaca data dari menu sumber. Jika belum ada input atau filter terlalu sempit, ringkasan bisa kosong.
+#### Hasil
 
-## 5. Bagaimana cara meminta perubahan akses?
-Sampaikan kebutuhan akses ke admin dengan menyebut:
+Menu tampil sesuai peran dan wilayah kerja.
 
-- nama Anda,
-- peran yang dibutuhkan,
-- wilayah kerja.
+### Ada Tanda Hanya Baca
 
-## 6. Kenapa grafik saya tidak sama dengan bulan sebelumnya?
-Kemungkinan Anda sedang memakai filter bulan yang berbeda. Periksa pilihan bulan dan parameter di alamat halaman dashboard.
+Menentukan menu yang bisa diubah.
 
-## 7. Kenapa saya tidak bisa membuka menu di luar pokja saya?
-Sistem membatasi akses sesuai tanggung jawab. Ini normal untuk menjaga keamanan data.
+#### Langkah Penggunaan
+
+1. Perhatikan label **Hanya Baca** pada menu.
+2. Gunakan menu lain yang bisa diubah untuk input data.
+3. Jika perlu akses ubah, hubungi **Super Admin**.
+
+#### Hasil
+
+Anda menggunakan menu yang tepat untuk mengubah data.
+
+### Tidak Bisa Menyimpan Data
+
+Periksa izin dan kelengkapan isian.
+
+#### Langkah Penggunaan
+
+1. Pastikan menu tidak bertanda **Hanya Baca**.
+2. Lengkapi semua kolom wajib.
+3. Klik **Simpan** kembali.
+4. Jika masih gagal, hubungi **Super Admin**.
+
+#### Hasil
+
+Data tersimpan atau Anda mendapatkan bantuan akses.
+
+### Dashboard Kosong
+
+Pastikan data sumber dan filter sudah benar.
+
+#### Langkah Penggunaan
+
+1. Pastikan data sudah tersimpan di menu sumber.
+2. Buka **Dashboard**.
+3. Pilih **Filter Bulan** dan **Filter Wilayah** jika tersedia.
+4. Klik **Terapkan Filter Chart**.
+
+#### Hasil
+
+**Dashboard** menampilkan ringkasan data.
+
+### Meminta Perubahan Akses
+
+Siapkan data akun sebelum menghubungi admin.
+
+#### Langkah Penggunaan
+
+1. Siapkan **Nama**, **Peran**, dan **Wilayah Kerja** yang dibutuhkan.
+2. Kirim permintaan ke **Super Admin**.
+
+#### Hasil
+
+Permintaan akses diproses dengan jelas.
+
+### Grafik Tidak Sama dengan Bulan Sebelumnya
+
+Pastikan filter bulan sudah sesuai.
+
+#### Langkah Penggunaan
+
+1. Buka **Dashboard**.
+2. Pilih **Filter Bulan** yang benar.
+3. Klik **Terapkan Filter Chart**.
+
+#### Hasil
+
+Grafik menampilkan data sesuai bulan aktif.
+
+### Tidak Bisa Membuka Menu di Luar Pokja
+
+Gunakan menu sesuai peran Anda.
+
+#### Langkah Penggunaan
+
+1. Buka menu **Pokja** yang sesuai akun Anda.
+2. Jika perlu akses tambahan, hubungi **Super Admin**.
+
+#### Hasil
+
+Anda bekerja di menu yang sesuai peran.
