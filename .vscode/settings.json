@@ -1,0 +1,16 @@
+{
+    "chatgpt.openOnStartup": true,
+    "playwright.env": {
+        "E2E_BASE_URL": "http://127.0.0.1:8000",
+        "E2E_EMAIL": "superadmin.tp-pkk-pecalungan@gmail.com",
+        "E2E_PASSWORD": "password123",
+        "E2E_SUPERADMIN_EMAIL": "superadmin.tp-pkk-pecalungan@gmail.com",
+        "E2E_SUPERADMIN_PASSWORD": "password123",
+        "E2E_DESA_EMAIL": "desa.desa-sekretaris@dummy.pkk.local",
+        "E2E_DESA_PASSWORD": "password123",
+        "E2E_SEKRETARIS_EMAIL": "sekretaris.kecamatan@gmail.com",
+        "E2E_SEKRETARIS_PASSWORD": "password123",
+        "E2E_POKJA_I_EMAIL": "desa.desa-pokja-i@dummy.pkk.local",
+        "E2E_POKJA_I_PASSWORD": "password123"
+    }
+}
