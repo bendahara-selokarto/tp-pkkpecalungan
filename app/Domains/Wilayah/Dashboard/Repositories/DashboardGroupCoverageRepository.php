@@ -38,6 +38,24 @@ use Illuminate\Support\Facades\Schema;
 
 class DashboardGroupCoverageRepository implements DashboardGroupCoverageRepositoryInterface
 {
+    /**
+     * @var array<string, string>
+     */
+    private const ROLE_TO_GROUP_MAP = [
+        'desa-sekretaris' => 'sekretaris-tpk',
+        'kecamatan-sekretaris' => 'sekretaris-tpk',
+        'desa-bendahara' => 'bendahara-tpk',
+        'kecamatan-bendahara' => 'bendahara-tpk',
+        'desa-pokja-i' => 'pokja-i',
+        'desa-pokja-ii' => 'pokja-ii',
+        'desa-pokja-iii' => 'pokja-iii',
+        'desa-pokja-iv' => 'pokja-iv',
+        'kecamatan-pokja-i' => 'pokja-i',
+        'kecamatan-pokja-ii' => 'pokja-ii',
+        'kecamatan-pokja-iii' => 'pokja-iii',
+        'kecamatan-pokja-iv' => 'pokja-iv',
+    ];
+
     public function __construct(
         private readonly AreaRepositoryInterface $areaRepository,
         private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
@@ -98,6 +116,8 @@ class DashboardGroupCoverageRepository implements DashboardGroupCoverageReposito
         $activeBudgetYear = $this->activeBudgetYearContextService->resolveForUser($user);
         $countsBySlug = [];
 
+        $allowedGroups = $this->resolveGroupsForUser($user);
+
         foreach ($requestedSlugs as $slug) {
             /** @var class-string<Model> $modelClass */
             $modelClass = $modelBySlug[$slug];
@@ -106,6 +126,7 @@ class DashboardGroupCoverageRepository implements DashboardGroupCoverageReposito
                 ->whereIn('area_id', $desaIds->all());
 
             $this->applyBudgetYearScope($modelQuery, $modelClass, $activeBudgetYear);
+            $this->applyGroupScope($modelQuery, $modelClass, $allowedGroups);
 
             if ($month !== null) {
                 if ($modelClass === Activity::class) {
@@ -210,5 +231,44 @@ class DashboardGroupCoverageRepository implements DashboardGroupCoverageReposito
         }
 
         $query->where($table.'.tahun_anggaran', $activeBudgetYear);
+    }
+
+    /**
+     * @param class-string<Model> $modelClass
+     * @param list<string> $allowedGroups
+     */
+    private function applyGroupScope(\Illuminate\Database\Eloquent\Builder $query, string $modelClass, array $allowedGroups): void
+    {
+        if ($allowedGroups === []) {
+            return;
+        }
+
+        $model = new $modelClass();
+        $table = $model->getTable();
+
+        if (! Schema::hasColumn($table, 'group')) {
+            return;
+        }
+
+        $query->whereIn($table.'.group', $allowedGroups);
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function resolveGroupsForUser(User $user): array
+    {
+        if ($user->hasRole('super-admin')) {
+            return [];
+        }
+
+        $groups = [];
+        foreach ($user->getRoleNames() as $roleName) {
+            if (isset(self::ROLE_TO_GROUP_MAP[$roleName])) {
+                $groups[] = self::ROLE_TO_GROUP_MAP[$roleName];
+            }
+        }
+
+        return array_values(array_unique($groups));
     }
 }

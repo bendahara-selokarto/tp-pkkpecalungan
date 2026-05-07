@@ -28,6 +28,7 @@ use App\Domains\Wilayah\SimulasiPenyuluhan\Models\SimulasiPenyuluhan;
 use App\Domains\Wilayah\TamanBacaan\Models\TamanBacaan;
 use App\Domains\Wilayah\WarungPkk\Models\WarungPkk;
 use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
+use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -37,7 +38,8 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
 {
     public function __construct(
         private readonly AreaRepositoryInterface $areaRepository,
-        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
+        private readonly RoleMenuVisibilityService $roleMenuVisibilityService
     ) {
     }
 
@@ -59,6 +61,9 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
             : collect();
         $activeBudgetYear = $this->activeBudgetYearContextService->resolveForUser($user);
 
+        $visibility = $this->roleMenuVisibilityService->resolveForScope($user, $scope);
+        $allowedModuleSlugs = array_keys($visibility['modules'] ?? []);
+
         $moduleItems = [];
         $modelTotals = [];
         $totalEntries = 0;
@@ -66,6 +71,10 @@ class DashboardDocumentCoverageRepository implements DashboardDocumentCoverageRe
         $totalKecamatan = 0;
 
         foreach ($this->moduleDefinitions() as $module) {
+            if (! in_array($module['slug'], $allowedModuleSlugs, true)) {
+                continue;
+            }
+
             $modelClass = $module['model'];
             $includeDescendantForKecamatan = $module['include_descendant_for_kecamatan'];
             $modelCacheKey = sprintf(

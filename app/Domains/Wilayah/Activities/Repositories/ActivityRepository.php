@@ -184,11 +184,15 @@ class ActivityRepository implements ActivityRepositoryInterface
                     if ($allowedGroups !== []) {
                         $kecamatanScope->whereIn('group', $allowedGroups);
                     }
-                })->orWhere(function (Builder $desaScope) use ($desaIds, $tahunAnggaran) {
+                })->orWhere(function (Builder $desaScope) use ($desaIds, $tahunAnggaran, $allowedGroups) {
                     $desaScope
                         ->where('level', ScopeLevel::DESA->value)
                         ->where('tahun_anggaran', $tahunAnggaran)
                         ->whereIn('area_id', $desaIds);
+
+                    if ($allowedGroups !== []) {
+                        $desaScope->whereIn('group', $allowedGroups);
+                    }
                 });
             });
         }

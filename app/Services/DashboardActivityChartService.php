@@ -8,6 +8,7 @@ use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryI
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Repositories\AreaRepositoryInterface;
 use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
+use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +20,8 @@ class DashboardActivityChartService
         private readonly AreaRepositoryInterface $areaRepository,
         private readonly DashboardDocumentCoverageRepositoryInterface $dashboardDocumentCoverageRepository,
         private readonly DashboardGroupCoverageRepositoryInterface $dashboardGroupCoverageRepository,
-        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
+        private readonly RoleMenuVisibilityService $roleMenuVisibilityService
     ) {}
 
     public function buildForUser(User $user, ?int $section1Month = null): array
@@ -175,7 +177,20 @@ class DashboardActivityChartService
             ->groupBy('area_id')
             ->pluck('total', 'area_id');
 
-        $moduleSlugs = $this->dashboardDocumentCoverageRepository->trackedModuleSlugs();
+        $areaLevel = $user->relationLoaded('area')
+            ? $user->area?->level
+            : $this->areaRepository->getLevelById($kecamatanAreaId);
+
+        $visibility = is_string($areaLevel)
+            ? $this->roleMenuVisibilityService->resolveForScope($user, $areaLevel)
+            : ['modules' => []];
+
+        $allowedModuleSlugs = array_keys($visibility['modules'] ?? []);
+        $moduleSlugs = collect($this->dashboardDocumentCoverageRepository->trackedModuleSlugs())
+            ->filter(static fn (string $slug): bool => in_array($slug, $allowedModuleSlugs, true))
+            ->values()
+            ->all();
+
         $bookTotalPerDesa = count($moduleSlugs);
         $rawBooksByDesa = collect(
             $this->dashboardGroupCoverageRepository->buildBreakdownByDesaForModules($user, $moduleSlugs, $section1Month)
