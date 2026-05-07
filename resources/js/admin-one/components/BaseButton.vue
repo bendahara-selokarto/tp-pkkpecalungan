@@ -12,6 +12,7 @@ const props = defineProps({
   iconSize: [String, Number],
   href: String,
   target: String,
+  rel: String,
   to: [String, Object],
   type: String,
   color: {
@@ -103,6 +104,7 @@ const componentClass = computed(() => {
     :type="computedType"
     :to="to"
     :target="target"
+    :rel="rel"
     :disabled="disabled"
   >
     <BaseIcon v-if="icon" :path="icon" :size="iconSize" />

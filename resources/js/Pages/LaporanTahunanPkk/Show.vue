@@ -46,6 +46,8 @@ defineProps({
         <div class="flex items-center gap-2">
           <a
             :href="`${scopePrefix}/${report.id}/print/docx`"
+            target="_blank"
+            rel="noopener noreferrer"
             class="inline-flex rounded-md border border-sky-200 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
           >
             Cetak .docx
@@ -117,4 +119,3 @@ defineProps({
     </CardBox>
   </SectionMain>
 </template>
-

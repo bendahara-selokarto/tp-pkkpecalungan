@@ -151,6 +151,7 @@ const isDocumentImage = computed(() => imageExtensions.includes(documentExtensio
           v-if="props.can.print && props.routes.print"
           :href="props.routes.print"
           target="_blank"
+          rel="noopener noreferrer"
           class="inline-flex rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700"
         >
           Cetak PDF

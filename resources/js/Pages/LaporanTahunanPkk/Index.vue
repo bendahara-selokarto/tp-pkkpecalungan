@@ -130,6 +130,8 @@ const cancelDelete = () => {
                 <div class="flex flex-wrap items-center gap-2">
                   <a
                     :href="`${scopePrefix}/${report.id}/print/docx`"
+                    target="_blank"
+                    rel="noopener noreferrer"
                     class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
                   >
                     Cetak .docx

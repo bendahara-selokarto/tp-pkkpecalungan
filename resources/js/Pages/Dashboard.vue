@@ -1199,6 +1199,7 @@ const hasBookComparisonData = (block) => {
         color="info"
         :href="dashboardChartPdfUrl"
         target="_blank"
+        rel="noopener noreferrer"
         small
       />
     </SectionTitleLineWithButton>
