@@ -25,6 +25,7 @@ class UpdateActivityAction
             'description' => $payload['description'] ?? $payload['uraian'] ?? null,
             'uraian' => $payload['uraian'] ?? $payload['description'] ?? null,
             'level' => $activity->level,
+            'group' => $activity->group,
             'area_id' => $activity->area_id,
             'created_by' => $activity->created_by,
             'tahun_anggaran' => $activity->tahun_anggaran,

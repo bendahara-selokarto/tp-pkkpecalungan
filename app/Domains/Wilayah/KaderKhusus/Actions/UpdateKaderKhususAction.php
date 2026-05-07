@@ -26,6 +26,7 @@ class UpdateKaderKhususAction
             'jenis_kader_khusus' => $payload['jenis_kader_khusus'],
             'keterangan' => $payload['keterangan'] ?? null,
             'level' => $kaderKhusus->level,
+            'group' => $kaderKhusus->group,
             'area_id' => $kaderKhusus->area_id,
             'created_by' => $kaderKhusus->created_by,
             'tahun_anggaran' => $kaderKhusus->tahun_anggaran,

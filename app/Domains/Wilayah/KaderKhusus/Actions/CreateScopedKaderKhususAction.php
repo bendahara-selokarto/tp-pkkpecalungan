@@ -19,6 +19,7 @@ class CreateScopedKaderKhususAction
 
     public function execute(array $payload, string $level): KaderKhusus
     {
+        $user = $this->kaderKhususScopeService->requireAuthenticatedUser();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
         $data = KaderKhususData::fromArray([
@@ -32,8 +33,9 @@ class CreateScopedKaderKhususAction
             'jenis_kader_khusus' => $payload['jenis_kader_khusus'],
             'keterangan' => $payload['keterangan'] ?? null,
             'level' => $level,
+            'group' => $this->kaderKhususScopeService->requireKaderKhususGroupForUser($user),
             'area_id' => $this->kaderKhususScopeService->requireUserAreaId(),
-            'created_by' => auth()->id(),
+            'created_by' => $user->id,
             'tahun_anggaran' => $tahunAnggaran,
         ]);
 

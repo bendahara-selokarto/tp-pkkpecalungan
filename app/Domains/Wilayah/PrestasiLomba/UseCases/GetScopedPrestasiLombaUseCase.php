@@ -17,10 +17,13 @@ class GetScopedPrestasiLombaUseCase
 
     public function execute(int $id, string $level): PrestasiLomba
     {
+        $user = $this->prestasiLombaScopeService->requireAuthenticatedUser();
         $prestasiLomba = $this->prestasiLombaRepository->find($id);
         $areaId = $this->prestasiLombaScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
-        return $this->prestasiLombaScopeService->authorizeSameLevelAreaAndBudgetYear($prestasiLomba, $level, $areaId, $tahunAnggaran);
+        $prestasiLomba = $this->prestasiLombaScopeService->authorizeSameLevelAreaAndBudgetYear($prestasiLomba, $level, $areaId, $tahunAnggaran);
+
+        return $this->prestasiLombaScopeService->authorizePrestasiGroup($user, $prestasiLomba);
     }
 }

@@ -142,4 +142,50 @@ class KaderKhususPolicyTest extends TestCase
 
         $this->assertFalse($policy->update($user, $kaderKhususLuar));
     }
+
+    #[Test]
+    public function kader_khusus_tidak_boleh_diakses_lintas_group_pada_area_dan_tahun_yang_sama(): void
+    {
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $sekretaris = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $sekretaris->assignRole('desa-sekretaris');
+
+        $pokja = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $pokja->assignRole('desa-pokja-i');
+
+        $kaderSekretaris = KaderKhusus::create([
+            'nama' => 'Kader Sekretaris',
+            'jenis_kelamin' => 'P',
+            'tempat_lahir' => 'Batang',
+            'tanggal_lahir' => '1990-01-01',
+            'status_perkawinan' => 'kawin',
+            'alamat' => 'Jl. Kader 1',
+            'pendidikan' => 'SMA',
+            'jenis_kader_khusus' => 'Kader Lansia',
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $sekretaris->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $policy = app(KaderKhususPolicy::class);
+
+        $this->assertTrue($policy->view($sekretaris, $kaderSekretaris));
+        $this->assertFalse($policy->view($pokja, $kaderSekretaris));
+        $this->assertFalse($policy->update($pokja, $kaderSekretaris));
+    }
 }

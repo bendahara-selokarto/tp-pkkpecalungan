@@ -18,6 +18,7 @@ class CreateScopedPrestasiLombaAction
 
     public function execute(array $payload, string $level): PrestasiLomba
     {
+        $user = $this->prestasiLombaScopeService->requireAuthenticatedUser();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
         $data = PrestasiLombaData::fromArray([
@@ -31,8 +32,9 @@ class CreateScopedPrestasiLombaAction
             'keterangan' => $payload['keterangan'] ?? null,
             'tahun_anggaran' => $tahunAnggaran,
             'level' => $level,
+            'group' => $this->prestasiLombaScopeService->requirePrestasiGroupForUser($user),
             'area_id' => $this->prestasiLombaScopeService->requireUserAreaId(),
-            'created_by' => auth()->id(),
+            'created_by' => $user->id,
         ]);
 
         return $this->prestasiLombaRepository->store($data);

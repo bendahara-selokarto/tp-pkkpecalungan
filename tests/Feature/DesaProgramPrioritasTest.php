@@ -27,6 +27,7 @@ class DesaProgramPrioritasTest extends TestCase
         parent::setUp();
 
         Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
         Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
@@ -202,6 +203,151 @@ class DesaProgramPrioritasTest extends TestCase
             ->assertStatus(302);
 
         $this->assertDatabaseMissing('program_prioritas', ['id' => $program->id]);
+    }
+
+    #[Test]
+    public function pokja_desa_dapat_crud_program_prioritas_dengan_group_terisolasi(): void
+    {
+        $pokja = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $pokja->assignRole('desa-pokja-i');
+
+        $this->actingAs($pokja)->post('/desa/program-prioritas', [
+            'program' => 'Program Pokja I',
+            'prioritas_program' => 'Prioritas Pokja',
+            'kegiatan' => 'Kegiatan Pokja I',
+            'sasaran_target' => 'Kader Pokja I',
+            'jadwal_bulan_1' => true,
+            'jadwal_bulan_2' => false,
+            'jadwal_bulan_3' => false,
+            'jadwal_bulan_4' => false,
+            'jadwal_bulan_5' => false,
+            'jadwal_bulan_6' => false,
+            'jadwal_bulan_7' => false,
+            'jadwal_bulan_8' => false,
+            'jadwal_bulan_9' => false,
+            'jadwal_bulan_10' => false,
+            'jadwal_bulan_11' => false,
+            'jadwal_bulan_12' => false,
+            'sumber_dana_pusat' => true,
+            'sumber_dana_apbd' => false,
+            'sumber_dana_swd' => false,
+            'sumber_dana_bant' => false,
+            'keterangan' => 'Pokja',
+        ])->assertStatus(302);
+
+        $program = ProgramPrioritas::where('program', 'Program Pokja I')->firstOrFail();
+
+        $this->assertDatabaseHas('program_prioritas', [
+            'id' => $program->id,
+            'group' => 'pokja-i',
+        ]);
+
+        $this->actingAs($pokja)->put(route('desa.program-prioritas.update', $program->id), [
+            'program' => 'Program Pokja I',
+            'prioritas_program' => 'Prioritas Pokja',
+            'kegiatan' => 'Kegiatan Pokja I',
+            'sasaran_target' => '35 kader',
+            'jadwal_bulan_1' => true,
+            'jadwal_bulan_2' => false,
+            'jadwal_bulan_3' => false,
+            'jadwal_bulan_4' => false,
+            'jadwal_bulan_5' => false,
+            'jadwal_bulan_6' => false,
+            'jadwal_bulan_7' => false,
+            'jadwal_bulan_8' => false,
+            'jadwal_bulan_9' => false,
+            'jadwal_bulan_10' => false,
+            'jadwal_bulan_11' => false,
+            'jadwal_bulan_12' => false,
+            'sumber_dana_pusat' => true,
+            'sumber_dana_apbd' => false,
+            'sumber_dana_swd' => false,
+            'sumber_dana_bant' => false,
+            'keterangan' => 'Pokja update',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('program_prioritas', [
+            'id' => $program->id,
+            'sasaran_target' => '35 kader',
+            'group' => 'pokja-i',
+        ]);
+
+        $this->actingAs($pokja)->delete(route('desa.program-prioritas.destroy', $program->id))
+            ->assertStatus(302);
+
+        $this->assertDatabaseMissing('program_prioritas', ['id' => $program->id]);
+    }
+
+    #[Test]
+    public function program_prioritas_terisolasi_per_group_pada_area_dan_tahun_yang_sama(): void
+    {
+        $sekretaris = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $sekretaris->assignRole('desa-sekretaris');
+
+        $pokja = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $pokja->assignRole('desa-pokja-i');
+
+        $sekretarisProgram = ProgramPrioritas::create([
+            'program' => 'Program Sekretaris',
+            'prioritas_program' => 'Prioritas Sekretaris',
+            'kegiatan' => 'Kegiatan Sekretaris',
+            'sasaran_target' => 'Sekretaris',
+            'jadwal_i' => true,
+            'jadwal_ii' => false,
+            'jadwal_iii' => false,
+            'jadwal_iv' => false,
+            'sumber_dana_pusat' => true,
+            'sumber_dana_apbd' => false,
+            'sumber_dana_swd' => false,
+            'sumber_dana_bant' => false,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $sekretaris->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        ProgramPrioritas::create([
+            'program' => 'Program Pokja I',
+            'prioritas_program' => 'Prioritas Pokja I',
+            'kegiatan' => 'Kegiatan Pokja I',
+            'sasaran_target' => 'Pokja I',
+            'jadwal_i' => true,
+            'jadwal_ii' => false,
+            'jadwal_iii' => false,
+            'jadwal_iv' => false,
+            'sumber_dana_pusat' => true,
+            'sumber_dana_apbd' => false,
+            'sumber_dana_swd' => false,
+            'sumber_dana_bant' => false,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $pokja->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $response = $this->actingAs($pokja)->get('/desa/program-prioritas');
+
+        $response->assertOk();
+        $response->assertSee('Program Pokja I');
+        $response->assertDontSee('Program Sekretaris');
+
+        $this->actingAs($pokja)
+            ->get(route('desa.program-prioritas.show', $sekretarisProgram->id))
+            ->assertForbidden();
     }
 
     #[Test]

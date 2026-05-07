@@ -23,8 +23,10 @@ class MenuVisibilityPayloadTest extends TestCase
 
         foreach ([
             'desa-sekretaris',
+            'desa-bendahara',
             'desa-pokja-i',
             'kecamatan-sekretaris',
+            'kecamatan-bendahara',
             'kecamatan-pokja-ii',
         ] as $roleName) {
             Role::firstOrCreate(['name' => $roleName]);
@@ -54,12 +56,15 @@ class MenuVisibilityPayloadTest extends TestCase
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
+                ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-only')
                 ->where('auth.user.menuGroupModes.pokja-iv', 'read-only')
                 ->missing('auth.user.menuGroupModes.referensi')
-                ->where('auth.user.moduleModes.buku-keuangan', 'read-write')
+                ->where('auth.user.moduleModes.agenda-surat', 'read-write')
+                ->where('auth.user.moduleModes.inventaris', 'read-write')
+                ->where('auth.user.moduleModes.catatan-keluarga', 'read-write')
                 ->where('auth.user.moduleModes.program-prioritas', 'read-write')
-                ->where('auth.user.moduleModes.data-warga', 'read-only')
+                ->where('auth.user.moduleModes.buku-keuangan', 'read-only')
             );
     }
 
@@ -79,14 +84,34 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->missing('auth.user.menuGroupModes.sekretaris-tpk')
                 ->missing('auth.user.menuGroupModes.monitoring')
                 ->where('auth.user.moduleModes.activities', 'read-write')
-                ->where('auth.user.moduleModes.anggota-pokja', 'read-write')
+                ->where('auth.user.moduleModes.catatan-keluarga', 'read-write')
+                ->where('auth.user.moduleModes.pra-koperasi-up2k', 'read-write')
                 ->where('auth.user.moduleModes.prestasi-lomba', 'read-write')
                 ->missing('auth.user.moduleModes.data-pelatihan-kader')
                 ->missing('auth.user.moduleModes.data-warga')
             );
     }
 
-    public function test_payload_desa_pokja_memuat_inventaris_dan_buku_tamu_rw(): void
+    public function test_payload_bendahara_tidak_memiliki_owner_modul_operasional(): void
+    {
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desa->id,
+        ]);
+        $user->assignRole('desa-bendahara');
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->missing('auth.user.menuGroupModes.bendahara-tpk')
+                ->missing('auth.user.moduleModes.activities')
+                ->missing('auth.user.moduleModes.prestasi-lomba')
+                ->missing('auth.user.menuGroupModes.sekretaris-tpk')
+                ->missing('auth.user.menuGroupModes.pokja-i')
+            );
+    }
+
+    public function test_payload_desa_pokja_i_memuat_buku_wajib_bantu_dan_bantu_unik_rw(): void
     {
         $user = User::factory()->create([
             'scope' => 'desa',
@@ -98,8 +123,12 @@ class MenuVisibilityPayloadTest extends TestCase
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
-                ->where('auth.user.moduleModes.inventaris', 'read-write')
-                ->where('auth.user.moduleModes.buku-tamu', 'read-write')
+                ->where('auth.user.moduleModes.program-prioritas', 'read-write')
+                ->where('auth.user.moduleModes.data-kegiatan-pkk-pokja-i', 'read-write')
+                ->where('auth.user.moduleModes.simulasi-penyuluhan', 'read-write')
+                ->where('auth.user.moduleModes.bkr', 'read-write')
+                ->where('auth.user.moduleModes.anggota-pokja', 'read-write')
+                ->where('auth.user.moduleModes.buku-tamu', 'read-only')
             );
     }
 
@@ -116,8 +145,10 @@ class MenuVisibilityPayloadTest extends TestCase
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
+                ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
-                ->where('auth.user.moduleModes.data-warga', 'read-write')
+                ->where('auth.user.moduleModes.agenda-surat', 'read-write')
+                ->where('auth.user.moduleModes.data-kegiatan-pkk-pokja-i', 'read-write')
             );
     }
 
@@ -133,8 +164,12 @@ class MenuVisibilityPayloadTest extends TestCase
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
+                ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.monitoring', 'read-only')
+                ->where('auth.user.menuGroupModes.belum-ada-pemilik', 'read-only')
                 ->where('auth.user.moduleModes.activities', 'read-write')
+                ->where('auth.user.moduleModes.data-pelatihan-kader', 'read-only')
+                ->where('auth.user.moduleModes.catatan-keluarga', 'read-write')
                 ->where('auth.user.moduleModes.desa-activities', 'read-only')
                 ->where('auth.user.moduleModes.desa-arsip', 'read-only')
             );

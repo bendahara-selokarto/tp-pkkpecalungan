@@ -15,6 +15,7 @@ class InventarisData
         public ?string $tempat_penyimpanan,
         public string $condition,
         public string $level,
+        public string $group,
         public int $area_id,
         public int $created_by,
         public int $tahun_anggaran,
@@ -34,6 +35,7 @@ class InventarisData
             $data['tempat_penyimpanan'] ?? null,
             $data['condition'],
             $data['level'],
+            $data['group'],
             $data['area_id'],
             $data['created_by'],
             $data['tahun_anggaran']

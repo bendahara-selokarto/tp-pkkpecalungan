@@ -21,6 +21,8 @@ class ActivityPolicyTest extends TestCase
 
         Role::firstOrCreate(['name' => 'desa-sekretaris']);
         Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-bendahara']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
     }
 
     public function test_admin_desa_hanya_dapat_mengakses_kegiatan_desanya_sendiri(): void
@@ -111,5 +113,60 @@ class ActivityPolicyTest extends TestCase
 
         $this->assertFalse($user->can('view', $oldBudgetYearActivity));
         $this->assertFalse($user->can('update', $oldBudgetYearActivity));
+    }
+
+    public function test_buku_kegiatan_desa_dipisahkan_per_group_jabatan_pada_area_yang_sama(): void
+    {
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $sekretaris = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
+        $sekretaris->assignRole('desa-sekretaris');
+
+        $pokjaI = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
+        $pokjaI->assignRole('desa-pokja-i');
+
+        $bendahara = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
+        $bendahara->assignRole('desa-bendahara');
+
+        $sekretariatActivity = Activity::create([
+            'title' => 'Sekretariat',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $sekretaris->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $pokjaActivity = Activity::create([
+            'title' => 'Pokja I',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $pokjaI->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $bendaharaActivity = Activity::create([
+            'title' => 'Bendahara',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $bendahara->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $this->assertTrue($sekretaris->can('view', $sekretariatActivity));
+        $this->assertFalse($sekretaris->can('view', $pokjaActivity));
+        $this->assertFalse($sekretaris->can('view', $bendaharaActivity));
+        $this->assertFalse($bendahara->can('view', $bendaharaActivity));
+        $this->assertFalse($bendahara->can('view', $sekretariatActivity));
+        $this->assertFalse($bendahara->can('view', $pokjaActivity));
+        $this->assertTrue($pokjaI->can('view', $pokjaActivity));
+        $this->assertFalse($pokjaI->can('view', $sekretariatActivity));
+        $this->assertFalse($pokjaI->can('view', $bendaharaActivity));
     }
 }

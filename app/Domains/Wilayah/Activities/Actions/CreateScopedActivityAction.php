@@ -18,9 +18,11 @@ class CreateScopedActivityAction
 
     public function execute(array $payload, string $level): Activity
     {
+        $user = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
         $attachments = $this->activityAttachmentService->storeFromPayload($payload, $level, $areaId);
+        $group = $this->activityScopeService->requireActivityGroupForUser($user);
 
         $data = ActivityData::fromArray([
             'title' => $payload['title'],
@@ -29,8 +31,9 @@ class CreateScopedActivityAction
             'description' => $payload['description'] ?? $payload['uraian'] ?? null,
             'uraian' => $payload['uraian'] ?? $payload['description'] ?? null,
             'level' => $level,
+            'group' => $group,
             'area_id' => $areaId,
-            'created_by' => auth()->id(),
+            'created_by' => $user->id,
             'tahun_anggaran' => $tahunAnggaran,
             'activity_date' => $payload['activity_date'],
             'tempat_kegiatan' => $payload['tempat_kegiatan'] ?? null,

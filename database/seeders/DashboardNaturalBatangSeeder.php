@@ -14,6 +14,15 @@ class DashboardNaturalBatangSeeder extends Seeder
 {
     private const TARGET_KECAMATAN = 'Pecalungan';
 
+    private const GROUP_ROLE_SUFFIX = [
+        'sekretaris-tpk' => 'sekretaris',
+        'bendahara-tpk' => 'bendahara',
+        'pokja-i' => 'pokja-i',
+        'pokja-ii' => 'pokja-ii',
+        'pokja-iii' => 'pokja-iii',
+        'pokja-iv' => 'pokja-iv',
+    ];
+
     public function run(): void
     {
         $this->call([
@@ -62,6 +71,7 @@ class DashboardNaturalBatangSeeder extends Seeder
             'area_name' => (string) $kecamatanArea->name,
             'kecamatan_name' => (string) $kecamatanArea->name,
             'creator_id' => $this->resolveCreatorId('kecamatan', (int) $kecamatanArea->id, (string) $kecamatanArea->name),
+            'group_creator_ids' => $this->resolveGroupCreatorIds('kecamatan', (int) $kecamatanArea->id, (string) $kecamatanArea->name),
         ]);
 
         $desaAreas = Area::query()
@@ -77,6 +87,7 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'area_name' => (string) $desaArea->name,
                 'kecamatan_name' => (string) $kecamatanArea->name,
                 'creator_id' => $this->resolveCreatorId('desa', (int) $desaArea->id, (string) $desaArea->name),
+                'group_creator_ids' => $this->resolveGroupCreatorIds('desa', (int) $desaArea->id, (string) $desaArea->name),
             ]);
         }
 
@@ -120,9 +131,52 @@ class DashboardNaturalBatangSeeder extends Seeder
         return (int) $user->id;
     }
 
+    /**
+     * @return array<string, int>
+     */
+    private function resolveGroupCreatorIds(string $level, int $areaId, string $areaName): array
+    {
+        $creatorIds = [];
+
+        foreach (self::GROUP_ROLE_SUFFIX as $group => $roleSuffix) {
+            $roleName = "{$level}-{$roleSuffix}";
+            $user = User::query()
+                ->where('scope', $level)
+                ->where('area_id', $areaId)
+                ->whereHas('roles', static fn ($query) => $query->where('name', $roleName))
+                ->first();
+
+            $creatorIds[$group] = $user instanceof User
+                ? (int) $user->id
+                : $this->resolveCreatorId($level, $areaId, $areaName);
+        }
+
+        return $creatorIds;
+    }
+
+    private function creatorIdForGroup(array $context, string $group): int
+    {
+        $groupCreatorIds = $context['group_creator_ids'] ?? [];
+
+        return is_array($groupCreatorIds) && isset($groupCreatorIds[$group])
+            ? (int) $groupCreatorIds[$group]
+            : (int) $context['creator_id'];
+    }
+
+    private function groupForIndex(int $index): string
+    {
+        $groups = array_keys(self::GROUP_ROLE_SUFFIX);
+
+        return $groups[($index - 1) % count($groups)];
+    }
+
     private function purgeExistingData(array $areaIds): void
     {
         $tables = [
+            'buku_keuangans',
+            'buku_daftar_hadirs',
+            'buku_notulen_rapats',
+            'buku_tamus',
             'simulasi_penyuluhans',
             'posyandus',
             'kejar_pakets',
@@ -137,6 +191,13 @@ class DashboardNaturalBatangSeeder extends Seeder
             'data_warga_anggotas',
             'data_wargas',
             'activities',
+            'laporan_tahunan_pkk_entries',
+            'laporan_tahunan_pkk_reports',
+            'pra_koperasi_up2k',
+            'pelatihan_kader_pokja_ii',
+            'tutor_khusus',
+            'bkb_kegiatans',
+            'literasi_wargas',
             'inventaris',
             'bantuans',
             'agenda_surats',
@@ -156,9 +217,13 @@ class DashboardNaturalBatangSeeder extends Seeder
         $this->seedAnggotaTimPenggerak($faker, $context);
         $this->seedKaderKhusus($faker, $context);
         $this->seedAgendaSurat($faker, $context);
+        $this->seedBukuSekretaris($faker, $context);
         $this->seedBantuan($faker, $context);
         $this->seedInventaris($faker, $context);
         $this->seedActivities($faker, $context);
+        $this->seedBukuDaftarHadir($faker, $context);
+        $this->seedBukuKeuangan($context);
+        $this->seedLaporanTahunanPkk($faker, $context);
         $this->seedDataWargaAndAnggota($faker, $context);
         $this->seedDataKegiatanWarga($faker, $context);
         $this->seedDataKeluarga($faker, $context);
@@ -171,6 +236,7 @@ class DashboardNaturalBatangSeeder extends Seeder
         $this->seedKejarPaket($faker, $context);
         $this->seedPosyandu($faker, $context);
         $this->seedSimulasiPenyuluhan($faker, $context);
+        $this->seedPokjaIiMinimal($context);
     }
 
     private function seedAnggotaTimPenggerak(\Faker\Generator $faker, array $context): void
@@ -183,6 +249,7 @@ class DashboardNaturalBatangSeeder extends Seeder
         $pekerjaanList = ['Ibu Rumah Tangga', 'Wiraswasta', 'Guru', 'Perangkat Desa', 'Kader PKK'];
 
         for ($i = 1; $i <= $count; $i++) {
+            $group = $this->groupForIndex($i);
             $rows[] = [
                 'nama' => $faker->name(),
                 'jabatan' => $faker->randomElement($jabatanList),
@@ -215,6 +282,7 @@ class DashboardNaturalBatangSeeder extends Seeder
         $pendidikanList = ['SMP', 'SMA', 'D3', 'S1'];
 
         for ($i = 1; $i <= $count; $i++) {
+            $group = $this->groupForIndex($i);
             $rows[] = [
                 'nama' => $faker->name(),
                 'jenis_kelamin' => $faker->randomElement(['L', 'P']),
@@ -227,8 +295,9 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'keterangan' => $faker->boolean(65) ? null : 'Pembinaan kader rutin',
                 'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
+                'group' => $group,
                 'area_id' => $context['area_id'],
-                'created_by' => $context['creator_id'],
+                'created_by' => $this->creatorIdForGroup($context, $group),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -329,6 +398,108 @@ class DashboardNaturalBatangSeeder extends Seeder
         DB::table($table)->insert($rows);
     }
 
+    private function seedBukuSekretaris(\Faker\Generator $faker, array $context): void
+    {
+        $creatorId = $this->creatorIdForGroup($context, 'sekretaris-tpk');
+        $now = now();
+        $entryDate = now()->subDays(7)->toDateString();
+
+        DB::table('buku_tamus')->insert([
+            'visit_date' => $entryDate,
+            'guest_name' => $faker->name(),
+            'purpose' => 'Koordinasi administrasi PKK',
+            'institution' => 'TP PKK Kabupaten Batang',
+            'description' => 'Contoh isian buku tamu sekretariat.',
+            'tahun_anggaran' => $this->resolveBudgetYear(date: $entryDate),
+            'level' => $context['level'],
+            'area_id' => $context['area_id'],
+            'created_by' => $creatorId,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        DB::table('buku_notulen_rapats')->insert([
+            'entry_date' => $entryDate,
+            'title' => 'Rapat Koordinasi TP PKK '.$context['area_name'],
+            'person_name' => $faker->name(),
+            'institution' => 'TP PKK '.$context['area_name'],
+            'description' => 'Pembahasan program kerja dan tindak lanjut administrasi.',
+            'tahun_anggaran' => $this->resolveBudgetYear(date: $entryDate),
+            'level' => $context['level'],
+            'area_id' => $context['area_id'],
+            'created_by' => $creatorId,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+    }
+
+    private function seedBukuDaftarHadir(\Faker\Generator $faker, array $context): void
+    {
+        $activityId = DB::table('activities')
+            ->where('level', $context['level'])
+            ->where('area_id', $context['area_id'])
+            ->orderBy('id')
+            ->value('id');
+
+        if (! is_numeric($activityId)) {
+            return;
+        }
+
+        $attendanceDate = now()->subDays(3)->toDateString();
+
+        DB::table('buku_daftar_hadirs')->insert([
+            'attendance_date' => $attendanceDate,
+            'activity_id' => (int) $activityId,
+            'attendee_name' => $faker->name(),
+            'institution' => 'TP PKK '.$context['area_name'],
+            'description' => 'Contoh peserta kegiatan untuk buku daftar hadir.',
+            'tahun_anggaran' => $this->resolveBudgetYear(date: $attendanceDate),
+            'level' => $context['level'],
+            'area_id' => $context['area_id'],
+            'created_by' => $this->creatorIdForGroup($context, 'sekretaris-tpk'),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+    }
+
+    private function seedBukuKeuangan(array $context): void
+    {
+        $now = now();
+        $creatorId = $this->creatorIdForGroup($context, 'bendahara-tpk');
+        $transactionDate = now()->subDays(5)->toDateString();
+
+        DB::table('buku_keuangans')->insert([
+            [
+                'transaction_date' => $transactionDate,
+                'source' => 'lainnya',
+                'description' => 'Saldo awal kas kegiatan PKK',
+                'reference_number' => 'SEED-KAS-MASUK-'.$context['area_id'],
+                'entry_type' => 'pemasukan',
+                'amount' => 1000000,
+                'tahun_anggaran' => $this->resolveBudgetYear(date: $transactionDate),
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $creatorId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'transaction_date' => $transactionDate,
+                'source' => 'lainnya',
+                'description' => 'Pembelian perlengkapan administrasi',
+                'reference_number' => 'SEED-KAS-KELUAR-'.$context['area_id'],
+                'entry_type' => 'pengeluaran',
+                'amount' => 250000,
+                'tahun_anggaran' => $this->resolveBudgetYear(date: $transactionDate),
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $creatorId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+        ]);
+    }
+
     private function seedBantuan(\Faker\Generator $faker, array $context): void
     {
         $count = $this->countFor($context['level'], 5, 12, 8, 18);
@@ -348,6 +519,7 @@ class DashboardNaturalBatangSeeder extends Seeder
         ];
 
         for ($i = 1; $i <= $count; $i++) {
+            $group = $this->groupForIndex($i);
             $rows[] = [
                 'name' => $faker->randomElement($targetLocations),
                 'category' => $faker->randomElement($categories),
@@ -357,8 +529,9 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'received_date' => $receivedDate = $faker->dateTimeBetween('-12 months', 'now')->format('Y-m-d'),
                 'tahun_anggaran' => $this->resolveBudgetYear(date: $receivedDate),
                 'level' => $context['level'],
+                'group' => $group,
                 'area_id' => $context['area_id'],
-                'created_by' => $context['creator_id'],
+                'created_by' => $this->creatorIdForGroup($context, $group),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -376,6 +549,7 @@ class DashboardNaturalBatangSeeder extends Seeder
         $items = ['Meja', 'Kursi', 'Lemari Arsip', 'Printer', 'Laptop', 'Papan Informasi', 'Tenda', 'Sound System'];
 
         for ($i = 1; $i <= $count; $i++) {
+            $group = $this->groupForIndex($i);
             $rows[] = [
                 'name' => $faker->randomElement($items).' '.$i,
                 'asal_barang' => $faker->randomElement(['APBDes', 'Swadaya', 'Bantuan Kabupaten', 'Donasi']),
@@ -388,8 +562,9 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'condition' => $faker->randomElement($conditions),
                 'tahun_anggaran' => $this->resolveBudgetYear(date: $tanggalPenerimaan),
                 'level' => $context['level'],
+                'group' => $group,
                 'area_id' => $context['area_id'],
-                'created_by' => $context['creator_id'],
+                'created_by' => $this->creatorIdForGroup($context, $group),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -416,6 +591,7 @@ class DashboardNaturalBatangSeeder extends Seeder
         $forcedThisMonth = max(2, (int) floor($count * 0.2));
 
         for ($i = 1; $i <= $count; $i++) {
+            $group = $this->groupForIndex($i);
             $isThisMonth = $i <= $forcedThisMonth;
             $activityDate = $isThisMonth
                 ? $faker->dateTimeBetween(now()->startOfMonth(), now()->endOfMonth())->format('Y-m-d')
@@ -429,8 +605,9 @@ class DashboardNaturalBatangSeeder extends Seeder
                 'uraian' => $faker->sentence(8),
                 'tahun_anggaran' => $this->resolveBudgetYear(date: $activityDate),
                 'level' => $context['level'],
+                'group' => $group,
                 'area_id' => $context['area_id'],
-                'created_by' => $context['creator_id'],
+                'created_by' => $this->creatorIdForGroup($context, $group),
                 'activity_date' => $activityDate,
                 'tempat_kegiatan' => $faker->randomElement(['Balai Desa', 'Aula Kecamatan', 'Posyandu', 'Rumah Kader']),
                 'status' => $faker->boolean(72) ? 'published' : 'draft',
@@ -441,6 +618,51 @@ class DashboardNaturalBatangSeeder extends Seeder
         }
 
         DB::table('activities')->insert($rows);
+    }
+
+    private function seedLaporanTahunanPkk(\Faker\Generator $faker, array $context): void
+    {
+        $year = $this->defaultBudgetYear();
+        $creatorId = $this->creatorIdForGroup($context, 'sekretaris-tpk');
+        $now = now();
+
+        $reportId = DB::table('laporan_tahunan_pkk_reports')->insertGetId([
+            'judul_laporan' => 'Laporan Tahunan TP PKK '.$context['area_name'],
+            'tahun_laporan' => $year,
+            'pendahuluan' => 'Gambaran umum pelaksanaan program PKK tahun berjalan.',
+            'keberhasilan' => 'Kegiatan administrasi dan pembinaan pokja berjalan rutin.',
+            'hambatan' => 'Koordinasi jadwal lintas kader masih perlu diperkuat.',
+            'kesimpulan' => 'Program PKK berjalan dan perlu tindak lanjut berkelanjutan.',
+            'penutup' => 'Laporan disusun sebagai contoh data awal.',
+            'disusun_oleh' => 'Sekretariat TP PKK '.$context['area_name'],
+            'jabatan_penanda_tangan' => 'Ketua TP PKK',
+            'nama_penanda_tangan' => $faker->name('female'),
+            'tahun_anggaran' => $year,
+            'level' => $context['level'],
+            'area_id' => $context['area_id'],
+            'created_by' => $creatorId,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        $entries = [];
+        foreach (['sekretariat', 'pokja-i', 'pokja-ii', 'pokja-iii', 'pokja-iv'] as $bidang) {
+            $entries[] = [
+                'report_id' => $reportId,
+                'bidang' => $bidang,
+                'activity_date' => now()->subDays(random_int(10, 120))->toDateString(),
+                'description' => 'Contoh uraian kegiatan '.$bidang.' '.$context['area_name'].'.',
+                'entry_source' => 'manual',
+                'tahun_anggaran' => $year,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $creatorId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ];
+        }
+
+        DB::table('laporan_tahunan_pkk_entries')->insert($entries);
     }
 
     private function seedDataWargaAndAnggota(\Faker\Generator $faker, array $context): void
@@ -855,6 +1077,112 @@ class DashboardNaturalBatangSeeder extends Seeder
         }
 
         DB::table('simulasi_penyuluhans')->insert($rows);
+    }
+
+    private function seedPokjaIiMinimal(array $context): void
+    {
+        $year = $this->defaultBudgetYear();
+        $creatorId = $this->creatorIdForGroup($context, 'pokja-ii');
+        $now = now();
+
+        DB::table('literasi_wargas')->insert([
+            'jumlah_tiga_buta' => 4,
+            'keterangan' => 'Contoh isian literasi warga.',
+            'tahun_anggaran' => $year,
+            'level' => $context['level'],
+            'area_id' => $context['area_id'],
+            'created_by' => $creatorId,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        DB::table('bkb_kegiatans')->insert([
+            'jumlah_kelompok' => 2,
+            'jumlah_ibu_peserta' => 24,
+            'jumlah_ape_set' => 3,
+            'jumlah_kelompok_simulasi' => 1,
+            'keterangan' => 'Contoh isian kegiatan BKB.',
+            'tahun_anggaran' => $year,
+            'level' => $context['level'],
+            'area_id' => $context['area_id'],
+            'created_by' => $creatorId,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
+
+        DB::table('tutor_khusus')->insert([
+            [
+                'jenis_tutor' => 'kf',
+                'jumlah_tutor' => 3,
+                'keterangan' => 'Contoh tutor keaksaraan fungsional.',
+                'tahun_anggaran' => $year,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $creatorId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'jenis_tutor' => 'paud',
+                'jumlah_tutor' => 5,
+                'keterangan' => 'Contoh tutor PAUD.',
+                'tahun_anggaran' => $year,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $creatorId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+        ]);
+
+        DB::table('pelatihan_kader_pokja_ii')->insert([
+            [
+                'kategori_pelatihan' => 'lp3',
+                'jumlah_kader' => 8,
+                'keterangan' => 'Contoh pelatihan LP3.',
+                'tahun_anggaran' => $year,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $creatorId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'kategori_pelatihan' => 'tpk_3_pkk',
+                'jumlah_kader' => 6,
+                'keterangan' => 'Contoh pelatihan TPK3PKK.',
+                'tahun_anggaran' => $year,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $creatorId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+            [
+                'kategori_pelatihan' => 'damas_pkk',
+                'jumlah_kader' => 5,
+                'keterangan' => 'Contoh pelatihan DAMAS PKK.',
+                'tahun_anggaran' => $year,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $creatorId,
+                'created_at' => $now,
+                'updated_at' => $now,
+            ],
+        ]);
+
+        DB::table('pra_koperasi_up2k')->insert([
+            'tingkat' => 'pemula',
+            'jumlah_kelompok' => 2,
+            'jumlah_peserta' => 18,
+            'keterangan' => 'Contoh isian pra koperasi UP2K.',
+            'tahun_anggaran' => $year,
+            'level' => $context['level'],
+            'area_id' => $context['area_id'],
+            'created_by' => $creatorId,
+            'created_at' => $now,
+            'updated_at' => $now,
+        ]);
     }
 
     /**

@@ -30,6 +30,7 @@ class ActivityRepository implements ActivityRepositoryInterface
             'description' => $data->description,
             'uraian' => $data->uraian,
             'level' => $data->level,
+            'group' => $data->group,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
             'tahun_anggaran' => $data->tahun_anggaran,
@@ -47,19 +48,14 @@ class ActivityRepository implements ActivityRepositoryInterface
         int $areaId,
         int $tahunAnggaran,
         int $perPage,
-        ?User $actor = null,
-        ?int $creatorIdFilter = null
+        ?User $actor = null
     ): LengthAwarePaginator {
         $query = Activity::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran);
 
-        if (is_int($creatorIdFilter)) {
-            $query->where('created_by', $creatorIdFilter);
-        }
-
-        $query = $this->applyRoleScopedCreatorFilter($query, $actor, $level);
+        $query = $this->applyActivityGroupFilter($query, $actor);
 
         return $query
             ->latest('activity_date')
@@ -72,19 +68,14 @@ class ActivityRepository implements ActivityRepositoryInterface
         string $level,
         int $areaId,
         int $tahunAnggaran,
-        ?User $actor = null,
-        ?int $creatorIdFilter = null
+        ?User $actor = null
     ): Collection {
         $query = Activity::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran);
 
-        if (is_int($creatorIdFilter)) {
-            $query->where('created_by', $creatorIdFilter);
-        }
-
-        $query = $this->applyRoleScopedCreatorFilter($query, $actor, $level);
+        $query = $this->applyActivityGroupFilter($query, $actor);
 
         return $query
             ->latest('activity_date')
@@ -158,13 +149,12 @@ class ActivityRepository implements ActivityRepositoryInterface
             $user->hasRoleForScope(ScopeLevel::DESA->value)
             && $areaLevel === ScopeLevel::DESA->value
         ) {
-            return $this->applyRoleScopedCreatorFilter(
+            return $this->applyActivityGroupFilter(
                 $query
                     ->where('level', ScopeLevel::DESA->value)
                     ->where('area_id', $areaId)
                     ->where('tahun_anggaran', $tahunAnggaran),
-                $user,
-                ScopeLevel::DESA->value
+                $user
             );
         }
 
@@ -176,12 +166,24 @@ class ActivityRepository implements ActivityRepositoryInterface
                 ->getDesaByKecamatan($areaId)
                 ->pluck('id');
 
-            return $query->where(function (Builder $scoped) use ($areaId, $desaIds, $tahunAnggaran) {
-                $scoped->where(function (Builder $kecamatanScope) use ($areaId, $tahunAnggaran) {
+            $allowedGroups = $this->activityScopeService->requiresActivityGroupFilter($user)
+                ? $this->activityScopeService->resolveActivityGroupsForUser($user)
+                : [];
+
+            if ($this->activityScopeService->requiresActivityGroupFilter($user) && $allowedGroups === []) {
+                return $query->whereRaw('1 = 0');
+            }
+
+            return $query->where(function (Builder $scoped) use ($areaId, $desaIds, $tahunAnggaran, $allowedGroups) {
+                $scoped->where(function (Builder $kecamatanScope) use ($areaId, $tahunAnggaran, $allowedGroups) {
                     $kecamatanScope
                         ->where('level', ScopeLevel::KECAMATAN->value)
                         ->where('area_id', $areaId)
                         ->where('tahun_anggaran', $tahunAnggaran);
+
+                    if ($allowedGroups !== []) {
+                        $kecamatanScope->whereIn('group', $allowedGroups);
+                    }
                 })->orWhere(function (Builder $desaScope) use ($desaIds, $tahunAnggaran) {
                     $desaScope
                         ->where('level', ScopeLevel::DESA->value)
@@ -224,23 +226,21 @@ class ActivityRepository implements ActivityRepositoryInterface
         $activity->delete();
     }
 
-    private function applyRoleScopedCreatorFilter(Builder $query, ?User $actor, string $level): Builder
+    private function applyActivityGroupFilter(Builder $query, ?User $actor): Builder
     {
         if (! $actor instanceof User) {
             return $query;
         }
 
-        if (! $this->activityScopeService->requiresRoleScopedActivityFilter($actor, $level)) {
+        if (! $this->activityScopeService->requiresActivityGroupFilter($actor)) {
             return $query;
         }
 
-        $allowedRoles = $this->activityScopeService->resolveRoleScopedActivityRoles($actor, $level);
-        if ($allowedRoles === []) {
+        $allowedGroups = $this->activityScopeService->resolveActivityGroupsForUser($actor);
+        if ($allowedGroups === []) {
             return $query->whereRaw('1 = 0');
         }
 
-        return $query->whereHas('creator.roles', static function (Builder $rolesQuery) use ($allowedRoles): void {
-            $rolesQuery->whereIn('name', $allowedRoles);
-        });
+        return $query->whereIn('group', $allowedGroups);
     }
 }

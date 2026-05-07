@@ -18,16 +18,14 @@ interface ActivityRepositoryInterface
         int $areaId,
         int $tahunAnggaran,
         int $perPage,
-        ?User $actor = null,
-        ?int $creatorIdFilter = null
+        ?User $actor = null
     ): LengthAwarePaginator;
 
     public function listByLevelAndArea(
         string $level,
         int $areaId,
         int $tahunAnggaran,
-        ?User $actor = null,
-        ?int $creatorIdFilter = null
+        ?User $actor = null
     ): Collection;
 
     public function paginateDesaActivitiesByKecamatan(

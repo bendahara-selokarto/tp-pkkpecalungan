@@ -5,6 +5,7 @@ namespace App\Domains\Wilayah\Activities\Services;
 use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
+use App\Domains\Wilayah\Services\RoleBookGroupContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -12,21 +13,19 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class ActivityScopeService
 {
     /**
-     * @var array<string, list<string>>
+     * @var array<string, string>
      */
-    private const ROLE_SCOPED_ACTIVITY_ROLES_BY_LEVEL = [
-        ScopeLevel::DESA->value => [
-            'desa-pokja-i',
-            'desa-pokja-ii',
-            'desa-pokja-iii',
-            'desa-pokja-iv',
-        ],
-        ScopeLevel::KECAMATAN->value => [
-            'kecamatan-pokja-i',
-            'kecamatan-pokja-ii',
-            'kecamatan-pokja-iii',
-            'kecamatan-pokja-iv',
-        ],
+    private const ROLE_TO_GROUP_MAP = [
+        'desa-pokja-i' => 'pokja-i',
+        'desa-pokja-ii' => 'pokja-ii',
+        'desa-pokja-iii' => 'pokja-iii',
+        'desa-pokja-iv' => 'pokja-iv',
+        'kecamatan-pokja-i' => 'pokja-i',
+        'kecamatan-pokja-ii' => 'pokja-ii',
+        'kecamatan-pokja-iii' => 'pokja-iii',
+        'kecamatan-pokja-iv' => 'pokja-iv',
+        'desa-sekretaris' => 'sekretaris-tpk',
+        'kecamatan-sekretaris' => 'sekretaris-tpk',
     ];
 
     /**
@@ -38,7 +37,8 @@ class ActivityScopeService
 
     public function __construct(
         private readonly UserAreaContextService $userAreaContextService,
-        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
+        private readonly RoleBookGroupContextService $roleBookGroupContextService
     ) {}
 
     public function canAccessLevel(User $user, string $level): bool
@@ -67,66 +67,55 @@ class ActivityScopeService
     }
 
     /**
+     * Resolve activity groups (pokja/group) that the user can access based on their roles.
+     *
      * @return list<string>
      */
-    public function resolveRoleScopedActivityRoles(User $user, string $level): array
+    public function resolveActivityGroupsForUser(User $user): array
     {
-        $allowedRoles = self::ROLE_SCOPED_ACTIVITY_ROLES_BY_LEVEL[$level] ?? [];
-        if ($allowedRoles === []) {
-            return [];
-        }
+        $groups = $this->roleBookGroupContextService->resolveRoleGroups($user, self::ROLE_TO_GROUP_MAP);
 
-        $userRoles = $user->getRoleNames()->all();
-
-        return array_values(array_intersect($allowedRoles, $userRoles));
+        return $this->roleBookGroupContextService->resolveContextualGroups($user, 'activities', $groups);
     }
 
-    public function requiresRoleScopedActivityFilter(User $user, string $level): bool
+    public function requireActivityGroupForUser(User $user): string
+    {
+        $groups = $this->resolveActivityGroupsForUser($user);
+        if ($groups === []) {
+            throw new HttpException(403, 'Pengguna tidak memiliki jabatan buku kegiatan aktif.');
+        }
+
+        return $groups[0];
+    }
+
+    /**
+     * Check if user needs activity group filtering based on their roles.
+     * Only role-scoped users (sekretaris and pokja-i through pokja-iv) need filtering;
+     * super-admin can see all groups.
+     */
+    public function requiresActivityGroupFilter(User $user): bool
     {
         if ($user->hasAnyRole(self::ROLE_SCOPED_ACTIVITY_BYPASS_ROLES)) {
             return false;
         }
 
-        return $this->resolveRoleScopedActivityRoles($user, $level) !== [];
+        return true;
     }
 
-    public function resolveCreatorIdFilterForList(User $user, string $level): ?int
+    public function canAccessActivityGroup(User $user, Activity $activity): bool
     {
-        if (
-            $level === ScopeLevel::KECAMATAN->value
-            && $user->hasRole('kecamatan-sekretaris')
-        ) {
-            return $user->id;
-        }
-
-        return null;
-    }
-
-    public function canAccessRoleScopedActivity(User $user, Activity $activity, string $level): bool
-    {
-        if (! $this->requiresRoleScopedActivityFilter($user, $level)) {
+        if (! $this->requiresActivityGroupFilter($user)) {
             return true;
         }
 
-        $allowedRoles = $this->resolveRoleScopedActivityRoles($user, $level);
-        if ($allowedRoles === []) {
-            return false;
-        }
+        $allowedGroups = $this->resolveActivityGroupsForUser($user);
 
-        $activity->loadMissing('creator.roles');
-        $creator = $activity->creator;
-        if (! $creator) {
-            return false;
-        }
-
-        $creatorRoles = $creator->getRoleNames()->all();
-
-        return array_intersect($allowedRoles, $creatorRoles) !== [];
+        return in_array((string) $activity->group, $allowedGroups, true);
     }
 
-    public function authorizeRoleScopedActivity(User $user, Activity $activity, string $level): Activity
+    public function authorizeActivityGroup(User $user, Activity $activity): Activity
     {
-        if (! $this->canAccessRoleScopedActivity($user, $activity, $level)) {
+        if (! $this->canAccessActivityGroup($user, $activity)) {
             throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
         }
 
@@ -157,7 +146,8 @@ class ActivityScopeService
                 return false;
             }
 
-            return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::DESA->value, (int) $user->area_id, $tahunAnggaran);
+            return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::DESA->value, (int) $user->area_id, $tahunAnggaran)
+                && $this->canAccessActivityGroup($user, $activity);
         }
 
         if ($user->hasRoleForScope(ScopeLevel::KECAMATAN->value)) {
@@ -166,7 +156,8 @@ class ActivityScopeService
             }
 
             if ($activity->level === ScopeLevel::KECAMATAN->value) {
-                return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id, $tahunAnggaran);
+                return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id, $tahunAnggaran)
+                    && $this->canAccessActivityGroup($user, $activity);
             }
 
             if ($activity->level === ScopeLevel::DESA->value) {
@@ -186,7 +177,8 @@ class ActivityScopeService
                 return false;
             }
 
-            return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::DESA->value, (int) $user->area_id, $tahunAnggaran);
+            return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::DESA->value, (int) $user->area_id, $tahunAnggaran)
+                && $this->canAccessActivityGroup($user, $activity);
         }
 
         if ($user->hasRoleForScope(ScopeLevel::KECAMATAN->value)) {
@@ -194,7 +186,8 @@ class ActivityScopeService
                 return false;
             }
 
-            return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id, $tahunAnggaran);
+            return $this->isSameLevelAreaAndBudgetYear($activity, ScopeLevel::KECAMATAN->value, (int) $user->area_id, $tahunAnggaran)
+                && $this->canAccessActivityGroup($user, $activity);
         }
 
         return false;

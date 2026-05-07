@@ -22,6 +22,17 @@ class BuildRoleAwareDashboardBlocksUseCase
         'pokja-iv',
     ];
 
+    /**
+     * @var list<string>
+     */
+    private const DESA_OWN_ACTIVITY_GROUPS = [
+        'bendahara-tpk',
+        'pokja-i',
+        'pokja-ii',
+        'pokja-iii',
+        'pokja-iv',
+    ];
+
     private const SECTION_SEKRETARIS_1 = 'sekretaris-section-1';
 
     private const SECTION_SEKRETARIS_2 = 'sekretaris-section-2';
@@ -35,6 +46,7 @@ class BuildRoleAwareDashboardBlocksUseCase
      */
     private const GROUP_LABELS = [
         'sekretaris-tpk' => 'Sekretaris TP-PKK',
+        'bendahara-tpk' => 'Bendahara TP-PKK',
         'pokja-i' => 'Pokja I',
         'pokja-ii' => 'Pokja II',
         'pokja-iii' => 'Pokja III',
@@ -87,15 +99,15 @@ class BuildRoleAwareDashboardBlocksUseCase
             );
         }
 
-        $desaPokjaOwnGroup = $this->resolveDesaPokjaOwnGroup($effectiveScope, $groupModes);
-        if (is_string($desaPokjaOwnGroup)) {
+        $desaOwnActivityGroup = $this->resolveDesaOwnActivityGroup($effectiveScope, $groupModes);
+        if (is_string($desaOwnActivityGroup)) {
             return [
                 $this->buildGroupActivityBlock(
-                    $desaPokjaOwnGroup,
+                    $desaOwnActivityGroup,
                     $effectiveScope,
-                    (string) ($groupModes[$desaPokjaOwnGroup] ?? RoleMenuVisibilityService::MODE_READ_ONLY),
+                    (string) ($groupModes[$desaOwnActivityGroup] ?? RoleMenuVisibilityService::MODE_READ_ONLY),
                     $activityData,
-                    $this->resolveBookSummaryByGroup($desaPokjaOwnGroup, $documentItems, $dashboardContext),
+                    $this->resolveBookSummaryByGroup($desaOwnActivityGroup, $documentItems, $dashboardContext),
                     $dashboardContext,
                     null
                 ),
@@ -292,7 +304,7 @@ class BuildRoleAwareDashboardBlocksUseCase
     /**
      * @param  array<string, string>  $groupModes
      */
-    private function resolveDesaPokjaOwnGroup(string $effectiveScope, array $groupModes): ?string
+    private function resolveDesaOwnActivityGroup(string $effectiveScope, array $groupModes): ?string
     {
         if ($effectiveScope !== ScopeLevel::DESA->value) {
             return null;
@@ -302,16 +314,16 @@ class BuildRoleAwareDashboardBlocksUseCase
             return null;
         }
 
-        $availablePokjaGroups = collect(self::POKJA_GROUPS)
+        $availableGroups = collect(self::DESA_OWN_ACTIVITY_GROUPS)
             ->filter(static fn (string $group): bool => array_key_exists($group, $groupModes))
             ->values()
             ->all();
 
-        if (count($availablePokjaGroups) !== 1) {
+        if (count($availableGroups) !== 1) {
             return null;
         }
 
-        return (string) $availablePokjaGroups[0];
+        return (string) $availableGroups[0];
     }
 
     /**

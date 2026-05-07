@@ -18,19 +18,19 @@ class ListScopedPrestasiLombaUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        $actor = $this->prestasiLombaScopeService->requireAuthenticatedUser();
         $areaId = $this->prestasiLombaScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
-        $creatorIdFilter = $this->prestasiLombaScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->prestasiLombaRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $creatorIdFilter);
+        return $this->prestasiLombaRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $actor);
     }
 
     public function executeAll(string $level): Collection
     {
+        $actor = $this->prestasiLombaScopeService->requireAuthenticatedUser();
         $areaId = $this->prestasiLombaScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
-        $creatorIdFilter = $this->prestasiLombaScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->prestasiLombaRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $creatorIdFilter);
+        return $this->prestasiLombaRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $actor);
     }
 }

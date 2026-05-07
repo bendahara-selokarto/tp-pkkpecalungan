@@ -17,10 +17,13 @@ class GetScopedProgramPrioritasUseCase
 
     public function execute(int $id, string $level): ProgramPrioritas
     {
+        $actor = $this->programPrioritasScopeService->requireAuthenticatedUser();
         $programPrioritas = $this->programPrioritasRepository->find($id);
         $areaId = $this->programPrioritasScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
-        return $this->programPrioritasScopeService->authorizeSameLevelAreaAndBudgetYear($programPrioritas, $level, $areaId, $tahunAnggaran);
+        $this->programPrioritasScopeService->authorizeSameLevelAreaAndBudgetYear($programPrioritas, $level, $areaId, $tahunAnggaran);
+
+        return $this->programPrioritasScopeService->authorizeProgramPrioritasGroup($actor, $programPrioritas);
     }
 }

@@ -18,10 +18,13 @@ class GetScopedKaderKhususUseCase
 
     public function execute(int $id, string $level): KaderKhusus
     {
+        $actor = $this->kaderKhususScopeService->requireAuthenticatedUser();
         $kaderKhusus = $this->kaderKhususRepository->find($id);
         $areaId = $this->kaderKhususScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
-        return $this->kaderKhususScopeService->authorizeSameLevelAreaAndBudgetYear($kaderKhusus, $level, $areaId, $tahunAnggaran);
+        $kaderKhusus = $this->kaderKhususScopeService->authorizeSameLevelAreaAndBudgetYear($kaderKhusus, $level, $areaId, $tahunAnggaran);
+
+        return $this->kaderKhususScopeService->authorizeKaderKhususGroup($actor, $kaderKhusus);
     }
 }

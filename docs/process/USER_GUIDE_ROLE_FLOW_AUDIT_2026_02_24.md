@@ -27,6 +27,11 @@
 - `Monitoring Kecamatan`: khusus scope kecamatan (`/kecamatan/desa-activities`).
 - `Referensi`: tautan pedoman, mode baca.
 
+Catatan domain 2026-05-02:
+
+- Pada tiap level wilayah, buku kegiatan mengikuti jabatan/unit kerja. Buku kegiatan Sekretaris TP-PKK, Pokja I, Pokja II, Pokja III, dan Pokja IV adalah buku terpisah walaupun berada pada `level` dan `area_id` yang sama.
+- Contoh: buku kegiatan Pokja I Kecamatan tidak boleh diperlakukan sebagai buku yang sama dengan buku kegiatan Sekretaris Kecamatan atau Pokja II Kecamatan.
+
 ## Matrix Role ke Mode Akses (Hasil Audit)
 
 | Role | Scope | Sekretaris TP-PKK | Pokja I-IV | Monitoring Kecamatan |
@@ -55,7 +60,7 @@ Catatan:
 - Untuk sekretaris, jelaskan dua mode kerja:
   - mengelola modul sekretaris (bisa ubah data),
   - memantau modul pokja (lihat data, tanpa ubah).
-- Untuk pokja, fokus pada alur input, ubah, dan cetak laporan di modul pokja masing-masing.
+- Untuk pokja, fokus pada alur input, ubah, dan cetak laporan di modul pokja masing-masing, termasuk pemisahan buku kegiatan dari jabatan/unit kerja lain.
 - Untuk kecamatan sekretaris, tambahkan alur monitoring kegiatan desa.
 - Untuk super-admin, fokus pada kelola user dan batasan role.
 
@@ -63,4 +68,3 @@ Catatan:
 
 - Struktur user guide pada TODO `U4` dinyatakan valid dan dapat dipakai sebagai skeleton final tahap awal.
 - Penulisan konten fase berikutnya harus mengikuti matrix akses di atas agar tidak terjadi mismatch panduan vs sistem.
-

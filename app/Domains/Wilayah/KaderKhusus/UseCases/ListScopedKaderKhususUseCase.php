@@ -19,20 +19,21 @@ class ListScopedKaderKhususUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        $actor = $this->kaderKhususScopeService->requireAuthenticatedUser();
         $areaId = $this->kaderKhususScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
         $creatorIdFilter = $this->kaderKhususScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->kaderKhususRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $creatorIdFilter);
+        return $this->kaderKhususRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $actor, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        $actor = $this->kaderKhususScopeService->requireAuthenticatedUser();
         $areaId = $this->kaderKhususScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
         $creatorIdFilter = $this->kaderKhususScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->kaderKhususRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $creatorIdFilter);
+        return $this->kaderKhususRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $actor, $creatorIdFilter);
     }
 }
-

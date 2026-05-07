@@ -25,6 +25,7 @@ class DesaBantuanTest extends TestCase
 
         Role::firstOrCreate(['name' => 'desa-sekretaris']);
         Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -42,6 +43,56 @@ class DesaBantuanTest extends TestCase
             'level' => 'desa',
             'parent_id' => $this->kecamatan->id,
         ]);
+    }
+
+    #[Test]
+    public function buku_bantuan_desa_terisolasi_per_jabatan_pada_area_yang_sama(): void
+    {
+        $sekretaris = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $sekretaris->assignRole('desa-sekretaris');
+
+        $pokjaI = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+        ]);
+        $pokjaI->assignRole('desa-pokja-i');
+
+        $sekretarisBantuan = Bantuan::create([
+            'name' => 'Bantuan Sekretaris',
+            'category' => 'uang',
+            'description' => 'Milik sekretaris',
+            'source' => 'pusat',
+            'amount' => 1000000,
+            'received_date' => '2026-02-01',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $sekretaris->id,
+        ]);
+
+        Bantuan::create([
+            'name' => 'Bantuan Pokja I',
+            'category' => 'barang',
+            'description' => 'Milik pokja',
+            'source' => 'provinsi',
+            'amount' => 2000000,
+            'received_date' => '2026-02-02',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $pokjaI->id,
+        ]);
+
+        $this->actingAs($pokjaI)->get('/desa/bantuans')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('bantuans.total', 1)
+                ->where('bantuans.data.0.lokasi_penerima', 'Bantuan Pokja I'));
+
+        $this->actingAs($pokjaI)
+            ->get(route('desa.bantuans.show', $sekretarisBantuan->id))
+            ->assertStatus(403);
     }
 
     #[Test]

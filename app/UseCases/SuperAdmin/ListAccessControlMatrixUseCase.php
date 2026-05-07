@@ -274,11 +274,14 @@ class ListAccessControlMatrixUseCase
     {
         return match ($group) {
             'sekretaris-tpk' => 'Sekretaris TP-PKK',
+            'penunjang-buku-wajib' => 'Penunjang Buku Wajib',
+            'bendahara-tpk' => 'Bendahara TP-PKK',
             'pokja-i' => 'Pokja I',
             'pokja-ii' => 'Pokja II',
             'pokja-iii' => 'Pokja III',
             'pokja-iv' => 'Pokja IV',
             'monitoring' => 'Monitoring',
+            'belum-ada-pemilik' => 'Belum Ada Pemilik',
             default => ucfirst(str_replace('-', ' ', $group)),
         };
     }

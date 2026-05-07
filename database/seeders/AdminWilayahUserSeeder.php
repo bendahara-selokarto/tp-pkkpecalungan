@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Support\RoleScopeMatrix;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -25,27 +26,70 @@ class AdminWilayahUserSeeder extends Seeder
             ->orderBy('id')
             ->get();
 
+        foreach (RoleScopeMatrix::assignableRolesForScope('kecamatan') as $role) {
+            $this->upsertRoleUserForArea(
+                role: $role,
+                scope: 'kecamatan',
+                areaId: (int) $kecamatanArea->id,
+                areaName: (string) $kecamatanArea->name,
+            );
+        }
+
         $this->upsertUserWithRole(
             name: 'Sekretaris Kecamatan',
             email: 'sekretaris.kecamatan@gmail.com',
             plainPassword: 'password123',
             scope: 'kecamatan',
-            areaId: $kecamatanArea->id,
+            areaId: (int) $kecamatanArea->id,
             role: 'kecamatan-sekretaris',
         );
 
         foreach ($desaAreas as $desaArea) {
-            $desaSlug = str($desaArea->name)->lower()->replace(' ', '.')->value();
+            foreach (RoleScopeMatrix::assignableRolesForScope('desa') as $role) {
+                $this->upsertRoleUserForArea(
+                    role: $role,
+                    scope: 'desa',
+                    areaId: (int) $desaArea->id,
+                    areaName: (string) $desaArea->name,
+                );
+            }
 
+            $desaSlug = str($desaArea->name)->lower()->replace(' ', '.')->value();
             $this->upsertUserWithRole(
                 name: 'Sekretaris Desa '.$desaArea->name,
                 email: 'sekretaris.desa.'.$desaSlug.'@gmail.com',
                 plainPassword: 'password123',
                 scope: 'desa',
-                areaId: $desaArea->id,
+                areaId: (int) $desaArea->id,
                 role: 'desa-sekretaris',
             );
         }
+    }
+
+    private function upsertRoleUserForArea(string $role, string $scope, int $areaId, string $areaName): void
+    {
+        $roleLabel = str($role)
+            ->replace('-', ' ')
+            ->title()
+            ->value();
+        $areaSlug = str($areaName)
+            ->lower()
+            ->replaceMatches('/[^a-z0-9]+/', '.')
+            ->trim('.')
+            ->value();
+        $roleSlug = str($role)
+            ->lower()
+            ->replace('-', '.')
+            ->value();
+
+        $this->upsertUserWithRole(
+            name: $roleLabel.' '.$areaName,
+            email: $roleSlug.'.'.($areaSlug !== '' ? $areaSlug : $areaId).'@gmail.com',
+            plainPassword: 'password123',
+            scope: $scope,
+            areaId: $areaId,
+            role: $role,
+        );
     }
 
     private function upsertUserWithRole(
@@ -69,6 +113,7 @@ class AdminWilayahUserSeeder extends Seeder
         $user->forceFill([
             'scope' => $scope,
             'area_id' => $areaId,
+            'active_budget_year' => (int) now()->format('Y'),
         ])->save();
 
         $user->syncRoles([$role]);

@@ -13,6 +13,7 @@ class BantuanData
         public string $tanggal,
         public int $tahun_anggaran,
         public string $level,
+        public string $group,
         public int $area_id,
         public int $created_by,
     ) {}
@@ -28,6 +29,7 @@ class BantuanData
             $data['tanggal'],
             (int) $data['tahun_anggaran'],
             $data['level'],
+            $data['group'],
             $data['area_id'],
             $data['created_by'],
         );

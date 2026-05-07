@@ -18,6 +18,7 @@ class UpdateBantuanAction
             ...$payload,
             'tahun_anggaran' => $bantuan->tahun_anggaran,
             'level' => $bantuan->level,
+            'group' => $bantuan->group,
             'area_id' => $bantuan->area_id,
             'created_by' => $bantuan->created_by,
         ]);

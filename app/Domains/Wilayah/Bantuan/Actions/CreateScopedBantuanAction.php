@@ -18,12 +18,15 @@ class CreateScopedBantuanAction
 
     public function execute(array $payload, string $level): Bantuan
     {
+        $user = $this->bantuanScopeService->requireAuthenticatedUser();
+
         $data = BantuanData::fromArray([
             ...$payload,
             'tahun_anggaran' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'level' => $level,
+            'group' => $this->bantuanScopeService->requireBantuanGroupForUser($user),
             'area_id' => $this->bantuanScopeService->requireUserAreaId(),
-            'created_by' => auth()->id(),
+            'created_by' => $user->id,
         ]);
 
         return $this->bantuanRepository->store($data);

@@ -19,20 +19,19 @@ class ListScopedInventarisUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        $actor = $this->inventarisScopeService->requireAuthenticatedUser();
         $areaId = $this->inventarisScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
-        $creatorIdFilter = $this->inventarisScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->inventarisRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $creatorIdFilter);
+        return $this->inventarisRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $actor);
     }
 
     public function executeAll(string $level): Collection
     {
+        $actor = $this->inventarisScopeService->requireAuthenticatedUser();
         $areaId = $this->inventarisScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
-        $creatorIdFilter = $this->inventarisScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->inventarisRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $creatorIdFilter);
+        return $this->inventarisRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $actor);
     }
 }
-

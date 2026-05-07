@@ -18,19 +18,19 @@ class ListScopedBantuanUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        $actor = $this->bantuanScopeService->requireAuthenticatedUser();
         $areaId = $this->bantuanScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
-        $creatorIdFilter = $this->bantuanScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bantuanRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $creatorIdFilter);
+        return $this->bantuanRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $actor);
     }
 
     public function executeAll(string $level): Collection
     {
+        $actor = $this->bantuanScopeService->requireAuthenticatedUser();
         $areaId = $this->bantuanScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
-        $creatorIdFilter = $this->bantuanScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->bantuanRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $creatorIdFilter);
+        return $this->bantuanRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $actor);
     }
 }

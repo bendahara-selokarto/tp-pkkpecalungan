@@ -25,6 +25,7 @@ class UpdatePrestasiLombaAction
             'keterangan' => $payload['keterangan'] ?? null,
             'tahun_anggaran' => $prestasiLomba->tahun_anggaran,
             'level' => $prestasiLomba->level,
+            'group' => $prestasiLomba->group,
             'area_id' => $prestasiLomba->area_id,
             'created_by' => $prestasiLomba->created_by,
         ]);

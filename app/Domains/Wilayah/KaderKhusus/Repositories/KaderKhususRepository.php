@@ -4,11 +4,19 @@ namespace App\Domains\Wilayah\KaderKhusus\Repositories;
 
 use App\Domains\Wilayah\KaderKhusus\DTOs\KaderKhususData;
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
+use App\Domains\Wilayah\KaderKhusus\Services\KaderKhususScopeService;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class KaderKhususRepository implements KaderKhususRepositoryInterface
 {
+    public function __construct(
+        private readonly KaderKhususScopeService $kaderKhususScopeService
+    ) {
+    }
+
     public function store(KaderKhususData $data): KaderKhusus
     {
         return KaderKhusus::create([
@@ -22,33 +30,58 @@ class KaderKhususRepository implements KaderKhususRepositoryInterface
             'jenis_kader_khusus' => $data->jenis_kader_khusus,
             'keterangan' => $data->keterangan,
             'level' => $data->level,
+            'group' => $data->group,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
             'tahun_anggaran' => $data->tahun_anggaran,
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?User $actor = null, ?int $creatorIdFilter = null): LengthAwarePaginator
     {
-        return KaderKhusus::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
-            ->where('tahun_anggaran', $tahunAnggaran)
-            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
+        return $this->applyKaderKhususGroupFilter(
+            KaderKhusus::query()
+                ->where('level', $level)
+                ->where('area_id', $areaId)
+                ->where('tahun_anggaran', $tahunAnggaran),
+            $actor
+        )
+            ->when(is_int($creatorIdFilter), static fn (Builder $query) => $query->where('created_by', $creatorIdFilter))
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?User $actor = null, ?int $creatorIdFilter = null): Collection
     {
-        return KaderKhusus::query()
-            ->where('level', $level)
-            ->where('area_id', $areaId)
-            ->where('tahun_anggaran', $tahunAnggaran)
-            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
+        return $this->applyKaderKhususGroupFilter(
+            KaderKhusus::query()
+                ->where('level', $level)
+                ->where('area_id', $areaId)
+                ->where('tahun_anggaran', $tahunAnggaran),
+            $actor
+        )
+            ->when(is_int($creatorIdFilter), static fn (Builder $query) => $query->where('created_by', $creatorIdFilter))
             ->latest('id')
             ->get();
+    }
+
+    private function applyKaderKhususGroupFilter(Builder $query, ?User $actor): Builder
+    {
+        if (! $actor instanceof User) {
+            return $query;
+        }
+
+        if (! $this->kaderKhususScopeService->requiresKaderKhususGroupFilter($actor)) {
+            return $query;
+        }
+
+        $allowedGroups = $this->kaderKhususScopeService->resolveKaderKhususGroupsForUser($actor);
+        if ($allowedGroups === []) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->whereIn('group', $allowedGroups);
     }
 
     public function find(int $id): KaderKhusus
@@ -79,6 +112,5 @@ class KaderKhususRepository implements KaderKhususRepositoryInterface
         $kaderKhusus->delete();
     }
 }
-
 
 

@@ -16,10 +16,17 @@ interface ProgramPrioritasRepositoryInterface
         int $areaId,
         int $tahunAnggaran,
         int $perPage,
+        array $allowedGroups,
         ?int $creatorIdFilter = null
     ): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection;
+    public function getByLevelAndArea(
+        string $level,
+        int $areaId,
+        int $tahunAnggaran,
+        array $allowedGroups,
+        ?int $creatorIdFilter = null
+    ): Collection;
 
     public function find(int $id): ProgramPrioritas;
 

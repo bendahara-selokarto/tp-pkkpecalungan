@@ -29,7 +29,7 @@ class DesaActivityTest extends TestCase
 
         // Buat role desa
         Role::firstOrCreate(['name' => 'desa-sekretaris']);
-        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-bendahara']);
         Role::firstOrCreate(['name' => 'desa-pokja-i']);
         Role::firstOrCreate(['name' => 'desa-pokja-ii']);
         Role::firstOrCreate(['name' => 'desa-pokja-iii']);
@@ -82,8 +82,36 @@ class DesaActivityTest extends TestCase
             'tanda_tangan' => 'Siti Aminah',
             'description' => 'Rapat tahunan',
             'area_id' => $this->desa->id,
+            'group' => 'sekretaris-tpk',
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
+    }
+
+    #[Test]
+    public function bendahara_desa_tidak_memiliki_akses_buku_kegiatan(): void
+    {
+        $user = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('desa-bendahara');
+
+        $this->actingAs($user)->post('/desa/activities', [
+            'title' => 'Kegiatan Bendahara Desa',
+            'nama_petugas' => 'Bendahara Desa',
+            'jabatan_petugas' => 'Bendahara',
+            'tempat_kegiatan' => 'Balai Desa',
+            'uraian' => 'Pembukuan kegiatan bendahara',
+            'tanda_tangan' => 'Bendahara Desa',
+            'activity_date' => '2026-02-12',
+        ])->assertForbidden();
+
+        $this->assertDatabaseMissing('activities', [
+            'title' => 'Kegiatan Bendahara Desa',
+        ]);
+
+        $this->actingAs($user)->get('/desa/activities')->assertForbidden();
     }
 
     #[Test]
@@ -477,6 +505,61 @@ class DesaActivityTest extends TestCase
     }
 
     #[Test]
+    public function akun_multi_role_mengikuti_konteks_book_group_yang_dibuka(): void
+    {
+        $multiRoleUser = User::factory()->create([
+            'area_id' => $this->desa->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $multiRoleUser->assignRole('desa-pokja-i');
+        $multiRoleUser->assignRole('desa-pokja-ii');
+
+        Activity::create([
+            'title' => 'Kegiatan Multi Role Pokja I',
+            'level' => 'desa',
+            'group' => 'pokja-i',
+            'area_id' => $this->desa->id,
+            'created_by' => $multiRoleUser->id,
+            'activity_date' => '2026-03-01',
+            'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Multi Role Pokja II',
+            'level' => 'desa',
+            'group' => 'pokja-ii',
+            'area_id' => $this->desa->id,
+            'created_by' => $multiRoleUser->id,
+            'activity_date' => '2026-03-02',
+            'status' => 'draft',
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $response = $this->actingAs($multiRoleUser)->get('/desa/activities?book_group=pokja-i');
+
+        $response->assertOk();
+        $response->assertSee('Kegiatan Multi Role Pokja I');
+        $response->assertDontSee('Kegiatan Multi Role Pokja II');
+
+        $this->post('/desa/activities', [
+            'title' => 'Kegiatan Baru Konteks Pokja I',
+            'nama_petugas' => 'Petugas Pokja I',
+            'jabatan_petugas' => 'Pokja I',
+            'tempat_kegiatan' => 'Balai Desa',
+            'uraian' => 'Kegiatan sesuai konteks menu',
+            'tanda_tangan' => 'Petugas Pokja I',
+            'activity_date' => '2026-03-03',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('activities', [
+            'title' => 'Kegiatan Baru Konteks Pokja I',
+            'group' => 'pokja-i',
+        ]);
+    }
+
+    #[Test]
     public function pokja_i_tidak_boleh_melihat_detail_kegiatan_pokja_lain_meski_satu_desa(): void
     {
         $pokjaIUser = User::factory()->create([
@@ -506,7 +589,7 @@ class DesaActivityTest extends TestCase
     }
 
     #[Test]
-    public function sekretaris_desa_tetap_melihat_semua_kegiatan_pada_area_desa_yang_sama(): void
+    public function sekretaris_desa_hanya_melihat_buku_kegiatan_sekretariat_pada_area_desa_yang_sama(): void
     {
         $sekretarisUser = User::factory()->create([
             'area_id' => $this->desa->id,
@@ -525,6 +608,15 @@ class DesaActivityTest extends TestCase
             'scope' => 'desa',
         ]);
         $pokjaIIUser->assignRole('desa-pokja-ii');
+
+        Activity::create([
+            'title' => 'Kegiatan Sekretariat',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $sekretarisUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
 
         Activity::create([
             'title' => 'Kegiatan Pokja I',
@@ -547,7 +639,8 @@ class DesaActivityTest extends TestCase
         $response = $this->actingAs($sekretarisUser)->get('/desa/activities');
 
         $response->assertOk();
-        $response->assertSee('Kegiatan Pokja I');
-        $response->assertSee('Kegiatan Pokja II');
+        $response->assertSee('Kegiatan Sekretariat');
+        $response->assertDontSee('Kegiatan Pokja I');
+        $response->assertDontSee('Kegiatan Pokja II');
     }
 }

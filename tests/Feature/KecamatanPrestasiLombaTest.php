@@ -26,6 +26,8 @@ class KecamatanPrestasiLombaTest extends TestCase
         parent::setUp();
 
         Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-bendahara']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-i']);
         Role::firstOrCreate(['name' => 'desa-sekretaris']);
 
         $this->kecamatanA = Area::create([
@@ -232,5 +234,56 @@ class KecamatanPrestasiLombaTest extends TestCase
         $response = $this->actingAs($adminDesa)->get('/kecamatan/prestasi-lomba');
 
         $response->assertStatus(403);
+    }
+
+    #[Test]
+    public function buku_prestasi_kecamatan_dipisahkan_per_jabatan_pada_area_yang_sama(): void
+    {
+        $bendahara = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $bendahara->assignRole('kecamatan-bendahara');
+
+        $pokjaI = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $pokjaI->assignRole('kecamatan-pokja-i');
+
+        PrestasiLomba::create([
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Prestasi Bendahara Kecamatan',
+            'lokasi' => 'Pendopo Kecamatan',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $bendahara->id,
+        ]);
+
+        PrestasiLomba::create([
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Prestasi Pokja I Kecamatan',
+            'lokasi' => 'Pendopo Kecamatan',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $pokjaI->id,
+        ]);
+
+        $this->actingAs($bendahara)->get('/kecamatan/prestasi-lomba')->assertForbidden();
+
+        $pokjaResponse = $this->actingAs($pokjaI)->get('/kecamatan/prestasi-lomba');
+        $pokjaResponse->assertOk();
+        $pokjaResponse->assertSee('Prestasi Pokja I Kecamatan');
+        $pokjaResponse->assertDontSee('Prestasi Bendahara Kecamatan');
     }
 }

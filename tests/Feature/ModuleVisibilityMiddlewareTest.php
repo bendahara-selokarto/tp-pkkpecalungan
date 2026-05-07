@@ -158,7 +158,7 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         }
     }
 
-    public function test_semua_pokja_kecamatan_tetap_tidak_memiliki_akses_inventaris(): void
+    public function test_semua_pokja_kecamatan_memiliki_akses_rw_modul_inventaris(): void
     {
         foreach (['kecamatan-pokja-i', 'kecamatan-pokja-ii', 'kecamatan-pokja-iii', 'kecamatan-pokja-iv'] as $role) {
             $user = User::factory()->create([
@@ -167,13 +167,28 @@ class ModuleVisibilityMiddlewareTest extends TestCase
             ]);
             $user->assignRole($role);
 
-            $this->actingAs($user)->get('/kecamatan/inventaris')->assertForbidden();
-            $this->actingAs($user)->get('/kecamatan/inventaris/create')->assertForbidden();
-            $this->actingAs($user)->post('/kecamatan/inventaris', [])->assertForbidden();
+            $response = $this->actingAs($user)->post('/kecamatan/inventaris', [
+                'name' => 'Inventaris '.$role,
+                'asal_barang' => 'Bantuan Kecamatan',
+                'tanggal_penerimaan' => '2026-03-04',
+                'tempat_penyimpanan' => 'Gudang',
+                'keterangan' => 'Uji akses RW inventaris kecamatan',
+                'quantity' => 1,
+                'unit' => 'unit',
+                'condition' => 'baik',
+            ]);
+
+            $response->assertStatus(302);
+            $this->assertDatabaseHas('inventaris', [
+                'name' => 'Inventaris '.$role,
+                'level' => 'kecamatan',
+                'area_id' => $this->kecamatan->id,
+                'created_by' => $user->id,
+            ]);
         }
     }
 
-    public function test_semua_pokja_desa_memiliki_akses_rw_modul_buku_tamu(): void
+    public function test_semua_pokja_desa_memiliki_akses_read_only_modul_buku_tamu(): void
     {
         foreach (['desa-pokja-i', 'desa-pokja-ii', 'desa-pokja-iii', 'desa-pokja-iv'] as $role) {
             $user = User::factory()->create([
@@ -183,21 +198,14 @@ class ModuleVisibilityMiddlewareTest extends TestCase
             $user->assignRole($role);
 
             $this->actingAs($user)->get('/desa/buku-tamu')->assertOk();
-            $response = $this->actingAs($user)->post('/desa/buku-tamu', [
+            $this->actingAs($user)->get('/desa/buku-tamu/create')->assertForbidden();
+            $this->actingAs($user)->post('/desa/buku-tamu', [
                 'visit_date' => '2026-03-04',
                 'guest_name' => 'Tamu '.$role,
                 'purpose' => 'Uji akses RW buku tamu',
                 'institution' => 'TP PKK Desa',
                 'description' => 'Validasi akses role pokja.',
-            ]);
-
-            $response->assertStatus(302);
-            $this->assertDatabaseHas('buku_tamus', [
-                'guest_name' => 'Tamu '.$role,
-                'level' => 'desa',
-                'area_id' => $this->desa->id,
-                'created_by' => $user->id,
-            ]);
+            ])->assertForbidden();
         }
     }
 
@@ -284,7 +292,7 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->get('/desa/program-prioritas/create')->assertOk();
     }
 
-    public function test_desa_pokja_iv_tidak_memiliki_akses_program_prioritas(): void
+    public function test_desa_pokja_iv_memiliki_akses_rw_ke_program_prioritas(): void
     {
         $user = User::factory()->create([
             'scope' => 'desa',
@@ -294,8 +302,8 @@ class ModuleVisibilityMiddlewareTest extends TestCase
 
         $this->actingAs($user);
 
-        $this->get('/desa/program-prioritas')->assertForbidden();
-        $this->get('/desa/program-prioritas/create')->assertForbidden();
+        $this->get('/desa/program-prioritas')->assertOk();
+        $this->get('/desa/program-prioritas/create')->assertOk();
     }
 
     public function test_role_pokja_tidak_bisa_akses_modul_buku_sekretaris(): void
@@ -308,7 +316,8 @@ class ModuleVisibilityMiddlewareTest extends TestCase
 
         $this->actingAs($desaPokja);
         $this->get('/desa/buku-notulen-rapat')->assertForbidden();
-        $this->get('/desa/buku-daftar-hadir')->assertForbidden();
+        $this->get('/desa/buku-daftar-hadir')->assertOk();
+        $this->get('/desa/buku-daftar-hadir/create')->assertForbidden();
 
         $kecamatanPokja = User::factory()->create([
             'scope' => 'kecamatan',

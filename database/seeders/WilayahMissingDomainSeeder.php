@@ -15,6 +15,15 @@ class WilayahMissingDomainSeeder extends Seeder
 {
     private const TARGET_KECAMATAN = 'Pecalungan';
 
+    private const GROUP_ROLE_SUFFIX = [
+        'sekretaris-tpk' => 'sekretaris',
+        'bendahara-tpk' => 'bendahara',
+        'pokja-i' => 'pokja-i',
+        'pokja-ii' => 'pokja-ii',
+        'pokja-iii' => 'pokja-iii',
+        'pokja-iv' => 'pokja-iv',
+    ];
+
     public function run(): void
     {
         $kecamatanArea = Area::query()
@@ -88,6 +97,7 @@ class WilayahMissingDomainSeeder extends Seeder
             'kecamatan_name' => (string) $kecamatanArea->name,
             'desa_reference_names' => $desaNames !== [] ? $desaNames : [(string) $kecamatanArea->name],
             'creator_id' => $this->resolveCreatorId('kecamatan', (int) $kecamatanArea->id, (string) $kecamatanArea->name),
+            'group_creator_ids' => $this->resolveGroupCreatorIds('kecamatan', (int) $kecamatanArea->id, (string) $kecamatanArea->name),
         ]);
 
         foreach ($desaAreas as $desaArea) {
@@ -100,6 +110,7 @@ class WilayahMissingDomainSeeder extends Seeder
                 'kecamatan_name' => (string) $kecamatanArea->name,
                 'desa_reference_names' => [$desaName],
                 'creator_id' => $this->resolveCreatorId('desa', (int) $desaArea->id, $desaName),
+                'group_creator_ids' => $this->resolveGroupCreatorIds('desa', (int) $desaArea->id, $desaName),
             ]);
         }
 
@@ -142,6 +153,45 @@ class WilayahMissingDomainSeeder extends Seeder
         $user->syncRoles([$roleName]);
 
         return (int) $user->id;
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private function resolveGroupCreatorIds(string $level, int $areaId, string $areaName): array
+    {
+        $creatorIds = [];
+
+        foreach (self::GROUP_ROLE_SUFFIX as $group => $roleSuffix) {
+            $roleName = "{$level}-{$roleSuffix}";
+            $user = User::query()
+                ->where('scope', $level)
+                ->where('area_id', $areaId)
+                ->whereHas('roles', static fn ($query) => $query->where('name', $roleName))
+                ->first();
+
+            $creatorIds[$group] = $user instanceof User
+                ? (int) $user->id
+                : $this->resolveCreatorId($level, $areaId, $areaName);
+        }
+
+        return $creatorIds;
+    }
+
+    private function creatorIdForGroup(array $context, string $group): int
+    {
+        $groupCreatorIds = $context['group_creator_ids'] ?? [];
+
+        return is_array($groupCreatorIds) && isset($groupCreatorIds[$group])
+            ? (int) $groupCreatorIds[$group]
+            : (int) $context['creator_id'];
+    }
+
+    private function groupForIndex(int $index): string
+    {
+        $groups = array_keys(self::GROUP_ROLE_SUFFIX);
+
+        return $groups[($index - 1) % count($groups)];
     }
 
     private function purgeExistingData(array $areaIds): void
@@ -264,6 +314,7 @@ class WilayahMissingDomainSeeder extends Seeder
         ];
 
         for ($i = 1; $i <= $count; $i++) {
+            $group = $this->groupForIndex($i);
             $prestasiFlags = $this->atLeastOneTrue([
                 'prestasi_kecamatan',
                 'prestasi_kabupaten',
@@ -282,8 +333,9 @@ class WilayahMissingDomainSeeder extends Seeder
                 'keterangan' => $faker->boolean(65) ? null : 'Prestasi lomba kader PKK '.$context['area_name'],
                 'tahun_anggaran' => $this->resolveBudgetYear(year: $tahun),
                 'level' => $context['level'],
+                'group' => $group,
                 'area_id' => $context['area_id'],
-                'created_by' => $context['creator_id'],
+                'created_by' => $this->creatorIdForGroup($context, $group),
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
@@ -305,6 +357,7 @@ class WilayahMissingDomainSeeder extends Seeder
         ];
 
         for ($i = 1; $i <= $count; $i++) {
+            $group = $this->groupForIndex($i);
             $monthlyJadwalFlags = $this->atLeastOneTrue(array_map(
                 static fn (int $month): string => "jadwal_bulan_{$month}",
                 range(1, 12)
@@ -345,8 +398,9 @@ class WilayahMissingDomainSeeder extends Seeder
                 'keterangan' => $faker->boolean(70) ? null : 'Program prioritas '.$context['area_name'].' periode berjalan',
                 'tahun_anggaran' => $this->defaultBudgetYear(),
                 'level' => $context['level'],
+                'group' => $group,
                 'area_id' => $context['area_id'],
-                'created_by' => $context['creator_id'],
+                'created_by' => $this->creatorIdForGroup($context, $group),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
@@ -355,7 +409,10 @@ class WilayahMissingDomainSeeder extends Seeder
                 programPrioritasId: $programPrioritasId,
                 monthlyJadwalFlags: $monthlyJadwalFlags,
                 sumberDanaFlags: $sumberDanaFlags,
-                context: $context
+                context: [
+                    ...$context,
+                    'creator_id' => $this->creatorIdForGroup($context, $group),
+                ]
             );
         }
     }

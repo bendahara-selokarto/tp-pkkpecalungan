@@ -18,10 +18,13 @@ class GetScopedInventarisUseCase
 
     public function execute(int $id, string $level): Inventaris
     {
+        $actor = $this->inventarisScopeService->requireAuthenticatedUser();
         $inventaris = $this->inventarisRepository->find($id);
         $areaId = $this->inventarisScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
-        return $this->inventarisScopeService->authorizeSameLevelAreaAndBudgetYear($inventaris, $level, $areaId, $tahunAnggaran);
+        $inventaris = $this->inventarisScopeService->authorizeSameLevelAreaAndBudgetYear($inventaris, $level, $areaId, $tahunAnggaran);
+
+        return $this->inventarisScopeService->authorizeInventarisGroup($actor, $inventaris);
     }
 }

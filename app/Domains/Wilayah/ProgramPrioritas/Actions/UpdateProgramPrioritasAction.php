@@ -18,6 +18,7 @@ class UpdateProgramPrioritasAction
             ...$payload,
             'level' => $programPrioritas->level,
             'area_id' => $programPrioritas->area_id,
+            'group' => $programPrioritas->group,
             'created_by' => $programPrioritas->created_by,
             'tahun_anggaran' => $programPrioritas->tahun_anggaran,
         ]);

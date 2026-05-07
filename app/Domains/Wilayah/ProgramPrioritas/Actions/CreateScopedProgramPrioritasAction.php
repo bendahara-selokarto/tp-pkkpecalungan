@@ -18,11 +18,14 @@ class CreateScopedProgramPrioritasAction
 
     public function execute(array $payload, string $level): ProgramPrioritas
     {
+        $user = $this->programPrioritasScopeService->requireAuthenticatedUser();
+
         $data = ProgramPrioritasData::fromArray([
             ...$payload,
             'level' => $level,
             'area_id' => $this->programPrioritasScopeService->requireUserAreaId(),
-            'created_by' => auth()->id(),
+            'group' => $this->programPrioritasScopeService->requireProgramPrioritasGroupForUser($user),
+            'created_by' => $user->id,
             'tahun_anggaran' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
         ]);
 

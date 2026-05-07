@@ -32,6 +32,7 @@ class KecamatanActivityTest extends TestCase
 
         foreach ([
             'kecamatan-sekretaris',
+            'kecamatan-bendahara',
             'desa-sekretaris',
             'kecamatan-pokja-i',
             'kecamatan-pokja-ii',
@@ -75,6 +76,7 @@ class KecamatanActivityTest extends TestCase
             ->where('area_id', $this->kecamatanA->id)
             ->where('title', 'Rapat Koordinasi Kecamatan')
             ->firstOrFail();
+        $this->assertSame('sekretaris-tpk', $activity->group);
 
         $this->actingAs($adminKecamatan)->put(route('kecamatan.activities.update', $activity->id), [
             'title' => 'Rapat Koordinasi Kecamatan Revisi',
@@ -99,6 +101,32 @@ class KecamatanActivityTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+    }
+
+    #[Test]
+    public function bendahara_kecamatan_tidak_memiliki_akses_buku_kegiatan(): void
+    {
+        $bendahara = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $bendahara->assignRole('kecamatan-bendahara');
+
+        $this->actingAs($bendahara)->post('/kecamatan/activities', [
+            'title' => 'Kegiatan Bendahara Kecamatan',
+            'nama_petugas' => 'Bendahara Kecamatan',
+            'jabatan_petugas' => 'Bendahara',
+            'tempat_kegiatan' => 'Pendopo Kecamatan',
+            'uraian' => 'Pembukuan kegiatan bendahara kecamatan',
+            'tanda_tangan' => 'Bendahara Kecamatan',
+            'activity_date' => '2026-02-22',
+            'status' => 'draft',
+        ])->assertForbidden();
+
+        $this->assertDatabaseMissing('activities', [
+            'title' => 'Kegiatan Bendahara Kecamatan',
         ]);
     }
 
@@ -410,13 +438,19 @@ class KecamatanActivityTest extends TestCase
     }
 
     #[Test]
-    public function sekretaris_kecamatan_hanya_melihat_kegiatan_milik_sendiri_pada_mode_kecamatan(): void
+    public function sekretaris_kecamatan_hanya_melihat_buku_kegiatan_sekretariat_pada_mode_kecamatan(): void
     {
         $sekretarisUser = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
             'scope' => 'kecamatan',
         ]);
         $sekretarisUser->assignRole('kecamatan-sekretaris');
+
+        $sekretarisLain = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $sekretarisLain->assignRole('kecamatan-sekretaris');
 
         $pokjaIUser = User::factory()->create([
             'area_id' => $this->kecamatanA->id,
@@ -435,6 +469,15 @@ class KecamatanActivityTest extends TestCase
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'created_by' => $sekretarisUser->id,
+            'activity_date' => now()->toDateString(),
+            'status' => 'draft',
+        ]);
+
+        Activity::create([
+            'title' => 'Kegiatan Kec Sekretariat Lain',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $sekretarisLain->id,
             'activity_date' => now()->toDateString(),
             'status' => 'draft',
         ]);
@@ -461,6 +504,7 @@ class KecamatanActivityTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Kegiatan Kec Milik Sekretaris');
+        $response->assertSee('Kegiatan Kec Sekretariat Lain');
         $response->assertDontSee('Kegiatan Kec Pokja I');
         $response->assertDontSee('Kegiatan Kec Pokja II');
     }

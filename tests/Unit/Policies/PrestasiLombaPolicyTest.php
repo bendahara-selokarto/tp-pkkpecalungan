@@ -103,6 +103,87 @@ class PrestasiLombaPolicyTest extends TestCase
     }
 
     #[Test]
+    public function admin_desa_hanya_boleh_melihat_prestasi_lomba_pada_group_jabatannya(): void
+    {
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-bendahara']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $sekretaris = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $sekretaris->assignRole('desa-sekretaris');
+
+        $bendahara = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $bendahara->assignRole('desa-bendahara');
+
+        $pokjaI = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $pokjaI->assignRole('desa-pokja-i');
+
+        $prestasiSekretaris = PrestasiLomba::create([
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Prestasi Sekretaris',
+            'lokasi' => 'Gombong',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $sekretaris->id,
+        ]);
+
+        $prestasiBendahara = PrestasiLomba::create([
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Prestasi Bendahara',
+            'lokasi' => 'Gombong',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $bendahara->id,
+        ]);
+
+        $prestasiPokjaI = PrestasiLomba::create([
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Prestasi Pokja I',
+            'lokasi' => 'Gombong',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $pokjaI->id,
+        ]);
+
+        $policy = app(PrestasiLombaPolicy::class);
+
+        $this->assertTrue($policy->view($sekretaris, $prestasiSekretaris));
+        $this->assertFalse($policy->view($sekretaris, $prestasiBendahara));
+        $this->assertFalse($policy->view($sekretaris, $prestasiPokjaI));
+
+        $this->assertFalse($policy->update($bendahara, $prestasiBendahara));
+        $this->assertFalse($policy->update($bendahara, $prestasiSekretaris));
+        $this->assertFalse($policy->update($bendahara, $prestasiPokjaI));
+    }
+
+    #[Test]
     public function admin_kecamatan_tidak_boleh_memperbarui_prestasi_lomba_kecamatan_lain(): void
     {
         Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);

@@ -17,10 +17,13 @@ class GetScopedBantuanUseCase
 
     public function execute(int $id, string $level): Bantuan
     {
+        $actor = $this->bantuanScopeService->requireAuthenticatedUser();
         $bantuan = $this->bantuanRepository->find($id);
         $areaId = $this->bantuanScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
-        return $this->bantuanScopeService->authorizeSameLevelAreaAndBudgetYear($bantuan, $level, $areaId, $tahunAnggaran);
+        $bantuan = $this->bantuanScopeService->authorizeSameLevelAreaAndBudgetYear($bantuan, $level, $areaId, $tahunAnggaran);
+
+        return $this->bantuanScopeService->authorizeBantuanGroup($actor, $bantuan);
     }
 }

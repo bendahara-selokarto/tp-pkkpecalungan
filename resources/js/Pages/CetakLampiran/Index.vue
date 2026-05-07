@@ -34,6 +34,7 @@ const isSekretarisRole = computed(() =>
 )
 
 const isExternalItem = (item) => item.external === true
+const duplicateAllowedModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'prestasi-lomba', 'program-prioritas'])
 
 const isModuleAllowedForCurrentUser = (item) => {
   if (isExternalItem(item)) {
@@ -46,6 +47,12 @@ const isModuleAllowedForCurrentUser = (item) => {
   }
 
   return !!moduleModes.value[moduleSlug]
+}
+
+const allowsDuplicateMenuHref = (item) => {
+  const moduleSlug = resolveModuleSlugFromHref(item.href)
+
+  return moduleSlug ? duplicateAllowedModuleSlugs.has(moduleSlug) : false
 }
 
 const isMenuItemVisibleByExperimentalPlacement = (item) => {
@@ -75,11 +82,11 @@ const filterMenuItems = (items, seenInternalHrefs) => items.filter((item) => {
     return false
   }
 
-  if (!isExternalItem(item) && seenInternalHrefs.has(item.href)) {
+  if (!isExternalItem(item) && !allowsDuplicateMenuHref(item) && seenInternalHrefs.has(item.href)) {
     return false
   }
 
-  if (!isExternalItem(item)) {
+  if (!isExternalItem(item) && !allowsDuplicateMenuHref(item)) {
     seenInternalHrefs.add(item.href)
   }
 

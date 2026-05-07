@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Inventaris\Repositories;
 
 use App\Domains\Wilayah\Inventaris\DTOs\InventarisData;
 use App\Domains\Wilayah\Inventaris\Models\Inventaris;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -11,9 +12,9 @@ interface InventarisRepositoryInterface
 {
     public function store(InventarisData $data): Inventaris;
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator;
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?User $actor = null): LengthAwarePaginator;
 
-    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection;
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?User $actor = null): Collection;
 
     public function find(int $id): Inventaris;
 
@@ -21,4 +22,3 @@ interface InventarisRepositoryInterface
 
     public function delete(Inventaris $inventaris): void;
 }
-

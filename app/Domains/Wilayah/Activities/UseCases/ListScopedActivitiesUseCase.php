@@ -19,9 +19,8 @@ class ListScopedActivitiesUseCase
         $actor = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
-        $creatorIdFilter = $this->activityScopeService->resolveCreatorIdFilterForList($actor, $level);
 
-        return $this->activityRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $actor, $creatorIdFilter);
+        return $this->activityRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $actor);
     }
 
     public function executeAll(string $level): Collection
@@ -29,8 +28,7 @@ class ListScopedActivitiesUseCase
         $actor = $this->activityScopeService->requireAuthenticatedUser();
         $areaId = $this->activityScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
-        $creatorIdFilter = $this->activityScopeService->resolveCreatorIdFilterForList($actor, $level);
 
-        return $this->activityRepository->listByLevelAndArea($level, $areaId, $tahunAnggaran, $actor, $creatorIdFilter);
+        return $this->activityRepository->listByLevelAndArea($level, $areaId, $tahunAnggaran, $actor);
     }
 }

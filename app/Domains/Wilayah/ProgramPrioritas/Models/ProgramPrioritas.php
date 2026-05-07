@@ -11,6 +11,21 @@ use Illuminate\Support\Carbon;
 
 class ProgramPrioritas extends Model
 {
+    private const ROLE_TO_GROUP_MAP = [
+        'desa-sekretaris' => 'sekretaris-tpk',
+        'kecamatan-sekretaris' => 'sekretaris-tpk',
+        'desa-bendahara' => 'bendahara-tpk',
+        'kecamatan-bendahara' => 'bendahara-tpk',
+        'desa-pokja-i' => 'pokja-i',
+        'desa-pokja-ii' => 'pokja-ii',
+        'desa-pokja-iii' => 'pokja-iii',
+        'desa-pokja-iv' => 'pokja-iv',
+        'kecamatan-pokja-i' => 'pokja-i',
+        'kecamatan-pokja-ii' => 'pokja-ii',
+        'kecamatan-pokja-iii' => 'pokja-iii',
+        'kecamatan-pokja-iv' => 'pokja-iv',
+    ];
+
     protected $table = 'program_prioritas';
 
     protected $fillable = [
@@ -40,6 +55,7 @@ class ProgramPrioritas extends Model
         'sumber_dana_bant',
         'keterangan',
         'level',
+        'group',
         'area_id',
         'created_by',
         'tahun_anggaran',
@@ -75,12 +91,36 @@ class ProgramPrioritas extends Model
     protected static function booted(): void
     {
         static::creating(function (self $programPrioritas): void {
+            if (! is_string($programPrioritas->group) || $programPrioritas->group === '') {
+                $programPrioritas->group = self::resolveGroupFromCreator((int) $programPrioritas->created_by);
+            }
+
             if (is_numeric($programPrioritas->tahun_anggaran)) {
                 return;
             }
 
             $programPrioritas->tahun_anggaran = (int) Carbon::now()->format('Y');
         });
+    }
+
+    private static function resolveGroupFromCreator(int $creatorId): string
+    {
+        if ($creatorId <= 0) {
+            return 'sekretaris-tpk';
+        }
+
+        $creator = User::query()->find($creatorId);
+        if (! $creator instanceof User) {
+            return 'sekretaris-tpk';
+        }
+
+        foreach ($creator->getRoleNames()->all() as $roleName) {
+            if (isset(self::ROLE_TO_GROUP_MAP[$roleName])) {
+                return self::ROLE_TO_GROUP_MAP[$roleName];
+            }
+        }
+
+        return 'sekretaris-tpk';
     }
 
     public function area()

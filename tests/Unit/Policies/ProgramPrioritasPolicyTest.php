@@ -150,4 +150,73 @@ class ProgramPrioritasPolicyTest extends TestCase
 
         $this->assertFalse($policy->view($user, $programTahunLama));
     }
+
+    #[Test]
+    public function program_prioritas_tidak_boleh_diakses_lintas_group_pada_area_dan_tahun_yang_sama(): void
+    {
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $sekretaris = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $sekretaris->assignRole('desa-sekretaris');
+
+        $pokja = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $pokja->assignRole('desa-pokja-i');
+
+        $programSekretaris = ProgramPrioritas::create([
+            'program' => 'Program Sekretaris',
+            'prioritas_program' => 'Prioritas',
+            'kegiatan' => 'Kegiatan',
+            'sasaran_target' => 'Target',
+            'jadwal_i' => true,
+            'jadwal_ii' => false,
+            'jadwal_iii' => false,
+            'jadwal_iv' => false,
+            'sumber_dana_pusat' => true,
+            'sumber_dana_apbd' => false,
+            'sumber_dana_swd' => false,
+            'sumber_dana_bant' => false,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $sekretaris->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $programPokja = ProgramPrioritas::create([
+            'program' => 'Program Pokja',
+            'prioritas_program' => 'Prioritas',
+            'kegiatan' => 'Kegiatan',
+            'sasaran_target' => 'Target',
+            'jadwal_i' => true,
+            'jadwal_ii' => false,
+            'jadwal_iii' => false,
+            'jadwal_iv' => false,
+            'sumber_dana_pusat' => true,
+            'sumber_dana_apbd' => false,
+            'sumber_dana_swd' => false,
+            'sumber_dana_bant' => false,
+            'keterangan' => null,
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $pokja->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $policy = app(ProgramPrioritasPolicy::class);
+
+        $this->assertFalse($policy->view($pokja, $programSekretaris));
+        $this->assertTrue($policy->view($pokja, $programPokja));
+    }
 }

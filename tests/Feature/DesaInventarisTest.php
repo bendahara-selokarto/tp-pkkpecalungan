@@ -27,6 +27,7 @@ class DesaInventarisTest extends TestCase
 
         Role::firstOrCreate(['name' => 'desa-sekretaris']);
         Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -44,6 +45,58 @@ class DesaInventarisTest extends TestCase
             'level' => 'desa',
             'parent_id' => $this->kecamatan->id,
         ]);
+    }
+
+    #[Test]
+    public function buku_inventaris_desa_terisolasi_per_jabatan_pada_area_yang_sama(): void
+    {
+        $sekretaris = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $sekretaris->assignRole('desa-sekretaris');
+
+        $pokjaI = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $pokjaI->assignRole('desa-pokja-i');
+
+        $sekretarisInventaris = Inventaris::create([
+            'name' => 'Inventaris Sekretaris',
+            'description' => 'Aset sekretaris',
+            'quantity' => 1,
+            'unit' => 'unit',
+            'condition' => 'baik',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $sekretaris->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        Inventaris::create([
+            'name' => 'Inventaris Pokja I',
+            'description' => 'Aset pokja',
+            'quantity' => 1,
+            'unit' => 'unit',
+            'condition' => 'baik',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $pokjaI->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+
+        $this->actingAs($pokjaI)->get('/desa/inventaris')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('inventaris.total', 1)
+                ->where('inventaris.data.0.name', 'Inventaris Pokja I'));
+
+        $this->actingAs($pokjaI)
+            ->get(route('desa.inventaris.show', $sekretarisInventaris->id))
+            ->assertStatus(403);
     }
 
     #[Test]

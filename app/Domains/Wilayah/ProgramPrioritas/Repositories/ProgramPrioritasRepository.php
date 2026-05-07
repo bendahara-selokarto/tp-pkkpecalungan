@@ -42,6 +42,7 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
                 'sumber_dana_bant' => $data->sumber_dana_bant,
                 'keterangan' => $data->keterangan,
                 'level' => $data->level,
+                'group' => $data->group,
                 'area_id' => $data->area_id,
                 'created_by' => $data->created_by,
                 'tahun_anggaran' => $data->tahun_anggaran,
@@ -53,13 +54,20 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
         });
     }
 
-    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection
+    public function getByLevelAndArea(
+        string $level,
+        int $areaId,
+        int $tahunAnggaran,
+        array $allowedGroups,
+        ?int $creatorIdFilter = null
+    ): Collection
     {
         return ProgramPrioritas::query()
             ->with(['jadwalBulans', 'sumberDanas'])
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran)
+            ->whereIn('group', $allowedGroups)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('id')
             ->get();
@@ -70,6 +78,7 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
         int $areaId,
         int $tahunAnggaran,
         int $perPage,
+        array $allowedGroups,
         ?int $creatorIdFilter = null
     ): LengthAwarePaginator {
         return ProgramPrioritas::query()
@@ -77,6 +86,7 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran)
+            ->whereIn('group', $allowedGroups)
             ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
             ->latest('id')
             ->paginate($perPage)

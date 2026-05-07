@@ -21,6 +21,6 @@ class GetScopedActivityUseCase
         $tahunAnggaran = $this->activityScopeService->requireActiveBudgetYear();
         $activity = $this->activityScopeService->authorizeSameLevelAreaAndBudgetYear($activity, $level, $areaId, $tahunAnggaran);
 
-        return $this->activityScopeService->authorizeRoleScopedActivity($user, $activity, $level);
+        return $this->activityScopeService->authorizeActivityGroup($user, $activity);
     }
 }

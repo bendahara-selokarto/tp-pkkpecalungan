@@ -15,6 +15,7 @@ class PrestasiLombaData
         public ?string $keterangan,
         public int $tahun_anggaran,
         public string $level,
+        public string $group,
         public int $area_id,
         public int $created_by,
     ) {}
@@ -32,6 +33,7 @@ class PrestasiLombaData
             $data['keterangan'] ?? null,
             (int) $data['tahun_anggaran'],
             $data['level'],
+            $data['group'],
             (int) $data['area_id'],
             (int) $data['created_by'],
         );

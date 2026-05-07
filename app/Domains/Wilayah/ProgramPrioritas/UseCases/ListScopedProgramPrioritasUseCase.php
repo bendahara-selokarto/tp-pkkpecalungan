@@ -18,19 +18,23 @@ class ListScopedProgramPrioritasUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        $actor = $this->programPrioritasScopeService->requireAuthenticatedUser();
         $areaId = $this->programPrioritasScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
         $creatorIdFilter = $this->programPrioritasScopeService->resolveCreatorIdFilterForList($level);
+        $allowedGroups = $this->programPrioritasScopeService->resolveProgramPrioritasGroupsForUser($actor);
 
-        return $this->programPrioritasRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $creatorIdFilter);
+        return $this->programPrioritasRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $allowedGroups, $creatorIdFilter);
     }
 
     public function executeAll(string $level): Collection
     {
+        $actor = $this->programPrioritasScopeService->requireAuthenticatedUser();
         $areaId = $this->programPrioritasScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
         $creatorIdFilter = $this->programPrioritasScopeService->resolveCreatorIdFilterForList($level);
+        $allowedGroups = $this->programPrioritasScopeService->resolveProgramPrioritasGroupsForUser($actor);
 
-        return $this->programPrioritasRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $creatorIdFilter);
+        return $this->programPrioritasRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $allowedGroups, $creatorIdFilter);
     }
 }

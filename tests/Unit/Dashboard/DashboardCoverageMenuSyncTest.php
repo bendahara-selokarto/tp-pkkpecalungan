@@ -74,7 +74,7 @@ class DashboardCoverageMenuSyncTest extends TestCase
             ->values();
         $roleMenuVisibilityService = $this->app->make(RoleMenuVisibilityService::class);
 
-        foreach (['sekretaris-tpk', 'pokja-i', 'pokja-ii', 'pokja-iii', 'pokja-iv'] as $group) {
+        foreach (['sekretaris-tpk', 'penunjang-buku-wajib', 'pokja-i', 'pokja-ii', 'pokja-iii', 'pokja-iv'] as $group) {
             $groupModules = collect($roleMenuVisibilityService->modulesForGroup($group))->unique()->values();
             $coveredModules = $groupModules->intersect($trackedCoverageSlugs)->values()->all();
 
@@ -103,11 +103,13 @@ class DashboardCoverageMenuSyncTest extends TestCase
 
         return collect([
             'sekretaris-tpk',
+            'penunjang-buku-wajib',
             'pokja-i',
             'pokja-ii',
             'pokja-iii',
             'pokja-iv',
             'monitoring',
+            'belum-ada-pemilik',
         ])->flatMap(
             fn (string $group): array => $roleMenuVisibilityService->modulesForGroup($group)
         )->unique()->sort()->values();

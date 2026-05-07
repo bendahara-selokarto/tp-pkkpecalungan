@@ -26,6 +26,7 @@ class UpdateInventarisAction
             'tempat_penyimpanan' => $payload['tempat_penyimpanan'] ?? null,
             'condition' => $payload['condition'],
             'level' => $inventaris->level,
+            'group' => $inventaris->group,
             'area_id' => $inventaris->area_id,
             'created_by' => $inventaris->created_by,
             'tahun_anggaran' => $inventaris->tahun_anggaran,

@@ -24,6 +24,7 @@ class KecamatanBantuanTest extends TestCase
 
         Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
         Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-pokja-i']);
 
         $this->kecamatanA = Area::create([
             'name' => 'Pecalungan',
@@ -34,6 +35,56 @@ class KecamatanBantuanTest extends TestCase
             'name' => 'Limpung',
             'level' => 'kecamatan',
         ]);
+    }
+
+    #[Test]
+    public function buku_bantuan_kecamatan_terisolasi_per_jabatan_pada_area_yang_sama(): void
+    {
+        $sekretaris = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $sekretaris->assignRole('kecamatan-sekretaris');
+
+        $pokjaI = User::factory()->create([
+            'area_id' => $this->kecamatanA->id,
+            'scope' => 'kecamatan',
+        ]);
+        $pokjaI->assignRole('kecamatan-pokja-i');
+
+        $sekretarisBantuan = Bantuan::create([
+            'name' => 'Bantuan Sekretaris Kecamatan',
+            'category' => 'uang',
+            'description' => 'Milik sekretaris',
+            'source' => 'pusat',
+            'amount' => 1000000,
+            'received_date' => '2026-02-01',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $sekretaris->id,
+        ]);
+
+        Bantuan::create([
+            'name' => 'Bantuan Pokja I Kecamatan',
+            'category' => 'barang',
+            'description' => 'Milik pokja',
+            'source' => 'provinsi',
+            'amount' => 2000000,
+            'received_date' => '2026-02-02',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatanA->id,
+            'created_by' => $pokjaI->id,
+        ]);
+
+        $this->actingAs($pokjaI)->get('/kecamatan/bantuans')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('bantuans.total', 1)
+                ->where('bantuans.data.0.lokasi_penerima', 'Bantuan Pokja I Kecamatan'));
+
+        $this->actingAs($pokjaI)
+            ->get(route('kecamatan.bantuans.show', $sekretarisBantuan->id))
+            ->assertStatus(403);
     }
 
     #[Test]

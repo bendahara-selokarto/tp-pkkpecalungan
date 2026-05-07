@@ -28,6 +28,8 @@ class DesaPrestasiLombaTest extends TestCase
         parent::setUp();
 
         Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-bendahara']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
         Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
@@ -260,6 +262,7 @@ class DesaPrestasiLombaTest extends TestCase
         ])->assertStatus(302);
 
         $prestasi = PrestasiLomba::where('jenis_lomba', 'Lomba Tertib Administrasi')->firstOrFail();
+        $this->assertSame('sekretaris-tpk', $prestasi->group);
 
         $this->actingAs($adminDesa)->put(route('desa.prestasi-lomba.update', $prestasi->id), [
             'tahun' => self::ACTIVE_BUDGET_YEAR,
@@ -283,6 +286,84 @@ class DesaPrestasiLombaTest extends TestCase
             ->assertStatus(302);
 
         $this->assertDatabaseMissing('prestasi_lombas', ['id' => $prestasi->id]);
+    }
+
+    #[Test]
+    public function buku_prestasi_desa_dipisahkan_per_jabatan_pada_area_yang_sama(): void
+    {
+        $sekretaris = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $sekretaris->assignRole('desa-sekretaris');
+
+        $bendahara = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $bendahara->assignRole('desa-bendahara');
+
+        $pokjaI = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $pokjaI->assignRole('desa-pokja-i');
+
+        PrestasiLomba::create([
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Prestasi Sekretaris',
+            'lokasi' => 'Balai Desa',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $sekretaris->id,
+        ]);
+
+        PrestasiLomba::create([
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Prestasi Bendahara',
+            'lokasi' => 'Balai Desa',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $bendahara->id,
+        ]);
+
+        PrestasiLomba::create([
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Prestasi Pokja I',
+            'lokasi' => 'Balai Desa',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $pokjaI->id,
+        ]);
+
+        $sekretarisResponse = $this->actingAs($sekretaris)->get('/desa/prestasi-lomba');
+        $sekretarisResponse->assertOk();
+        $sekretarisResponse->assertSee('Prestasi Sekretaris');
+        $sekretarisResponse->assertDontSee('Prestasi Bendahara');
+        $sekretarisResponse->assertDontSee('Prestasi Pokja I');
+
+        $this->actingAs($bendahara)->get('/desa/prestasi-lomba')->assertForbidden();
+
+        $pokjaResponse = $this->actingAs($pokjaI)->get('/desa/prestasi-lomba');
+        $pokjaResponse->assertOk();
+        $pokjaResponse->assertSee('Prestasi Pokja I');
+        $pokjaResponse->assertDontSee('Prestasi Sekretaris');
+        $pokjaResponse->assertDontSee('Prestasi Bendahara');
     }
 
     #[Test]

@@ -19,6 +19,7 @@ class CreateScopedInventarisAction
 
     public function execute(array $payload, string $level): Inventaris
     {
+        $user = $this->inventarisScopeService->requireAuthenticatedUser();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
         $data = InventarisData::fromArray([
@@ -32,8 +33,9 @@ class CreateScopedInventarisAction
             'tempat_penyimpanan' => $payload['tempat_penyimpanan'] ?? null,
             'condition' => $payload['condition'],
             'level' => $level,
+            'group' => $this->inventarisScopeService->requireInventarisGroupForUser($user),
             'area_id' => $this->inventarisScopeService->requireUserAreaId(),
-            'created_by' => auth()->id(),
+            'created_by' => $user->id,
             'tahun_anggaran' => $tahunAnggaran,
         ]);
 
