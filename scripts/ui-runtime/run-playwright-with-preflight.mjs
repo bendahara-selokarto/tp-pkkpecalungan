@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { existsSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -121,16 +121,45 @@ function runLinuxPreflight(env) {
   return false;
 }
 
+function loadLocalEnv(env) {
+  const envPath = path.join(process.cwd(), '.env.e2e.local');
+  if (!existsSync(envPath)) {
+    return;
+  }
+
+  const lines = readFileSync(envPath, 'utf8').split(/\r?\n/);
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (line === '' || line.startsWith('#')) {
+      continue;
+    }
+    const separatorIndex = line.indexOf('=');
+    if (separatorIndex <= 0) {
+      continue;
+    }
+    const key = line.slice(0, separatorIndex).trim();
+    let value = line.slice(separatorIndex + 1).trim();
+    if (value.startsWith('"') && value.endsWith('"')) {
+      value = value.slice(1, -1);
+    }
+    if (env[key] === undefined) {
+      env[key] = value;
+    }
+  }
+}
+
 function main() {
   const passthroughArgs = process.argv.slice(2);
   const doctorMode = passthroughArgs.includes(DOCTOR_FLAG);
   const forwardedArgs = passthroughArgs.filter((arg) => arg !== DOCTOR_FLAG);
 
   const env = { ...process.env };
+  loadLocalEnv(env);
   if (process.platform === 'linux') {
-    env.TMPDIR = env.TMPDIR || '/tmp';
-    env.TEMP = env.TEMP || '/tmp';
-    env.TMP = env.TMP || '/tmp';
+    const runtimeTmp = env.E2E_TMPDIR || '/tmp';
+    env.TMPDIR = runtimeTmp;
+    env.TEMP = runtimeTmp;
+    env.TMP = runtimeTmp;
 
     const preflightOk = runLinuxPreflight(env);
     if (!preflightOk) {
@@ -155,10 +184,34 @@ function main() {
 
     return forwardedArgs;
   })();
-  const run = spawnSync('npx', ['playwright', ...playwrightArgs], {
+  const isWindows = process.platform === 'win32';
+  const localBin = path.join(
+    process.cwd(),
+    'node_modules',
+    '.bin',
+    isWindows ? 'playwright.cmd' : 'playwright',
+  );
+  const commandOptions = [
+    { command: isWindows ? 'npx.cmd' : 'npx', args: ['playwright', ...playwrightArgs] },
+    { command: isWindows ? 'npm.cmd' : 'npm', args: ['exec', '--', 'playwright', ...playwrightArgs] },
+    ...(existsSync(localBin) ? [{ command: localBin, args: playwrightArgs }] : []),
+  ];
+  const spawnOption = (option) => spawnSync(option.command, option.args, {
     stdio: 'inherit',
     env,
+    shell: isWindows && option.command.endsWith('.cmd'),
   });
+  let run = spawnOption(commandOptions[0]);
+
+  if (run.error && run.error.code === 'ENOENT') {
+    for (let index = 1; index < commandOptions.length; index += 1) {
+      const option = commandOptions[index];
+      run = spawnOption(option);
+      if (!run.error || run.error.code !== 'ENOENT') {
+        break;
+      }
+    }
+  }
 
   if (run.error) {
     console.error('[e2e-preflight] Gagal menjalankan Playwright CLI (tooling).');

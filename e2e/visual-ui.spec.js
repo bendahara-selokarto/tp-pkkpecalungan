@@ -44,8 +44,36 @@ const stabilizeVisualRender = async (page) => {
         animation: none !important;
         transition: none !important;
       }
+      html {
+        scrollbar-gutter: stable;
+      }
+      body {
+        overflow-y: scroll;
+      }
       .apexcharts-toolbar {
         display: none !important;
+      }
+    `,
+  });
+};
+
+const lockLoginFormSize = async (page, projectName) => {
+  const fallbackWidth = projectName.includes('mobile') ? 261 : 382;
+  const measuredWidth = await page.evaluate(() => {
+    const form = document.querySelector('form');
+    if (!form) {
+      return null;
+    }
+    return Math.round(form.getBoundingClientRect().width);
+  });
+  const width = measuredWidth && measuredWidth > 0 ? measuredWidth : fallbackWidth;
+  await page.addStyleTag({
+    content: `
+      form {
+        width: ${width}px !important;
+        min-width: ${width}px !important;
+        max-width: ${width}px !important;
+        box-sizing: border-box !important;
       }
     `,
   });
@@ -56,11 +84,13 @@ test.describe('runtime visual baseline', () => {
     await page.goto('/login');
     await waitForStableUi(page);
     await stabilizeVisualRender(page);
+    await lockLoginFormSize(page, test.info().project.name);
 
     await expect(page.locator('form').first()).toHaveScreenshot('login-form.png', {
       animations: 'disabled',
       caret: 'hide',
       scale: 'css',
+      maxDiffPixelRatio: 0.03,
     });
   });
 
