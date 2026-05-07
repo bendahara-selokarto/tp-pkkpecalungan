@@ -377,11 +377,11 @@ const filterMenuItems = (items, seenInternalHrefs) => items.filter((item) => {
     return false
   }
 
-  if (!isExternalItem(item) && !allowsDuplicateMenuHref(item) && seenInternalHrefs.has(item.href)) {
+  if (!allowsDuplicateMenuHref(item) && seenInternalHrefs.has(item.href)) {
     return false
   }
 
-  if (!isExternalItem(item) && !allowsDuplicateMenuHref(item)) {
+  if (!allowsDuplicateMenuHref(item)) {
     seenInternalHrefs.add(item.href)
   }
 

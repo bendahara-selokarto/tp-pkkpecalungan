@@ -82,11 +82,11 @@ const filterMenuItems = (items, seenInternalHrefs) => items.filter((item) => {
     return false
   }
 
-  if (!isExternalItem(item) && !allowsDuplicateMenuHref(item) && seenInternalHrefs.has(item.href)) {
+  if (!allowsDuplicateMenuHref(item) && seenInternalHrefs.has(item.href)) {
     return false
   }
 
-  if (!isExternalItem(item) && !allowsDuplicateMenuHref(item)) {
+  if (!allowsDuplicateMenuHref(item)) {
     seenInternalHrefs.add(item.href)
   }
 
@@ -126,6 +126,17 @@ const lampiranBySlug = computed(() => buildLampiranMap(baseGroups.value))
 
 const visibleGroups = computed(() => {
   const seenPrintHrefs = new Set()
+
+  // Daftarkan semua item dari Menu Utama ke dalam set seen agar tidak diduplikasi di Menu Lampiran
+  baseGroups.value.forEach((group) => {
+    if (!!menuGroupModes.value[group.key]) {
+      group.items.forEach((item) => {
+        if (!allowsDuplicateMenuHref(item)) {
+          seenPrintHrefs.add(item.href)
+        }
+      })
+    }
+  })
 
   return baseGroups.value
     .filter((group) => !!menuGroupModes.value[group.key])
