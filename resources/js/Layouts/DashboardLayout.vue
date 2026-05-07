@@ -57,7 +57,7 @@ const isSekretarisRole = computed(() =>
 )
 
 const isActive = (prefix) => page.url.startsWith(prefix)
-const isExternalItem = (item) => item.external === true
+const isExternalItem = (item) => item.external === true || (typeof item.href === 'string' && item.href.includes('report/pdf'))
 const isItemActive = (item) => !isExternalItem(item) && isActive(item.href)
 const openExternal = (href) => {
   window.open(href, '_blank', 'noopener,noreferrer')

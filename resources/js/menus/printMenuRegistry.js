@@ -39,7 +39,7 @@ const resolveModuleSlugFromHref = (href) => {
   return segments[1]
 }
 
-const isExternalItem = (item) => item?.external === true
+const isExternalItem = (item) => item?.external === true || (typeof item?.href === 'string' && item.href.includes('report/pdf'))
 
 const withBookGroupContext = (item, menuGroupKey) => {
   if (isExternalItem(item)) {
