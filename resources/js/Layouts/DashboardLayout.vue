@@ -63,7 +63,7 @@ const openExternal = (href) => {
   window.open(href, '_blank', 'noopener,noreferrer')
 }
 
-const duplicateAllowedModuleSlugs = new Set(['bantuans', 'catatan-keluarga', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas'])
+const duplicateAllowedModuleSlugs = new Set([])
 const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas'])
 const bookGroupContextByMenuGroup = {
   'sekretaris-tpk': 'sekretaris-tpk',

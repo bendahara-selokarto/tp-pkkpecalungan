@@ -34,7 +34,7 @@ const isSekretarisRole = computed(() =>
 )
 
 const isExternalItem = (item) => item.external === true || (typeof item.href === 'string' && item.href.includes('report/pdf'))
-const duplicateAllowedModuleSlugs = new Set(['bantuans', 'inventaris', 'prestasi-lomba', 'program-prioritas'])
+const duplicateAllowedModuleSlugs = new Set([])
 
 const isModuleAllowedForCurrentUser = (item) => {
   if (isExternalItem(item)) {
