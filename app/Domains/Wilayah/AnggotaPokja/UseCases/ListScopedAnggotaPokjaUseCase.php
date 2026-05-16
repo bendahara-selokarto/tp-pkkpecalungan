@@ -18,19 +18,21 @@ class ListScopedAnggotaPokjaUseCase
 
     public function execute(string $level, int $perPage): LengthAwarePaginator
     {
+        $actor = $this->anggotaPokjaScopeService->requireAuthenticatedUser();
         $areaId = $this->anggotaPokjaScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
         $creatorIdFilter = $this->anggotaPokjaScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->anggotaPokjaRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $creatorIdFilter);
+        return $this->anggotaPokjaRepository->paginateByLevelAndArea($level, $areaId, $tahunAnggaran, $perPage, $creatorIdFilter, $actor);
     }
 
     public function executeAll(string $level): Collection
     {
+        $actor = $this->anggotaPokjaScopeService->requireAuthenticatedUser();
         $areaId = $this->anggotaPokjaScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
         $creatorIdFilter = $this->anggotaPokjaScopeService->resolveCreatorIdFilterForList($level);
 
-        return $this->anggotaPokjaRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $creatorIdFilter);
+        return $this->anggotaPokjaRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran, $creatorIdFilter, $actor);
     }
 }

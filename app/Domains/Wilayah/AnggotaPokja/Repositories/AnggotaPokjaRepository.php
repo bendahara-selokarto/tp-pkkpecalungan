@@ -4,11 +4,18 @@ namespace App\Domains\Wilayah\AnggotaPokja\Repositories;
 
 use App\Domains\Wilayah\AnggotaPokja\DTOs\AnggotaPokjaData;
 use App\Domains\Wilayah\AnggotaPokja\Models\AnggotaPokja;
+use App\Domains\Wilayah\AnggotaPokja\Services\AnggotaPokjaScopeService;
+use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class AnggotaPokjaRepository implements AnggotaPokjaRepositoryInterface
 {
+    public function __construct(
+        private readonly AnggotaPokjaScopeService $anggotaPokjaScopeService
+    ) {}
+
     public function store(AnggotaPokjaData $data): AnggotaPokja
     {
         return AnggotaPokja::create([
@@ -30,28 +37,51 @@ class AnggotaPokjaRepository implements AnggotaPokjaRepositoryInterface
         ]);
     }
 
-    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null): LengthAwarePaginator
+    public function paginateByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, int $perPage, ?int $creatorIdFilter = null, ?User $actor = null): LengthAwarePaginator
     {
-        return AnggotaPokja::query()
+        $query = AnggotaPokja::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran)
-            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter));
+
+        return $this->applyPokjaFilter($query, $actor)
             ->latest('id')
             ->paginate($perPage)
             ->withQueryString();
     }
 
-    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null): Collection
+    public function getByLevelAndArea(string $level, int $areaId, int $tahunAnggaran, ?int $creatorIdFilter = null, ?User $actor = null): Collection
     {
-        return AnggotaPokja::query()
+        $query = AnggotaPokja::query()
             ->where('level', $level)
             ->where('area_id', $areaId)
             ->where('tahun_anggaran', $tahunAnggaran)
-            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter))
+            ->when(is_int($creatorIdFilter), static fn ($query) => $query->where('created_by', $creatorIdFilter));
+
+        return $this->applyPokjaFilter($query, $actor)
             ->latest('id')
             ->get();
     }
+
+    private function applyPokjaFilter(Builder $query, ?User $actor): Builder
+    {
+        if (! $actor instanceof User) {
+            return $query;
+        }
+
+        if (! $this->anggotaPokjaScopeService->requiresPokjaFilter($actor)) {
+            return $query;
+        }
+
+        $allowedPokjas = $this->anggotaPokjaScopeService->resolvePokjaGroupsForUser($actor);
+        if ($allowedPokjas === []) {
+            return $query->whereRaw('1 = 0');
+        }
+
+        return $query->whereIn('pokja', $allowedPokjas);
+    }
+
 
     public function find(int $id): AnggotaPokja
     {

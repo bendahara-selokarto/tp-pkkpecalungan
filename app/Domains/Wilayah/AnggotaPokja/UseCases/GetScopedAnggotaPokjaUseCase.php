@@ -18,9 +18,11 @@ class GetScopedAnggotaPokjaUseCase
     public function execute(int $id, string $level): AnggotaPokja
     {
         $anggotaPokja = $this->anggotaPokjaRepository->find($id);
+        $user = $this->anggotaPokjaScopeService->requireAuthenticatedUser();
         $areaId = $this->anggotaPokjaScopeService->requireUserAreaId();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
+        $anggotaPokja = $this->anggotaPokjaScopeService->authorizeSameLevelAreaAndBudgetYear($anggotaPokja, $level, $areaId, $tahunAnggaran);
 
-        return $this->anggotaPokjaScopeService->authorizeSameLevelAreaAndBudgetYear($anggotaPokja, $level, $areaId, $tahunAnggaran);
+        return $this->anggotaPokjaScopeService->authorizePokjaGroup($user, $anggotaPokja);
     }
 }
