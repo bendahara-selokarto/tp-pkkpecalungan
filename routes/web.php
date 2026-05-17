@@ -7,6 +7,7 @@ use App\Http\Controllers\UiRuntimeErrorLogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SuperAdmin\AccessControlManagementController;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
+use App\Http\Controllers\SuperAdmin\AreaManagementController;
 use App\Http\Controllers\SuperAdmin\ArsipManagementController;
 use App\Domains\Wilayah\CetakLampiran\Controllers\CetakLampiranController;
 use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
@@ -173,6 +174,7 @@ Route::middleware(['auth', 'role:super-admin'])
     ->name('super-admin.')
     ->group(function () {
         Route::resource('users', UserManagementController::class);
+        Route::resource('areas', AreaManagementController::class)->only(['index', 'edit', 'update']);
         Route::get('access-control', [AccessControlManagementController::class, 'index'])
             ->name('access-control.index');
         Route::put('access-control/override', [AccessControlManagementController::class, 'updateOverride'])

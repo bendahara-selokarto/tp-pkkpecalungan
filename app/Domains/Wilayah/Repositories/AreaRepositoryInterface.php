@@ -15,4 +15,8 @@ interface AreaRepositoryInterface
     public function getDesaByKecamatan(int $kecamatanId): Collection;
 
     public function getByUser(User $user): Collection;
+
+    public function paginate(int $perPage): \Illuminate\Contracts\Pagination\LengthAwarePaginator;
+
+    public function update(Area $area, array $data): bool;
 }

@@ -57,4 +57,18 @@ class AreaRepository implements AreaRepositoryInterface
 
         return collect();
     }
+
+    public function paginate(int $perPage): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        return Area::query()
+            ->with('parent')
+            ->orderBy('level')
+            ->orderBy('name')
+            ->paginate($perPage);
+    }
+
+    public function update(Area $area, array $data): bool
+    {
+        return $area->update($data);
+    }
 }
