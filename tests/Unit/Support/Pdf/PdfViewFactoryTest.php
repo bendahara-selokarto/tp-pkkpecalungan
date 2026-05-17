@@ -94,6 +94,7 @@ public function test_otomatisasi_metadata_header_saat_user_login(): void
 
     // Mock User
     $user = Mockery::mock(\App\Models\User::class)->makePartial();
+    $user->shouldReceive('getAttribute')->with('name')->andReturn('Test User');
     $user->shouldReceive('getAttribute')->with('active_budget_year')->andReturn(2026);
     $user->shouldReceive('isDesa')->andReturn(true);
     $user->shouldReceive('isKecamatan')->andReturn(false);
@@ -105,7 +106,17 @@ public function test_otomatisasi_metadata_header_saat_user_login(): void
 
     $area = Mockery::mock(\App\Domains\Wilayah\Models\Area::class);
     $area->shouldReceive('getAttribute')->with('name')->andReturn('Desa Selokarto');
+    $area->shouldReceive('offsetExists')->with('name')->andReturn(true);
+    $area->shouldReceive('offsetGet')->with('name')->andReturn('Desa Selokarto');
+    $area->shouldReceive('getAttribute')->with('chairperson_name')->andReturn('Chairperson Name');
+    $area->shouldReceive('offsetExists')->with('chairperson_name')->andReturn(true);
+    $area->shouldReceive('offsetGet')->with('chairperson_name')->andReturn('Chairperson Name');
+    $area->shouldReceive('getAttribute')->with('chairperson_role')->andReturn('KETUA TP PKK DESA SELOKARTO');
+    $area->shouldReceive('offsetExists')->with('chairperson_role')->andReturn(true);
+    $area->shouldReceive('offsetGet')->with('chairperson_role')->andReturn('KETUA TP PKK DESA SELOKARTO');
     $area->shouldReceive('getAttribute')->with('parent')->andReturn($areaParent);
+    $area->shouldReceive('offsetExists')->with('parent')->andReturn(true);
+    $area->shouldReceive('offsetGet')->with('parent')->andReturn($areaParent);
 
     $user->shouldReceive('getAttribute')->with('area')->andReturn($area);
 
@@ -120,7 +131,11 @@ public function test_otomatisasi_metadata_header_saat_user_login(): void
                 return $data['headerRole'] === 'SEKRETARIS PKK DESA' &&
                        $data['headerVillage'] === 'Desa Selokarto' &&
                        $data['headerKecamatan'] === 'Kecamatan Pecalungan' &&
-                       $data['headerYear'] === 2026;
+                       $data['headerYear'] === 2026 &&
+                       $data['footerUserName'] === 'Test User' &&
+                       $data['footerRoleLabel'] === 'SEKRETARIS (DESA)' &&
+                       $data['footerChairpersonName'] === 'Chairperson Name' &&
+                       $data['footerChairpersonRole'] === 'KETUA TP PKK DESA SELOKARTO';
             }))
             ->andReturn($pdfMock);
 
@@ -142,6 +157,7 @@ public function test_otomatisasi_metadata_header_saat_user_login(): void
 
         // Mock User
         $user = Mockery::mock(\App\Models\User::class)->makePartial();
+        $user->shouldReceive('getAttribute')->with('name')->andReturn('Kecamatan User');
         $user->shouldReceive('getAttribute')->with('active_budget_year')->andReturn(2026);
         $user->shouldReceive('isDesa')->andReturn(false);
         $user->shouldReceive('isKecamatan')->andReturn(true);
@@ -150,6 +166,14 @@ public function test_otomatisasi_metadata_header_saat_user_login(): void
         // Mock Area
         $area = Mockery::mock(\App\Domains\Wilayah\Models\Area::class);
         $area->shouldReceive('getAttribute')->with('name')->andReturn('Kecamatan Pecalungan');
+        $area->shouldReceive('offsetExists')->with('name')->andReturn(true);
+        $area->shouldReceive('offsetGet')->with('name')->andReturn('Kecamatan Pecalungan');
+        $area->shouldReceive('getAttribute')->with('chairperson_name')->andReturn('Kecamatan Chairperson');
+        $area->shouldReceive('offsetExists')->with('chairperson_name')->andReturn(true);
+        $area->shouldReceive('offsetGet')->with('chairperson_name')->andReturn('Kecamatan Chairperson');
+        $area->shouldReceive('getAttribute')->with('chairperson_role')->andReturn('KETUA TP PKK KECAMATAN PECALUNGAN');
+        $area->shouldReceive('offsetExists')->with('chairperson_role')->andReturn(true);
+        $area->shouldReceive('offsetGet')->with('chairperson_role')->andReturn('KETUA TP PKK KECAMATAN PECALUNGAN');
         
         $user->shouldReceive('getAttribute')->with('area')->andReturn($area);
 
@@ -163,7 +187,11 @@ public function test_otomatisasi_metadata_header_saat_user_login(): void
                 return $data['headerRole'] === 'SEKRETARIS PKK KECAMATAN' &&
                        ! isset($data['headerVillage']) &&
                        $data['headerKecamatan'] === 'Kecamatan Pecalungan' &&
-                       $data['headerYear'] === 2026;
+                       $data['headerYear'] === 2026 &&
+                       $data['footerUserName'] === 'Kecamatan User' &&
+                       $data['footerRoleLabel'] === 'SEKRETARIS (KECAMATAN)' &&
+                       $data['footerChairpersonName'] === 'Kecamatan Chairperson' &&
+                       $data['footerChairpersonRole'] === 'KETUA TP PKK KECAMATAN PECALUNGAN';
             }))
             ->andReturn($pdfMock);
 
