@@ -12,4 +12,5 @@ return [
             'agenda-surat',
         ],
     ],
+    'sekretaris_show_pokja_menus' => env('ACCESS_CONTROL_SEKRETARIS_SHOW_POKJA', false),
 ];

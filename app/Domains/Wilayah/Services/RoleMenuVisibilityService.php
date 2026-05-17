@@ -25,6 +25,16 @@ class RoleMenuVisibilityService
     ];
 
     /**
+     * @var list<string>
+     */
+    private const POKJA_GROUPS = [
+        'pokja-i',
+        'pokja-ii',
+        'pokja-iii',
+        'pokja-iv',
+    ];
+
+    /**
      * @var array<string, list<string>>
      */
     private const GROUP_MODULES = [
@@ -413,11 +423,18 @@ class RoleMenuVisibilityService
             return [];
         }
 
+        $showPokjaForSekretaris = (bool) config('access_control.sekretaris_show_pokja_menus', false);
+
         $groupModes = [];
         foreach ($roleNames as $roleName) {
+            $isSekretaris = str_ends_with($roleName, '-sekretaris');
             $roleModes = self::ROLE_GROUP_MODES[$roleName] ?? [];
             foreach ($roleModes as $group => $mode) {
                 if (! array_key_exists($group, $allowedGroupLookup)) {
+                    continue;
+                }
+
+                if ($isSekretaris && ! $showPokjaForSekretaris && in_array($group, self::POKJA_GROUPS, true)) {
                     continue;
                 }
 
@@ -484,7 +501,7 @@ class RoleMenuVisibilityService
     }
 
     /**
-     * @param list<string> $roleNames
+     * @list<string> $roleNames
      * @return array<string, array<string, string>>
      */
     private function rolloutOverridesByScopeRoles(string $scope, array $roleNames): array
