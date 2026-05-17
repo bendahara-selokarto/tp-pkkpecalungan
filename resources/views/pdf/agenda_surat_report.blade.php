@@ -17,19 +17,10 @@
     </style>
 </head>
 <body>
-    @php
-        $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
-        $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $level);
-        $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
-    @endphp
-
-    <div class="lampiran">LAMPIRAN 4.10</div>
-    <div class="title">BUKU AGENDA SURAT MASUK/KELUAR</div>
-    <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }}<br>
-        Level: {{ $levelLabel }}<br>
-        Tahun Anggaran: {{ $tahunAnggaran ?? '-' }}
-    </div>
+    @include('pdf.partials._report_header', [
+        'headerTitle' => 'BUKU AGENDA SURAT MASUK/KELUAR',
+        'headerLampiran' => 'LAMPIRAN 4.10'
+    ])
 
     <table>
         <thead>

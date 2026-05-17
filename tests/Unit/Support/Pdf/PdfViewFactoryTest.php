@@ -84,4 +84,94 @@ class PdfViewFactoryTest extends TestCase
         $factory = new PdfViewFactory;
         $factory->loadView('pdf.sample', [], 'invalid');
     }
+public function test_otomatisasi_metadata_header_saat_user_login(): void
+{
+    // Mock Role
+    $role = Mockery::mock(\Spatie\Permission\Models\Role::class);
+    $role->shouldReceive('getAttribute')->with('name')->andReturn('desa-sekretaris');
+    $role->shouldReceive('offsetExists')->with('name')->andReturn(true);
+    $role->shouldReceive('offsetGet')->with('name')->andReturn('desa-sekretaris');
+
+    // Mock User
+    $user = Mockery::mock(\App\Models\User::class)->makePartial();
+    $user->shouldReceive('getAttribute')->with('active_budget_year')->andReturn(2026);
+    $user->shouldReceive('isDesa')->andReturn(true);
+    $user->shouldReceive('isKecamatan')->andReturn(false);
+    $user->shouldReceive('getAttribute')->with('roles')->andReturn(collect([$role]));
+
+    // Mock Area
+    $areaParent = Mockery::mock(\App\Domains\Wilayah\Models\Area::class);
+    $areaParent->shouldReceive('getAttribute')->with('name')->andReturn('Kecamatan Pecalungan');
+
+    $area = Mockery::mock(\App\Domains\Wilayah\Models\Area::class);
+    $area->shouldReceive('getAttribute')->with('name')->andReturn('Desa Selokarto');
+    $area->shouldReceive('getAttribute')->with('parent')->andReturn($areaParent);
+
+    $user->shouldReceive('getAttribute')->with('area')->andReturn($area);
+
+    $this->actingAs($user);
+
+
+        $pdfMock = Mockery::mock(DompdfPdf::class);
+
+        Pdf::shouldReceive('loadView')
+            ->once()
+            ->with('pdf.sample', Mockery::on(function ($data) {
+                return $data['headerRole'] === 'SEKRETARIS PKK DESA' &&
+                       $data['headerVillage'] === 'Desa Selokarto' &&
+                       $data['headerKecamatan'] === 'Kecamatan Pecalungan' &&
+                       $data['headerYear'] === 2026;
+            }))
+            ->andReturn($pdfMock);
+
+        $pdfMock->shouldReceive('setPaper')->andReturnSelf();
+
+        $factory = new PdfViewFactory;
+        $result = $factory->loadView('pdf.sample', []);
+
+        $this->assertSame($pdfMock, $result);
+    }
+
+    public function test_otomatisasi_metadata_header_saat_kecamatan_user_login(): void
+    {
+        // Mock Role
+        $role = Mockery::mock(\Spatie\Permission\Models\Role::class);
+        $role->shouldReceive('getAttribute')->with('name')->andReturn('kecamatan-sekretaris');
+        $role->shouldReceive('offsetExists')->with('name')->andReturn(true);
+        $role->shouldReceive('offsetGet')->with('name')->andReturn('kecamatan-sekretaris');
+
+        // Mock User
+        $user = Mockery::mock(\App\Models\User::class)->makePartial();
+        $user->shouldReceive('getAttribute')->with('active_budget_year')->andReturn(2026);
+        $user->shouldReceive('isDesa')->andReturn(false);
+        $user->shouldReceive('isKecamatan')->andReturn(true);
+        $user->shouldReceive('getAttribute')->with('roles')->andReturn(collect([$role]));
+
+        // Mock Area
+        $area = Mockery::mock(\App\Domains\Wilayah\Models\Area::class);
+        $area->shouldReceive('getAttribute')->with('name')->andReturn('Kecamatan Pecalungan');
+        
+        $user->shouldReceive('getAttribute')->with('area')->andReturn($area);
+
+        $this->actingAs($user);
+
+        $pdfMock = Mockery::mock(DompdfPdf::class);
+
+        Pdf::shouldReceive('loadView')
+            ->once()
+            ->with('pdf.sample', Mockery::on(function ($data) {
+                return $data['headerRole'] === 'SEKRETARIS PKK KECAMATAN' &&
+                       ! isset($data['headerVillage']) &&
+                       $data['headerKecamatan'] === 'Kecamatan Pecalungan' &&
+                       $data['headerYear'] === 2026;
+            }))
+            ->andReturn($pdfMock);
+
+        $pdfMock->shouldReceive('setPaper')->andReturnSelf();
+
+        $factory = new PdfViewFactory;
+        $result = $factory->loadView('pdf.sample', []);
+
+        $this->assertSame($pdfMock, $result);
+    }
 }

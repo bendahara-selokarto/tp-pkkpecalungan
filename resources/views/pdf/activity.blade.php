@@ -22,19 +22,11 @@
     </style>
 </head>
 <body>
-    @php
-        $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $activity->level);
-        $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $activity->level);
-        $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
-    @endphp
-
-    <div class="lampiran">LAMPIRAN 4.13</div>
-    <div class="title">BUKU KEGIATAN</div>
-    <div class="meta">
-        {{ $areaLabel }}: {{ $activity->area?->name ?? '-' }}<br>
-        Level: {{ $levelLabel }}<br>
-        Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}
-    </div>
+    @include('pdf.partials._report_header', [
+        'headerTitle' => 'BUKU KEGIATAN',
+        'headerLampiran' => 'LAMPIRAN 4.13',
+        'headerYear' => $budgetYearLabel ?? null
+    ])
 
     <table>
         <thead>

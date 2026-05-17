@@ -29,6 +29,30 @@ class PdfViewFactory
             throw new InvalidArgumentException('Invalid PDF orientation. Use landscape or portrait.');
         }
 
+        $data = $this->appendHeaderMetadata($data);
+
         return Pdf::loadView($view, $data)->setPaper($resolvedPaperSize, $resolvedOrientation);
+    }
+
+    private function appendHeaderMetadata(array $data): array
+    {
+        $user = auth()->user();
+        if (! $user) {
+            return $data;
+        }
+
+        $role = $user->roles->first()?->name ?? '';
+
+        $data['headerRole'] = $data['headerRole'] ?? \App\Support\RoleLabelFormatter::pdfTitleSuffix($role);
+        $data['headerYear'] = $data['headerYear'] ?? $user->active_budget_year;
+
+        if ($user->isDesa() && $user->area) {
+            $data['headerVillage'] = $data['headerVillage'] ?? $user->area->name;
+            $data['headerKecamatan'] = $data['headerKecamatan'] ?? $user->area->parent?->name;
+        } elseif ($user->isKecamatan() && $user->area) {
+            $data['headerKecamatan'] = $data['headerKecamatan'] ?? $user->area->name;
+        }
+
+        return $data;
     }
 }

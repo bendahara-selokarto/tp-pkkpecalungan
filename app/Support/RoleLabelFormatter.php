@@ -22,6 +22,24 @@ class RoleLabelFormatter
         return sprintf('%s (%s)', $baseLabel, $scopeLabel);
     }
 
+    public static function pdfTitleSuffix(string $role): string
+    {
+        if ($role === 'super-admin') {
+            return 'SUPER ADMIN';
+        }
+
+        [$scope, $suffix] = array_pad(explode('-', $role, 2), 2, '');
+
+        if (! in_array($scope, ['desa', 'kecamatan'], true) || $suffix === '') {
+            return strtoupper(str_replace('-', ' ', $role));
+        }
+
+        $scopeLabel = $scope === 'desa' ? 'PKK DESA' : 'PKK KECAMATAN';
+        $baseLabel = strtoupper(self::suffixLabel($suffix));
+
+        return sprintf('%s %s', $baseLabel, $scopeLabel);
+    }
+
     private static function suffixLabel(string $suffix): string
     {
         return match ($suffix) {
