@@ -29,12 +29,12 @@ class PdfViewFactory
             throw new InvalidArgumentException('Invalid PDF orientation. Use landscape or portrait.');
         }
 
-        $data = $this->appendHeaderMetadata($data);
+        $data = $this->appendStandardMetadata($data);
 
         return Pdf::loadView($view, $data)->setPaper($resolvedPaperSize, $resolvedOrientation);
     }
 
-    private function appendHeaderMetadata(array $data): array
+    private function appendStandardMetadata(array $data): array
     {
         $user = auth()->user();
         if (! $user) {
@@ -43,6 +43,7 @@ class PdfViewFactory
 
         $role = $user->roles->first()?->name ?? '';
 
+        // Header Metadata
         $data['headerRole'] = $data['headerRole'] ?? \App\Support\RoleLabelFormatter::pdfTitleSuffix($role);
         $data['headerYear'] = $data['headerYear'] ?? $user->active_budget_year;
 
@@ -52,6 +53,28 @@ class PdfViewFactory
         } elseif ($user->isKecamatan() && $user->area) {
             $data['headerKecamatan'] = $data['headerKecamatan'] ?? $user->area->name;
         }
+
+        // Footer Metadata
+        $area = $user->area;
+        $data['footerPlace'] = $data['footerPlace'] ?? config('pdf.regional_identity.kecamatan', 'Pecalungan');
+        $data['footerDate'] = $data['footerDate'] ?? now()->translatedFormat('d F Y');
+        $data['footerUserName'] = $data['footerUserName'] ?? $user->name;
+        $data['footerRoleLabel'] = $data['footerRoleLabel'] ?? strtoupper(\App\Support\RoleLabelFormatter::label($role));
+
+        // Database Driven Chairperson Metadata
+        if ($area) {
+            $data['footerChairpersonName'] = $data['footerChairpersonName'] ?? $area->chairperson_name;
+            $data['footerChairpersonRole'] = $data['footerChairpersonRole'] ?? $area->chairperson_role;
+        }
+
+        // Fallback logic if database values are missing
+        if ($user->isDesa()) {
+            $data['footerChairpersonRole'] = $data['footerChairpersonRole'] ?? 'KETUA TP PKK DESA ' . strtoupper($area?->name ?? '');
+        } else {
+            $data['footerChairpersonRole'] = $data['footerChairpersonRole'] ?? 'KETUA TP PKK KECAMATAN ' . strtoupper(config('pdf.regional_identity.kecamatan', 'PECALUNGAN'));
+        }
+
+        $data['footerChairpersonName'] = $data['footerChairpersonName'] ?? '..........................';
 
         return $data;
     }
