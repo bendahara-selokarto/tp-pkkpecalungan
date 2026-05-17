@@ -12,6 +12,8 @@ class Area extends Model
         'name',
         'level',
         'parent_id',
+        'chairperson_name',
+        'chairperson_role',
     ];
 
     public function parent()
