@@ -4,7 +4,7 @@ import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { formatScopeLabel } from '@/utils/roleLabelFormatter'
 import { Link, useForm } from '@inertiajs/vue3'
-import { mdiMapMarkerEdit } from '@mdi/js'
+import { mdiMapMarker } from '@mdi/js'
 
 const props = defineProps({
   area: {
@@ -25,7 +25,7 @@ const submit = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiMapMarkerEdit" title="Edit Metadata Wilayah" main />
+    <SectionTitleLineWithButton :icon="mdiMapMarker" title="Edit Metadata Wilayah" main />
 
     <CardBox class="max-w-2xl">
       <div class="mb-6 rounded-lg bg-slate-50 p-4 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800">
