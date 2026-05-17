@@ -21,42 +21,10 @@
     </style>
 </head>
 <body>
-    @php
-        $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
-        $desaKel = $scopeLevel === \App\Domains\Wilayah\Enums\ScopeLevel::DESA ? $areaName : '-';
-        $kec = $pdfKecamatanName ?? '-';
-        $budgetYearLabel = $tahunAnggaran ?? ($printedBy?->active_budget_year ?? now()->format('Y'));
-    @endphp
-
-    <div class="lampiran">LAMPIRAN 4.9a</div>
-    <div class="title">BUKU DAFTAR ANGGOTA TIM PENGGERAK PKK</div>
-
-    <table class="identity">
-        <tr>
-            <td class="label">Desa/Kel.</td>
-            <td class="dot">:</td>
-            <td>{{ $desaKel }}</td>
-            <td class="label">Kec.</td>
-            <td class="dot">:</td>
-            <td>{{ $kec }}</td>
-        </tr>
-        <tr>
-            <td class="label">Kab/Kota</td>
-            <td class="dot">:</td>
-            <td>{{ $pdfKabKotaName ?? '-' }}</td>
-            <td class="label">Prov.</td>
-            <td class="dot">:</td>
-            <td>{{ $pdfProvinsiName ?? '-' }}</td>
-        </tr>
-        <tr>
-            <td class="label">Tahun Anggaran</td>
-            <td class="dot">:</td>
-            <td>{{ $budgetYearLabel }}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </table>
+    @include('pdf.partials._report_header', [
+        'headerTitle' => 'BUKU DAFTAR ANGGOTA TIM PENGGERAK PKK',
+        'headerLampiran' => 'LAMPIRAN 4.9a'
+    ])
 
     <table class="main">
         <thead>
@@ -129,6 +97,8 @@
     <div class="note">
         Digunakan untuk di Setiap Jenjang TP PKK.
     </div>
+
+    @include('pdf.partials._report_footer')
 
     <div class="meta">
         Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}

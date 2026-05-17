@@ -49,18 +49,18 @@
     @php
         $scopeLevel = \App\Domains\Wilayah\Enums\ScopeLevel::tryFrom((string) $level);
         $levelLabel = $scopeLevel?->reportLevelLabel() ?? strtoupper((string) $level);
-        $areaLabel = $scopeLevel?->reportAreaLabel() ?? 'Wilayah';
+        
+        $headerVillage = ($scopeLevel === \App\Domains\Wilayah\Enums\ScopeLevel::DESA) ? $areaName : null;
         $budgetYearLabel = $tahunAnggaran ?? ($printedBy?->active_budget_year ?? now()->format('Y'));
     @endphp
 
-    <div class="title">BUKU TAMU {{ $levelLabel }}</div>
-
-    <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }}<br>
-        Tahun Anggaran: {{ $budgetYearLabel }}<br>
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
-        Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
-    </div>
+    @include('pdf.partials._report_header', [
+        'headerTitle' => 'BUKU TAMU',
+        'headerRole' => $levelLabel,
+        'headerVillage' => $headerVillage,
+        'headerKecamatan' => $pdfKecamatanName ?? null,
+        'headerYear' => $budgetYearLabel
+    ])
 
     <table>
         <thead>
@@ -91,8 +91,11 @@
         </tbody>
     </table>
 
+    @include('pdf.partials._report_footer')
+
     <div class="footer">
-        Total data: {{ $items->count() }}.
+        Total data: {{ $items->count() }}. | 
+        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
 </body>
 </html>

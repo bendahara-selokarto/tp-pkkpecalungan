@@ -160,6 +160,8 @@
         </tbody>
     </table>
 
+    @include('pdf.partials._report_footer')
+
     <div class="meta-footer">
         Level: {{ $levelLabel }} | Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>

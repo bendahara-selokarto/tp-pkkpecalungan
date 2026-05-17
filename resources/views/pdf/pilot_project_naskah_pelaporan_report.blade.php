@@ -406,16 +406,9 @@
 
     <div class="closing-text">Demikian kami sampaikan laporan ...</div>
 
-    <table class="signature-wrap">
-        <tr>
-            <td></td>
-            <td class="signature-right">
-                Ketua Bidang IV / Pokja IV<br>
-                Tim Penggerak PKK {{ $scopeInstitutionTitle }} {{ $areaName }},
-                <div class="signature-line">{{ $dotFill(42) }}</div>
-            </td>
-        </tr>
-    </table>
+    @include('pdf.partials._report_footer', [
+        'footerChairpersonRole' => 'Ketua Bidang IV / Pokja IV'
+    ])
 
     @php
         $visualAttachments = collect(data_get($report, 'attachments', []))

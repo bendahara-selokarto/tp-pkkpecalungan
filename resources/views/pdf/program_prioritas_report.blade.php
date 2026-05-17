@@ -38,7 +38,7 @@
         .center {
             text-align: center;
         }
-        .footer {
+        .footer-meta {
             margin-top: 12px;
             font-size: 10px;
             color: #374151;
@@ -56,9 +56,7 @@
 
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
-        Tahun anggaran: {{ $budgetYearLabel ?? '-' }}<br>
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
-        Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+        Tahun anggaran: {{ $budgetYearLabel ?? '-' }}
     </div>
 
     <table>
@@ -126,8 +124,11 @@
         </tbody>
     </table>
 
-    <div class="footer">
-        Total data: {{ $items->count() }}.
+    @include('pdf.partials._report_footer')
+
+    <div class="footer-meta">
+        Total data: {{ $items->count() }}. | 
+        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
 </body>
 </html>

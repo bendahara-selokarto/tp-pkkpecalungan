@@ -14,13 +14,12 @@
     </style>
 </head>
 <body>
-    <div class="title">DAFTAR ANGGOTA POKJA I</div>
-    <div class="meta">
-        Wilayah: {{ $areaName }}<br>
-        Tahun anggaran: {{ $budgetYearLabel ?? '-' }}<br>
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
-        Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
-    </div>
+    @include('pdf.partials._report_header', [
+        'headerTitle' => 'DAFTAR ANGGOTA POKJA I',
+        'headerLampiran' => 'LAMPIRAN 4.9',
+        'headerKecamatan' => $pdfKecamatanName ?? null,
+        'headerYear' => $budgetYearLabel ?? null
+    ])
 
     <table>
         <thead>
@@ -71,5 +70,16 @@
             @endforelse
         </tbody>
     </table>
+</body>
+</html>
+
+        </tbody>
+    </table>
+
+    @include('pdf.partials._report_footer')
+
+    <div style="margin-top: 8px; font-size: 9px; color: #374151;">
+        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+    </div>
 </body>
 </html>

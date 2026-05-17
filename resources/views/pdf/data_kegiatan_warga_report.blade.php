@@ -64,7 +64,9 @@
         </tbody>
     </table>
 
-    <div class="meta-print">
+    @include('pdf.partials._report_footer')
+
+    <div class="footer-meta">
         Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
 </body>

@@ -76,12 +76,14 @@
         </tbody>
     </table>
 
-    <div class="ttd">
-        Tempat, ........ tanggal, ..... bulan, ........ tahun
-    </div>
+    @include('pdf.partials._report_footer')
 
-    <div class="meta-print">
+    <div class="footer-meta">
         Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+    </div>
+</body>
+</html>
+intedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
 </body>
 </html>

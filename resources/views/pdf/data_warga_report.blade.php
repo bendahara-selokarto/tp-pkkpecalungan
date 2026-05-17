@@ -119,10 +119,12 @@
                 </tbody>
             </table>
 
-            <div class="meta">
-                Wilayah: {{ $areaName }}<br>
-                Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}<br>
-                Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
+            @include('pdf.partials._report_footer')
+
+            <div class="footer-meta">
+                Wilayah: {{ $areaName }} | 
+                Tahun Anggaran: {{ $budgetYearLabel ?? '-' }} | 
+                Dicetak oleh: {{ $printedBy?->name ?? '-' }} | 
                 Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
             </div>
         </section>

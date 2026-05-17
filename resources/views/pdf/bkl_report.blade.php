@@ -55,14 +55,15 @@
         </tbody>
     </table>
 
-    <table class="signature">
-        <tr>
-            <td style="width: 50%;">
-                Mengetahui :<br>
-                KETUA TP. PKK ................
-                <div class="placeholder">( ................................ )</div>
-            </td>
-            <td style="width: 50%; text-align: left;">
+    @include('pdf.partials._report_footer')
+
+    <div class="note" style="margin-top: 8px; font-size: 9px; color: #374151;">
+        Keterangan : Diisi oleh TP. PKK Kecamatan | 
+        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+    </div>
+</body>
+</html>
+0%; text-align: left;">
                 Batang ............<br>
                 KETUA POKJA I ................
                 <div class="placeholder">( ................................ )</div>

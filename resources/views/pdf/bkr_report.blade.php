@@ -54,12 +54,14 @@
         </tbody>
     </table>
 
-    <table class="signature">
-        <tr>
-            <td style="width: 50%;">
-                Mengetahui :<br>
-                KETUA TP. PKK ................
-                <div class="placeholder">( ................................ )</div>
+    @include('pdf.partials._report_footer')
+
+    <div style="margin-top: 8px; font-size: 9px; color: #374151;">
+        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+    </div>
+</body>
+</html>
+........ )</div>
             </td>
             <td style="width: 50%; text-align: left;">
                 Batang ............<br>

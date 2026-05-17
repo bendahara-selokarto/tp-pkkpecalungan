@@ -15,9 +15,7 @@
         .center { text-align: center; }
         .right { text-align: right; }
         .summary { margin-top: 10px; font-size: 10px; line-height: 1.5; }
-        .ttd { margin-top: 18px; width: 100%; border-collapse: collapse; }
-        .ttd td { border: none; width: 50%; vertical-align: top; text-align: center; font-size: 10px; }
-        .meta-print { margin-top: 8px; font-size: 9px; color: #374151; }
+        .footer-meta { margin-top: 8px; font-size: 9px; color: #374151; }
     </style>
 </head>
 <body>
@@ -35,11 +33,14 @@
         $totalSaldo = $sisaBank + $sisaKasTunai;
     @endphp
 
-    <div class="lampiran">LAMPIRAN 4.11</div>
-    <div class="title">BUKU TABUNGAN</div>
-    <div class="meta">
-        {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }} | Tahun anggaran: {{ $budgetYearLabel ?? '-' }}
-    </div>
+    @include('pdf.partials._report_header', [
+        'headerTitle' => 'BUKU TABUNGAN',
+        'headerRole' => $levelLabel,
+        'headerLampiran' => 'LAMPIRAN 4.11',
+        'headerYear' => $budgetYearLabel ?? null,
+        'headerVillage' => (string)$level === 'desa' ? $areaName : null,
+        'headerKecamatan' => (string)$level === 'kecamatan' ? $areaName : 'Pecalungan'
+    ])
 
     <table>
         <thead>
@@ -118,26 +119,10 @@
         TOTAL: Rp. {{ number_format($totalSaldo, 0, ',', '.') }}
     </div>
 
-    <table class="ttd">
-        <tr>
-            <td>
-                Mengetahui,<br>
-                Ketua Umum/Ketua
-                <br><br><br>
-                Tanda tangan
-                <br><br>
-                Nama Jelas
-            </td>
-            <td>
-                Nama Kota, ..... tanggal ..... bulan ..... tahun<br>
-                Bendahara
-                <br><br><br>
-                Tanda tangan
-                <br><br>
-                Nama Jelas
-            </td>
-        </tr>
-    </table>
+    @include('pdf.partials._report_footer', [
+        'footerChairpersonRole' => 'Ketua Umum/Ketua',
+        'footerRoleLabel' => 'Bendahara'
+    ])
 
     <div class="meta-print">
         Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}

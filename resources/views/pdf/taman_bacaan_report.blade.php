@@ -141,6 +141,8 @@
                 Katagori : [pertanian, pendidikan, ketrampilan keluarga]
             </div>
 
+            @include('pdf.partials._report_footer')
+
             <div class="meta-print">
                 Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
             </div>

@@ -186,6 +186,8 @@
         @endif
     @empty
         <div class="title">LAPORAN PILOT PROJECT KELUARGA SEHAT {{ $levelLabel }}</div>
+        @include('pdf.partials._report_footer')
+
         <div class="meta">
             {{ $areaLabel }}: {{ $areaName }}<br>
             Tahun anggaran: {{ $budgetYearLabel ?? '-' }}<br>

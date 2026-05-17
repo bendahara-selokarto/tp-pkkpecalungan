@@ -11,9 +11,7 @@
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
-        .signature { margin-top: 20px; border-collapse: collapse; width: 100%; table-layout: fixed; }
-        .signature td { border: none; padding: 0; vertical-align: top; font-size: 12px; }
-        .signature .placeholder { margin-top: 52px; }
+        .footer-meta { margin-top: 12px; font-size: 9px; color: #374151; }
     </style>
 </head>
 <body>
@@ -53,13 +51,10 @@
         </tbody>
     </table>
 
-    <table class="signature">
-        <tr>
-            <td style="width: 100%; text-align: left;">
-                Ketua TP. PKK Desa/Kel ............
-                <div class="placeholder">( ................................ )</div>
-            </td>
-        </tr>
-    </table>
+    @include('pdf.partials._report_footer')
+
+    <div class="footer-meta">
+        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+    </div>
 </body>
 </html>

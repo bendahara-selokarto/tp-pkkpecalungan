@@ -103,6 +103,12 @@
             @endforelse
         </tbody>
     </table>
+
+    @include('pdf.partials._report_footer')
+
+    <div class="meta" style="margin-top: 8px; font-size: 9px; color: #374151;">
+        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+    </div>
 </body>
 </html>
 
