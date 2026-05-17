@@ -35,15 +35,6 @@ class AdminWilayahUserSeeder extends Seeder
             );
         }
 
-        $this->upsertUserWithRole(
-            name: 'Sekretaris Kecamatan',
-            email: 'sekretaris.kecamatan@gmail.com',
-            plainPassword: 'password123',
-            scope: 'kecamatan',
-            areaId: (int) $kecamatanArea->id,
-            role: 'kecamatan-sekretaris',
-        );
-
         foreach ($desaAreas as $desaArea) {
             foreach (RoleScopeMatrix::assignableRolesForScope('desa') as $role) {
                 $this->upsertRoleUserForArea(
@@ -53,16 +44,6 @@ class AdminWilayahUserSeeder extends Seeder
                     areaName: (string) $desaArea->name,
                 );
             }
-
-            $desaSlug = str($desaArea->name)->lower()->replace(' ', '.')->value();
-            $this->upsertUserWithRole(
-                name: 'Sekretaris Desa '.$desaArea->name,
-                email: 'sekretaris.desa.'.$desaSlug.'@gmail.com',
-                plainPassword: 'password123',
-                scope: 'desa',
-                areaId: (int) $desaArea->id,
-                role: 'desa-sekretaris',
-            );
         }
     }
 

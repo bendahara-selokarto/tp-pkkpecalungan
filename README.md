@@ -257,6 +257,20 @@ Minimal test yang wajib ada:
 5. Jika query scoped kompleks, test repository/use case untuk memastikan data luar scope tidak bocor.
 6. Jalankan `php artisan test` sebelum finalisasi.
 
+## 14A. Starter Data
+
+Default `php artisan migrate:fresh --seed` hanya mengisi data starter aplikasi:
+
+- role aplikasi,
+- kecamatan Pecalungan dan 10 desa canonical,
+- akun super-admin,
+- akun wilayah yang mewakili setiap role non-super-admin sesuai scope dan area,
+- sinkronisasi `scope` dan `area_id` user.
+
+Seeder demo/dashboard seperti `DashboardNaturalBatangSeeder`, `WilayahMissingDomainSeeder`, `DashboardRandomBukuSeeder`, dan `DashboardUiChartAccessDumpSeeder` tidak dijalankan pada chain default. Jalankan manual hanya saat butuh data simulasi atau evidence UI.
+
+Semua akun starter memakai password default `password123`.
+
 ## 15. Runtime Evidence UI/UX (Playwright + Axe)
 
 Baseline audit runtime UI/UX tersedia melalui Playwright (smoke) dan Axe (aksesibilitas).
