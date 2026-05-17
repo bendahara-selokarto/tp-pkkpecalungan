@@ -27,6 +27,7 @@ Related ADR: `-`
 - [x] Penambahan field `chairperson_role` (optional/sebagai perluasan) atau standarisasi logic role berbasis database.
 - [x] `PdfViewFactory` dimodifikasi untuk otomatisasi data footer dari database.
 - [x] Unit test/Feature test memastikan footer berubah saat data area diubah.
+- [x] Implementasi UI "Manajemen Wilayah" untuk Super Admin agar dapat menginput data ketua.
 
 ## Langkah Eksekusi
 
@@ -35,11 +36,15 @@ Related ADR: `-`
 - [x] (Opsional) Menambahkan migrasi untuk `chairperson_role` jika diperlukan untuk kedinamisan penuh.
 - [x] Refactor `PdfViewFactory::appendStandardMetadata` untuk lookup ke database.
 - [x] Verifikasi visual/test pada modul pilot (Agenda Surat).
+- [x] Membuat `AreaManagementController` dan UseCases terkait.
+- [x] Membuat halaman Inertia `SuperAdmin/Areas/Index` dan `SuperAdmin/Areas/Edit`.
+- [x] Menambahkan menu "Manajemen Wilayah" di Sidebar Super Admin.
 
 ## Validasi
 
 - [x] L1: `php artisan test --filter=PdfViewFactoryTest`
-- [x] L2: Verifikasi manual/test render pada modul yang sudah menggunakan footer standar.
+- [x] L2: `php artisan test --filter=AreaManagementTest` (Feature test UI)
+- [x] L3: Verifikasi manual/test render pada modul yang sudah menggunakan footer standar.
 
 ## Risiko
 
@@ -50,6 +55,7 @@ Related ADR: `-`
 
 - [x] K1: Gunakan `areas.chairperson_name` sebagai source of truth utama untuk nama ketua.
 - [x] K2: Standarisasi label role tetap di logic factory jika belum ada field dedicated, atau tambahkan field `chairperson_role` di `areas`.
+- [x] K3: Modul Manajemen Wilayah hanya dapat diakses oleh Super Admin.
 
 ## Fallback Plan
 
