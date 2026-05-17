@@ -73,13 +73,21 @@ const isMenuItemVisibleByExperimentalPlacement = (item) => {
   return true
 }
 
-const filterMenuItems = (items, seenInternalHrefs) => items.filter((item) => {
+const filterMenuItems = (items, seenInternalHrefs, seenModuleSlugs) => items.filter((item) => {
   if (!isMenuItemVisibleByExperimentalPlacement(item)) {
     return false
   }
 
   if (!isModuleAllowedForCurrentUser(item)) {
     return false
+  }
+
+  const moduleSlug = resolveModuleSlugFromHref(item.href)
+  if (moduleSlug && seenModuleSlugs.has(moduleSlug)) {
+    // Jika item adalah link PDF report, dan modul utamanya sudah ada di sidebar, sembunyikan dari lampiran
+    if (item.href.includes('report/pdf') && !allowsDuplicateMenuHref(item)) {
+      return false
+    }
   }
 
   const normalizedHref = item.href?.split('?')[0] ?? ''
@@ -128,11 +136,16 @@ const lampiranBySlug = computed(() => buildLampiranMap(baseGroups.value))
 
 const visibleGroups = computed(() => {
   const seenPrintHrefs = new Set()
+  const seenModuleSlugs = new Set()
 
   // Daftarkan semua item dari Menu Utama ke dalam set seen agar tidak diduplikasi di Menu Lampiran
   baseGroups.value.forEach((group) => {
     if (!!menuGroupModes.value[group.key]) {
       group.items.forEach((item) => {
+        const slug = resolveModuleSlugFromHref(item.href)
+        if (slug) {
+          seenModuleSlugs.add(slug)
+        }
         if (!allowsDuplicateMenuHref(item)) {
           const normalizedHref = item.href?.split('?')[0] ?? ''
           seenPrintHrefs.add(normalizedHref)
@@ -144,7 +157,7 @@ const visibleGroups = computed(() => {
   return baseGroups.value
     .filter((group) => !!menuGroupModes.value[group.key])
     .map((group) => {
-      const printItems = filterMenuItems(group.printItems ?? [], seenPrintHrefs)
+      const printItems = filterMenuItems(group.printItems ?? [], seenPrintHrefs, seenModuleSlugs)
         .map((item) => ({
           ...item,
           lampiran: resolveLampiran(item, lampiranBySlug.value),
