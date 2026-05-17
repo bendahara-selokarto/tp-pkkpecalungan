@@ -292,6 +292,46 @@ const buildScopedMenuGroups = (scope) => {
   }))
 }
 
+const desaMenuGroups = buildScopedMenuGroups('desa')
+
+const kecamatanMenuGroups = [
+  {
+    key: 'belum-ada-pemilik',
+    label: 'Belum Ada Pemilik',
+    code: 'BP',
+    items: [
+      { href: '/kecamatan/buku-daftar-hadir', label: 'Buku Daftar Hadir' },
+      { href: '/kecamatan/buku-tamu', label: 'Buku Tamu' },
+      { href: '/kecamatan/buku-keuangan', label: 'Buku Keuangan' },
+      { href: '/kecamatan/laporan-tahunan-pkk', label: 'Laporan Tahunan Tim Penggerak PKK' },
+      { href: '/kecamatan/data-warga', label: 'Data Warga | 4.14.1a' },
+      { href: '/kecamatan/data-kegiatan-warga', label: 'Kegiatan Warga | 4.14.1b' },
+      { href: '/kecamatan/bkl', label: 'Buku Kegiatan BKL' },
+      { href: '/kecamatan/data-pelatihan-kader', label: 'Data Pelatihan Kader | 4.14.3' },
+      { href: '/kecamatan/taman-bacaan', label: 'Data Taman Bacaan/Perpustakaan' },
+      { href: '/kecamatan/koperasi', label: 'Data Koperasi' },
+      { href: '/kecamatan/kejar-paket', label: 'Data Kejar Paket/KF/PAUD' },
+      { href: '/kecamatan/literasi-warga', label: 'Literasi Warga (3 Buta)' },
+      { href: '/kecamatan/bkb-kegiatan', label: 'Data BKB (Kegiatan)' },
+      { href: '/kecamatan/tutor-khusus', label: 'Tutor Khusus KF/PAUD' },
+      { href: '/kecamatan/pelatihan-kader-pokja-ii', label: 'Rekap Pelatihan Kader Pokja II' },
+      { href: '/kecamatan/warung-pkk', label: 'Data Aset Sarana Desa/Kelurahan | 4.14.4' },
+      { href: '/kecamatan/pilot-project-naskah-pelaporan', label: 'Naskah Pelaporan Pilot Project Pokja IV' },
+      { href: '/kecamatan/pilot-project-keluarga-sehat', label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
+    ],
+  },
+  ...buildScopedMenuGroups('kecamatan'),
+  {
+    key: 'monitoring',
+    label: 'Monitoring Kecamatan',
+    code: 'MON',
+    items: [
+      { href: '/kecamatan/desa-activities', label: 'Rekap Kegiatan Desa', uiVisibility: 'disabled' },
+      { href: '/kecamatan/desa-arsip', label: 'Rekap Arsip Desa', uiVisibility: 'disabled' },
+    ],
+  },
+]
+
 const buildLampiranMap = (groups) => {
   const lampiranBySlug = {}
 
@@ -375,4 +415,6 @@ export {
   resolvePrintSourceSlug,
   resolveLampiran,
   resolveModuleSlugFromHref,
+  desaMenuGroups,
+  kecamatanMenuGroups,
 }

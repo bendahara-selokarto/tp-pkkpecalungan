@@ -4,6 +4,10 @@ import { useDarkModeStore } from '@/admin-one/stores/darkMode'
 import FlashMessageBar from '@/admin-one/components/FlashMessageBar.vue'
 import { formatRoleList } from '@/utils/roleLabelFormatter'
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import {
+  desaMenuGroups,
+  kecamatanMenuGroups,
+} from '@/menus/printMenuRegistry'
 
 const page = usePage()
 const darkModeStore = useDarkModeStore()
@@ -57,6 +61,7 @@ const isSekretarisRole = computed(() =>
 )
 
 const isActive = (prefix) => page.url.startsWith(prefix)
+
 const isExternalItem = (item) => item.external === true || (typeof item.href === 'string' && item.href.includes('report/pdf'))
 const isItemActive = (item) => !isExternalItem(item) && isActive(item.href)
 const openExternal = (href) => {
@@ -64,15 +69,6 @@ const openExternal = (href) => {
 }
 
 const duplicateAllowedModuleSlugs = new Set([])
-const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas'])
-const bookGroupContextByMenuGroup = {
-  'sekretaris-tpk': 'sekretaris-tpk',
-  'penunjang-buku-wajib': 'sekretaris-tpk',
-  'pokja-i': 'pokja-i',
-  'pokja-ii': 'pokja-ii',
-  'pokja-iii': 'pokja-iii',
-  'pokja-iv': 'pokja-iv',
-}
 
 const resolveModuleSlugFromHref = (href) => {
   if (typeof href !== 'string' || href.length === 0 || href.startsWith('http')) {
@@ -106,249 +102,6 @@ const allowsDuplicateMenuHref = (item) => {
 
   return moduleSlug ? duplicateAllowedModuleSlugs.has(moduleSlug) : false
 }
-
-const withBookGroupContext = (item, menuGroupKey) => {
-  if (isExternalItem(item)) {
-    return item
-  }
-
-  const bookGroup = bookGroupContextByMenuGroup[menuGroupKey]
-  const moduleSlug = resolveModuleSlugFromHref(item.href)
-  if (!bookGroup || !moduleSlug || !roleScopedBookModuleSlugs.has(moduleSlug)) {
-    return item
-  }
-
-  const separator = item.href.includes('?') ? '&' : '?'
-
-  return {
-    ...item,
-    href: `${item.href}${separator}book_group=${bookGroup}`,
-  }
-}
-
-const buildScopedPdfReportItemsByGroup = (scope) => ({
-  'sekretaris-tpk': [
-    { href: '/dashboard/charts/report/pdf', label: 'Grafik Dashboard', external: true },
-    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan | 4.13' },
-    { href: `/${scope}/agenda-surat/report/pdf`, label: 'Agenda Surat Masuk/Keluar | 4.10' },
-    { href: `/${scope}/agenda-surat/ekspedisi/report/pdf`, label: 'Ekspedisi Agenda Surat | 4.10' },
-    { href: `/${scope}/anggota-tim-penggerak/report/pdf`, label: 'Anggota Tim Penggerak PKK | 4.9a' },
-    { href: `/${scope}/anggota-tim-penggerak-kader/report/pdf`, label: 'Anggota dan Kader Tim Penggerak PKK | -' },
-    { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris | 4.12' },
-    { href: `/${scope}/buku-notulen-rapat/report/pdf`, label: 'Buku Notulen Rapat | -' },
-    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-    { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-  ],
-  'penunjang-buku-wajib': [
-    {
-      href: scope === 'kecamatan'
-        ? `/${scope}/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf`
-        : `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`,
-      label: 'Data Umum',
-    },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Program Kerja' },
-  ],
-  'pokja-i': [
-    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
-        { href: `/${scope}/data-kegiatan-pkk-pokja-i/report/pdf`, label: 'Buku Data Kegiatan Pokja I | 4.21' },
-        { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-        { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-        { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris | 4.12' },
-        { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-    { href: `/${scope}/simulasi-penyuluhan/report/pdf`, label: 'Buku Kegiatan Simulasi | -' },
-    { href: `/${scope}/bkr/report/pdf`, label: 'Buku Kegiatan BKR | -' },
-    { href: `/${scope}/anggota-pokja/report/pdf`, label: 'Buku Anggota Pokja I | -' },
-    { href: `/${scope}/paar/report/pdf`, label: 'Buku Data PAAR | -' },
-  ],
-  'pokja-ii': [
-    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf`, label: 'Buku Data Kegiatan Pokja II | 4.22' },
-        { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-        { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-        { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris | 4.12' },
-        { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-    { href: `/${scope}/pra-koperasi-up2k/report/pdf`, label: 'Buku Rekap Kelompok UP2K | -' },
-  ],
-  'pokja-iii': [
-    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
-    { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Buku Data Kegiatan Pokja III | 4.23' },
-    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-    { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-    { href: `/${scope}/data-keluarga/report/pdf`, label: 'Buku Rumah Sehat dan Tidak Sehat | 4.14.2a' },
-    { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf`, label: 'Buku Bantu Pangan | 4.14.2b' },
-    { href: `/${scope}/data-industri-rumah-tangga/report/pdf`, label: 'Buku Jumlah Industri Rumah Tangga | 4.14.2c' },
-    { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris Pokja III | 4.12' },
-  ],
-  'pokja-iv': [
-    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Buku Data Kegiatan Pokja IV | 4.24' },
-        { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-        { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-        { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris | 4.12' },
-        { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-    { href: `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`, label: 'Data Umum Pokja IV | 4.20a' },
-    { href: `/${scope}/posyandu/report/pdf`, label: 'Hasil Kegiatan Posyandu | 4.14.4e' },
-  ],
-})
-
-const buildScopedMenuGroups = (scope) => {
-  const pdfReportItemsByGroup = buildScopedPdfReportItemsByGroup(scope)
-
-  const groups = [
-    {
-      key: 'sekretaris-tpk',
-      label: 'Sekretaris PKK',
-      code: 'ST',
-      items: [
-        { href: `/${scope}/anggota-tim-penggerak`, label: 'Daftar Anggota Tim Penggerak PKK' },
-        { href: `/${scope}/agenda-surat`, label: 'Agenda Surat Masuk/Keluar' },
-        { href: `/${scope}/inventaris`, label: 'Buku Inventaris | 4.12' },
-        { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-        { href: `/${scope}/buku-notulen-rapat`, label: 'Buku Notulen Rapat' },
-        { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
-      ],
-    },
-    {
-      key: 'penunjang-buku-wajib',
-      label: 'Penunjang Buku Wajib',
-      code: 'PB',
-      items: [
-        {
-          href: scope === 'kecamatan'
-            ? `/${scope}/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf`
-            : `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`,
-          label: 'Data Umum',
-        },
-        { href: `/${scope}/program-prioritas`, label: 'Program Kerja' },
-      ],
-    },
-    {
-      key: 'pokja-i',
-      label: 'Pokja I',
-      code: 'P1',
-      items: [
-        { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja TP PKK' },
-        { href: `/${scope}/data-kegiatan-pkk-pokja-i/report/pdf`, label: 'Buku Data Kegiatan Pokja I' },
-        { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-        { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
-        { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
-        { href: `/${scope}/simulasi-penyuluhan`, label: 'Buku Kegiatan Simulasi' },
-        { href: `/${scope}/bkr`, label: 'Buku Kegiatan BKR' },
-        { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja I' },
-        { href: `/${scope}/paar`, label: 'Buku Data PAAR' },
-      ],
-    },
-    {
-      key: 'pokja-ii',
-      label: 'Pokja II',
-      code: 'P2',
-      items: [
-        { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja TP PKK' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf`, label: 'Buku Data Kegiatan Pokja II' },
-        { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-        { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
-        { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
-        { href: `/${scope}/pra-koperasi-up2k`, label: 'Buku Rekap Kelompok UP2K' },
-      ],
-    },
-    {
-      key: 'pokja-iii',
-      label: 'Pokja III',
-      code: 'P3',
-      items: [
-        { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja TP PKK' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Buku Data Kegiatan Pokja III' },
-        { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-        { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
-        { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
-        { href: `/${scope}/data-keluarga`, label: 'Buku Rumah Sehat dan Tidak Sehat' },
-        { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku Bantu Pangan' },
-        { href: `/${scope}/data-industri-rumah-tangga`, label: 'Buku Jumlah Industri Rumah Tangga' },
-        { href: `/${scope}/inventaris`, label: 'Buku Inventaris Pokja III' },
-      ],
-    },
-    {
-      key: 'pokja-iv',
-      label: 'Pokja IV',
-      code: 'P4',
-      items: [
-        { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja TP PKK' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Buku Data Kegiatan Pokja IV' },
-        { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-        { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
-        { href: `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`, label: 'Data Umum Pokja IV' },
-        { href: `/${scope}/posyandu`, label: 'Hasil Kegiatan Posyandu' },
-      ],
-    },
-  ]
-
-  return groups.map((group) => ({
-    ...group,
-    items: group.items.map((item) => withBookGroupContext(item, group.key)),
-    printItems: (pdfReportItemsByGroup[group.key] ?? []).map((item) => withBookGroupContext(item, group.key)),
-  }))
-}
-
-const desaMenuGroups = buildScopedMenuGroups('desa')
-
-const kecamatanMenuGroups = [
-  {
-    key: 'belum-ada-pemilik',
-    label: 'Belum Ada Pemilik',
-    code: 'BP',
-    items: [
-      { href: '/kecamatan/buku-daftar-hadir', label: 'Buku Daftar Hadir' },
-      { href: '/kecamatan/buku-tamu', label: 'Buku Tamu' },
-      { href: '/kecamatan/buku-keuangan', label: 'Buku Keuangan' },
-      { href: '/kecamatan/laporan-tahunan-pkk', label: 'Laporan Tahunan Tim Penggerak PKK' },
-      { href: '/kecamatan/data-warga', label: 'Data Warga | 4.14.1a' },
-      { href: '/kecamatan/data-kegiatan-warga', label: 'Kegiatan Warga | 4.14.1b' },
-      { href: '/kecamatan/bkl', label: 'Buku Kegiatan BKL' },
-      { href: '/kecamatan/data-pelatihan-kader', label: 'Data Pelatihan Kader | 4.14.3' },
-      { href: '/kecamatan/taman-bacaan', label: 'Data Taman Bacaan/Perpustakaan' },
-      { href: '/kecamatan/koperasi', label: 'Data Koperasi' },
-      { href: '/kecamatan/kejar-paket', label: 'Data Kejar Paket/KF/PAUD' },
-      { href: '/kecamatan/literasi-warga', label: 'Literasi Warga (3 Buta)' },
-      { href: '/kecamatan/bkb-kegiatan', label: 'Data BKB (Kegiatan)' },
-      { href: '/kecamatan/tutor-khusus', label: 'Tutor Khusus KF/PAUD' },
-      { href: '/kecamatan/pelatihan-kader-pokja-ii', label: 'Rekap Pelatihan Kader Pokja II' },
-      { href: '/kecamatan/warung-pkk', label: 'Data Aset Sarana Desa/Kelurahan | 4.14.4' },
-      { href: '/kecamatan/pilot-project-naskah-pelaporan', label: 'Naskah Pelaporan Pilot Project Pokja IV' },
-      { href: '/kecamatan/pilot-project-keluarga-sehat', label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
-    ],
-  },
-  ...buildScopedMenuGroups('kecamatan'),
-  {
-    key: 'monitoring',
-    label: 'Monitoring Kecamatan',
-    code: 'MON',
-    items: [
-      { href: '/kecamatan/desa-activities', label: 'Rekap Kegiatan Desa', uiVisibility: 'disabled' },
-      { href: '/kecamatan/desa-arsip', label: 'Rekap Arsip Desa', uiVisibility: 'disabled' },
-    ],
-  },
-]
-
-const buildGroupState = (groups) => groups.reduce((state, group) => {
-  state[group.key] = group.items.some((item) => isItemActive(item))
-  return state
-}, {})
 
 const isMenuItemVisibleByExperimentalPlacement = (item) => {
   const visibility = String(item?.uiVisibility ?? 'default')
