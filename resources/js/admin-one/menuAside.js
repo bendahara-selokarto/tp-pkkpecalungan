@@ -1,4 +1,4 @@
-import { mdiAccountCircle, mdiAccountMultiple, mdiMonitor } from '@mdi/js'
+import { mdiAccountCircle, mdiAccountMultiple, mdiMapMarker, mdiMonitor } from '@mdi/js'
 
 export const buildMenuAside = (roles = []) => {
   const menu = [
@@ -14,6 +14,11 @@ export const buildMenuAside = (roles = []) => {
       route: '/super-admin/users',
       icon: mdiAccountMultiple,
       label: 'Manajemen User',
+    })
+    menu.push({
+      route: '/super-admin/areas',
+      icon: mdiMapMarker,
+      label: 'Manajemen Wilayah',
     })
   }
 
