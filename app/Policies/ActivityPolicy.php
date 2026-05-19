@@ -13,30 +13,26 @@ class ActivityPolicy
 
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::hasPermission($user->role, 'activities.view');
+        return RoleScopeMatrix::userHasPermission($user, 'activities.view');
     }
 
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::hasPermission($user->role, 'activities.create');
+        return RoleScopeMatrix::userHasPermission($user, 'activities.create');
     }
 
     public function view(User $user, Activity $activity): bool
     {
-        // Permission check
-        if (!RoleScopeMatrix::hasPermission($user->role, 'activities.view')) {
+        if (! RoleScopeMatrix::userHasPermission($user, 'activities.view')) {
             return false;
         }
 
-        // Scoping logic will be handled by ActivityScopeService::canView or Global Scope
-        // For now, we delegate the complex scoping to the service to ensure no regression,
-        // but the core permission check is moved here.
         return app(\App\Domains\Wilayah\Activities\Services\ActivityScopeService::class)->canView($user, $activity);
     }
 
     public function update(User $user, Activity $activity): bool
     {
-        if (!RoleScopeMatrix::hasPermission($user->role, 'activities.update')) {
+        if (! RoleScopeMatrix::userHasPermission($user, 'activities.update')) {
             return false;
         }
 
@@ -50,7 +46,7 @@ class ActivityPolicy
 
     public function print(User $user, Activity $activity): bool
     {
-        if (!RoleScopeMatrix::hasPermission($user->role, 'activities.print')) {
+        if (! RoleScopeMatrix::userHasPermission($user, 'activities.print')) {
             return false;
         }
 

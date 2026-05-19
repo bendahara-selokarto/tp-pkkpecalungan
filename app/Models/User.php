@@ -82,4 +82,9 @@ class User extends Authenticatable
     {
         return RoleScopeMatrix::userHasRoleForScope($this, $scope);
     }
+
+    public function getRoleAttribute(): ?string
+    {
+        return RoleScopeMatrix::primaryRoleForUser($this);
+    }
 }

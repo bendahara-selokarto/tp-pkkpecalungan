@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\RoleBookGroupContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
+use App\Support\RoleScopeMatrix;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class KaderKhususScopeService
@@ -15,23 +16,23 @@ class KaderKhususScopeService
      * @var array<string, string>
      */
     private const ROLE_TO_GROUP_MAP = [
-        'desa-pokja-i' => 'pokja-i',
-        'desa-pokja-ii' => 'pokja-ii',
-        'desa-pokja-iii' => 'pokja-iii',
-        'desa-pokja-iv' => 'pokja-iv',
-        'kecamatan-pokja-i' => 'pokja-i',
-        'kecamatan-pokja-ii' => 'pokja-ii',
-        'kecamatan-pokja-iii' => 'pokja-iii',
-        'kecamatan-pokja-iv' => 'pokja-iv',
-        'desa-sekretaris' => 'sekretaris-tpk',
-        'kecamatan-sekretaris' => 'sekretaris-tpk',
+        RoleScopeMatrix::ROLE_POKJA_1_DESA => 'pokja-i',
+        RoleScopeMatrix::ROLE_POKJA_2_DESA => 'pokja-ii',
+        RoleScopeMatrix::ROLE_POKJA_3_DESA => 'pokja-iii',
+        RoleScopeMatrix::ROLE_POKJA_4_DESA => 'pokja-iv',
+        RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => 'pokja-i',
+        RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => 'pokja-ii',
+        RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => 'pokja-iii',
+        RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => 'pokja-iv',
+        RoleScopeMatrix::ROLE_SEKRETARIS_DESA => 'sekretaris-tpk',
+        RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => 'sekretaris-tpk',
     ];
 
     /**
      * @var list<string>
      */
     private const ROLE_SCOPED_KADER_KHUSUS_BYPASS_ROLES = [
-        'super-admin',
+        RoleScopeMatrix::ROLE_SUPER_ADMIN,
     ];
 
     public function __construct(

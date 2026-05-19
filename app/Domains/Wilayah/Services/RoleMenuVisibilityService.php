@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\Services;
 
 use App\Domains\Wilayah\AccessControl\Repositories\ModuleAccessOverrideRepositoryInterface;
 use App\Models\User;
+use App\Support\RoleScopeMatrix;
 
 class RoleMenuVisibilityService
 {
@@ -25,22 +26,13 @@ class RoleMenuVisibilityService
     ];
 
     /**
-     * @var list<string>
-     */
-    private const POKJA_GROUPS = [
-        'pokja-i',
-        'pokja-ii',
-        'pokja-iii',
-        'pokja-iv',
-    ];
-
-    /**
      * @var array<string, list<string>>
      */
     private const GROUP_MODULES = [
         'sekretaris-tpk' => [
             'anggota-tim-penggerak',
             'anggota-tim-penggerak-kader',
+            'anggota-pokja',
             'agenda-surat',
             'buku-notulen-rapat',
             'inventaris',
@@ -153,7 +145,7 @@ class RoleMenuVisibilityService
      * @var array<string, array<string, string>>
      */
     private const ROLE_GROUP_MODES = [
-        'desa-sekretaris' => [
+        RoleScopeMatrix::ROLE_SEKRETARIS_DESA => [
             'sekretaris-tpk' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_ONLY,
@@ -162,7 +154,7 @@ class RoleMenuVisibilityService
             'pokja-iv' => self::MODE_READ_ONLY,
             'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
-        'kecamatan-sekretaris' => [
+        RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => [
             'sekretaris-tpk' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_ONLY,
@@ -172,35 +164,35 @@ class RoleMenuVisibilityService
             'monitoring' => self::MODE_READ_ONLY,
             'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
-        'desa-pokja-i' => [
+        RoleScopeMatrix::ROLE_POKJA_1_DESA => [
             'pokja-i' => self::MODE_READ_WRITE,
             'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
-        'desa-pokja-ii' => [
+        RoleScopeMatrix::ROLE_POKJA_2_DESA => [
             'pokja-ii' => self::MODE_READ_WRITE,
             'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
-        'desa-pokja-iii' => [
+        RoleScopeMatrix::ROLE_POKJA_3_DESA => [
             'pokja-iii' => self::MODE_READ_WRITE,
             'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
-        'desa-pokja-iv' => [
+        RoleScopeMatrix::ROLE_POKJA_4_DESA => [
             'pokja-iv' => self::MODE_READ_WRITE,
             'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
-        'kecamatan-pokja-i' => [
+        RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => [
             'pokja-i' => self::MODE_READ_WRITE,
         ],
-        'kecamatan-pokja-ii' => [
+        RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => [
             'pokja-ii' => self::MODE_READ_WRITE,
         ],
-        'kecamatan-pokja-iii' => [
+        RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => [
             'pokja-iii' => self::MODE_READ_WRITE,
         ],
-        'kecamatan-pokja-iv' => [
+        RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => [
             'pokja-iv' => self::MODE_READ_WRITE,
         ],
-        'super-admin' => [
+        RoleScopeMatrix::ROLE_SUPER_ADMIN => [
             'sekretaris-tpk' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
@@ -423,18 +415,11 @@ class RoleMenuVisibilityService
             return [];
         }
 
-        $showPokjaForSekretaris = (bool) config('access_control.sekretaris_show_pokja_menus', false);
-
         $groupModes = [];
         foreach ($roleNames as $roleName) {
-            $isSekretaris = str_ends_with($roleName, '-sekretaris');
             $roleModes = self::ROLE_GROUP_MODES[$roleName] ?? [];
             foreach ($roleModes as $group => $mode) {
                 if (! array_key_exists($group, $allowedGroupLookup)) {
-                    continue;
-                }
-
-                if ($isSekretaris && ! $showPokjaForSekretaris && in_array($group, self::POKJA_GROUPS, true)) {
                     continue;
                 }
 

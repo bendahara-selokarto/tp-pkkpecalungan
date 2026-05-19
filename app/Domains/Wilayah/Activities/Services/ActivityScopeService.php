@@ -46,11 +46,8 @@ class ActivityScopeService
      */
     public function resolveActivityGroupsForUser(User $user): array
     {
-        // Use the centralized job group resolution from RoleScopeMatrix
         $groups = [];
-        $roleName = $user->role; // Assuming single role anchor for now
-        
-        if ($roleName) {
+        foreach (RoleScopeMatrix::roleNamesForUser($user) as $roleName) {
             $jobGroup = RoleScopeMatrix::resolveJobGroup($roleName);
             if ($jobGroup) {
                 $groups[] = $jobGroup;
@@ -73,11 +70,11 @@ class ActivityScopeService
     /**
      * Check if user needs activity group filtering based on their roles.
      * Only role-scoped users (sekretaris and pokja-i through pokja-iv) need filtering;
-     * super_admin can see all groups.
+     * super-admin can see all groups.
      */
     public function requiresActivityGroupFilter(User $user): bool
     {
-        if ($user->role === RoleScopeMatrix::ROLE_SUPER_ADMIN) {
+        if (RoleScopeMatrix::userIsSuperAdmin($user)) {
             return false;
         }
 
@@ -112,8 +109,7 @@ class ActivityScopeService
 
     public function canView(User $user, Activity $activity): bool
     {
-        // super_admin bypass
-        if ($user->role === RoleScopeMatrix::ROLE_SUPER_ADMIN) {
+        if (RoleScopeMatrix::userIsSuperAdmin($user)) {
             return true;
         }
 
@@ -148,7 +144,7 @@ class ActivityScopeService
 
     public function canUpdate(User $user, Activity $activity): bool
     {
-        if ($user->role === RoleScopeMatrix::ROLE_SUPER_ADMIN) {
+        if (RoleScopeMatrix::userIsSuperAdmin($user)) {
             return true;
         }
 

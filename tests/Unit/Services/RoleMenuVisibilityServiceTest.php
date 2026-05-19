@@ -53,6 +53,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         foreach ([
             'anggota-tim-penggerak',
             'anggota-tim-penggerak-kader',
+            'anggota-pokja',
             'agenda-surat',
             'inventaris',
             'activities',

@@ -21,6 +21,7 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
         'sekretaris-tpk' => [
             'anggota-tim-penggerak',
             'anggota-tim-penggerak-kader',
+            'anggota-pokja',
             'agenda-surat',
             'buku-notulen-rapat',
             'inventaris',
@@ -136,11 +137,19 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
         'desa-sekretaris' => [
             'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'penunjang-buku-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-i' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_ONLY,
             'belum-ada-pemilik' => RoleMenuVisibilityService::MODE_READ_ONLY,
         ],
         'kecamatan-sekretaris' => [
             'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'penunjang-buku-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-i' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_ONLY,
             'monitoring' => RoleMenuVisibilityService::MODE_READ_ONLY,
             'belum-ada-pemilik' => RoleMenuVisibilityService::MODE_READ_ONLY,
         ],

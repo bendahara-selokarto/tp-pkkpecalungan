@@ -15,7 +15,7 @@ class ArsipDocumentPolicy
      */
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.view');
+        return RoleScopeMatrix::userHasPermission($user, 'arsip_document.view');
     }
 
     /**
@@ -23,7 +23,7 @@ class ArsipDocumentPolicy
      */
     public function view(User $user): bool
     {
-        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.view');
+        return RoleScopeMatrix::userHasPermission($user, 'arsip_document.view');
     }
 
     /**
@@ -31,7 +31,7 @@ class ArsipDocumentPolicy
      */
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.create');
+        return RoleScopeMatrix::userHasPermission($user, 'arsip_document.create');
     }
 
     /**
@@ -39,7 +39,7 @@ class ArsipDocumentPolicy
      */
     public function update(User $user): bool
     {
-        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.update');
+        return RoleScopeMatrix::userHasPermission($user, 'arsip_document.update');
     }
 
     /**
@@ -47,7 +47,7 @@ class ArsipDocumentPolicy
      */
     public function delete(User $user): bool
     {
-        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.delete');
+        return RoleScopeMatrix::userHasPermission($user, 'arsip_document.delete');
     }
 
     /**
@@ -55,6 +55,6 @@ class ArsipDocumentPolicy
      */
     public function export(User $user): bool
     {
-        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.export');
+        return RoleScopeMatrix::userHasPermission($user, 'arsip_document.export');
     }
 }

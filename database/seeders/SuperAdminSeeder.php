@@ -35,7 +35,7 @@ class SuperAdminSeeder extends Seeder
         /**
          * 2. Buat role super-admin
          */
-        $superAdminRole = Role::firstOrCreate(['name' => 'super_admin']);
+        $superAdminRole = Role::firstOrCreate(['name' => 'super-admin']);
 
         // Berikan semua permission ke super-admin
         $superAdminRole->syncPermissions(Permission::all());

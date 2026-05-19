@@ -83,6 +83,7 @@ Catatan runtime: `buku-tamu` umum tidak diberi owner Pokja karena kebutuhan aktu
 - [x] Seeder menyediakan minimal satu data contoh untuk create utama yang belum terwakili, tanpa menyentuh grafik/chart.
 - [x] Matrix `Data Kegiatan` terdokumentasi sebagai data terisolasi per jabatan/group dengan output format berbeda per jabatan.
 - [x] Submenu audit `Belum Ada Pemilik` tersedia untuk `kecamatan-sekretaris`.
+- [x] Policy permission lintas modul target membaca assignment role aktual dan konstanta canonical repo (`super-admin`, `desa-*`, `kecamatan-*`), bukan slug eksperimen atau atribut ad-hoc.
 - [ ] Rencana eksekusi end-to-end siap jalan tanpa ambigu (backend, middleware, UI, test, docs).
 
 ## Langkah Eksekusi Terstruktur (Tanpa Eksekusi Kode)
@@ -96,6 +97,7 @@ Catatan runtime: `buku-tamu` umum tidak diberi owner Pokja karena kebutuhan aktu
 ## Validation Gate Plan
 
 - [ ] G1. Matrix owner lengkap; targeted test plan siap untuk service, middleware, payload, sidebar.
+- [x] G1A. Lint syntax patch authorization/grouping hijau; regression test PHP tertahan blocker runner `mbstring` yang belum tersedia.
 - [x] G2. Full regression backend siap: `php artisan test --compact` hijau.
 - [x] G3. Exit criteria: tidak ada mismatch payload/sidebar, privilege escalation, drift dokumen, atau data buku kegiatan/buku prestasi tercampur lintas group.
 

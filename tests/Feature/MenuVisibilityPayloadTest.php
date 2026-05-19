@@ -61,6 +61,7 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.menuGroupModes.pokja-iv', 'read-only')
                 ->missing('auth.user.menuGroupModes.referensi')
                 ->where('auth.user.moduleModes.agenda-surat', 'read-write')
+                ->where('auth.user.moduleModes.anggota-pokja', 'read-write')
                 ->where('auth.user.moduleModes.inventaris', 'read-write')
                 ->where('auth.user.moduleModes.catatan-keluarga', 'read-write')
                 ->where('auth.user.moduleModes.program-prioritas', 'read-write')

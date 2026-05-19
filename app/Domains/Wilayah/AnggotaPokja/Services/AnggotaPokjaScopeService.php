@@ -7,6 +7,7 @@ use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\RoleBookGroupContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
+use App\Support\RoleScopeMatrix;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AnggotaPokjaScopeService
@@ -14,24 +15,26 @@ class AnggotaPokjaScopeService
     /**
      * @var array<string, string>
      */
-    private const ROLE_TO_POKJA_MAP = [
-        'desa-pokja-i' => 'pokja-i',
-        'desa-pokja-ii' => 'pokja-ii',
-        'desa-pokja-iii' => 'pokja-iii',
-        'desa-pokja-iv' => 'pokja-iv',
-        'kecamatan-pokja-i' => 'pokja-i',
-        'kecamatan-pokja-ii' => 'pokja-ii',
-        'kecamatan-pokja-iii' => 'pokja-iii',
-        'kecamatan-pokja-iv' => 'pokja-iv',
-        'desa-sekretaris' => 'sekretaris-tpk',
-        'kecamatan-sekretaris' => 'sekretaris-tpk',
+    private const ROLE_TO_GROUP_MAP = [
+        RoleScopeMatrix::ROLE_POKJA_1_DESA => 'pokja-i',
+        RoleScopeMatrix::ROLE_POKJA_2_DESA => 'pokja-ii',
+        RoleScopeMatrix::ROLE_POKJA_3_DESA => 'pokja-iii',
+        RoleScopeMatrix::ROLE_POKJA_4_DESA => 'pokja-iv',
+        RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => 'pokja-i',
+        RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => 'pokja-ii',
+        RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => 'pokja-iii',
+        RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => 'pokja-iv',
+        RoleScopeMatrix::ROLE_SEKRETARIS_DESA => 'sekretaris-tpk',
+        RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => 'sekretaris-tpk',
     ];
 
     /**
      * @var list<string>
      */
     private const ROLE_SCOPED_ANGGOTA_POKJA_BYPASS_ROLES = [
-        'super-admin',
+        RoleScopeMatrix::ROLE_SUPER_ADMIN,
+        RoleScopeMatrix::ROLE_SEKRETARIS_DESA,
+        RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN,
     ];
 
     public function __construct(
@@ -72,7 +75,7 @@ class AnggotaPokjaScopeService
      */
     public function resolvePokjaGroupsForUser(User $user): array
     {
-        $groups = $this->roleBookGroupContextService->resolveRoleGroups($user, self::ROLE_TO_POKJA_MAP);
+        $groups = $this->roleBookGroupContextService->resolveRoleGroups($user, self::ROLE_TO_GROUP_MAP);
 
         return $this->roleBookGroupContextService->resolveContextualGroups($user, 'anggota-pokja', $groups);
     }
@@ -97,7 +100,7 @@ class AnggotaPokjaScopeService
 
         $allowedGroups = $this->resolvePokjaGroupsForUser($user);
 
-        return in_array((string) $anggotaPokja->pokja, $allowedGroups, true);
+        return in_array($this->normalizePokjaGroup((string) $anggotaPokja->pokja), $allowedGroups, true);
     }
 
     public function canView(User $user, AnggotaPokja $anggotaPokja): bool
@@ -146,5 +149,18 @@ class AnggotaPokjaScopeService
     public function requireActiveBudgetYear(): int
     {
         return $this->activeBudgetYearContextService->requireForAuthenticatedUser();
+    }
+
+    private function normalizePokjaGroup(string $value): string
+    {
+        $normalized = strtolower(trim($value));
+
+        return match ($normalized) {
+            'pokja i' => 'pokja-i',
+            'pokja ii' => 'pokja-ii',
+            'pokja iii' => 'pokja-iii',
+            'pokja iv' => 'pokja-iv',
+            default => str_replace(' ', '-', $normalized),
+        };
     }
 }

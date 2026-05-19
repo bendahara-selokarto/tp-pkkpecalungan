@@ -168,6 +168,7 @@ use App\Policies\ArsipDocumentPolicy;
 use App\Policies\UserPolicy;
 use App\Repositories\SuperAdmin\UserManagementRepository;
 use App\Repositories\SuperAdmin\UserManagementRepositoryInterface;
+use App\Support\RoleScopeMatrix;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
@@ -452,7 +453,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ArsipDocument::class, ArsipDocumentPolicy::class);
 
         Gate::before(function ($user, $ability) {
-            return $user->hasRole('super-admin') ? true : null;
+            return $user->hasRole(RoleScopeMatrix::ROLE_SUPER_ADMIN) ? true : null;
         });
 
         // Lightweight observability for auth throttling.
