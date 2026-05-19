@@ -19,7 +19,8 @@ class RoleSeeder extends Seeder
             }
         }
 
-        // Keep explicit super-admin creation for clarity and compatibility.
-        Role::firstOrCreate(['name' => 'super-admin']);
+        // The matrix already includes ROLE_SUPER_ADMIN in scopedRoles, 
+        // but we ensure it's explicitly handled if needed.
+        Role::firstOrCreate(['name' => RoleScopeMatrix::ROLE_SUPER_ADMIN]);
     }
 }

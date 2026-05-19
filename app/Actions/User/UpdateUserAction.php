@@ -17,7 +17,7 @@ class UpdateUserAction
 
     public function execute(User $user, array $data): User
     {
-        if ($user->hasRole('super-admin')) {
+        if ($user->hasRole('super_admin')) {
             throw new DomainException('Super Admin tidak boleh diubah');
         }
 
@@ -68,7 +68,7 @@ class UpdateUserAction
 
         if (RoleScopeMatrix::isRestrictedForManagedAssignment($role)) {
             throw ValidationException::withMessages([
-                'role' => 'Role super-admin tidak dapat ditetapkan melalui manajemen user.',
+                'role' => 'Role super_admin tidak dapat ditetapkan melalui manajemen user.',
             ]);
         }
 

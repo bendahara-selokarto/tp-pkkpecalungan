@@ -60,7 +60,7 @@ class CreateUserAction
 
         if (RoleScopeMatrix::isRestrictedForManagedAssignment($role)) {
             throw ValidationException::withMessages([
-                'role' => 'Role super-admin tidak dapat ditetapkan melalui manajemen user.',
+                'role' => 'Role super_admin tidak dapat ditetapkan melalui manajemen user.',
             ]);
         }
 
