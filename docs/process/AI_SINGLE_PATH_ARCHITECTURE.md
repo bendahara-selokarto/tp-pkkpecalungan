@@ -144,7 +144,7 @@ Aturan:
 
 | Jenis Permintaan | Concern Canonical | File Primer | Validasi Minimum |
 | --- | --- | --- | --- |
-| Akses role/scope/menu | Authorization & visibility | `app/Support/RoleScopeMatrix.php`, `app/Domains/Wilayah/Services/*Scope*`, `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`, `app/Http/Middleware/EnsureModuleVisibility.php` | Feature auth/policy terkait + full test jika lintas modul |
+| Akses role/scope/menu | Authorization & visibility | `app/Support/RoleScopeMatrix.php` (Permission Matrix Anchor), `app/Domains/Wilayah/Services/*Scope*`, `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`, `app/Http/Middleware/EnsureModuleVisibility.php` | Feature auth/policy terkait + unit test RoleScopeMatrix + full test jika lintas modul |
 | Domain CRUD baru | Domain module delivery | `routes/web.php`, `app/Http/Requests/*`, `app/Domains/Wilayah/*`, `resources/js/Pages/*` | Matrix test minimal AGENTS section 8 |
 | Dashboard agregat/chart/filter | Dashboard representation | `app/Http/Controllers/DashboardController.php`, `app/Domains/Wilayah/Dashboard/*`, `resources/js/Pages/Dashboard.vue` | `DashboardDocumentCoverageTest` + test dashboard relevan |
 | Seeder/migrasi legacy | Pre-release upgrade track | `database/migrations/*`, `database/seeders/*` | `migrate:fresh --seed` + regression impacted area |
