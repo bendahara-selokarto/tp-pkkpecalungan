@@ -47,13 +47,11 @@ Architecture:
 
 - `Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`
 
-Authorization:
+Authorization & Scoping:
 
-- `Policy -> RoleScopeMatrix (Permission Matrix)`
-- Source of truth: `app/Support/RoleScopeMatrix.php`.
-- Hierarchy: 10 levels (Pusat down to Dasawisma).
-- Implementation boundary: Active up to `kecamatan`. `kabupaten` and above are for planning only.
-- Anchor: All core policies MUST use `RoleScopeMatrix::hasPermission($user->role, 'domain.action')`.
+- **Authorization (Who can do what)**: Handled by `Policy` -> `RoleScopeMatrix::hasPermission`. Single source of truth for action-level permissions.
+- **Data Scoping (What data can they see)**: Handled by `ScopeService` or `Model Global Scope`. Filters records based on area, level, and functional group.
+- **Functional Roles**: Mapped via `RoleScopeMatrix::resolveJobGroup` to business groups like `pokja-i`.
 
 Code placement contract:
 
