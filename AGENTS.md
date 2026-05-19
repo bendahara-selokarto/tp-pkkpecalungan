@@ -49,7 +49,11 @@ Architecture:
 
 Authorization:
 
-- `Policy -> Scope Service`
+- `Policy -> RoleScopeMatrix (Permission Matrix)`
+- Source of truth: `app/Support/RoleScopeMatrix.php`.
+- Hierarchy: 10 levels (Pusat down to Dasawisma).
+- Implementation boundary: Active up to `kecamatan`. `kabupaten` and above are for planning only.
+- Anchor: All core policies MUST use `RoleScopeMatrix::hasPermission($user->role, 'domain.action')`.
 
 Code placement contract:
 
