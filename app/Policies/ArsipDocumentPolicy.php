@@ -2,98 +2,59 @@
 
 namespace App\Policies;
 
-use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
-use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use App\Support\RoleScopeMatrix;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ArsipDocumentPolicy
 {
-    public function viewAny(User $authUser): bool
+    use HandlesAuthorization;
+
+    /**
+     * Determine whether the user can view any models.
+     */
+    public function viewAny(User $user): bool
     {
-        return true;
+        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.view');
     }
 
-    public function view(User $authUser, ArsipDocument $arsipDocument): bool
+    /**
+     * Determine whether the user can view the model.
+     */
+    public function view(User $user): bool
     {
-        if ((bool) $arsipDocument->is_global) {
-            return true;
-        }
-
-        if ((int) $arsipDocument->created_by === (int) $authUser->id) {
-            return true;
-        }
-
-        return $this->canMonitorDesaArsip($authUser, $arsipDocument);
+        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.view');
     }
 
-    public function create(User $authUser): bool
+    /**
+     * Determine whether the user can create models.
+     */
+    public function create(User $user): bool
     {
-        if (! is_numeric($authUser->area_id)) {
-            return false;
-        }
-
-        $scope = (string) ($authUser->scope ?? '');
-        if (! in_array($scope, ['desa', 'kecamatan'], true)) {
-            return false;
-        }
-
-        if (! RoleScopeMatrix::userHasRoleForScope($authUser, $scope)) {
-            return false;
-        }
-
-        $areaLevel = Area::query()
-            ->whereKey((int) $authUser->area_id)
-            ->value('level');
-
-        return $areaLevel === $scope;
+        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.create');
     }
 
-    public function update(User $authUser, ArsipDocument $arsipDocument): bool
+    /**
+     * Determine whether the user can update the model.
+     */
+    public function update(User $user): bool
     {
-        if ((int) $arsipDocument->created_by === (int) $authUser->id) {
-            return true;
-        }
-
-        return $this->canManageGlobalArsip($authUser, $arsipDocument);
+        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.update');
     }
 
-    public function delete(User $authUser, ArsipDocument $arsipDocument): bool
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user): bool
     {
-        if ((int) $arsipDocument->created_by === (int) $authUser->id) {
-            return true;
-        }
-
-        return $this->canManageGlobalArsip($authUser, $arsipDocument);
+        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.delete');
     }
 
-    private function canMonitorDesaArsip(User $authUser, ArsipDocument $arsipDocument): bool
+    /**
+     * Determine whether the user can export models.
+     */
+    public function export(User $user): bool
     {
-        if (
-            ! $authUser->hasRole('kecamatan-sekretaris')
-            || $authUser->scope !== 'kecamatan'
-            || ! is_numeric($authUser->area_id)
-            || $arsipDocument->level !== 'desa'
-        ) {
-            return false;
-        }
-
-        $arsipDocument->loadMissing(['area', 'creator']);
-
-        $area = $arsipDocument->area;
-        if (! $area || $area->level !== 'desa') {
-            return false;
-        }
-
-        if ((int) $area->parent_id !== (int) $authUser->area_id) {
-            return false;
-        }
-
-        return $arsipDocument->creator?->scope === 'desa';
-    }
-
-    private function canManageGlobalArsip(User $authUser, ArsipDocument $arsipDocument): bool
-    {
-        return (bool) $arsipDocument->is_global && $authUser->hasRole('super-admin');
+        return RoleScopeMatrix::hasPermission($user->role, 'arsip_document.export');
     }
 }

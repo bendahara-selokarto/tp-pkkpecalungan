@@ -2,204 +2,91 @@
 
 namespace Tests\Unit\Policies;
 
-use App\Domains\Wilayah\Arsip\Models\ArsipDocument;
-use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
 use App\Policies\ArsipDocumentPolicy;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\Attributes\Test;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use App\Support\RoleScopeMatrix;
+use Mockery;
+use PHPUnit\Framework\TestCase;
 
 class ArsipDocumentPolicyTest extends TestCase
 {
-    use RefreshDatabase;
-
-    private Area $kecamatanA;
-
-    private Area $kecamatanB;
-
-    private Area $desaA;
-
-    private Area $desaB;
+    private ArsipDocumentPolicy $policy;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        foreach (['super-admin', 'desa-sekretaris', 'kecamatan-sekretaris', 'kecamatan-sekretaris'] as $roleName) {
-            Role::firstOrCreate(['name' => $roleName]);
-        }
-
-        $this->kecamatanA = Area::create([
-            'name' => 'Pecalungan',
-            'level' => 'kecamatan',
-        ]);
-
-        $this->kecamatanB = Area::create([
-            'name' => 'Limpung',
-            'level' => 'kecamatan',
-        ]);
-
-        $this->desaA = Area::create([
-            'name' => 'Gombong',
-            'level' => 'desa',
-            'parent_id' => $this->kecamatanA->id,
-        ]);
-
-        $this->desaB = Area::create([
-            'name' => 'Kalisalak',
-            'level' => 'desa',
-            'parent_id' => $this->kecamatanB->id,
-        ]);
+        $this->policy = new ArsipDocumentPolicy();
     }
 
-    #[Test]
-    public function owner_dapat_mengelola_arsip_pribadinya(): void
+    protected function tearDown(): void
     {
-        $owner = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desaA->id,
-        ]);
-        $owner->assignRole('desa-sekretaris');
-
-        $document = ArsipDocument::factory()->create([
-            'is_global' => false,
-            'level' => 'desa',
-            'area_id' => $this->desaA->id,
-            'created_by' => $owner->id,
-        ]);
-
-        $policy = app(ArsipDocumentPolicy::class);
-
-        $this->assertTrue($policy->create($owner));
-        $this->assertTrue($policy->view($owner, $document));
-        $this->assertTrue($policy->update($owner, $document));
-        $this->assertTrue($policy->delete($owner, $document));
+        Mockery::close();
+        parent::tearDown();
     }
 
-    #[Test]
-    public function non_owner_tidak_dapat_melihat_arsip_pribadi_user_lain(): void
+    /**
+     * Helper to create a user instance with a specific role.
+     * We use a real instance but avoid hitting the database for pure unit tests.
+     */
+    private function createMockUser(string $role): User
     {
-        $owner = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desaA->id,
-        ]);
-        $owner->assignRole('desa-sekretaris');
-
-        $otherUser = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desaA->id,
-        ]);
-        $otherUser->assignRole('desa-sekretaris');
-
-        $document = ArsipDocument::factory()->create([
-            'is_global' => false,
-            'level' => 'desa',
-            'area_id' => $this->desaA->id,
-            'created_by' => $owner->id,
-        ]);
-
-        $policy = app(ArsipDocumentPolicy::class);
-
-        $this->assertFalse($policy->view($otherUser, $document));
-        $this->assertFalse($policy->update($otherUser, $document));
-        $this->assertFalse($policy->delete($otherUser, $document));
+        $user = new User();
+        $user->role = $role;
+        return $user;
     }
 
-    #[Test]
-    public function arsip_global_dapat_dilihat_semua_user(): void
+    public function test_super_admin_has_all_permissions(): void
     {
-        $user = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desaA->id,
-        ]);
-        $user->assignRole('desa-sekretaris');
+        $user = $this->createMockUser(RoleScopeMatrix::ROLE_SUPER_ADMIN);
 
-        $creator = User::factory()->create([
-            'scope' => 'kecamatan',
-            'area_id' => $this->kecamatanA->id,
-        ]);
-        $creator->assignRole('super-admin');
-
-        $document = ArsipDocument::factory()->create([
-            'is_global' => true,
-            'level' => 'kecamatan',
-            'area_id' => $this->kecamatanA->id,
-            'created_by' => $creator->id,
-        ]);
-
-        $policy = app(ArsipDocumentPolicy::class);
-
-        $this->assertTrue($policy->view($user, $document));
+        $this->assertTrue($this->policy->viewAny($user));
+        $this->assertTrue($this->policy->view($user));
+        $this->assertTrue($this->policy->create($user));
+        $this->assertTrue($this->policy->update($user));
+        $this->assertTrue($this->policy->delete($user));
+        $this->assertTrue($this->policy->export($user));
     }
 
-    #[Test]
-    public function super_admin_dapat_update_delete_arsip_global_milik_super_admin_lain(): void
+    public function test_admin_pusat_has_all_permissions(): void
     {
-        $creator = User::factory()->create([
-            'scope' => 'kecamatan',
-            'area_id' => $this->kecamatanA->id,
-        ]);
-        $creator->assignRole('super-admin');
+        $user = $this->createMockUser(RoleScopeMatrix::ROLE_ADMIN_PUSAT);
 
-        $operator = User::factory()->create([
-            'scope' => 'kecamatan',
-            'area_id' => $this->kecamatanB->id,
-        ]);
-        $operator->assignRole('super-admin');
-
-        $document = ArsipDocument::factory()->create([
-            'is_global' => true,
-            'level' => 'kecamatan',
-            'area_id' => $this->kecamatanA->id,
-            'created_by' => $creator->id,
-        ]);
-
-        $policy = app(ArsipDocumentPolicy::class);
-
-        $this->assertTrue($policy->update($operator, $document));
-        $this->assertTrue($policy->delete($operator, $document));
+        $this->assertTrue($this->policy->viewAny($user));
+        $this->assertTrue($this->policy->view($user));
+        $this->assertTrue($this->policy->create($user));
+        $this->assertTrue($this->policy->update($user));
+        $this->assertTrue($this->policy->delete($user));
+        $this->assertTrue($this->policy->export($user));
     }
 
-    #[Test]
-    public function sekretaris_kecamatan_dapat_melihat_arsip_desa_di_wilayahnya_saja(): void
+    public function test_admin_dusun_cannot_export(): void
     {
-        $sekretaris = User::factory()->create([
-            'scope' => 'kecamatan',
-            'area_id' => $this->kecamatanA->id,
-        ]);
-        $sekretaris->assignRole('kecamatan-sekretaris');
+        $user = $this->createMockUser(RoleScopeMatrix::ROLE_ADMIN_DUSUN);
 
-        $desaUserA = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desaA->id,
-        ]);
-        $desaUserA->assignRole('desa-sekretaris');
+        $this->assertTrue($this->policy->viewAny($user));
+        $this->assertTrue($this->policy->view($user));
+        $this->assertTrue($this->policy->create($user));
+        $this->assertTrue($this->policy->update($user));
+        $this->assertTrue($this->policy->delete($user));
+        $this->assertFalse($this->policy->export($user));
+    }
 
-        $desaUserB = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desaB->id,
-        ]);
-        $desaUserB->assignRole('desa-sekretaris');
+    public function test_unauthorized_role_has_no_permissions(): void
+    {
+        $user = $this->createMockUser('tamu');
 
-        $inAreaDocument = ArsipDocument::factory()->create([
-            'is_global' => false,
-            'level' => 'desa',
-            'area_id' => $this->desaA->id,
-            'created_by' => $desaUserA->id,
-        ]);
+        $this->assertFalse($this->policy->viewAny($user));
+        $this->assertFalse($this->policy->view($user));
+        $this->assertFalse($this->policy->create($user));
+        $this->assertFalse($this->policy->update($user));
+        $this->assertFalse($this->policy->delete($user));
+        $this->assertFalse($this->policy->export($user));
+    }
 
-        $outsideDocument = ArsipDocument::factory()->create([
-            'is_global' => false,
-            'level' => 'desa',
-            'area_id' => $this->desaB->id,
-            'created_by' => $desaUserB->id,
-        ]);
+    public function test_admin_desa_can_export(): void
+    {
+        $user = $this->createMockUser(RoleScopeMatrix::ROLE_ADMIN_DESA);
 
-        $policy = app(ArsipDocumentPolicy::class);
-
-        $this->assertTrue($policy->view($sekretaris, $inAreaDocument));
-        $this->assertFalse($policy->view($sekretaris, $outsideDocument));
+        $this->assertTrue($this->policy->export($user));
     }
 }
