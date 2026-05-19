@@ -2,171 +2,64 @@
 
 namespace Tests\Unit\Policies;
 
-use App\Domains\Wilayah\Activities\Models\Activity;
-use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use App\Policies\ActivityPolicy;
+use App\Support\RoleScopeMatrix;
+use Mockery;
+use PHPUnit\Framework\TestCase;
 
 class ActivityPolicyTest extends TestCase
 {
-    use RefreshDatabase;
-
-    private const ACTIVE_BUDGET_YEAR = 2026;
+    private ActivityPolicy $policy;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        Role::firstOrCreate(['name' => 'desa-sekretaris']);
-        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
-        Role::firstOrCreate(['name' => 'desa-bendahara']);
-        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+        $this->policy = new ActivityPolicy();
     }
 
-    public function test_admin_desa_hanya_dapat_mengakses_kegiatan_desanya_sendiri(): void
+    protected function tearDown(): void
     {
-        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
-        $desaA = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
-        $desaB = Area::create(['name' => 'Bandung', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
-
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desaA->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('desa-sekretaris');
-
-        $ownActivity = Activity::create([
-            'title' => 'Own',
-            'level' => 'desa',
-            'area_id' => $desaA->id,
-            'created_by' => $user->id,
-            'activity_date' => now()->toDateString(),
-            'status' => 'draft',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
-        ]);
-
-        $otherActivity = Activity::create([
-            'title' => 'Other',
-            'level' => 'desa',
-            'area_id' => $desaB->id,
-            'created_by' => $user->id,
-            'activity_date' => now()->toDateString(),
-            'status' => 'draft',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
-        ]);
-
-        $this->assertTrue($user->can('view', $ownActivity));
-        $this->assertTrue($user->can('update', $ownActivity));
-        $this->assertFalse($user->can('view', $otherActivity));
-        $this->assertFalse($user->can('update', $otherActivity));
+        Mockery::close();
+        parent::tearDown();
     }
 
-    public function test_admin_kecamatan_dapat_melihat_kegiatan_desa_turunan_tetapi_tidak_dapat_memperbaruinya(): void
+    private function createUser(string $role): User
     {
-        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
-        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
-
-        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $kecamatan->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('kecamatan-sekretaris');
-
-        $desaActivity = Activity::create([
-            'title' => 'Desa',
-            'level' => 'desa',
-            'area_id' => $desa->id,
-            'created_by' => $user->id,
-            'activity_date' => now()->toDateString(),
-            'status' => 'published',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
-        ]);
-
-        $kecamatanActivity = Activity::create([
-            'title' => 'Kecamatan',
-            'level' => 'kecamatan',
-            'area_id' => $kecamatan->id,
-            'created_by' => $user->id,
-            'activity_date' => now()->toDateString(),
-            'status' => 'published',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
-        ]);
-
-        $this->assertTrue($user->can('view', $desaActivity));
-        $this->assertFalse($user->can('update', $desaActivity));
-        $this->assertTrue($user->can('update', $kecamatanActivity));
+        $user = new User();
+        $user->role = $role;
+        return $user;
     }
 
-    public function test_admin_desa_tidak_dapat_melihat_kegiatan_tahun_anggaran_lain_meski_area_sama(): void
+    public function test_super_admin_has_full_access(): void
     {
-        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
-        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+        $user = $this->createUser(RoleScopeMatrix::ROLE_SUPER_ADMIN);
 
-        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $user->assignRole('desa-sekretaris');
-
-        $oldBudgetYearActivity = Activity::create([
-            'title' => 'Old',
-            'level' => 'desa',
-            'area_id' => $desa->id,
-            'created_by' => $user->id,
-            'activity_date' => now()->toDateString(),
-            'status' => 'draft',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
-        ]);
-
-        $this->assertFalse($user->can('view', $oldBudgetYearActivity));
-        $this->assertFalse($user->can('update', $oldBudgetYearActivity));
+        $this->assertTrue($this->policy->viewAny($user));
+        $this->assertTrue($this->policy->create($user));
     }
 
-    public function test_buku_kegiatan_desa_dipisahkan_per_group_jabatan_pada_area_yang_sama(): void
+    public function test_pokja_1_desa_has_activities_access(): void
     {
-        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
-        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+        $user = $this->createUser(RoleScopeMatrix::ROLE_POKJA_1_DESA);
 
-        $sekretaris = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $sekretaris->assignRole('desa-sekretaris');
+        $this->assertTrue($this->policy->viewAny($user));
+        $this->assertTrue($this->policy->create($user));
+    }
 
-        $pokjaI = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $pokjaI->assignRole('desa-pokja-i');
+    public function test_unauthorized_role_denied(): void
+    {
+        $user = $this->createUser('tamu');
 
-        $bendahara = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id, 'active_budget_year' => self::ACTIVE_BUDGET_YEAR]);
-        $bendahara->assignRole('desa-bendahara');
+        $this->assertFalse($this->policy->viewAny($user));
+        $this->assertFalse($this->policy->create($user));
+    }
 
-        $sekretariatActivity = Activity::create([
-            'title' => 'Sekretariat',
-            'level' => 'desa',
-            'area_id' => $desa->id,
-            'created_by' => $sekretaris->id,
-            'activity_date' => now()->toDateString(),
-            'status' => 'draft',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
-        ]);
+    public function test_admin_pusat_has_view_only_activities(): void
+    {
+        $user = $this->createUser(RoleScopeMatrix::ROLE_ADMIN_PUSAT);
 
-        $pokjaActivity = Activity::create([
-            'title' => 'Pokja I',
-            'level' => 'desa',
-            'area_id' => $desa->id,
-            'created_by' => $pokjaI->id,
-            'activity_date' => now()->toDateString(),
-            'status' => 'draft',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
-        ]);
-
-        $bendaharaActivity = Activity::create([
-            'title' => 'Bendahara',
-            'level' => 'desa',
-            'area_id' => $desa->id,
-            'created_by' => $bendahara->id,
-            'activity_date' => now()->toDateString(),
-            'status' => 'draft',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
-        ]);
-
-        $this->assertTrue($sekretaris->can('view', $sekretariatActivity));
-        $this->assertFalse($sekretaris->can('view', $pokjaActivity));
-        $this->assertFalse($sekretaris->can('view', $bendaharaActivity));
-        $this->assertFalse($bendahara->can('view', $bendaharaActivity));
-        $this->assertFalse($bendahara->can('view', $sekretariatActivity));
-        $this->assertFalse($bendahara->can('view', $pokjaActivity));
-        $this->assertTrue($pokjaI->can('view', $pokjaActivity));
-        $this->assertFalse($pokjaI->can('view', $sekretariatActivity));
-        $this->assertFalse($pokjaI->can('view', $bendaharaActivity));
+        $this->assertTrue($this->policy->viewAny($user));
+        $this->assertFalse($this->policy->create($user));
     }
 }

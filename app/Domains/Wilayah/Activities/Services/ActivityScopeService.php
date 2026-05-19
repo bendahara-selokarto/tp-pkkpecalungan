@@ -8,33 +8,11 @@ use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\RoleBookGroupContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Models\User;
+use App\Support\RoleScopeMatrix;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class ActivityScopeService
 {
-    /**
-     * @var array<string, string>
-     */
-    private const ROLE_TO_GROUP_MAP = [
-        'desa-pokja-i' => 'pokja-i',
-        'desa-pokja-ii' => 'pokja-ii',
-        'desa-pokja-iii' => 'pokja-iii',
-        'desa-pokja-iv' => 'pokja-iv',
-        'kecamatan-pokja-i' => 'pokja-i',
-        'kecamatan-pokja-ii' => 'pokja-ii',
-        'kecamatan-pokja-iii' => 'pokja-iii',
-        'kecamatan-pokja-iv' => 'pokja-iv',
-        'desa-sekretaris' => 'sekretaris-tpk',
-        'kecamatan-sekretaris' => 'sekretaris-tpk',
-    ];
-
-    /**
-     * @var list<string>
-     */
-    private const ROLE_SCOPED_ACTIVITY_BYPASS_ROLES = [
-        'super-admin',
-    ];
-
     public function __construct(
         private readonly UserAreaContextService $userAreaContextService,
         private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
@@ -44,11 +22,6 @@ class ActivityScopeService
     public function canAccessLevel(User $user, string $level): bool
     {
         return $this->userAreaContextService->canAccessLevel($user, $level);
-    }
-
-    public function canEnterModule(User $user): bool
-    {
-        return $this->userAreaContextService->canEnterModule($user);
     }
 
     public function requireUserAreaId(): int
@@ -73,7 +46,16 @@ class ActivityScopeService
      */
     public function resolveActivityGroupsForUser(User $user): array
     {
-        $groups = $this->roleBookGroupContextService->resolveRoleGroups($user, self::ROLE_TO_GROUP_MAP);
+        // Use the centralized job group resolution from RoleScopeMatrix
+        $groups = [];
+        $roleName = $user->role; // Assuming single role anchor for now
+        
+        if ($roleName) {
+            $jobGroup = RoleScopeMatrix::resolveJobGroup($roleName);
+            if ($jobGroup) {
+                $groups[] = $jobGroup;
+            }
+        }
 
         return $this->roleBookGroupContextService->resolveContextualGroups($user, 'activities', $groups);
     }
@@ -91,11 +73,11 @@ class ActivityScopeService
     /**
      * Check if user needs activity group filtering based on their roles.
      * Only role-scoped users (sekretaris and pokja-i through pokja-iv) need filtering;
-     * super-admin can see all groups.
+     * super_admin can see all groups.
      */
     public function requiresActivityGroupFilter(User $user): bool
     {
-        if ($user->hasAnyRole(self::ROLE_SCOPED_ACTIVITY_BYPASS_ROLES)) {
+        if ($user->role === RoleScopeMatrix::ROLE_SUPER_ADMIN) {
             return false;
         }
 
@@ -111,15 +93,6 @@ class ActivityScopeService
         $allowedGroups = $this->resolveActivityGroupsForUser($user);
 
         return in_array((string) $activity->group, $allowedGroups, true);
-    }
-
-    public function authorizeActivityGroup(User $user, Activity $activity): Activity
-    {
-        if (! $this->canAccessActivityGroup($user, $activity)) {
-            throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
-        }
-
-        return $activity;
     }
 
     public function isSameLevelAreaAndBudgetYear(Activity $activity, string $level, int $areaId, int $tahunAnggaran): bool
@@ -139,6 +112,11 @@ class ActivityScopeService
 
     public function canView(User $user, Activity $activity): bool
     {
+        // super_admin bypass
+        if ($user->role === RoleScopeMatrix::ROLE_SUPER_ADMIN) {
+            return true;
+        }
+
         $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
 
         if ($user->hasRoleForScope(ScopeLevel::DESA->value)) {
@@ -170,6 +148,10 @@ class ActivityScopeService
 
     public function canUpdate(User $user, Activity $activity): bool
     {
+        if ($user->role === RoleScopeMatrix::ROLE_SUPER_ADMIN) {
+            return true;
+        }
+
         $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
 
         if ($user->hasRoleForScope(ScopeLevel::DESA->value)) {
@@ -191,29 +173,6 @@ class ActivityScopeService
         }
 
         return false;
-    }
-
-    public function canPrint(User $user, Activity $activity): bool
-    {
-        return $this->canView($user, $activity);
-    }
-
-    public function authorizeSameLevelAreaAndBudgetYear(Activity $activity, string $level, int $areaId, int $tahunAnggaran): Activity
-    {
-        if (! $this->isSameLevelAreaAndBudgetYear($activity, $level, $areaId, $tahunAnggaran)) {
-            throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
-        }
-
-        return $activity;
-    }
-
-    public function authorizeDesaInKecamatanAndBudgetYear(Activity $activity, int $kecamatanAreaId, int $tahunAnggaran): Activity
-    {
-        if (! $this->isDesaInKecamatanAndBudgetYear($activity, $kecamatanAreaId, $tahunAnggaran)) {
-            throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
-        }
-
-        return $activity;
     }
 
     public function requireActiveBudgetYear(): int
