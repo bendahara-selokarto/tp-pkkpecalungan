@@ -109,7 +109,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         }
     }
 
-    public function test_role_pokja_memiliki_buku_wajib_bantu_seragam_dan_bantu_unik(): void
+    public function test_role_pokja_memiliki_buku_pembantu_bersama_dan_bantu_unik(): void
     {
         $expectedModulesByRole = [
             'kecamatan-pokja-i' => [
@@ -118,7 +118,6 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'activities',
                 'prestasi-lomba',
                 'bantuans',
-                'inventaris',
                 'kader-khusus',
                 'simulasi-penyuluhan',
                 'bkr',
@@ -131,7 +130,6 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'activities',
                 'prestasi-lomba',
                 'bantuans',
-                'inventaris',
                 'kader-khusus',
                 'pra-koperasi-up2k',
             ],
@@ -153,7 +151,6 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'activities',
                 'prestasi-lomba',
                 'bantuans',
-                'inventaris',
                 'kader-khusus',
                 'posyandu',
             ],

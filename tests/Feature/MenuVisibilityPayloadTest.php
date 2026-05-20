@@ -88,6 +88,7 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.moduleModes.catatan-keluarga', 'read-write')
                 ->where('auth.user.moduleModes.pra-koperasi-up2k', 'read-write')
                 ->where('auth.user.moduleModes.prestasi-lomba', 'read-write')
+                ->missing('auth.user.moduleModes.inventaris')
                 ->missing('auth.user.moduleModes.data-pelatihan-kader')
                 ->missing('auth.user.moduleModes.data-warga')
             );

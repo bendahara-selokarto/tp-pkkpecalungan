@@ -16,14 +16,8 @@ class InventarisScopeService
      * @var array<string, string>
      */
     private const ROLE_TO_GROUP_MAP = [
-        RoleScopeMatrix::ROLE_POKJA_1_DESA => 'pokja-i',
-        RoleScopeMatrix::ROLE_POKJA_2_DESA => 'pokja-ii',
         RoleScopeMatrix::ROLE_POKJA_3_DESA => 'pokja-iii',
-        RoleScopeMatrix::ROLE_POKJA_4_DESA => 'pokja-iv',
-        RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => 'pokja-i',
-        RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => 'pokja-ii',
         RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => 'pokja-iii',
-        RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => 'pokja-iv',
         RoleScopeMatrix::ROLE_SEKRETARIS_DESA => 'sekretaris-tpk',
         RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => 'sekretaris-tpk',
     ];
@@ -49,7 +43,17 @@ class InventarisScopeService
 
     public function canEnterModule(User $user): bool
     {
-        return $this->userAreaContextService->canEnterModule($user);
+        return $this->userAreaContextService->canEnterModule($user)
+            && $this->canUseInventarisBook($user);
+    }
+
+    public function canUseInventarisBook(User $user): bool
+    {
+        if ($user->hasAnyRole(self::ROLE_SCOPED_INVENTARIS_BYPASS_ROLES)) {
+            return true;
+        }
+
+        return $this->roleBookGroupContextService->resolveRoleGroups($user, self::ROLE_TO_GROUP_MAP) !== [];
     }
 
     public function canView(User $user, Inventaris $inventaris): bool

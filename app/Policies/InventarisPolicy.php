@@ -20,12 +20,14 @@ class InventarisPolicy
 
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'inventaris.view');
+        return RoleScopeMatrix::userHasPermission($user, 'inventaris.view')
+            && $this->inventarisScopeService->canUseInventarisBook($user);
     }
 
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'inventaris.create');
+        return RoleScopeMatrix::userHasPermission($user, 'inventaris.create')
+            && $this->inventarisScopeService->canUseInventarisBook($user);
     }
 
     public function view(User $user, Inventaris $inventaris): bool

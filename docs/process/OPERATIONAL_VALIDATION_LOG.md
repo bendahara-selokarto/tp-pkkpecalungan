@@ -24,14 +24,18 @@ Aturan:
 - Snapshot sinkronisasi TODO/ADR: `docs/process/DOC_TODO_ADR_SYNC_MAP_2026_03_15.md` (generated).
 - Concern berjalan yang tetap berada di index aktif:
   - `docs/process/TODO_IWN26B1_REFACTOR_GROUPING_MODUL_DOMAIN_E2E_2026_03_04.md` (`planned`)
-  - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`planned`)
+  - `docs/process/TODO_RGM26A1_PENATAAN_ULANG_GROUPING_MODUL_BERDASARKAN_ROLE_USER_2026_03_07.md` (`in-progress`)
+  - `docs/process/TODO_BKADM1_PLANNING_IMPLEMENTASI_KATEGORI_BUKU_ADMINISTRASI_2026_05_20.md` (`planned`)
   - `docs/process/TODO_QG90A1_ROADMAP_SPRINT_NAIK_SKOR_PROJECT_90_PLUS_2026_03_07.md` (`in-progress`)
   - `docs/process/TODO_LGC26A1_DEPRECATE_LEGACY_RUNTIME_COMPATIBILITY_2026_03_15.md` (`in-progress`)
   - `docs/process/TODO_SPT26A1_PENATAAN_MENU_SIDEBAR_FLOW_PDF_TURUNAN_TANPA_FORM_INPUT_2026_03_09.md` (`in-progress`)
   - `docs/process/TODO_SPA26B1_EXCEPTION_SINGLE_PATH_FLOW_AUTH_FRAMEWORK_2026_03_15.md` (`planned`)
 - Catatan sinkronisasi `RGM26A1`:
   - histori no-op tervalidasi pada 2026-03-07 tetap dipertahankan di TODO concern sebagai audit trail,
-  - status aktif terbaru tetap `planned` (`state:awaiting-owner-group-target`) sampai ada input owner baru.
+  - status aktif terbaru `in-progress` (`state:runtime-mapping-updated-gap-modules-pending`) setelah input owner 2026-05-20 masuk.
+- Catatan sinkronisasi `BKADM1`:
+  - dibuat pada 2026-05-20 untuk mengunci revisi kategori buku administrasi dari owner,
+  - menjadi child concern implementasi dari `RGM26A1` dan memakai ADR 0011 sebagai keputusan arsitektur terkait.
 
 ### Pointer Closure Terbaru
 

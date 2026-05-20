@@ -18,6 +18,41 @@ class InventarisPolicyTest extends TestCase
     private const ACTIVE_BUDGET_YEAR = 2026;
 
     #[Test]
+    public function pokja_i_tidak_boleh_memakai_buku_inventaris(): void
+    {
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('desa-pokja-i');
+
+        $inventaris = Inventaris::create([
+            'name' => 'Inventaris Pokja I',
+            'description' => null,
+            'quantity' => 1,
+            'unit' => 'unit',
+            'condition' => 'baik',
+            'level' => 'desa',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
+            'group' => 'pokja-i',
+        ]);
+
+        $policy = app(InventarisPolicy::class);
+
+        $this->assertFalse($policy->viewAny($user));
+        $this->assertFalse($policy->create($user));
+        $this->assertFalse($policy->view($user, $inventaris));
+    }
+
+    #[Test]
     public function admin_desa_hanya_boleh_melihat_inventaris_pada_desanya_sendiri()
     {
         Role::firstOrCreate(['name' => 'desa-sekretaris']);

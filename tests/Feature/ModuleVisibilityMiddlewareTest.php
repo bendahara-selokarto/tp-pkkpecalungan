@@ -128,64 +128,84 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->get('/kecamatan/desa-activities')->assertForbidden();
     }
 
-    public function test_semua_pokja_desa_memiliki_akses_rw_modul_inventaris(): void
+    public function test_hanya_pokja_iii_desa_memiliki_akses_rw_modul_inventaris(): void
     {
-        foreach (['desa-pokja-i', 'desa-pokja-ii', 'desa-pokja-iii', 'desa-pokja-iv'] as $role) {
+        foreach (['desa-pokja-i', 'desa-pokja-ii', 'desa-pokja-iv'] as $role) {
             $user = User::factory()->create([
                 'scope' => 'desa',
                 'area_id' => $this->desa->id,
             ]);
             $user->assignRole($role);
 
-            $response = $this->actingAs($user)->post('/desa/inventaris', [
-                'name' => 'Inventaris '.$role,
-                'asal_barang' => 'Bantuan Desa',
-                'tanggal_penerimaan' => '2026-03-04',
-                'tempat_penyimpanan' => 'Gudang',
-                'keterangan' => 'Uji akses RW inventaris',
-                'quantity' => 1,
-                'unit' => 'unit',
-                'condition' => 'baik',
-            ]);
-
-            $response->assertStatus(302);
-            $this->assertDatabaseHas('inventaris', [
-                'name' => 'Inventaris '.$role,
-                'level' => 'desa',
-                'area_id' => $this->desa->id,
-                'created_by' => $user->id,
-            ]);
+            $this->actingAs($user)->get('/desa/inventaris')->assertForbidden();
+            $this->actingAs($user)->get('/desa/inventaris/create')->assertForbidden();
+            $this->actingAs($user)->post('/desa/inventaris', [])->assertForbidden();
         }
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $this->desa->id,
+        ]);
+        $user->assignRole('desa-pokja-iii');
+
+        $response = $this->actingAs($user)->post('/desa/inventaris', [
+            'name' => 'Inventaris desa-pokja-iii',
+            'asal_barang' => 'Bantuan Desa',
+            'tanggal_penerimaan' => '2026-03-04',
+            'tempat_penyimpanan' => 'Gudang',
+            'keterangan' => 'Uji akses RW inventaris',
+            'quantity' => 1,
+            'unit' => 'unit',
+            'condition' => 'baik',
+        ]);
+
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('inventaris', [
+            'name' => 'Inventaris desa-pokja-iii',
+            'level' => 'desa',
+            'area_id' => $this->desa->id,
+            'created_by' => $user->id,
+        ]);
     }
 
-    public function test_semua_pokja_kecamatan_memiliki_akses_rw_modul_inventaris(): void
+    public function test_hanya_pokja_iii_kecamatan_memiliki_akses_rw_modul_inventaris(): void
     {
-        foreach (['kecamatan-pokja-i', 'kecamatan-pokja-ii', 'kecamatan-pokja-iii', 'kecamatan-pokja-iv'] as $role) {
+        foreach (['kecamatan-pokja-i', 'kecamatan-pokja-ii', 'kecamatan-pokja-iv'] as $role) {
             $user = User::factory()->create([
                 'scope' => 'kecamatan',
                 'area_id' => $this->kecamatan->id,
             ]);
             $user->assignRole($role);
 
-            $response = $this->actingAs($user)->post('/kecamatan/inventaris', [
-                'name' => 'Inventaris '.$role,
-                'asal_barang' => 'Bantuan Kecamatan',
-                'tanggal_penerimaan' => '2026-03-04',
-                'tempat_penyimpanan' => 'Gudang',
-                'keterangan' => 'Uji akses RW inventaris kecamatan',
-                'quantity' => 1,
-                'unit' => 'unit',
-                'condition' => 'baik',
-            ]);
-
-            $response->assertStatus(302);
-            $this->assertDatabaseHas('inventaris', [
-                'name' => 'Inventaris '.$role,
-                'level' => 'kecamatan',
-                'area_id' => $this->kecamatan->id,
-                'created_by' => $user->id,
-            ]);
+            $this->actingAs($user)->get('/kecamatan/inventaris')->assertForbidden();
+            $this->actingAs($user)->get('/kecamatan/inventaris/create')->assertForbidden();
+            $this->actingAs($user)->post('/kecamatan/inventaris', [])->assertForbidden();
         }
+
+        $user = User::factory()->create([
+            'scope' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+        ]);
+        $user->assignRole('kecamatan-pokja-iii');
+
+        $response = $this->actingAs($user)->post('/kecamatan/inventaris', [
+            'name' => 'Inventaris kecamatan-pokja-iii',
+            'asal_barang' => 'Bantuan Kecamatan',
+            'tanggal_penerimaan' => '2026-03-04',
+            'tempat_penyimpanan' => 'Gudang',
+            'keterangan' => 'Uji akses RW inventaris kecamatan',
+            'quantity' => 1,
+            'unit' => 'unit',
+            'condition' => 'baik',
+        ]);
+
+        $response->assertStatus(302);
+        $this->assertDatabaseHas('inventaris', [
+            'name' => 'Inventaris kecamatan-pokja-iii',
+            'level' => 'kecamatan',
+            'area_id' => $this->kecamatan->id,
+            'created_by' => $user->id,
+        ]);
     }
 
     public function test_semua_pokja_desa_memiliki_akses_read_only_modul_buku_tamu(): void

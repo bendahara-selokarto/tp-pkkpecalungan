@@ -7,7 +7,8 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 ## Konteks
 
 - Owner mengunci koreksi domain: buku yang memiliki format fisik sama persis pada jalur buku utama adalah `Buku Program Kerja` dan `Buku Kegiatan`.
-- Owner mengunci kelompok `buku bantu`: `Buku Prestasi`, `Buku Bantuan`, `Buku Inventaris`, dan `Buku Kader Khusus` memiliki format fisik yang sama.
+- Owner mengunci kelompok `buku bantu`: `Buku Prestasi`, `Buku Bantuan`, dan `Buku Kader Khusus` memiliki format fisik yang sama.
+- Revisi owner 2026-05-20: `Buku Inventaris` bukan lagi buku bantu seragam; posisinya menjadi buku wajib Sekretaris dan buku spesifik Pokja III jika format/slugnya dikunci.
 - Buku lain boleh memiliki nama yang sama lintas jabatan, tetapi format tabel/kolom/struktur dokumennya berbeda sesuai jabatan atau konteks buku fisik.
 - Kelompok `buku bantu` dimiliki oleh `sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, dan `pokja-iv`; data wajib terisolasi untuk masing-masing jabatan/group.
 - `Data Kegiatan` dimiliki oleh `sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, dan `pokja-iv` dengan format output berbeda per jabatan.
@@ -22,7 +23,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - Boundary data: patch runtime hanya boleh untuk buku yang format samanya sudah dikunci owner; perubahan implementasi tetap mengikuti `Controller -> UseCase/Action -> Repository -> Model`.
 - Acceptance criteria:
   - `Buku Program Kerja` dan `Buku Kegiatan` ditetapkan sebagai buku utama yang boleh memakai format sama persis lintas jabatan.
-  - `Buku Prestasi`, `Buku Bantuan`, `Buku Inventaris`, dan `Buku Kader Khusus` ditetapkan sebagai kelompok `buku bantu` dengan format sama.
+  - `Buku Prestasi`, `Buku Bantuan`, dan `Buku Kader Khusus` ditetapkan sebagai kelompok `buku bantu` dengan format sama.
   - Kelompok `buku bantu` wajib tersedia untuk `sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, dan `pokja-iv`.
   - Data kelompok `buku bantu` wajib terisolasi per `group` sebagai bagian dari boundary query dan policy/scope.
   - Buku bernama sama selain `Buku Program Kerja` dan `Buku Kegiatan` wajib punya baris matrix format sendiri per jabatan/konteks.
@@ -37,7 +38,8 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 
 - [ ] Matrix format buku per jabatan tersedia sebelum implementasi.
 - [x] Daftar buku yang boleh reuse format dikunci, dengan `Buku Program Kerja` dan `Buku Kegiatan` sebagai reuse penuh.
-- [x] Daftar kelompok `buku bantu` dikunci: `Buku Prestasi`, `Buku Bantuan`, `Buku Inventaris`, `Buku Kader Khusus`.
+- [x] Daftar kelompok `buku bantu` dikunci: `Buku Prestasi`, `Buku Bantuan`, `Buku Kader Khusus`.
+- [x] Revisi 2026-05-20 mengeluarkan `Buku Inventaris` dari kelompok buku bantu seragam.
 - [ ] Matrix isolasi data kelompok `buku bantu` per jabatan/group dikunci sebelum implementasi.
 - [ ] Daftar buku bernama sama tetapi format berbeda dikunci beserta sumber bukti, termasuk `Data Kegiatan` per jabatan.
 - [ ] Matrix isolasi data `Data Kegiatan` per jabatan/group dikunci sebelum implementasi.
@@ -49,7 +51,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - [ ] P1. Susun matrix `jabatan -> nama buku -> format id -> sumber bukti -> status implementasi`.
 - [ ] P2. Tandai `Buku Program Kerja` dan `Buku Kegiatan` sebagai `reuse-full` hanya jika header/kolom/merge cell terbukti identik.
 - [ ] P3. Tandai semua buku bernama sama selain `Buku Program Kerja` dan `Buku Kegiatan` sebagai `format-specific` sampai bukti autentik menyatakan identik.
-- [x] P3c. Tandai `Buku Prestasi`, `Buku Bantuan`, `Buku Inventaris`, dan `Buku Kader Khusus` sebagai kelompok `buku bantu` berformat sama untuk `sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, dan `pokja-iv`.
+- [x] P3c. Tandai `Buku Prestasi`, `Buku Bantuan`, dan `Buku Kader Khusus` sebagai kelompok `buku bantu` berformat sama untuk `sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, dan `pokja-iv`.
 - [ ] P3d. Audit kebutuhan isolasi data kelompok `buku bantu` per `group` pada route, request, repository, policy/scope, UI, dan PDF/report output.
 - [ ] P3a. Tandai `Data Kegiatan` sebagai `format-specific` per jabatan untuk `sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, dan `pokja-iv`.
 - [ ] P3b. Audit kebutuhan isolasi data `Data Kegiatan` per `group` pada route, request, repository, policy/scope, UI, dan PDF/report output.
@@ -79,7 +81,8 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - [x] K4: data `Data Kegiatan` wajib terisolasi untuk masing-masing jabatan/group.
 - [ ] K5: setiap reuse format PDF/form wajib punya bukti header/kolom/merge cell di matrix.
 - [x] K6: `Buku Program Kerja` dan `Buku Kegiatan` wajib memiliki hak CRUD serta isolasi data per `group`.
-- [x] K7: `Buku Prestasi`, `Buku Bantuan`, `Buku Inventaris`, dan `Buku Kader Khusus` dikunci sebagai kelompok `buku bantu` dengan format sama.
+- [x] K7: `Buku Prestasi`, `Buku Bantuan`, dan `Buku Kader Khusus` dikunci sebagai kelompok `buku bantu` dengan format sama.
+- [x] K7A: `Buku Inventaris` dikeluarkan dari buku bantu seragam berdasarkan revisi owner 2026-05-20.
 - [x] K8: kelompok `buku bantu` dimiliki oleh `sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, dan `pokja-iv`; data terisolasi per jabatan/group.
 
 ## Keputusan Arsitektur (Jika Ada)
