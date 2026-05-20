@@ -2,10 +2,11 @@
 
 namespace App\Policies;
 
+use App\Support\RoleScopeMatrix;
+
 use App\Domains\Wilayah\PrestasiLomba\Models\PrestasiLomba;
 use App\Domains\Wilayah\PrestasiLomba\Services\PrestasiLombaScopeService;
 use App\Models\User;
-use App\Support\RoleScopeMatrix;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PrestasiLombaPolicy

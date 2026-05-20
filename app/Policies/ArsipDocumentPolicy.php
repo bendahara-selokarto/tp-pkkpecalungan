@@ -2,8 +2,9 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Support\RoleScopeMatrix;
+
+use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ArsipDocumentPolicy

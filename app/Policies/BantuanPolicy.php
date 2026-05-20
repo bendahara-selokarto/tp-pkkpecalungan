@@ -2,10 +2,11 @@
 
 namespace App\Policies;
 
+use App\Support\RoleScopeMatrix;
+
 use App\Domains\Wilayah\Bantuan\Models\Bantuan;
 use App\Domains\Wilayah\Bantuan\Services\BantuanScopeService;
 use App\Models\User;
-use App\Support\RoleScopeMatrix;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class BantuanPolicy

@@ -2,10 +2,11 @@
 
 namespace App\Policies;
 
+use App\Support\RoleScopeMatrix;
+
 use App\Domains\Wilayah\ProgramPrioritas\Models\ProgramPrioritas;
 use App\Domains\Wilayah\ProgramPrioritas\Services\ProgramPrioritasScopeService;
 use App\Models\User;
-use App\Support\RoleScopeMatrix;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class ProgramPrioritasPolicy

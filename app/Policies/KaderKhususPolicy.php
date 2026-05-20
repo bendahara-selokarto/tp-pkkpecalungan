@@ -2,10 +2,11 @@
 
 namespace App\Policies;
 
+use App\Support\RoleScopeMatrix;
+
 use App\Domains\Wilayah\KaderKhusus\Models\KaderKhusus;
 use App\Domains\Wilayah\KaderKhusus\Services\KaderKhususScopeService;
 use App\Models\User;
-use App\Support\RoleScopeMatrix;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class KaderKhususPolicy

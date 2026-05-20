@@ -2,10 +2,11 @@
 
 namespace App\Policies;
 
+use App\Support\RoleScopeMatrix;
+
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\AgendaSurat\Services\AgendaSuratScopeService;
 use App\Models\User;
-use App\Support\RoleScopeMatrix;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class AgendaSuratPolicy

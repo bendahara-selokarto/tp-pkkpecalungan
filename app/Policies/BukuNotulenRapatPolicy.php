@@ -2,12 +2,16 @@
 
 namespace App\Policies;
 
+use App\Support\RoleScopeMatrix;
+
 use App\Domains\Wilayah\BukuNotulenRapat\Models\BukuNotulenRapat;
 use App\Domains\Wilayah\BukuNotulenRapat\Services\BukuNotulenRapatScopeService;
 use App\Models\User;
 
 class BukuNotulenRapatPolicy
 {
+    use \Illuminate\Auth\Access\HandlesAuthorization;
+
     public function __construct(
         private readonly BukuNotulenRapatScopeService $bukuNotulenRapatScopeService
     ) {
@@ -15,26 +19,38 @@ class BukuNotulenRapatPolicy
 
     public function viewAny(User $user): bool
     {
-        return $this->bukuNotulenRapatScopeService->canEnterModule($user);
+        return RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.view');
     }
 
     public function create(User $user): bool
     {
-        return $this->viewAny($user);
+        return RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.create');
     }
 
     public function view(User $user, BukuNotulenRapat $bukuNotulenRapat): bool
     {
+        if (! RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.view')) {
+            return false;
+        }
+
         return $this->bukuNotulenRapatScopeService->canView($user, $bukuNotulenRapat);
     }
 
     public function update(User $user, BukuNotulenRapat $bukuNotulenRapat): bool
     {
+        if (! RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.update')) {
+            return false;
+        }
+
         return $this->bukuNotulenRapatScopeService->canUpdate($user, $bukuNotulenRapat);
     }
 
     public function delete(User $user, BukuNotulenRapat $bukuNotulenRapat): bool
     {
+        if (! RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.delete')) {
+            return false;
+        }
+
         return $this->view($user, $bukuNotulenRapat);
     }
 }
