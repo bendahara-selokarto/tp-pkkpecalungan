@@ -68,7 +68,17 @@ const openExternal = (href) => {
   window.open(href, '_blank', 'noopener,noreferrer')
 }
 
-const duplicateAllowedModuleSlugs = new Set([])
+const duplicateAllowedModuleSlugs = new Set([
+  'activities',
+  'program-prioritas',
+  'inventaris',
+  'bantuans',
+  'prestasi-lomba',
+  'kader-khusus',
+  'buku-notulen-rapat',
+  'buku-daftar-hadir',
+  'catatan-keluarga',
+])
 
 const resolveModuleSlugFromHref = (href) => {
   if (typeof href !== 'string' || href.length === 0 || href.startsWith('http')) {
