@@ -142,7 +142,7 @@ class ListAccessControlMatrixUseCase
                 foreach ($this->roleMenuVisibilityService->modulesForGroup($group) as $module) {
                     $mode = $this->resolveEffectiveMode($groupMode, $overrides, $module);
                     $isOverrideManageable = in_array($module, $overrideModules, true)
-                        && $role !== 'super-admin'
+                        && $role !== \App\Support\RoleScopeMatrix::ROLE_SUPER_ADMIN
                         && $this->roleMenuVisibilityService->isModuleAssignableForRoleScope($module, $role, $scope);
                     $overrideMode = $overrideModesByModule[$module][$this->overrideModeKey($scope, $role)] ?? null;
                     $baselineMode = $isOverrideManageable
@@ -204,7 +204,7 @@ class ListAccessControlMatrixUseCase
         foreach (ScopeLevel::values() as $scope) {
             $roles = array_values(array_unique([
                 ...($scopedRoles[$scope] ?? []),
-                'super-admin',
+                \App\Support\RoleScopeMatrix::ROLE_SUPER_ADMIN,
             ]));
 
             foreach ($roles as $role) {

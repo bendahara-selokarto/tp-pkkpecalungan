@@ -30,7 +30,7 @@ class CreateArsipDocumentAction
             throw new HttpException(403, 'Area pengguna belum valid untuk mengelola arsip.');
         }
 
-        $isGlobal = $actor->hasRole('super-admin');
+        $isGlobal = \App\Support\RoleScopeMatrix::userIsSuperAdmin($actor);
 
         return $this->arsipDocumentRepository->store([
             'title' => (string) $payload['title'],

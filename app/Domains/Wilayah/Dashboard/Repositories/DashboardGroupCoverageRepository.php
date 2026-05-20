@@ -258,7 +258,7 @@ class DashboardGroupCoverageRepository implements DashboardGroupCoverageReposito
      */
     private function resolveGroupsForUser(User $user): array
     {
-        if ($user->hasRole('super-admin')) {
+        if (\App\Support\RoleScopeMatrix::userIsSuperAdmin($user)) {
             return [];
         }
 

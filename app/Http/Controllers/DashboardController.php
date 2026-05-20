@@ -28,7 +28,7 @@ class DashboardController extends Controller
 
     public function __invoke(Request $request): Response|RedirectResponse
     {
-        if (auth()->user()?->hasRole('super-admin')) {
+        if (\App\Support\RoleScopeMatrix::userIsSuperAdmin(auth()->user())) {
             return redirect()->route('super-admin.users.index');
         }
 
@@ -37,7 +37,7 @@ class DashboardController extends Controller
 
     public function printChartPdf(Request $request): SymfonyResponse|RedirectResponse
     {
-        if (auth()->user()?->hasRole('super-admin')) {
+        if (\App\Support\RoleScopeMatrix::userIsSuperAdmin(auth()->user())) {
             return redirect()->route('super-admin.users.index');
         }
 
@@ -56,7 +56,7 @@ class DashboardController extends Controller
 
     public function showBlockDetail(Request $request, string $blockKey): JsonResponse
     {
-        abort_if(auth()->user()?->hasRole('super-admin'), 404);
+        abort_if(\App\Support\RoleScopeMatrix::userIsSuperAdmin(auth()->user()), 404);
 
         $payload = $this->buildDashboardBlockDetailWidgetUseCase->execute(
             auth()->user(),

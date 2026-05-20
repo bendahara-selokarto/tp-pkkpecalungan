@@ -53,7 +53,7 @@ class UpsertPilotCatatanKeluargaOverrideAction
 
     private function ensureCompatibleScopeRole(string $scope, string $roleName, string $moduleSlug): void
     {
-        if ($roleName === 'super-admin' || ! RoleScopeMatrix::isRoleCompatibleWithScope($roleName, $scope)) {
+        if ($roleName === RoleScopeMatrix::ROLE_SUPER_ADMIN || ! RoleScopeMatrix::isRoleCompatibleWithScope($roleName, $scope)) {
             throw new InvalidArgumentException('Kombinasi role dan scope tidak valid untuk pilot override.');
         }
 

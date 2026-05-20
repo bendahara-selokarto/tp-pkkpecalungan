@@ -20,7 +20,7 @@ class CetakLampiranController
         $user = $request->user();
         abort_if(! $user, 403);
 
-        if ($user->hasRole('super-admin')) {
+        if (\App\Support\RoleScopeMatrix::userIsSuperAdmin($user)) {
             return redirect()->route('super-admin.users.index');
         }
 

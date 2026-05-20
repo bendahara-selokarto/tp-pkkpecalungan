@@ -19,7 +19,7 @@ class EnsureModuleVisibility
     public function handle(Request $request, Closure $next): Response
     {
         $user = $request->user();
-        if (! $user || $user->hasRole('super-admin')) {
+        if (! $user || \App\Support\RoleScopeMatrix::userIsSuperAdmin($user)) {
             return $next($request);
         }
 

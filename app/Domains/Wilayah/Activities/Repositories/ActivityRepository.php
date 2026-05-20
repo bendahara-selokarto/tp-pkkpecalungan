@@ -131,7 +131,7 @@ class ActivityRepository implements ActivityRepositoryInterface
     {
         $query = Activity::query();
 
-        if ($user->hasRole('super-admin')) {
+        if (\App\Support\RoleScopeMatrix::userIsSuperAdmin($user)) {
             return $query->where('tahun_anggaran', $this->activeBudgetYearContextService->resolveForUser($user));
         }
 

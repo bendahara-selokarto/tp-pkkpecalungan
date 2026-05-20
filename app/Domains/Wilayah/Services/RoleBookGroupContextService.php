@@ -76,7 +76,7 @@ class RoleBookGroupContextService
      */
     private function isGroupAllowed(string $group, User $user, array $roleGroups): bool
     {
-        if ($user->hasRole('super-admin')) {
+        if (\App\Support\RoleScopeMatrix::userIsSuperAdmin($user)) {
             return true;
         }
 

@@ -369,7 +369,7 @@ class RoleMenuVisibilityService
 
     private function userCanResolveScope(User $user, string $scope): bool
     {
-        return $user->hasRole('super-admin') || $user->hasRoleForScope($scope);
+        return \App\Support\RoleScopeMatrix::userIsSuperAdmin($user) || $user->hasRoleForScope($scope);
     }
 
     /**
