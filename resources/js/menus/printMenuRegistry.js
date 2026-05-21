@@ -5,14 +5,20 @@ const PRINT_SOURCE_OVERRIDES = {
   'anggota-tim-penggerak-kader': 'anggota-tim-penggerak',
 }
 
-const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas'])
+const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir'])
 const bookGroupContextByMenuGroup = {
-  'sekretaris-tpk': 'sekretaris-tpk',
+  'sekretaris-wajib': 'sekretaris-tpk',
+  'bendahara-wajib': 'bendahara-tpk',
   'penunjang-buku-wajib': 'sekretaris-tpk',
+  'pokja-i-wajib': 'pokja-i',
+  'pokja-ii-wajib': 'pokja-ii',
+  'pokja-iii-wajib': 'pokja-iii',
+  'pokja-iv-wajib': 'pokja-iv',
   'pokja-i': 'pokja-i',
   'pokja-ii': 'pokja-ii',
   'pokja-iii': 'pokja-iii',
   'pokja-iv': 'pokja-iv',
+  'common-pembantu': 'common', // Will be overridden if merged with pokja-x
 }
 
 const extractLampiranCode = (label) => {
@@ -60,92 +66,43 @@ const withBookGroupContext = (item, menuGroupKey) => {
 }
 
 const buildScopedPdfReportItemsByGroup = (scope) => ({
-  'sekretaris-tpk': [
-    { href: '/dashboard/charts/report/pdf', label: 'Grafik Dashboard', external: true },
-    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan | 4.13' },
-    { href: `/${scope}/agenda-surat/report/pdf`, label: 'Agenda Surat Masuk/Keluar | 4.10' },
-    { href: `/${scope}/agenda-surat/ekspedisi/report/pdf`, label: 'Ekspedisi Agenda Surat | 4.10' },
-    { href: `/${scope}/anggota-pokja/report/pdf`, label: 'Buku Anggota Pokja | -' },
-    { href: `/${scope}/anggota-tim-penggerak/report/pdf`, label: 'Anggota Tim Penggerak PKK | 4.9a' },
-    { href: `/${scope}/anggota-tim-penggerak-kader/report/pdf`, label: 'Anggota dan Kader Tim Penggerak PKK | -' },
-    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-    { href: `/${scope}/buku-notulen-rapat/report/pdf`, label: 'Buku Notulen Rapat | -' },
-    { href: `/${scope}/buku-daftar-hadir/report/pdf`, label: 'Buku Daftar Hadir | -' },
-    { href: `/${scope}/buku-tamu/report/pdf`, label: 'Buku Tamu | -' },
-    { href: `/${scope}/buku-keuangan/report/pdf`, label: 'Buku Keuangan | 4.11' },
-    { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-    { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris | 4.12' },
-    { href: `/${scope}/data-warga/report/pdf`, label: 'Data Warga | 4.14.1a' },
-    { href: `/${scope}/data-kegiatan-warga/report/pdf`, label: 'Data Kegiatan Warga | 4.14.1b' },
-  ],
-  'penunjang-buku-wajib': [
-    {
-      href: scope === 'kecamatan'
-        ? `/${scope}/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf`
-        : `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`,
-      label: 'Data Umum',
-    },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Program Kerja' },
-  ],
-  'pokja-i': [
+  'sekretaris-wajib': [
     { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
-    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-    { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-    { href: `/${scope}/data-kegiatan-pkk-pokja-i/report/pdf`, label: 'Data Kegiatan PKK Pokja I | 4.21' },
-    { href: `/${scope}/simulasi-penyuluhan/report/pdf`, label: 'Kelompok Simulasi dan Penyuluhan | 4.14.4f' },
-    { href: `/${scope}/anggota-pokja/report/pdf`, label: 'Anggota Pokja I | -' },
-    { href: `/${scope}/bkl/report/pdf`, label: 'Buku Kegiatan BKL | -' },
-    { href: `/${scope}/bkr/report/pdf`, label: 'Buku Kegiatan BKR | -' },
-    { href: `/${scope}/paar/report/pdf`, label: 'Buku PAAR | -' },
+    { href: `/${scope}/agenda-surat/report/pdf`, label: 'Agenda Surat Masuk/Keluar' },
+    { href: `/${scope}/anggota-tim-penggerak/report/pdf`, label: 'Anggota Tim Penggerak PKK' },
+    { href: `/${scope}/buku-notulen-rapat/report/pdf`, label: 'Buku Notulen Rapat' },
+    { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris' },
   ],
-  'pokja-ii': [
-    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
-    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-    { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-    { href: `/${scope}/data-pelatihan-kader/report/pdf`, label: 'Data Pelatihan Kader | 4.14.3' },
-    { href: `/${scope}/taman-bacaan/report/pdf`, label: 'Taman Bacaan/Perpustakaan | 4.14.4b' },
-    { href: `/${scope}/koperasi/report/pdf`, label: 'Koperasi | 4.14.4c' },
-    { href: `/${scope}/kejar-paket/report/pdf`, label: 'Kejar Paket/KF/PAUD | 4.14.4d' },
+  'bendahara-wajib': [
+    { href: `/${scope}/buku-keuangan/report/pdf`, label: 'Buku Keuangan' },
   ],
-  'pokja-iii': [
+  'pokja-i-wajib': [
     { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
-    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-    { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-    { href: `/${scope}/inventaris/report/pdf`, label: 'Buku Inventaris | 4.12' },
-    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-    { href: `/${scope}/data-keluarga/report/pdf`, label: 'Data Keluarga | 4.14.2a' },
-    { href: `/${scope}/data-industri-rumah-tangga/report/pdf`, label: 'Industri Rumah Tangga | 4.14.2c' },
-    { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf`, label: 'HATINYA PKK | 4.14.2b' },
-    { href: `/${scope}/warung-pkk/report/pdf`, label: 'Data Aset Sarana Desa/Kelurahan | 4.14.4' },
+    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja' },
   ],
-  'pokja-iv': [
+  'pokja-ii-wajib': [
     { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
-    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja TP PKK | -' },
-    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus | -' },
-    { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan | -' },
-    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi | -' },
-    {
-      href: `/${scope}/catatan-keluarga`,
-      label: 'Pusat Laporan Catatan Keluarga | 4.15-4.24',
-      lampiran: 'Hub',
-      hub: true,
-    },
-    { href: `/${scope}/posyandu/report/pdf`, label: 'Data Isian Posyandu oleh TP PKK | 4.14.4e' },
-    { href: `/${scope}/pilot-project-naskah-pelaporan/report/pdf`, label: 'Naskah Pelaporan Pilot Project Pokja IV | -' },
-    { href: `/${scope}/pilot-project-keluarga-sehat/report/pdf`, label: 'Pilot Project Keluarga Sehat | -' },
+    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja' },
+  ],
+  'pokja-iii-wajib': [
+    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
+    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja' },
+  ],
+  'pokja-iv-wajib': [
+    { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
+    { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja' },
+  ],
+  'common-pembantu': [
+    { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi' },
+    { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan' },
+    { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus' },
   ],
 })
 
 const buildScopedMenuGroups = (scope) => {
   const pdfReportItemsByGroup = buildScopedPdfReportItemsByGroup(scope)
 
-  const groups = [
+  const rawGroups = [
     {
       key: 'sekretaris-wajib',
       label: 'Buku Wajib',
@@ -318,16 +275,40 @@ const buildScopedMenuGroups = (scope) => {
     },
   ]
 
-  // Filter groups based on items visibility and combine Pokja bantu groups
-  const processedGroups = groups.map((group) => ({
+  // Filter out disabled items first
+  const filteredGroups = rawGroups.map((group) => ({
     ...group,
-    items: group.items
-      .filter((item) => item.uiVisibility !== 'disabled')
-      .map((item) => withBookGroupContext(item, group.key)),
-    printItems: (pdfReportItemsByGroup[group.key] ?? []).map((item) => withBookGroupContext(item, group.key)),
-  }))
+    items: group.items.filter((item) => item.uiVisibility !== 'disabled'),
+    printItems: pdfReportItemsByGroup[group.key] ?? [],
+  })).filter((group) => group.items.length > 0 || group.printItems.length > 0)
 
-  return processedGroups.filter((group) => group.items.length > 0)
+  // Use a map to track the order and content of consolidated groups
+  const groupMap = new Map()
+
+  filteredGroups.forEach((group) => {
+    // We want to keep groups like 'penunjang-buku-wajib' separate if needed,
+    // but the user wants to consolidate based on label for Pokja.
+    // To be safe, we consolidate only if the labels are EXACTLY the same AND they are not 'Buku Penunjang Buku Wajib'.
+    const shouldConsolidate = group.label === 'Buku Wajib' || group.label === 'Buku Bantu'
+
+    const consolidationKey = shouldConsolidate ? group.label : group.key
+
+    if (!groupMap.has(consolidationKey)) {
+      groupMap.set(consolidationKey, {
+        ...group,
+        items: [...group.items.map((item) => withBookGroupContext(item, group.key))],
+        printItems: [...group.printItems.map((item) => withBookGroupContext(item, group.key))],
+        originalKeys: [group.key], // Keep track of which backend keys are contributing
+      })
+    } else {
+      const existing = groupMap.get(consolidationKey)
+      existing.items.push(...group.items.map((item) => withBookGroupContext(item, group.key)))
+      existing.printItems.push(...group.printItems.map((item) => withBookGroupContext(item, group.key)))
+      existing.originalKeys.push(group.key)
+    }
+  })
+
+  return Array.from(groupMap.values())
 }
 
 const desaMenuGroups = buildScopedMenuGroups('desa')

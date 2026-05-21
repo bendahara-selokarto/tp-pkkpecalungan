@@ -3,7 +3,9 @@
 namespace Tests\Feature;
 
 use App\Domains\Wilayah\Models\Area;
+use App\Domains\Wilayah\Services\RoleMenuVisibilityService;
 use App\Models\User;
+use App\Support\RoleScopeMatrix;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Inertia\Testing\AssertableInertia;
 use Spatie\Permission\Models\Role;
@@ -13,141 +15,118 @@ class MenuVisibilityPayloadTest extends TestCase
 {
     use RefreshDatabase;
 
-    private Area $kecamatan;
-
-    private Area $desa;
+    private Area $desaArea;
+    private Area $kecamatanArea;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        foreach ([
-            'desa-sekretaris',
-            'desa-bendahara',
-            'desa-pokja-i',
-            'kecamatan-sekretaris',
-            'kecamatan-bendahara',
-            'kecamatan-pokja-ii',
-        ] as $roleName) {
-            Role::firstOrCreate(['name' => $roleName]);
-        }
-
-        $this->kecamatan = Area::create([
-            'name' => 'Pecalungan',
+        $this->kecamatanArea = Area::create([
+            'name' => 'Kecamatan Test',
             'level' => 'kecamatan',
         ]);
 
-        $this->desa = Area::create([
-            'name' => 'Gombong',
+        $this->desaArea = Area::create([
+            'name' => 'Desa Test',
             'level' => 'desa',
-            'parent_id' => $this->kecamatan->id,
+            'parent_id' => $this->kecamatanArea->id,
         ]);
+
+        foreach ([
+            RoleScopeMatrix::ROLE_SEKRETARIS_DESA,
+            RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN,
+            RoleScopeMatrix::ROLE_BENDAHARA_DESA,
+            RoleScopeMatrix::ROLE_BENDAHARA_KECAMATAN,
+            RoleScopeMatrix::ROLE_POKJA_1_DESA,
+            RoleScopeMatrix::ROLE_POKJA_2_DESA,
+            RoleScopeMatrix::ROLE_POKJA_3_DESA,
+            RoleScopeMatrix::ROLE_POKJA_4_DESA,
+            RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN,
+            RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN,
+            RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN,
+            RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN,
+            RoleScopeMatrix::ROLE_SUPER_ADMIN,
+        ] as $roleName) {
+            Role::firstOrCreate(['name' => $roleName]);
+        }
     }
 
     public function test_payload_sekretaris_berisi_rw_dan_pokja_ro(): void
     {
-        $user = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desa->id,
-        ]);
-        $user->assignRole('desa-sekretaris');
+        $user = User::factory()->create(['area_id' => $this->desaArea->id]);
+        $user->assignRole(RoleScopeMatrix::ROLE_SEKRETARIS_DESA);
 
         $this->actingAs($user)
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
+                ->where('auth.user.menuGroupModes.sekretaris-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
-                ->where('auth.user.menuGroupModes.pokja-i', 'read-only')
-                ->where('auth.user.menuGroupModes.pokja-iv', 'read-only')
+                ->where('auth.user.menuGroupModes.common-pembantu', 'read-write')
+                ->missing('auth.user.menuGroupModes.pokja-i')
                 ->missing('auth.user.menuGroupModes.referensi')
-                ->where('auth.user.moduleModes.agenda-surat', 'read-write')
-                ->where('auth.user.moduleModes.anggota-pokja', 'read-write')
-                ->where('auth.user.moduleModes.inventaris', 'read-write')
-                ->where('auth.user.moduleModes.catatan-keluarga', 'read-write')
-                ->where('auth.user.moduleModes.program-prioritas', 'read-write')
-                ->where('auth.user.moduleModes.buku-keuangan', 'read-only')
             );
     }
 
     public function test_payload_pokja_hanya_grup_sendiri(): void
     {
-        $user = User::factory()->create([
-            'scope' => 'kecamatan',
-            'area_id' => $this->kecamatan->id,
-        ]);
-        $user->assignRole('kecamatan-pokja-ii');
+        $user = User::factory()->create(['area_id' => $this->desaArea->id]);
+        $user->assignRole(RoleScopeMatrix::ROLE_POKJA_2_DESA);
 
         $this->actingAs($user)
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('auth.user.menuGroupModes.pokja-ii-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-ii', 'read-write')
+                ->where('auth.user.menuGroupModes.common-pembantu', 'read-write')
                 ->missing('auth.user.menuGroupModes.referensi')
-                ->missing('auth.user.menuGroupModes.sekretaris-tpk')
+                ->missing('auth.user.menuGroupModes.sekretaris-wajib')
                 ->missing('auth.user.menuGroupModes.monitoring')
-                ->where('auth.user.moduleModes.activities', 'read-write')
-                ->where('auth.user.moduleModes.catatan-keluarga', 'read-write')
-                ->where('auth.user.moduleModes.pra-koperasi-up2k', 'read-write')
-                ->where('auth.user.moduleModes.prestasi-lomba', 'read-write')
-                ->missing('auth.user.moduleModes.inventaris')
-                ->missing('auth.user.moduleModes.data-pelatihan-kader')
-                ->missing('auth.user.moduleModes.data-warga')
             );
     }
 
-    public function test_payload_bendahara_tidak_memiliki_owner_modul_operasional(): void
+    public function test_payload_bendahara_memiliki_buku_wajib_keuangan(): void
     {
-        $user = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desa->id,
-        ]);
-        $user->assignRole('desa-bendahara');
+        $user = User::factory()->create(['area_id' => $this->desaArea->id]);
+        $user->assignRole(RoleScopeMatrix::ROLE_BENDAHARA_DESA);
 
         $this->actingAs($user)
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->missing('auth.user.menuGroupModes.bendahara-tpk')
-                ->missing('auth.user.moduleModes.activities')
-                ->missing('auth.user.moduleModes.prestasi-lomba')
-                ->missing('auth.user.menuGroupModes.sekretaris-tpk')
+                ->where('auth.user.menuGroupModes.bendahara-wajib', 'read-write')
+                ->where('auth.user.moduleModes.buku-keuangan', 'read-write')
+                ->where('auth.user.menuGroupModes.common-pembantu', 'read-only')
+                ->missing('auth.user.menuGroupModes.sekretaris-wajib')
                 ->missing('auth.user.menuGroupModes.pokja-i')
             );
     }
 
     public function test_payload_desa_pokja_i_memuat_buku_wajib_bantu_dan_bantu_unik_rw(): void
     {
-        $user = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desa->id,
-        ]);
-        $user->assignRole('desa-pokja-i');
+        $user = User::factory()->create(['area_id' => $this->desaArea->id]);
+        $user->assignRole(RoleScopeMatrix::ROLE_POKJA_1_DESA);
 
         $this->actingAs($user)
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('auth.user.menuGroupModes.pokja-i-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
-                ->where('auth.user.moduleModes.program-prioritas', 'read-write')
+                ->where('auth.user.menuGroupModes.common-pembantu', 'read-write')
                 ->where('auth.user.moduleModes.data-kegiatan-pkk-pokja-i', 'read-write')
-                ->where('auth.user.moduleModes.simulasi-penyuluhan', 'read-write')
-                ->where('auth.user.moduleModes.bkr', 'read-write')
-                ->where('auth.user.moduleModes.anggota-pokja', 'read-write')
-                ->where('auth.user.moduleModes.buku-tamu', 'read-only')
             );
     }
 
     public function test_payload_multi_role_menggunakan_union_dengan_prioritas_rw(): void
     {
-        $user = User::factory()->create([
-            'scope' => 'desa',
-            'area_id' => $this->desa->id,
-        ]);
-        $user->assignRole('desa-sekretaris');
-        $user->assignRole('desa-pokja-i');
+        $user = User::factory()->create(['area_id' => $this->desaArea->id]);
+        $user->assignRole([RoleScopeMatrix::ROLE_SEKRETARIS_DESA, RoleScopeMatrix::ROLE_POKJA_1_DESA]);
 
         $this->actingAs($user)
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
+                ->where('auth.user.menuGroupModes.sekretaris-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
+                ->where('auth.user.menuGroupModes.pokja-i-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
                 ->where('auth.user.moduleModes.agenda-surat', 'read-write')
                 ->where('auth.user.moduleModes.data-kegiatan-pkk-pokja-i', 'read-write')
@@ -156,24 +135,17 @@ class MenuVisibilityPayloadTest extends TestCase
 
     public function test_payload_kecamatan_sekretaris_memiliki_monitoring_desa_read_only(): void
     {
-        $user = User::factory()->create([
-            'scope' => 'kecamatan',
-            'area_id' => $this->kecamatan->id,
-        ]);
-        $user->assignRole('kecamatan-sekretaris');
+        $user = User::factory()->create(['area_id' => $this->kecamatanArea->id]);
+        $user->assignRole(RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN);
 
         $this->actingAs($user)
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
-                ->where('auth.user.menuGroupModes.sekretaris-tpk', 'read-write')
+                ->where('auth.user.menuGroupModes.sekretaris-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.monitoring', 'read-only')
                 ->where('auth.user.menuGroupModes.belum-ada-pemilik', 'read-only')
                 ->where('auth.user.moduleModes.activities', 'read-write')
-                ->where('auth.user.moduleModes.data-pelatihan-kader', 'read-only')
-                ->where('auth.user.moduleModes.catatan-keluarga', 'read-write')
-                ->where('auth.user.moduleModes.desa-activities', 'read-only')
-                ->where('auth.user.moduleModes.desa-arsip', 'read-only')
             );
     }
 }

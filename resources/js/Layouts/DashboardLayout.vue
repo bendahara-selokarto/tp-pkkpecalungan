@@ -157,12 +157,29 @@ const withMode = (groups) => {
   const seenInternalHrefs = new Set()
 
   return groups
-    .filter((group) => !!menuGroupModes.value[group.key])
-    .map((group) => ({
-      ...group,
-      mode: menuGroupModes.value[group.key],
-      items: filterMenuItems(group.items, seenInternalHrefs),
-    }))
+    .filter((group) => {
+      // Check if any of the original keys from consolidation have a mode in backend
+      if (group.originalKeys) {
+        return group.originalKeys.some((key) => !!menuGroupModes.value[key])
+      }
+      return !!menuGroupModes.value[group.key]
+    })
+    .map((group) => {
+      // Resolve the effective mode (prefer read-write over read-only)
+      let mode = 'read-only'
+      if (group.originalKeys) {
+        const hasRW = group.originalKeys.some((key) => menuGroupModes.value[key] === 'read-write')
+        mode = hasRW ? 'read-write' : 'read-only'
+      } else {
+        mode = menuGroupModes.value[group.key]
+      }
+
+      return {
+        ...group,
+        mode,
+        items: filterMenuItems(group.items, seenInternalHrefs),
+      }
+    })
     .filter((group) => group.items.length > 0)
 }
 

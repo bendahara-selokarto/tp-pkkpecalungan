@@ -140,7 +140,11 @@ const visibleGroups = computed(() => {
 
   // Daftarkan semua item dari Menu Utama ke dalam set seen agar tidak diduplikasi di Menu Lampiran
   baseGroups.value.forEach((group) => {
-    if (!!menuGroupModes.value[group.key]) {
+    const isVisible = group.originalKeys
+      ? group.originalKeys.some((key) => !!menuGroupModes.value[key])
+      : !!menuGroupModes.value[group.key]
+
+    if (isVisible) {
       group.items.forEach((item) => {
         const slug = resolveModuleSlugFromHref(item.href)
         if (slug) {
@@ -155,8 +159,21 @@ const visibleGroups = computed(() => {
   })
 
   return baseGroups.value
-    .filter((group) => !!menuGroupModes.value[group.key])
+    .filter((group) => {
+      if (group.originalKeys) {
+        return group.originalKeys.some((key) => !!menuGroupModes.value[key])
+      }
+      return !!menuGroupModes.value[group.key]
+    })
     .map((group) => {
+      let mode = 'read-only'
+      if (group.originalKeys) {
+        const hasRW = group.originalKeys.some((key) => menuGroupModes.value[key] === 'read-write')
+        mode = hasRW ? 'read-write' : 'read-only'
+      } else {
+        mode = menuGroupModes.value[group.key]
+      }
+
       const printItems = filterMenuItems(group.printItems ?? [], seenPrintHrefs, seenModuleSlugs)
         .map((item) => ({
           ...item,
@@ -183,7 +200,7 @@ const visibleGroups = computed(() => {
 
       return {
         ...group,
-        mode: menuGroupModes.value[group.key],
+        mode,
         printItems,
       }
     })
