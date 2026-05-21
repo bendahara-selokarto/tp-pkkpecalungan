@@ -20,16 +20,16 @@ Untuk menjaga fokus operasional dan mencegah kesalahan input lintas bidang, apli
 
 Gunakan tabel ini sebagai acuan pembagian tanggung jawab input data:
 
-| Nama Modul | Pemilik Utama (RW) | Grup Sidebar |
+| Bidang | Kategori Buku | Modul / Fitur |
 | :--- | :--- | :--- |
-| Data Warga, Keluarga, Catatan Keluarga | Sekretariat | Buku Wajib Sekretaris |
-| Buku Daftar Hadir, Buku Tamu, Agenda Surat | Sekretariat | Buku Wajib Sekretaris |
-| Buku Inventaris | Sekretariat & Pokja III | Buku Wajib / Buku Bantu |
-| Buku Keuangan | Bendahara | Buku Wajib |
-| PAAR, Simulasi, Literasi, BKR, BKL | Pokja I | Buku Bantu Pokja I |
-| Koperasi, UP2K, Pelatihan Kader, Taman Bacaan | Pokja II | Buku Bantu Pokja II |
-| Industri Rumah Tangga, HATINYA PKK | Pokja III | Buku Bantu Pokja III |
-| Posyandu, Pilot Project | Pokja IV | Buku Bantu Pokja IV |
+| **Sekretariat** | [Buku Wajib] | Daftar Anggota TP-PKK, Buku Notulen, Buku Kegiatan, Buku Inventaris, Agenda Surat |
+| | [Buku Penunjang] | Buku Program Kerja, Buku Data Umum (Warga/Keluarga) |
+| | [Buku Bantu] | Daftar Hadir, Buku Prestasi, Buku Tamu, Buku Konsultasi, Buku Ekspedisi, Buku Bantuan, Buku Grafik, Buku Agenda SK |
+| **Bendahara** | [Buku Wajib] | Buku Keuangan |
+| **Pokja I** | [Buku Bantu] | PAAR, Simulasi, Literasi, BKR, BKL |
+| **Pokja II** | [Buku Bantu] | Koperasi, UP2K, Pelatihan Kader, Taman Bacaan |
+| **Pokja III** | [Buku Bantu] | Industri Rumah Tangga, HATINYA PKK, Inventaris |
+| **Pokja IV** | [Buku Bantu] | Posyandu, Pilot Project |
 
 ---
 

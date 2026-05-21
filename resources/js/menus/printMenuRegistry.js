@@ -8,6 +8,7 @@ const PRINT_SOURCE_OVERRIDES = {
 const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir'])
 const bookGroupContextByMenuGroup = {
   'sekretaris-wajib': 'sekretaris-tpk',
+  'sekretaris-bantu': 'sekretaris-tpk',
   'bendahara-wajib': 'bendahara-tpk',
   'penunjang-buku-wajib': 'sekretaris-tpk',
   'pokja-i-wajib': 'pokja-i',

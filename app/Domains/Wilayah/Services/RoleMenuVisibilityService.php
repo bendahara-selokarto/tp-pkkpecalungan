@@ -144,6 +144,7 @@ class RoleMenuVisibilityService
         'kecamatan' => [
             'sekretaris-wajib',
             'penunjang-buku-wajib',
+            'sekretaris-bantu',
             'bendahara-wajib',
             'pokja-i-wajib',
             'pokja-ii-wajib',
