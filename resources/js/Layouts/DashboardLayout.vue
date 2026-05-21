@@ -105,6 +105,11 @@ const isModuleAllowedForCurrentUser = (item) => {
     return true
   }
 
+  // If item has a sourceKey (from consolidation), check if user has access to that specific group
+  if (item.sourceKey && !menuGroupModes.value[item.sourceKey]) {
+    return false
+  }
+
   const moduleSlug = resolveModuleSlugFromHref(item.href)
   if (!moduleSlug) {
     // If we can't resolve a module slug, default to hidden for safety, 

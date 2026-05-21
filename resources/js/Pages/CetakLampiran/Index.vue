@@ -40,6 +40,10 @@ const isModuleAllowedForCurrentUser = (item) => {
     return true
   }
 
+  if (item.sourceKey && !menuGroupModes.value[item.sourceKey]) {
+    return false
+  }
+
   const moduleSlug = resolveModuleSlugFromHref(item.href)
   if (!moduleSlug) {
     return item.href === '#' || item.href === '/'

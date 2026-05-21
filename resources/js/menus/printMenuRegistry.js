@@ -320,14 +320,14 @@ const buildScopedMenuGroups = (scope) => {
     if (!groupMap.has(consolidationKey)) {
       groupMap.set(consolidationKey, {
         ...group,
-        items: [...group.items.map((item) => withBookGroupContext(item, group.key))],
-        printItems: [...group.printItems.map((item) => withBookGroupContext(item, group.key))],
+        items: [...group.items.map((item) => ({ ...withBookGroupContext(item, group.key), sourceKey: group.key }))],
+        printItems: [...group.printItems.map((item) => ({ ...withBookGroupContext(item, group.key), sourceKey: group.key }))],
         originalKeys: [group.key], // Keep track of which backend keys are contributing
       })
     } else {
       const existing = groupMap.get(consolidationKey)
-      existing.items.push(...group.items.map((item) => withBookGroupContext(item, group.key)))
-      existing.printItems.push(...group.printItems.map((item) => withBookGroupContext(item, group.key)))
+      existing.items.push(...group.items.map((item) => ({ ...withBookGroupContext(item, group.key), sourceKey: group.key })))
+      existing.printItems.push(...group.printItems.map((item) => ({ ...withBookGroupContext(item, group.key), sourceKey: group.key })))
       existing.originalKeys.push(group.key)
     }
   })
