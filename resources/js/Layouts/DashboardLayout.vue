@@ -117,6 +117,16 @@ const isModuleAllowedForCurrentUser = (item) => {
     return item.href === '#' || item.href === '/'
   }
 
+  // Hide read-only Pokja-sourced items to avoid UI confusion: only
+  // surface Pokja responsibilities when user has read-write on that group.
+  const sourceKey = item.sourceKey ?? null
+  if (typeof sourceKey === 'string' && sourceKey.startsWith('pokja-')) {
+    const groupMode = menuGroupModes.value[sourceKey] ?? null
+    if (groupMode === 'read-only') {
+      return false
+    }
+  }
+
   return !!moduleModes.value[moduleSlug]
 }
 
