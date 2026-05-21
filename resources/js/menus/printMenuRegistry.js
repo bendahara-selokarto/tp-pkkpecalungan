@@ -5,7 +5,7 @@ const PRINT_SOURCE_OVERRIDES = {
   'anggota-tim-penggerak-kader': 'anggota-tim-penggerak',
 }
 
-const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'agenda-surat', 'buku-tamu', 'laporan-tahunan-pkk'])
+const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'agenda-surat', 'buku-tamu', 'laporan-tahunan-pkk', 'data-umum-pkk', 'data-umum-pkk-kecamatan'])
 const bookGroupContextByMenuGroup = {
   'sekretaris-wajib': 'sekretaris-tpk',
   'sekretaris-bantu': 'sekretaris-tpk',

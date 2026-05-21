@@ -73,6 +73,8 @@ class RoleMenuVisibilityService
             'data-warga',
             'data-kegiatan-warga',
             'data-keluarga',
+            'data-umum-pkk',
+            'data-umum-pkk-kecamatan',
         ],
         'common-pembantu' => [
             'prestasi-lomba',
@@ -117,6 +119,8 @@ class RoleMenuVisibilityService
             'bantuans',
             'prestasi-lomba',
             'data-kegiatan-pkk-pokja-iv',
+            'data-umum-pkk',
+            'data-umum-pkk-kecamatan',
         ],
         'monitoring' => [
             'desa-activities',
