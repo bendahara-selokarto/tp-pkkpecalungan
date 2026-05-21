@@ -17,6 +17,11 @@ class BukuDaftarHadir extends Model
         'attendee_name',
         'institution',
         'description',
+        'file_path',
+        'original_name',
+        'mime_type',
+        'extension',
+        'size_bytes',
         'level',
         'area_id',
         'created_by',
@@ -28,6 +33,7 @@ class BukuDaftarHadir extends Model
         return [
             'attendance_date' => 'date:Y-m-d',
             'tahun_anggaran' => 'integer',
+            'size_bytes' => 'integer',
         ];
     }
 

@@ -1,19 +1,15 @@
 <?php
 
-namespace App\Domains\Wilayah\BukuNotulenRapat\DTOs;
+namespace App\Domains\Wilayah\BukuEkspedisi\DTOs;
 
-class BukuNotulenRapatData
+class BukuEkspedisiData
 {
     public function __construct(
-        public string $entry_date,
         public string $title,
-        public ?string $person_name,
-        public ?string $institution,
-        public ?string $description,
-        public ?string $file_path,
-        public ?string $original_name,
+        public string $file_path,
+        public string $original_name,
         public ?string $mime_type,
-        public ?string $extension,
+        public string $extension,
         public int $size_bytes,
         public string $level,
         public int $area_id,
@@ -25,15 +21,11 @@ class BukuNotulenRapatData
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['entry_date'],
             $data['title'],
-            $data['person_name'] ?? null,
-            $data['institution'] ?? null,
-            $data['description'] ?? null,
-            $data['file_path'] ?? null,
-            $data['original_name'] ?? null,
+            $data['file_path'],
+            $data['original_name'],
             $data['mime_type'] ?? null,
-            $data['extension'] ?? null,
+            $data['extension'],
             $data['size_bytes'] ?? 0,
             $data['level'],
             $data['area_id'],

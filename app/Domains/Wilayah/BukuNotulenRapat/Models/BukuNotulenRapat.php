@@ -16,6 +16,11 @@ class BukuNotulenRapat extends Model
         'person_name',
         'institution',
         'description',
+        'file_path',
+        'original_name',
+        'mime_type',
+        'extension',
+        'size_bytes',
         'level',
         'area_id',
         'created_by',
@@ -27,6 +32,7 @@ class BukuNotulenRapat extends Model
         return [
             'entry_date' => 'date:Y-m-d',
             'tahun_anggaran' => 'integer',
+            'size_bytes' => 'integer',
         ];
     }
 

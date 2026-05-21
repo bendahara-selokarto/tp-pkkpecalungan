@@ -21,12 +21,26 @@ class CreateScopedBukuNotulenRapatAction
     {
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
+        $fileInfo = [];
+        if (isset($payload['file']) && $payload['file'] instanceof \Illuminate\Http\UploadedFile) {
+            $uploadedFile = $payload['file'];
+            $storedPath = $uploadedFile->store('buku-notulen', 'public');
+            $fileInfo = [
+                'file_path' => $storedPath,
+                'original_name' => $uploadedFile->getClientOriginalName(),
+                'mime_type' => $uploadedFile->getClientMimeType(),
+                'extension' => strtolower($uploadedFile->getClientOriginalExtension()),
+                'size_bytes' => (int) $uploadedFile->getSize(),
+            ];
+        }
+
         $data = BukuNotulenRapatData::fromArray([
             'entry_date' => $payload['entry_date'],
             'title' => $payload['title'],
             'person_name' => $payload['person_name'] ?? null,
             'institution' => $payload['institution'] ?? null,
             'description' => $payload['description'] ?? null,
+            ...$fileInfo,
             'level' => $level,
             'area_id' => $this->bukuNotulenRapatScopeService->requireUserAreaId(),
             'created_by' => auth()->id(),

@@ -18,6 +18,11 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
             'attendee_name' => $data->attendee_name,
             'institution' => $data->institution,
             'description' => $data->description,
+            'file_path' => $data->file_path,
+            'original_name' => $data->original_name,
+            'mime_type' => $data->mime_type,
+            'extension' => $data->extension,
+            'size_bytes' => $data->size_bytes,
             'level' => $data->level,
             'area_id' => $data->area_id,
             'created_by' => $data->created_by,
@@ -78,6 +83,11 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
             'attendee_name' => $data->attendee_name,
             'institution' => $data->institution,
             'description' => $data->description,
+            'file_path' => $data->file_path,
+            'original_name' => $data->original_name,
+            'mime_type' => $data->mime_type,
+            'extension' => $data->extension,
+            'size_bytes' => $data->size_bytes,
             'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 

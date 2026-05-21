@@ -19,6 +19,7 @@ class UpdateBukuNotulenRapatRequest extends FormRequest
             'person_name' => 'nullable|string|max:255',
             'institution' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ];
     }
 }

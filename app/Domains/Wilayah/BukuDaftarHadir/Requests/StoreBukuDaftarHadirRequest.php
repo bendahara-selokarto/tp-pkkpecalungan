@@ -15,10 +15,11 @@ class StoreBukuDaftarHadirRequest extends FormRequest
     {
         return [
             'attendance_date' => 'required|date_format:Y-m-d',
-            'activity_id' => 'required|integer|exists:activities,id',
-            'attendee_name' => 'required|string|max:255',
+            'activity_id' => 'nullable|integer|exists:activities,id',
+            'attendee_name' => 'nullable|string|max:255',
             'institution' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ];
     }
 }

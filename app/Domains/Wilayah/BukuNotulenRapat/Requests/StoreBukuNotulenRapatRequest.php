@@ -19,6 +19,7 @@ class StoreBukuNotulenRapatRequest extends FormRequest
             'person_name' => 'nullable|string|max:255',
             'institution' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ];
     }
 }
