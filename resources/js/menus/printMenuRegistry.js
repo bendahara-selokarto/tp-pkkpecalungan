@@ -41,10 +41,16 @@ const resolveModuleSlugFromHref = (href) => {
     return null
   }
 
+  // Handle nested paths for Pokja Data Kegiatan and Data Umum
+  // e.g., /desa/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf -> data-kegiatan-pkk-pokja-ii
+  if (segments.length >= 3 && segments[1] === 'catatan-keluarga') {
+    return segments[2]
+  }
+
   return segments[1]
 }
 
-const isExternalItem = (item) => item?.external === true || (typeof item?.href === 'string' && item.href.includes('report/pdf'))
+const isExternalItem = (item) => item?.external === true
 
 const withBookGroupContext = (item, menuGroupKey) => {
   if (isExternalItem(item)) {
@@ -79,18 +85,22 @@ const buildScopedPdfReportItemsByGroup = (scope) => ({
   'pokja-i-wajib': [
     { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
     { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja' },
+    { href: `/${scope}/data-kegiatan-pkk-pokja-i/report/pdf`, label: 'Buku Data Kegiatan' },
   ],
   'pokja-ii-wajib': [
     { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
     { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja' },
+    { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf`, label: 'Buku Data Kegiatan' },
   ],
   'pokja-iii-wajib': [
     { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
     { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja' },
+    { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Buku Data Kegiatan' },
   ],
   'pokja-iv-wajib': [
     { href: `/${scope}/activities/report/pdf`, label: 'Buku Kegiatan' },
     { href: `/${scope}/program-prioritas/report/pdf`, label: 'Buku Program Kerja' },
+    { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Buku Data Kegiatan' },
   ],
   'common-pembantu': [
     { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi' },
@@ -130,7 +140,7 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-        { href: `/${scope}/data-kegiatan-pkk-pokja-i/report/pdf`, label: 'Buku Data Kegiatan', external: true },
+        { href: `/${scope}/data-kegiatan-pkk-pokja-i/report/pdf`, label: 'Buku Data Kegiatan' },
       ],
     },
     {
@@ -140,7 +150,7 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf`, label: 'Buku Data Kegiatan', external: true },
+        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf`, label: 'Buku Data Kegiatan' },
       ],
     },
     {
@@ -150,7 +160,7 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Buku Data Kegiatan', external: true },
+        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Buku Data Kegiatan' },
       ],
     },
     {
@@ -160,7 +170,7 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Buku Data Kegiatan', external: true },
+        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Buku Data Kegiatan' },
       ],
     },
     {
@@ -174,7 +184,6 @@ const buildScopedMenuGroups = (scope) => {
             ? `/${scope}/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf`
             : `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`,
           label: 'Buku Data Umum',
-          external: true,
         },
       ],
     },

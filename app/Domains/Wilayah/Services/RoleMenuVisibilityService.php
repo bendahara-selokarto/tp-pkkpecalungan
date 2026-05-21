@@ -47,17 +47,17 @@ class RoleMenuVisibilityService
         'pokja-ii-wajib' => [
             'program-prioritas',
             'activities',
-            'catatan-keluarga', // Hub for Pokja II data
+            'data-kegiatan-pkk-pokja-ii',
         ],
         'pokja-iii-wajib' => [
             'program-prioritas',
             'activities',
-            'catatan-keluarga', // Hub for Pokja III data
+            'data-kegiatan-pkk-pokja-iii',
         ],
         'pokja-iv-wajib' => [
             'program-prioritas',
             'activities',
-            'catatan-keluarga', // Hub for Pokja IV data
+            'data-kegiatan-pkk-pokja-iv',
         ],
         'penunjang-buku-wajib' => [
             'program-prioritas',

@@ -139,7 +139,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'literasi-warga',
                 'bkb-kegiatan',
                 'tutor-khusus',
-                'catatan-keluarga',
+                'data-kegiatan-pkk-pokja-ii',
             ],
             'kecamatan-pokja-iii' => [
                 'program-prioritas',
@@ -147,7 +147,6 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'prestasi-lomba',
                 'bantuans',
                 'kader-khusus',
-                'catatan-keluarga',
                 'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
                 'warung-pkk',
                 'data-keluarga',
@@ -155,6 +154,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'buku-notulen-rapat',
                 'inventaris',
                 'data-industri-rumah-tangga',
+                'data-kegiatan-pkk-pokja-iii',
             ],
             'kecamatan-pokja-iv' => [
                 'program-prioritas',
@@ -162,11 +162,11 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'prestasi-lomba',
                 'bantuans',
                 'kader-khusus',
-                'catatan-keluarga',
                 'posyandu',
                 'pilot-project-naskah-pelaporan',
                 'pilot-project-keluarga-sehat',
                 'inventaris',
+                'data-kegiatan-pkk-pokja-iv',
             ],
         ];
 

@@ -62,7 +62,7 @@ const isSekretarisRole = computed(() =>
 
 const isActive = (prefix) => page.url.startsWith(prefix)
 
-const isExternalItem = (item) => item.external === true || (typeof item.href === 'string' && item.href.includes('report/pdf'))
+const isExternalItem = (item) => item.external === true
 const isItemActive = (item) => !isExternalItem(item) && isActive(item.href)
 const openExternal = (href) => {
   window.open(href, '_blank', 'noopener,noreferrer')
@@ -91,6 +91,12 @@ const resolveModuleSlugFromHref = (href) => {
     return null
   }
 
+  // Handle nested paths for Pokja Data Kegiatan and Data Umum
+  // e.g., /desa/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf -> data-kegiatan-pkk-pokja-ii
+  if (segments.length >= 3 && segments[1] === 'catatan-keluarga') {
+    return segments[2]
+  }
+
   return segments[1]
 }
 
@@ -101,7 +107,9 @@ const isModuleAllowedForCurrentUser = (item) => {
 
   const moduleSlug = resolveModuleSlugFromHref(item.href)
   if (!moduleSlug) {
-    return true
+    // If we can't resolve a module slug, default to hidden for safety, 
+    // unless it's a known internal non-module path like # or /
+    return item.href === '#' || item.href === '/'
   }
 
   return !!moduleModes.value[moduleSlug]

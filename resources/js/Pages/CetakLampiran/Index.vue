@@ -33,8 +33,7 @@ const isSekretarisRole = computed(() =>
   || hasRole('kecamatan-sekretaris'),
 )
 
-const isExternalItem = (item) => item.external === true || (typeof item.href === 'string' && item.href.includes('report/pdf'))
-const duplicateAllowedModuleSlugs = new Set([])
+const isExternalItem = (item) => item.external === true
 
 const isModuleAllowedForCurrentUser = (item) => {
   if (isExternalItem(item)) {
@@ -43,7 +42,7 @@ const isModuleAllowedForCurrentUser = (item) => {
 
   const moduleSlug = resolveModuleSlugFromHref(item.href)
   if (!moduleSlug) {
-    return true
+    return item.href === '#' || item.href === '/'
   }
 
   return !!moduleModes.value[moduleSlug]
