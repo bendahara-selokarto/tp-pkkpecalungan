@@ -43,8 +43,27 @@ Jika terdapat permintaan perubahan dari stakeholder (misal: Ketua Pokja IV memin
 
 ---
 
-### 4. Log Perubahan Non-Teknis
+### 5. Flow Perbaikan & Sinkronisasi (E2E)
+
+Setiap kali terjadi perubahan hak akses atau struktur menu, wajib mengikuti alur sinkronisasi berikut untuk mencegah error 403 atau menu tidak tampil:
+
+1.  **Level Kebijakan (`PEDOMAN_KONFIGURASI_AKSES_PKK.md`)**:
+    *   Tentukan kategori (Wajib/Penunjang/Bantu) dan Pemilik Utama.
+2.  **Level Backend (`RoleMenuVisibilityService.php`)**:
+    *   **Mapping Grup**: Daftarkan modul ke konstanta `GROUP_MODULES`.
+    *   **Mapping Scope**: Daftarkan grup ke konstanta `GROUPS_BY_SCOPE` (Sering terlewat: Pastikan grup ada di scope `desa` DAN `kecamatan`).
+    *   **Mapping Role**: Tentukan mode akses di konstanta `ROLE_GROUP_MODES`.
+3.  **Level Frontend Registry (`printMenuRegistry.js`)**:
+    *   Sesuaikan `rawGroups` dengan struktur kategori yang baru.
+    *   Wajib sertakan metadata `sourceKey` yang nilainya sama dengan kunci grup di backend.
+    *   Wajib sertakan parameter `?book_group=...` pada properti `href` untuk isolasi data.
+4.  **Level Verifikasi**:
+    *   Pastikan tidak ada duplikasi modul antar grup untuk satu peran yang sama (mencegah konflik filter).
+
+---
+
+### 6. Log Perubahan Non-Teknis
 | Tanggal | Deskripsi Perubahan | Disetujui Oleh | Status |
 | :--- | :--- | :--- | :--- |
-| 21-05-2026 | Peresmian **Strict Visibility** & Granular Module Mapping | Tim Pengembang | **Aktif (Standard)** |
+| 21-05-2026 | Peresmian **Strict Visibility**, Granular Mapping, & Flow E2E | Tim Pengembang | **Aktif (Standard)** |
 | 20-05-2026 | Peresmian Dokumen Acuan Awal | Tim Pengembang | Superseded |
