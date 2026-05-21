@@ -9,8 +9,8 @@
     $place = $footerPlace ?? 'Pecalungan';
     $date = $footerDate ?? \Carbon\Carbon::now()->translatedFormat('d F Y');
     
-    $chairpersonName = $footerChairpersonName ? strtoupper($footerChairpersonName) : '..........................';
-    $userName = $footerUserName ? strtoupper($footerUserName) : '..........................';
+    $chairpersonName = ($footerChairpersonName ?? null) ? strtoupper($footerChairpersonName) : '..........................';
+    $userName = ($footerUserName ?? null) ? strtoupper($footerUserName) : '..........................';
 @endphp
 
 <style>

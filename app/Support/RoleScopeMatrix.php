@@ -63,6 +63,7 @@ class RoleScopeMatrix
             'anggota_tim_penggerak.view', 'anggota_tim_penggerak.create', 'anggota_tim_penggerak.update', 'anggota_tim_penggerak.delete', 'anggota_tim_penggerak.print',
             'buku_daftar_hadir.view', 'buku_daftar_hadir.create', 'buku_daftar_hadir.update', 'buku_daftar_hadir.delete', 'buku_daftar_hadir.print',
             'buku_notulen_rapat.view', 'buku_notulen_rapat.create', 'buku_notulen_rapat.update', 'buku_notulen_rapat.delete', 'buku_notulen_rapat.print',
+            'buku_ekspedisi.view', 'buku_ekspedisi.create', 'buku_ekspedisi.update', 'buku_ekspedisi.delete', 'buku_ekspedisi.print',
             'buku_tamu.view', 'buku_tamu.create', 'buku_tamu.update', 'buku_tamu.delete', 'buku_tamu.print',
             'laporan_tahunan_pkk.view', 'laporan_tahunan_pkk.create', 'laporan_tahunan_pkk.update', 'laporan_tahunan_pkk.delete', 'laporan_tahunan_pkk.print',
             'data_warga.view', 'data_warga.create', 'data_warga.update', 'data_warga.delete', 'data_warga.print',
@@ -105,6 +106,7 @@ class RoleScopeMatrix
             'anggota_tim_penggerak.view', 'anggota_tim_penggerak.create', 'anggota_tim_penggerak.update', 'anggota_tim_penggerak.delete', 'anggota_tim_penggerak.print',
             'buku_daftar_hadir.view', 'buku_daftar_hadir.create', 'buku_daftar_hadir.update', 'buku_daftar_hadir.delete', 'buku_daftar_hadir.print',
             'buku_notulen_rapat.view', 'buku_notulen_rapat.create', 'buku_notulen_rapat.update', 'buku_notulen_rapat.delete', 'buku_notulen_rapat.print',
+            'buku_ekspedisi.view', 'buku_ekspedisi.create', 'buku_ekspedisi.update', 'buku_ekspedisi.delete', 'buku_ekspedisi.print',
             'buku_tamu.view', 'buku_tamu.create', 'buku_tamu.update', 'buku_tamu.delete', 'buku_tamu.print',
             'laporan_tahunan_pkk.view', 'laporan_tahunan_pkk.create', 'laporan_tahunan_pkk.update', 'laporan_tahunan_pkk.delete', 'laporan_tahunan_pkk.print',
             'data_warga.view', 'data_warga.create', 'data_warga.update', 'data_warga.delete', 'data_warga.print',
@@ -198,6 +200,7 @@ class RoleScopeMatrix
             'anggota_tim_penggerak.view', 'anggota_tim_penggerak.create', 'anggota_tim_penggerak.update', 'anggota_tim_penggerak.delete', 'anggota_tim_penggerak.print',
             'buku_daftar_hadir.view', 'buku_daftar_hadir.create', 'buku_daftar_hadir.update', 'buku_daftar_hadir.delete', 'buku_daftar_hadir.print',
             'buku_notulen_rapat.view', 'buku_notulen_rapat.create', 'buku_notulen_rapat.update', 'buku_notulen_rapat.delete', 'buku_notulen_rapat.print',
+            'buku_ekspedisi.view', 'buku_ekspedisi.create', 'buku_ekspedisi.update', 'buku_ekspedisi.delete', 'buku_ekspedisi.print',
             'buku_tamu.view', 'buku_tamu.create', 'buku_tamu.update', 'buku_tamu.delete', 'buku_tamu.print',
             'laporan_tahunan_pkk.view', 'laporan_tahunan_pkk.create', 'laporan_tahunan_pkk.update', 'laporan_tahunan_pkk.delete', 'laporan_tahunan_pkk.print',
             'data_warga.view', 'data_warga.create', 'data_warga.update', 'data_warga.delete', 'data_warga.print',
@@ -240,6 +243,7 @@ class RoleScopeMatrix
             'anggota_tim_penggerak.view', 'anggota_tim_penggerak.create', 'anggota_tim_penggerak.update', 'anggota_tim_penggerak.delete', 'anggota_tim_penggerak.print',
             'buku_daftar_hadir.view', 'buku_daftar_hadir.create', 'buku_daftar_hadir.update', 'buku_daftar_hadir.delete', 'buku_daftar_hadir.print',
             'buku_notulen_rapat.view', 'buku_notulen_rapat.create', 'buku_notulen_rapat.update', 'buku_notulen_rapat.delete', 'buku_notulen_rapat.print',
+            'buku_ekspedisi.view', 'buku_ekspedisi.create', 'buku_ekspedisi.update', 'buku_ekspedisi.delete', 'buku_ekspedisi.print',
             'buku_tamu.view', 'buku_tamu.create', 'buku_tamu.update', 'buku_tamu.delete', 'buku_tamu.print',
             'laporan_tahunan_pkk.view', 'laporan_tahunan_pkk.create', 'laporan_tahunan_pkk.update', 'laporan_tahunan_pkk.delete', 'laporan_tahunan_pkk.print',
             'data_warga.view', 'data_warga.create', 'data_warga.update', 'data_warga.delete', 'data_warga.print',
@@ -384,6 +388,11 @@ class RoleScopeMatrix
     public static function userIsSuperAdmin(User $user): bool
     {
         return in_array(self::ROLE_SUPER_ADMIN, self::roleNamesForUser($user), true);
+    }
+
+    public static function userHasRole(User $user, string $role): bool
+    {
+        return in_array($role, self::roleNamesForUser($user), true);
     }
 
     /**

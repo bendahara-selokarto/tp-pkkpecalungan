@@ -29,10 +29,29 @@ class RoleMenuVisibilityService
      * @var array<string, list<string>>
      */
     private const GROUP_MODULES = [
-        'sekretaris-wajib' => [
+        'sekretaris-tpk' => [
             'anggota-tim-penggerak',
+            'anggota-tim-penggerak-kader',
             'agenda-surat',
             'buku-notulen-rapat',
+            'buku-ekspedisi',
+            'inventaris',
+            'activities',
+            'prestasi-lomba',
+            'bantuans',
+            'kader-khusus',
+            'laporan-tahunan-pkk',
+        ],
+        'bendahara-tpk' => [
+            'buku-keuangan',
+            'activities',
+        ],
+        'sekretaris-wajib' => [
+            'anggota-tim-penggerak',
+            'anggota-tim-penggerak-kader',
+            'agenda-surat',
+            'buku-notulen-rapat',
+            'buku-ekspedisi',
             'inventaris',
             'activities',
         ],
@@ -133,6 +152,8 @@ class RoleMenuVisibilityService
      */
     private const GROUPS_BY_SCOPE = [
         'desa' => [
+            'sekretaris-tpk',
+            'bendahara-tpk',
             'sekretaris-wajib',
             'penunjang-buku-wajib',
             'pkk-data-dasar',
@@ -149,6 +170,8 @@ class RoleMenuVisibilityService
             'pokja-iv',
         ],
         'kecamatan' => [
+            'sekretaris-tpk',
+            'bendahara-tpk',
             'sekretaris-wajib',
             'penunjang-buku-wajib',
             'pkk-data-dasar',
@@ -173,27 +196,41 @@ class RoleMenuVisibilityService
      */
     private const ROLE_GROUP_MODES = [
         RoleScopeMatrix::ROLE_SEKRETARIS_DESA => [
+            'sekretaris-tpk' => self::MODE_READ_WRITE,
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
             'sekretaris-bantu' => self::MODE_READ_WRITE,
             'common-pembantu' => self::MODE_READ_WRITE,
+            'pokja-i' => self::MODE_READ_ONLY,
+            'pokja-ii' => self::MODE_READ_ONLY,
+            'pokja-iii' => self::MODE_READ_ONLY,
+            'pokja-iv' => self::MODE_READ_ONLY,
+            'bendahara-wajib' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => [
+            'sekretaris-tpk' => self::MODE_READ_WRITE,
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
             'sekretaris-bantu' => self::MODE_READ_WRITE,
             'common-pembantu' => self::MODE_READ_WRITE,
+            'pokja-i' => self::MODE_READ_ONLY,
+            'pokja-ii' => self::MODE_READ_ONLY,
+            'pokja-iii' => self::MODE_READ_ONLY,
+            'pokja-iv' => self::MODE_READ_ONLY,
+            'bendahara-wajib' => self::MODE_READ_ONLY,
             'monitoring' => self::MODE_READ_ONLY,
             'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_DESA => [
+            'bendahara-tpk' => self::MODE_READ_WRITE,
             'bendahara-wajib' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
             'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_KECAMATAN => [
+            'bendahara-tpk' => self::MODE_READ_WRITE,
             'bendahara-wajib' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
             'common-pembantu' => self::MODE_READ_ONLY,

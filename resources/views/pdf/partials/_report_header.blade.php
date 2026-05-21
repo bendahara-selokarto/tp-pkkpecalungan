@@ -7,7 +7,7 @@
     /** @var string|null $headerLampiran */
 
     $title = $headerTitle ?? 'LAPORAN';
-    $role = $headerRole ? ' ' . strtoupper($headerRole) : '';
+    $role = ($headerRole ?? null) ? ' ' . strtoupper($headerRole) : '';
     $lampiran = $headerLampiran ?? '';
 @endphp
 

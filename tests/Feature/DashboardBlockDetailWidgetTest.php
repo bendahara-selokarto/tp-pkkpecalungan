@@ -36,7 +36,7 @@ class DashboardBlockDetailWidgetTest extends TestCase
         ]);
         $user->assignRole('kecamatan-pokja-i');
 
-        $this->createDataWarga($user, 'desa', $desa->id, 'Kepala A');
+        $this->createBkr($user, 'desa', $desa->id, 'BKR Melati');
 
         $response = $this->actingAs($user)->get(route('dashboard'));
 
@@ -77,7 +77,7 @@ class DashboardBlockDetailWidgetTest extends TestCase
         ]);
         $user->assignRole('kecamatan-pokja-i');
 
-        $this->createDataWarga($user, 'desa', $desa->id, 'Kepala A');
+        $this->createBkr($user, 'desa', $desa->id, 'BKR Melati');
 
         $response = $this->actingAs($user)
             ->getJson(route('dashboard.blocks.show', ['blockKey' => 'documents-pokja-i-kecamatan-desa-breakdown']));
@@ -87,7 +87,7 @@ class DashboardBlockDetailWidgetTest extends TestCase
                 ->where('key', 'documents-pokja-i-kecamatan-desa-breakdown')
                 ->where('items.0.label', 'Gombong')
                 ->where('items.0.total', 1)
-                ->where('items.0.per_module.data-warga', 1)
+                ->where('items.0.per_module.bkr', 1)
                 ->has('tracked_modules');
         });
     }
@@ -108,15 +108,15 @@ class DashboardBlockDetailWidgetTest extends TestCase
         $response->assertNotFound();
     }
 
-    private function createDataWarga(User $user, string $level, int $areaId, string $kepalaKeluarga): void
+    private function createBkr(User $user, string $level, int $areaId, string $name): void
     {
-        DataWarga::create([
-            'dasawisma' => 'Melati',
-            'nama_kepala_keluarga' => $kepalaKeluarga,
-            'alamat' => 'Alamat',
-            'jumlah_warga_laki_laki' => 2,
-            'jumlah_warga_perempuan' => 1,
-            'keterangan' => null,
+        \App\Domains\Wilayah\Bkr\Models\Bkr::create([
+            'desa' => 'Gombong',
+            'nama_bkr' => $name,
+            'no_tgl_sk' => '123/2026',
+            'nama_ketua_kelompok' => 'Ketua A',
+            'jumlah_anggota' => 10,
+            'kegiatan' => 'Kegiatan A',
             'level' => $level,
             'area_id' => $areaId,
             'created_by' => $user->id,

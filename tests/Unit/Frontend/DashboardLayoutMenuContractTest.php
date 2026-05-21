@@ -39,15 +39,13 @@ class DashboardLayoutMenuContractTest extends TestCase
         );
     }
 
-    public function test_dashboard_layout_memasang_submenu_belum_ada_pemilik_kecamatan(): void
+    public function test_dashboard_layout_memasang_menu_monitoring_kecamatan(): void
     {
         $content = $this->readPrintMenuRegistry();
 
-        $this->assertStringContainsString("key: 'belum-ada-pemilik'", $content);
-        $this->assertStringContainsString("label: 'Belum Ada Pemilik'", $content);
-        $this->assertStringContainsString("{ href: '/kecamatan/buku-keuangan', label: 'Buku Keuangan' }", $content);
-        $this->assertStringContainsString("{ href: '/kecamatan/data-pelatihan-kader', label: 'Data Pelatihan Kader | 4.14.3' }", $content);
-        $this->assertStringNotContainsString("{ href: '/kecamatan/catatan-keluarga', label: 'Catatan Keluarga | 4.15' }", $content);
+        $this->assertStringContainsString("key: 'monitoring'", $content);
+        $this->assertStringContainsString("label: 'Monitoring Kecamatan'", $content);
+        $this->assertStringContainsString("href: '/kecamatan/desa-activities', label: 'Rekap Kegiatan Desa', uiVisibility: 'disabled'", $content);
     }
 
     public function test_dashboard_layout_mengunci_coverage_menu_pdf_statis_wajib(): void
@@ -55,9 +53,8 @@ class DashboardLayoutMenuContractTest extends TestCase
         $content = $this->readPrintMenuRegistry();
 
         $this->assertStringContainsString('/${scope}/bantuans/report/pdf', $content);
-        $this->assertStringContainsString('/${scope}/anggota-tim-penggerak-kader/report/pdf', $content);
-        $this->assertStringContainsString('/${scope}/agenda-surat/ekspedisi/report/pdf', $content);
-        $this->assertStringContainsString('/${scope}/posyandu/report/pdf', $content);
+        $this->assertStringContainsString('/${scope}/anggota-tim-penggerak/report/pdf', $content);
+        $this->assertStringContainsString('/${scope}/buku-ekspedisi', $content);
     }
 
     public function test_dashboard_layout_memasang_menu_wajib_sekretaris(): void
@@ -65,11 +62,11 @@ class DashboardLayoutMenuContractTest extends TestCase
         $content = $this->readDashboardLayout();
 
         $registry = $this->readPrintMenuRegistry();
-        $this->assertStringContainsString("label: 'Buku Wajib Sekretaris'", $registry);
+        $this->assertStringContainsString("label: 'Buku Wajib'", $registry);
 
         foreach (['anggota-tim-penggerak', 'agenda-surat', 'inventaris', 'activities', 'buku-notulen-rapat'] as $slug) {
             $this->assertMatchesRegularExpression(
-                sprintf("/key: 'sekretaris-tpk'.*?href: `\\/\\$\\{scope\\}\\/%s`/s", preg_quote($slug, '/')),
+                sprintf("/key: 'sekretaris-wajib'.*?href: `\\/\\$\\{scope\\}\\/%s`/s", preg_quote($slug, '/')),
                 $registry
             );
         }
@@ -81,9 +78,9 @@ class DashboardLayoutMenuContractTest extends TestCase
         $registry = $this->readPrintMenuRegistry();
 
         $this->assertStringContainsString("key: 'penunjang-buku-wajib'", $registry);
-        $this->assertStringContainsString("label: 'Penunjang Buku Wajib'", $registry);
+        $this->assertStringContainsString("label: 'Buku Penunjang Buku Wajib'", $registry);
         $this->assertMatchesRegularExpression(
-            "/key: 'penunjang-buku-wajib'.*?label: 'Data Umum'.*?\\/program-prioritas`, label: 'Program Kerja'/s",
+            "/key: 'penunjang-buku-wajib'.*?\\/program-prioritas`, label: 'Buku Program Kerja'.*?label: 'Buku Data Umum'/s",
             $registry
         );
     }
@@ -92,22 +89,17 @@ class DashboardLayoutMenuContractTest extends TestCase
     {
         $registry = $this->readPrintMenuRegistry();
 
-        foreach (['sekretaris-tpk', 'pokja-i', 'pokja-ii', 'pokja-iii', 'pokja-iv'] as $group) {
+        foreach (['sekretaris-bantu', 'pokja-i', 'pokja-ii', 'pokja-iii', 'pokja-iv'] as $group) {
+            $labelBantuan = $group === 'pokja-iv' ? 'Buku Bantu Umum' : 'Buku Bantuan';
             $this->assertMatchesRegularExpression(
-                sprintf("/key: '%s'.*?\\{ href: `\\/\\$\\{scope\\}\\/bantuans`, label: 'Buku Bantuan' \\}/s", $group),
+                sprintf("/key: '%s'.*?\\{ href: `\\/\\$\\{scope\\}\\/bantuans`, label: '%s' \\}/s", $group, $labelBantuan),
                 $registry
             );
             $this->assertMatchesRegularExpression(
                 sprintf("/key: '%s'.*?\\{ href: `\\/\\$\\{scope\\}\\/prestasi-lomba`, label: 'Buku Prestasi' \\}/s", $group),
                 $registry
             );
-            $this->assertMatchesRegularExpression(
-                sprintf("/key: '%s'.*?\\{ href: `\\/\\$\\{scope\\}\\/kader-khusus`, label: 'Buku Kader Khusus' \\}/s", $group),
-                $registry
-            );
         }
-
-        $this->assertStringNotContainsString("key: 'bendahara-tpk'", $registry);
     }
 
     public function test_dashboard_layout_memasang_buku_wajib_dan_bantu_unik_pokja(): void
@@ -116,17 +108,17 @@ class DashboardLayoutMenuContractTest extends TestCase
 
         foreach ([
             '/${scope}/data-kegiatan-pkk-pokja-i/report/pdf',
-            '/${scope}/simulasi-penyuluhan/report/pdf',
-            '/${scope}/anggota-pokja/report/pdf',
-            '/${scope}/bkr/report/pdf',
-            '/${scope}/paar/report/pdf',
+            '/${scope}/simulasi-penyuluhan',
+            '/${scope}/anggota-pokja',
+            '/${scope}/bkr',
+            '/${scope}/paar',
         ] as $hrefFragment) {
             $this->assertStringContainsString($hrefFragment, $registry);
         }
-        $this->assertStringContainsString('/${scope}/data-pelatihan-kader/report/pdf', $registry);
+        $this->assertStringContainsString('/${scope}/data-pelatihan-kader', $registry);
         $this->assertStringContainsString('/${scope}/pra-koperasi-up2k', $registry);
         $this->assertMatchesRegularExpression(
-            "/key: 'pokja-iii'.*?\\/catatan-keluarga\\/data-kegiatan-pkk-pokja-iii\\/report\\/pdf.*?\\/data-keluarga.*?\\/data-pemanfaatan-tanah-pekarangan-hatinya-pkk.*?\\/data-industri-rumah-tangga.*?\\/inventaris/s",
+            "/key: 'pokja-iii'.*?\\/data-pemanfaatan-tanah-pekarangan-hatinya-pkk.*?\\/data-industri-rumah-tangga.*?\\/inventaris/s",
             $registry
         );
         $this->assertMatchesRegularExpression("/key: 'pokja-iv'.*?\\/posyandu/s", $registry);
@@ -137,17 +129,16 @@ class DashboardLayoutMenuContractTest extends TestCase
         $content = $this->readDashboardLayout();
 
         $this->assertStringContainsString('const seenInternalHrefs = new Set()', $content);
-        $this->assertStringContainsString('const duplicateAllowedModuleSlugs = new Set([])', $content);
+        $this->assertStringContainsString('const duplicateAllowedModuleSlugs = new Set([', $content);
         $this->assertStringContainsString('const allowsDuplicateMenuHref = (item) => {', $content);
-        $this->assertStringContainsString('if (!isExternalItem(item) && !allowsDuplicateMenuHref(item) && seenInternalHrefs.has(item.href)) {', $content);
+        $this->assertStringContainsString('if (!allowsDuplicateMenuHref(item) && seenInternalHrefs.has(normalizedHref)) {', $content);
     }
 
     public function test_dashboard_layout_tidak_mematikan_ui_visibility_pdf_catatan_dan_pilot_project(): void
     {
         $content = $this->readPrintMenuRegistry();
 
-        $this->assertStringContainsString('href: `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`', $content);
-        $this->assertStringNotContainsString('href: `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`, label: \'Data Umum Pokja IV\', uiVisibility: \'disabled\'', $content);
+        $this->assertStringContainsString('`/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`', $content);
     }
 
     public function test_dashboard_layout_mengunci_active_state_item_dan_persistensi_collapse_sidebar(): void

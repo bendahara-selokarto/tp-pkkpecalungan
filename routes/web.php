@@ -26,6 +26,8 @@ use App\Domains\Wilayah\BukuTamu\Controllers\BukuTamuPrintController;
 use App\Domains\Wilayah\BukuNotulenRapat\Controllers\DesaBukuNotulenRapatController;
 use App\Domains\Wilayah\BukuNotulenRapat\Controllers\KecamatanBukuNotulenRapatController;
 use App\Domains\Wilayah\BukuNotulenRapat\Controllers\BukuNotulenRapatPrintController;
+use App\Domains\Wilayah\BukuEkspedisi\Controllers\DesaBukuEkspedisiController;
+use App\Domains\Wilayah\BukuEkspedisi\Controllers\KecamatanBukuEkspedisiController;
 use App\Domains\Wilayah\Inventaris\Controllers\DesaInventarisController;
 use App\Domains\Wilayah\Inventaris\Controllers\KecamatanInventarisController;
 use App\Domains\Wilayah\Inventaris\Controllers\InventarisReportPrintController;
@@ -194,6 +196,8 @@ Route::prefix('desa')
         Route::get('agenda-surat/{id}/attachment/data-dukung', [DesaAgendaSuratController::class, 'attachment'])
             ->name('agenda-surat.attachments.show');
         Route::resource('buku-daftar-hadir', DesaBukuDaftarHadirController::class);
+        Route::resource('buku-ekspedisi', DesaBukuEkspedisiController::class);
+        Route::get('buku-ekspedisi/{id}/download', [DesaBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
         Route::resource('buku-tamu', DesaBukuTamuController::class);
         Route::resource('buku-notulen-rapat', DesaBukuNotulenRapatController::class);
         Route::resource('inventaris', DesaInventarisController::class);
@@ -299,6 +303,8 @@ Route::prefix('kecamatan')
         Route::get('agenda-surat/{id}/attachment/data-dukung', [KecamatanAgendaSuratController::class, 'attachment'])
             ->name('agenda-surat.attachments.show');
         Route::resource('buku-daftar-hadir', KecamatanBukuDaftarHadirController::class);
+        Route::resource('buku-ekspedisi', KecamatanBukuEkspedisiController::class);
+        Route::get('buku-ekspedisi/{id}/download', [KecamatanBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
         Route::resource('buku-tamu', KecamatanBukuTamuController::class);
         Route::resource('buku-notulen-rapat', KecamatanBukuNotulenRapatController::class);
         Route::resource('inventaris', KecamatanInventarisController::class);

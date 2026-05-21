@@ -107,6 +107,33 @@ class ActivityScopeService
             && (int) $activity->tahun_anggaran === $tahunAnggaran;
     }
 
+    public function authorizeSameLevelAreaAndBudgetYear(Activity $activity, string $level, int $areaId, int $tahunAnggaran): Activity
+    {
+        if (! $this->isSameLevelAreaAndBudgetYear($activity, $level, $areaId, $tahunAnggaran)) {
+            throw new HttpException(403, 'Anda tidak memiliki akses ke data ini.');
+        }
+
+        return $activity;
+    }
+
+    public function authorizeDesaInKecamatanAndBudgetYear(Activity $activity, int $kecamatanAreaId, int $tahunAnggaran): Activity
+    {
+        if (! $this->isDesaInKecamatanAndBudgetYear($activity, $kecamatanAreaId, $tahunAnggaran)) {
+            throw new HttpException(403, 'Anda tidak memiliki akses ke data desa ini.');
+        }
+
+        return $activity;
+    }
+
+    public function authorizeActivityGroup(User $user, Activity $activity): Activity
+    {
+        if (! $this->canAccessActivityGroup($user, $activity)) {
+            throw new HttpException(403, 'Anda tidak memiliki akses ke kelompok data kegiatan ini.');
+        }
+
+        return $activity;
+    }
+
     public function canView(User $user, Activity $activity): bool
     {
         if (RoleScopeMatrix::userIsSuperAdmin($user)) {

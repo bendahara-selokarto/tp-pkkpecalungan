@@ -61,14 +61,3 @@
     </div>
 </body>
 </html>
-........ )</div>
-            </td>
-            <td style="width: 50%; text-align: left;">
-                Batang ............<br>
-                KETUA POKJA I ................
-                <div class="placeholder">( ................................ )</div>
-            </td>
-        </tr>
-    </table>
-</body>
-</html>

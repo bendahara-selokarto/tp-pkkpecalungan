@@ -125,6 +125,10 @@ use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepository;
 use App\Domains\Wilayah\Dashboard\Repositories\DashboardGroupCoverageRepositoryInterface;
 use App\Domains\Wilayah\AccessControl\Repositories\ModuleAccessOverrideRepository;
 use App\Domains\Wilayah\AccessControl\Repositories\ModuleAccessOverrideRepositoryInterface;
+use App\Domains\Wilayah\BukuEkspedisi\Models\BukuEkspedisi;
+use App\Domains\Wilayah\BukuEkspedisi\Repositories\BukuEkspedisiRepository;
+use App\Domains\Wilayah\BukuEkspedisi\Repositories\BukuEkspedisiRepositoryInterface;
+use App\Policies\BukuEkspedisiPolicy;
 use App\Domains\Wilayah\Dashboard\Observers\InvalidateDashboardDocumentCacheObserver;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
@@ -229,6 +233,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             BukuDaftarHadirRepositoryInterface::class,
             BukuDaftarHadirRepository::class
+        );
+
+        $this->app->bind(
+            BukuEkspedisiRepositoryInterface::class,
+            BukuEkspedisiRepository::class
         );
 
         $this->app->bind(
@@ -420,6 +429,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Inventaris::class, InventarisPolicy::class);
         Gate::policy(AgendaSurat::class, AgendaSuratPolicy::class);
         Gate::policy(BukuDaftarHadir::class, BukuDaftarHadirPolicy::class);
+        Gate::policy(BukuEkspedisi::class, BukuEkspedisiPolicy::class);
         Gate::policy(BukuTamu::class, BukuTamuPolicy::class);
         Gate::policy(BukuNotulenRapat::class, BukuNotulenRapatPolicy::class);
         Gate::policy(AnggotaPokja::class, AnggotaPokjaPolicy::class);
@@ -527,6 +537,7 @@ class AppServiceProvider extends ServiceProvider
             AgendaSurat::class,
             AnggotaTimPenggerak::class,
             BukuDaftarHadir::class,
+            BukuEkspedisi::class,
             BukuTamu::class,
             BukuNotulenRapat::class,
             BukuKeuangan::class,
