@@ -48,10 +48,13 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - [ ] Buku bersama menjaga konteks `book_group` untuk akun multi-role.
 - [ ] Gap modul tanpa slug dicatat sebagai backlog, bukan reuse modul yang salah.
 - [ ] Dashboard diaudit: coverage KPI/chart/progress input dipertahankan atau diberi justifikasi jika tidak relevan.
+- [ ] Backlog: Implementasi modul dedicated untuk `Buku Konsultasi` dan `Buku Agenda SK` (status: `hidden`).
+- [ ] Backlog: Verifikasi format autentik Rakernas X untuk `Buku Notulen Rapat`, `Buku Daftar Hadir`, dan `Buku Tamu` (saat ini `unverified-local-extension`).
 
 ## Langkah Eksekusi
 
 - [ ] P0. Audit baseline slug modul aktual pada route, permission matrix, sidebar, print route, dan dashboard coverage.
+- [ ] P0a. Perbaikan label/mapping salah: Pastikan "Buku Konsultasi" tidak mengarah ke "Buku Bantuan" (label disembunyikan sampai modul tersedia).
 - [ ] P1. Susun matrix slug:
   - `Agenda Surat Keluar/Masuk` -> kandidat `agenda-surat`;
   - `Buku Daftar Anggota TP PKK` -> perlu konfirmasi slug aktif antara `anggota-tim-penggerak`, `anggota-tim-penggerak-kader`, atau modul baru;

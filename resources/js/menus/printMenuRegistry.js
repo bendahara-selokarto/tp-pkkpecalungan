@@ -203,10 +203,10 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/buku-daftar-hadir`, label: 'Daftar Hadir' },
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
-        { href: '#', label: 'Buku Konsultasi' },
-        { href: `/${scope}/agenda-surat/ekspedisi/report/pdf`, label: 'Buku Ekspedisi', external: true },
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
+        { href: '#', label: 'Buku Konsultasi', uiVisibility: 'disabled' },
+        { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
+        { href: `/${scope}/agenda-surat/ekspedisi/report/pdf`, label: 'Buku Ekspedisi', external: true },
         { href: '/dashboard/charts/report/pdf', label: 'Buku Grafik', external: true },
         { href: '#', label: 'Buku Agenda SK' },
         { href: `/${scope}/laporan-tahunan-pkk`, label: 'Laporan Tahunan Tim Penggerak PKK' },
