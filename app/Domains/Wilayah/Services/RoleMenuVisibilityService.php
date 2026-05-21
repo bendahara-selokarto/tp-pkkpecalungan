@@ -171,55 +171,44 @@ class RoleMenuVisibilityService
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
             'common-pembantu' => self::MODE_READ_WRITE,
-            'monitoring' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_DESA => [
             'bendahara-wajib' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_KECAMATAN => [
             'bendahara-wajib' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_1_DESA => [
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_DESA => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_DESA => [
             'pokja-iii-wajib' => self::MODE_READ_WRITE,
             'pokja-iii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_4_DESA => [
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => [
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => [
             'pokja-iii-wajib' => self::MODE_READ_WRITE,
             'pokja-iii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => [
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_SUPER_ADMIN => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,
