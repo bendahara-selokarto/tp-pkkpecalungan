@@ -5,27 +5,31 @@ Dokumen ini adalah acuan resmi non-teknis untuk menentukan siapa (peran apa) yan
 
 ---
 
-### 1. Prinsip Dasar Akses
-Untuk menjaga integritas data namun tetap mendukung kolaborasi, aplikasi menggunakan prinsip:
-1.  **Visibilitas Terbuka (View Only)**: Semua pengurus di tingkat yang sama (misal: semua pengurus Desa A) dapat melihat data pengurus lain untuk koordinasi.
-2.  **Kontrol Eksekusi (Create/Edit/Delete)**: Hanya pengurus yang bertanggung jawab langsung pada bidangnya yang dapat menambah, mengubah, atau menghapus data.
-3.  **Super Admin**: Hanya satu peran yang memiliki akses mutlak untuk pengelolaan sistem dan pengguna.
+### 1. Prinsip Utama Visibilitas (Update 21-05-2026)
+
+Untuk menjaga fokus operasional dan mencegah kesalahan input lintas bidang, aplikasi PKK menerapkan **Strict Role-Based Visibility** dengan aturan sebagai berikut:
+
+1.  **Ownership-Only Visibility**: Pengguna hanya diperbolehkan melihat menu yang secara fungsional menjadi tanggung jawabnya (memiliki hak akses *Read-Write*).
+2.  **Shared Module Isolation**: Untuk modul yang digunakan bersama (seperti *Buku Kegiatan* atau *Program Kerja*), sistem menggunakan parameter isolasi dan metadata `sourceKey`. Hal ini memastikan bahwa tautan menu milik bidang lain (misal: milik Sekretaris) tidak akan pernah muncul di sidebar bidang lain (misal: Pokja), meskipun jenis modulnya sama.
+3.  **No Unowned Modules**: Seluruh fitur wajib memiliki pemilik definitif. Grup audit "Belum Ada Pemilik" telah dihapus dari antarmuka pengguna untuk memastikan seluruh data terkelola secara resmi oleh bidang terkait.
+4.  **Super Admin**: Memiliki visibilitas mutlak ke seluruh modul untuk keperluan audit sistem.
 
 ---
 
-### 2. Matriks Tanggung Jawab Fitur
-Gunakan tabel ini untuk mendiskusikan penyesuaian fitur. Jika ada buku baru, tentukan siapa "Pemilik (O)" dan siapa "Pengawas (V)".
+### 2. Matriks Kepemilikan Definitif (Baseline V1.0)
 
-| Bidang / Kelompok Jabatan | Contoh Fitur / Modul | Hak Akses (Operasional) |
+Gunakan tabel ini sebagai acuan pembagian tanggung jawab input data:
+
+| Nama Modul | Pemilik Utama (RW) | Grup Sidebar |
 | :--- | :--- | :--- |
-| **Sekretariat** | Agenda Surat, Anggota TP-PKK, Laporan Tahunan, Inventaris, Data Warga | Full (Tambah/Edit/Hapus/Cetak) |
-| **Bendahara** | Buku Keuangan, Laporan Keuangan | Full (Tambah/Edit/Hapus/Cetak) |
-| **Pokja I** | Paar, Simulasi Penyuluhan, Literasi Warga, BKL, BKR | Full (Tambah/Edit/Hapus/Cetak) |
-| **Pokja II** | Koperasi, UP2K, Taman Bacaan, Kejar Paket, Pelatihan Kader | Full (Tambah/Edit/Hapus/Cetak) |
-| **Pokja III** | Industri Rumah Tangga, Pemanfaatan Tanah Pekarangan | Full (Tambah/Edit/Hapus/Cetak) |
-| **Pokja IV** | Posyandu, BKB, Perencanaan Sehat, Pilot Project | Full (Tambah/Edit/Hapus/Cetak) |
-
-*Catatan: Seluruh bidang di atas dapat saling **melihat (View)** data satu sama lain di tingkat wilayah yang sama.*
+| Data Warga, Keluarga, Catatan Keluarga | Sekretariat | Buku Wajib Sekretaris |
+| Buku Daftar Hadir, Buku Tamu, Agenda Surat | Sekretariat | Buku Wajib Sekretaris |
+| Buku Inventaris | Sekretariat & Pokja III | Buku Wajib / Buku Bantu |
+| Buku Keuangan | Bendahara | Buku Wajib |
+| PAAR, Simulasi, Literasi, BKR, BKL | Pokja I | Buku Bantu Pokja I |
+| Koperasi, UP2K, Pelatihan Kader, Taman Bacaan | Pokja II | Buku Bantu Pokja II |
+| Industri Rumah Tangga, HATINYA PKK | Pokja III | Buku Bantu Pokja III |
+| Posyandu, Pilot Project | Pokja IV | Buku Bantu Pokja IV |
 
 ---
 
@@ -34,25 +38,13 @@ Jika terdapat permintaan perubahan dari stakeholder (misal: Ketua Pokja IV memin
 
 1.  **Identifikasi Modul**: Tentukan nama modul baru tersebut.
 2.  **Tentukan Pemilik**: Pilih peran mana yang akan menginput data tersebut (misal: `pokja-iv`).
-3.  **Tentukan Level Wilayah**: Apakah fitur ini ada di tingkat Desa, Kecamatan, atau keduanya?
-4.  **Update Dokumen Ini**: Tambahkan baris baru pada tabel di atas.
-5.  **Instruksi Teknis**: Serahkan dokumen ini kepada pengembang untuk disinkronkan ke dalam `RoleScopeMatrix.php`.
+3.  **Update Dokumen Ini**: Tambahkan baris baru pada tabel di atas.
+4.  **Instruksi Teknis**: Serahkan dokumen ini kepada pengembang untuk disinkronkan ke dalam `RoleMenuVisibilityService.php` (backend) dan `printMenuRegistry.js` (frontend).
 
 ---
 
-### 4. Daftar Modul Saat Ini (Acuan Diskusi)
-Berikut adalah daftar modul yang sudah aktif dan bisa dipindahkan hak aksesnya jika diperlukan:
-
-*   **Administrasi Umum**: `arsip_document`, `activities`, `agenda_surat`, `anggota_pokja`, `inventaris`, `bantuan`, `kader_khusus`, `prestasi_lomba`, `program_prioritas`, `anggota_tim_penggerak`, `buku_daftar_hadir`, `buku_notulen_rapat`, `buku_tamu`, `laporan_tahunan_pkk`.
-*   **Data Kependudukan**: `data_warga`, `data_kegiatan_warga`, `data_keluarga`, `catatan_keluarga`.
-*   **Keuangan**: `buku_keuangan`.
-*   **Pendidikan & Ekonomi (Pokja I & II)**: `simulasi_penyuluhan`, `bkr`, `paar`, `bkl`, `literasi_warga`, `pra_koperasi_up2k`, `koperasi`, `kejar_paket`, `taman_bacaan`, `pelatihan_kader_pokja_ii`, `warung_pkk`, `tutor_khusus`, `data_pelatihan_kader`.
-*   **Pangan & Sandang (Pokja III)**: `data_pemanfaatan_tanah_pekarangan_hatinya_pkk`, `data_industri_rumah_tangga`.
-*   **Kesehatan & Lingkungan (Pokja IV)**: `posyandu`, `bkb_kegiatan`, `pilot_project_naskah_pelaporan`, `pilot_project_keluarga_sehat`.
-
----
-
-### 5. Log Perubahan Non-Teknis
+### 4. Log Perubahan Non-Teknis
 | Tanggal | Deskripsi Perubahan | Disetujui Oleh | Status |
 | :--- | :--- | :--- | :--- |
-| 20-05-2026 | Peresmian Dokumen Acuan & Sentralisasi Izin Akses | Tim Pengembang | Aktif |
+| 21-05-2026 | Peresmian **Strict Visibility** & Granular Module Mapping | Tim Pengembang | **Aktif (Standard)** |
+| 20-05-2026 | Peresmian Dokumen Acuan Awal | Tim Pengembang | Superseded |
