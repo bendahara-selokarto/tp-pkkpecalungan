@@ -35,6 +35,13 @@ class RoleMenuVisibilityService
             'buku-notulen-rapat',
             'inventaris',
             'activities',
+            'buku-daftar-hadir',
+            'buku-tamu',
+            'laporan-tahunan-pkk',
+            'data-warga',
+            'data-kegiatan-warga',
+            'data-keluarga',
+            'catatan-keluarga',
         ],
         'bendahara-wajib' => [
             'buku-keuangan',
@@ -61,7 +68,7 @@ class RoleMenuVisibilityService
         ],
         'penunjang-buku-wajib' => [
             'program-prioritas',
-            'catatan-keluarga', // Data Umum/Data Keluarga for Sekretaris
+            'catatan-keluarga',
         ],
         'common-pembantu' => [
             'prestasi-lomba',
@@ -74,7 +81,7 @@ class RoleMenuVisibilityService
             'bkl',
             'paar',
             'anggota-pokja',
-            'inventaris',
+            'literasi-warga',
         ],
         'pokja-ii' => [
             'pelatihan-kader-pokja-ii',
@@ -82,9 +89,9 @@ class RoleMenuVisibilityService
             'taman-bacaan',
             'koperasi',
             'kejar-paket',
-            'literasi-warga',
             'bkb-kegiatan',
             'tutor-khusus',
+            'data-pelatihan-kader',
         ],
         'pokja-iii' => [
             'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
@@ -96,6 +103,7 @@ class RoleMenuVisibilityService
             'bantuans',
             'prestasi-lomba',
             'data-industri-rumah-tangga',
+            'data-kegiatan-pkk-pokja-iii',
         ],
         'pokja-iv' => [
             'posyandu',
@@ -104,17 +112,13 @@ class RoleMenuVisibilityService
             'inventaris',
             'bantuans',
             'prestasi-lomba',
+            'data-kegiatan-pkk-pokja-iv',
         ],
         'monitoring' => [
             'desa-activities',
             'desa-arsip',
         ],
         'belum-ada-pemilik' => [
-            'buku-daftar-hadir',
-            'buku-tamu',
-            'laporan-tahunan-pkk',
-            'data-warga',
-            'data-kegiatan-warga',
             'data-pelatihan-kader',
         ],
     ];
@@ -136,7 +140,6 @@ class RoleMenuVisibilityService
             'pokja-ii',
             'pokja-iii',
             'pokja-iv',
-            'belum-ada-pemilik',
         ],
         'kecamatan' => [
             'sekretaris-wajib',
@@ -152,7 +155,6 @@ class RoleMenuVisibilityService
             'pokja-iii',
             'pokja-iv',
             'monitoring',
-            'belum-ada-pemilik',
         ],
     ];
 
@@ -164,14 +166,12 @@ class RoleMenuVisibilityService
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
             'common-pembantu' => self::MODE_READ_WRITE,
-            'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
             'common-pembantu' => self::MODE_READ_WRITE,
             'monitoring' => self::MODE_READ_ONLY,
-            'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_DESA => [
             'bendahara-wajib' => self::MODE_READ_WRITE,
@@ -184,46 +184,42 @@ class RoleMenuVisibilityService
         RoleScopeMatrix::ROLE_POKJA_1_DESA => [
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
-            'belum-ada-pemilik' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_DESA => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
-            'belum-ada-pemilik' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_DESA => [
             'pokja-iii-wajib' => self::MODE_READ_WRITE,
             'pokja-iii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
-            'belum-ada-pemilik' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_4_DESA => [
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
-            'belum-ada-pemilik' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => [
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => [
             'pokja-iii-wajib' => self::MODE_READ_WRITE,
             'pokja-iii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => [
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_SUPER_ADMIN => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,
@@ -239,7 +235,6 @@ class RoleMenuVisibilityService
             'pokja-iii' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
             'monitoring' => self::MODE_READ_WRITE,
-            'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
     ];
 

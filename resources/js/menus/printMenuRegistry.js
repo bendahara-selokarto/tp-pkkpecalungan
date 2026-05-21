@@ -123,6 +123,10 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/buku-notulen-rapat`, label: 'Buku Notulen Rapat' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
+        { href: `/${scope}/buku-daftar-hadir`, label: 'Buku Daftar Hadir' },
+        { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
+        { href: `/${scope}/laporan-tahunan-pkk`, label: 'Laporan Tahunan Tim Penggerak PKK' },
+        { href: `/${scope}/data-warga`, label: 'Data Warga' },
       ],
     },
     {
@@ -218,6 +222,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/bkr`, label: 'Buku Kegiatan BKR' },
         { href: `/${scope}/bkl`, label: 'Buku Data Lansia' },
         { href: `/${scope}/paar`, label: 'Buku Data PAAR' },
+        { href: `/${scope}/literasi-warga`, label: 'Literasi Warga (3 Buta)' },
       ],
     },
     {
@@ -231,6 +236,12 @@ const buildScopedMenuGroups = (scope) => {
         { href: '#', label: 'Buku Grafik', uiVisibility: 'disabled' },
         { href: '#', label: 'Unggah Foto Kegiatan', uiVisibility: 'disabled' },
         { href: `/${scope}/pra-koperasi-up2k`, label: 'Buku Rekap Kelompok UP2K' },
+        { href: `/${scope}/taman-bacaan`, label: 'Data Taman Bacaan/Perpustakaan' },
+        { href: `/${scope}/koperasi`, label: 'Data Koperasi' },
+        { href: `/${scope}/kejar-paket`, label: 'Data Kejar Paket/KF/PAUD' },
+        { href: `/${scope}/bkb-kegiatan`, label: 'Data BKB (Kegiatan)' },
+        { href: `/${scope}/tutor-khusus`, label: 'Tutor Khusus KF/PAUD' },
+        { href: `/${scope}/data-pelatihan-kader`, label: 'Data Pelatihan Kader' },
       ],
     },
     {
@@ -240,8 +251,6 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        { href: `/${scope}/buku-daftar-hadir`, label: 'Buku Daftar Hadir' },
-        { href: `/${scope}/buku-notulen-rapat`, label: 'Buku Notulen' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
         { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku HATINYA PKK' },
         { href: '#', label: 'Buku Kader Khusus Pokja III', uiVisibility: 'disabled' },
@@ -253,6 +262,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: '#', label: 'Buku Grafik', uiVisibility: 'disabled' },
         { href: '#', label: 'Kliping', uiVisibility: 'disabled' },
         { href: '#', label: 'Unggah File Foto Kegiatan', uiVisibility: 'disabled' },
+        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Buku Data Kegiatan' },
       ],
     },
     {
@@ -280,6 +290,9 @@ const buildScopedMenuGroups = (scope) => {
         { href: '#', label: 'Data Pengunjung Petugas Posyandu', uiVisibility: 'disabled' },
         { href: '#', label: 'Buku Grafik', uiVisibility: 'disabled' },
         { href: '#', label: 'Upload Foto Kegiatan', uiVisibility: 'disabled' },
+        { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project' },
+        { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pilot Project Keluarga Sehat' },
+        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Buku Data Kegiatan' },
       ],
     },
   ]
@@ -323,31 +336,6 @@ const buildScopedMenuGroups = (scope) => {
 const desaMenuGroups = buildScopedMenuGroups('desa')
 
 const kecamatanMenuGroups = [
-  {
-    key: 'belum-ada-pemilik',
-    label: 'Belum Ada Pemilik',
-    code: 'BP',
-    items: [
-      { href: '/kecamatan/buku-daftar-hadir', label: 'Buku Daftar Hadir' },
-      { href: '/kecamatan/buku-tamu', label: 'Buku Tamu' },
-      { href: '/kecamatan/buku-keuangan', label: 'Buku Keuangan' },
-      { href: '/kecamatan/laporan-tahunan-pkk', label: 'Laporan Tahunan Tim Penggerak PKK' },
-      { href: '/kecamatan/data-warga', label: 'Data Warga | 4.14.1a' },
-      { href: '/kecamatan/data-kegiatan-warga', label: 'Kegiatan Warga | 4.14.1b' },
-      { href: '/kecamatan/bkl', label: 'Buku Kegiatan BKL' },
-      { href: '/kecamatan/data-pelatihan-kader', label: 'Data Pelatihan Kader | 4.14.3' },
-      { href: '/kecamatan/taman-bacaan', label: 'Data Taman Bacaan/Perpustakaan' },
-      { href: '/kecamatan/koperasi', label: 'Data Koperasi' },
-      { href: '/kecamatan/kejar-paket', label: 'Data Kejar Paket/KF/PAUD' },
-      { href: '/kecamatan/literasi-warga', label: 'Literasi Warga (3 Buta)' },
-      { href: '/kecamatan/bkb-kegiatan', label: 'Data BKB (Kegiatan)' },
-      { href: '/kecamatan/tutor-khusus', label: 'Tutor Khusus KF/PAUD' },
-      { href: '/kecamatan/pelatihan-kader-pokja-ii', label: 'Rekap Pelatihan Kader Pokja II' },
-      { href: '/kecamatan/warung-pkk', label: 'Data Aset Sarana Desa/Kelurahan | 4.14.4' },
-      { href: '/kecamatan/pilot-project-naskah-pelaporan', label: 'Naskah Pelaporan Pilot Project Pokja IV' },
-      { href: '/kecamatan/pilot-project-keluarga-sehat', label: 'Laporan Pelaksanaan Pilot Project Gerakan Keluarga Sehat Tanggap dan Tangguh Bencana' },
-    ],
-  },
   ...buildScopedMenuGroups('kecamatan'),
   {
     key: 'monitoring',
