@@ -134,6 +134,7 @@ class RoleMenuVisibilityService
         'desa' => [
             'sekretaris-wajib',
             'penunjang-buku-wajib',
+            'sekretaris-bantu',
             'bendahara-wajib',
             'pokja-i-wajib',
             'pokja-ii-wajib',
@@ -170,12 +171,12 @@ class RoleMenuVisibilityService
         RoleScopeMatrix::ROLE_SEKRETARIS_DESA => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
+            'sekretaris-bantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
+            'sekretaris-bantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_DESA => [
             'bendahara-wajib' => self::MODE_READ_WRITE,
