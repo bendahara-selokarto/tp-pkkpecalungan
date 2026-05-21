@@ -9,7 +9,6 @@ use App\Http\Controllers\SuperAdmin\AccessControlManagementController;
 use App\Http\Controllers\SuperAdmin\UserManagementController;
 use App\Http\Controllers\SuperAdmin\AreaManagementController;
 use App\Http\Controllers\SuperAdmin\ArsipManagementController;
-use App\Domains\Wilayah\CetakLampiran\Controllers\CetakLampiranController;
 use App\Domains\Wilayah\Activities\Controllers\DesaActivityController;
 use App\Domains\Wilayah\Activities\Controllers\ActivityPrintController;
 use App\Domains\Wilayah\Activities\Controllers\KecamatanActivityController;
@@ -135,9 +134,6 @@ Route::get('/', function () {
 Route::get('/dashboard', DashboardController::class)
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
-Route::get('/cetak-lampiran', CetakLampiranController::class)
-    ->middleware(['auth', 'verified'])
-    ->name('cetak-lampiran.index');
 Route::get('/dashboard/blocks/{blockKey}/detail', [DashboardController::class, 'showBlockDetail'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard.blocks.show');

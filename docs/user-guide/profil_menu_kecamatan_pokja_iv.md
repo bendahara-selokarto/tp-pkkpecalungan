@@ -30,7 +30,6 @@ User memiliki akses penuh untuk mengelola data operasional Pokja IV:
 - **Hasil Kegiatan Posyandu**: Pendataan hasil kegiatan posyandu (Format 4.14.4e).
 
 ### 3. Fitur Pelaporan & Cetak
-- **Cetak Lampiran**: Akses cetak untuk buku-buku di atas dalam format PDF standar.
 - **Laporan PDF Khusus**: Menu cepat untuk menghasilkan laporan rekapitulasi Pokja IV (4.24) dan Data Umum (4.20a).
 
 ---

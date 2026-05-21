@@ -31,7 +31,6 @@ User desa Pokja IV memiliki akses baca untuk modul umum:
 - Pilot Project Keluarga Sehat & Naskah Pelaporan.
 
 ### 3. Fitur Pelaporan & Cetak
-- **Cetak Lampiran**: Akses cetak untuk buku laporan Pokja IV tingkat desa.
 - **Laporan PDF Khusus**: Menu cepat untuk Format 4.24.
 
 ---

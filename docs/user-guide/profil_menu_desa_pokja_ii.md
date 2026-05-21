@@ -31,7 +31,6 @@ User desa Pokja II memiliki akses baca untuk modul umum:
 - Literasi Warga, BKB Kegiatan, Tutor Khusus, Pelatihan Kader.
 
 ### 3. Fitur Pelaporan & Cetak
-- **Cetak Lampiran**: Akses cetak untuk buku laporan Pokja II tingkat desa.
 - **Laporan PDF Khusus**: Menu cepat untuk Format 4.22.
 
 ---

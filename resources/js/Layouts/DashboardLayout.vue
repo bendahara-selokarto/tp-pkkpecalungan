@@ -498,15 +498,6 @@ onBeforeUnmount(() => {
           <div v-if="!isProfilePage && !hasRole('super-admin')" class="space-y-1">
             <p v-show="!isAsideDesktopCollapsed" class="px-3 text-xs font-semibold uppercase tracking-wide text-slate-400">Menu Domain</p>
 
-            <Link
-              href="/cetak-lampiran"
-              :class="[isAsideDesktopCollapsed ? 'justify-center' : '', isActive('/cetak-lampiran') ? 'bg-emerald-600 text-white shadow-sm' : 'text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-slate-700']"
-              class="flex items-center gap-3 rounded-md px-3 py-2 text-sm"
-            >
-              <span v-show="!isAsideDesktopCollapsed">Cetak Lampiran</span>
-              <span v-show="isAsideDesktopCollapsed">CL</span>
-            </Link>
-
             <template v-if="isDesaScope">
               <div v-for="group in desaVisibleMenuGroups" :key="`desa-${group.key}`" class="space-y-1">
                 <button

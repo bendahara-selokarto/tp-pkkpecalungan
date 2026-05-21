@@ -54,7 +54,6 @@ Sekretaris memiliki visibilitas terhadap data Pokja untuk keperluan koordinasi:
 - Pilot Project Keluarga Sehat & Naskah Pelaporan
 
 ### 3. Fitur Pelaporan
-- **Cetak Lampiran**: Akses ke berbagai format laporan standar (4.9a, 4.10, 4.12, 4.13, 4.14, 4.21-4.24, dll).
 - **Grafik Dashboard**: Cetak ringkasan statistik dalam format PDF.
 
 ---

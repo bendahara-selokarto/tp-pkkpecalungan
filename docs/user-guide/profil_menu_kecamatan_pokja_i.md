@@ -33,7 +33,6 @@ User memiliki akses penuh untuk mengelola data operasional Pokja I:
 - **Buku Data PAAR**: Pola Asuh Anak dan Remaja.
 
 ### 3. Fitur Pelaporan & Cetak
-- **Cetak Lampiran**: Akses cetak untuk buku-buku di atas dalam format PDF standar.
 - **Laporan PDF Khusus**: Menu cepat untuk menghasilkan laporan rekapitulasi Pokja I.
 
 ---

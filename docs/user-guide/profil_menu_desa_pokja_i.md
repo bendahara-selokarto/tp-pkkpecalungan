@@ -32,7 +32,6 @@ User desa Pokja I memiliki akses baca untuk modul umum guna sinkronisasi data:
 - Pilot Project Keluarga Sehat & Naskah Pelaporan.
 
 ### 3. Fitur Pelaporan & Cetak
-- **Cetak Lampiran**: Akses cetak untuk buku laporan Pokja I tingkat desa.
 - **Laporan PDF Khusus**: Menu cepat untuk Format 4.21.
 
 ---

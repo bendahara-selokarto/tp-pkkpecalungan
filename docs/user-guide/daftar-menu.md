@@ -19,7 +19,6 @@ Anda mengetahui menu yang tersedia untuk akun Anda.
 
 - **Dashboard**
 - **Arsip**
-- **Cetak Lampiran**
 - **Profil**
 
 **Menu Super Admin**

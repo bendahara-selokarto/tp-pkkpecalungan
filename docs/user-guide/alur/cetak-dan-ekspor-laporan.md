@@ -8,7 +8,7 @@ Menyiapkan laporan yang siap dibagikan.
 
 1. Buka menu data yang ingin dilaporkan.
 2. Pastikan data sudah benar.
-3. Klik **Cetak** atau **Cetak Lampiran** sesuai menu.
+3. Klik **Cetak** sesuai menu.
 4. Tunggu file terbuka.
 5. Simpan file atau lanjutkan cetak.
 

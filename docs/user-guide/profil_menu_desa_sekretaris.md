@@ -44,7 +44,6 @@ Sekretaris memiliki hak untuk memantau (view) seluruh data yang diinput oleh mas
 - Pilot Project Keluarga Sehat & Naskah Pelaporan
 
 ### 3. Fitur Pelaporan & Cetak
-- **Cetak Lampiran**: Akses cetak untuk seluruh buku laporan standar tingkat desa.
 - **Grafik Dashboard**: Cetak ringkasan statistik dalam format PDF.
 
 ---

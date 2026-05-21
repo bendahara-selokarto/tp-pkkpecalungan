@@ -32,7 +32,6 @@ User memiliki akses penuh untuk mengelola data operasional Pokja III:
 - **Buku Jumlah Industri Rumah Tangga**: Pendataan industri kecil keluarga (Format 4.14.2c).
 
 ### 3. Fitur Pelaporan & Cetak
-- **Cetak Lampiran**: Akses cetak untuk buku-buku di atas dalam format PDF standar.
 - **Laporan PDF Khusus**: Menu cepat untuk menghasilkan laporan rekapitulasi Pokja III (4.23).
 
 ---

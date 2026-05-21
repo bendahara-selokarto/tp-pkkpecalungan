@@ -32,7 +32,6 @@ User desa Pokja III memiliki akses baca untuk modul umum:
 - Data Warga, Kegiatan Warga, Warung PKK.
 
 ### 3. Fitur Pelaporan & Cetak
-- **Cetak Lampiran**: Akses cetak untuk buku laporan Pokja III tingkat desa.
 - **Laporan PDF Khusus**: Menu cepat untuk Format 4.23.
 
 ---

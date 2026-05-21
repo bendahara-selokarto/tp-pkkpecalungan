@@ -30,7 +30,6 @@ User memiliki akses penuh untuk mengelola data operasional Pokja II:
 - **Buku Rekap Kelompok UP2K**: Rekapitulasi Usaha Peningkatan Pendapatan Keluarga.
 
 ### 3. Fitur Pelaporan & Cetak
-- **Cetak Lampiran**: Akses cetak untuk buku-buku di atas dalam format PDF standar.
 - **Laporan PDF Khusus**: Menu cepat untuk menghasilkan laporan rekapitulasi Pokja II (4.22).
 
 ---
