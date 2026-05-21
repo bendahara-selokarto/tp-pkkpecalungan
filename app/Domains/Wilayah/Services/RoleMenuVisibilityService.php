@@ -35,13 +35,14 @@ class RoleMenuVisibilityService
             'buku-notulen-rapat',
             'inventaris',
             'activities',
+        ],
+        'sekretaris-bantu' => [
             'buku-daftar-hadir',
             'buku-tamu',
             'laporan-tahunan-pkk',
-            'data-warga',
-            'data-kegiatan-warga',
-            'data-keluarga',
-            'catatan-keluarga',
+            'prestasi-lomba',
+            'bantuans',
+            'kader-khusus',
         ],
         'bendahara-wajib' => [
             'buku-keuangan',
@@ -69,6 +70,9 @@ class RoleMenuVisibilityService
         'penunjang-buku-wajib' => [
             'program-prioritas',
             'catatan-keluarga',
+            'data-warga',
+            'data-kegiatan-warga',
+            'data-keluarga',
         ],
         'common-pembantu' => [
             'prestasi-lomba',
