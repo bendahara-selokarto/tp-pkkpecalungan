@@ -144,8 +144,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-i-wajib',
-      label: 'Buku Wajib',
-      code: 'BW',
+      label: 'Buku Bantu',
+      code: 'BB',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -154,8 +154,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-ii-wajib',
-      label: 'Buku Wajib',
-      code: 'BW',
+      label: 'Buku Bantu',
+      code: 'BB',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -164,8 +164,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-iii-wajib',
-      label: 'Buku Wajib',
-      code: 'BW',
+      label: 'Buku Bantu',
+      code: 'BB',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -174,8 +174,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-iv-wajib',
-      label: 'Buku Wajib',
-      code: 'BW',
+      label: 'Buku Bantu',
+      code: 'BB',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },

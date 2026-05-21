@@ -37,15 +37,16 @@ class RoleMenuVisibilityService
             'activities',
         ],
         'sekretaris-bantu' => [
-            'buku-daftar-hadir',
-            'buku-tamu',
-            'laporan-tahunan-pkk',
             'prestasi-lomba',
             'bantuans',
             'kader-khusus',
+            'buku-daftar-hadir',
+            'buku-tamu',
+            'laporan-tahunan-pkk',
         ],
         'bendahara-wajib' => [
             'buku-keuangan',
+            'activities',
         ],
         'pokja-i-wajib' => [
             'program-prioritas',
@@ -69,12 +70,14 @@ class RoleMenuVisibilityService
         ],
         'penunjang-buku-wajib' => [
             'program-prioritas',
+            'data-umum-pkk',
+            'data-umum-pkk-kecamatan',
+            'data-keluarga',
+        ],
+        'pkk-data-dasar' => [
             'catatan-keluarga',
             'data-warga',
             'data-kegiatan-warga',
-            'data-keluarga',
-            'data-umum-pkk',
-            'data-umum-pkk-kecamatan',
         ],
         'common-pembantu' => [
             'prestasi-lomba',
@@ -106,8 +109,6 @@ class RoleMenuVisibilityService
             'buku-daftar-hadir',
             'buku-notulen-rapat',
             'inventaris',
-            'bantuans',
-            'prestasi-lomba',
             'data-industri-rumah-tangga',
             'data-kegiatan-pkk-pokja-iii',
         ],
@@ -115,9 +116,6 @@ class RoleMenuVisibilityService
             'posyandu',
             'pilot-project-naskah-pelaporan',
             'pilot-project-keluarga-sehat',
-            'inventaris',
-            'bantuans',
-            'prestasi-lomba',
             'data-kegiatan-pkk-pokja-iv',
             'data-umum-pkk',
             'data-umum-pkk-kecamatan',
@@ -127,7 +125,6 @@ class RoleMenuVisibilityService
             'desa-arsip',
         ],
         'belum-ada-pemilik' => [
-            'data-pelatihan-kader',
         ],
     ];
 
@@ -138,6 +135,7 @@ class RoleMenuVisibilityService
         'desa' => [
             'sekretaris-wajib',
             'penunjang-buku-wajib',
+            'pkk-data-dasar',
             'sekretaris-bantu',
             'bendahara-wajib',
             'pokja-i-wajib',
@@ -153,6 +151,7 @@ class RoleMenuVisibilityService
         'kecamatan' => [
             'sekretaris-wajib',
             'penunjang-buku-wajib',
+            'pkk-data-dasar',
             'sekretaris-bantu',
             'bendahara-wajib',
             'pokja-i-wajib',
@@ -165,6 +164,7 @@ class RoleMenuVisibilityService
             'pokja-iii',
             'pokja-iv',
             'monitoring',
+            'belum-ada-pemilik',
         ],
     ];
 
@@ -175,50 +175,76 @@ class RoleMenuVisibilityService
         RoleScopeMatrix::ROLE_SEKRETARIS_DESA => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
+            'pkk-data-dasar' => self::MODE_READ_ONLY,
             'sekretaris-bantu' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
+            'pkk-data-dasar' => self::MODE_READ_ONLY,
             'sekretaris-bantu' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_WRITE,
+            'monitoring' => self::MODE_READ_ONLY,
+            'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_DESA => [
             'bendahara-wajib' => self::MODE_READ_WRITE,
+            'pkk-data-dasar' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_KECAMATAN => [
             'bendahara-wajib' => self::MODE_READ_WRITE,
+            'pkk-data-dasar' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_1_DESA => [
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
+            'pkk-data-dasar' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_WRITE,
+            'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_DESA => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
+            'pkk-data-dasar' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_WRITE,
+            'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_DESA => [
             'pokja-iii-wajib' => self::MODE_READ_WRITE,
             'pokja-iii' => self::MODE_READ_WRITE,
+            'pkk-data-dasar' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_WRITE,
+            'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_4_DESA => [
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
+            'pkk-data-dasar' => self::MODE_READ_ONLY,
+            'common-pembantu' => self::MODE_READ_WRITE,
+            'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => [
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => [
             'pokja-iii-wajib' => self::MODE_READ_WRITE,
             'pokja-iii' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => [
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
+            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_SUPER_ADMIN => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,

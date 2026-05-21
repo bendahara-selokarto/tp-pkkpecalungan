@@ -60,7 +60,6 @@ class RoleMenuVisibilityServiceTest extends TestCase
             'prestasi-lomba',
             'bantuans',
             'kader-khusus',
-            'catatan-keluarga',
             'program-prioritas',
         ] as $moduleSlug) {
             $this->assertSame(
@@ -70,6 +69,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
             );
         }
 
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['catatan-keluarga'] ?? null);
         $this->assertNull($visibility['modules']['buku-keuangan'] ?? null);
     }
 
@@ -123,7 +123,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'bkl',
                 'paar',
                 'anggota-pokja',
-                'inventaris',
+                'literasi-warga',
             ],
             'kecamatan-pokja-ii' => [
                 'program-prioritas',
@@ -136,9 +136,9 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'taman-bacaan',
                 'koperasi',
                 'kejar-paket',
-                'literasi-warga',
                 'bkb-kegiatan',
                 'tutor-khusus',
+                'data-pelatihan-kader',
                 'data-kegiatan-pkk-pokja-ii',
             ],
             'kecamatan-pokja-iii' => [
@@ -165,8 +165,9 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'posyandu',
                 'pilot-project-naskah-pelaporan',
                 'pilot-project-keluarga-sehat',
-                'inventaris',
                 'data-kegiatan-pkk-pokja-iv',
+                'data-umum-pkk',
+                'data-umum-pkk-kecamatan',
             ],
         ];
 
