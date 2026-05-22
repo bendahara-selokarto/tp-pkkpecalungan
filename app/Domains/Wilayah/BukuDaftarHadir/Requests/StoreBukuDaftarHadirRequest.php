@@ -14,7 +14,8 @@ class StoreBukuDaftarHadirRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'attendance_date' => 'required|date_format:Y-m-d',
+            'title' => 'required|string|max:255',
+            'attendance_date' => 'nullable|date_format:Y-m-d',
             'activity_id' => 'nullable|integer|exists:activities,id',
             'attendee_name' => 'nullable|string|max:255',
             'institution' => 'nullable|string|max:255',

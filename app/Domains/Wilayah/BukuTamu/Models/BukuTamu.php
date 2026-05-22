@@ -11,11 +11,17 @@ class BukuTamu extends Model
     protected $table = 'buku_tamus';
 
     protected $fillable = [
+        'title',
         'visit_date',
         'guest_name',
         'purpose',
         'institution',
         'description',
+        'file_path',
+        'original_name',
+        'mime_type',
+        'extension',
+        'size_bytes',
         'level',
         'area_id',
         'created_by',
@@ -27,6 +33,7 @@ class BukuTamu extends Model
         return [
             'visit_date' => 'date:Y-m-d',
             'tahun_anggaran' => 'integer',
+            'size_bytes' => 'integer',
         ];
     }
 

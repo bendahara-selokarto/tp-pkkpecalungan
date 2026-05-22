@@ -14,7 +14,7 @@ class StoreBukuNotulenRapatRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'entry_date' => 'required|date_format:Y-m-d',
+            'entry_date' => 'nullable|date_format:Y-m-d',
             'title' => 'required|string|max:255',
             'person_name' => 'nullable|string|max:255',
             'institution' => 'nullable|string|max:255',

@@ -36,11 +36,13 @@ class KecamatanBukuTamuController extends Controller
             ->execute('kecamatan', $request->perPage())
             ->through(fn (BukuTamu $item) => [
                 'id' => $item->id,
+                'title' => $item->title,
                 'visit_date' => $this->formatDateForPayload($item->visit_date),
                 'guest_name' => $item->guest_name,
                 'purpose' => $item->purpose,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
             ]);
 
         return Inertia::render('Kecamatan/BukuTamu/Index', [
@@ -80,11 +82,13 @@ class KecamatanBukuTamuController extends Controller
         return Inertia::render('Kecamatan/BukuTamu/Show', [
             'item' => [
                 'id' => $item->id,
+                'title' => $item->title,
                 'visit_date' => $this->formatDateForPayload($item->visit_date),
                 'guest_name' => $item->guest_name,
                 'purpose' => $item->purpose,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
                 'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);
@@ -98,11 +102,13 @@ class KecamatanBukuTamuController extends Controller
         return Inertia::render('Kecamatan/BukuTamu/Edit', [
             'item' => [
                 'id' => $item->id,
+                'title' => $item->title,
                 'visit_date' => $this->formatDateForPayload($item->visit_date),
                 'guest_name' => $item->guest_name,
                 'purpose' => $item->purpose,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
                 'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);

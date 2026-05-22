@@ -4,9 +4,9 @@ import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
 import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
-import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link, router } from '@inertiajs/vue3'
-import { mdiNotebookEditOutline } from '@mdi/js'
+import { mdiNotebookEditOutline, mdiFileDownloadOutline } from '@mdi/js'
+import BaseIcon from '@/admin-one/components/BaseIcon.vue'
 import { computed, ref } from 'vue'
 
 const props = defineProps({
@@ -63,13 +63,11 @@ const cancelDelete = () => {
   isDeleteModalActive.value = false
   deletingId.value = null
 }
-
-const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiNotebookEditOutline" title="Buku Tamu Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiNotebookEditOutline" title="Buku Tamu" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
@@ -87,14 +85,6 @@ const formatDate = (value) => formatDateForDisplay(value)
               </option>
             </select>
           </label>
-          <a
-            href="/kecamatan/buku-tamu/report/pdf"
-            target="_blank"
-            rel="noopener"
-            class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
-          >
-            Cetak PDF
-          </a>
           <Link
             href="/kecamatan/buku-tamu/create"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
@@ -108,10 +98,8 @@ const formatDate = (value) => formatDateForDisplay(value)
         <table class="w-full min-w-[760px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
-              <th class="px-3 py-3 font-semibold">Tanggal Kunjungan</th>
-              <th class="px-3 py-3 font-semibold">Nama Tamu</th>
-              <th class="px-3 py-3 font-semibold">Keperluan</th>
-              <th class="px-3 py-3 font-semibold">Instansi</th>
+              <th class="px-3 py-3 font-semibold">Judul/Keterangan Tamu</th>
+              <th class="px-3 py-3 font-semibold">File</th>
               <th class="px-3 py-3 font-semibold w-44">Aksi</th>
             </tr>
           </thead>
@@ -121,18 +109,21 @@ const formatDate = (value) => formatDateForDisplay(value)
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.visit_date) }}</td>
-              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.guest_name }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.purpose }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.institution || '-' }}</td>
+              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.title }}</td>
+              <td class="px-3 py-3">
+                <a
+                  v-if="item.file_url"
+                  :href="item.file_url"
+                  target="_blank"
+                  class="inline-flex items-center gap-1 text-emerald-600 hover:underline dark:text-emerald-400"
+                >
+                  <BaseIcon :path="mdiFileDownloadOutline" size="16" />
+                  Unduh File
+                </a>
+                <span v-else class="text-gray-400">-</span>
+              </td>
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
-                  <Link
-                    :href="`/kecamatan/buku-tamu/${item.id}`"
-                    class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
-                  >
-                    Lihat
-                  </Link>
                   <Link
                     :href="`/kecamatan/buku-tamu/${item.id}/edit`"
                     class="inline-flex rounded-md border border-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
@@ -150,7 +141,7 @@ const formatDate = (value) => formatDateForDisplay(value)
               </td>
             </tr>
             <tr v-if="items.data.length === 0">
-              <td colspan="5" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <td colspan="3" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Data buku tamu belum tersedia.
               </td>
             </tr>
@@ -176,4 +167,3 @@ const formatDate = (value) => formatDateForDisplay(value)
     />
   </SectionMain>
 </template>
-

@@ -13,6 +13,7 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
     public function store(BukuDaftarHadirData $data): BukuDaftarHadir
     {
         return BukuDaftarHadir::create([
+            'title' => $data->title,
             'attendance_date' => $data->attendance_date,
             'activity_id' => $data->activity_id,
             'attendee_name' => $data->attendee_name,
@@ -78,6 +79,7 @@ class BukuDaftarHadirRepository implements BukuDaftarHadirRepositoryInterface
     public function update(BukuDaftarHadir $bukuDaftarHadir, BukuDaftarHadirData $data): BukuDaftarHadir
     {
         $bukuDaftarHadir->update([
+            'title' => $data->title,
             'attendance_date' => $data->attendance_date,
             'activity_id' => $data->activity_id,
             'attendee_name' => $data->attendee_name,

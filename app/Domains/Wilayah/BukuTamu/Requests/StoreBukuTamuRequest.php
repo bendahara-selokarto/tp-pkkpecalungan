@@ -14,11 +14,13 @@ class StoreBukuTamuRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'visit_date' => 'required|date_format:Y-m-d',
-            'guest_name' => 'required|string|max:255',
-            'purpose' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'visit_date' => 'nullable|date_format:Y-m-d',
+            'guest_name' => 'nullable|string|max:255',
+            'purpose' => 'nullable|string|max:255',
             'institution' => 'nullable|string|max:255',
             'description' => 'nullable|string',
+            'file' => 'required|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ];
     }
 }

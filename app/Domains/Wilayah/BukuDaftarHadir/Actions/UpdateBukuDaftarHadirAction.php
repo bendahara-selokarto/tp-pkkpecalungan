@@ -53,6 +53,7 @@ class UpdateBukuDaftarHadirAction
         }
 
         $data = BukuDaftarHadirData::fromArray([
+            'title' => $payload['title'] ?? $bukuDaftarHadir->title,
             'attendance_date' => $payload['attendance_date'],
             'activity_id' => isset($payload['activity_id']) ? (int) $payload['activity_id'] : null,
             'attendee_name' => $payload['attendee_name'] ?? null,

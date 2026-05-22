@@ -39,12 +39,14 @@ class KecamatanBukuDaftarHadirController extends Controller
             ->execute('kecamatan', $request->perPage())
             ->through(fn (BukuDaftarHadir $item) => [
                 'id' => $item->id,
+                'title' => $item->title,
                 'attendance_date' => $this->formatDateForPayload($item->attendance_date),
                 'activity_id' => $item->activity_id,
                 'activity_title' => $item->activity?->title,
                 'attendee_name' => $item->attendee_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
             ]);
 
         return Inertia::render('Kecamatan/BukuDaftarHadir/Index', [
@@ -86,6 +88,7 @@ class KecamatanBukuDaftarHadirController extends Controller
         return Inertia::render('Kecamatan/BukuDaftarHadir/Show', [
             'item' => [
                 'id' => $item->id,
+                'title' => $item->title,
                 'attendance_date' => $this->formatDateForPayload($item->attendance_date),
                 'activity_id' => $item->activity_id,
                 'activity_title' => $item->activity?->title,
@@ -93,6 +96,7 @@ class KecamatanBukuDaftarHadirController extends Controller
                 'attendee_name' => $item->attendee_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
                 'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);
@@ -106,6 +110,7 @@ class KecamatanBukuDaftarHadirController extends Controller
         return Inertia::render('Kecamatan/BukuDaftarHadir/Edit', [
             'item' => [
                 'id' => $item->id,
+                'title' => $item->title,
                 'attendance_date' => $this->formatDateForPayload($item->attendance_date),
                 'activity_id' => $item->activity_id,
                 'activity_title' => $item->activity?->title,
@@ -113,6 +118,7 @@ class KecamatanBukuDaftarHadirController extends Controller
                 'attendee_name' => $item->attendee_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
                 'tahun_anggaran' => $item->tahun_anggaran,
             ],
             'activityOptions' => $this->activityOptions('kecamatan'),

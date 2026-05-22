@@ -12,6 +12,7 @@ class BukuDaftarHadir extends Model
     protected $table = 'buku_daftar_hadirs';
 
     protected $fillable = [
+        'title',
         'attendance_date',
         'activity_id',
         'attendee_name',

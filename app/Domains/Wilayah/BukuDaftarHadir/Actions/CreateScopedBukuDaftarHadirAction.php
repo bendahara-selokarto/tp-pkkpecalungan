@@ -43,7 +43,8 @@ class CreateScopedBukuDaftarHadirAction
         }
 
         $data = BukuDaftarHadirData::fromArray([
-            'attendance_date' => $payload['attendance_date'],
+            'title' => $payload['title'] ?? null,
+            'attendance_date' => $payload['attendance_date'] ?? now()->format('Y-m-d'),
             'activity_id' => isset($payload['activity_id']) ? (int) $payload['activity_id'] : null,
             'attendee_name' => $payload['attendee_name'] ?? null,
             'institution' => $payload['institution'] ?? null,

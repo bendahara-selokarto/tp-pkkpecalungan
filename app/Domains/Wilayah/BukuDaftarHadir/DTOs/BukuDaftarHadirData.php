@@ -5,7 +5,8 @@ namespace App\Domains\Wilayah\BukuDaftarHadir\DTOs;
 class BukuDaftarHadirData
 {
     public function __construct(
-        public string $attendance_date,
+        public ?string $title,
+        public ?string $attendance_date,
         public ?int $activity_id,
         public ?string $attendee_name,
         public ?string $institution,
@@ -25,7 +26,8 @@ class BukuDaftarHadirData
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['attendance_date'],
+            $data['title'] ?? null,
+            $data['attendance_date'] ?? null,
             $data['activity_id'] ?? null,
             $data['attendee_name'] ?? null,
             $data['institution'] ?? null,
