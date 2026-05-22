@@ -6,7 +6,8 @@ import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { Link, router } from '@inertiajs/vue3'
-import { mdiNotebookEditOutline } from '@mdi/js'
+import { mdiNotebookEditOutline, mdiFileDownloadOutline } from '@mdi/js'
+import BaseIcon from '@/admin-one/components/BaseIcon.vue'
 import { computed, ref } from 'vue'
 
 const props = defineProps({
@@ -112,7 +113,8 @@ const formatDate = (value) => formatDateForDisplay(value)
               <th class="px-3 py-3 font-semibold">Judul Rapat</th>
               <th class="px-3 py-3 font-semibold">Nama</th>
               <th class="px-3 py-3 font-semibold">Instansi</th>
-              <th class="px-3 py-3 font-semibold w-44">Aksi</th>
+              <th class="px-3 py-3 font-semibold">File</th>
+              <th class="px-3 py-3 font-semibold w-52">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -125,6 +127,18 @@ const formatDate = (value) => formatDateForDisplay(value)
               <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.title }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.person_name || '-' }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.institution || '-' }}</td>
+              <td class="px-3 py-3">
+                <a
+                  v-if="item.file_url"
+                  :href="item.file_url"
+                  target="_blank"
+                  class="inline-flex items-center gap-1 text-emerald-600 hover:underline dark:text-emerald-400"
+                >
+                  <BaseIcon :path="mdiFileDownloadOutline" size="16" />
+                  Unduh
+                </a>
+                <span v-else class="text-gray-400">-</span>
+              </td>
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
                   <Link
@@ -150,7 +164,7 @@ const formatDate = (value) => formatDateForDisplay(value)
               </td>
             </tr>
             <tr v-if="items.data.length === 0">
-              <td colspan="5" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Data notulen rapat belum tersedia.
               </td>
             </tr>

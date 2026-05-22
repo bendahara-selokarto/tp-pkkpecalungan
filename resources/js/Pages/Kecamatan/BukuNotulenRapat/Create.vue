@@ -7,7 +7,11 @@ import { Link, useForm } from '@inertiajs/vue3'
 import { mdiNotebookPlusOutline } from '@mdi/js'
 
 const form = useForm({
+  entry_date: '',
   title: '',
+  person_name: '',
+  institution: '',
+  description: '',
   file: null,
 })
 
@@ -27,13 +31,48 @@ const submit = () => {
     <SectionTitleLineWithButton :icon="mdiNotebookPlusOutline" title="Tambah Buku Notulen Rapat" main />
 
     <CardBox is-form @submit.prevent="submit">
-      <FormField label="Judul Notulen" :error="form.errors.title" help="Contoh: Notulen Rapat Koordinasi Bulanan Mei 2026">
+      <FormField label="Tanggal Rapat" :error="form.errors.entry_date" help="Tanggal pelaksanaan rapat">
+        <input
+          v-model="form.entry_date"
+          type="date"
+          class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          required
+        >
+      </FormField>
+
+      <FormField label="Judul Rapat" :error="form.errors.title" help="Contoh: Rapat Koordinasi Bulanan Mei 2026">
         <input
           v-model="form.title"
           type="text"
           class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           required
         >
+      </FormField>
+
+      <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+        <FormField label="Nama Pihak/Petugas" :error="form.errors.person_name">
+          <input
+            v-model="form.person_name"
+            type="text"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          >
+        </FormField>
+
+        <FormField label="Instansi/Unit" :error="form.errors.institution">
+          <input
+            v-model="form.institution"
+            type="text"
+            class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          >
+        </FormField>
+      </div>
+
+      <FormField label="Uraian Notulen" :error="form.errors.description">
+        <textarea
+          v-model="form.description"
+          rows="4"
+          class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+        />
       </FormField>
 
       <FormField label="Unggah File (PDF/Gambar)" :error="form.errors.file" help="Format: pdf, jpg, jpeg, png. Maks: 10MB">

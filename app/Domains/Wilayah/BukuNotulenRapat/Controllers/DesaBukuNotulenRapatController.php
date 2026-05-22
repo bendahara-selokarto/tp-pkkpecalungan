@@ -41,6 +41,7 @@ class DesaBukuNotulenRapatController extends Controller
                 'person_name' => $item->person_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
             ]);
 
         return Inertia::render('Desa/BukuNotulenRapat/Index', [
@@ -85,6 +86,7 @@ class DesaBukuNotulenRapatController extends Controller
                 'person_name' => $item->person_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
                 'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);
@@ -103,6 +105,7 @@ class DesaBukuNotulenRapatController extends Controller
                 'person_name' => $item->person_name,
                 'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
                 'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);

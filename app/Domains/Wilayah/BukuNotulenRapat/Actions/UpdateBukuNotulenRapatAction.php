@@ -41,8 +41,8 @@ class UpdateBukuNotulenRapatAction
         }
 
         $data = BukuNotulenRapatData::fromArray([
-            'entry_date' => $payload['entry_date'],
-            'title' => $payload['title'],
+            'entry_date' => $payload['entry_date'] ?? null,
+            'title' => $payload['title'] ?? null,
             'person_name' => $payload['person_name'] ?? null,
             'institution' => $payload['institution'] ?? null,
             'description' => $payload['description'] ?? null,

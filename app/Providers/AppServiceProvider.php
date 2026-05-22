@@ -26,6 +26,9 @@ use App\Domains\Wilayah\BukuDaftarHadir\Repositories\BukuDaftarHadirRepositoryIn
 use App\Domains\Wilayah\BukuTamu\Models\BukuTamu;
 use App\Domains\Wilayah\BukuTamu\Repositories\BukuTamuRepository;
 use App\Domains\Wilayah\BukuTamu\Repositories\BukuTamuRepositoryInterface;
+use App\Domains\Wilayah\BukuAgendaSk\Models\BukuAgendaSk;
+use App\Domains\Wilayah\BukuAgendaSk\Repositories\BukuAgendaSkRepository;
+use App\Domains\Wilayah\BukuAgendaSk\Repositories\BukuAgendaSkRepositoryInterface;
 use App\Domains\Wilayah\BukuNotulenRapat\Models\BukuNotulenRapat;
 use App\Domains\Wilayah\BukuNotulenRapat\Repositories\BukuNotulenRapatRepository;
 use App\Domains\Wilayah\BukuNotulenRapat\Repositories\BukuNotulenRapatRepositoryInterface;
@@ -140,6 +143,7 @@ use App\Policies\BukuKeuanganPolicy;
 use App\Policies\AgendaSuratPolicy;
 use App\Policies\BukuDaftarHadirPolicy;
 use App\Policies\BukuTamuPolicy;
+use App\Policies\BukuAgendaSkPolicy;
 use App\Policies\BukuNotulenRapatPolicy;
 use App\Policies\InventarisPolicy;
 use App\Policies\KaderKhususPolicy;
@@ -243,6 +247,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             BukuTamuRepositoryInterface::class,
             BukuTamuRepository::class
+        );
+
+        $this->app->bind(
+            BukuAgendaSkRepositoryInterface::class,
+            BukuAgendaSkRepository::class
         );
 
         $this->app->bind(
@@ -431,6 +440,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(BukuDaftarHadir::class, BukuDaftarHadirPolicy::class);
         Gate::policy(BukuEkspedisi::class, BukuEkspedisiPolicy::class);
         Gate::policy(BukuTamu::class, BukuTamuPolicy::class);
+        Gate::policy(BukuAgendaSk::class, BukuAgendaSkPolicy::class);
         Gate::policy(BukuNotulenRapat::class, BukuNotulenRapatPolicy::class);
         Gate::policy(AnggotaPokja::class, AnggotaPokjaPolicy::class);
         Gate::policy(AnggotaTimPenggerak::class, AnggotaTimPenggerakPolicy::class);
@@ -539,6 +549,7 @@ class AppServiceProvider extends ServiceProvider
             BukuDaftarHadir::class,
             BukuEkspedisi::class,
             BukuTamu::class,
+            BukuAgendaSk::class,
             BukuNotulenRapat::class,
             BukuKeuangan::class,
             DataIndustriRumahTangga::class,

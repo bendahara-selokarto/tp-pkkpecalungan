@@ -23,6 +23,9 @@ use App\Domains\Wilayah\BukuDaftarHadir\Controllers\BukuDaftarHadirPrintControll
 use App\Domains\Wilayah\BukuTamu\Controllers\DesaBukuTamuController;
 use App\Domains\Wilayah\BukuTamu\Controllers\KecamatanBukuTamuController;
 use App\Domains\Wilayah\BukuTamu\Controllers\BukuTamuPrintController;
+use App\Domains\Wilayah\BukuAgendaSk\Controllers\DesaBukuAgendaSkController;
+use App\Domains\Wilayah\BukuAgendaSk\Controllers\KecamatanBukuAgendaSkController;
+use App\Domains\Wilayah\BukuAgendaSk\Controllers\BukuAgendaSkPrintController;
 use App\Domains\Wilayah\BukuNotulenRapat\Controllers\DesaBukuNotulenRapatController;
 use App\Domains\Wilayah\BukuNotulenRapat\Controllers\KecamatanBukuNotulenRapatController;
 use App\Domains\Wilayah\BukuNotulenRapat\Controllers\BukuNotulenRapatPrintController;
@@ -199,6 +202,7 @@ Route::prefix('desa')
         Route::resource('buku-ekspedisi', DesaBukuEkspedisiController::class);
         Route::get('buku-ekspedisi/{id}/download', [DesaBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
         Route::resource('buku-tamu', DesaBukuTamuController::class);
+        Route::resource('buku-agenda-sk', DesaBukuAgendaSkController::class);
         Route::resource('buku-notulen-rapat', DesaBukuNotulenRapatController::class);
         Route::resource('inventaris', DesaInventarisController::class);
         Route::resource('bantuans', DesaBantuanController::class);
@@ -238,6 +242,7 @@ Route::prefix('desa')
         Route::get('buku-notulen-rapat/report/pdf', [BukuNotulenRapatPrintController::class, 'printDesaReport'])->name('buku-notulen-rapat.report');
         Route::get('buku-daftar-hadir/report/pdf', [BukuDaftarHadirPrintController::class, 'printDesaReport'])->name('buku-daftar-hadir.report');
         Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printDesaReport'])->name('buku-tamu.report');
+        Route::get('buku-agenda-sk/report/pdf', [BukuAgendaSkPrintController::class, 'report'])->defaults('level', 'desa')->name('buku-agenda-sk.report');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaReport'])->name('agenda-surat.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printDesaReport'])->name('inventaris.report');
@@ -306,6 +311,7 @@ Route::prefix('kecamatan')
         Route::resource('buku-ekspedisi', KecamatanBukuEkspedisiController::class);
         Route::get('buku-ekspedisi/{id}/download', [KecamatanBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
         Route::resource('buku-tamu', KecamatanBukuTamuController::class);
+        Route::resource('buku-agenda-sk', KecamatanBukuAgendaSkController::class);
         Route::resource('buku-notulen-rapat', KecamatanBukuNotulenRapatController::class);
         Route::resource('inventaris', KecamatanInventarisController::class);
         Route::resource('bantuans', KecamatanBantuanController::class);
@@ -345,6 +351,7 @@ Route::prefix('kecamatan')
         Route::get('buku-notulen-rapat/report/pdf', [BukuNotulenRapatPrintController::class, 'printKecamatanReport'])->name('buku-notulen-rapat.report');
         Route::get('buku-daftar-hadir/report/pdf', [BukuDaftarHadirPrintController::class, 'printKecamatanReport'])->name('buku-daftar-hadir.report');
         Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printKecamatanReport'])->name('buku-tamu.report');
+        Route::get('buku-agenda-sk/report/pdf', [BukuAgendaSkPrintController::class, 'report'])->defaults('level', 'kecamatan')->name('buku-agenda-sk.report');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanReport'])->name('agenda-surat.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printKecamatanReport'])->name('inventaris.report');

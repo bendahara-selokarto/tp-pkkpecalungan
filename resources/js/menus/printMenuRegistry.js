@@ -5,7 +5,7 @@ const PRINT_SOURCE_OVERRIDES = {
   'anggota-tim-penggerak-kader': 'anggota-tim-penggerak',
 }
 
-const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'buku-ekspedisi', 'agenda-surat', 'buku-tamu', 'laporan-tahunan-pkk', 'data-umum-pkk', 'data-umum-pkk-kecamatan'])
+const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'buku-ekspedisi', 'agenda-surat', 'buku-tamu', 'buku-agenda-sk', 'laporan-tahunan-pkk', 'data-umum-pkk', 'data-umum-pkk-kecamatan'])
 const bookGroupContextByMenuGroup = {
   'sekretaris-wajib': 'sekretaris-tpk',
   'sekretaris-bantu': 'sekretaris-tpk',
@@ -83,6 +83,7 @@ const buildScopedPdfReportItemsByGroup = (scope) => ({
   'sekretaris-bantu': [
     { href: `/${scope}/buku-daftar-hadir/report/pdf`, label: 'Daftar Hadir' },
     { href: `/${scope}/buku-tamu/report/pdf`, label: 'Buku Tamu' },
+    { href: `/${scope}/buku-agenda-sk/report/pdf`, label: 'Buku Agenda SK' },
     { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi' },
     { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan' },
     { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus' },
@@ -208,7 +209,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
         { href: `/${scope}/buku-ekspedisi`, label: 'Buku Ekspedisi' },
         { href: '/dashboard/charts/report/pdf', label: 'Buku Grafik', external: true },
-        { href: '#', label: 'Buku Agenda SK' },
+        { href: `/${scope}/buku-agenda-sk`, label: 'Buku Agenda SK' },
         { href: `/${scope}/laporan-tahunan-pkk`, label: 'Laporan Tahunan Tim Penggerak PKK' },
       ],
     },

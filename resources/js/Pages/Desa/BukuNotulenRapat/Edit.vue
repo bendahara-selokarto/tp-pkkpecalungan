@@ -13,15 +13,25 @@ const props = defineProps({
 })
 
 const form = useForm({
+  _method: 'PUT',
   entry_date: props.item.entry_date ?? '',
   title: props.item.title ?? '',
   person_name: props.item.person_name ?? '',
   institution: props.item.institution ?? '',
   description: props.item.description ?? '',
+  file: null,
 })
 
+const onFileChange = (event) => {
+  form.file = event.target.files?.[0] ?? null
+}
+
 const submit = () => {
-  form.put(`/desa/buku-notulen-rapat/${props.item.id}`)
+  // Use post with _method=PUT for multipart/form-data support in Laravel
+  form.post(`/desa/buku-notulen-rapat/${props.item.id}`, {
+    forceFormData: true,
+    preserveScroll: true,
+  })
 }
 </script>
 
@@ -84,6 +94,29 @@ const submit = () => {
           <p v-if="form.errors.description" class="mt-1 text-xs text-rose-600">{{ form.errors.description }}</p>
         </div>
 
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Unggah File Baru (Opsional)</label>
+          <input
+            type="file"
+            accept=".pdf,.jpg,.jpeg,.png"
+            class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+            @change="onFileChange"
+          >
+          <p v-if="form.errors.file" class="mt-1 text-xs text-rose-600">{{ form.errors.file }}</p>
+          <p class="mt-1 text-xs text-gray-500">Kosongkan jika tidak ingin mengubah file.</p>
+        </div>
+
+        <div v-if="props.item.file_url" class="mb-4">
+          <p class="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">File Saat Ini:</p>
+          <a
+            :href="props.item.file_url"
+            target="_blank"
+            class="text-sm text-emerald-600 hover:underline dark:text-emerald-400"
+          >
+            Lihat File
+          </a>
+        </div>
+
         <div class="flex items-center justify-end gap-2">
           <Link
             href="/desa/buku-notulen-rapat"
@@ -96,7 +129,7 @@ const submit = () => {
             class="inline-flex rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
             :disabled="form.processing"
           >
-            Update
+            {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
           </button>
         </div>
       </form>
