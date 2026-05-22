@@ -37,10 +37,8 @@ class DesaBukuTamuController extends Controller
             ->through(fn (BukuTamu $item) => [
                 'id' => $item->id,
                 'visit_date' => $this->formatDateForPayload($item->visit_date),
-                'guest_name' => $item->guest_name,
-                'purpose' => $item->purpose,
-                'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
             ]);
 
         return Inertia::render('Desa/BukuTamu/Index', [
@@ -81,10 +79,8 @@ class DesaBukuTamuController extends Controller
             'item' => [
                 'id' => $item->id,
                 'visit_date' => $this->formatDateForPayload($item->visit_date),
-                'guest_name' => $item->guest_name,
-                'purpose' => $item->purpose,
-                'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
                 'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);
@@ -99,10 +95,8 @@ class DesaBukuTamuController extends Controller
             'item' => [
                 'id' => $item->id,
                 'visit_date' => $this->formatDateForPayload($item->visit_date),
-                'guest_name' => $item->guest_name,
-                'purpose' => $item->purpose,
-                'institution' => $item->institution,
                 'description' => $item->description,
+                'file_url' => $item->file_path ? \Illuminate\Support\Facades\Storage::disk('public')->url($item->file_path) : null,
                 'tahun_anggaran' => $item->tahun_anggaran,
             ],
         ]);

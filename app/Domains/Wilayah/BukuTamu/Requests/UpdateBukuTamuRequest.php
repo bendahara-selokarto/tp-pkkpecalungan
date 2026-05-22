@@ -14,12 +14,8 @@ class UpdateBukuTamuRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'required|string|max:255',
-            'visit_date' => 'nullable|date_format:Y-m-d',
-            'guest_name' => 'nullable|string|max:255',
-            'purpose' => 'nullable|string|max:255',
-            'institution' => 'nullable|string|max:255',
-            'description' => 'nullable|string',
+            'visit_date' => 'required|date_format:Y-m-d',
+            'description' => 'required|string',
             'file' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:10240',
         ];
     }

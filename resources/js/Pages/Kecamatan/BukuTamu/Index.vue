@@ -7,6 +7,7 @@ import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineW
 import { Link, router } from '@inertiajs/vue3'
 import { mdiNotebookEditOutline, mdiFileDownloadOutline } from '@mdi/js'
 import BaseIcon from '@/admin-one/components/BaseIcon.vue'
+import { formatDateForDisplay } from '@/utils/dateFormatter'
 import { computed, ref } from 'vue'
 
 const props = defineProps({
@@ -63,6 +64,8 @@ const cancelDelete = () => {
   isDeleteModalActive.value = false
   deletingId.value = null
 }
+
+const formatDate = (value) => formatDateForDisplay(value)
 </script>
 
 <template>
@@ -98,9 +101,10 @@ const cancelDelete = () => {
         <table class="w-full min-w-[760px] text-sm">
           <thead class="border-b border-gray-200 dark:border-slate-700">
             <tr class="text-left text-gray-600 dark:text-gray-300">
-              <th class="px-3 py-3 font-semibold">Judul/Keterangan Tamu</th>
+              <th class="px-3 py-3 font-semibold">Tanggal</th>
+              <th class="px-3 py-3 font-semibold">Keterangan</th>
               <th class="px-3 py-3 font-semibold">File</th>
-              <th class="px-3 py-3 font-semibold w-44">Aksi</th>
+              <th class="px-3 py-3 font-semibold w-52">Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -109,7 +113,8 @@ const cancelDelete = () => {
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
-              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.title }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.visit_date) }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.description }}</td>
               <td class="px-3 py-3">
                 <a
                   v-if="item.file_url"
@@ -118,12 +123,18 @@ const cancelDelete = () => {
                   class="inline-flex items-center gap-1 text-emerald-600 hover:underline dark:text-emerald-400"
                 >
                   <BaseIcon :path="mdiFileDownloadOutline" size="16" />
-                  Unduh File
+                  Unduh
                 </a>
                 <span v-else class="text-gray-400">-</span>
               </td>
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
+                  <Link
+                    :href="`/kecamatan/buku-tamu/${item.id}`"
+                    class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
+                  >
+                    Lihat
+                  </Link>
                   <Link
                     :href="`/kecamatan/buku-tamu/${item.id}/edit`"
                     class="inline-flex rounded-md border border-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
@@ -141,7 +152,7 @@ const cancelDelete = () => {
               </td>
             </tr>
             <tr v-if="items.data.length === 0">
-              <td colspan="3" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+              <td colspan="6" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
                 Data buku tamu belum tersedia.
               </td>
             </tr>

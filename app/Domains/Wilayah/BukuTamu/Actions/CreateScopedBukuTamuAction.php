@@ -35,12 +35,8 @@ class CreateScopedBukuTamuAction
         }
 
         $data = BukuTamuData::fromArray([
-            'title' => $payload['title'] ?? null,
-            'visit_date' => $payload['visit_date'] ?? now()->format('Y-m-d'),
-            'guest_name' => $payload['guest_name'] ?? null,
-            'purpose' => $payload['purpose'] ?? null,
-            'institution' => $payload['institution'] ?? null,
-            'description' => $payload['description'] ?? null,
+            'visit_date' => $payload['visit_date'],
+            'description' => $payload['description'],
             ...$fileInfo,
             'level' => $level,
             'area_id' => $this->bukuTamuScopeService->requireUserAreaId(),

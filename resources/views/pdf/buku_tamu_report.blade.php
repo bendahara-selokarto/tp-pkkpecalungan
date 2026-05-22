@@ -67,9 +67,6 @@
             <tr>
                 <th style="width: 28px;">NO</th>
                 <th style="width: 90px;">TANGGAL</th>
-                <th style="width: 170px;">NAMA TAMU</th>
-                <th style="width: 190px;">KEPERLUAN</th>
-                <th style="width: 150px;">INSTANSI</th>
                 <th>KETERANGAN</th>
             </tr>
         </thead>
@@ -78,14 +75,11 @@
                 <tr>
                     <td class="center">{{ $index + 1 }}</td>
                     <td class="center">{{ $item->visit_date ? \Carbon\Carbon::parse((string) $item->visit_date)->format('Y-m-d') : '-' }}</td>
-                    <td>{{ $item->guest_name }}</td>
-                    <td>{{ $item->purpose }}</td>
-                    <td>{{ $item->institution ?: '-' }}</td>
                     <td>{{ $item->description ?: '-' }}</td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="6" class="center">Data belum tersedia.</td>
+                    <td colspan="3" class="center">Data belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>

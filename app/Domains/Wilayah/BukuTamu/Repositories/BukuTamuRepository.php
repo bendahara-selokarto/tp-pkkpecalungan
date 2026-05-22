@@ -12,11 +12,7 @@ class BukuTamuRepository implements BukuTamuRepositoryInterface
     public function store(BukuTamuData $data): BukuTamu
     {
         return BukuTamu::create([
-            'title' => $data->title,
             'visit_date' => $data->visit_date,
-            'guest_name' => $data->guest_name,
-            'purpose' => $data->purpose,
-            'institution' => $data->institution,
             'description' => $data->description,
             'file_path' => $data->file_path,
             'original_name' => $data->original_name,
@@ -63,11 +59,7 @@ class BukuTamuRepository implements BukuTamuRepositoryInterface
     public function update(BukuTamu $bukuTamu, BukuTamuData $data): BukuTamu
     {
         $bukuTamu->update([
-            'title' => $data->title,
             'visit_date' => $data->visit_date,
-            'guest_name' => $data->guest_name,
-            'purpose' => $data->purpose,
-            'institution' => $data->institution,
             'description' => $data->description,
             'file_path' => $data->file_path,
             'original_name' => $data->original_name,

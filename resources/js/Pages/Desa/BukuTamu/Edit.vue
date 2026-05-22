@@ -1,5 +1,6 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
+import FormField from '@/admin-one/components/FormField.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
 import { Link, useForm } from '@inertiajs/vue3'
@@ -13,94 +14,85 @@ const props = defineProps({
 })
 
 const form = useForm({
+  _method: 'PUT',
   visit_date: props.item.visit_date ?? '',
-  guest_name: props.item.guest_name ?? '',
-  purpose: props.item.purpose ?? '',
-  institution: props.item.institution ?? '',
   description: props.item.description ?? '',
+  file: null,
 })
 
+const onFileChange = (event) => {
+  form.file = event.target.files?.[0] ?? null
+}
+
 const submit = () => {
-  form.put(`/desa/buku-tamu/${props.item.id}`)
+  // Use post with _method=PUT for multipart/form-data support in Laravel
+  form.post(`/desa/buku-tamu/${props.item.id}`, {
+    forceFormData: true,
+    preserveScroll: true,
+  })
 }
 </script>
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiNotebookEditOutline" title="Edit Buku Tamu Desa" main />
+    <SectionTitleLineWithButton :icon="mdiNotebookEditOutline" title="Edit Buku Tamu" main />
 
-    <CardBox class="max-w-3xl">
-      <form class="space-y-5" @submit.prevent="submit">
-        <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tanggal Kunjungan</label>
-          <input
-            v-model="form.visit_date"
-            type="date"
-            class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-            required
+    <CardBox is-form @submit.prevent="submit">
+      <FormField label="Tanggal" :error="form.errors.visit_date" help="Tanggal pelaksanaan kunjungan">
+        <input
+          v-model="form.visit_date"
+          type="date"
+          class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          required
+        >
+      </FormField>
+
+      <FormField label="Keterangan" :error="form.errors.description">
+        <textarea
+          v-model="form.description"
+          rows="4"
+          class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          required
+        />
+      </FormField>
+
+      <FormField label="Unggah File Baru (Opsional)" :error="form.errors.file" help="Format: pdf, jpg, jpeg, png. Maks: 10MB. Kosongkan jika tidak ingin mengubah file.">
+        <input
+          type="file"
+          accept=".pdf,.jpg,.jpeg,.png"
+          class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          @change="onFileChange"
+        >
+      </FormField>
+
+      <div v-if="props.item.file_url" class="mb-4">
+        <p class="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">File Saat Ini:</p>
+        <a
+          :href="props.item.file_url"
+          target="_blank"
+          class="text-sm text-emerald-600 hover:underline dark:text-emerald-400"
+        >
+          Lihat File
+        </a>
+      </div>
+
+      <template #footer>
+        <div class="flex items-center gap-4">
+          <button
+            type="submit"
+            class="inline-flex min-h-[44px] items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-50"
+            :disabled="form.processing"
           >
-          <p v-if="form.errors.visit_date" class="mt-1 text-xs text-rose-600">{{ form.errors.visit_date }}</p>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Nama Tamu</label>
-          <input
-            v-model="form.guest_name"
-            type="text"
-            class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-            required
-          >
-          <p v-if="form.errors.guest_name" class="mt-1 text-xs text-rose-600">{{ form.errors.guest_name }}</p>
-        </div>
-
-        <div class="grid gap-5 md:grid-cols-2">
-          <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Keperluan</label>
-            <input
-              v-model="form.purpose"
-              type="text"
-              class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-              required
-            >
-            <p v-if="form.errors.purpose" class="mt-1 text-xs text-rose-600">{{ form.errors.purpose }}</p>
-          </div>
-          <div>
-            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Instansi/Unit</label>
-            <input
-              v-model="form.institution"
-              type="text"
-              class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-            >
-            <p v-if="form.errors.institution" class="mt-1 text-xs text-rose-600">{{ form.errors.institution }}</p>
-          </div>
-        </div>
-
-        <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Keterangan</label>
-          <textarea
-            v-model="form.description"
-            rows="4"
-            class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-          />
-          <p v-if="form.errors.description" class="mt-1 text-xs text-rose-600">{{ form.errors.description }}</p>
-        </div>
-
-        <div class="flex items-center justify-end gap-2">
+            {{ form.processing ? 'Menyimpan...' : 'Simpan Perubahan' }}
+          </button>
           <Link
             href="/desa/buku-tamu"
-            class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+            class="inline-flex min-h-[44px] items-center rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
           >
             Batal
           </Link>
-          <button
-            type="submit"
-            class="inline-flex rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
-            :disabled="form.processing"
-          >
-            Update
-          </button>
         </div>
-      </form>
+      </template>
     </CardBox>
   </SectionMain>
 </template>

@@ -38,9 +38,6 @@ class BukuTamuReportPrintTest extends TestCase
         $this->assertPdfReportHeadersInOrder('pdf.buku_tamu_report', [
             'NO',
             'TANGGAL',
-            'NAMA TAMU',
-            'KEPERLUAN',
-            'INSTANSI',
             'KETERANGAN',
         ]);
     }
@@ -56,9 +53,6 @@ class BukuTamuReportPrintTest extends TestCase
 
         BukuTamu::create([
             'visit_date' => '2026-02-27',
-            'guest_name' => 'Siti Aminah',
-            'purpose' => 'Konsultasi program',
-            'institution' => 'TP PKK Desa Gombong',
             'description' => 'Kunjungan koordinasi bulanan.',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
@@ -83,9 +77,6 @@ class BukuTamuReportPrintTest extends TestCase
 
         BukuTamu::create([
             'visit_date' => '2026-02-27',
-            'guest_name' => 'Dewi Lestari',
-            'purpose' => 'Koordinasi lintas desa',
-            'institution' => 'TP PKK Kecamatan Pecalungan',
             'description' => 'Koordinasi program lintas desa.',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,

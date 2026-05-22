@@ -41,12 +41,8 @@ class UpdateBukuTamuAction
         }
 
         $data = BukuTamuData::fromArray([
-            'title' => $payload['title'] ?? $bukuTamu->title,
             'visit_date' => $payload['visit_date'],
-            'guest_name' => $payload['guest_name'] ?? $bukuTamu->guest_name,
-            'purpose' => $payload['purpose'] ?? $bukuTamu->purpose,
-            'institution' => $payload['institution'] ?? null,
-            'description' => $payload['description'] ?? null,
+            'description' => $payload['description'],
             ...$fileInfo,
             'level' => $bukuTamu->level,
             'area_id' => $bukuTamu->area_id,

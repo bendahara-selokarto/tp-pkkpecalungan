@@ -60,9 +60,6 @@ class DesaBukuTamuTest extends TestCase
 
         BukuTamu::create([
             'visit_date' => '2026-02-26',
-            'guest_name' => 'Siti Aminah',
-            'purpose' => 'Konsultasi program',
-            'institution' => 'TP PKK Desa A',
             'description' => 'Tamu desa A',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
@@ -71,9 +68,6 @@ class DesaBukuTamuTest extends TestCase
 
         BukuTamu::create([
             'visit_date' => '2026-02-26',
-            'guest_name' => 'Budi Santoso',
-            'purpose' => 'Koordinasi lintas desa',
-            'institution' => 'TP PKK Desa B',
             'description' => 'Tamu desa B',
             'level' => 'desa',
             'area_id' => $this->desaB->id,
@@ -86,21 +80,21 @@ class DesaBukuTamuTest extends TestCase
                 $page
                     ->component('Desa/BukuTamu/Index')
                     ->has('items.data', 1)
-                    ->where('items.data.0.guest_name', 'Siti Aminah')
+                    ->where('items.data.0.description', 'Tamu desa A')
                     ->where('items.total', 1)
                     ->where('filters.per_page', 10);
             });
 
+        $file = \Illuminate\Http\UploadedFile::fake()->image('visit.jpg');
+
         $this->actingAs($adminDesa)->post('/desa/buku-tamu', [
             'visit_date' => '2026-02-27',
-            'guest_name' => 'Nur Kholis',
-            'purpose' => 'Audiensi kegiatan',
-            'institution' => 'TP PKK Desa Gombong',
             'description' => 'Audiensi kegiatan bulanan.',
+            'file' => $file,
         ])->assertStatus(302);
 
         $created = BukuTamu::query()
-            ->where('guest_name', 'Nur Kholis')
+            ->where('description', 'Audiensi kegiatan bulanan.')
             ->firstOrFail();
 
         $this->assertDatabaseHas('buku_tamus', [
@@ -112,15 +106,11 @@ class DesaBukuTamuTest extends TestCase
 
         $this->actingAs($adminDesa)->put(route('desa.buku-tamu.update', $created->id), [
             'visit_date' => '2026-02-27',
-            'guest_name' => 'Nur Kholis Final',
-            'purpose' => 'Audiensi kegiatan lanjutan',
-            'institution' => 'TP PKK Desa Gombong',
             'description' => 'Audiensi kegiatan lanjutan.',
         ])->assertStatus(302);
 
         $this->assertDatabaseHas('buku_tamus', [
             'id' => $created->id,
-            'guest_name' => 'Nur Kholis Final',
             'description' => 'Audiensi kegiatan lanjutan.',
         ]);
 
@@ -142,9 +132,6 @@ class DesaBukuTamuTest extends TestCase
 
         BukuTamu::create([
             'visit_date' => '2026-02-26',
-            'guest_name' => 'Tamu Tahun Aktif',
-            'purpose' => 'Koordinasi',
-            'institution' => 'TP PKK Desa A',
             'description' => 'Masuk list 2026',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
@@ -154,9 +141,6 @@ class DesaBukuTamuTest extends TestCase
 
         BukuTamu::create([
             'visit_date' => '2025-02-26',
-            'guest_name' => 'Tamu Tahun Lama',
-            'purpose' => 'Arsip',
-            'institution' => 'TP PKK Desa A',
             'description' => 'Tidak boleh muncul',
             'level' => 'desa',
             'area_id' => $this->desaA->id,
@@ -169,7 +153,7 @@ class DesaBukuTamuTest extends TestCase
             ->assertInertia(function (AssertableInertia $page): void {
                 $page
                     ->where('items.total', 1)
-                    ->where('items.data.0.guest_name', 'Tamu Tahun Aktif')
+                    ->where('items.data.0.description', 'Masuk list 2026')
                     ->where('filters.tahun_anggaran', 2026);
             });
     }

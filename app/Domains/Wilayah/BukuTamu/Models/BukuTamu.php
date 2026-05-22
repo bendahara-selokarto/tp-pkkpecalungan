@@ -11,11 +11,7 @@ class BukuTamu extends Model
     protected $table = 'buku_tamus';
 
     protected $fillable = [
-        'title',
         'visit_date',
-        'guest_name',
-        'purpose',
-        'institution',
         'description',
         'file_path',
         'original_name',

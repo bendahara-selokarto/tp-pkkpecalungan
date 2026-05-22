@@ -5,11 +5,7 @@ namespace App\Domains\Wilayah\BukuTamu\DTOs;
 class BukuTamuData
 {
     public function __construct(
-        public ?string $title,
         public ?string $visit_date,
-        public ?string $guest_name,
-        public ?string $purpose,
-        public ?string $institution,
         public ?string $description,
         public ?string $file_path,
         public ?string $original_name,
@@ -26,11 +22,7 @@ class BukuTamuData
     public static function fromArray(array $data): self
     {
         return new self(
-            $data['title'] ?? null,
             $data['visit_date'] ?? null,
-            $data['guest_name'] ?? null,
-            $data['purpose'] ?? null,
-            $data['institution'] ?? null,
             $data['description'] ?? null,
             $data['file_path'] ?? null,
             $data['original_name'] ?? null,

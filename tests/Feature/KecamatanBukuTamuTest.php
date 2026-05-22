@@ -51,9 +51,6 @@ class KecamatanBukuTamuTest extends TestCase
 
         BukuTamu::create([
             'visit_date' => '2026-02-26',
-            'guest_name' => 'Dewi Lestari',
-            'purpose' => 'Kunjungan monitoring',
-            'institution' => 'TP PKK Kecamatan A',
             'description' => 'Tamu kecamatan A',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
@@ -62,9 +59,6 @@ class KecamatanBukuTamuTest extends TestCase
 
         BukuTamu::create([
             'visit_date' => '2026-02-26',
-            'guest_name' => 'Fajar Nugroho',
-            'purpose' => 'Koordinasi kecamatan',
-            'institution' => 'TP PKK Kecamatan B',
             'description' => 'Tamu kecamatan B',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanB->id,
@@ -77,34 +71,31 @@ class KecamatanBukuTamuTest extends TestCase
                 $page
                     ->component('Kecamatan/BukuTamu/Index')
                     ->has('items.data', 1)
-                    ->where('items.data.0.guest_name', 'Dewi Lestari')
+                    ->where('items.data.0.description', 'Tamu kecamatan A')
                     ->where('items.total', 1)
                     ->where('filters.per_page', 10);
             });
 
+        $file = \Illuminate\Http\UploadedFile::fake()->image('visit.jpg');
+
         $this->actingAs($adminKecamatan)->post('/kecamatan/buku-tamu', [
             'visit_date' => '2026-02-27',
-            'guest_name' => 'Slamet Riyadi',
-            'purpose' => 'Verifikasi administrasi',
-            'institution' => 'TP PKK Kecamatan Pecalungan',
             'description' => 'Verifikasi administrasi triwulan.',
+            'file' => $file,
         ])->assertStatus(302);
 
         $created = BukuTamu::query()
-            ->where('guest_name', 'Slamet Riyadi')
+            ->where('description', 'Verifikasi administrasi triwulan.')
             ->firstOrFail();
 
         $this->actingAs($adminKecamatan)->put(route('kecamatan.buku-tamu.update', $created->id), [
             'visit_date' => '2026-02-27',
-            'guest_name' => 'Slamet Riyadi Final',
-            'purpose' => 'Verifikasi administrasi lanjutan',
-            'institution' => 'TP PKK Kecamatan Pecalungan',
             'description' => 'Verifikasi administrasi lanjutan.',
         ])->assertStatus(302);
 
         $this->assertDatabaseHas('buku_tamus', [
             'id' => $created->id,
-            'guest_name' => 'Slamet Riyadi Final',
+            'description' => 'Verifikasi administrasi lanjutan.',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
@@ -128,9 +119,6 @@ class KecamatanBukuTamuTest extends TestCase
 
         $bukuTamu = BukuTamu::create([
             'visit_date' => '2025-02-26',
-            'guest_name' => 'Tamu Tahun Lama',
-            'purpose' => 'Arsip',
-            'institution' => 'TP PKK Kecamatan Pecalungan',
             'description' => 'Tidak boleh diakses',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
