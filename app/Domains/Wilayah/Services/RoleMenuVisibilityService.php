@@ -35,6 +35,7 @@ class RoleMenuVisibilityService
             'agenda-surat',
             'buku-notulen-rapat',
             'buku-agenda-sk',
+            'buku-konsultasi',
             'buku-ekspedisi',
             'inventaris',
             'activities',
@@ -54,6 +55,7 @@ class RoleMenuVisibilityService
             'agenda-surat',
             'buku-notulen-rapat',
             'buku-agenda-sk',
+            'buku-konsultasi',
             'buku-ekspedisi',
             'inventaris',
             'activities',
@@ -137,6 +139,7 @@ class RoleMenuVisibilityService
             'kader-khusus',
             'foto-kegiatan',
             'data-industri-rumah-tangga',
+            'buku-konsultasi',
             'data-kegiatan-pkk-pokja-iii',
         ],
         'pokja-iv' => [

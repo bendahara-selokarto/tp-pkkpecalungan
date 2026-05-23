@@ -32,4 +32,31 @@ class ListScopedBukuKonsultasiesUseCase
 
         return $this->bukuKonsultasiRepository->listScoped($level, $areaId, $tahunAnggaran, $perPage, $group);
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Domains\Wilayah\BukuKonsultasi\Models\BukuKonsultasi>
+     */
+    public function executeAll(string $level): \Illuminate\Database\Eloquent\Collection
+    {
+        $user = auth()->user();
+        $areaId = $this->userAreaContextService->requireUserAreaId($user);
+        $tahunAnggaran = $this->activeBudgetYearContextService->resolveForUser($user);
+
+        $group = null;
+        if ($this->bukuKonsultasiScopeService->requiresGroupFilter($user)) {
+            $groups = $this->bukuKonsultasiScopeService->resolveGroupsForUser($user);
+            $group = $groups[0] ?? null;
+        }
+
+        $query = \App\Domains\Wilayah\BukuKonsultasi\Models\BukuKonsultasi::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran);
+
+        if ($group !== null) {
+            $query->where('group', $group);
+        }
+
+        return $query->orderBy('activity_date')->get();
+    }
 }
