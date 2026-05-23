@@ -124,6 +124,8 @@ use App\Domains\Wilayah\LaporanTahunanPkk\Controllers\KecamatanLaporanTahunanPkk
 use App\Domains\Wilayah\LaporanTahunanPkk\Controllers\LaporanTahunanPkkPrintController;
 use App\Domains\Wilayah\FotoKegiatan\Controllers\DesaFotoKegiatanController;
 use App\Domains\Wilayah\FotoKegiatan\Controllers\KecamatanFotoKegiatanController;
+use App\Domains\Wilayah\BukuKonsultasi\Controllers\DesaBukuKonsultasiController;
+use App\Domains\Wilayah\BukuKonsultasi\Controllers\KecamatanBukuKonsultasiController;
 
 
 Route::get('/', function () {
@@ -195,6 +197,7 @@ Route::prefix('desa')
 
         Route::resource('activities', DesaActivityController::class);
         Route::resource('foto-kegiatan', DesaFotoKegiatanController::class);
+        Route::resource('buku-konsultasi', DesaBukuKonsultasiController::class);
         Route::get('activities/{id}/attachments/{type}', [DesaActivityController::class, 'attachment'])
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');
@@ -305,6 +308,7 @@ Route::prefix('kecamatan')
 
         Route::resource('activities', KecamatanActivityController::class);
         Route::resource('foto-kegiatan', KecamatanFotoKegiatanController::class);
+        Route::resource('buku-konsultasi', KecamatanBukuKonsultasiController::class);
         Route::get('activities/{id}/attachments/{type}', [KecamatanActivityController::class, 'attachment'])
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');

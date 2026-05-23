@@ -136,6 +136,10 @@ use App\Domains\Wilayah\FotoKegiatan\Models\FotoKegiatan;
 use App\Domains\Wilayah\FotoKegiatan\Repositories\FotoKegiatanRepository;
 use App\Domains\Wilayah\FotoKegiatan\Repositories\FotoKegiatanRepositoryInterface;
 use App\Policies\FotoKegiatanPolicy;
+use App\Domains\Wilayah\BukuKonsultasi\Repositories\BukuKonsultasiRepository;
+use App\Domains\Wilayah\BukuKonsultasi\Repositories\BukuKonsultasiRepositoryInterface;
+use App\Domains\Wilayah\BukuKonsultasi\Models\BukuKonsultasi;
+use App\Policies\BukuKonsultasiPolicy;
 use App\Domains\Wilayah\Dashboard\Observers\InvalidateDashboardDocumentCacheObserver;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
@@ -432,6 +436,11 @@ class AppServiceProvider extends ServiceProvider
             FotoKegiatanRepositoryInterface::class,
             FotoKegiatanRepository::class
         );
+
+        $this->app->bind(
+            BukuKonsultasiRepositoryInterface::class,
+            BukuKonsultasiRepository::class
+        );
     }
 
     /**
@@ -481,6 +490,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(LaporanTahunanPkkReport::class, LaporanTahunanPkkPolicy::class);
         Gate::policy(ArsipDocument::class, ArsipDocumentPolicy::class);
         Gate::policy(FotoKegiatan::class, FotoKegiatanPolicy::class);
+        Gate::policy(BukuKonsultasi::class, BukuKonsultasiPolicy::class);
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole(RoleScopeMatrix::ROLE_SUPER_ADMIN) ? true : null;
@@ -582,6 +592,7 @@ class AppServiceProvider extends ServiceProvider
             PraKoperasiUp2k::class,
             WarungPkk::class,
             FotoKegiatan::class,
+            BukuKonsultasi::class,
         ];
     }
 }

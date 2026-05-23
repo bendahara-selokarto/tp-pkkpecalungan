@@ -5,7 +5,7 @@ const PRINT_SOURCE_OVERRIDES = {
   'anggota-tim-penggerak-kader': 'anggota-tim-penggerak',
 }
 
-const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'buku-ekspedisi', 'agenda-surat', 'buku-tamu', 'buku-agenda-sk', 'laporan-tahunan-pkk', 'data-umum-pkk', 'data-umum-pkk-kecamatan', 'foto-kegiatan'])
+const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'buku-ekspedisi', 'agenda-surat', 'buku-tamu', 'buku-agenda-sk', 'buku-konsultasi', 'laporan-tahunan-pkk', 'data-umum-pkk', 'data-umum-pkk-kecamatan', 'foto-kegiatan'])
 const bookGroupContextByMenuGroup = {
   'sekretaris-wajib': 'sekretaris-tpk',
   'sekretaris-bantu': 'sekretaris-tpk',
@@ -205,7 +205,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/buku-daftar-hadir`, label: 'Daftar Hadir' },
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
-        { href: '#', label: 'Buku Konsultasi', uiVisibility: 'disabled' },
+        { href: `/${scope}/buku-konsultasi`, label: 'Buku Konsultasi' },
         { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
         { href: `/${scope}/buku-ekspedisi`, label: 'Buku Ekspedisi' },
         { href: '/dashboard/charts/report/pdf', label: 'Buku Grafik', external: true },
@@ -281,7 +281,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: '#', label: 'Buku Kader Khusus Pokja III', uiVisibility: 'disabled' },
         { href: '#', label: 'Buku Rumah Sehat and Tidak Sehat', uiVisibility: 'disabled' },
         { href: `/${scope}/data-industri-rumah-tangga`, label: 'Buku Bantu Jumlah Industri Rumah Tangga' },
-        { href: '#', label: 'Buku Konsultasi', uiVisibility: 'disabled' },
+        { href: `/${scope}/buku-konsultasi`, label: 'Buku Konsultasi' },
         { href: '#', label: 'Buku Kas Pokja', uiVisibility: 'disabled' },
         { href: '#', label: 'Buku Susunan Pengurus Pokja', uiVisibility: 'disabled' },
         { href: '#', label: 'Buku Grafik', uiVisibility: 'disabled' },
