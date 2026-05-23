@@ -76,7 +76,7 @@ const formatDateForDisplay = (dateString) => {
 
       <div class="pt-6 flex items-center justify-between border-t border-gray-100 dark:border-slate-800">
         <Link
-          :href="route('kecamatan.buku-agenda-sk.index')"
+          href="/kecamatan/buku-agenda-sk"
           class="text-sm font-medium text-gray-600 hover:text-gray-900 dark:text-slate-400 dark:hover:text-slate-200"
         >
           &larr; Kembali ke Daftar
@@ -84,7 +84,7 @@ const formatDateForDisplay = (dateString) => {
 
         <Link
           v-if="canUpdate"
-          :href="route('kecamatan.buku-agenda-sk.edit', props.item.id)"
+          :href="`/kecamatan/buku-agenda-sk/${props.item.id}/edit`"
           class="inline-flex rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
         >
           Edit

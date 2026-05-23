@@ -113,7 +113,7 @@ const submit = () => {
             />
           </BaseButtons>
           <Link
-            :href="route('kecamatan.buku-agenda-sk.index')"
+            href="/kecamatan/buku-agenda-sk"
             class="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800"
           >
             Batal
