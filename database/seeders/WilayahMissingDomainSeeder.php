@@ -58,6 +58,7 @@ class WilayahMissingDomainSeeder extends Seeder
         $faker = FakerFactory::create('id_ID');
 
         foreach ($contexts as $context) {
+            $this->seedBukuAgendaSk($faker, $context);
             $this->seedAnggotaPokja($faker, $context);
             $this->seedBkl($faker, $context);
             $this->seedBkr($faker, $context);
@@ -197,6 +198,7 @@ class WilayahMissingDomainSeeder extends Seeder
     private function purgeExistingData(array $areaIds): void
     {
         $tables = [
+            'buku_agenda_sks',
             'pilot_project_naskah_pelaporan_attachments',
             'pilot_project_keluarga_sehat_values',
             'pilot_project_naskah_pelaporan_reports',
@@ -823,5 +825,42 @@ class WilayahMissingDomainSeeder extends Seeder
         $sampleB = random_int($min, $max);
 
         return (int) round(($sampleA + $sampleB) / 2);
+    }
+
+    private function seedBukuAgendaSk(\Faker\Generator $faker, array $context): void
+    {
+        $count = $this->countFor($context['level'], 4, 10, 6, 12);
+        $rows = [];
+        $perihalList = [
+            'Pembentukan Panitia Lomba',
+            'Penunjukan Kader Posyandu',
+            'Pelaksanaan Rapat Rutin',
+            'Pemberian Bantuan Sembako',
+            'Penyusunan Rencana Kerja',
+            'Penugasan Pelatihan Kader',
+        ];
+
+        for ($i = 1; $i <= $count; $i++) {
+            $rows[] = [
+                'nomor_sk' => sprintf('%03d/SK-PKK/%s/%d', $i, strtoupper($context['level']), $this->defaultBudgetYear()),
+                'tanggal_sk' => $faker->dateTimeBetween('-5 months', 'now')->format('Y-m-d'),
+                'kepada' => $faker->randomElement(['Ketua TP PKK', 'Kader PKK', 'Sekretaris', 'Bendahara']),
+                'perihal' => $faker->randomElement($perihalList),
+                'tembusan' => $faker->boolean(60) ? "1. Kepala Desa\n2. Camat" : null,
+                'file_path' => null,
+                'original_name' => null,
+                'mime_type' => null,
+                'extension' => null,
+                'size_bytes' => 0,
+                'level' => $context['level'],
+                'area_id' => $context['area_id'],
+                'created_by' => $context['creator_id'],
+                'tahun_anggaran' => $this->defaultBudgetYear(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        DB::table('buku_agenda_sks')->insert($rows);
     }
 }

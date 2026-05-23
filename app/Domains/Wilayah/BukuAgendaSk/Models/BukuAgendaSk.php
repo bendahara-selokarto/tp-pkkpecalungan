@@ -27,6 +27,8 @@ class BukuAgendaSk extends Model
         'tahun_anggaran',
     ];
 
+    protected $appends = ['file_url'];
+
     protected function casts(): array
     {
         return [
@@ -34,6 +36,13 @@ class BukuAgendaSk extends Model
             'tahun_anggaran' => 'integer',
             'size_bytes' => 'integer',
         ];
+    }
+
+    public function getFileUrlAttribute(): ?string
+    {
+        return $this->file_path 
+            ? \Illuminate\Support\Facades\Storage::disk('public')->url($this->file_path)
+            : null;
     }
 
     protected static function booted(): void

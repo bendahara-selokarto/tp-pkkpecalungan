@@ -3,6 +3,7 @@
 namespace App\Domains\Wilayah\BukuAgendaSk\Controllers;
 
 use App\Domains\Wilayah\BukuAgendaSk\Actions\CreateScopedBukuAgendaSkAction;
+use App\Domains\Wilayah\BukuAgendaSk\Actions\DeleteBukuAgendaSkAction;
 use App\Domains\Wilayah\BukuAgendaSk\Actions\UpdateBukuAgendaSkAction;
 use App\Domains\Wilayah\BukuAgendaSk\Models\BukuAgendaSk;
 use App\Domains\Wilayah\BukuAgendaSk\Requests\ListBukuAgendaSkRequest;
@@ -22,7 +23,8 @@ class DesaBukuAgendaSkController extends Controller
         private readonly ListScopedBukuAgendaSkUseCase $listScopedBukuAgendaSkUseCase,
         private readonly GetScopedBukuAgendaSkUseCase $getScopedBukuAgendaSkUseCase,
         private readonly CreateScopedBukuAgendaSkAction $createScopedBukuAgendaSkAction,
-        private readonly UpdateBukuAgendaSkAction $updateBukuAgendaSkAction
+        private readonly UpdateBukuAgendaSkAction $updateBukuAgendaSkAction,
+        private readonly DeleteBukuAgendaSkAction $deleteBukuAgendaSkAction
     ) {
     }
 
@@ -125,11 +127,7 @@ class DesaBukuAgendaSkController extends Controller
         $item = $this->getScopedBukuAgendaSkUseCase->execute($id, 'desa');
         $this->authorize('delete', $item);
 
-        if ($item->file_path) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($item->file_path);
-        }
-
-        $item->delete();
+        $this->deleteBukuAgendaSkAction->execute($item);
 
         return redirect()
             ->route('desa.buku-agenda-sk.index')

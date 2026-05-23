@@ -27,11 +27,11 @@ const isDeleteModalActive = ref(false)
 const itemToDelete = ref(null)
 const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data agenda SK ini?'
 
-const permissions = computed(() => page.props.auth?.user?.permissions ?? [])
-const canCreate = computed(() => permissions.value.includes('buku_agenda_sk.create'))
-const canUpdate = computed(() => permissions.value.includes('buku_agenda_sk.update'))
-const canDelete = computed(() => permissions.value.includes('buku_agenda_sk.delete'))
-const canPrint = computed(() => permissions.value.includes('buku_agenda_sk.print'))
+const moduleMode = computed(() => page.props.auth?.user?.moduleModes?.['buku-agenda-sk'])
+const canCreate = computed(() => moduleMode.value === 'read-write')
+const canUpdate = computed(() => moduleMode.value === 'read-write')
+const canDelete = computed(() => moduleMode.value === 'read-write')
+const canPrint = computed(() => !!moduleMode.value)
 
 const formatDate = (dateString) => {
   if (!dateString) return '-'
@@ -66,30 +66,32 @@ const confirmDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiNotebookEditOutline" title="Buku Agenda SK" main>
-      <BaseButtons>
-        <BaseButton
-          v-if="canPrint"
-          :href="route('kecamatan.buku-agenda-sk.report')"
-          :icon="mdiPrinter"
-          label="Cetak PDF"
-          color="info"
-          target="_blank"
-        />
-        <BaseButton
-          v-if="canCreate"
-          :href="route('kecamatan.buku-agenda-sk.create')"
-          :icon="mdiPlus"
-          label="Tambah Data"
-          color="emerald"
-        />
-      </BaseButtons>
-    </SectionTitleLineWithButton>
+    <SectionTitleLineWithButton :icon="mdiNotebookEditOutline" title="Buku Agenda SK" main />
 
     <CardBox class="mb-6" has-table>
-      <div class="p-4 border-b border-gray-100 dark:border-slate-800">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Agenda SK</h3>
-        <p class="text-sm text-gray-500">Tahun Anggaran: {{ filters.tahun_anggaran }}</p>
+      <div class="p-4 border-b border-gray-100 dark:border-slate-800 flex items-center justify-between gap-4">
+        <div>
+          <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Agenda SK</h3>
+          <p class="text-sm text-gray-500">Tahun Anggaran: {{ filters.tahun_anggaran }}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <a
+            href="/kecamatan/buku-agenda-sk/report/pdf"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
+          >
+            <BaseIcon :path="mdiPrinter" size="18" class="mr-2" />
+            Cetak PDF
+          </a>
+          <Link
+            href="/kecamatan/buku-agenda-sk/create"
+            class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+          >
+            <BaseIcon :path="mdiPlus" size="18" class="mr-1" />
+            Tambah Data
+          </Link>
+        </div>
       </div>
 
       <div class="overflow-x-auto">
@@ -134,19 +136,17 @@ const confirmDelete = () => {
                     color="info"
                     :icon="mdiEye"
                     small
-                    :href="route('kecamatan.buku-agenda-sk.show', item.id)"
+                    :href="`/kecamatan/buku-agenda-sk/${item.id}`"
                     title="Detail"
                   />
                   <BaseButton
-                    v-if="canUpdate"
                     color="warning"
                     :icon="mdiPencil"
                     small
-                    :href="route('kecamatan.buku-agenda-sk.edit', item.id)"
+                    :href="`/kecamatan/buku-agenda-sk/${item.id}/edit`"
                     title="Edit"
                   />
                   <BaseButton
-                    v-if="canDelete"
                     color="danger"
                     :icon="mdiTrashCan"
                     small

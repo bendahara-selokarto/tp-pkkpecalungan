@@ -17,8 +17,8 @@ const props = defineProps({
 })
 
 const page = usePage()
-const permissions = computed(() => page.props.auth?.user?.permissions ?? [])
-const canUpdate = computed(() => permissions.value.includes('buku_agenda_sk.update'))
+const moduleMode = computed(() => page.props.auth?.user?.moduleModes?.['buku-agenda-sk'])
+const canUpdate = computed(() => moduleMode.value === 'read-write')
 
 const formatDateForDisplay = (dateString) => {
   if (!dateString) return '-'
