@@ -5,7 +5,7 @@ const PRINT_SOURCE_OVERRIDES = {
   'anggota-tim-penggerak-kader': 'anggota-tim-penggerak',
 }
 
-const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'buku-ekspedisi', 'agenda-surat', 'buku-tamu', 'buku-agenda-sk', 'laporan-tahunan-pkk', 'data-umum-pkk', 'data-umum-pkk-kecamatan'])
+const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'buku-ekspedisi', 'agenda-surat', 'buku-tamu', 'buku-agenda-sk', 'laporan-tahunan-pkk', 'data-umum-pkk', 'data-umum-pkk-kecamatan', 'foto-kegiatan'])
 const bookGroupContextByMenuGroup = {
   'sekretaris-wajib': 'sekretaris-tpk',
   'sekretaris-bantu': 'sekretaris-tpk',
@@ -256,7 +256,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
         { href: `/${scope}/pelatihan-kader-pokja-ii`, label: 'Buku Rekap Khusus Kader Pokja II' },
         { href: '#', label: 'Buku Grafik', uiVisibility: 'disabled' },
-        { href: '#', label: 'Unggah Foto Kegiatan', uiVisibility: 'disabled' },
+        { href: `/${scope}/foto-kegiatan`, label: 'Unggah Foto Kegiatan' },
         { href: `/${scope}/pra-koperasi-up2k`, label: 'Buku Rekap Kelompok UP2K' },
         { href: `/${scope}/taman-bacaan`, label: 'Data Taman Bacaan/Perpustakaan' },
         { href: `/${scope}/koperasi`, label: 'Data Koperasi' },
@@ -285,8 +285,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: '#', label: 'Buku Kas Pokja', uiVisibility: 'disabled' },
         { href: '#', label: 'Buku Susunan Pengurus Pokja', uiVisibility: 'disabled' },
         { href: '#', label: 'Buku Grafik', uiVisibility: 'disabled' },
-        { href: '#', label: 'Kliping', uiVisibility: 'disabled' },
-        { href: '#', label: 'Unggah File Foto Kegiatan', uiVisibility: 'disabled' },
+        { href: `/${scope}/foto-kegiatan`, label: 'Unggah Foto Kegiatan' },
         { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Buku Data Kegiatan' },
       ],
     },
@@ -314,7 +313,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/posyandu`, label: 'Buku Kegiatan Posyandu' },
         { href: '#', label: 'Data Pengunjung Petugas Posyandu', uiVisibility: 'disabled' },
         { href: '#', label: 'Buku Grafik', uiVisibility: 'disabled' },
-        { href: '#', label: 'Upload Foto Kegiatan', uiVisibility: 'disabled' },
+        { href: `/${scope}/foto-kegiatan`, label: 'Unggah Foto Kegiatan' },
         { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project' },
         { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pilot Project Keluarga Sehat' },
         { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Buku Data Kegiatan' },

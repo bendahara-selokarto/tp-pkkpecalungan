@@ -132,6 +132,10 @@ use App\Domains\Wilayah\BukuEkspedisi\Models\BukuEkspedisi;
 use App\Domains\Wilayah\BukuEkspedisi\Repositories\BukuEkspedisiRepository;
 use App\Domains\Wilayah\BukuEkspedisi\Repositories\BukuEkspedisiRepositoryInterface;
 use App\Policies\BukuEkspedisiPolicy;
+use App\Domains\Wilayah\FotoKegiatan\Models\FotoKegiatan;
+use App\Domains\Wilayah\FotoKegiatan\Repositories\FotoKegiatanRepository;
+use App\Domains\Wilayah\FotoKegiatan\Repositories\FotoKegiatanRepositoryInterface;
+use App\Policies\FotoKegiatanPolicy;
 use App\Domains\Wilayah\Dashboard\Observers\InvalidateDashboardDocumentCacheObserver;
 use App\Models\User;
 use App\Policies\ActivityPolicy;
@@ -423,6 +427,11 @@ class AppServiceProvider extends ServiceProvider
             ModuleAccessOverrideRepositoryInterface::class,
             ModuleAccessOverrideRepository::class
         );
+
+        $this->app->bind(
+            FotoKegiatanRepositoryInterface::class,
+            FotoKegiatanRepository::class
+        );
     }
 
     /**
@@ -471,6 +480,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(PilotProjectNaskahPelaporanReport::class, PilotProjectNaskahPelaporanPolicy::class);
         Gate::policy(LaporanTahunanPkkReport::class, LaporanTahunanPkkPolicy::class);
         Gate::policy(ArsipDocument::class, ArsipDocumentPolicy::class);
+        Gate::policy(FotoKegiatan::class, FotoKegiatanPolicy::class);
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole(RoleScopeMatrix::ROLE_SUPER_ADMIN) ? true : null;
@@ -571,6 +581,7 @@ class AppServiceProvider extends ServiceProvider
             PelatihanKaderPokjaIi::class,
             PraKoperasiUp2k::class,
             WarungPkk::class,
+            FotoKegiatan::class,
         ];
     }
 }

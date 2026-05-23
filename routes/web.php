@@ -122,6 +122,8 @@ use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Controllers\PilotProjectNask
 use App\Domains\Wilayah\LaporanTahunanPkk\Controllers\DesaLaporanTahunanPkkController;
 use App\Domains\Wilayah\LaporanTahunanPkk\Controllers\KecamatanLaporanTahunanPkkController;
 use App\Domains\Wilayah\LaporanTahunanPkk\Controllers\LaporanTahunanPkkPrintController;
+use App\Domains\Wilayah\FotoKegiatan\Controllers\DesaFotoKegiatanController;
+use App\Domains\Wilayah\FotoKegiatan\Controllers\KecamatanFotoKegiatanController;
 
 
 Route::get('/', function () {
@@ -192,6 +194,7 @@ Route::prefix('desa')
     ->group(function () {
 
         Route::resource('activities', DesaActivityController::class);
+        Route::resource('foto-kegiatan', DesaFotoKegiatanController::class);
         Route::get('activities/{id}/attachments/{type}', [DesaActivityController::class, 'attachment'])
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');
@@ -301,6 +304,7 @@ Route::prefix('kecamatan')
     ->group(function () {
 
         Route::resource('activities', KecamatanActivityController::class);
+        Route::resource('foto-kegiatan', KecamatanFotoKegiatanController::class);
         Route::get('activities/{id}/attachments/{type}', [KecamatanActivityController::class, 'attachment'])
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');
