@@ -59,25 +59,30 @@ class BuildDataUmumChartPayloadUseCase
                 'title' => 'Jumlah Jiwa',
                 'labels' => $labels,
                 'series' => [
-                    'Laki-laki' => $data->map(fn ($item) => (int) ($item['jumlah_jiwa_l'] ?? 0))->all(),
-                    'Perempuan' => $data->map(fn ($item) => (int) ($item['jumlah_jiwa_p'] ?? 0))->all(),
+                    'Laki-laki (L)' => $data->map(fn ($item) => (int) ($item['jumlah_jiwa_l'] ?? 0))->all(),
+                    'Perempuan (P)' => $data->map(fn ($item) => (int) ($item['jumlah_jiwa_p'] ?? 0))->all(),
                 ],
             ],
             'kader' => [
                 'title' => 'Jumlah Kader',
                 'labels' => $labels,
                 'series' => [
-                    'Anggota TP PKK' => $data->map(fn ($item) => (int) (($item['jumlah_kader_anggota_tp_pkk_l'] ?? 0) + ($item['jumlah_kader_anggota_tp_pkk_p'] ?? 0)))->all(),
-                    'Kader Umum' => $data->map(fn ($item) => (int) (($item['jumlah_kader_umum_l'] ?? 0) + ($item['jumlah_kader_umum_p'] ?? 0)))->all(),
-                    'Kader Khusus' => $data->map(fn ($item) => (int) (($item['jumlah_kader_khusus_l'] ?? 0) + ($item['jumlah_kader_khusus_p'] ?? 0)))->all(),
+                    'Anggota TP PKK (L)' => $data->map(fn ($item) => (int) ($item['jumlah_kader_anggota_tp_pkk_l'] ?? 0))->all(),
+                    'Anggota TP PKK (P)' => $data->map(fn ($item) => (int) ($item['jumlah_kader_anggota_tp_pkk_p'] ?? 0))->all(),
+                    'Kader Umum (L)' => $data->map(fn ($item) => (int) ($item['jumlah_kader_umum_l'] ?? 0))->all(),
+                    'Kader Umum (P)' => $data->map(fn ($item) => (int) ($item['jumlah_kader_umum_p'] ?? 0))->all(),
+                    'Kader Khusus (L)' => $data->map(fn ($item) => (int) ($item['jumlah_kader_khusus_l'] ?? 0))->all(),
+                    'Kader Khusus (P)' => $data->map(fn ($item) => (int) ($item['jumlah_kader_khusus_p'] ?? 0))->all(),
                 ],
             ],
             'sekretariat' => [
                 'title' => 'Tenaga Sekretariat',
                 'labels' => $labels,
                 'series' => [
-                    'Honorer' => $data->map(fn ($item) => (int) (($item['jumlah_tenaga_sekretariat_honorer_l'] ?? 0) + ($item['jumlah_tenaga_sekretariat_honorer_p'] ?? 0)))->all(),
-                    'Bantuan' => $data->map(fn ($item) => (int) (($item['jumlah_tenaga_sekretariat_bantuan_l'] ?? 0) + ($item['jumlah_tenaga_sekretariat_bantuan_p'] ?? 0)))->all(),
+                    'Honorer (L)' => $data->map(fn ($item) => (int) ($item['jumlah_tenaga_sekretariat_honorer_l'] ?? 0))->all(),
+                    'Honorer (P)' => $data->map(fn ($item) => (int) ($item['jumlah_tenaga_sekretariat_honorer_p'] ?? 0))->all(),
+                    'Bantuan (L)' => $data->map(fn ($item) => (int) ($item['jumlah_tenaga_sekretariat_bantuan_l'] ?? 0))->all(),
+                    'Bantuan (P)' => $data->map(fn ($item) => (int) ($item['jumlah_tenaga_sekretariat_bantuan_p'] ?? 0))->all(),
                 ],
             ],
         ];

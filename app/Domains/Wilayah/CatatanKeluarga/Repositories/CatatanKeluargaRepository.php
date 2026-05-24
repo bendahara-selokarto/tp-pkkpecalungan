@@ -37,6 +37,16 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
      */
     private array $budgetYearColumnCache = [];
 
+    /**
+     * @var array<int, string>
+     */
+    private array $areaLevelCache = [];
+
+    /**
+     * @var array<int, array<int, int>>
+     */
+    private array $childAreaIdsCache = [];
+
     private ?int $resolvedBudgetYear = null;
 
     public function __construct(
@@ -1944,9 +1954,36 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
      */
     private function scopedModelQuery(string $modelClass, string $level, int $areaId): Builder
     {
-        return $this->applyBudgetYearFilter($modelClass::query())
-            ->where('level', $level)
-            ->where('area_id', $areaId);
+        $query = $this->applyBudgetYearFilter($modelClass::query())
+            ->where('level', $level);
+
+        if ($level === 'desa' && $this->getAreaLevel($areaId) === 'kecamatan') {
+            return $query->whereIn('area_id', $this->getChildAreaIds($areaId));
+        }
+
+        return $query->where('area_id', $areaId);
+    }
+
+    private function getAreaLevel(int $areaId): ?string
+    {
+        if (! isset($this->areaLevelCache[$areaId])) {
+            $this->areaLevelCache[$areaId] = Area::query()->whereKey($areaId)->value('level');
+        }
+
+        return $this->areaLevelCache[$areaId];
+    }
+
+    private function getChildAreaIds(int $parentAreaId): array
+    {
+        if (! isset($this->childAreaIdsCache[$parentAreaId])) {
+            $this->childAreaIdsCache[$parentAreaId] = Area::query()
+                ->where('parent_id', $parentAreaId)
+                ->where('level', 'desa')
+                ->pluck('id')
+                ->toArray();
+        }
+
+        return $this->childAreaIdsCache[$parentAreaId];
     }
 
     private function applyBudgetYearFilter(Builder $query): Builder

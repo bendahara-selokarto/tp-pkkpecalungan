@@ -49,3 +49,4 @@ docs/referensi/_local/*
 /test-results/
 /public/chart-pdf-examples/output/*.pdf
 /buku_*.pdf
+/database/seeders/BukuGrafikDemoSeeder.php

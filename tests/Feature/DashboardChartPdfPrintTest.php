@@ -76,16 +76,7 @@ class DashboardChartPdfPrintTest extends TestCase
                 'activity' => ['total' => 1, 'this_month' => 1],
                 'documents' => ['total_buku_tracked' => 19, 'buku_terisi' => 4, 'buku_belum_terisi' => 15],
             ],
-            'charts' => [
-                'activity' => [
-                    'monthly' => ['labels' => ['Jan 2026'], 'values' => [1]],
-                    'level' => ['labels' => ['Desa', 'Kecamatan'], 'values' => [1, 0]],
-                ],
-                'documents' => [
-                    'coverage_per_buku' => ['labels' => ['activities'], 'values' => [1]],
-                    'coverage_per_lampiran' => ['labels' => ['4.13'], 'values' => [1]],
-                ],
-            ],
+            'chartSvgs' => [],
             'filters' => [
                 'mode' => 'all',
                 'level' => 'all',
@@ -97,6 +88,6 @@ class DashboardChartPdfPrintTest extends TestCase
             'printedAt' => now(),
         ])->render();
 
-        $this->assertStringContainsString('Tahun Anggaran: 2026', $html);
+        $this->assertStringContainsString('Tahun Anggaran:</strong> 2026', $html);
     }
 }

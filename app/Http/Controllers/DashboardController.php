@@ -8,6 +8,7 @@ use App\Domains\Wilayah\Dashboard\UseCases\BuildDashboardDocumentCoverageUseCase
 use App\Domains\Wilayah\Dashboard\UseCases\BuildRoleAwareDashboardBlocksUseCase;
 use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Services\DashboardActivityChartService;
+use App\Support\Pdf\AcademicChartPdfService;
 use App\Support\Pdf\PdfViewFactory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -25,7 +26,8 @@ class DashboardController extends Controller
         private readonly BuildDashboardBlockDetailWidgetUseCase $buildDashboardBlockDetailWidgetUseCase,
         private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
         private readonly PdfViewFactory $pdfViewFactory,
-        private readonly BuildDataUmumChartPayloadUseCase $buildDataUmumChartPayloadUseCase
+        private readonly BuildDataUmumChartPayloadUseCase $buildDataUmumChartPayloadUseCase,
+        private readonly AcademicChartPdfService $academicChartPdfService
     ) {}
 
     public function __invoke(Request $request): Response|RedirectResponse
@@ -45,12 +47,22 @@ class DashboardController extends Controller
 
         $dashboardPayload = $this->buildDashboardChartPayload($request);
         $user = auth()->user()?->loadMissing('area');
-        $dataUmumCharts = $this->buildDataUmumChartPayloadUseCase->execute($user);
+        $dataUmumPayload = $this->buildDataUmumChartPayloadUseCase->execute($user);
+        
+        $chartSvgs = [];
+
+        // 1. Data Umum Charts (Primary implementation target)
+        foreach ($dataUmumPayload as $key => $chart) {
+            $chartSvgs[] = $this->academicChartPdfService->generateVerticalBarChartBase64(
+                $chart['title'],
+                $chart['labels'],
+                $chart['series']
+            );
+        }
 
         $pdf = $this->pdfViewFactory->loadView('pdf.dashboard_chart_report', [
             'stats' => $dashboardPayload['stats'],
-            'charts' => $dashboardPayload['charts'],
-            'dataUmumCharts' => $dataUmumCharts,
+            'chartSvgs' => $chartSvgs,
             'filters' => $dashboardPayload['context'],
             'printedBy' => $user,
             'printedAt' => now(),
