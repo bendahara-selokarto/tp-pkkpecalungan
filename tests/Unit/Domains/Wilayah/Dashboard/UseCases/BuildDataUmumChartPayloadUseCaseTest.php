@@ -53,9 +53,9 @@ class BuildDataUmumChartPayloadUseCaseTest extends TestCase
         $this->assertEquals(['Desa A'], $result['kelompok']['labels']);
         $this->assertEquals([10], $result['kelompok']['series']['Dasa Wisma']);
         $this->assertEquals([2], $result['kelompok']['series']['Dusun/Lingkungan']);
-        $this->assertEquals([50], $result['jiwa']['series']['Laki-laki']);
-        $this->assertEquals([2], $result['kader']['series']['Anggota TP PKK']);
-        $this->assertEquals([2], $result['sekretariat']['series']['Honorer']);
+        $this->assertEquals([50], $result['jiwa']['series']['Laki-laki (L)']);
+        $this->assertEquals([1], $result['kader']['series']['Anggota TP PKK (P)']);
+        $this->assertEquals([1], $result['sekretariat']['series']['Honorer (L)']);
     }
 
     public function test_execute_returns_payload_for_desa_user()
@@ -73,8 +73,8 @@ class BuildDataUmumChartPayloadUseCaseTest extends TestCase
                 'jumlah_kk' => 20,
                 'jumlah_jiwa_l' => 20,
                 'jumlah_jiwa_p' => 20,
-                'jumlah_kader_anggota_tp_pkk_l' => 1,
-                'jumlah_kader_anggota_tp_pkk_p' => 0,
+                'jumlah_kader_anggota_tp_pkk_l' => 0,
+                'jumlah_kader_anggota_tp_pkk_p' => 1,
                 'jumlah_kader_umum_l' => 2,
                 'jumlah_kader_umum_p' => 2,
                 'jumlah_kader_khusus_l' => 1,
@@ -98,7 +98,7 @@ class BuildDataUmumChartPayloadUseCaseTest extends TestCase
         $this->assertEquals(['Dusun 1'], $result['kelompok']['labels']);
         $this->assertEquals([5], $result['kelompok']['series']['Dasa Wisma']);
         $this->assertArrayNotHasKey('Dusun/Lingkungan', $result['kelompok']['series']);
-        $this->assertEquals([20], $result['jiwa']['series']['Perempuan']);
-        $this->assertEquals([1], $result['kader']['series']['Anggota TP PKK']);
+        $this->assertEquals([20], $result['jiwa']['series']['Perempuan (P)']);
+        $this->assertEquals([1], $result['kader']['series']['Anggota TP PKK (P)']);
     }
 }

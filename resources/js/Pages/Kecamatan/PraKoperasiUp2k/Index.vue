@@ -96,12 +96,22 @@ const tingkatLabel = (value) => {
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Pra Koperasi/UP2K</h3>
-        <Link
-          href="/kecamatan/pra-koperasi-up2k/create"
-          class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-        >
-          + Tambah
-        </Link>
+        <div class="flex items-center gap-2">
+          <a
+            href="/kecamatan/pra-koperasi-up2k/report/pdf/chart"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
+          >
+            Cetak Grafik
+          </a>
+          <Link
+            href="/kecamatan/pra-koperasi-up2k/create"
+            class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
+          >
+            + Tambah
+          </Link>
+        </div>
       </div>
 
       <div class="mb-3 flex justify-end">

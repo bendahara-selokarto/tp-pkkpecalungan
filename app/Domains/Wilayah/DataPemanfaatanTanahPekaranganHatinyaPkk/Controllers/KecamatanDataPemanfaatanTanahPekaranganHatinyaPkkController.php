@@ -11,6 +11,9 @@ use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Requests\StoreD
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\Requests\UpdateDataPemanfaatanTanahPekaranganHatinyaPkkRequest;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\UseCases\GetScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase;
 use App\Domains\Wilayah\DataPemanfaatanTanahPekaranganHatinyaPkk\UseCases\ListScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase;
+use App\Domains\Wilayah\Dashboard\UseCases\BuildPokjaGeneralChartPayloadUseCase;
+use App\Support\Pdf\AcademicChartPdfService;
+use App\Support\Pdf\PdfViewFactory;
 use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -24,9 +27,38 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
         private readonly ListScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase $listScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase,
         private readonly GetScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase $getScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase,
         private readonly CreateScopedDataPemanfaatanTanahPekaranganHatinyaPkkAction $createScopedDataPemanfaatanTanahPekaranganHatinyaPkkAction,
-        private readonly UpdateDataPemanfaatanTanahPekaranganHatinyaPkkAction $updateDataPemanfaatanTanahPekaranganHatinyaPkkAction
+        private readonly UpdateDataPemanfaatanTanahPekaranganHatinyaPkkAction $updateDataPemanfaatanTanahPekaranganHatinyaPkkAction,
+        private readonly AcademicChartPdfService $academicChartPdfService,
+        private readonly BuildPokjaGeneralChartPayloadUseCase $buildPokjaGeneralChartPayloadUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
         $this->middleware('scope.role:kecamatan');
+    }
+
+    public function printChartPdf(): \Symfony\Component\HttpFoundation\Response
+    {
+        $user = auth()->user()?->loadMissing('area');
+        $payload = $this->buildPokjaGeneralChartPayloadUseCase->execute($user, 'pokja-iii');
+        $colorMap = $this->academicChartPdfService->getPokjaColorMap();
+
+        $chartSvgs = [];
+        foreach ($payload as $chart) {
+            $chartSvgs[] = $this->academicChartPdfService->generateVerticalBarChartBase64(
+                $chart['title'],
+                $chart['labels'],
+                $chart['series'],
+                $colorMap,
+                'pokja-iii'
+            );
+        }
+
+        $pdf = $this->pdfViewFactory->loadView('pdf.pokja_chart_report', [
+            'pokjaName' => 'Pokja III',
+            'chartSvgs' => $chartSvgs,
+            'printedBy' => $user,
+        ]);
+
+        return $pdf->stream('laporan-grafik-pokja-iii.pdf');
     }
 
     public function index(ListDataPemanfaatanTanahPekaranganHatinyaPkkRequest $request): Response

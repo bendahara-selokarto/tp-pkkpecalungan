@@ -101,13 +101,21 @@ const resolveModuleSlugFromHref = (href) => {
 }
 
 const isModuleAllowedForCurrentUser = (item) => {
-  if (isExternalItem(item)) {
-    return true
+  // If item has a sourceKey (from consolidation), check if user has access to that specific group
+  if (item.sourceKey) {
+    const groupMode = menuGroupModes.value[item.sourceKey] ?? null
+    if (!groupMode) {
+      return false
+    }
+
+    // Hide read-only items to avoid UI confusion (Ownership-Only Visibility)
+    if (groupMode === 'read-only' && !hasRole('super-admin')) {
+      return false
+    }
   }
 
-  // If item has a sourceKey (from consolidation), check if user has access to that specific group
-  if (item.sourceKey && !menuGroupModes.value[item.sourceKey]) {
-    return false
+  if (isExternalItem(item)) {
+    return true
   }
 
   const moduleSlug = resolveModuleSlugFromHref(item.href)
@@ -115,16 +123,6 @@ const isModuleAllowedForCurrentUser = (item) => {
     // If we can't resolve a module slug, default to hidden for safety, 
     // unless it's a known internal non-module path like # or /
     return item.href === '#' || item.href === '/'
-  }
-
-  // Hide read-only Pokja-sourced items to avoid UI confusion: only
-  // surface Pokja responsibilities when user has read-write on that group.
-  const sourceKey = item.sourceKey ?? null
-  if (typeof sourceKey === 'string' && sourceKey.startsWith('pokja-')) {
-    const groupMode = menuGroupModes.value[sourceKey] ?? null
-    if (groupMode === 'read-only') {
-      return false
-    }
   }
 
   return !!moduleModes.value[moduleSlug]
@@ -182,10 +180,29 @@ const withMode = (groups) => {
   return groups
     .filter((group) => {
       // Check if any of the original keys from consolidation have a mode in backend
+      let effectiveMode = null
       if (group.originalKeys) {
-        return group.originalKeys.some((key) => !!menuGroupModes.value[key])
+        // Resolve the effective mode (prefer read-write over read-only)
+        const modes = group.originalKeys.map((key) => menuGroupModes.value[key]).filter(Boolean)
+        if (modes.includes('read-write')) {
+          effectiveMode = 'read-write'
+        } else if (modes.length > 0) {
+          effectiveMode = 'read-only'
+        }
+      } else {
+        effectiveMode = menuGroupModes.value[group.key]
       }
-      return !!menuGroupModes.value[group.key]
+
+      if (!effectiveMode) {
+        return false
+      }
+
+      // Ownership-Only Visibility: Only show groups where user has READ-WRITE access (unless Super Admin)
+      if (effectiveMode === 'read-only' && !hasRole('super-admin')) {
+        return false
+      }
+
+      return true
     })
     .map((group) => {
       // Resolve the effective mode (prefer read-write over read-only)

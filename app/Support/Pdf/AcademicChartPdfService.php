@@ -11,26 +11,53 @@ class AcademicChartPdfService
     private const MARGIN_TOP = 40;
     private const MARGIN_BOTTOM = 80;
 
+    public const ACADEMIC_PALETTE = [
+        'blue' => '#1d4ed8',    // Blue-700
+        'green' => '#15803d',   // Green-700
+        'yellow' => '#eab308',  // Yellow-600
+        'red' => '#b91c1c',     // Red-700
+        'orange' => '#ea580c',  // Orange-600
+        'purple' => '#7e22ce',  // Purple-700
+        'cyan' => '#0e7490',    // Cyan-700
+        'pink' => '#be185d',    // Pink-700
+        'slate' => '#334155',   // Slate-700
+    ];
+
+    public const ROLE_COLORS = [
+        'pokja-i' => self::ACADEMIC_PALETTE['blue'],
+        'pokja-ii' => self::ACADEMIC_PALETTE['green'],
+        'pokja-iii' => self::ACADEMIC_PALETTE['yellow'],
+        'pokja-iv' => self::ACADEMIC_PALETTE['red'],
+        'sekretaris' => self::ACADEMIC_PALETTE['purple'],
+        'bendahara' => self::ACADEMIC_PALETTE['orange'],
+        'admin' => self::ACADEMIC_PALETTE['slate'],
+    ];
+
     private const BAR_COLORS = [
-        '#000000', // Black
-        '#444444', // Dark Gray
-        '#888888', // Medium Gray
-        '#cccccc', // Light Gray
+        self::ACADEMIC_PALETTE['blue'],
+        self::ACADEMIC_PALETTE['green'],
+        self::ACADEMIC_PALETTE['yellow'],
+        self::ACADEMIC_PALETTE['red'],
+        self::ACADEMIC_PALETTE['orange'],
+        self::ACADEMIC_PALETTE['purple'],
+        self::ACADEMIC_PALETTE['cyan'],
+        self::ACADEMIC_PALETTE['pink'],
+        self::ACADEMIC_PALETTE['slate'],
     ];
 
     /**
-     * Generate an academic style vertical bar chart as a base64 encoded SVG string.
+     * Generate an academic style vertical bar chart as a base64 encoded SVG string with optional color mapping.
      */
-    public function generateVerticalBarChartBase64(string $title, array $labels, array $series): string
+    public function generateVerticalBarChartBase64(string $title, array $labels, array $series, array $colorMap = [], ?string $role = null): string
     {
-        $svg = $this->generateVerticalBarChart($title, $labels, $series);
+        $svg = $this->generateVerticalBarChart($title, $labels, $series, $colorMap, $role);
         return 'data:image/svg+xml;base64,' . base64_encode($svg);
     }
 
     /**
-     * Generate an academic style vertical bar chart SVG.
+     * Generate an academic style vertical bar chart SVG with optional color mapping.
      */
-    public function generateVerticalBarChart(string $title, array $labels, array $series): string
+    public function generateVerticalBarChart(string $title, array $labels, array $series, array $colorMap = [], ?string $role = null): string
     {
         $maxValue = $this->calculateMaxValue($series);
         $scale = $this->calculateScale($maxValue);
@@ -42,12 +69,29 @@ class AcademicChartPdfService
         $svg .= $this->drawBackground();
         $svg .= $this->drawTitle($title);
         $svg .= $this->drawGridAndAxes($scale, $chartWidth, $chartHeight);
-        $svg .= $this->drawBars($labels, $series, $scale['limit'], $chartWidth, $chartHeight);
+        $svg .= $this->drawBars($labels, $series, $scale['limit'], $chartWidth, $chartHeight, $colorMap, $role);
         $svg .= $this->drawLabels($labels, $chartWidth, $chartHeight);
-        $svg .= $this->drawLegend(array_keys($series), $chartHeight);
+        $svg .= $this->drawLegend(array_keys($series), $chartHeight, $colorMap, $role);
         $svg .= $this->endSvg();
 
         return $svg;
+    }
+
+    /**
+     * Get a standardized color mapping for Pokja classifications.
+     */
+    public function getPokjaColorMap(): array
+    {
+        return [
+            // UP2K / Posyandu levels
+            'Pemula' => self::ACADEMIC_PALETTE['red'],
+            'Pratama' => self::ACADEMIC_PALETTE['red'],
+            'Madya' => self::ACADEMIC_PALETTE['yellow'],
+            'Utama' => self::ACADEMIC_PALETTE['green'],
+            'Purnama' => self::ACADEMIC_PALETTE['green'],
+            'Mandiri' => self::ACADEMIC_PALETTE['blue'],
+            'Istimewa' => self::ACADEMIC_PALETTE['blue'],
+        ];
     }
 
     private function calculateMaxValue(array $series): int
@@ -148,7 +192,7 @@ class AcademicChartPdfService
         return $svg;
     }
 
-    private function drawBars(array $labels, array $series, int $limit, int $width, int $height): string
+    private function drawBars(array $labels, array $series, int $limit, int $width, int $height, array $colorMap = [], ?string $role = null): string
     {
         $svg = '';
         $groupCount = count($labels);
@@ -172,7 +216,7 @@ class AcademicChartPdfService
                 $barX = $groupX + ($j * $barWidth);
                 $barY = self::MARGIN_TOP + $height - $barHeight;
                 
-                $color = self::BAR_COLORS[$j % count(self::BAR_COLORS)];
+                $color = $this->resolveColor($seriesNames[$j], $j, $colorMap, $role);
                 
                 $svg .= '<rect x="' . $barX . '" y="' . $barY . '" width="' . $barWidth . '" height="' . $barHeight . '" fill="' . $color . '" stroke="#000000" stroke-width="1" />';
             }
@@ -185,6 +229,31 @@ class AcademicChartPdfService
         }
 
         return $svg;
+    }
+
+    private function resolveColor(string $name, int $index, array $colorMap, ?string $role = null): string
+    {
+        // 1. Check exact match in color map (e.g., specific levels)
+        if (isset($colorMap[$name])) {
+            return $colorMap[$name];
+        }
+
+        // 2. Check partial match in color map
+        foreach ($colorMap as $key => $color) {
+            if (stripos($name, (string) $key) !== false) {
+                return $color;
+            }
+        }
+
+        // 3. Check role-based color override (only for Pokjas)
+        if ($role && isset(self::ROLE_COLORS[$role])) {
+            // Apply slight darkening/lightening based on index for multiple series if needed, 
+            // but for now return base role color.
+            return self::ROLE_COLORS[$role];
+        }
+
+        // 4. Fallback to default grayscale palette
+        return self::BAR_COLORS[$index % count(self::BAR_COLORS)];
     }
 
     private function drawLabels(array $labels, int $width, int $height): string
@@ -207,13 +276,13 @@ class AcademicChartPdfService
         return $svg;
     }
 
-    private function drawLegend(array $seriesNames, int $height): string
+    private function drawLegend(array $seriesNames, int $height, array $colorMap = [], ?string $role = null): string
     {
         $svg = '<g transform="translate(' . self::MARGIN_LEFT . ',' . (self::MARGIN_TOP + $height + 60) . ')">';
         
         $xOffset = 0;
         foreach ($seriesNames as $idx => $name) {
-            $color = self::BAR_COLORS[$idx % count(self::BAR_COLORS)];
+            $color = $this->resolveColor($name, $idx, $colorMap, $role);
             
             $svg .= '<rect x="' . $xOffset . '" y="0" width="12" height="12" fill="' . $color . '" stroke="#000000" stroke-width="1" />';
             $svg .= '<text x="' . ($xOffset + 18) . '" y="10" font-size="11" fill="#000000">' . htmlspecialchars($name) . '</text>';

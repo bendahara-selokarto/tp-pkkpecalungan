@@ -11,7 +11,9 @@ use App\Domains\Wilayah\Posyandu\Requests\ListPosyanduRequest;
 use App\Domains\Wilayah\Posyandu\Requests\UpdatePosyanduRequest;
 use App\Domains\Wilayah\Posyandu\UseCases\GetScopedPosyanduUseCase;
 use App\Domains\Wilayah\Posyandu\UseCases\ListScopedPosyanduUseCase;
-use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Dashboard\UseCases\BuildPosyanduChartPayloadUseCase;
+use App\Support\Pdf\AcademicChartPdfService;
+use App\Support\Pdf\PdfViewFactory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -24,9 +26,38 @@ class KecamatanPosyanduController extends Controller
         private readonly ListScopedPosyanduUseCase $listScopedPosyanduUseCase,
         private readonly GetScopedPosyanduUseCase $getScopedPosyanduUseCase,
         private readonly CreateScopedPosyanduAction $createScopedPosyanduAction,
-        private readonly UpdatePosyanduAction $updatePosyanduAction
+        private readonly UpdatePosyanduAction $updatePosyanduAction,
+        private readonly AcademicChartPdfService $academicChartPdfService,
+        private readonly BuildPosyanduChartPayloadUseCase $buildPosyanduChartPayloadUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
         $this->middleware('scope.role:kecamatan');
+    }
+
+    public function printChartPdf(): \Symfony\Component\HttpFoundation\Response
+    {
+        $user = auth()->user()?->loadMissing('area');
+        $payload = $this->buildPosyanduChartPayloadUseCase->execute($user);
+        $colorMap = $this->academicChartPdfService->getPokjaColorMap();
+
+        $chartSvgs = [];
+        foreach ($payload as $chart) {
+            $chartSvgs[] = $this->academicChartPdfService->generateVerticalBarChartBase64(
+                $chart['title'],
+                $chart['labels'],
+                $chart['series'],
+                $colorMap,
+                'pokja-iv'
+            );
+        }
+
+        $pdf = $this->pdfViewFactory->loadView('pdf.pokja_chart_report', [
+            'pokjaName' => 'Pokja IV (Posyandu)',
+            'chartSvgs' => $chartSvgs,
+            'printedBy' => $user,
+        ]);
+
+        return $pdf->stream('laporan-grafik-posyandu.pdf');
     }
 
     public function index(ListPosyanduRequest $request): Response

@@ -228,6 +228,7 @@ Route::prefix('desa')
         Route::resource('data-keluarga', DesaDataKeluargaController::class);
         Route::resource('data-industri-rumah-tangga', DesaDataIndustriRumahTanggaController::class);
         Route::resource('data-pelatihan-kader', DesaDataPelatihanKaderController::class);
+        Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf/chart', [DesaDataPemanfaatanTanahPekaranganHatinyaPkkController::class, 'printChartPdf'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report.chart');
         Route::resource('data-pemanfaatan-tanah-pekarangan-hatinya-pkk', DesaDataPemanfaatanTanahPekaranganHatinyaPkkController::class)
             ->parameters(['data-pemanfaatan-tanah-pekarangan-hatinya-pkk' => 'dataPemanfaatan']);
         Route::get('catatan-keluarga', [DesaCatatanKeluargaController::class, 'index'])->name('catatan-keluarga.index');
@@ -238,8 +239,11 @@ Route::prefix('desa')
         Route::resource('bkb-kegiatan', DesaBkbKegiatanController::class);
         Route::resource('tutor-khusus', DesaTutorKhususController::class);
         Route::resource('pelatihan-kader-pokja-ii', DesaPelatihanKaderPokjaIiController::class);
+        Route::get('pra-koperasi-up2k/report/pdf/chart', [DesaPraKoperasiUp2kController::class, 'printChartPdf'])->name('pra-koperasi-up2k.report.chart');
         Route::resource('pra-koperasi-up2k', DesaPraKoperasiUp2kController::class);
+        Route::get('posyandu/report/pdf/chart', [DesaPosyanduController::class, 'printChartPdf'])->name('posyandu.report.chart');
         Route::resource('posyandu', DesaPosyanduController::class);
+        Route::get('simulasi-penyuluhan/report/pdf/chart', [DesaSimulasiPenyuluhanController::class, 'printChartPdf'])->name('simulasi-penyuluhan.report.chart');
         Route::resource('simulasi-penyuluhan', DesaSimulasiPenyuluhanController::class);
         Route::resource('program-prioritas', DesaProgramPrioritasController::class);
         Route::resource('pilot-project-keluarga-sehat', DesaPilotProjectKeluargaSehatController::class);
@@ -340,6 +344,7 @@ Route::prefix('kecamatan')
         Route::resource('data-keluarga', KecamatanDataKeluargaController::class);
         Route::resource('data-industri-rumah-tangga', KecamatanDataIndustriRumahTanggaController::class);
         Route::resource('data-pelatihan-kader', KecamatanDataPelatihanKaderController::class);
+        Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf/chart', [KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController::class, 'printChartPdf'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report.chart');
         Route::resource('data-pemanfaatan-tanah-pekarangan-hatinya-pkk', KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController::class)
             ->parameters(['data-pemanfaatan-tanah-pekarangan-hatinya-pkk' => 'dataPemanfaatan']);
         Route::get('catatan-keluarga', [KecamatanCatatanKeluargaController::class, 'index'])->name('catatan-keluarga.index');
@@ -350,8 +355,11 @@ Route::prefix('kecamatan')
         Route::resource('bkb-kegiatan', KecamatanBkbKegiatanController::class);
         Route::resource('tutor-khusus', KecamatanTutorKhususController::class);
         Route::resource('pelatihan-kader-pokja-ii', KecamatanPelatihanKaderPokjaIiController::class);
+        Route::get('pra-koperasi-up2k/report/pdf/chart', [KecamatanPraKoperasiUp2kController::class, 'printChartPdf'])->name('pra-koperasi-up2k.report.chart');
         Route::resource('pra-koperasi-up2k', KecamatanPraKoperasiUp2kController::class);
+        Route::get('posyandu/report/pdf/chart', [KecamatanPosyanduController::class, 'printChartPdf'])->name('posyandu.report.chart');
         Route::resource('posyandu', KecamatanPosyanduController::class);
+        Route::get('simulasi-penyuluhan/report/pdf/chart', [KecamatanSimulasiPenyuluhanController::class, 'printChartPdf'])->name('simulasi-penyuluhan.report.chart');
         Route::resource('simulasi-penyuluhan', KecamatanSimulasiPenyuluhanController::class);
         Route::resource('program-prioritas', KecamatanProgramPrioritasController::class);
         Route::resource('pilot-project-keluarga-sehat', KecamatanPilotProjectKeluargaSehatController::class);

@@ -673,22 +673,36 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
         $fallbackDesaLabel = '-';
         if ($level === 'desa' && $scopeArea?->level === 'desa' && trim((string) $scopeArea->name) !== '') {
-            $fallbackDesaLabel = sprintf('DESA %s', trim((string) $scopeArea->name));
+            $fallbackDesaLabel = sprintf('DESA %s', strtoupper(trim((string) $scopeArea->name)));
         }
 
-        $households = $this->scopedModelQuery(DataWarga::class, $level, $areaId)
+        // Broaden scope for kecamatan report to include all child villages
+        $targetAreaIds = [$areaId];
+        $childAreaIds = [];
+        if ($level === 'kecamatan') {
+            $childAreaIds = $this->getChildAreaIds($areaId);
+            $targetAreaIds = array_merge($targetAreaIds, $childAreaIds);
+        }
+
+        $households = $this->applyBudgetYearFilter(DataWarga::query())
+            ->whereIn('area_id', $targetAreaIds)
             ->with(['anggota', 'area.parent'])
             ->orderBy('id')
             ->get();
 
         $grouped = [];
+        $areaNameMap = [];
+        $labelToIdMap = [];
 
-        $ensureRow = function (string $label) use (&$grouped): void {
-            if (isset($grouped[$label])) {
+        $ensureRow = function (int $id, string $label) use (&$grouped, &$areaNameMap, &$labelToIdMap): void {
+            if (isset($grouped[$id])) {
                 return;
             }
 
-            $grouped[$label] = [
+            $areaNameMap[$id] = $label;
+            $labelToIdMap[$label] = $id;
+
+            $grouped[$id] = [
                 'dusun_lingkungan' => [],
                 'pkk_rw' => [],
                 'pkk_rt' => [],
@@ -709,6 +723,45 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
                 'tenaga_bantuan_p' => 0,
                 'keterangan' => [],
             ];
+        };
+
+        // Pre-populate all villages if we are at kecamatan level to ensure
+        // they always appear in the iteration (Desa 1-10) as requested.
+        if ($level === 'kecamatan') {
+            $desaAreas = Area::query()
+                ->whereIn('id', $childAreaIds)
+                ->orderBy('name')
+                ->get(['id', 'name']);
+
+            foreach ($desaAreas as $desaArea) {
+                $ensureRow($desaArea->id, sprintf('DESA %s', strtoupper(trim((string) $desaArea->name))));
+            }
+        } else {
+            $ensureRow($areaId, $fallbackDesaLabel);
+        }
+
+        $resolveTargetId = function ($item) use ($areaId, $childAreaIds, $labelToIdMap, $fallbackDesaLabel): ?int {
+            $recordAreaId = (int) $item->area_id;
+
+            // 1. Direct match by area_id (Strongest match)
+            if (isset($labelToIdMap[$recordAreaId]) || $recordAreaId === $areaId || in_array($recordAreaId, $childAreaIds, true)) {
+                return $recordAreaId;
+            }
+
+            // 2. Fallback: try to extract village name from address/attribute
+            $sourceText = property_exists($item, 'alamat') ? $item->alamat : null;
+            if ($sourceText) {
+                $extractedLabel = $this->normalizeDataUmumPkkDesaLabel(
+                    $this->extractDesaKelurahanFromText($sourceText),
+                    $fallbackDesaLabel
+                );
+
+                if (isset($labelToIdMap[$extractedLabel])) {
+                    return $labelToIdMap[$extractedLabel];
+                }
+            }
+
+            return $recordAreaId; // Fallback to its own area_id
         };
 
         $incrementGender = function (array &$row, string $keyPrefix, ?string $gender): void {
@@ -741,34 +794,36 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         };
 
         foreach ($households as $household) {
-            $desaLabel = $this->normalizeDataUmumPkkDesaLabel(
-                $this->extractDesaKelurahanNameOrFallback($household),
-                $fallbackDesaLabel
-            );
-            $ensureRow($desaLabel);
+            $targetId = $resolveTargetId($household);
+            if ($targetId === null) {
+                continue;
+            }
+
+            $ensureRow($targetId, $this->normalizeDataUmumPkkDesaLabel($this->extractDesaKelurahanNameOrFallback($household), $fallbackDesaLabel));
+            $row = &$grouped[$targetId];
 
             $dusunLingkungan = $this->extractDusunLingkunganName($household);
             if ($dusunLingkungan !== '-') {
-                $grouped[$desaLabel]['dusun_lingkungan'][$dusunLingkungan] = true;
+                $row['dusun_lingkungan'][$dusunLingkungan] = true;
             }
 
             $rw = $this->extractRwNumber($household);
             if ($rw !== '-') {
-                $grouped[$desaLabel]['pkk_rw'][$rw] = true;
+                $row['pkk_rw'][$rw] = true;
             }
 
             $rt = $this->extractRtNumber($household);
             if ($rt !== '-') {
-                $grouped[$desaLabel]['pkk_rt'][$rt] = true;
+                $row['pkk_rt'][$rt] = true;
             }
 
             $dasaWisma = $this->normalizeDasaWismaName($household->dasawisma);
             if ($dasaWisma !== '-') {
-                $grouped[$desaLabel]['dasa_wisma'][$dasaWisma] = true;
+                $row['dasa_wisma'][$dasaWisma] = true;
             }
 
-            $grouped[$desaLabel]['krt']++;
-            $grouped[$desaLabel]['kk']++;
+            $row['krt']++;
+            $row['kk']++;
 
             $anggota = $household->relationLoaded('anggota') ? $household->anggota : collect();
             $jiwaL = 0;
@@ -784,95 +839,116 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
                 $jiwaP = (int) $household->jumlah_warga_perempuan;
             }
 
-            $grouped[$desaLabel]['jiwa_l'] += $jiwaL;
-            $grouped[$desaLabel]['jiwa_p'] += $jiwaP;
+            $row['jiwa_l'] += $jiwaL;
+            $row['jiwa_p'] += $jiwaP;
 
             $keterangan = trim((string) $household->keterangan);
             if ($keterangan !== '') {
-                $grouped[$desaLabel]['keterangan'][] = $keterangan;
+                $row['keterangan'][] = $keterangan;
             }
         }
 
-        $anggotaTpPkk = $this->scopedModelQuery(AnggotaTimPenggerak::class, $level, $areaId)
-            ->get(['jenis_kelamin', 'alamat', 'jabatan', 'keterangan']);
+        $anggotaTpPkk = $this->applyBudgetYearFilter(AnggotaTimPenggerak::query())
+            ->whereIn('area_id', $targetAreaIds)
+            ->get(['area_id', 'jenis_kelamin', 'alamat', 'jabatan', 'keterangan']);
 
         foreach ($anggotaTpPkk as $item) {
-            $desaLabel = $this->normalizeDataUmumPkkDesaLabel(
-                $this->extractDesaKelurahanFromText($item->alamat),
-                $fallbackDesaLabel
-            );
-            $ensureRow($desaLabel);
+            $targetId = $resolveTargetId($item);
+            if ($targetId === null) {
+                continue;
+            }
 
-            $appendTopologyFromAddress($grouped[$desaLabel], $item->alamat);
-            $incrementGender($grouped[$desaLabel], 'anggota_tp_pkk', $item->jenis_kelamin);
+            $ensureRow($targetId, $this->normalizeDataUmumPkkDesaLabel($this->extractDesaKelurahanFromText($item->alamat), $fallbackDesaLabel));
+            $row = &$grouped[$targetId];
+
+            $appendTopologyFromAddress($row, $item->alamat);
+            $incrementGender($row, 'anggota_tp_pkk', $item->jenis_kelamin);
 
             $jabatan = Str::lower(trim((string) $item->jabatan));
             if ($jabatan !== '') {
                 if (str_contains($jabatan, 'honorer')) {
-                    $incrementGender($grouped[$desaLabel], 'tenaga_honorer', $item->jenis_kelamin);
+                    $incrementGender($row, 'tenaga_honorer', $item->jenis_kelamin);
                 }
 
                 if (str_contains($jabatan, 'bantuan')) {
-                    $incrementGender($grouped[$desaLabel], 'tenaga_bantuan', $item->jenis_kelamin);
+                    $incrementGender($row, 'tenaga_bantuan', $item->jenis_kelamin);
                 }
             }
 
             $keterangan = trim((string) $item->keterangan);
             if ($keterangan !== '') {
-                $grouped[$desaLabel]['keterangan'][] = $keterangan;
+                $row['keterangan'][] = $keterangan;
             }
         }
 
-        $kaderUmumItems = $this->scopedModelQuery(AnggotaPokja::class, $level, $areaId)
-            ->get(['jenis_kelamin', 'alamat', 'keterangan']);
+        $kaderUmumItems = $this->applyBudgetYearFilter(AnggotaPokja::query())
+            ->whereIn('area_id', $targetAreaIds)
+            ->get(['area_id', 'jenis_kelamin', 'alamat', 'keterangan']);
 
         foreach ($kaderUmumItems as $item) {
-            $desaLabel = $this->normalizeDataUmumPkkDesaLabel(
-                $this->extractDesaKelurahanFromText($item->alamat),
-                $fallbackDesaLabel
-            );
-            $ensureRow($desaLabel);
+            $targetId = $resolveTargetId($item);
+            if ($targetId === null) {
+                continue;
+            }
 
-            $appendTopologyFromAddress($grouped[$desaLabel], $item->alamat);
-            $incrementGender($grouped[$desaLabel], 'kader_umum', $item->jenis_kelamin);
+            $ensureRow($targetId, $this->normalizeDataUmumPkkDesaLabel($this->extractDesaKelurahanFromText($item->alamat), $fallbackDesaLabel));
+            $row = &$grouped[$targetId];
+
+            $appendTopologyFromAddress($row, $item->alamat);
+            $incrementGender($row, 'kader_umum', $item->jenis_kelamin);
 
             $keterangan = trim((string) $item->keterangan);
             if ($keterangan !== '') {
-                $grouped[$desaLabel]['keterangan'][] = $keterangan;
+                $row['keterangan'][] = $keterangan;
             }
         }
 
-        $kaderKhususItems = $this->scopedModelQuery(KaderKhusus::class, $level, $areaId)
-            ->get(['jenis_kelamin', 'alamat', 'keterangan']);
+        $kaderKhususItems = $this->applyBudgetYearFilter(KaderKhusus::query())
+            ->whereIn('area_id', $targetAreaIds)
+            ->get(['area_id', 'jenis_kelamin', 'alamat', 'keterangan']);
 
         foreach ($kaderKhususItems as $item) {
-            $desaLabel = $this->normalizeDataUmumPkkDesaLabel(
-                $this->extractDesaKelurahanFromText($item->alamat),
-                $fallbackDesaLabel
-            );
-            $ensureRow($desaLabel);
+            $targetId = $resolveTargetId($item);
+            if ($targetId === null) {
+                continue;
+            }
 
-            $appendTopologyFromAddress($grouped[$desaLabel], $item->alamat);
-            $incrementGender($grouped[$desaLabel], 'kader_khusus', $item->jenis_kelamin);
+            $ensureRow($targetId, $this->normalizeDataUmumPkkDesaLabel($this->extractDesaKelurahanFromText($item->alamat), $fallbackDesaLabel));
+            $row = &$grouped[$targetId];
+
+            $appendTopologyFromAddress($row, $item->alamat);
+            $incrementGender($row, 'kader_khusus', $item->jenis_kelamin);
 
             $keterangan = trim((string) $item->keterangan);
             if ($keterangan !== '') {
-                $grouped[$desaLabel]['keterangan'][] = $keterangan;
+                $row['keterangan'][] = $keterangan;
             }
         }
 
-        $sortedGroupLabels = collect(array_keys($grouped))
-            ->sort(fn (string $left, string $right): int => $this->compareDataUmumPkkDesaLabels($left, $right))
+        // Filter: In kecamatan report, we strictly only want to show the 10 child villages in the table.
+        // Data belonging directly to the kecamatan ID will be excluded from the village iteration
+        // and only appear in the recap row (handled by the controller/view).
+        if ($level === 'kecamatan') {
+            $villageKeys = array_keys($grouped);
+            foreach ($villageKeys as $key) {
+                if ($key === $areaId) {
+                    unset($grouped[$key]);
+                }
+            }
+        }
+
+        $sortedGroupIds = collect(array_keys($grouped))
+            ->sort(fn ($a, $b): int => $this->compareDataUmumPkkDesaLabels($areaNameMap[$a], $areaNameMap[$b]))
             ->values();
 
         $result = collect();
 
-        foreach ($sortedGroupLabels as $groupLabel) {
-            $row = $grouped[$groupLabel];
+        foreach ($sortedGroupIds as $id) {
+            $row = $grouped[$id];
 
             $result->push([
                 'nomor_urut' => $result->count() + 1,
-                'nama_desa_kelurahan' => $groupLabel,
+                'nama_desa_kelurahan' => $areaNameMap[$id],
                 'jumlah_dusun_lingkungan' => count($row['dusun_lingkungan']),
                 'jumlah_pkk_rw' => count($row['pkk_rw']),
                 'jumlah_pkk_rt' => count($row['pkk_rt']),
@@ -2562,13 +2638,13 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             $normalizedFallback = trim($fallbackLabel);
 
             if ($normalizedFallback !== '' && $normalizedFallback !== '-') {
-                return $normalizedFallback;
+                return strtoupper($normalizedFallback);
             }
 
             return 'SEBUTAN LAIN';
         }
 
-        return $normalized;
+        return strtoupper($normalized);
     }
 
     private function extractDesaKelurahanFromText(?string $source): string

@@ -12,6 +12,9 @@ use App\Domains\Wilayah\PraKoperasiUp2k\Requests\StorePraKoperasiUp2kRequest;
 use App\Domains\Wilayah\PraKoperasiUp2k\Requests\UpdatePraKoperasiUp2kRequest;
 use App\Domains\Wilayah\PraKoperasiUp2k\UseCases\GetScopedPraKoperasiUp2kUseCase;
 use App\Domains\Wilayah\PraKoperasiUp2k\UseCases\ListScopedPraKoperasiUp2kUseCase;
+use App\Domains\Wilayah\Dashboard\UseCases\BuildUp2kChartPayloadUseCase;
+use App\Support\Pdf\AcademicChartPdfService;
+use App\Support\Pdf\PdfViewFactory;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -24,9 +27,38 @@ class DesaPraKoperasiUp2kController extends Controller
         private readonly ListScopedPraKoperasiUp2kUseCase $listScopedPraKoperasiUp2kUseCase,
         private readonly GetScopedPraKoperasiUp2kUseCase $getScopedPraKoperasiUp2kUseCase,
         private readonly CreateScopedPraKoperasiUp2kAction $createScopedPraKoperasiUp2kAction,
-        private readonly UpdatePraKoperasiUp2kAction $updatePraKoperasiUp2kAction
+        private readonly UpdatePraKoperasiUp2kAction $updatePraKoperasiUp2kAction,
+        private readonly AcademicChartPdfService $academicChartPdfService,
+        private readonly BuildUp2kChartPayloadUseCase $buildUp2kChartPayloadUseCase,
+        private readonly PdfViewFactory $pdfViewFactory
     ) {
         $this->middleware('scope.role:desa');
+    }
+
+    public function printChartPdf(): \Symfony\Component\HttpFoundation\Response
+    {
+        $user = auth()->user()?->loadMissing('area');
+        $payload = $this->buildUp2kChartPayloadUseCase->execute($user);
+        $colorMap = $this->academicChartPdfService->getPokjaColorMap();
+
+        $chartSvgs = [];
+        foreach ($payload as $chart) {
+            $chartSvgs[] = $this->academicChartPdfService->generateVerticalBarChartBase64(
+                $chart['title'],
+                $chart['labels'],
+                $chart['series'],
+                $colorMap,
+                'pokja-ii'
+            );
+        }
+
+        $pdf = $this->pdfViewFactory->loadView('pdf.pokja_chart_report', [
+            'pokjaName' => 'Pokja II (UP2K)',
+            'chartSvgs' => $chartSvgs,
+            'printedBy' => $user,
+        ]);
+
+        return $pdf->stream('laporan-grafik-up2k.pdf');
     }
 
     public function index(ListPraKoperasiUp2kRequest $request): Response

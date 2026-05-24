@@ -78,6 +78,14 @@ const cancelDelete = () => {
         <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Isian Posyandu oleh TP PKK</h3>
         <div class="flex items-center gap-2">
           <a
+            href="/kecamatan/posyandu/report/pdf/chart"
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
+          >
+            Cetak Grafik
+          </a>
+          <a
             href="/kecamatan/posyandu/report/pdf"
             target="_blank"
             rel="noopener"
