@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Domains\Wilayah\Dashboard\UseCases\BuildDataUmumChartPayloadUseCase;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildDashboardBlockDetailWidgetUseCase;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildDashboardDocumentCoverageUseCase;
 use App\Domains\Wilayah\Dashboard\UseCases\BuildRoleAwareDashboardBlocksUseCase;
@@ -23,7 +24,8 @@ class DashboardController extends Controller
         private readonly BuildRoleAwareDashboardBlocksUseCase $buildRoleAwareDashboardBlocksUseCase,
         private readonly BuildDashboardBlockDetailWidgetUseCase $buildDashboardBlockDetailWidgetUseCase,
         private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
-        private readonly PdfViewFactory $pdfViewFactory
+        private readonly PdfViewFactory $pdfViewFactory,
+        private readonly BuildDataUmumChartPayloadUseCase $buildDataUmumChartPayloadUseCase
     ) {}
 
     public function __invoke(Request $request): Response|RedirectResponse
@@ -43,9 +45,12 @@ class DashboardController extends Controller
 
         $dashboardPayload = $this->buildDashboardChartPayload($request);
         $user = auth()->user()?->loadMissing('area');
+        $dataUmumCharts = $this->buildDataUmumChartPayloadUseCase->execute($user);
+
         $pdf = $this->pdfViewFactory->loadView('pdf.dashboard_chart_report', [
             'stats' => $dashboardPayload['stats'],
             'charts' => $dashboardPayload['charts'],
+            'dataUmumCharts' => $dataUmumCharts,
             'filters' => $dashboardPayload['context'],
             'printedBy' => $user,
             'printedAt' => now(),

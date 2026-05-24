@@ -104,7 +104,7 @@ Gunakan status autentikasi:
 | Pokja I | Buku Kegiatan BKR | Pokja I Desa | available | partial | Modul `bkr` tersedia; status autentikasi belum tervalidasi. |
 | Pokja I | Buku Kegiatan BKL | Pokja I Desa | available | partial | Modul `bkl` tersedia; status autentikasi belum tervalidasi. |
 | Pokja I | Buku Administrasi PAAR | Pokja I Desa | available | partial | Modul `paar` tersedia; status autentikasi belum tervalidasi. |
-| Pokja I | Buku Grafik | Pokja I Desa | available | unverified | Tersedia sebagai report `Grafik Dashboard` (external PDF); belum ada domain input mandiri. |
+| Pokja I | Buku Grafik | Pokja I Desa | available | verified | Tersedia sebagai report `Buku Grafik` (PDF) yang merepresentasikan visualisasi Data Umum PKK sesuai level wilayah. |
 | Pokja I | Buku Evaluasi Program | Pokja I Desa | planned | unverified | Tambah struktur evaluasi periodik |
 | Pokja II | Buku Rencana Kerja Pokja II | Pokja II Desa | partial | partial | Belum ada bukti autentik: text-layer `Rakernas X.pdf` (scan 2026-03-14) tidak menemukan token “RENCANA KERJA”; belum ada screenshot lampiran khusus. |
 | Pokja II | Buku Kegiatan Pendidikan dan Keterampilan | Pokja II Desa | available | verified | Bukti autentik: text-layer `Rakernas X.pdf` + screenshot Lampiran 4.22 (`DATA_KEGIATAN_PKK_POKJA_II_4_22_MAPPING.md`). |
