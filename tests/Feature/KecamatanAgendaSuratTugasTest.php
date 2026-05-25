@@ -92,4 +92,12 @@ class KecamatanAgendaSuratTugasTest extends TestCase
             'kepada' => 'Jane Doe',
         ]);
     }
+
+    public function test_kecamatan_sekretaris_can_print_pdf_agenda_surat_tugas(): void
+    {
+        $response = $this->actingAs($this->user)->get('/kecamatan/agenda-surat-tugas/report/pdf');
+
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/pdf');
+    }
 }

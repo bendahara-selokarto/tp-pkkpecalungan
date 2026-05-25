@@ -8,7 +8,7 @@ use App\Domains\Wilayah\Enums\ScopeLevel;
 use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
 use App\Domains\Wilayah\Services\UserAreaContextService;
 use App\Http\Controllers\Controller;
-use App\Support\PdfViewFactory;
+use App\Support\Pdf\PdfViewFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,7 +27,7 @@ class AgendaSuratTugasReportPrintController extends Controller
         $this->authorize('print', AgendaSuratTugas::class);
 
         $level = $request->get('level', 'desa');
-        $user = Auth::user();
+        $user = Auth::user()->loadMissing('area.parent');
         $areaId = (int) $user->area_id;
         $tahunAnggaran = (int) $user->active_budget_year;
 
@@ -39,11 +39,17 @@ class AgendaSuratTugasReportPrintController extends Controller
             ->orderBy('id')
             ->get();
 
+        $area = $user->area;
+        $areaName = $area?->name ?? '-';
+        $pdfKecamatanName = $area?->level === ScopeLevel::DESA->value
+            ? ($area->parent?->name ?? '-')
+            : ($area?->name ?? '-');
+
         $pdf = $this->pdfViewFactory->loadView('pdf.agenda_surat_tugas_report', [
             'items' => $items,
             'level' => $level,
-            'areaName' => $this->userAreaContextService->resolveAreaName($user, $level),
-            'pdfKecamatanName' => $this->userAreaContextService->resolveKecamatanName($user, $level),
+            'areaName' => $areaName,
+            'pdfKecamatanName' => $pdfKecamatanName,
             'tahunAnggaran' => $tahunAnggaran,
             'printedBy' => $user,
             'printedAt' => now(),
