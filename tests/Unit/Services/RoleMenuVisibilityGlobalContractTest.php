@@ -340,6 +340,10 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
      * @var array<string, array<string, string|null>>
      */
     private const BASELINE_ROLE_MODULE_OVERRIDES = [
+        RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => [
+            'prestasi-lomba' => null,
+            'bantuans' => null,
+        ],
     ];
 
     private RoleMenuVisibilityService $service;

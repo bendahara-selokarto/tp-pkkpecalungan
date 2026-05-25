@@ -67,6 +67,7 @@ class RoleMenuVisibilityService
             'buku-daftar-hadir',
             'buku-tamu',
             'buku-agenda-sk',
+            'agenda-surat-tugas',
             'foto-kegiatan',
             'laporan-tahunan-pkk',
         ],
@@ -350,6 +351,10 @@ class RoleMenuVisibilityService
      * @var array<string, array<string, string|null>>
      */
     private const ROLE_MODULE_MODE_OVERRIDES = [
+        RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => [
+            'prestasi-lomba' => null,
+            'bantuans' => null,
+        ],
     ];
 
     public function __construct(

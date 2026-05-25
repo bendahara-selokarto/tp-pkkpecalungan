@@ -20,6 +20,9 @@ use App\Domains\Wilayah\BukuKeuangan\Repositories\BukuKeuanganRepositoryInterfac
 use App\Domains\Wilayah\AgendaSurat\Repositories\AgendaSuratRepository;
 use App\Domains\Wilayah\AgendaSurat\Repositories\AgendaSuratRepositoryInterface;
 use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
+use App\Domains\Wilayah\AgendaSuratTugas\Repositories\AgendaSuratTugasRepository;
+use App\Domains\Wilayah\AgendaSuratTugas\Repositories\AgendaSuratTugasRepositoryInterface;
+use App\Domains\Wilayah\AgendaSuratTugas\Models\AgendaSuratTugas;
 use App\Domains\Wilayah\BukuDaftarHadir\Models\BukuDaftarHadir;
 use App\Domains\Wilayah\BukuDaftarHadir\Repositories\BukuDaftarHadirRepository;
 use App\Domains\Wilayah\BukuDaftarHadir\Repositories\BukuDaftarHadirRepositoryInterface;
@@ -149,6 +152,7 @@ use App\Policies\AnggotaTimPenggerakPolicy;
 use App\Policies\BantuanPolicy;
 use App\Policies\BukuKeuanganPolicy;
 use App\Policies\AgendaSuratPolicy;
+use App\Policies\AgendaSuratTugasPolicy;
 use App\Policies\BukuDaftarHadirPolicy;
 use App\Policies\BukuTamuPolicy;
 use App\Policies\BukuAgendaSkPolicy;
@@ -235,6 +239,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             AgendaSuratRepositoryInterface::class,
             AgendaSuratRepository::class
+        );
+
+        $this->app->bind(
+            AgendaSuratTugasRepositoryInterface::class,
+            AgendaSuratTugasRepository::class
         );
 
         $this->app->bind(
@@ -455,6 +464,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(BukuKeuangan::class, BukuKeuanganPolicy::class);
         Gate::policy(Inventaris::class, InventarisPolicy::class);
         Gate::policy(AgendaSurat::class, AgendaSuratPolicy::class);
+        Gate::policy(AgendaSuratTugas::class, AgendaSuratTugasPolicy::class);
         Gate::policy(BukuDaftarHadir::class, BukuDaftarHadirPolicy::class);
         Gate::policy(BukuEkspedisi::class, BukuEkspedisiPolicy::class);
         Gate::policy(BukuTamu::class, BukuTamuPolicy::class);
@@ -565,6 +575,7 @@ class AppServiceProvider extends ServiceProvider
         return [
             Activity::class,
             AgendaSurat::class,
+            AgendaSuratTugas::class,
             AnggotaTimPenggerak::class,
             BukuDaftarHadir::class,
             BukuEkspedisi::class,

@@ -17,6 +17,9 @@ use App\Domains\Wilayah\Arsip\Controllers\KecamatanDesaArsipController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\DesaAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\KecamatanAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\AgendaSuratReportPrintController;
+use App\Domains\Wilayah\AgendaSuratTugas\Controllers\DesaAgendaSuratTugasController;
+use App\Domains\Wilayah\AgendaSuratTugas\Controllers\KecamatanAgendaSuratTugasController;
+use App\Domains\Wilayah\AgendaSuratTugas\Controllers\AgendaSuratTugasReportPrintController;
 use App\Domains\Wilayah\BukuDaftarHadir\Controllers\DesaBukuDaftarHadirController;
 use App\Domains\Wilayah\BukuDaftarHadir\Controllers\KecamatanBukuDaftarHadirController;
 use App\Domains\Wilayah\BukuDaftarHadir\Controllers\BukuDaftarHadirPrintController;
@@ -204,6 +207,7 @@ Route::prefix('desa')
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');
         Route::resource('agenda-surat', DesaAgendaSuratController::class);
+        Route::resource('agenda-surat-tugas', DesaAgendaSuratTugasController::class);
         Route::get('agenda-surat/{id}/attachment/data-dukung', [DesaAgendaSuratController::class, 'attachment'])
             ->name('agenda-surat.attachments.show');
         Route::resource('buku-daftar-hadir', DesaBukuDaftarHadirController::class);
@@ -256,6 +260,7 @@ Route::prefix('desa')
         Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printDesaReport'])->name('buku-tamu.report');
         Route::get('buku-agenda-sk/report/pdf', [BukuAgendaSkPrintController::class, 'report'])->defaults('level', 'desa')->name('buku-agenda-sk.report');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaReport'])->name('agenda-surat.report');
+        Route::get('agenda-surat-tugas/report/pdf', [AgendaSuratTugasReportPrintController::class, 'report'])->defaults('level', 'desa')->name('agenda-surat-tugas.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printDesaReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printDesaReport'])->name('bantuans.report');
@@ -320,6 +325,7 @@ Route::prefix('kecamatan')
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');
         Route::resource('agenda-surat', KecamatanAgendaSuratController::class);
+        Route::resource('agenda-surat-tugas', KecamatanAgendaSuratTugasController::class);
         Route::get('agenda-surat/{id}/attachment/data-dukung', [KecamatanAgendaSuratController::class, 'attachment'])
             ->name('agenda-surat.attachments.show');
         Route::resource('buku-daftar-hadir', KecamatanBukuDaftarHadirController::class);
@@ -372,6 +378,7 @@ Route::prefix('kecamatan')
         Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printKecamatanReport'])->name('buku-tamu.report');
         Route::get('buku-agenda-sk/report/pdf', [BukuAgendaSkPrintController::class, 'report'])->defaults('level', 'kecamatan')->name('buku-agenda-sk.report');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanReport'])->name('agenda-surat.report');
+        Route::get('agenda-surat-tugas/report/pdf', [AgendaSuratTugasReportPrintController::class, 'report'])->defaults('level', 'kecamatan')->name('agenda-surat-tugas.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printKecamatanReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printKecamatanReport'])->name('bantuans.report');

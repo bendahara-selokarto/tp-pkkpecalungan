@@ -1,0 +1,54 @@
+<?php
+
+namespace App\Domains\Wilayah\AgendaSuratTugas\Controllers;
+
+use App\Domains\Wilayah\AgendaSuratTugas\Models\AgendaSuratTugas;
+use App\Domains\Wilayah\AgendaSuratTugas\Repositories\AgendaSuratTugasRepository;
+use App\Domains\Wilayah\Enums\ScopeLevel;
+use App\Domains\Wilayah\Services\ActiveBudgetYearContextService;
+use App\Domains\Wilayah\Services\UserAreaContextService;
+use App\Http\Controllers\Controller;
+use App\Support\PdfViewFactory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class AgendaSuratTugasReportPrintController extends Controller
+{
+    public function __construct(
+        private readonly AgendaSuratTugasRepository $repository,
+        private readonly UserAreaContextService $userAreaContextService,
+        private readonly ActiveBudgetYearContextService $activeBudgetYearContextService,
+        private readonly PdfViewFactory $pdfViewFactory
+    ) {
+    }
+
+    public function report(Request $request)
+    {
+        $this->authorize('print', AgendaSuratTugas::class);
+
+        $level = $request->get('level', 'desa');
+        $user = Auth::user();
+        $areaId = (int) $user->area_id;
+        $tahunAnggaran = (int) $user->active_budget_year;
+
+        $items = AgendaSuratTugas::query()
+            ->where('level', $level)
+            ->where('area_id', $areaId)
+            ->where('tahun_anggaran', $tahunAnggaran)
+            ->orderBy('tanggal_surat')
+            ->orderBy('id')
+            ->get();
+
+        $pdf = $this->pdfViewFactory->loadView('pdf.agenda_surat_tugas_report', [
+            'items' => $items,
+            'level' => $level,
+            'areaName' => $this->userAreaContextService->resolveAreaName($user, $level),
+            'pdfKecamatanName' => $this->userAreaContextService->resolveKecamatanName($user, $level),
+            'tahunAnggaran' => $tahunAnggaran,
+            'printedBy' => $user,
+            'printedAt' => now(),
+        ]);
+
+        return $pdf->stream("agenda-surat-tugas-{$level}-report.pdf");
+    }
+}
