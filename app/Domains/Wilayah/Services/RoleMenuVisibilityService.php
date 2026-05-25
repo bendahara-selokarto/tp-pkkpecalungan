@@ -156,8 +156,6 @@ class RoleMenuVisibilityService
             'desa-activities',
             'desa-arsip',
         ],
-        'belum-ada-pemilik' => [
-        ],
     ];
 
     /**
@@ -200,7 +198,6 @@ class RoleMenuVisibilityService
             'pokja-iii',
             'pokja-iv',
             'monitoring',
-            'belum-ada-pemilik',
         ],
     ];
 
@@ -234,7 +231,6 @@ class RoleMenuVisibilityService
             'pokja-iv' => self::MODE_READ_ONLY,
             'bendahara-wajib' => self::MODE_READ_ONLY,
             'monitoring' => self::MODE_READ_ONLY,
-            'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_ADMIN_DESA => [
             'sekretaris-tpk' => self::MODE_READ_WRITE,
