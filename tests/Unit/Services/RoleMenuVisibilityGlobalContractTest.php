@@ -19,10 +19,33 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
      * @var array<string, list<string>>
      */
     private const BASELINE_GROUP_MODULES = [
-        'sekretaris-wajib' => [
+        'sekretaris-tpk' => [
             'anggota-tim-penggerak',
+            'anggota-tim-penggerak-kader',
             'agenda-surat',
             'buku-notulen-rapat',
+            'buku-agenda-sk',
+            'buku-konsultasi',
+            'buku-ekspedisi',
+            'inventaris',
+            'activities',
+            'foto-kegiatan',
+            'prestasi-lomba',
+            'bantuans',
+            'kader-khusus',
+            'laporan-tahunan-pkk',
+        ],
+        'bendahara-tpk' => [
+            'buku-keuangan',
+            'activities',
+        ],
+        'sekretaris-wajib' => [
+            'anggota-tim-penggerak',
+            'anggota-tim-penggerak-kader',
+            'agenda-surat',
+            'buku-notulen-rapat',
+            'buku-agenda-sk',
+            'buku-konsultasi',
             'buku-ekspedisi',
             'inventaris',
             'activities',
@@ -33,6 +56,8 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'kader-khusus',
             'buku-daftar-hadir',
             'buku-tamu',
+            'buku-agenda-sk',
+            'foto-kegiatan',
             'laporan-tahunan-pkk',
         ],
         'bendahara-wajib' => [
@@ -91,6 +116,7 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'kejar-paket',
             'bkb-kegiatan',
             'tutor-khusus',
+            'foto-kegiatan',
             'data-pelatihan-kader',
         ],
         'pokja-iii' => [
@@ -100,13 +126,18 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'buku-daftar-hadir',
             'buku-notulen-rapat',
             'inventaris',
+            'kader-khusus',
+            'foto-kegiatan',
             'data-industri-rumah-tangga',
+            'buku-konsultasi',
             'data-kegiatan-pkk-pokja-iii',
         ],
         'pokja-iv' => [
             'posyandu',
             'pilot-project-naskah-pelaporan',
             'pilot-project-keluarga-sehat',
+            'kader-khusus',
+            'foto-kegiatan',
             'data-kegiatan-pkk-pokja-iv',
             'data-umum-pkk',
             'data-umum-pkk-kecamatan',
@@ -115,8 +146,6 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'desa-activities',
             'desa-arsip',
         ],
-        'belum-ada-pemilik' => [
-        ],
     ];
 
     /**
@@ -124,6 +153,8 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
      */
     private const BASELINE_SCOPE_GROUPS = [
         'desa' => [
+            'sekretaris-tpk',
+            'bendahara-tpk',
             'sekretaris-wajib',
             'penunjang-buku-wajib',
             'pkk-data-dasar',
@@ -140,6 +171,8 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'pokja-iv',
         ],
         'kecamatan' => [
+            'sekretaris-tpk',
+            'bendahara-tpk',
             'sekretaris-wajib',
             'penunjang-buku-wajib',
             'pkk-data-dasar',
@@ -155,7 +188,6 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'pokja-iii',
             'pokja-iv',
             'monitoring',
-            'belum-ada-pemilik',
         ],
     ];
 
@@ -164,27 +196,77 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
      */
     private const BASELINE_ROLE_GROUP_MODES = [
         RoleScopeMatrix::ROLE_SEKRETARIS_DESA => [
+            'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'sekretaris-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'penunjang-buku-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'pkk-data-dasar' => RoleMenuVisibilityService::MODE_READ_ONLY,
             'sekretaris-bantu' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'common-pembantu' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-i' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'bendahara-wajib' => RoleMenuVisibilityService::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => [
+            'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'sekretaris-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'penunjang-buku-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'pkk-data-dasar' => RoleMenuVisibilityService::MODE_READ_ONLY,
             'sekretaris-bantu' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'common-pembantu' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-i' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_ONLY,
+            'bendahara-wajib' => RoleMenuVisibilityService::MODE_READ_ONLY,
             'monitoring' => RoleMenuVisibilityService::MODE_READ_ONLY,
-            'belum-ada-pemilik' => RoleMenuVisibilityService::MODE_READ_ONLY,
+        ],
+        RoleScopeMatrix::ROLE_ADMIN_DESA => [
+            'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'bendahara-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'sekretaris-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'penunjang-buku-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pkk-data-dasar' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'sekretaris-bantu' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'bendahara-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-i-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-ii-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iii-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iv-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'common-pembantu' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-i' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_WRITE,
+        ],
+        RoleScopeMatrix::ROLE_ADMIN_KECAMATAN => [
+            'sekretaris-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'bendahara-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'sekretaris-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'penunjang-buku-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pkk-data-dasar' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'sekretaris-bantu' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'bendahara-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-i-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-ii-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iii-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iv-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'common-pembantu' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-i' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-ii' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iii' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'pokja-iv' => RoleMenuVisibilityService::MODE_READ_WRITE,
+            'monitoring' => RoleMenuVisibilityService::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_DESA => [
+            'bendahara-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'bendahara-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'pkk-data-dasar' => RoleMenuVisibilityService::MODE_READ_ONLY,
             'common-pembantu' => RoleMenuVisibilityService::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_BENDAHARA_KECAMATAN => [
+            'bendahara-tpk' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'bendahara-wajib' => RoleMenuVisibilityService::MODE_READ_WRITE,
             'pkk-data-dasar' => RoleMenuVisibilityService::MODE_READ_ONLY,
             'common-pembantu' => RoleMenuVisibilityService::MODE_READ_ONLY,
@@ -304,9 +386,13 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             $visibility = $this->service->resolveForScope($user, $item['scope']);
 
             $expectedGroupModes = $this->expectedGroupModes($item['role'], $item['scope']);
+            ksort($expectedGroupModes);
+            $actualGroupModes = $visibility['groups'];
+            ksort($actualGroupModes);
+
             $this->assertSame(
                 $expectedGroupModes,
-                $visibility['groups'],
+                $actualGroupModes,
                 sprintf(
                     'Group modes mismatch for role %s on scope %s.',
                     $item['role'],
@@ -348,9 +434,6 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
                 : ['desa', 'kecamatan'];
 
             foreach ($expectedScopes as $scope) {
-                // Special case for modules without UI but with specific endpoints or those we've just added
-                if ($slug === 'belum-ada-pemilik') continue;
-
                 $hasRoute = $routeUris->contains(
                     static fn (string $uri): bool => (
                         str_contains($uri, $scope.'/'.$slug) || 
