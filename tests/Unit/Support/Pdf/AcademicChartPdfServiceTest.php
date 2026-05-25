@@ -54,4 +54,17 @@ class AcademicChartPdfServiceTest extends TestCase
         $this->assertStringContainsString('1.200', $svg);
         $this->assertStringContainsString('Large Data', $svg);
     }
+
+    public function test_it_resolves_gender_colors_correctly(): void
+    {
+        $series = [
+            'Laki-laki (L)' => [10],
+            'Perempuan (P)' => [20],
+        ];
+
+        $svg = $this->service->generateVerticalBarChart('Gender Chart', ['Group 1'], $series);
+
+        $this->assertStringContainsString('fill="' . AcademicChartPdfService::ACADEMIC_PALETTE['blue'] . '"', $svg);
+        $this->assertStringContainsString('fill="' . AcademicChartPdfService::ACADEMIC_PALETTE['pink'] . '"', $svg);
+    }
 }

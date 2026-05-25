@@ -33,6 +33,13 @@ class AcademicChartPdfService
         'admin' => self::ACADEMIC_PALETTE['slate'],
     ];
 
+    public const GENDER_COLORS = [
+        '(L)' => self::ACADEMIC_PALETTE['blue'],
+        '(P)' => self::ACADEMIC_PALETTE['pink'],
+        'Laki-laki' => self::ACADEMIC_PALETTE['blue'],
+        'Perempuan' => self::ACADEMIC_PALETTE['pink'],
+    ];
+
     private const BAR_COLORS = [
         self::ACADEMIC_PALETTE['blue'],
         self::ACADEMIC_PALETTE['green'],
@@ -245,14 +252,21 @@ class AcademicChartPdfService
             }
         }
 
-        // 3. Check role-based color override (only for Pokjas)
+        // 3. Check gender-based color mapping
+        foreach (self::GENDER_COLORS as $key => $color) {
+            if (stripos($name, (string) $key) !== false) {
+                return $color;
+            }
+        }
+
+        // 4. Check role-based color override (only for Pokjas)
         if ($role && isset(self::ROLE_COLORS[$role])) {
             // Apply slight darkening/lightening based on index for multiple series if needed, 
             // but for now return base role color.
             return self::ROLE_COLORS[$role];
         }
 
-        // 4. Fallback to default grayscale palette
+        // 5. Fallback to default grayscale palette
         return self::BAR_COLORS[$index % count(self::BAR_COLORS)];
     }
 
