@@ -152,8 +152,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-i-wajib',
-      label: 'Buku Bantu',
-      code: 'BB',
+      label: 'Buku Wajib',
+      code: 'BW',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -162,8 +162,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-ii-wajib',
-      label: 'Buku Bantu',
-      code: 'BB',
+      label: 'Buku Wajib',
+      code: 'BW',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -172,8 +172,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-iii-wajib',
-      label: 'Buku Bantu',
-      code: 'BB',
+      label: 'Buku Wajib',
+      code: 'BW',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -182,8 +182,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-iv-wajib',
-      label: 'Buku Bantu',
-      code: 'BB',
+      label: 'Buku Wajib',
+      code: 'BW',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -239,21 +239,19 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        { href: '#', label: 'Buku Daftar Anggota', uiVisibility: 'disabled' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
+        { href: `/${scope}/anggota-tim-penggerak`, label: 'Buku Daftar Anggota dan Kader' },
+        { href: `/${scope}/kader-khusus`, label: 'Buku Daftar Kader Khusus' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
         { href: `/${scope}/simulasi-penyuluhan`, label: 'Buku Kegiatan Simulasi' },
-        { href: '#', label: 'Buku Daftar Anggota Simulasi', uiVisibility: 'disabled' },
         { href: `/${scope}/simulasi/buku-tamu`, label: 'Buku Tamu Simulasi' },
         { href: `/${scope}/simulasi/buku-daftar-hadir`, label: 'Buku Daftar Hadir Simulasi' },
         { href: `/${scope}/simulasi/buku-notulen`, label: 'Buku Notulen Simulasi' },
-        { href: `/${scope}/simulasi-penyuluhan/report/pdf/chart`, label: 'Buku Grafik', external: true },
-        { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja I' },
-        { href: `/${scope}/buku-kliping`, label: 'Buku Kliping' },
         { href: `/${scope}/bkr`, label: 'Buku Kegiatan BKR' },
+        { href: `/${scope}/simulasi-penyuluhan/report/pdf/chart`, label: 'Buku Grafik', external: true },
         { href: `/${scope}/bkl`, label: 'Buku Data Lansia' },
-        { href: `/${scope}/paar`, label: 'Buku Data PAAR' },
-        { href: `/${scope}/literasi-warga`, label: 'Literasi Warga (3 Buta)' },
+        { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja I' },
+        { href: `/${scope}/buku-kliping`, label: 'Kliping' },
+        { href: `/${scope}/paar`, label: 'Data PAAR' },
       ],
     },
     {

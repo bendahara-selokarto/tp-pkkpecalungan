@@ -113,6 +113,11 @@ class RoleMenuVisibilityService
             'kader-khusus',
         ],
         'pokja-i' => [
+            'bantuans',
+            'prestasi-lomba',
+            'anggota-tim-penggerak',
+            'kader-khusus',
+            'inventaris',
             'simulasi-penyuluhan',
             'buku-tamu-simulasi',
             'buku-daftar-hadir-simulasi',
@@ -291,7 +296,6 @@ class RoleMenuVisibilityService
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
-            'common-pembantu' => self::MODE_READ_WRITE,
             'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_DESA => [
@@ -318,7 +322,6 @@ class RoleMenuVisibilityService
         RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => [
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
