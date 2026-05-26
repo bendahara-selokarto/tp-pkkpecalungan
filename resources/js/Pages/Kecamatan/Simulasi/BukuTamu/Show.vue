@@ -41,18 +41,6 @@ const formatDate = (dateString) => {
           <div class="font-medium">{{ formatDate(item.visit_date) }}</div>
         </FormField>
 
-        <FormField label="Nama Tamu">
-          <div class="font-medium">{{ item.guest_name }}</div>
-        </FormField>
-
-        <FormField label="Maksud / Tujuan">
-          <div class="font-medium">{{ item.purpose }}</div>
-        </FormField>
-
-        <FormField label="Instansi">
-          <div class="font-medium">{{ item.institution || '-' }}</div>
-        </FormField>
-
         <FormField label="Keterangan" class="md:col-span-2">
           <div class="p-3 bg-gray-50 rounded-md dark:bg-slate-800 whitespace-pre-wrap">{{ item.description || '-' }}</div>
         </FormField>

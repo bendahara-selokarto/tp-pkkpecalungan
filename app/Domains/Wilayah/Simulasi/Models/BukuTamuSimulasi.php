@@ -13,9 +13,6 @@ class BukuTamuSimulasi extends Model
 
     protected $fillable = [
         'visit_date',
-        'guest_name',
-        'purpose',
-        'institution',
         'description',
         'file_path',
         'original_name',

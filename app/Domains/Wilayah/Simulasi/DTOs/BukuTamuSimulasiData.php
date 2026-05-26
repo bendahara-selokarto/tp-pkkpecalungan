@@ -9,9 +9,6 @@ class BukuTamuSimulasiData
 {
     public function __construct(
         public readonly string $visit_date,
-        public readonly string $guest_name,
-        public readonly string $purpose,
-        public readonly ?string $institution,
         public readonly ?string $description,
         public readonly string $level,
         public readonly int $area_id,
@@ -30,9 +27,6 @@ class BukuTamuSimulasiData
     {
         return new self(
             visit_date: $data['visit_date'],
-            guest_name: $data['guest_name'],
-            purpose: $data['purpose'],
-            institution: $data['institution'] ?? null,
             description: $data['description'] ?? null,
             level: $data['level'],
             area_id: (int) $data['area_id'],
@@ -51,9 +45,6 @@ class BukuTamuSimulasiData
     {
         return [
             'visit_date' => $this->visit_date,
-            'guest_name' => $this->guest_name,
-            'purpose' => $this->purpose,
-            'institution' => $this->institution,
             'description' => $this->description,
             'level' => $this->level,
             'area_id' => $this->area_id,

@@ -15,9 +15,6 @@ class StoreBukuTamuSimulasiRequest extends FormRequest
     {
         return [
             'visit_date' => ['required', 'date'],
-            'guest_name' => ['required', 'string', 'max:255'],
-            'purpose' => ['required', 'string', 'max:255'],
-            'institution' => ['nullable', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'file' => ['nullable', 'file', 'max:5120'], // 5MB limit
         ];

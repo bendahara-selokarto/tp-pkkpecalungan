@@ -19,9 +19,6 @@ const props = defineProps({
 const form = useForm({
   _method: 'PUT',
   visit_date: props.item.visit_date,
-  guest_name: props.item.guest_name,
-  purpose: props.item.purpose,
-  institution: props.item.institution,
   description: props.item.description,
   file: null,
 })
@@ -45,18 +42,6 @@ const submit = () => {
     <CardBox is-form @submit.prevent="submit">
       <FormField label="Tanggal Kunjungan" :help="form.errors.visit_date">
         <FormControl v-model="form.visit_date" type="date" required />
-      </FormField>
-
-      <FormField label="Nama Tamu" :help="form.errors.guest_name">
-        <FormControl v-model="form.guest_name" required />
-      </FormField>
-
-      <FormField label="Maksud / Tujuan" :help="form.errors.purpose">
-        <FormControl v-model="form.purpose" required />
-      </FormField>
-
-      <FormField label="Instansi" :help="form.errors.institution">
-        <FormControl v-model="form.institution" />
       </FormField>
 
       <FormField label="Keterangan" :help="form.errors.description">
