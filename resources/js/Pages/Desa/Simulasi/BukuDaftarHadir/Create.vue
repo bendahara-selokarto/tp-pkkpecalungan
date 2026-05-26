@@ -11,9 +11,6 @@ import { useForm, Link } from '@inertiajs/vue3'
 const form = useForm({
   attendance_date: '',
   title: '',
-  attendee_name: '',
-  institution: '',
-  description: '',
   file: null,
 })
 
@@ -42,18 +39,6 @@ const submit = () => {
 
       <FormField label="Nama Acara / Kegiatan" :help="form.errors.title">
         <FormControl v-model="form.title" required />
-      </FormField>
-
-      <FormField label="Nama Peserta" :help="form.errors.attendee_name">
-        <FormControl v-model="form.attendee_name" required />
-      </FormField>
-
-      <FormField label="Instansi" :help="form.errors.institution">
-        <FormControl v-model="form.institution" />
-      </FormField>
-
-      <FormField label="Keterangan" :help="form.errors.description">
-        <FormControl v-model="form.description" type="textarea" />
       </FormField>
 
       <FormField label="Unggah Berkas (Opsional)" :help="form.errors.file">

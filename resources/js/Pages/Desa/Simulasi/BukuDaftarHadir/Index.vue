@@ -91,8 +91,6 @@ const confirmDelete = () => {
             <tr class="text-left text-gray-600 dark:text-gray-300">
               <th class="px-3 py-3 font-semibold">Tanggal</th>
               <th class="px-3 py-3 font-semibold">Nama Acara / Kegiatan</th>
-              <th class="px-3 py-3 font-semibold">Nama Peserta</th>
-              <th class="px-3 py-3 font-semibold">Instansi</th>
               <th class="px-3 py-3 font-semibold">Lampiran</th>
               <th class="px-3 py-3 font-semibold w-32 text-center">Aksi</th>
             </tr>
@@ -105,8 +103,6 @@ const confirmDelete = () => {
             >
               <td class="px-3 py-3 text-gray-900 font-medium dark:text-gray-100">{{ formatDate(item.attendance_date) }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.title }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.attendee_name }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.institution || '-' }}</td>
               <td class="px-3 py-3">
                 <a
                   v-if="item.file_url"
@@ -148,7 +144,7 @@ const confirmDelete = () => {
               </td>
             </tr>
             <tr v-if="items.data.length === 0">
-              <td colspan="6" class="px-6 py-12 text-center text-gray-500">
+              <td colspan="4" class="px-6 py-12 text-center text-gray-500">
                 Data belum tersedia.
               </td>
             </tr>

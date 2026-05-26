@@ -14,9 +14,6 @@ class BukuDaftarHadirSimulasi extends Model
     protected $fillable = [
         'attendance_date',
         'title',
-        'attendee_name',
-        'institution',
-        'description',
         'file_path',
         'original_name',
         'mime_type',

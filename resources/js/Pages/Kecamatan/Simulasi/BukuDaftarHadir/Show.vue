@@ -45,18 +45,6 @@ const formatDate = (dateString) => {
           <div class="font-medium">{{ item.title }}</div>
         </FormField>
 
-        <FormField label="Nama Peserta">
-          <div class="font-medium">{{ item.attendee_name }}</div>
-        </FormField>
-
-        <FormField label="Instansi">
-          <div class="font-medium">{{ item.institution || '-' }}</div>
-        </FormField>
-
-        <FormField label="Keterangan" class="md:col-span-2">
-          <div class="p-3 bg-gray-50 rounded-md dark:bg-slate-800 whitespace-pre-wrap">{{ item.description || '-' }}</div>
-        </FormField>
-
         <FormField v-if="item.file_url" label="Lampiran Berkas" class="md:col-span-2">
           <a
             :href="item.file_url"

@@ -9,9 +9,6 @@ class BukuDaftarHadirSimulasiData
     public function __construct(
         public readonly string $attendance_date,
         public readonly string $title,
-        public readonly string $attendee_name,
-        public readonly ?string $institution,
-        public readonly ?string $description,
         public readonly string $level,
         public readonly int $area_id,
         public readonly int $created_by,
@@ -30,9 +27,6 @@ class BukuDaftarHadirSimulasiData
         return new self(
             attendance_date: $data['attendance_date'],
             title: $data['title'],
-            attendee_name: $data['attendee_name'],
-            institution: $data['institution'] ?? null,
-            description: $data['description'] ?? null,
             level: $data['level'],
             area_id: (int) $data['area_id'],
             created_by: (int) $data['created_by'],
@@ -51,9 +45,6 @@ class BukuDaftarHadirSimulasiData
         return [
             'attendance_date' => $this->attendance_date,
             'title' => $this->title,
-            'attendee_name' => $this->attendee_name,
-            'institution' => $this->institution,
-            'description' => $this->description,
             'level' => $this->level,
             'area_id' => $this->area_id,
             'created_by' => $this->created_by,

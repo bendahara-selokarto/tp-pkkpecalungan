@@ -20,9 +20,6 @@ const form = useForm({
   _method: 'PUT',
   attendance_date: props.item.attendance_date,
   title: props.item.title,
-  attendee_name: props.item.attendee_name,
-  institution: props.item.institution,
-  description: props.item.description,
   file: null,
 })
 
@@ -49,18 +46,6 @@ const submit = () => {
 
       <FormField label="Nama Acara / Kegiatan" :help="form.errors.title">
         <FormControl v-model="form.title" required />
-      </FormField>
-
-      <FormField label="Nama Peserta" :help="form.errors.attendee_name">
-        <FormControl v-model="form.attendee_name" required />
-      </FormField>
-
-      <FormField label="Instansi" :help="form.errors.institution">
-        <FormControl v-model="form.institution" />
-      </FormField>
-
-      <FormField label="Keterangan" :help="form.errors.description">
-        <FormControl v-model="form.description" type="textarea" />
       </FormField>
 
       <FormField label="Ganti Berkas (Opsional)" :help="form.errors.file">

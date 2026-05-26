@@ -16,9 +16,6 @@ class StoreBukuDaftarHadirSimulasiRequest extends FormRequest
         return [
             'attendance_date' => ['required', 'date'],
             'title' => ['required', 'string', 'max:255'],
-            'attendee_name' => ['required', 'string', 'max:255'],
-            'institution' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
             'file' => ['nullable', 'file', 'max:5120'],
         ];
     }
