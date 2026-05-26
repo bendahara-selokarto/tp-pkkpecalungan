@@ -129,15 +129,11 @@ class RoleMenuVisibilityService
             'anggota-pokja',
         ],
         'pokja-ii' => [
+            'bantuans',
+            'prestasi-lomba',
             'pelatihan-kader-pokja-ii',
             'pra-koperasi-up2k',
-            'taman-bacaan',
-            'koperasi',
-            'kejar-paket',
-            'bkb-kegiatan',
-            'tutor-khusus',
             'foto-kegiatan',
-            'data-pelatihan-kader',
         ],
         'pokja-iii' => [
             'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
@@ -301,7 +297,6 @@ class RoleMenuVisibilityService
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
-            'common-pembantu' => self::MODE_READ_WRITE,
             'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_DESA => [
@@ -325,7 +320,6 @@ class RoleMenuVisibilityService
         RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => [
             'pokja-iii-wajib' => self::MODE_READ_WRITE,

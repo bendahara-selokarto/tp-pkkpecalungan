@@ -261,16 +261,10 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
+        { href: `/${scope}/pra-koperasi-up2k`, label: 'Buku Rekap Kelompok UP2K' },
         { href: `/${scope}/pelatihan-kader-pokja-ii`, label: 'Buku Rekap Khusus Kader Pokja II' },
         { href: `/${scope}/pra-koperasi-up2k/report/pdf/chart`, label: 'Buku Grafik', external: true },
         { href: `/${scope}/foto-kegiatan`, label: 'Unggah Foto Kegiatan' },
-        { href: `/${scope}/pra-koperasi-up2k`, label: 'Buku Rekap Kelompok UP2K' },
-        { href: `/${scope}/taman-bacaan`, label: 'Data Taman Bacaan/Perpustakaan' },
-        { href: `/${scope}/koperasi`, label: 'Data Koperasi' },
-        { href: `/${scope}/kejar-paket`, label: 'Data Kejar Paket/KF/PAUD' },
-        { href: `/${scope}/bkb-kegiatan`, label: 'Data BKB (Kegiatan)' },
-        { href: `/${scope}/tutor-khusus`, label: 'Tutor Khusus KF/PAUD' },
-        { href: `/${scope}/data-pelatihan-kader`, label: 'Data Pelatihan Kader' },
       ],
     },
     {
