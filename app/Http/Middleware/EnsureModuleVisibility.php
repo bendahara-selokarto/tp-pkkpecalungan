@@ -62,7 +62,14 @@ class EnsureModuleVisibility
         if ($moduleSlug === 'catatan-keluarga' && isset($segments[2]) && $segments[2] !== '') {
             // Only use segment 2 if it's likely a module sub-path, not an ID or 'create'
             if (! is_numeric($segments[2]) && ! in_array($segments[2], ['create', 'report'], true)) {
-                return $segments[2];
+                $subSlug = $segments[2];
+                if ($subSlug === 'buku-data-umum-pokja-iv') return 'data-umum-pkk';
+                if ($subSlug === 'buku-asi-eksklusif-pokja-iv') return 'posyandu';
+                if ($subSlug === 'buku-iva-test-pokja-iv') return 'posyandu';
+                if ($subSlug === 'buku-data-kegiatan-posyandu-pokja-iv') return 'posyandu';
+                if ($subSlug === 'buku-kader-khusus-pokja-iv') return 'kader-khusus';
+
+                return $subSlug;
             }
         }
 

@@ -50,7 +50,7 @@
                 <th>AKTIFITAS FISIK</th>
                 <th>CEK KESEHATAN</th>
                 <th>KONSUMSI BUAH & SAYUR</th>
-                <th>TIDAK MEROKOK</th>
+                <th>ORANG YANG TIDAK MEROKOK</th>
                 <th>ASI EKSLUSIF</th>
             </tr>
             <tr>
