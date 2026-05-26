@@ -18,8 +18,12 @@ class InventarisScopeService
     private const ROLE_TO_GROUP_MAP = [
         RoleScopeMatrix::ROLE_POKJA_1_DESA => 'pokja-i',
         RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => 'pokja-i',
+        RoleScopeMatrix::ROLE_POKJA_2_DESA => 'pokja-ii',
+        RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => 'pokja-ii',
         RoleScopeMatrix::ROLE_POKJA_3_DESA => 'pokja-iii',
         RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => 'pokja-iii',
+        RoleScopeMatrix::ROLE_POKJA_4_DESA => 'pokja-iv',
+        RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => 'pokja-iv',
         RoleScopeMatrix::ROLE_SEKRETARIS_DESA => 'sekretaris-tpk',
         RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => 'sekretaris-tpk',
     ];
