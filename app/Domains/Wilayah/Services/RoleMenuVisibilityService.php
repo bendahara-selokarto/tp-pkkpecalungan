@@ -127,7 +127,6 @@ class RoleMenuVisibilityService
             'bkl',
             'paar',
             'anggota-pokja',
-            'literasi-warga',
         ],
         'pokja-ii' => [
             'pelatihan-kader-pokja-ii',
