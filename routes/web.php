@@ -221,7 +221,9 @@ Route::prefix('desa')
         Route::resource('buku-daftar-hadir', DesaBukuDaftarHadirController::class);
         Route::resource('buku-ekspedisi', DesaBukuEkspedisiController::class);
         Route::get('buku-ekspedisi/{id}/download', [DesaBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
+        Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printDesaReport'])->name('buku-tamu.report');
         Route::resource('buku-tamu', DesaBukuTamuController::class);
+        Route::get('buku-kliping/report/pdf', [KlipingPrintController::class, 'printDesaReport'])->name('buku-kliping.report');
         Route::resource('buku-kliping', DesaKlipingController::class);
         Route::resource('buku-agenda-sk', DesaBukuAgendaSkController::class);
         Route::resource('buku-notulen-rapat', DesaBukuNotulenRapatController::class);
@@ -347,7 +349,9 @@ Route::prefix('kecamatan')
         Route::resource('buku-daftar-hadir', KecamatanBukuDaftarHadirController::class);
         Route::resource('buku-ekspedisi', KecamatanBukuEkspedisiController::class);
         Route::get('buku-ekspedisi/{id}/download', [KecamatanBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
+        Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printKecamatanReport'])->name('buku-tamu.report');
         Route::resource('buku-tamu', KecamatanBukuTamuController::class);
+        Route::get('buku-kliping/report/pdf', [KlipingPrintController::class, 'printKecamatanReport'])->name('buku-kliping.report');
         Route::resource('buku-kliping', KecamatanKlipingController::class);
         Route::resource('buku-agenda-sk', KecamatanBukuAgendaSkController::class);
         Route::resource('buku-notulen-rapat', KecamatanBukuNotulenRapatController::class);

@@ -15,7 +15,7 @@ const props = defineProps({
 
 const form = useForm({
   _method: 'PUT',
-  visit_date: props.item.visit_date ?? '',
+  date: props.item.date ?? '',
   description: props.item.description ?? '',
   file: null,
 })
@@ -38,9 +38,9 @@ const submit = () => {
     <SectionTitleLineWithButton :icon="mdiNotebookEditOutline" title="Edit Buku Kliping" main />
 
     <CardBox is-form @submit.prevent="submit">
-      <FormField label="Tanggal" :error="form.errors.visit_date" help="Tanggal pelaksanaan kunjungan">
+      <FormField label="Tanggal" :error="form.errors.date" help="Tanggal pelaksanaan kunjungan">
         <input
-          v-model="form.visit_date"
+          v-model="form.date"
           type="date"
           class="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
           required

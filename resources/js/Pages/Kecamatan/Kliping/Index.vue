@@ -121,7 +121,7 @@ const formatDate = (value) => formatDateForDisplay(value)
               :key="item.id"
               class="border-b border-gray-100 align-top dark:border-slate-800"
             >
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.visit_date) }}</td>
+              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ formatDate(item.date) }}</td>
               <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.description }}</td>
               <td class="px-3 py-3">
                 <a
