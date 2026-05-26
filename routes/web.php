@@ -26,6 +26,8 @@ use App\Domains\Wilayah\BukuDaftarHadir\Controllers\BukuDaftarHadirPrintControll
 use App\Domains\Wilayah\BukuTamu\Controllers\DesaBukuTamuController;
 use App\Domains\Wilayah\BukuTamu\Controllers\KecamatanBukuTamuController;
 use App\Domains\Wilayah\BukuTamu\Controllers\BukuTamuPrintController;
+use App\Domains\Wilayah\Kliping\Controllers\DesaKlipingController;
+use App\Domains\Wilayah\Kliping\Controllers\KecamatanKlipingController;
 use App\Domains\Wilayah\BukuAgendaSk\Controllers\DesaBukuAgendaSkController;
 use App\Domains\Wilayah\BukuAgendaSk\Controllers\KecamatanBukuAgendaSkController;
 use App\Domains\Wilayah\BukuAgendaSk\Controllers\BukuAgendaSkPrintController;
@@ -110,6 +112,12 @@ use App\Domains\Wilayah\PraKoperasiUp2k\Controllers\KecamatanPraKoperasiUp2kCont
 use App\Domains\Wilayah\Posyandu\Controllers\DesaPosyanduController;
 use App\Domains\Wilayah\Posyandu\Controllers\KecamatanPosyanduController;
 use App\Domains\Wilayah\Posyandu\Controllers\PosyanduPrintController;
+use App\Domains\Wilayah\Simulasi\Controllers\DesaBukuTamuSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\KecamatanBukuTamuSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\DesaBukuDaftarHadirSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\KecamatanBukuDaftarHadirSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\DesaBukuNotulenSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\KecamatanBukuNotulenSimulasiController;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Controllers\DesaSimulasiPenyuluhanController;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Controllers\KecamatanSimulasiPenyuluhanController;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Controllers\SimulasiPenyuluhanPrintController;
@@ -214,6 +222,7 @@ Route::prefix('desa')
         Route::resource('buku-ekspedisi', DesaBukuEkspedisiController::class);
         Route::get('buku-ekspedisi/{id}/download', [DesaBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
         Route::resource('buku-tamu', DesaBukuTamuController::class);
+        Route::resource('buku-kliping', DesaKlipingController::class);
         Route::resource('buku-agenda-sk', DesaBukuAgendaSkController::class);
         Route::resource('buku-notulen-rapat', DesaBukuNotulenRapatController::class);
         Route::resource('inventaris', DesaInventarisController::class);
@@ -249,6 +258,13 @@ Route::prefix('desa')
         Route::resource('posyandu', DesaPosyanduController::class);
         Route::get('simulasi-penyuluhan/report/pdf/chart', [DesaSimulasiPenyuluhanController::class, 'printChartPdf'])->name('simulasi-penyuluhan.report.chart');
         Route::resource('simulasi-penyuluhan', DesaSimulasiPenyuluhanController::class);
+
+        Route::prefix('simulasi')->name('simulasi.')->group(function () {
+            Route::resource('buku-tamu', DesaBukuTamuSimulasiController::class);
+            Route::resource('buku-daftar-hadir', DesaBukuDaftarHadirSimulasiController::class);
+            Route::resource('buku-notulen', DesaBukuNotulenSimulasiController::class);
+        });
+
         Route::resource('program-prioritas', DesaProgramPrioritasController::class);
         Route::resource('pilot-project-keluarga-sehat', DesaPilotProjectKeluargaSehatController::class);
         Route::resource('pilot-project-naskah-pelaporan', DesaPilotProjectNaskahPelaporanController::class);
@@ -332,6 +348,7 @@ Route::prefix('kecamatan')
         Route::resource('buku-ekspedisi', KecamatanBukuEkspedisiController::class);
         Route::get('buku-ekspedisi/{id}/download', [KecamatanBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
         Route::resource('buku-tamu', KecamatanBukuTamuController::class);
+        Route::resource('buku-kliping', KecamatanKlipingController::class);
         Route::resource('buku-agenda-sk', KecamatanBukuAgendaSkController::class);
         Route::resource('buku-notulen-rapat', KecamatanBukuNotulenRapatController::class);
         Route::resource('inventaris', KecamatanInventarisController::class);
@@ -367,6 +384,13 @@ Route::prefix('kecamatan')
         Route::resource('posyandu', KecamatanPosyanduController::class);
         Route::get('simulasi-penyuluhan/report/pdf/chart', [KecamatanSimulasiPenyuluhanController::class, 'printChartPdf'])->name('simulasi-penyuluhan.report.chart');
         Route::resource('simulasi-penyuluhan', KecamatanSimulasiPenyuluhanController::class);
+
+        Route::prefix('simulasi')->name('simulasi.')->group(function () {
+            Route::resource('buku-tamu', KecamatanBukuTamuSimulasiController::class);
+            Route::resource('buku-daftar-hadir', KecamatanBukuDaftarHadirSimulasiController::class);
+            Route::resource('buku-notulen', KecamatanBukuNotulenSimulasiController::class);
+        });
+
         Route::resource('program-prioritas', KecamatanProgramPrioritasController::class);
         Route::resource('pilot-project-keluarga-sehat', KecamatanPilotProjectKeluargaSehatController::class);
         Route::resource('pilot-project-naskah-pelaporan', KecamatanPilotProjectNaskahPelaporanController::class);

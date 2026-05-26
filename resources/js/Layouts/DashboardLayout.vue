@@ -97,6 +97,12 @@ const resolveModuleSlugFromHref = (href) => {
     return segments[2]
   }
 
+  // Handle nested paths for Simulasi books
+  // e.g., /desa/simulasi/buku-tamu -> buku-tamu-simulasi
+  if (segments.length >= 3 && segments[1] === 'simulasi') {
+    return `${segments[2]}-simulasi`
+  }
+
   return segments[1]
 }
 

@@ -23,6 +23,15 @@ use App\Domains\Wilayah\AgendaSurat\Models\AgendaSurat;
 use App\Domains\Wilayah\AgendaSuratTugas\Repositories\AgendaSuratTugasRepository;
 use App\Domains\Wilayah\AgendaSuratTugas\Repositories\AgendaSuratTugasRepositoryInterface;
 use App\Domains\Wilayah\AgendaSuratTugas\Models\AgendaSuratTugas;
+use App\Domains\Wilayah\Simulasi\Repositories\BukuTamuSimulasiRepository;
+use App\Domains\Wilayah\Simulasi\Repositories\BukuTamuSimulasiRepositoryInterface;
+use App\Domains\Wilayah\Simulasi\Repositories\BukuDaftarHadirSimulasiRepository;
+use App\Domains\Wilayah\Simulasi\Repositories\BukuDaftarHadirSimulasiRepositoryInterface;
+use App\Domains\Wilayah\Simulasi\Repositories\BukuNotulenSimulasiRepository;
+use App\Domains\Wilayah\Simulasi\Repositories\BukuNotulenSimulasiRepositoryInterface;
+use App\Domains\Wilayah\Simulasi\Models\BukuTamuSimulasi;
+use App\Domains\Wilayah\Simulasi\Models\BukuDaftarHadirSimulasi;
+use App\Domains\Wilayah\Simulasi\Models\BukuNotulenSimulasi;
 use App\Domains\Wilayah\BukuDaftarHadir\Models\BukuDaftarHadir;
 use App\Domains\Wilayah\BukuDaftarHadir\Repositories\BukuDaftarHadirRepository;
 use App\Domains\Wilayah\BukuDaftarHadir\Repositories\BukuDaftarHadirRepositoryInterface;
@@ -119,6 +128,10 @@ use App\Domains\Wilayah\PilotProjectKeluargaSehat\Repositories\PilotProjectKelua
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Models\PilotProjectNaskahPelaporanReport;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNaskahPelaporanRepository;
 use App\Domains\Wilayah\PilotProjectNaskahPelaporan\Repositories\PilotProjectNaskahPelaporanRepositoryInterface;
+use App\Domains\Wilayah\Kliping\Models\Kliping;
+use App\Domains\Wilayah\Kliping\Repositories\KlipingRepository;
+use App\Domains\Wilayah\Kliping\Repositories\KlipingRepositoryInterface;
+use App\Policies\KlipingPolicy;
 use App\Domains\Wilayah\LaporanTahunanPkk\Models\LaporanTahunanPkkReport;
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepository;
 use App\Domains\Wilayah\LaporanTahunanPkk\Repositories\LaporanTahunanPkkRepositoryInterface;
@@ -153,6 +166,9 @@ use App\Policies\BantuanPolicy;
 use App\Policies\BukuKeuanganPolicy;
 use App\Policies\AgendaSuratPolicy;
 use App\Policies\AgendaSuratTugasPolicy;
+use App\Policies\BukuTamuSimulasiPolicy;
+use App\Policies\BukuDaftarHadirSimulasiPolicy;
+use App\Policies\BukuNotulenSimulasiPolicy;
 use App\Policies\BukuDaftarHadirPolicy;
 use App\Policies\BukuTamuPolicy;
 use App\Policies\BukuAgendaSkPolicy;
@@ -244,6 +260,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             AgendaSuratTugasRepositoryInterface::class,
             AgendaSuratTugasRepository::class
+        );
+
+        $this->app->bind(
+            BukuTamuSimulasiRepositoryInterface::class,
+            BukuTamuSimulasiRepository::class
+        );
+
+        $this->app->bind(
+            BukuDaftarHadirSimulasiRepositoryInterface::class,
+            BukuDaftarHadirSimulasiRepository::class
+        );
+
+        $this->app->bind(
+            BukuNotulenSimulasiRepositoryInterface::class,
+            BukuNotulenSimulasiRepository::class
         );
 
         $this->app->bind(
@@ -450,6 +481,11 @@ class AppServiceProvider extends ServiceProvider
             BukuKonsultasiRepositoryInterface::class,
             BukuKonsultasiRepository::class
         );
+
+        $this->app->bind(
+            KlipingRepositoryInterface::class,
+            KlipingRepository::class
+        );
     }
 
     /**
@@ -466,6 +502,9 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(AgendaSurat::class, AgendaSuratPolicy::class);
         Gate::policy(AgendaSuratTugas::class, AgendaSuratTugasPolicy::class);
         Gate::policy(BukuDaftarHadir::class, BukuDaftarHadirPolicy::class);
+        Gate::policy(BukuTamuSimulasi::class, BukuTamuSimulasiPolicy::class);
+        Gate::policy(BukuDaftarHadirSimulasi::class, BukuDaftarHadirSimulasiPolicy::class);
+        Gate::policy(BukuNotulenSimulasi::class, BukuNotulenSimulasiPolicy::class);
         Gate::policy(BukuEkspedisi::class, BukuEkspedisiPolicy::class);
         Gate::policy(BukuTamu::class, BukuTamuPolicy::class);
         Gate::policy(BukuAgendaSk::class, BukuAgendaSkPolicy::class);
@@ -501,6 +540,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(ArsipDocument::class, ArsipDocumentPolicy::class);
         Gate::policy(FotoKegiatan::class, FotoKegiatanPolicy::class);
         Gate::policy(BukuKonsultasi::class, BukuKonsultasiPolicy::class);
+        Gate::policy(Kliping::class, KlipingPolicy::class);
 
         Gate::before(function ($user, $ability) {
             return $user->hasRole(RoleScopeMatrix::ROLE_SUPER_ADMIN) ? true : null;

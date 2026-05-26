@@ -66,6 +66,7 @@ class RoleMenuVisibilityService
             'kader-khusus',
             'buku-daftar-hadir',
             'buku-tamu',
+            'buku-kliping',
             'buku-agenda-sk',
             'agenda-surat-tugas',
             'foto-kegiatan',
@@ -113,6 +114,10 @@ class RoleMenuVisibilityService
         ],
         'pokja-i' => [
             'simulasi-penyuluhan',
+            'buku-tamu-simulasi',
+            'buku-daftar-hadir-simulasi',
+            'buku-notulen-simulasi',
+            'buku-kliping',
             'bkr',
             'bkl',
             'paar',

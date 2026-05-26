@@ -53,8 +53,28 @@ class EnsureModuleVisibility
         }
 
         $moduleSlug = $segments[1] ?? null;
+        if (! is_string($moduleSlug) || $moduleSlug === '') {
+            return null;
+        }
 
-        return is_string($moduleSlug) && $moduleSlug !== '' ? $moduleSlug : null;
+        // Handle nested paths for Pokja Data Kegiatan and Data Umum under catatan-keluarga
+        // e.g., /desa/catatan-keluarga/data-kegiatan-pkk-pokja-ii -> data-kegiatan-pkk-pokja-ii
+        if ($moduleSlug === 'catatan-keluarga' && isset($segments[2]) && $segments[2] !== '') {
+            // Only use segment 2 if it's likely a module sub-path, not an ID or 'create'
+            if (! is_numeric($segments[2]) && ! in_array($segments[2], ['create', 'report'], true)) {
+                return $segments[2];
+            }
+        }
+
+        // Handle nested paths for Simulasi books
+        // e.g., /desa/simulasi/buku-tamu -> buku-tamu-simulasi
+        if ($moduleSlug === 'simulasi' && isset($segments[2]) && $segments[2] !== '') {
+            if (! is_numeric($segments[2]) && ! in_array($segments[2], ['create', 'report'], true)) {
+                return "{$segments[2]}-simulasi";
+            }
+        }
+
+        return $moduleSlug;
     }
 
     private function isWriteIntent(Request $request): bool

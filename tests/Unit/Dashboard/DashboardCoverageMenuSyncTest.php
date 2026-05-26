@@ -15,13 +15,18 @@ class DashboardCoverageMenuSyncTest extends TestCase
      * @var list<string>
      */
     private const EXPLICIT_NON_COVERAGE_MENU_SLUGS = [
+        'agenda-surat-tugas',
         'anggota-tim-penggerak-kader',
         'anggota-pokja',
         'bantuans',
         'bkl',
         'bkr',
         'buku-agenda-sk',
+        'buku-daftar-hadir-simulasi',
+        'buku-kliping',
         'buku-konsultasi',
+        'buku-notulen-simulasi',
+        'buku-tamu-simulasi',
         'data-kegiatan-pkk-pokja-i',
         'data-kegiatan-pkk-pokja-ii',
         'data-kegiatan-pkk-pokja-iii',

@@ -48,6 +48,12 @@ const resolveModuleSlugFromHref = (href) => {
     return segments[2]
   }
 
+  // Handle nested paths for Simulasi books
+  // e.g., /desa/simulasi/buku-tamu -> buku-tamu-simulasi
+  if (segments.length >= 3 && segments[1] === 'simulasi') {
+    return `${segments[2]}-simulasi`
+  }
+
   return segments[1]
 }
 
@@ -208,6 +214,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
         { href: `/${scope}/buku-konsultasi`, label: 'Buku Konsultasi' },
         { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
+        { href: `/${scope}/buku-kliping`, label: 'Buku Kliping' },
         { href: `/${scope}/buku-ekspedisi`, label: 'Buku Ekspedisi' },
         { href: '/dashboard/charts/report/pdf', label: 'Buku Grafik', external: true },
         { href: `/${scope}/buku-agenda-sk`, label: 'Buku Agenda SK' },
@@ -237,12 +244,12 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
         { href: `/${scope}/simulasi-penyuluhan`, label: 'Buku Kegiatan Simulasi' },
         { href: '#', label: 'Buku Daftar Anggota Simulasi', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Tamu Simulasi', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Daftar Hadir Simulasi', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Notulen Simulasi', uiVisibility: 'disabled' },
+        { href: `/${scope}/simulasi/buku-tamu`, label: 'Buku Tamu Simulasi' },
+        { href: `/${scope}/simulasi/buku-daftar-hadir`, label: 'Buku Daftar Hadir Simulasi' },
+        { href: `/${scope}/simulasi/buku-notulen`, label: 'Buku Notulen Simulasi' },
         { href: `/${scope}/simulasi-penyuluhan/report/pdf/chart`, label: 'Buku Grafik', external: true },
         { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja I' },
-        { href: '#', label: 'Buku Kliping', uiVisibility: 'disabled' },
+        { href: `/${scope}/buku-kliping`, label: 'Buku Kliping' },
         { href: `/${scope}/bkr`, label: 'Buku Kegiatan BKR' },
         { href: `/${scope}/bkl`, label: 'Buku Data Lansia' },
         { href: `/${scope}/paar`, label: 'Buku Data PAAR' },
