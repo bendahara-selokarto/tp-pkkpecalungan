@@ -301,6 +301,11 @@ Route::prefix('desa')
         Route::get('data-pelatihan-kader/report/pdf', [DataPelatihanKaderPrintController::class, 'printDesaReport'])->name('data-pelatihan-kader.report');
         Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf', [DataPemanfaatanTanahPekaranganHatinyaPkkPrintController::class, 'printDesaReport'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report');
         Route::get('catatan-keluarga/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaReport'])->name('catatan-keluarga.report');
+        Route::get('catatan-keluarga/buku-data-umum-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuDataUmum'])->name('catatan-keluarga.buku-data-umum-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-asi-eksklusif-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuAsiEksklusif'])->name('catatan-keluarga.buku-asi-eksklusif-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-iva-test-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuIvaTest'])->name('catatan-keluarga.buku-iva-test-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-data-kegiatan-posyandu-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuDataKegiatanPosyandu'])->name('catatan-keluarga.buku-data-kegiatan-posyandu-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-kader-khusus-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuKaderKhusus'])->name('catatan-keluarga.buku-kader-khusus-pokja-iv.report');
         Route::get('catatan-keluarga/rekap-dasa-wisma/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapDasaWismaReport'])->name('catatan-keluarga.rekap-dasa-wisma.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-dasawisma/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapIbuHamilDasaWismaReport'])->name('catatan-keluarga.rekap-ibu-hamil-dasawisma.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-rt/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapIbuHamilPkkRtReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-rt.report');
@@ -429,6 +434,11 @@ Route::prefix('kecamatan')
         Route::get('data-pelatihan-kader/report/pdf', [DataPelatihanKaderPrintController::class, 'printKecamatanReport'])->name('data-pelatihan-kader.report');
         Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf', [DataPemanfaatanTanahPekaranganHatinyaPkkPrintController::class, 'printKecamatanReport'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report');
         Route::get('catatan-keluarga/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanReport'])->name('catatan-keluarga.report');
+        Route::get('catatan-keluarga/buku-data-umum-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuDataUmum'])->name('catatan-keluarga.buku-data-umum-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-asi-eksklusif-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuAsiEksklusif'])->name('catatan-keluarga.buku-asi-eksklusif-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-iva-test-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuIvaTest'])->name('catatan-keluarga.buku-iva-test-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-data-kegiatan-posyandu-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuDataKegiatanPosyandu'])->name('catatan-keluarga.buku-data-kegiatan-posyandu-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-kader-khusus-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuKaderKhusus'])->name('catatan-keluarga.buku-kader-khusus-pokja-iv.report');
         Route::get('catatan-keluarga/rekap-dasa-wisma/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapDasaWismaReport'])->name('catatan-keluarga.rekap-dasa-wisma.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-dasawisma/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapIbuHamilDasaWismaReport'])->name('catatan-keluarga.rekap-ibu-hamil-dasawisma.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-rt/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapIbuHamilPkkRtReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-rt.report');

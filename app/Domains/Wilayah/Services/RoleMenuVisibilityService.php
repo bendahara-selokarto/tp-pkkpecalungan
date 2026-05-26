@@ -152,12 +152,13 @@ class RoleMenuVisibilityService
             'foto-kegiatan',
         ],
         'pokja-iv' => [
-            'posyandu',
-            'pilot-project-naskah-pelaporan',
-            'pilot-project-keluarga-sehat',
+            'bantuans',
+            'prestasi-lomba',
+            'inventaris',
             'kader-khusus',
+            'bkl',
+            'posyandu',
             'foto-kegiatan',
-            'data-kegiatan-pkk-pokja-iv',
             'data-umum-pkk',
             'data-umum-pkk-kecamatan',
         ],
@@ -312,7 +313,6 @@ class RoleMenuVisibilityService
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
-            'common-pembantu' => self::MODE_READ_WRITE,
             'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => [
@@ -330,7 +330,6 @@ class RoleMenuVisibilityService
         RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => [
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_SUPER_ADMIN => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,
