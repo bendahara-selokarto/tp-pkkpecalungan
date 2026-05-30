@@ -60,10 +60,3 @@
     </div>
 </body>
 </html>
-lass="center">Data keluarga belum tersedia.</td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</body>
-</html>

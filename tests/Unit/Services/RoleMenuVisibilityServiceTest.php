@@ -50,6 +50,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['sekretaris-wajib'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['penunjang-buku-wajib'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['common-pembantu'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['pokja-i'] ?? null);
 
         foreach ([
             'anggota-tim-penggerak',
@@ -70,10 +71,10 @@ class RoleMenuVisibilityServiceTest extends TestCase
         }
 
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['catatan-keluarga'] ?? null);
-        $this->assertNull($visibility['modules']['buku-keuangan'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['buku-keuangan'] ?? null);
     }
 
-    public function test_kecamatan_sekretaris_memiliki_monitoring_dan_submenu_belum_ada_pemilik_ro(): void
+    public function test_kecamatan_sekretaris_memiliki_monitoring_ro(): void
     {
         $user = User::factory()->create();
         $user->assignRole('kecamatan-sekretaris');
@@ -82,16 +83,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
 
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['groups']['sekretaris-wajib'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['monitoring'] ?? null);
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['groups']['belum-ada-pemilik'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['desa-activities'] ?? null);
-
-        foreach ($this->service->modulesForGroup('belum-ada-pemilik') as $moduleSlug) {
-            $this->assertSame(
-                RoleMenuVisibilityService::MODE_READ_ONLY,
-                $visibility['modules'][$moduleSlug] ?? null,
-                sprintf('Modul %s pada submenu belum ada pemilik wajib read-only.', $moduleSlug)
-            );
-        }
     }
 
     public function test_bendahara_memiliki_buku_wajib_keuangan(): void
@@ -119,6 +111,10 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'bantuans',
                 'kader-khusus',
                 'simulasi-penyuluhan',
+                'buku-tamu-simulasi',
+                'buku-daftar-hadir-simulasi',
+                'buku-notulen-simulasi',
+                'buku-kliping',
                 'bkr',
                 'bkl',
                 'paar',
@@ -138,6 +134,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'kejar-paket',
                 'bkb-kegiatan',
                 'tutor-khusus',
+                'foto-kegiatan',
                 'data-pelatihan-kader',
                 'data-kegiatan-pkk-pokja-ii',
             ],
@@ -154,7 +151,9 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'buku-notulen-rapat',
                 'inventaris',
                 'data-industri-rumah-tangga',
+                'buku-konsultasi',
                 'data-kegiatan-pkk-pokja-iii',
+                'foto-kegiatan',
             ],
             'kecamatan-pokja-iv' => [
                 'program-prioritas',
@@ -168,6 +167,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'data-kegiatan-pkk-pokja-iv',
                 'data-umum-pkk',
                 'data-umum-pkk-kecamatan',
+                'foto-kegiatan',
             ],
         ];
 
@@ -183,37 +183,6 @@ class RoleMenuVisibilityServiceTest extends TestCase
             ksort($expected);
 
             $this->assertSame($expected, $actualModules, sprintf('Modul role %s drift.', $role));
-        }
-    }
-
-    public function test_submenu_belum_ada_pemilik_berisi_modul_tanpa_owner_rw_operasional_kecamatan(): void
-    {
-        $operationalRoles = [
-            'kecamatan-sekretaris',
-            'kecamatan-bendahara',
-            'kecamatan-pokja-i',
-            'kecamatan-pokja-ii',
-            'kecamatan-pokja-iii',
-            'kecamatan-pokja-iv',
-        ];
-
-        foreach ($this->service->modulesForGroup('belum-ada-pemilik') as $moduleSlug) {
-            foreach ($operationalRoles as $role) {
-                // If it's a Pokja role, it might have RW access to these modules via their own Pokja group
-                // We only check if it doesn't have RW access via 'belum-ada-pemilik' group (which is RO)
-                // But resolveModuleModeForRoleScope returns the combined mode.
-                // So we only assert modules that are NOT in the Pokja's RW groups.
-
-                if (in_array($moduleSlug, ['buku-daftar-hadir', 'buku-notulen-rapat', 'inventaris', 'bantuans', 'prestasi-lomba'], true)) {
-                    continue;
-                }
-
-                $this->assertNotSame(
-                    RoleMenuVisibilityService::MODE_READ_WRITE,
-                    $this->service->resolveModuleModeForRoleScope($role, 'kecamatan', $moduleSlug),
-                    sprintf('Modul %s belum boleh punya owner RW pada role operasional %s.', $moduleSlug, $role)
-                );
-            }
         }
     }
 

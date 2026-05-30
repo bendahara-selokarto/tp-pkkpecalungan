@@ -63,7 +63,11 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.menuGroupModes.sekretaris-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.common-pembantu', 'read-write')
-                ->missing('auth.user.menuGroupModes.pokja-i')
+                ->where('auth.user.menuGroupModes.pokja-i', 'read-only')
+                ->where('auth.user.menuGroupModes.pokja-ii', 'read-only')
+                ->where('auth.user.menuGroupModes.pokja-iii', 'read-only')
+                ->where('auth.user.menuGroupModes.pokja-iv', 'read-only')
+                ->where('auth.user.menuGroupModes.bendahara-wajib', 'read-only')
                 ->missing('auth.user.menuGroupModes.referensi')
             );
     }
@@ -78,7 +82,7 @@ class MenuVisibilityPayloadTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.pokja-ii-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-ii', 'read-write')
-                ->where('auth.user.menuGroupModes.common-pembantu', 'read-write')
+                ->missing('auth.user.menuGroupModes.common-pembantu')
                 ->missing('auth.user.menuGroupModes.referensi')
                 ->missing('auth.user.menuGroupModes.sekretaris-wajib')
                 ->missing('auth.user.menuGroupModes.monitoring')
@@ -111,7 +115,7 @@ class MenuVisibilityPayloadTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.pokja-i-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
-                ->where('auth.user.menuGroupModes.common-pembantu', 'read-write')
+                ->missing('auth.user.menuGroupModes.common-pembantu')
                 ->where('auth.user.moduleModes.data-kegiatan-pkk-pokja-i', 'read-write')
             );
     }
@@ -144,7 +148,6 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.menuGroupModes.sekretaris-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.monitoring', 'read-only')
-                ->where('auth.user.menuGroupModes.belum-ada-pemilik', 'read-only')
                 ->where('auth.user.moduleModes.activities', 'read-write')
             );
     }

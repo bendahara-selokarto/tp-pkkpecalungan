@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArsipController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PokjaIvSpecialReportController;
 use App\Http\Controllers\UiRuntimeErrorLogController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SuperAdmin\AccessControlManagementController;
@@ -17,12 +18,17 @@ use App\Domains\Wilayah\Arsip\Controllers\KecamatanDesaArsipController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\DesaAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\KecamatanAgendaSuratController;
 use App\Domains\Wilayah\AgendaSurat\Controllers\AgendaSuratReportPrintController;
+use App\Domains\Wilayah\AgendaSuratTugas\Controllers\DesaAgendaSuratTugasController;
+use App\Domains\Wilayah\AgendaSuratTugas\Controllers\KecamatanAgendaSuratTugasController;
+use App\Domains\Wilayah\AgendaSuratTugas\Controllers\AgendaSuratTugasReportPrintController;
 use App\Domains\Wilayah\BukuDaftarHadir\Controllers\DesaBukuDaftarHadirController;
 use App\Domains\Wilayah\BukuDaftarHadir\Controllers\KecamatanBukuDaftarHadirController;
 use App\Domains\Wilayah\BukuDaftarHadir\Controllers\BukuDaftarHadirPrintController;
 use App\Domains\Wilayah\BukuTamu\Controllers\DesaBukuTamuController;
 use App\Domains\Wilayah\BukuTamu\Controllers\KecamatanBukuTamuController;
 use App\Domains\Wilayah\BukuTamu\Controllers\BukuTamuPrintController;
+use App\Domains\Wilayah\Kliping\Controllers\DesaKlipingController;
+use App\Domains\Wilayah\Kliping\Controllers\KecamatanKlipingController;
 use App\Domains\Wilayah\BukuAgendaSk\Controllers\DesaBukuAgendaSkController;
 use App\Domains\Wilayah\BukuAgendaSk\Controllers\KecamatanBukuAgendaSkController;
 use App\Domains\Wilayah\BukuAgendaSk\Controllers\BukuAgendaSkPrintController;
@@ -107,6 +113,12 @@ use App\Domains\Wilayah\PraKoperasiUp2k\Controllers\KecamatanPraKoperasiUp2kCont
 use App\Domains\Wilayah\Posyandu\Controllers\DesaPosyanduController;
 use App\Domains\Wilayah\Posyandu\Controllers\KecamatanPosyanduController;
 use App\Domains\Wilayah\Posyandu\Controllers\PosyanduPrintController;
+use App\Domains\Wilayah\Simulasi\Controllers\DesaBukuTamuSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\KecamatanBukuTamuSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\DesaBukuDaftarHadirSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\KecamatanBukuDaftarHadirSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\DesaBukuNotulenSimulasiController;
+use App\Domains\Wilayah\Simulasi\Controllers\KecamatanBukuNotulenSimulasiController;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Controllers\DesaSimulasiPenyuluhanController;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Controllers\KecamatanSimulasiPenyuluhanController;
 use App\Domains\Wilayah\SimulasiPenyuluhan\Controllers\SimulasiPenyuluhanPrintController;
@@ -204,12 +216,16 @@ Route::prefix('desa')
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');
         Route::resource('agenda-surat', DesaAgendaSuratController::class);
+        Route::resource('agenda-surat-tugas', DesaAgendaSuratTugasController::class);
         Route::get('agenda-surat/{id}/attachment/data-dukung', [DesaAgendaSuratController::class, 'attachment'])
             ->name('agenda-surat.attachments.show');
         Route::resource('buku-daftar-hadir', DesaBukuDaftarHadirController::class);
         Route::resource('buku-ekspedisi', DesaBukuEkspedisiController::class);
         Route::get('buku-ekspedisi/{id}/download', [DesaBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
+        Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printDesaReport'])->name('buku-tamu.report');
         Route::resource('buku-tamu', DesaBukuTamuController::class);
+        Route::get('buku-kliping/report/pdf', [KlipingPrintController::class, 'printDesaReport'])->name('buku-kliping.report');
+        Route::resource('buku-kliping', DesaKlipingController::class);
         Route::resource('buku-agenda-sk', DesaBukuAgendaSkController::class);
         Route::resource('buku-notulen-rapat', DesaBukuNotulenRapatController::class);
         Route::resource('inventaris', DesaInventarisController::class);
@@ -245,6 +261,13 @@ Route::prefix('desa')
         Route::resource('posyandu', DesaPosyanduController::class);
         Route::get('simulasi-penyuluhan/report/pdf/chart', [DesaSimulasiPenyuluhanController::class, 'printChartPdf'])->name('simulasi-penyuluhan.report.chart');
         Route::resource('simulasi-penyuluhan', DesaSimulasiPenyuluhanController::class);
+
+        Route::prefix('simulasi')->name('simulasi.')->group(function () {
+            Route::resource('buku-tamu', DesaBukuTamuSimulasiController::class);
+            Route::resource('buku-daftar-hadir', DesaBukuDaftarHadirSimulasiController::class);
+            Route::resource('buku-notulen', DesaBukuNotulenSimulasiController::class);
+        });
+
         Route::resource('program-prioritas', DesaProgramPrioritasController::class);
         Route::resource('pilot-project-keluarga-sehat', DesaPilotProjectKeluargaSehatController::class);
         Route::resource('pilot-project-naskah-pelaporan', DesaPilotProjectNaskahPelaporanController::class);
@@ -256,6 +279,7 @@ Route::prefix('desa')
         Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printDesaReport'])->name('buku-tamu.report');
         Route::get('buku-agenda-sk/report/pdf', [BukuAgendaSkPrintController::class, 'report'])->defaults('level', 'desa')->name('buku-agenda-sk.report');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaReport'])->name('agenda-surat.report');
+        Route::get('agenda-surat-tugas/report/pdf', [AgendaSuratTugasReportPrintController::class, 'report'])->defaults('level', 'desa')->name('agenda-surat-tugas.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printDesaEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printDesaReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printDesaReport'])->name('bantuans.report');
@@ -278,6 +302,11 @@ Route::prefix('desa')
         Route::get('data-pelatihan-kader/report/pdf', [DataPelatihanKaderPrintController::class, 'printDesaReport'])->name('data-pelatihan-kader.report');
         Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf', [DataPemanfaatanTanahPekaranganHatinyaPkkPrintController::class, 'printDesaReport'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report');
         Route::get('catatan-keluarga/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaReport'])->name('catatan-keluarga.report');
+        Route::get('catatan-keluarga/buku-data-umum-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuDataUmum'])->defaults('scope', 'desa')->name('catatan-keluarga.buku-data-umum-pokja-iv.report');       
+        Route::get('catatan-keluarga/buku-asi-eksklusif-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuAsiEksklusif'])->defaults('scope', 'desa')->name('catatan-keluarga.buku-asi-eksklusif-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-iva-test-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuIvaTest'])->defaults('scope', 'desa')->name('catatan-keluarga.buku-iva-test-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-data-kegiatan-posyandu-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuDataKegiatanPosyandu'])->defaults('scope', 'desa')->name('catatan-keluarga.buku-data-kegiatan-posyandu-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-kader-khusus-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuKaderKhusus'])->defaults('scope', 'desa')->name('catatan-keluarga.buku-kader-khusus-pokja-iv.report');
         Route::get('catatan-keluarga/rekap-dasa-wisma/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapDasaWismaReport'])->name('catatan-keluarga.rekap-dasa-wisma.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-dasawisma/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapIbuHamilDasaWismaReport'])->name('catatan-keluarga.rekap-ibu-hamil-dasawisma.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-rt/report/pdf', [CatatanKeluargaPrintController::class, 'printDesaRekapIbuHamilPkkRtReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-rt.report');
@@ -320,12 +349,16 @@ Route::prefix('kecamatan')
             ->whereIn('type', ['image', 'document'])
             ->name('activities.attachments.show');
         Route::resource('agenda-surat', KecamatanAgendaSuratController::class);
+        Route::resource('agenda-surat-tugas', KecamatanAgendaSuratTugasController::class);
         Route::get('agenda-surat/{id}/attachment/data-dukung', [KecamatanAgendaSuratController::class, 'attachment'])
             ->name('agenda-surat.attachments.show');
         Route::resource('buku-daftar-hadir', KecamatanBukuDaftarHadirController::class);
         Route::resource('buku-ekspedisi', KecamatanBukuEkspedisiController::class);
         Route::get('buku-ekspedisi/{id}/download', [KecamatanBukuEkspedisiController::class, 'download'])->name('buku-ekspedisi.download');
+        Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printKecamatanReport'])->name('buku-tamu.report');
         Route::resource('buku-tamu', KecamatanBukuTamuController::class);
+        Route::get('buku-kliping/report/pdf', [KlipingPrintController::class, 'printKecamatanReport'])->name('buku-kliping.report');
+        Route::resource('buku-kliping', KecamatanKlipingController::class);
         Route::resource('buku-agenda-sk', KecamatanBukuAgendaSkController::class);
         Route::resource('buku-notulen-rapat', KecamatanBukuNotulenRapatController::class);
         Route::resource('inventaris', KecamatanInventarisController::class);
@@ -361,6 +394,13 @@ Route::prefix('kecamatan')
         Route::resource('posyandu', KecamatanPosyanduController::class);
         Route::get('simulasi-penyuluhan/report/pdf/chart', [KecamatanSimulasiPenyuluhanController::class, 'printChartPdf'])->name('simulasi-penyuluhan.report.chart');
         Route::resource('simulasi-penyuluhan', KecamatanSimulasiPenyuluhanController::class);
+
+        Route::prefix('simulasi')->name('simulasi.')->group(function () {
+            Route::resource('buku-tamu', KecamatanBukuTamuSimulasiController::class);
+            Route::resource('buku-daftar-hadir', KecamatanBukuDaftarHadirSimulasiController::class);
+            Route::resource('buku-notulen', KecamatanBukuNotulenSimulasiController::class);
+        });
+
         Route::resource('program-prioritas', KecamatanProgramPrioritasController::class);
         Route::resource('pilot-project-keluarga-sehat', KecamatanPilotProjectKeluargaSehatController::class);
         Route::resource('pilot-project-naskah-pelaporan', KecamatanPilotProjectNaskahPelaporanController::class);
@@ -372,6 +412,7 @@ Route::prefix('kecamatan')
         Route::get('buku-tamu/report/pdf', [BukuTamuPrintController::class, 'printKecamatanReport'])->name('buku-tamu.report');
         Route::get('buku-agenda-sk/report/pdf', [BukuAgendaSkPrintController::class, 'report'])->defaults('level', 'kecamatan')->name('buku-agenda-sk.report');
         Route::get('agenda-surat/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanReport'])->name('agenda-surat.report');
+        Route::get('agenda-surat-tugas/report/pdf', [AgendaSuratTugasReportPrintController::class, 'report'])->defaults('level', 'kecamatan')->name('agenda-surat-tugas.report');
         Route::get('agenda-surat/ekspedisi/report/pdf', [AgendaSuratReportPrintController::class, 'printKecamatanEkspedisiReport'])->name('agenda-surat.ekspedisi.report');
         Route::get('inventaris/report/pdf', [InventarisReportPrintController::class, 'printKecamatanReport'])->name('inventaris.report');
         Route::get('bantuans/report/pdf', [BantuanReportPrintController::class, 'printKecamatanReport'])->name('bantuans.report');
@@ -394,6 +435,11 @@ Route::prefix('kecamatan')
         Route::get('data-pelatihan-kader/report/pdf', [DataPelatihanKaderPrintController::class, 'printKecamatanReport'])->name('data-pelatihan-kader.report');
         Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf', [DataPemanfaatanTanahPekaranganHatinyaPkkPrintController::class, 'printKecamatanReport'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report');
         Route::get('catatan-keluarga/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanReport'])->name('catatan-keluarga.report');
+        Route::get('catatan-keluarga/buku-data-umum-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuDataUmum'])->defaults('scope', 'kecamatan')->name('catatan-keluarga.buku-data-umum-pokja-iv.report');       
+        Route::get('catatan-keluarga/buku-asi-eksklusif-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuAsiEksklusif'])->defaults('scope', 'kecamatan')->name('catatan-keluarga.buku-asi-eksklusif-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-iva-test-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuIvaTest'])->defaults('scope', 'kecamatan')->name('catatan-keluarga.buku-iva-test-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-data-kegiatan-posyandu-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuDataKegiatanPosyandu'])->defaults('scope', 'kecamatan')->name('catatan-keluarga.buku-data-kegiatan-posyandu-pokja-iv.report');
+        Route::get('catatan-keluarga/buku-kader-khusus-pokja-iv/report/pdf', [PokjaIvSpecialReportController::class, 'printBukuKaderKhusus'])->defaults('scope', 'kecamatan')->name('catatan-keluarga.buku-kader-khusus-pokja-iv.report');
         Route::get('catatan-keluarga/rekap-dasa-wisma/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapDasaWismaReport'])->name('catatan-keluarga.rekap-dasa-wisma.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-dasawisma/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapIbuHamilDasaWismaReport'])->name('catatan-keluarga.rekap-ibu-hamil-dasawisma.report');
         Route::get('catatan-keluarga/rekap-ibu-hamil-pkk-rt/report/pdf', [CatatanKeluargaPrintController::class, 'printKecamatanRekapIbuHamilPkkRtReport'])->name('catatan-keluarga.rekap-ibu-hamil-pkk-rt.report');

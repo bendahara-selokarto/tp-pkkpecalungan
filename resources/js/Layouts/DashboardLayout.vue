@@ -94,7 +94,20 @@ const resolveModuleSlugFromHref = (href) => {
   // Handle nested paths for Pokja Data Kegiatan and Data Umum
   // e.g., /desa/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf -> data-kegiatan-pkk-pokja-ii
   if (segments.length >= 3 && segments[1] === 'catatan-keluarga') {
-    return segments[2]
+    const slug = segments[2]
+    if (slug === 'buku-data-umum-pokja-iv') return 'data-umum-pkk'
+    if (slug === 'buku-asi-eksklusif-pokja-iv') return 'posyandu'
+    if (slug === 'buku-iva-test-pokja-iv') return 'posyandu'
+    if (slug === 'buku-data-kegiatan-posyandu-pokja-iv') return 'posyandu'
+    if (slug === 'buku-kader-khusus-pokja-iv') return 'kader-khusus'
+
+    return slug
+  }
+
+  // Handle nested paths for Simulasi books
+  // e.g., /desa/simulasi/buku-tamu -> buku-tamu-simulasi
+  if (segments.length >= 3 && segments[1] === 'simulasi') {
+    return `${segments[2]}-simulasi`
   }
 
   return segments[1]

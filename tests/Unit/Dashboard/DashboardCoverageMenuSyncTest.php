@@ -15,17 +15,27 @@ class DashboardCoverageMenuSyncTest extends TestCase
      * @var list<string>
      */
     private const EXPLICIT_NON_COVERAGE_MENU_SLUGS = [
+        'agenda-surat-tugas',
         'anggota-tim-penggerak-kader',
         'anggota-pokja',
         'bantuans',
         'bkl',
         'bkr',
-        'buku-daftar-hadir',
-        'buku-tamu',
-        'buku-notulen-rapat',
+        'buku-agenda-sk',
+        'buku-daftar-hadir-simulasi',
+        'buku-kliping',
+        'buku-konsultasi',
+        'buku-notulen-simulasi',
+        'buku-tamu-simulasi',
         'data-kegiatan-pkk-pokja-i',
+        'data-kegiatan-pkk-pokja-ii',
+        'data-kegiatan-pkk-pokja-iii',
+        'data-kegiatan-pkk-pokja-iv',
+        'data-umum-pkk',
+        'data-umum-pkk-kecamatan',
         'desa-activities',
         'desa-arsip',
+        'foto-kegiatan',
         'laporan-tahunan-pkk',
         'pilot-project-keluarga-sehat',
         'pilot-project-naskah-pelaporan',
@@ -103,13 +113,21 @@ class DashboardCoverageMenuSyncTest extends TestCase
 
         return collect([
             'sekretaris-tpk',
+            'bendahara-tpk',
+            'sekretaris-wajib',
+            'sekretaris-bantu',
+            'bendahara-wajib',
+            'pokja-i-wajib',
+            'pokja-ii-wajib',
+            'pokja-iii-wajib',
+            'pokja-iv-wajib',
             'penunjang-buku-wajib',
+            'pkk-data-dasar',
             'pokja-i',
             'pokja-ii',
             'pokja-iii',
             'pokja-iv',
             'monitoring',
-            'belum-ada-pemilik',
         ])->flatMap(
             fn (string $group): array => $roleMenuVisibilityService->modulesForGroup($group)
         )->unique()->sort()->values();

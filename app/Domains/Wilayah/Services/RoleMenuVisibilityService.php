@@ -66,7 +66,9 @@ class RoleMenuVisibilityService
             'kader-khusus',
             'buku-daftar-hadir',
             'buku-tamu',
+            'buku-kliping',
             'buku-agenda-sk',
+            'agenda-surat-tugas',
             'foto-kegiatan',
             'laporan-tahunan-pkk',
         ],
@@ -111,52 +113,58 @@ class RoleMenuVisibilityService
             'kader-khusus',
         ],
         'pokja-i' => [
+            'bantuans',
+            'prestasi-lomba',
+            'anggota-tim-penggerak',
+            'kader-khusus',
+            'inventaris',
             'simulasi-penyuluhan',
+            'buku-tamu-simulasi',
+            'buku-daftar-hadir-simulasi',
+            'buku-notulen-simulasi',
+            'buku-kliping',
             'bkr',
             'bkl',
             'paar',
             'anggota-pokja',
-            'literasi-warga',
         ],
         'pokja-ii' => [
+            'bantuans',
+            'prestasi-lomba',
             'pelatihan-kader-pokja-ii',
             'pra-koperasi-up2k',
-            'taman-bacaan',
-            'koperasi',
-            'kejar-paket',
-            'bkb-kegiatan',
-            'tutor-khusus',
             'foto-kegiatan',
-            'data-pelatihan-kader',
         ],
         'pokja-iii' => [
-            'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
-            'warung-pkk',
-            'data-keluarga',
+            'bantuans',
+            'prestasi-lomba',
             'buku-daftar-hadir',
             'buku-notulen-rapat',
             'inventaris',
+            'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
             'kader-khusus',
-            'foto-kegiatan',
+            'data-keluarga',
             'data-industri-rumah-tangga',
             'buku-konsultasi',
-            'data-kegiatan-pkk-pokja-iii',
+            'buku-keuangan',
+            'anggota-pokja',
+            'buku-kliping',
+            'foto-kegiatan',
         ],
         'pokja-iv' => [
-            'posyandu',
-            'pilot-project-naskah-pelaporan',
-            'pilot-project-keluarga-sehat',
+            'bantuans',
+            'prestasi-lomba',
+            'inventaris',
             'kader-khusus',
+            'bkl',
+            'posyandu',
             'foto-kegiatan',
-            'data-kegiatan-pkk-pokja-iv',
             'data-umum-pkk',
             'data-umum-pkk-kecamatan',
         ],
         'monitoring' => [
             'desa-activities',
             'desa-arsip',
-        ],
-        'belum-ada-pemilik' => [
         ],
     ];
 
@@ -200,7 +208,6 @@ class RoleMenuVisibilityService
             'pokja-iii',
             'pokja-iv',
             'monitoring',
-            'belum-ada-pemilik',
         ],
     ];
 
@@ -234,7 +241,6 @@ class RoleMenuVisibilityService
             'pokja-iv' => self::MODE_READ_ONLY,
             'bendahara-wajib' => self::MODE_READ_ONLY,
             'monitoring' => self::MODE_READ_ONLY,
-            'belum-ada-pemilik' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_ADMIN_DESA => [
             'sekretaris-tpk' => self::MODE_READ_WRITE,
@@ -289,49 +295,41 @@ class RoleMenuVisibilityService
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
-            'common-pembantu' => self::MODE_READ_WRITE,
             'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_DESA => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
-            'common-pembantu' => self::MODE_READ_WRITE,
             'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_DESA => [
             'pokja-iii-wajib' => self::MODE_READ_WRITE,
             'pokja-iii' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
-            'common-pembantu' => self::MODE_READ_WRITE,
             'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_4_DESA => [
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
             'pkk-data-dasar' => self::MODE_READ_ONLY,
-            'common-pembantu' => self::MODE_READ_WRITE,
             'sekretaris-bantu' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_1_KECAMATAN => [
             'pokja-i-wajib' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_KECAMATAN => [
             'pokja-ii-wajib' => self::MODE_READ_WRITE,
             'pokja-ii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_POKJA_3_KECAMATAN => [
             'pokja-iii-wajib' => self::MODE_READ_WRITE,
             'pokja-iii' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_POKJA_4_KECAMATAN => [
             'pokja-iv-wajib' => self::MODE_READ_WRITE,
             'pokja-iv' => self::MODE_READ_WRITE,
-            'common-pembantu' => self::MODE_READ_WRITE,
         ],
         RoleScopeMatrix::ROLE_SUPER_ADMIN => [
             'sekretaris-wajib' => self::MODE_READ_WRITE,
@@ -354,6 +352,10 @@ class RoleMenuVisibilityService
      * @var array<string, array<string, string|null>>
      */
     private const ROLE_MODULE_MODE_OVERRIDES = [
+        RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN => [
+            'prestasi-lomba' => null,
+            'bantuans' => null,
+        ],
     ];
 
     public function __construct(

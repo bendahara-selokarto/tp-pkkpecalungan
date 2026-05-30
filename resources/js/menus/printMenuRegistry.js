@@ -5,7 +5,7 @@ const PRINT_SOURCE_OVERRIDES = {
   'anggota-tim-penggerak-kader': 'anggota-tim-penggerak',
 }
 
-const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'buku-ekspedisi', 'agenda-surat', 'buku-tamu', 'buku-agenda-sk', 'buku-konsultasi', 'laporan-tahunan-pkk', 'data-umum-pkk', 'data-umum-pkk-kecamatan', 'foto-kegiatan'])
+const roleScopedBookModuleSlugs = new Set(['activities', 'bantuans', 'inventaris', 'kader-khusus', 'prestasi-lomba', 'program-prioritas', 'buku-notulen-rapat', 'buku-daftar-hadir', 'buku-ekspedisi', 'agenda-surat', 'agenda-surat-tugas', 'buku-tamu', 'buku-agenda-sk', 'buku-konsultasi', 'laporan-tahunan-pkk', 'data-umum-pkk', 'data-umum-pkk-kecamatan', 'foto-kegiatan'])
 const bookGroupContextByMenuGroup = {
   'sekretaris-wajib': 'sekretaris-tpk',
   'sekretaris-bantu': 'sekretaris-tpk',
@@ -45,7 +45,20 @@ const resolveModuleSlugFromHref = (href) => {
   // Handle nested paths for Pokja Data Kegiatan and Data Umum
   // e.g., /desa/catatan-keluarga/data-kegiatan-pkk-pokja-ii/report/pdf -> data-kegiatan-pkk-pokja-ii
   if (segments.length >= 3 && segments[1] === 'catatan-keluarga') {
-    return segments[2]
+    const slug = segments[2]
+    if (slug === 'buku-data-umum-pokja-iv') return 'data-umum-pkk'
+    if (slug === 'buku-asi-eksklusif-pokja-iv') return 'posyandu'
+    if (slug === 'buku-iva-test-pokja-iv') return 'posyandu'
+    if (slug === 'buku-data-kegiatan-posyandu-pokja-iv') return 'posyandu'
+    if (slug === 'buku-kader-khusus-pokja-iv') return 'kader-khusus'
+
+    return slug
+  }
+
+  // Handle nested paths for Simulasi books
+  // e.g., /desa/simulasi/buku-tamu -> buku-tamu-simulasi
+  if (segments.length >= 3 && segments[1] === 'simulasi') {
+    return `${segments[2]}-simulasi`
   }
 
   return segments[1]
@@ -84,6 +97,7 @@ const buildScopedPdfReportItemsByGroup = (scope) => ({
     { href: `/${scope}/buku-daftar-hadir/report/pdf`, label: 'Daftar Hadir' },
     { href: `/${scope}/buku-tamu/report/pdf`, label: 'Buku Tamu' },
     { href: `/${scope}/buku-agenda-sk/report/pdf`, label: 'Buku Agenda SK' },
+    { href: `/${scope}/agenda-surat-tugas/report/pdf`, label: 'Agenda Surat Tugas' },
     { href: `/${scope}/prestasi-lomba/report/pdf`, label: 'Buku Prestasi' },
     { href: `/${scope}/bantuans/report/pdf`, label: 'Buku Bantuan' },
     { href: `/${scope}/kader-khusus/report/pdf`, label: 'Buku Kader Khusus' },
@@ -145,8 +159,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-i-wajib',
-      label: 'Buku Bantu',
-      code: 'BB',
+      label: 'Buku Wajib',
+      code: 'BW',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -155,8 +169,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-ii-wajib',
-      label: 'Buku Bantu',
-      code: 'BB',
+      label: 'Buku Wajib',
+      code: 'BW',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -165,8 +179,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-iii-wajib',
-      label: 'Buku Bantu',
-      code: 'BB',
+      label: 'Buku Wajib',
+      code: 'BW',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -175,8 +189,8 @@ const buildScopedMenuGroups = (scope) => {
     },
     {
       key: 'pokja-iv-wajib',
-      label: 'Buku Bantu',
-      code: 'BB',
+      label: 'Buku Wajib',
+      code: 'BW',
       items: [
         { href: `/${scope}/program-prioritas`, label: 'Buku Program Kerja' },
         { href: `/${scope}/activities`, label: 'Buku Kegiatan' },
@@ -207,9 +221,11 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
         { href: `/${scope}/buku-konsultasi`, label: 'Buku Konsultasi' },
         { href: `/${scope}/buku-tamu`, label: 'Buku Tamu' },
+        { href: `/${scope}/buku-kliping`, label: 'Buku Kliping' },
         { href: `/${scope}/buku-ekspedisi`, label: 'Buku Ekspedisi' },
         { href: '/dashboard/charts/report/pdf', label: 'Buku Grafik', external: true },
         { href: `/${scope}/buku-agenda-sk`, label: 'Buku Agenda SK' },
+        { href: `/${scope}/agenda-surat-tugas`, label: 'Agenda Surat Tugas' },
         { href: `/${scope}/laporan-tahunan-pkk`, label: 'Laporan Tahunan Tim Penggerak PKK' },
       ],
     },
@@ -230,21 +246,19 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        { href: '#', label: 'Buku Daftar Anggota', uiVisibility: 'disabled' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
+        { href: `/${scope}/anggota-tim-penggerak`, label: 'Buku Daftar Anggota dan Kader' },
+        { href: `/${scope}/kader-khusus`, label: 'Buku Daftar Kader Khusus' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
         { href: `/${scope}/simulasi-penyuluhan`, label: 'Buku Kegiatan Simulasi' },
-        { href: '#', label: 'Buku Daftar Anggota Simulasi', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Tamu Simulasi', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Daftar Hadir Simulasi', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Notulen Simulasi', uiVisibility: 'disabled' },
-        { href: `/${scope}/simulasi-penyuluhan/report/pdf/chart`, label: 'Buku Grafik', external: true },
-        { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja I' },
-        { href: '#', label: 'Buku Kliping', uiVisibility: 'disabled' },
+        { href: `/${scope}/simulasi/buku-tamu`, label: 'Buku Tamu Simulasi' },
+        { href: `/${scope}/simulasi/buku-daftar-hadir`, label: 'Buku Daftar Hadir Simulasi' },
+        { href: `/${scope}/simulasi/buku-notulen`, label: 'Buku Notulen Simulasi' },
         { href: `/${scope}/bkr`, label: 'Buku Kegiatan BKR' },
+        { href: `/${scope}/simulasi-penyuluhan/report/pdf/chart`, label: 'Buku Grafik', external: true },
         { href: `/${scope}/bkl`, label: 'Buku Data Lansia' },
-        { href: `/${scope}/paar`, label: 'Buku Data PAAR' },
-        { href: `/${scope}/literasi-warga`, label: 'Literasi Warga (3 Buta)' },
+        { href: `/${scope}/anggota-pokja`, label: 'Buku Anggota Pokja I' },
+        { href: `/${scope}/buku-kliping`, label: 'Kliping' },
+        { href: `/${scope}/paar`, label: 'Data PAAR' },
       ],
     },
     {
@@ -254,16 +268,10 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
+        { href: `/${scope}/pra-koperasi-up2k`, label: 'Buku Rekap Kelompok UP2K' },
         { href: `/${scope}/pelatihan-kader-pokja-ii`, label: 'Buku Rekap Khusus Kader Pokja II' },
         { href: `/${scope}/pra-koperasi-up2k/report/pdf/chart`, label: 'Buku Grafik', external: true },
         { href: `/${scope}/foto-kegiatan`, label: 'Unggah Foto Kegiatan' },
-        { href: `/${scope}/pra-koperasi-up2k`, label: 'Buku Rekap Kelompok UP2K' },
-        { href: `/${scope}/taman-bacaan`, label: 'Data Taman Bacaan/Perpustakaan' },
-        { href: `/${scope}/koperasi`, label: 'Data Koperasi' },
-        { href: `/${scope}/kejar-paket`, label: 'Data Kejar Paket/KF/PAUD' },
-        { href: `/${scope}/bkb-kegiatan`, label: 'Data BKB (Kegiatan)' },
-        { href: `/${scope}/tutor-khusus`, label: 'Tutor Khusus KF/PAUD' },
-        { href: `/${scope}/data-pelatihan-kader`, label: 'Data Pelatihan Kader' },
       ],
     },
     {
@@ -276,17 +284,17 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/buku-daftar-hadir`, label: 'Buku Daftar Hadir' },
         { href: `/${scope}/buku-notulen-rapat`, label: 'Buku Notulen' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
         { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku HATINYA PKK' },
-        { href: '#', label: 'Buku Kader Khusus Pokja III', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Rumah Sehat and Tidak Sehat', uiVisibility: 'disabled' },
+        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus Pokja III' },
+        { href: `/${scope}/data-keluarga`, label: 'Buku Rumah Sehat dan Tidak Sehat' },
+        { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku Bantu Pangan' },
         { href: `/${scope}/data-industri-rumah-tangga`, label: 'Buku Bantu Jumlah Industri Rumah Tangga' },
         { href: `/${scope}/buku-konsultasi`, label: 'Buku Konsultasi' },
-        { href: '#', label: 'Buku Kas Pokja', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Susunan Pengurus Pokja', uiVisibility: 'disabled' },
+        { href: `/${scope}/buku-keuangan`, label: 'Buku Kas Pokja' },
+        { href: `/${scope}/anggota-pokja`, label: 'Buku Susunan Pengurus Pokja' },
         { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf/chart`, label: 'Buku Grafik', external: true },
+        { href: `/${scope}/buku-kliping`, label: 'Kliping' },
         { href: `/${scope}/foto-kegiatan`, label: 'Unggah Foto Kegiatan' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iii/report/pdf`, label: 'Buku Data Kegiatan' },
       ],
     },
     {
@@ -294,29 +302,20 @@ const buildScopedMenuGroups = (scope) => {
       label: 'Buku Bantu',
       code: 'BB',
       items: [
-        { href: '#', label: 'Buku Kader Khusus Pokja IV', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Bantu Catatan Lansia', uiVisibility: 'disabled' },
+        { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
+        { href: `/${scope}/catatan-keluarga/buku-kader-khusus-pokja-iv/report/pdf`, label: 'Buku Kader Khusus Pokja IV' },
+        { href: `/${scope}/bkl`, label: 'Buku Bantu Catatan Lansia' },
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
-        {
-          href: scope === 'kecamatan'
-            ? `/${scope}/catatan-keluarga/data-umum-pkk-kecamatan/report/pdf`
-            : `/${scope}/catatan-keluarga/data-umum-pkk/report/pdf`,
-          label: 'Buku Data Umum',
-        },
-        { href: `/${scope}/bantuans`, label: 'Buku Bantu Umum' },
+        { href: `/${scope}/catatan-keluarga/buku-data-umum-pokja-iv/report/pdf`, label: 'Buku Data Umum Pokja IV' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
-        { href: '#', label: 'Buku ASI Eksklusif', uiVisibility: 'disabled' },
-        { href: '#', label: 'Buku Rekapitulasi IVA Test', uiVisibility: 'disabled' },
+        { href: `/${scope}/catatan-keluarga/buku-asi-eksklusif-pokja-iv/report/pdf`, label: 'Buku ASI Eksklusif' },
+        { href: `/${scope}/catatan-keluarga/buku-iva-test-pokja-iv/report/pdf`, label: 'Buku Rekapitulasi IVA Test' },
         { href: '#', label: 'Buku Capaian Akseptor', uiVisibility: 'disabled' },
         { href: '#', label: 'Buku Catatan Pemeriksaan dan IVA Test', uiVisibility: 'disabled' },
-        { href: `/${scope}/posyandu`, label: 'Buku Kegiatan Posyandu' },
+        { href: `/${scope}/catatan-keluarga/buku-data-kegiatan-posyandu-pokja-iv/report/pdf`, label: 'Data Kegiatan Posyandu' },
         { href: '#', label: 'Data Pengunjung Petugas Posyandu', uiVisibility: 'disabled' },
         { href: `/${scope}/posyandu/report/pdf/chart`, label: 'Buku Grafik', external: true },
         { href: `/${scope}/foto-kegiatan`, label: 'Unggah Foto Kegiatan' },
-        { href: `/${scope}/pilot-project-naskah-pelaporan`, label: 'Naskah Pelaporan Pilot Project' },
-        { href: `/${scope}/pilot-project-keluarga-sehat`, label: 'Laporan Pilot Project Keluarga Sehat' },
-        { href: `/${scope}/catatan-keluarga/data-kegiatan-pkk-pokja-iv/report/pdf`, label: 'Buku Data Kegiatan' },
       ],
     },
   ]

@@ -1,0 +1,107 @@
+<script setup>
+import CardBox from '@/admin-one/components/CardBox.vue'
+import FormField from '@/admin-one/components/FormField.vue'
+import FormControl from '@/admin-one/components/FormControl.vue'
+import SectionMain from '@/admin-one/components/SectionMain.vue'
+import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
+import BaseButton from '@/admin-one/components/BaseButton.vue'
+import BaseButtons from '@/admin-one/components/BaseButtons.vue'
+import BaseIcon from '@/admin-one/components/BaseIcon.vue'
+import { mdiCardAccountDetailsOutline, mdiFileDownloadOutline } from '@mdi/js'
+import { useForm, Link } from '@inertiajs/vue3'
+
+const props = defineProps({
+  item: {
+    type: Object,
+    required: true,
+  },
+})
+
+const form = useForm({
+  _method: 'PUT',
+  nomor_surat: props.item.nomor_surat,
+  tanggal_surat: props.item.tanggal_surat,
+  kepada: props.item.kepada,
+  perihal: props.item.perihal,
+  lampiran: props.item.lampiran,
+  tembusan: props.item.tembusan,
+  file: null,
+})
+
+const submit = () => {
+  form.post(`/desa/agenda-surat-tugas/${props.item.id}`)
+}
+</script>
+
+<template>
+  <SectionMain>
+    <SectionTitleLineWithButton :icon="mdiCardAccountDetailsOutline" title="Edit Agenda Surat Tugas" main>
+      <Link
+        href="/desa/agenda-surat-tugas"
+        class="inline-flex items-center text-sm font-medium text-gray-500 hover:text-gray-700"
+      >
+        Kembali ke Daftar
+      </Link>
+    </SectionTitleLineWithButton>
+
+    <CardBox is-form @submit.prevent="submit">
+      <FormField label="Nomor dan Kode Surat" :help="form.errors.nomor_surat">
+        <FormControl v-model="form.nomor_surat" required />
+      </FormField>
+
+      <FormField label="Tanggal Surat" :help="form.errors.tanggal_surat">
+        <FormControl v-model="form.tanggal_surat" type="date" required />
+      </FormField>
+
+      <FormField label="Kepada" :help="form.errors.kepada">
+        <FormControl v-model="form.kepada" required />
+      </FormField>
+
+      <FormField label="Perihal" :help="form.errors.perihal">
+        <FormControl v-model="form.perihal" type="textarea" required />
+      </FormField>
+
+      <FormField label="Lampiran (Teks)" :help="form.errors.lampiran">
+        <FormControl v-model="form.lampiran" />
+      </FormField>
+
+      <FormField label="Tembusan" :help="form.errors.tembusan">
+        <FormControl v-model="form.tembusan" type="textarea" />
+      </FormField>
+
+      <FormField label="Ganti Berkas (Opsional)" :help="form.errors.file">
+        <div class="space-y-2">
+          <FormControl
+            type="file"
+            @input="form.file = $event.target.files[0]"
+            accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+          />
+          <div v-if="item.file_url" class="text-sm text-gray-500 flex items-center gap-1">
+            <span>Berkas saat ini:</span>
+            <a :href="item.file_url" target="_blank" class="text-emerald-600 hover:underline inline-flex items-center gap-1">
+              <BaseIcon :path="mdiFileDownloadOutline" size="14" />
+              Lihat Berkas
+            </a>
+          </div>
+        </div>
+      </FormField>
+
+      <hr class="-mx-6 my-6 border-t border-gray-100 dark:border-slate-800">
+
+      <div class="flex items-center justify-end gap-2">
+        <Link
+          href="/desa/agenda-surat-tugas"
+          class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800"
+        >
+          Batal
+        </Link>
+        <BaseButton
+          type="submit"
+          color="info"
+          label="Update"
+          :loading="form.processing"
+        />
+      </div>
+    </CardBox>
+  </SectionMain>
+</template>

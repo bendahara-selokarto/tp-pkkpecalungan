@@ -281,7 +281,6 @@ class ListAccessControlMatrixUseCase
             'pokja-iii' => 'Pokja III',
             'pokja-iv' => 'Pokja IV',
             'monitoring' => 'Monitoring',
-            'belum-ada-pemilik' => 'Belum Ada Pemilik',
             default => ucfirst(str_replace('-', ' ', $group)),
         };
     }
