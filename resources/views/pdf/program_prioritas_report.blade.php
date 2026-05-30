@@ -62,32 +62,32 @@
     <table>
         <thead>
             <tr>
-                <th rowspan="2" style="width: 28px;">NO</th>
-                <th rowspan="2" style="width: 72px;">PROGRAM</th>
-                <th rowspan="2" style="width: 80px;">PRIORITAS PROGRAM</th>
-                <th rowspan="2" style="width: 76px;">KEGIATAN</th>
-                <th rowspan="2" style="width: 70px;">SASARAN TARGET</th>
-                <th colspan="12" style="width: 204px;">JADWAL WAKTU</th>
-                <th colspan="4" style="width: 72px;">SUMBER DANA</th>
-                <th rowspan="2" style="width: 48px;">KET</th>
+                <th rowspan="2" style="width: 20px;">NO</th>
+                <th rowspan="2" style="width: 92px;">PROGRAM</th>
+                <th rowspan="2" style="width: 95px;">PRIORITAS PROGRAM</th>
+                <th rowspan="2" style="width: 91px;">KEGIATAN</th>
+                <th rowspan="2" style="width: 80px;">SASARAN TARGET</th>
+                <th colspan="12" style="width: 168px;">JADWAL WAKTU</th>
+                <th colspan="4" style="width: 64px;">SUMBER DANA</th>
+                <th rowspan="2" style="width: 40px;">KET</th>
             </tr>
             <tr>
-                <th style="width: 17px;">1</th>
-                <th style="width: 17px;">2</th>
-                <th style="width: 17px;">3</th>
-                <th style="width: 17px;">4</th>
-                <th style="width: 17px;">5</th>
-                <th style="width: 17px;">6</th>
-                <th style="width: 17px;">7</th>
-                <th style="width: 17px;">8</th>
-                <th style="width: 17px;">9</th>
-                <th style="width: 17px;">10</th>
-                <th style="width: 17px;">11</th>
-                <th style="width: 17px;">12</th>
-                <th style="width: 18px;">Pus</th>
-                <th style="width: 18px;">APB</th>
-                <th style="width: 18px;">SWL</th>
-                <th style="width: 18px;">Ban</th>
+                <th style="width: 14px;">1</th>
+                <th style="width: 14px;">2</th>
+                <th style="width: 14px;">3</th>
+                <th style="width: 14px;">4</th>
+                <th style="width: 14px;">5</th>
+                <th style="width: 14px;">6</th>
+                <th style="width: 14px;">7</th>
+                <th style="width: 14px;">8</th>
+                <th style="width: 14px;">9</th>
+                <th style="width: 14px;">10</th>
+                <th style="width: 14px;">11</th>
+                <th style="width: 14px;">12</th>
+                <th style="width: 16px;">Pus</th>
+                <th style="width: 16px;">APB</th>
+                <th style="width: 16px;">SWL</th>
+                <th style="width: 16px;">Ban</th>
             </tr>
         </thead>
         <tbody>
