@@ -30,6 +30,11 @@ All domain logic MUST follow this strict layering:
 - The `areas` table is the single source of truth for all regional data.
 - Do NOT add new dependencies to legacy tables (`kecamatans`, `desas`, `user_assignments`).
 
+### Report & PDF Standards
+- All PDF templates MUST adhere to `docs/pdf/PDF_RENDERING_STANDARDS_DOMPDF.md`.
+- Use `<colgroup>` for column widths; avoid `table-layout: fixed` and inline `width` on `<th>` with `colspan`.
+- Reports MUST be verified against `docs/pdf/PDF_COMPLIANCE_CHECKLIST.md`.
+
 ## 2. Operational Workflows for AI
 
 ### Documentation Governance

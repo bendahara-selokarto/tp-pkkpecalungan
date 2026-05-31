@@ -22,7 +22,6 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
         }
         th, td {
             border: 1px solid #111827;
@@ -60,34 +59,58 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 25px;">
+            <col style="width: 120px;">
+            <col style="width: 180px;">
+            <col style="width: 150px;">
+            <col style="width: 120px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 18px;">
+            <col style="width: 22px;">
+            <col style="width: 22px;">
+            <col style="width: 22px;">
+            <col style="width: 22px;">
+            <col style="width: 100px;">
+        </colgroup>
         <thead>
             <tr>
-                <th rowspan="2" style="width: 20px;">NO</th>
-                <th rowspan="2" style="width: 92px;">PROGRAM</th>
-                <th rowspan="2" style="width: 95px;">PRIORITAS PROGRAM</th>
-                <th rowspan="2" style="width: 91px;">KEGIATAN</th>
-                <th rowspan="2" style="width: 80px;">SASARAN TARGET</th>
-                <th colspan="12" style="width: 168px;">JADWAL WAKTU</th>
-                <th colspan="4" style="width: 64px;">SUMBER DANA</th>
-                <th rowspan="2" style="width: 40px;">KET</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">PROGRAM</th>
+                <th rowspan="2">PRIORITAS PROGRAM</th>
+                <th rowspan="2">KEGIATAN</th>
+                <th rowspan="2">SASARAN TARGET</th>
+                <th colspan="12">JADWAL WAKTU</th>
+                <th colspan="4">SUMBER DANA</th>
+                <th rowspan="2">KET</th>
             </tr>
             <tr>
-                <th style="width: 14px;">1</th>
-                <th style="width: 14px;">2</th>
-                <th style="width: 14px;">3</th>
-                <th style="width: 14px;">4</th>
-                <th style="width: 14px;">5</th>
-                <th style="width: 14px;">6</th>
-                <th style="width: 14px;">7</th>
-                <th style="width: 14px;">8</th>
-                <th style="width: 14px;">9</th>
-                <th style="width: 14px;">10</th>
-                <th style="width: 14px;">11</th>
-                <th style="width: 14px;">12</th>
-                <th style="width: 16px;">Pus</th>
-                <th style="width: 16px;">APB</th>
-                <th style="width: 16px;">SWL</th>
-                <th style="width: 16px;">Ban</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>4</th>
+                <th>5</th>
+                <th>6</th>
+                <th>7</th>
+                <th>8</th>
+                <th>9</th>
+                <th>10</th>
+                <th>11</th>
+                <th>12</th>
+                <th>Pus</th>
+                <th>APB</th>
+                <th>SWL</th>
+                <th>Ban</th>
             </tr>
         </thead>
         <tbody>
