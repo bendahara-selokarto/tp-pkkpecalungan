@@ -7,7 +7,7 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 9px; }
         .center { text-align: center; }
@@ -28,14 +28,23 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 35px;">
+            <col style="width: 85px;">
+            <col style="width: 120px;">
+            <col style="width: 150px;">
+            <col style="width: 200px;">
+            <col style="width: 90px;">
+            <col style="width: 100px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 26px;">NO</th>
-                <th style="width: 72px;">TGL SURAT</th>
-                <th style="width: 98px;">NO SURAT</th>
-                <th style="width: 140px;">KEPADA</th>
-                <th style="width: 185px;">PERIHAL</th>
-                <th style="width: 88px;">LAMPIRAN</th>
+                <th>NO</th>
+                <th>TGL SURAT</th>
+                <th>NO SURAT</th>
+                <th>KEPADA</th>
+                <th>PERIHAL</th>
+                <th>LAMPIRAN</th>
                 <th>KETERANGAN</th>
             </tr>
         </thead>

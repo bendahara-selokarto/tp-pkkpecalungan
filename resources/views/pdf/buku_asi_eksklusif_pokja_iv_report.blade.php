@@ -8,7 +8,7 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 6px; color: #111827; margin: 0; }
         .lampiran { text-align: right; font-weight: 700; font-size: 8px; margin-bottom: 4px; }
         .title { text-align: center; font-size: 10px; font-weight: 700; margin-bottom: 8px; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -23,10 +23,19 @@
     <div class="title">BUKU ASI EKSLUSIF</div>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 25px;">
+            <col style="width: 80px;">
+            @for ($i = 0; $i < 22; $i++)
+                <col style="width: 20px;">
+            @endfor
+            <col style="width: 35px;">
+            <col style="width: 30px;">
+        </colgroup>
         <thead>
             <tr>
-                <th rowspan="3" width="20">NO</th>
-                <th rowspan="3" width="60">NAMA DESA</th>
+                <th rowspan="3">NO</th>
+                <th rowspan="3">NAMA DESA</th>
                 <th colspan="3">JUMLAH DARI UMUR (0-5 BLN)</th>
                 <th colspan="3">JUMLAH DARI BAYI 6 BULAN</th>
                 <th colspan="2">E0</th>
@@ -47,20 +56,13 @@
                 <th rowspan="2">L</th>
                 <th rowspan="2">P</th>
                 <th rowspan="2">JML</th>
-                <th>L</th>
-                <th>P</th>
-                <th>L</th>
-                <th>P</th>
-                <th>L</th>
-                <th>P</th>
-                <th>L</th>
-                <th>P</th>
-                <th>L</th>
-                <th>P</th>
-                <th>L</th>
-                <th>P</th>
-                <th>L</th>
-                <th>P</th>
+                <th colspan="2">JUMLAH</th>
+                <th colspan="2">JUMLAH</th>
+                <th colspan="2">JUMLAH</th>
+                <th colspan="2">JUMLAH</th>
+                <th colspan="2">JUMLAH</th>
+                <th colspan="2">JUMLAH</th>
+                <th colspan="2">JUMLAH</th>
                 <th rowspan="2">L</th>
                 <th rowspan="2">P</th>
             </tr>

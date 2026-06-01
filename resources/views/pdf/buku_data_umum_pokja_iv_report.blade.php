@@ -8,7 +8,7 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 6px; color: #111827; margin: 0; }
         .lampiran { text-align: right; font-weight: 700; font-size: 8px; margin-bottom: 4px; }
         .title { text-align: center; font-size: 10px; font-weight: 700; margin-bottom: 8px; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -23,10 +23,18 @@
     <div class="title">BUKU DATA UMUM POKJA IV</div>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 25px;">
+            <col style="width: 80px;">
+            @for ($i = 0; $i < 18; $i++)
+                <col style="width: 32px;">
+            @endfor
+            <col style="width: 80px;">
+        </colgroup>
         <thead>
             <tr>
-                <th rowspan="2" width="20">NO</th>
-                <th rowspan="2" width="60">DESA</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">DESA</th>
                 <th colspan="4">KA</th>
                 <th colspan="4">POSYANDU</th>
                 <th colspan="5">GERAKAN PHBS</th>

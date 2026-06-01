@@ -8,7 +8,7 @@
         .lampiran { text-align: right; font-size: 14px; font-weight: 700; margin-bottom: 18px; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 10px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 3px; vertical-align: top; word-break: break-word; }
         th { text-align: center; font-size: 8px; font-weight: 700; }
         .number-row th { font-size: 7px; font-weight: 400; }
@@ -23,30 +23,47 @@
     ])
 
     <table>
+        <colgroup>
+            <col style="width: 25px;">
+            <col style="width: 65px;">
+            <col style="width: 65px;">
+            <col style="width: 90px;">
+            <col style="width: 90px;">
+            <col style="width: 110px;">
+            <col style="width: 60px;">
+            <col style="width: 80px;">
+            <col style="width: 25px;">
+            <col style="width: 90px;">
+            <col style="width: 65px;">
+            <col style="width: 90px;">
+            <col style="width: 110px;">
+            <col style="width: 60px;">
+            <col style="width: 80px;">
+        </colgroup>
         <thead>
             <tr>
                 <th colspan="8">SURAT MASUK</th>
                 <th colspan="7">SURAT KELUAR</th>
             </tr>
             <tr>
-                <th rowspan="2" style="width: 3%;">NO</th>
-                <th colspan="2" style="width: 10%;">TANGGAL</th>
-                <th rowspan="2" style="width: 8%;">NOMOR SURAT</th>
-                <th rowspan="2" style="width: 10%;">ASAL SURAT DARI</th>
-                <th rowspan="2" style="width: 12%;">PERIHAL</th>
-                <th rowspan="2" style="width: 7%;">LAMPIRAN</th>
-                <th rowspan="2" style="width: 9%;">DITERUSKAN KEPADA</th>
-                <th rowspan="2" style="width: 3%;">NO</th>
-                <th rowspan="2" style="width: 9%;">NOMOR DAN KODE SURAT</th>
-                <th rowspan="2" style="width: 7%;">TANGGAL SURAT</th>
-                <th rowspan="2" style="width: 8%;">KEPADA</th>
-                <th rowspan="2" style="width: 12%;">PERIHAL</th>
-                <th rowspan="2" style="width: 7%;">LAMPIRAN</th>
-                <th rowspan="2" style="width: 8%;">TEMBUSAN</th>
+                <th rowspan="2">NO</th>
+                <th colspan="2">TANGGAL</th>
+                <th rowspan="2">NOMOR SURAT</th>
+                <th rowspan="2">ASAL SURAT DARI</th>
+                <th rowspan="2">PERIHAL</th>
+                <th rowspan="2">LAMPIRAN</th>
+                <th rowspan="2">DITERUSKAN KEPADA</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">NOMOR DAN KODE SURAT</th>
+                <th rowspan="2">TANGGAL SURAT</th>
+                <th rowspan="2">KEPADA</th>
+                <th rowspan="2">PERIHAL</th>
+                <th rowspan="2">LAMPIRAN</th>
+                <th rowspan="2">TEMBUSAN</th>
             </tr>
             <tr>
-                <th style="width: 5%;">TERIMA SURAT</th>
-                <th style="width: 5%;">SURAT</th>
+                <th>TERIMA SURAT</th>
+                <th>SURAT</th>
             </tr>
             <tr class="number-row">
                 <th>1</th>

@@ -12,7 +12,7 @@
         .meta-wrap td { padding: 1px 0; vertical-align: top; }
         .meta-wrap .label { width: 140px; font-weight: 700; }
         .meta-wrap .sep { width: 8px; text-align: center; font-weight: 700; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -69,6 +69,14 @@
     </table>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 25px;"> <!-- NO -->
+            <col style="width: 130px;"> <!-- DESA -->
+            @for ($i = 0; $i < 18; $i++)
+                <col style="width: 32px;"> <!-- 3-20 -->
+            @endfor
+            <col style="width: 80px;"> <!-- KET -->
+        </colgroup>
         <thead>
             <tr class="header-group">
                 <th rowspan="3">NO</th>

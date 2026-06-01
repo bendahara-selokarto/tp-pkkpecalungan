@@ -12,7 +12,7 @@
         .meta-wrap td { padding: 1px 4px; vertical-align: top; }
         .meta-wrap .label { width: 200px; font-weight: 700; }
         .meta-wrap .sep { width: 8px; text-align: center; font-weight: 700; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -95,6 +95,25 @@
     </table>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 25px;"> {{-- 1. NO --}}
+            <col style="width: 80px;"> {{-- 2. NAMA IBU --}}
+            <col style="width: 80px;"> {{-- 3. NAMA SUAMI --}}
+            <col style="width: 60px;"> {{-- 4. STATUS IBU --}}
+            <col style="width: 80px;"> {{-- 5. NAMA BAYI --}}
+            <col style="width: 30px;"> {{-- 6. KELAHIRAN L --}}
+            <col style="width: 30px;"> {{-- 7. KELAHIRAN P --}}
+            <col style="width: 60px;"> {{-- 8. TGL. LAHIR --}}
+            <col style="width: 35px;"> {{-- 9. AKTA ADA --}}
+            <col style="width: 35px;"> {{-- 10. AKTA TIDAK ADA --}}
+            <col style="width: 80px;"> {{-- 11. NAMA IBU/BAYI/BALITA --}}
+            <col style="width: 60px;"> {{-- 12. STATUS KEMATIAN --}}
+            <col style="width: 30px;"> {{-- 13. KEMATIAN L --}}
+            <col style="width: 30px;"> {{-- 14. KEMATIAN P --}}
+            <col style="width: 60px;"> {{-- 15. TGL. MENINGGAL --}}
+            <col style="width: 80px;"> {{-- 16. SEBAB MENINGGAL --}}
+            <col style="width: 80px;"> {{-- 17. KETERANGAN --}}
+        </colgroup>
         <thead>
             <tr class="header-group">
                 <th rowspan="3">NO.</th>

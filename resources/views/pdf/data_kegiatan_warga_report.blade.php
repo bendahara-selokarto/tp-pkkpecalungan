@@ -8,7 +8,7 @@
         .lampiran { text-align: right; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 10px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-break: break-word; }
         th { text-align: center; font-size: 10px; font-weight: 700; }
         .center { text-align: center; }
@@ -36,11 +36,17 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 35px;">
+            <col style="width: 260px;">
+            <col style="width: 90px;">
+            <col style="width: 250px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 28px;">NO</th>
-                <th style="width: 260px;">KEGIATAN</th>
-                <th style="width: 90px;">AKTIVITAS (Y/T)</th>
+                <th>NO</th>
+                <th>KEGIATAN</th>
+                <th>AKTIVITAS (Y/T)</th>
                 <th>KETERANGAN (JENIS KEGIATAN YANG DIIKUTI)</th>
             </tr>
         </thead>

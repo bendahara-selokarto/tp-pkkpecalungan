@@ -10,7 +10,7 @@
         .sheet:last-child { page-break-after: auto; }
         .lampiran { text-align: right; font-weight: 700; margin-bottom: 8px; }
         .title { text-align: center; font-size: 13px; font-weight: 700; margin-bottom: 8px; }
-        .header-table, .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .header-table, .main-table { width: 100%; border-collapse: collapse; }
         .header-table td { padding: 3px 0; vertical-align: top; }
         .header-label { width: 170px; font-weight: 700; }
         .header-sep { width: 12px; text-align: center; font-weight: 700; }
@@ -49,37 +49,64 @@
             </table>
 
             <table class="main-table">
+                <colgroup>
+                    <col style="width: 25px;"> <!-- 1: NO -->
+                    <col style="width: 55px;"> <!-- 2: REG -->
+                    <col style="width: 55px;"> <!-- 3: KTP -->
+                    <col style="width: 80px;"> <!-- 4: NAMA -->
+                    <col style="width: 45px;"> <!-- 5: JAB -->
+                    <col style="width: 20px;"> <!-- 6: L -->
+                    <col style="width: 20px;"> <!-- 7: P -->
+                    <col style="width: 60px;"> <!-- 8: TEMP -->
+                    <col style="width: 60px;"> <!-- 9: TGL -->
+                    <col style="width: 30px;"> <!-- 10: UMUR -->
+                    <col style="width: 60px;"> <!-- 11: STATUS PERK -->
+                    <col style="width: 60px;"> <!-- 12: STATUS KEL -->
+                    <col style="width: 50px;"> <!-- 13: AGAMA -->
+                    <col style="width: 70px;"> <!-- 14: ALAMAT -->
+                    <col style="width: 60px;"> <!-- 15: DESA -->
+                    <col style="width: 60px;"> <!-- 16: PEND -->
+                    <col style="width: 60px;"> <!-- 17: PEK -->
+                    <col style="width: 35px;"> <!-- 18: KB -->
+                    <col style="width: 35px;"> <!-- 19: POS -->
+                    <col style="width: 35px;"> <!-- 20: BKB -->
+                    <col style="width: 35px;"> <!-- 21: TAB -->
+                    <col style="width: 25px;"> <!-- 22: IKUT -->
+                    <col style="width: 45px;"> <!-- 23: JENIS -->
+                    <col style="width: 40px;"> <!-- 24: PAUD -->
+                    <col style="width: 40px;"> <!-- 25: KOP -->
+                </colgroup>
                 <thead>
                     <tr>
-                        <th rowspan="2" style="width: 20px;">NO</th>
-                        <th rowspan="2" style="width: 54px;">NO. REGISTRASI</th>
-                        <th rowspan="2" style="width: 54px;">NO. KTP/KK</th>
-                        <th rowspan="2" style="width: 74px;">NAMA</th>
-                        <th rowspan="2" style="width: 44px;">JABATAN</th>
-                        <th colspan="2" style="width: 32px;">JENIS KELAMIN</th>
-                        <th rowspan="2" style="width: 50px;">TEMPAT LAHIR</th>
-                        <th rowspan="2" style="width: 48px;">TGL. LAHIR</th>
-                        <th rowspan="2" style="width: 36px;">UMUR (TH)</th>
-                        <th rowspan="2" style="width: 54px;">STATUS PERKAWINAN</th>
-                        <th rowspan="2" style="width: 58px;">STATUS DALAM KELUARGA</th>
-                        <th rowspan="2" style="width: 40px;">AGAMA</th>
-                        <th rowspan="2" style="width: 64px;">ALAMAT</th>
-                        <th rowspan="2" style="width: 56px;">DESA/KEL/SEJENIS</th>
-                        <th rowspan="2" style="width: 50px;">PENDIDIKAN</th>
-                        <th rowspan="2" style="width: 50px;">PEKERJAAN</th>
-                        <th rowspan="2" style="width: 34px;">AKSEPTOR KB</th>
-                        <th rowspan="2" style="width: 38px;">AKTIF POSYANDU</th>
-                        <th rowspan="2" style="width: 34px;">IKUT BKB</th>
-                        <th rowspan="2" style="width: 38px;">MEMILIKI TABUNGAN</th>
-                        <th colspan="2" style="width: 72px;">KELOMPOK BELAJAR</th>
-                        <th rowspan="2" style="width: 40px;">MENGIKUTI PAUD/SEJENIS</th>
-                        <th rowspan="2" style="width: 40px;">IKUT KEGIATAN KOPERASI</th>
+                        <th rowspan="2">NO</th>
+                        <th rowspan="2">NO. REGISTRASI</th>
+                        <th rowspan="2">NO. KTP/KK</th>
+                        <th rowspan="2">NAMA</th>
+                        <th rowspan="2">JABATAN</th>
+                        <th colspan="2">JENIS KELAMIN</th>
+                        <th rowspan="2">TEMPAT LAHIR</th>
+                        <th rowspan="2">TGL. LAHIR</th>
+                        <th rowspan="2">UMUR (TH)</th>
+                        <th rowspan="2">STATUS PERKAWINAN</th>
+                        <th rowspan="2">STATUS DALAM KELUARGA</th>
+                        <th rowspan="2">AGAMA</th>
+                        <th rowspan="2">ALAMAT</th>
+                        <th rowspan="2">DESA/KEL/SEJENIS</th>
+                        <th rowspan="2">PENDIDIKAN</th>
+                        <th rowspan="2">PEKERJAAN</th>
+                        <th rowspan="2">AKSEPTOR KB</th>
+                        <th rowspan="2">AKTIF POSYANDU</th>
+                        <th rowspan="2">IKUT BKB</th>
+                        <th rowspan="2">MEMILIKI TABUNGAN</th>
+                        <th colspan="2">KELOMPOK BELAJAR</th>
+                        <th rowspan="2">MENGIKUTI PAUD/SEJENIS</th>
+                        <th rowspan="2">IKUT KEGIATAN KOPERASI</th>
                     </tr>
                     <tr>
-                        <th style="width: 16px;">L</th>
-                        <th style="width: 16px;">P</th>
-                        <th style="width: 26px;">IKUT</th>
-                        <th style="width: 46px;">JENIS</th>
+                        <th>L</th>
+                        <th>P</th>
+                        <th>IKUT</th>
+                        <th>JENIS</th>
                     </tr>
                 </thead>
                 <tbody>

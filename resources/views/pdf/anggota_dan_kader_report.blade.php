@@ -8,7 +8,7 @@
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
         .section-title { font-size: 12px; font-weight: 700; margin: 10px 0 6px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 9px; }
         .center { text-align: center; }
@@ -32,17 +32,29 @@
 
     <div class="section-title">A. ANGGOTA TIM PENGGERAK PKK</div>
     <table>
+        <colgroup>
+            <col style="width: 30px;">
+            <col style="width: 120px;">
+            <col style="width: 100px;">
+            <col style="width: 45px;">
+            <col style="width: 90px;">
+            <col style="width: 100px;">
+            <col style="width: 70px;">
+            <col style="width: 90px;">
+            <col style="width: 90px;">
+            <col style="width: 120px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 24px;">NO</th>
-                <th style="width: 115px;">NAMA</th>
-                <th style="width: 96px;">JABATAN</th>
-                <th style="width: 42px;">L/P</th>
-                <th style="width: 80px;">TEMPAT LAHIR</th>
-                <th style="width: 86px;">TANGGAL LAHIR</th>
-                <th style="width: 64px;">STATUS</th>
-                <th style="width: 80px;">PENDIDIKAN</th>
-                <th style="width: 80px;">PEKERJAAN</th>
+                <th>NO</th>
+                <th>NAMA</th>
+                <th>JABATAN</th>
+                <th>L/P</th>
+                <th>TEMPAT LAHIR</th>
+                <th>TANGGAL LAHIR</th>
+                <th>STATUS</th>
+                <th>PENDIDIKAN</th>
+                <th>PEKERJAAN</th>
                 <th>KETERANGAN</th>
             </tr>
         </thead>
@@ -70,16 +82,27 @@
 
     <div class="section-title">B. KADER TIM PENGGERAK PKK</div>
     <table>
+        <colgroup>
+            <col style="width: 30px;">
+            <col style="width: 120px;">
+            <col style="width: 45px;">
+            <col style="width: 90px;">
+            <col style="width: 100px;">
+            <col style="width: 70px;">
+            <col style="width: 90px;">
+            <col style="width: 120px;">
+            <col style="width: 120px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 24px;">NO</th>
-                <th style="width: 115px;">NAMA</th>
-                <th style="width: 42px;">L/P</th>
-                <th style="width: 80px;">TEMPAT LAHIR</th>
-                <th style="width: 86px;">TANGGAL LAHIR</th>
-                <th style="width: 64px;">STATUS</th>
-                <th style="width: 80px;">PENDIDIKAN</th>
-                <th style="width: 115px;">JENIS KADER TP PKK</th>
+                <th>NO</th>
+                <th>NAMA</th>
+                <th>L/P</th>
+                <th>TEMPAT LAHIR</th>
+                <th>TANGGAL LAHIR</th>
+                <th>STATUS</th>
+                <th>PENDIDIKAN</th>
+                <th>JENIS KADER TP PKK</th>
                 <th>KETERANGAN</th>
             </tr>
         </thead>

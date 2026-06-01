@@ -13,7 +13,7 @@
         .identity td { border: none; padding: 2px 4px 2px 0; vertical-align: top; }
         .identity .label { width: 180px; font-weight: 700; }
         .identity .dot { width: 12px; text-align: center; font-weight: 700; }
-        table.main { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table.main { width: 100%; border-collapse: collapse; }
         .main th, .main td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-break: break-word; }
         .main th { text-align: center; font-size: 10px; font-weight: 700; }
         .number-row th { font-size: 9px; font-weight: 400; }
@@ -99,11 +99,17 @@
             </table>
 
             <table class="main">
+                <colgroup>
+                    <col style="width: 6%;">
+                    <col style="width: 54%;">
+                    <col style="width: 20%;">
+                    <col style="width: 20%;">
+                </colgroup>
                 <thead>
                     <tr>
-                        <th style="width: 6%;">NO</th>
-                        <th style="width: 54%;">JENIS BUKU</th>
-                        <th style="width: 20%;">KATAGORI</th>
+                        <th>NO</th>
+                        <th>JENIS BUKU</th>
+                        <th>KATAGORI</th>
                         <th>JUMLAH</th>
                     </tr>
                     <tr class="number-row">

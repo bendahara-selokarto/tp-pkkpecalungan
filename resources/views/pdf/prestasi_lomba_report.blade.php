@@ -7,7 +7,7 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
@@ -28,20 +28,31 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 28px;">
+            <col style="width: 64px;">
+            <col style="width: 110px;">
+            <col style="width: 90px;">
+            <col style="width: 45px;">
+            <col style="width: 45px;">
+            <col style="width: 45px;">
+            <col style="width: 45px;">
+            <col style="width: 150px;">
+        </colgroup>
         <thead>
             <tr>
-                <th rowspan="2" style="width: 28px;">NO</th>
-                <th rowspan="2" style="width: 64px;">TAHUN</th>
-                <th rowspan="2" style="width: 110px;">JENIS LOMBA</th>
-                <th rowspan="2" style="width: 90px;">LOKASI</th>
-                <th colspan="4" style="width: 180px;">PRESTASI/KEBERHASILAN YANG DICAPAI</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">TAHUN</th>
+                <th rowspan="2">JENIS LOMBA</th>
+                <th rowspan="2">LOKASI</th>
+                <th colspan="4">PRESTASI/KEBERHASILAN YANG DICAPAI</th>
                 <th rowspan="2">KETERANGAN</th>
             </tr>
             <tr>
-                <th style="width: 45px;">KECAMATAN</th>
-                <th style="width: 45px;">KABUPATEN</th>
-                <th style="width: 45px;">PROVINSI</th>
-                <th style="width: 45px;">NASIONAL</th>
+                <th>KECAMATAN</th>
+                <th>KABUPATEN</th>
+                <th>PROVINSI</th>
+                <th>NASIONAL</th>
             </tr>
         </thead>
         <tbody>

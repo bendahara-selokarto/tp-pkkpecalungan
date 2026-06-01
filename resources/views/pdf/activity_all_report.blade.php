@@ -8,7 +8,7 @@
         .lampiran { text-align: right; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 10px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 3px; vertical-align: top; word-break: break-word; }
         th { text-align: center; font-size: 9px; font-weight: 700; }
         .number-row th { font-size: 8px; font-weight: 400; }
@@ -24,17 +24,26 @@
     ])
 
     <table>
+        <colgroup>
+            <col style="width: 35px;">
+            <col style="width: 110px;">
+            <col style="width: 120px;">
+            <col style="width: 85px;">
+            <col style="width: 110px;">
+            <col style="width: 280px;">
+            <col style="width: 150px;">
+        </colgroup>
         <thead>
             <tr>
-                <th rowspan="2" style="width: 4%;">NO</th>
-                <th rowspan="2" style="width: 10%;">NAMA</th>
-                <th rowspan="2" style="width: 14%;">JABATAN</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">NAMA</th>
+                <th rowspan="2">JABATAN</th>
                 <th colspan="3">KEGIATAN</th>
-                <th rowspan="2" style="width: 22%;">TANDA TANGAN</th>
+                <th rowspan="2">TANDA TANGAN</th>
             </tr>
             <tr>
-                <th style="width: 12%;">TANGGAL</th>
-                <th style="width: 12%;">TEMPAT</th>
+                <th>TANGGAL</th>
+                <th>TEMPAT</th>
                 <th>URAIAN</th>
             </tr>
             <tr class="number-row">

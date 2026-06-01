@@ -11,7 +11,7 @@
         .identity td { border: none; padding: 1px 4px 1px 0; vertical-align: top; font-size: 11px; }
         .identity .label { width: 78px; font-weight: 700; }
         .identity .dot { width: 10px; text-align: center; font-weight: 700; }
-        table.main { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table.main { width: 100%; border-collapse: collapse; }
         .main th, .main td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-break: break-word; }
         .main th { text-align: center; font-size: 10px; font-weight: 700; }
         .number-row th { font-size: 9px; font-weight: 400; }
@@ -27,19 +27,32 @@
     ])
 
     <table class="main">
+        <colgroup>
+            <col style="width: 30px;">
+            <col style="width: 110px;">
+            <col style="width: 90px;">
+            <col style="width: 50px;">
+            <col style="width: 80px;">
+            <col style="width: 100px;">
+            <col style="width: 70px;">
+            <col style="width: 130px;">
+            <col style="width: 80px;">
+            <col style="width: 80px;">
+            <col style="width: 120px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 3%;">NO</th>
-                <th style="width: 8%;">NAMA</th>
-                <th style="width: 8%;">JABATAN</th>
-                <th style="width: 8%;">JENIS KELAMIN (L/P)</th>
-                <th style="width: 8%;">TEMPAT LAHIR</th>
-                <th style="width: 12%;">TG/BL/TH.LAHIR/UMUR</th>
-                <th style="width: 7%;">STATUS</th>
-                <th style="width: 12%;">ALAMAT</th>
-                <th style="width: 8%;">PENDIDIKAN</th>
-                <th style="width: 8%;">PEKERJAAN</th>
-                <th style="width: 18%;">KET</th>
+                <th>NO</th>
+                <th>NAMA</th>
+                <th>JABATAN</th>
+                <th>JENIS KELAMIN (L/P)</th>
+                <th>TEMPAT LAHIR</th>
+                <th>TG/BL/TH.LAHIR/UMUR</th>
+                <th>STATUS</th>
+                <th>ALAMAT</th>
+                <th>PENDIDIKAN</th>
+                <th>PEKERJAAN</th>
+                <th>KET</th>
             </tr>
             <tr class="number-row">
                 <th>1</th>

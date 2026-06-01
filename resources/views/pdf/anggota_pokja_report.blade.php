@@ -7,7 +7,7 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
@@ -22,24 +22,38 @@
     ])
 
     <table>
+        <colgroup>
+            <col style="width: 25px;">
+            <col style="width: 100px;">
+            <col style="width: 90px;">
+            <col style="width: 35px;">
+            <col style="width: 35px;">
+            <col style="width: 110px;">
+            <col style="width: 45px;">
+            <col style="width: 45px;">
+            <col style="width: 120px;">
+            <col style="width: 80px;">
+            <col style="width: 80px;">
+            <col style="width: 100px;">
+        </colgroup>
         <thead>
             <tr>
-                <th rowspan="2" style="width: 24px;">NO</th>
-                <th rowspan="2" style="width: 92px;">NAMA</th>
-                <th rowspan="2" style="width: 84px;">JABATAN</th>
-                <th colspan="2" style="width: 70px;">JENIS KELAMIN</th>
-                <th rowspan="2" style="width: 110px;">TEMP, TGL/BLN/LAHIR (UMUR)</th>
-                <th colspan="2" style="width: 95px;">STATUS</th>
-                <th rowspan="2" style="width: 86px;">ALAMAT</th>
-                <th rowspan="2" style="width: 70px;">PENDIDIKAN</th>
-                <th rowspan="2" style="width: 70px;">PEKERJAAN</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">NAMA</th>
+                <th rowspan="2">JABATAN</th>
+                <th colspan="2">JENIS KELAMIN</th>
+                <th rowspan="2">TEMP, TGL/BLN/LAHIR (UMUR)</th>
+                <th colspan="2">STATUS</th>
+                <th rowspan="2">ALAMAT</th>
+                <th rowspan="2">PENDIDIKAN</th>
+                <th rowspan="2">PEKERJAAN</th>
                 <th rowspan="2">KET</th>
             </tr>
             <tr>
-                <th style="width: 35px;">L</th>
-                <th style="width: 35px;">P</th>
-                <th style="width: 48px;">KAWIN</th>
-                <th style="width: 47px;">TIDAK KAWIN</th>
+                <th>L</th>
+                <th>P</th>
+                <th>KAWIN</th>
+                <th>TIDAK KAWIN</th>
             </tr>
         </thead>
         <tbody>
@@ -68,11 +82,6 @@
                     <td colspan="12" class="center">Data belum tersedia.</td>
                 </tr>
             @endforelse
-        </tbody>
-    </table>
-</body>
-</html>
-
         </tbody>
     </table>
 

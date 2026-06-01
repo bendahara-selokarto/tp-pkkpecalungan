@@ -85,13 +85,6 @@
             padding: 2px 4px;
             vertical-align: top;
         }
-        .surat-table .label-col {
-            width: 82px;
-        }
-        .surat-table .separator-col {
-            width: 10px;
-            text-align: center;
-        }
         .page-break {
             page-break-after: always;
         }
@@ -281,6 +274,10 @@
 
     <div class="letterhead-wrap">
         <table class="letterhead-top">
+            <colgroup>
+                <col style="width: 82px;">
+                <col>
+            </colgroup>
             <tr>
                 <td colspan="2" class="lampiran-label">LAMPIRAN 2</td>
             </tr>
@@ -312,44 +309,49 @@
         </div>
 
         <table class="surat-table">
+            <colgroup>
+                <col style="width: 82px;">
+                <col style="width: 10px;">
+                <col>
+            </colgroup>
             <tr>
-                <td class="label-col">Kepada</td>
-                <td class="separator-col">:</td>
+                <td>Kepada</td>
+                <td>:</td>
                 <td>{{ $dotOrText((string) data_get($report, 'surat_kepada', '')) }}</td>
             </tr>
             <tr>
-                <td class="label-col">Dari</td>
-                <td class="separator-col">:</td>
+                <td>Dari</td>
+                <td>:</td>
                 <td>{{ $fromValue }}</td>
             </tr>
             <tr>
-                <td class="label-col">Tembusan</td>
-                <td class="separator-col">:</td>
+                <td>Tembusan</td>
+                <td>:</td>
                 <td>{{ $dotOrText((string) data_get($report, 'surat_tembusan', '')) }}</td>
             </tr>
             <tr>
-                <td class="label-col">Tanggal</td>
-                <td class="separator-col">:</td>
+                <td>Tanggal</td>
+                <td>:</td>
                 <td>{{ $tanggalValue }}</td>
             </tr>
             <tr>
-                <td class="label-col">Nomor</td>
-                <td class="separator-col">:</td>
+                <td>Nomor</td>
+                <td>:</td>
                 <td>{{ $dotOrText((string) data_get($report, 'surat_nomor', '')) }}</td>
             </tr>
             <tr>
-                <td class="label-col">Sifat</td>
-                <td class="separator-col">:</td>
+                <td>Sifat</td>
+                <td>:</td>
                 <td>{{ $dotOrText((string) data_get($report, 'surat_sifat', '')) }}</td>
             </tr>
             <tr>
-                <td class="label-col">Lampiran</td>
-                <td class="separator-col">:</td>
+                <td>Lampiran</td>
+                <td>:</td>
                 <td>{{ $dotOrText((string) data_get($report, 'surat_lampiran', '')) }}</td>
             </tr>
             <tr>
-                <td class="label-col">Hal</td>
-                <td class="separator-col">:</td>
+                <td>Hal</td>
+                <td>:</td>
                 <td>{{ $halValue }}</td>
             </tr>
         </table>

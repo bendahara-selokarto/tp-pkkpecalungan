@@ -13,7 +13,7 @@
         .identity .label-right { width: 52px; font-weight: 700; }
         .identity .colon { width: 10px; text-align: center; }
         .identity .value { width: 250px; }
-        .report-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .report-table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
@@ -73,23 +73,33 @@
             </table>
 
             <table class="report-table">
+                <colgroup>
+                    <col style="width: 36px;">
+                    <col style="width: 205px;">
+                    <col style="width: 132px;">
+                    <col style="width: 54px;">
+                    <col style="width: 54px;">
+                    <col style="width: 54px;">
+                    <col style="width: 54px;">
+                    <col style="width: 132px;">
+                </colgroup>
                 <thead>
                     <tr>
-                        <th style="width: 36px;" rowspan="3">NO</th>
-                        <th style="width: 205px;" rowspan="3">JENIS KEGIATAN/LAYANAN</th>
-                        <th style="width: 132px;" rowspan="3">FREKUENSI LAYANAN</th>
+                        <th rowspan="3">NO</th>
+                        <th rowspan="3">JENIS KEGIATAN/LAYANAN</th>
+                        <th rowspan="3">FREKUENSI LAYANAN</th>
                         <th colspan="4">JUMLAH</th>
-                        <th style="width: 132px;" rowspan="3">KETERANGAN</th>
+                        <th rowspan="3">KETERANGAN</th>
                     </tr>
                     <tr>
                         <th colspan="2">PENGUNJUNG</th>
                         <th colspan="2">PETUGAS/PARAMEDIS</th>
                     </tr>
                     <tr>
-                        <th style="width: 54px;">L</th>
-                        <th style="width: 54px;">P</th>
-                        <th style="width: 54px;">L</th>
-                        <th style="width: 54px;">P</th>
+                        <th>L</th>
+                        <th>P</th>
+                        <th>L</th>
+                        <th>P</th>
                     </tr>
                     <tr>
                         <th>1</th>
@@ -141,23 +151,33 @@
                 </table>
 
                 <table class="report-table">
+                    <colgroup>
+                        <col style="width: 36px;">
+                        <col style="width: 205px;">
+                        <col style="width: 132px;">
+                        <col style="width: 54px;">
+                        <col style="width: 54px;">
+                        <col style="width: 54px;">
+                        <col style="width: 54px;">
+                        <col style="width: 132px;">
+                    </colgroup>
                     <thead>
                         <tr>
-                            <th style="width: 36px;" rowspan="3">NO</th>
-                            <th style="width: 205px;" rowspan="3">JENIS KEGIATAN/LAYANAN</th>
-                            <th style="width: 132px;" rowspan="3">FREKUENSI LAYANAN</th>
+                            <th rowspan="3">NO</th>
+                            <th rowspan="3">JENIS KEGIATAN/LAYANAN</th>
+                            <th rowspan="3">FREKUENSI LAYANAN</th>
                             <th colspan="4">JUMLAH</th>
-                            <th style="width: 132px;" rowspan="3">KETERANGAN</th>
+                            <th rowspan="3">KETERANGAN</th>
                         </tr>
                         <tr>
                             <th colspan="2">PENGUNJUNG</th>
                             <th colspan="2">PETUGAS/PARAMEDIS</th>
                         </tr>
                         <tr>
-                            <th style="width: 54px;">L</th>
-                            <th style="width: 54px;">P</th>
-                            <th style="width: 54px;">L</th>
-                            <th style="width: 54px;">P</th>
+                            <th>L</th>
+                            <th>P</th>
+                            <th>L</th>
+                            <th>P</th>
                         </tr>
                         <tr>
                             <th>1</th>

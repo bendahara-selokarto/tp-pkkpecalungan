@@ -22,7 +22,6 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
         }
         th, td {
             border: 1px solid #111827;
@@ -63,10 +62,15 @@
     ])
 
     <table>
+        <colgroup>
+            <col style="width: 35px;">
+            <col style="width: 110px;">
+            <col style="width: 600px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 28px;">NO</th>
-                <th style="width: 90px;">TANGGAL</th>
+                <th>NO</th>
+                <th>TANGGAL</th>
                 <th>KETERANGAN</th>
             </tr>
         </thead>

@@ -7,11 +7,11 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
-        .signature { margin-top: 20px; border-collapse: collapse; width: 100%; table-layout: fixed; }
+        .signature { margin-top: 20px; border-collapse: collapse; width: 100%; }
         .signature td { border: none; padding: 0; vertical-align: top; font-size: 12px; }
         .signature .placeholder { margin-top: 52px; }
         .note { margin-top: 14px; font-size: 11px; }
@@ -25,14 +25,23 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 35px;">
+            <col style="width: 120px;">
+            <col style="width: 150px;">
+            <col style="width: 150px;">
+            <col style="width: 160px;">
+            <col style="width: 80px;">
+            <col style="width: 150px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 28px;">NO</th>
-                <th style="width: 110px;">DESA</th>
-                <th style="width: 120px;">NAMA BKL</th>
-                <th style="width: 120px;">NO/TGL SK</th>
-                <th style="width: 145px;">NAMA KETUA KELOMPOK</th>
-                <th style="width: 70px;">JUMLAH ANGGOTA</th>
+                <th>NO</th>
+                <th>DESA</th>
+                <th>NAMA BKL</th>
+                <th>NO/TGL SK</th>
+                <th>NAMA KETUA KELOMPOK</th>
+                <th>JUMLAH ANGGOTA</th>
                 <th>KEGIATAN</th>
             </tr>
         </thead>
@@ -60,19 +69,6 @@
     <div class="note" style="margin-top: 8px; font-size: 9px; color: #374151;">
         Keterangan : Diisi oleh TP. PKK Kecamatan | 
         Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
-    </div>
-</body>
-</html>
-0%; text-align: left;">
-                Batang ............<br>
-                KETUA POKJA I ................
-                <div class="placeholder">( ................................ )</div>
-            </td>
-        </tr>
-    </table>
-
-    <div class="note">
-        Keterangan : Diisi oleh TP. PKK Kecamatan
     </div>
 </body>
 </html>

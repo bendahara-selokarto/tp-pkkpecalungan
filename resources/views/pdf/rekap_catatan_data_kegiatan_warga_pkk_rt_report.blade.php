@@ -15,7 +15,7 @@
         .meta-right td { padding: 1px 0; }
         .meta-right .label { width: 100px; font-weight: 700; }
         .meta-right .sep { width: 8px; text-align: center; font-weight: 700; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -76,6 +76,38 @@
     </table>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 20px;"> {{-- 1. NO --}}
+            <col style="width: 80px;"> {{-- 2. NAMA DASAWISMA --}}
+            <col style="width: 22px;"> {{-- 3. JML KRT --}}
+            <col style="width: 22px;"> {{-- 4. JML KK --}}
+            <col style="width: 20px;"> {{-- 5. TOTAL L --}}
+            <col style="width: 20px;"> {{-- 6. TOTAL P --}}
+            <col style="width: 20px;"> {{-- 7. BALITA L --}}
+            <col style="width: 20px;"> {{-- 8. BALITA P --}}
+            <col style="width: 20px;"> {{-- 9. PUS --}}
+            <col style="width: 20px;"> {{-- 10. WUS --}}
+            <col style="width: 20px;"> {{-- 11. IBU HAMIL --}}
+            <col style="width: 20px;"> {{-- 12. IBU MENYUSUI --}}
+            <col style="width: 20px;"> {{-- 13. LANSIA --}}
+            <col style="width: 20px;"> {{-- 14. 3 BUTA --}}
+            <col style="width: 20px;"> {{-- 15. BERKEBUTUHAN KHUSUS --}}
+            <col style="width: 20px;"> {{-- 16. SEHAT LAYAK HUNI --}}
+            <col style="width: 20px;"> {{-- 17. TIDAK SEHAT LAYAK HUNI --}}
+            <col style="width: 20px;"> {{-- 18. MEMILIKI TTMP/PEMBUANGAN SAMPAH --}}
+            <col style="width: 20px;"> {{-- 19. MEMILIKI SPAL/PEMBUANGAN AIR --}}
+            <col style="width: 20px;"> {{-- 20. MEMILIKI SARANA MCK DAN SEPTIC TANK --}}
+            <col style="width: 22px;"> {{-- 21. PDAM --}}
+            <col style="width: 22px;"> {{-- 22. SUMUR --}}
+            <col style="width: 22px;"> {{-- 23. DLL --}}
+            <col style="width: 22px;"> {{-- 24. BERAS --}}
+            <col style="width: 22px;"> {{-- 25. NON BERAS --}}
+            <col style="width: 22px;"> {{-- 26. UP2K --}}
+            <col style="width: 22px;"> {{-- 27. PEMANFAATAN TANAH PEKARANGAN --}}
+            <col style="width: 22px;"> {{-- 28. INDUSTRI RUMAH TANGGA --}}
+            <col style="width: 22px;"> {{-- 29. KESEHATAN LINGKUNGAN --}}
+            <col style="width: 60px;"> {{-- 30. KET --}}
+        </colgroup>
         <thead>
             <tr class="header-group">
                 <th rowspan="2">NO</th>

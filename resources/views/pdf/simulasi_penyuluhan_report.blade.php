@@ -7,7 +7,7 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
@@ -28,19 +28,28 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 28px;"> {{-- 1. NO --}}
+            <col style="width: 150px;"> {{-- 2. NAMA KEGIATAN --}}
+            <col style="width: 150px;"> {{-- 3. JENIS SIMULASI/PENYULUHAN --}}
+            <col style="width: 75px;"> {{-- 4. KELOMPOK --}}
+            <col style="width: 85px;"> {{-- 5. SOSIALISASI --}}
+            <col style="width: 50px;"> {{-- 6. L --}}
+            <col style="width: 50px;"> {{-- 7. P --}}
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 28px;" rowspan="2">NO</th>
-                <th style="width: 135px;" rowspan="2">NAMA KEGIATAN</th>
-                <th style="width: 145px;" rowspan="2">JENIS SIMULASI/PENYULUHAN</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">NAMA KEGIATAN</th>
+                <th rowspan="2">JENIS SIMULASI/PENYULUHAN</th>
                 <th colspan="2">JUMLAH</th>
-                <th colspan="2" style="width: 95px;">JUMLAH KADER</th>
+                <th colspan="2">JUMLAH KADER</th>
             </tr>
             <tr>
-                <th style="width: 72px;">KELOMPOK</th>
-                <th style="width: 82px;">SOSIALISASI</th>
-                <th style="width: 47px;">L</th>
-                <th style="width: 48px;">P</th>
+                <th>KELOMPOK</th>
+                <th>SOSIALISASI</th>
+                <th>L</th>
+                <th>P</th>
             </tr>
             <tr>
                 <th>1</th>

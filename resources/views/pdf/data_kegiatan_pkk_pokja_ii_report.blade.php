@@ -13,7 +13,7 @@
         .meta .label { width: 70px; font-weight: 700; }
         .meta .sep { width: 8px; text-align: center; font-weight: 700; }
         .pokja { font-size: 9px; font-weight: 700; margin: 3px 0 3px; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -48,6 +48,15 @@
     <div class="pokja">POKJA II</div>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 25px;"> <!-- NO -->
+            <col style="width: 90px;"> <!-- WILAYAH -->
+            <col style="width: 35px;"> <!-- 3BUT -->
+            @for ($i = 0; $i < 32; $i++)
+                <col style="width: 28px;"> <!-- 4-35 -->
+            @endfor
+            <col style="width: 80px;"> <!-- KET -->
+        </colgroup>
         <thead>
             <tr>
                 <th rowspan="4">NO</th>

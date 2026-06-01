@@ -15,7 +15,7 @@
         .meta-table td { padding: 1px 0; }
         .meta-table .label { width: 160px; font-weight: 700; }
         .meta-table .sep { width: 8px; text-align: center; font-weight: 700; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -106,6 +106,24 @@
     </table>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 30px;"> {{-- 1. NO --}}
+            <col style="width: 60px;"> {{-- 2. NOMOR RT --}}
+            <col style="width: 80px;"> {{-- 3. JUMLAH KELOMPOK DASAWISMA --}}
+            <col style="width: 60px;"> {{-- 4. HAMIL --}}
+            <col style="width: 60px;"> {{-- 5. MELAHIRKAN --}}
+            <col style="width: 60px;"> {{-- 6. NIFAS --}}
+            <col style="width: 60px;"> {{-- 7. MENINGGAL --}}
+            <col style="width: 50px;"> {{-- 8. LAHIR L --}}
+            <col style="width: 50px;"> {{-- 9. LAHIR P --}}
+            <col style="width: 50px;"> {{-- 10. AKTE ADA --}}
+            <col style="width: 50px;"> {{-- 11. AKTE TIDAK ADA --}}
+            <col style="width: 50px;"> {{-- 12. MENINGGAL L --}}
+            <col style="width: 50px;"> {{-- 13. MENINGGAL P --}}
+            <col style="width: 65px;"> {{-- 14. MENINGGAL L (BALITA) --}}
+            <col style="width: 65px;"> {{-- 15. MENINGGAL P (BALITA) --}}
+            <col style="width: 120px;"> {{-- 16. KETERANGAN --}}
+        </colgroup>
         <thead>
             <tr class="header-group">
                 <th rowspan="3">NO.</th>

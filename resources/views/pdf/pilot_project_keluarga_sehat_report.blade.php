@@ -28,7 +28,6 @@
         table.data-table {
             width: 100%;
             border-collapse: collapse;
-            table-layout: fixed;
         }
         table.data-table th,
         table.data-table td {
@@ -108,22 +107,34 @@
 
             <div class="section-title section-break">{{ $sectionLabel }}</div>
             <table class="data-table">
+                <colgroup>
+                    <col style="width: 30px;"> <!-- NO -->
+                    <col style="width: 250px;"> <!-- DATA UTAMA -->
+                    @foreach ($periodYears as $year)
+                        <col style="width: 26px;"> <!-- I -->
+                        <col style="width: 26px;"> <!-- II -->
+                    @endforeach
+                    <col style="width: 100px;"> <!-- EVALUASI -->
+                    @if ($hasKeteranganColumn)
+                        <col style="width: 100px;"> <!-- KETERANGAN -->
+                    @endif
+                </colgroup>
                 <thead>
                     <tr>
-                        <th rowspan="2" style="width: 24px;">NO</th>
+                        <th rowspan="2">NO</th>
                         <th rowspan="2">DATA UTAMA YANG DI MONITOR</th>
                         @foreach ($periodYears as $year)
-                            <th colspan="2" style="width: 52px;">{{ $year }}</th>
+                            <th colspan="2">{{ $year }}</th>
                         @endforeach
-                        <th rowspan="2" style="width: 90px;">EVALUASI</th>
+                        <th rowspan="2">EVALUASI</th>
                         @if ($hasKeteranganColumn)
-                            <th rowspan="2" style="width: 90px;">KETERANGAN</th>
+                            <th rowspan="2">KETERANGAN</th>
                         @endif
                     </tr>
                     <tr>
                         @foreach ($periodYears as $year)
-                            <th style="width: 26px;">I</th>
-                            <th style="width: 26px;">II</th>
+                            <th>I</th>
+                            <th>II</th>
                         @endforeach
                     </tr>
                 </thead>

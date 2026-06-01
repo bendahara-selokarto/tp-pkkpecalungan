@@ -7,7 +7,7 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
@@ -33,28 +33,33 @@
     ])
 
     <table>
+        <colgroup>
+            <col style="width: 35px;">
+            <col style="width: 200px;">
+            <col style="width: 180px;">
+            <col style="width: 80px;">
+            <col style="width: 80px;">
+            <col style="width: 80px;">
+            <col style="width: 80px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 28px;" rowspan="2">NO</th>
-                <th style="width: 185px;" rowspan="2">NAMA KOPERASI</th>
-                <th style="width: 170px;" rowspan="2">JENIS USAHA</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">NAMA KOPERASI</th>
+                <th rowspan="2">JENIS USAHA</th>
                 <th colspan="2">STATUS HUKUM</th>
                 <th colspan="2">JUMLAH ANGGOTA</th>
             </tr>
             <tr>
-                <th style="width: 90px;">BERBADAN HUKUM</th>
-                <th style="width: 95px;">BLM. BERBADAN HUKUM</th>
-                <th style="width: 90px;">L</th>
-                <th style="width: 90px;">P</th>
+                <th>BERBADAN HUKUM</th>
+                <th>BLM. BERBADAN HUKUM</th>
+                <th>L</th>
+                <th>P</th>
             </tr>
-            <tr>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-                <th>4</th>
-                <th>5</th>
-                <th>6</th>
-                <th>7</th>
+            <tr class="number-row">
+                @for ($i = 1; $i <= 7; $i++)
+                    <th>{{ $i }}</th>
+                @endfor
             </tr>
         </thead>
         <tbody>

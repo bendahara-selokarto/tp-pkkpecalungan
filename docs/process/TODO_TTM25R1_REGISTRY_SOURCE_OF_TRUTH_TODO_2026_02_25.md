@@ -27,6 +27,7 @@ Status: `done` (`state:thin-registry-active-index`)
 | `C-LEGACY-RUNTIME-DEPRECATION` | Deprecate legacy runtime compatibility | `docs/process/TODO_LGC26A1_DEPRECATE_LEGACY_RUNTIME_COMPATIBILITY_2026_03_15.md` | `in-progress` | Semua jalur kompatibilitas legacy dipindahkan dari runtime ke dokumentasi saja. |
 | `C-SIDEBAR-PDF-FLOW` | Penataan menu sidebar flow PDF turunan tanpa form input | `docs/process/TODO_SPT26A1_PENATAAN_MENU_SIDEBAR_FLOW_PDF_TURUNAN_TANPA_FORM_INPUT_2026_03_09.md` | `in-progress` | Concern ini menjadi jalur sinkron flow PDF turunan tanpa form input agar navigasi tetap konsisten. |
 | `C-SINGLE-PATH-AUTH-EXCEPTION` | Exception single path flow auth framework | `docs/process/TODO_SPA26B1_EXCEPTION_SINGLE_PATH_FLOW_AUTH_FRAMEWORK_2026_03_15.md` | `planned` | Concern ini mengunci pengecualian auth framework agar tidak melebar ke flow non-auth. |
+| `C-PDF-DOMPDF-REFACTOR` | Refactoring laporan PDF sesuai standar DomPDF | `docs/process/TODO_PDF26R1_REFACTORING_LAPORAN_PDF_STANDAR_DOMPDF_2026_06_01.md` | `planned` | Refactoring menyeluruh template PDF agar patuh pada standar rendering DomPDF (colgroup, auto-layout). |
 
 ## Pointer Closure Terbaru
 

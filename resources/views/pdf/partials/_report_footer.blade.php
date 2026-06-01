@@ -21,7 +21,6 @@
     }
     .footer-table td {
         border: none !important;
-        width: 50%;
         text-align: center;
         vertical-align: top;
         padding: 0 20px;
@@ -37,6 +36,10 @@
 </style>
 
 <table class="footer-table">
+    <colgroup>
+        <col style="width: 50%;">
+        <col style="width: 50%;">
+    </colgroup>
     <tr>
         <td>
             Mengetahui,<br>

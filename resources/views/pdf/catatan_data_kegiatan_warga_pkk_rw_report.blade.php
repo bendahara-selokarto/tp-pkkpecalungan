@@ -15,7 +15,7 @@
         .meta-right td { padding: 1px 0; }
         .meta-right .label { width: 100px; font-weight: 700; }
         .meta-right .sep { width: 8px; text-align: center; font-weight: 700; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -77,6 +77,17 @@
     </table>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 25px;"> <!-- 1: NO -->
+            <col style="width: 40px;"> <!-- 2: RT -->
+            <col style="width: 35px;"> <!-- 3 -->
+            <col style="width: 35px;"> <!-- 4 -->
+            <col style="width: 35px;"> <!-- 5 -->
+            @for ($i = 0; $i < 26; $i++)
+                <col style="width: 28px;"> <!-- 6-31 -->
+            @endfor
+            <col style="width: 80px;"> <!-- 32: KET -->
+        </colgroup>
         <thead>
             <tr class="header-group">
                 <th rowspan="3">NO</th>

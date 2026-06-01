@@ -7,11 +7,12 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .number-row th { font-size: 9px; font-weight: 400; }
         .center { text-align: center; }
+        .footer-meta { margin-top: 8px; font-size: 9px; color: #374151; }
     </style>
 </head>
 <body>
@@ -31,36 +32,41 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 25px;">
+            <col style="width: 100px;">
+            <col style="width: 35px;">
+            <col style="width: 35px;">
+            <col style="width: 120px;">
+            <col style="width: 45px;">
+            <col style="width: 45px;">
+            <col style="width: 120px;">
+            <col style="width: 80px;">
+            <col style="width: 120px;">
+            <col style="width: 80px;">
+        </colgroup>
         <thead>
             <tr>
-                <th rowspan="2" style="width: 28px;">NO</th>
-                <th rowspan="2" style="width: 105px;">NAMA</th>
-                <th colspan="2" style="width: 80px;">JENIS KELAMIN</th>
-                <th rowspan="2" style="width: 125px;">TEMPAT TANGGAL LAHIR</th>
-                <th colspan="2" style="width: 80px;">STATUS</th>
-                <th rowspan="2" style="width: 120px;">ALAMAT</th>
-                <th rowspan="2" style="width: 80px;">PENDIDIKAN</th>
-                <th rowspan="2" style="width: 120px;">JENIS KADER KHUSUS</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">NAMA</th>
+                <th colspan="2">JENIS KELAMIN</th>
+                <th rowspan="2">TEMPAT TANGGAL LAHIR</th>
+                <th colspan="2">STATUS</th>
+                <th rowspan="2">ALAMAT</th>
+                <th rowspan="2">PENDIDIKAN</th>
+                <th rowspan="2">JENIS KADER KHUSUS</th>
                 <th rowspan="2">KETERANGAN</th>
             </tr>
             <tr>
-                <th style="width: 40px;">L</th>
-                <th style="width: 40px;">P</th>
-                <th style="width: 40px;">NIKAH</th>
-                <th style="width: 40px;">BLM NIKAH</th>
+                <th>L</th>
+                <th>P</th>
+                <th>NIKAH</th>
+                <th>BLM NIKAH</th>
             </tr>
             <tr class="number-row">
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-                <th>4</th>
-                <th>5</th>
-                <th>6</th>
-                <th>7</th>
-                <th>8</th>
-                <th>9</th>
-                <th>10</th>
-                <th>11</th>
+                @for ($i = 1; $i <= 11; $i++)
+                    <th>{{ $i }}</th>
+                @endfor
             </tr>
         </thead>
         <tbody>
@@ -101,9 +107,5 @@
     <div class="footer-meta">
         Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
-</body>
-</html>
-     </tbody>
-    </table>
 </body>
 </html>

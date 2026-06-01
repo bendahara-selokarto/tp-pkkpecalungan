@@ -7,7 +7,7 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
@@ -30,13 +30,21 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 28px;">
+            <col style="width: 170px;">
+            <col style="width: 150px;">
+            <col style="width: 170px;">
+            <col style="width: 130px;">
+            <col style="width: 80px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 28px;">NO</th>
-                <th style="width: 170px;">NAMA ASET/SARANA</th>
-                <th style="width: 150px;">NAMA PENGELOLA</th>
-                <th style="width: 170px;">KOMODITI</th>
-                <th style="width: 130px;">KATEGORI</th>
+                <th>NO</th>
+                <th>NAMA ASET/SARANA</th>
+                <th>NAMA PENGELOLA</th>
+                <th>KOMODITI</th>
+                <th>KATEGORI</th>
                 <th>VOLUME</th>
             </tr>
         </thead>

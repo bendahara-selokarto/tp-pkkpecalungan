@@ -14,7 +14,7 @@
         .meta .label { width: 52px; font-weight: 700; }
         .meta .sep { width: 8px; text-align: center; font-weight: 700; }
         .pokja { font-size: 10px; font-weight: 700; margin: 6px 0 6px; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -51,6 +51,13 @@
     <div class="pokja">POKJA IV</div>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 25px;"> <!-- NO -->
+            <col style="width: 100px;"> <!-- WILAYAH -->
+            @for ($i = 0; $i < 25; $i++)
+                <col style="width: 30px;"> <!-- 3-27 -->
+            @endfor
+        </colgroup>
         <thead>
             <tr>
                 <th rowspan="4">NO</th>

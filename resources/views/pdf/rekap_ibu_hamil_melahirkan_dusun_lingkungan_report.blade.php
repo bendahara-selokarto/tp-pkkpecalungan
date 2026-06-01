@@ -15,7 +15,7 @@
         .meta-table td { padding: 1px 0; }
         .meta-table .label { width: 160px; font-weight: 700; }
         .meta-table .sep { width: 8px; text-align: center; font-weight: 700; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -101,6 +101,25 @@
     </table>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 30px;"> {{-- 1. NO --}}
+            <col style="width: 50px;"> {{-- 2. NOMOR RW --}}
+            <col style="width: 35px;"> {{-- 3. RT --}}
+            <col style="width: 50px;"> {{-- 4. DASA WISMA --}}
+            <col style="width: 45px;"> {{-- 5. HAMIL --}}
+            <col style="width: 65px;"> {{-- 6. MELAHIRKAN --}}
+            <col style="width: 45px;"> {{-- 7. NIFAS --}}
+            <col style="width: 60px;"> {{-- 8. MENINGGAL --}}
+            <col style="width: 35px;"> {{-- 9. LAHIR L --}}
+            <col style="width: 35px;"> {{-- 10. LAHIR P --}}
+            <col style="width: 45px;"> {{-- 11. AKTE ADA --}}
+            <col style="width: 45px;"> {{-- 12. AKTE TIDAK --}}
+            <col style="width: 60px;"> {{-- 13. BAYI MENINGGAL L --}}
+            <col style="width: 60px;"> {{-- 14. BAYI MENINGGAL P --}}
+            <col style="width: 65px;"> {{-- 15. BALITA MENINGGAL L --}}
+            <col style="width: 65px;"> {{-- 16. BALITA MENINGGAL P --}}
+            <col style="width: 100px;"> {{-- 17. KETERANGAN --}}
+        </colgroup>
         <thead>
             <tr class="header-group">
                 <th rowspan="3">NO</th>

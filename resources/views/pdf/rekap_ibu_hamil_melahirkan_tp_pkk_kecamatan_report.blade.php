@@ -15,7 +15,7 @@
         .meta-table td { padding: 1px 0; }
         .meta-table .label { width: 140px; font-weight: 700; }
         .meta-table .sep { width: 8px; text-align: center; font-weight: 700; }
-        .main-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        .main-table { width: 100%; border-collapse: collapse; }
         .main-table th, .main-table td {
             border: 1px solid #111827;
             padding: 2px 1px;
@@ -90,6 +90,27 @@
     </table>
 
     <table class="main-table">
+        <colgroup>
+            <col style="width: 20px;"> {{-- 1. NO --}}
+            <col style="width: 80px;"> {{-- 2. NAMA DESA/ KEL --}}
+            <col style="width: 40px;"> {{-- 3. DUSUN/ LINGK --}}
+            <col style="width: 25px;"> {{-- 4. RW --}}
+            <col style="width: 25px;"> {{-- 5. RT --}}
+            <col style="width: 40px;"> {{-- 6. DASA WISMA --}}
+            <col style="width: 45px;"> {{-- 7. HAMIL --}}
+            <col style="width: 45px;"> {{-- 8. MELAHIRKAN --}}
+            <col style="width: 45px;"> {{-- 9. NIFAS --}}
+            <col style="width: 45px;"> {{-- 10. MENINGGAL --}}
+            <col style="width: 35px;"> {{-- 11. LAHIR L --}}
+            <col style="width: 35px;"> {{-- 12. LAHIR P --}}
+            <col style="width: 35px;"> {{-- 13. AKTE ADA --}}
+            <col style="width: 35px;"> {{-- 14. AKTE TIDAK --}}
+            <col style="width: 35px;"> {{-- 15. MENINGGAL L --}}
+            <col style="width: 35px;"> {{-- 16. MENINGGAL P --}}
+            <col style="width: 45px;"> {{-- 17. JML BALITA MENINGGAL L --}}
+            <col style="width: 45px;"> {{-- 18. JML BALITA MENINGGAL P --}}
+            <col style="width: 70px;"> {{-- 19. KETERANGAN --}}
+        </colgroup>
         <thead>
             <tr class="header-group">
                 <th rowspan="3">NO</th>

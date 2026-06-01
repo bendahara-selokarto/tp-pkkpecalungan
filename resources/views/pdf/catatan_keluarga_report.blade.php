@@ -7,8 +7,8 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-break: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 9px; }
         .center { text-align: center; }
     </style>
@@ -29,17 +29,29 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 35px;">
+            <col style="width: 180px;">
+            <col style="width: 90px;">
+            <col style="width: 55px;">
+            <col style="width: 65px;">
+            <col style="width: 65px;">
+            <col style="width: 55px;">
+            <col style="width: 50px;">
+            <col style="width: 65px;">
+            <col style="width: 120px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 30px;">NO</th>
-                <th style="width: 165px;">NAMA KEPALA RUMAH TANGGA</th>
-                <th style="width: 70px;">JUMLAH ANGGOTA RUMAH TANGGA</th>
-                <th style="width: 55px;">KERJA BAKTI</th>
-                <th style="width: 62px;">RUKUN KEMATIAN</th>
-                <th style="width: 55px;">KEAGAMAAN</th>
-                <th style="width: 50px;">JIMPITAN</th>
-                <th style="width: 45px;">ARISAN</th>
-                <th style="width: 55px;">LAIN-LAIN</th>
+                <th>NO</th>
+                <th>NAMA KEPALA RUMAH TANGGA</th>
+                <th>JUMLAH ANGGOTA RUMAH TANGGA</th>
+                <th>KERJA BAKTI</th>
+                <th>RUKUN KEMATIAN</th>
+                <th>KEAGAMAAN</th>
+                <th>JIMPITAN</th>
+                <th>ARISAN</th>
+                <th>LAIN-LAIN</th>
                 <th>KETERANGAN</th>
             </tr>
         </thead>

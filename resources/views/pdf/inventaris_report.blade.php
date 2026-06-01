@@ -8,13 +8,13 @@
         .lampiran { text-align: right; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 10px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 3px; vertical-align: top; word-break: break-word; }
         th { text-align: center; font-size: 9px; font-weight: 700; }
         .number-row th { font-size: 8px; font-weight: 400; }
         .center { text-align: center; }
         .ttd { margin-top: 12px; text-align: right; font-size: 11px; font-weight: 700; }
-        .meta-print { margin-top: 8px; font-size: 9px; color: #374151; }
+        .footer-meta { margin-top: 8px; font-size: 9px; color: #374151; }
     </style>
 </head>
 <body>
@@ -32,15 +32,25 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 35px;">
+            <col style="width: 150px;">
+            <col style="width: 120px;">
+            <col style="width: 100px;">
+            <col style="width: 90px;">
+            <col style="width: 130px;">
+            <col style="width: 100px;">
+            <col style="width: 120px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 3%;">NO</th>
-                <th style="width: 16%;">NAMA BARANG</th>
-                <th style="width: 13%;">ASAL BARANG</th>
-                <th style="width: 12%;">TANGGAL PENERIMAAN/PEMBELIAN</th>
-                <th style="width: 10%;">JUMLAH</th>
-                <th style="width: 15%;">TEMPAT PENYIMPANAN</th>
-                <th style="width: 13%;">KONDISI BARANG</th>
+                <th>NO</th>
+                <th>NAMA BARANG</th>
+                <th>ASAL BARANG</th>
+                <th>TANGGAL PENERIMAAN/PEMBELIAN</th>
+                <th>JUMLAH</th>
+                <th>TEMPAT PENYIMPANAN</th>
+                <th>KONDISI BARANG</th>
                 <th>KETERANGAN</th>
             </tr>
             <tr class="number-row">
@@ -80,10 +90,6 @@
 
     <div class="footer-meta">
         Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
-    </div>
-</body>
-</html>
-intedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
 </body>
 </html>

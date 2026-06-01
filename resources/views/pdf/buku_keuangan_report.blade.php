@@ -8,7 +8,7 @@
         .lampiran { text-align: right; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 10px; }
         .meta { margin-bottom: 8px; font-size: 10px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 3px; vertical-align: top; word-break: break-word; }
         th { text-align: center; font-size: 8px; font-weight: 700; }
         .number-row th { font-size: 7px; font-weight: 400; }
@@ -43,20 +43,34 @@
     ])
 
     <table>
+        <colgroup>
+            <col style="width: 25px;">
+            <col style="width: 70px;">
+            <col style="width: 80px;">
+            <col style="width: 130px;">
+            <col style="width: 80px;">
+            <col style="width: 100px;">
+            <col style="width: 25px;">
+            <col style="width: 70px;">
+            <col style="width: 80px;">
+            <col style="width: 130px;">
+            <col style="width: 80px;">
+            <col style="width: 100px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 3%;">NO</th>
-                <th style="width: 8%;">TANGGAL,<br>BULAN,<br>TAHUN</th>
-                <th style="width: 8%;">SUMBER DANA</th>
-                <th style="width: 8%;">URAIAN</th>
-                <th style="width: 8%;">NOMOR BUKTI KAS</th>
-                <th style="width: 13%;">JUMLAH PENGELUARAN (Rp.)</th>
-                <th style="width: 3%;">NO</th>
-                <th style="width: 8%;">TANGGAL,<br>BULAN,<br>TAHUN</th>
-                <th style="width: 8%;">SUMBER DANA</th>
-                <th style="width: 8%;">URAIAN</th>
-                <th style="width: 8%;">NOMOR BUKTI KAS</th>
-                <th style="width: 13%;">JUMLAH PENERIMAAN (Rp.)</th>
+                <th>NO</th>
+                <th>TANGGAL,<br>BULAN,<br>TAHUN</th>
+                <th>SUMBER DANA</th>
+                <th>URAIAN</th>
+                <th>NOMOR BUKTI KAS</th>
+                <th>JUMLAH PENGELUARAN (Rp.)</th>
+                <th>NO</th>
+                <th>TANGGAL,<br>BULAN,<br>TAHUN</th>
+                <th>SUMBER DANA</th>
+                <th>URAIAN</th>
+                <th>NOMOR BUKTI KAS</th>
+                <th>JUMLAH PENERIMAAN (Rp.)</th>
             </tr>
             <tr class="number-row">
                 <th>1</th>
@@ -124,7 +138,7 @@
         'footerRoleLabel' => 'Bendahara'
     ])
 
-    <div class="meta-print">
+    <div class="footer-meta">
         Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
 </body>

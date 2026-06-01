@@ -7,7 +7,7 @@
         body { font-family: DejaVu Sans, sans-serif; font-size: 11px; color: #111827; }
         .title { font-size: 16px; font-weight: 700; text-align: center; margin-bottom: 8px; }
         .meta { margin-bottom: 8px; font-size: 11px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; }
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
@@ -30,28 +30,33 @@
     </div>
 
     <table>
+        <colgroup>
+            <col style="width: 35px;">
+            <col style="width: 250px;">
+            <col style="width: 150px;">
+            <col style="width: 60px;">
+            <col style="width: 60px;">
+            <col style="width: 60px;">
+            <col style="width: 60px;">
+        </colgroup>
         <thead>
             <tr>
-                <th style="width: 28px;" rowspan="2">NO</th>
-                <th style="width: 190px;" rowspan="2">NAMA KEJAR PAKET/KF/PAUD</th>
-                <th style="width: 120px;" rowspan="2">JENIS KEJAR PAKET/KF/PAUD</th>
+                <th rowspan="2">NO</th>
+                <th rowspan="2">NAMA KEJAR PAKET/KF/PAUD</th>
+                <th rowspan="2">JENIS KEJAR PAKET/KF/PAUD</th>
                 <th colspan="2">JUMLAH WARGA BELAJAR/SISWA</th>
                 <th colspan="2">JUMLAH PENGAJAR</th>
             </tr>
             <tr>
-                <th style="width: 70px;">L</th>
-                <th style="width: 70px;">P</th>
-                <th style="width: 70px;">L</th>
-                <th style="width: 70px;">P</th>
+                <th>L</th>
+                <th>P</th>
+                <th>L</th>
+                <th>P</th>
             </tr>
-            <tr>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-                <th>4</th>
-                <th>5</th>
-                <th>6</th>
-                <th>7</th>
+            <tr class="number-row">
+                @for ($i = 1; $i <= 7; $i++)
+                    <th>{{ $i }}</th>
+                @endfor
             </tr>
         </thead>
         <tbody>
@@ -60,10 +65,10 @@
                     <td class="center">{{ $index + 1 }}</td>
                     <td>{{ $item->nama_kejar_paket }}</td>
                     <td>{{ $item->jenis_kejar_paket }}</td>
-                    <td>{{ $item->jumlah_warga_belajar_l }}</td>
-                    <td>{{ $item->jumlah_warga_belajar_p }}</td>
-                    <td>{{ $item->jumlah_pengajar_l }}</td>
-                    <td>{{ $item->jumlah_pengajar_p }}</td>
+                    <td class="center">{{ $item->jumlah_warga_belajar_l }}</td>
+                    <td class="center">{{ $item->jumlah_warga_belajar_p }}</td>
+                    <td class="center">{{ $item->jumlah_pengajar_l }}</td>
+                    <td class="center">{{ $item->jumlah_pengajar_p }}</td>
                 </tr>
             @empty
                 <tr>
@@ -80,7 +85,3 @@
     </div>
 </body>
 </html>
-
-
-
-
