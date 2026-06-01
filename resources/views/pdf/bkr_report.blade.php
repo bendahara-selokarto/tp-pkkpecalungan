@@ -66,7 +66,8 @@
     @include('pdf.partials._report_footer')
 
     <div style="margin-top: 8px; font-size: 9px; color: #374151;">
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+        
     </div>
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

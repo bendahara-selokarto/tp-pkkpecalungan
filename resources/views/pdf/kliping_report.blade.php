@@ -11,7 +11,7 @@
         th, td { border: 1px solid #111827; padding: 4px; vertical-align: top; word-wrap: break-word; }
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .center { text-align: center; }
-        .footer-meta { margin-top: 12px; font-size: 9px; color: #374151; }
+        
     </style>
 </head>
 <body>
@@ -25,7 +25,7 @@
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
         Tahun Anggaran: {{ $tahunAnggaran }}<br>
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
+        <br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
 
@@ -64,8 +64,7 @@
 
     @include('pdf.partials._report_footer')
 
-    <div class="footer-meta">
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
-    </div>
+    
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

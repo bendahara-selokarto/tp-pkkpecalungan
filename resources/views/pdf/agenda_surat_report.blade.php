@@ -13,7 +13,7 @@
         th { text-align: center; font-size: 8px; font-weight: 700; }
         .number-row th { font-size: 7px; font-weight: 400; }
         .center { text-align: center; }
-        .footer-meta { margin-top: 8px; font-size: 9px; color: #374151; }
+        
     </style>
 </head>
 <body>
@@ -142,8 +142,7 @@
 
     @include('pdf.partials._report_footer')
 
-    <div class="footer-meta">
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
-    </div>
+    
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

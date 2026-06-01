@@ -61,6 +61,17 @@ class PdfViewFactory
         $data['footerUserName'] = $data['footerUserName'] ?? $user->name;
         $data['footerRoleLabel'] = $data['footerRoleLabel'] ?? strtoupper(\App\Support\RoleLabelFormatter::label($role));
 
+        // Audit Trail Metadata (Standardized for _report_metadata)
+        $data['auditWilayah'] = $data['auditWilayah'] ?? ($area?->name ?? config('pdf.regional_identity.kecamatan', 'PECALUNGAN'));
+        $data['auditTahun'] = $data['auditTahun'] ?? $user->active_budget_year;
+        $data['auditUser'] = $data['auditUserName'] ?? ($data['footerUserName'] ?? $user->name);
+        $data['auditWaktu'] = $data['auditWaktu'] ?? now()->format('Y-m-d H:i:s');
+
+        // Added for TODO_PDF26F3 consistency
+        $data['areaName'] = $data['auditWilayah'];
+        $data['budgetYearLabel'] = $data['auditTahun'];
+        $data['footerPrintedAt'] = now()->format('Y-m-d H:i:s');
+
         // Database Driven Chairperson Metadata
         if ($area) {
             $data['footerChairpersonName'] = $data['footerChairpersonName'] ?? $area->chairperson_name;

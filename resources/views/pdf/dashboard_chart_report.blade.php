@@ -31,8 +31,7 @@
     <div class="meta">
         <strong>Wilayah:</strong> {{ $printedBy?->area?->name ?? '-' }} ({{ strtoupper((string) ($printedBy?->scope ?? '-')) }})<br>
         <strong>Tahun Anggaran:</strong> {{ $budgetYearLabel }}<br>
-        <strong>Dicetak Oleh:</strong> {{ $printedBy?->name ?? '-' }} pada {{ $printedAt->format('d/m/Y H:i') }}
-    </div>
+            </div>
 
     @foreach($chartSvgs as $svg)
         <div class="chart-container">
@@ -40,5 +39,6 @@
         </div>
     @endforeach
 
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

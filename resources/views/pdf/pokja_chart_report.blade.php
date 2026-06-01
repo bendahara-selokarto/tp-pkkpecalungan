@@ -27,8 +27,7 @@
     <div class="meta">
         <strong>Wilayah:</strong> {{ $printedBy?->area?->name ?? '-' }} ({{ strtoupper((string) ($printedBy?->scope ?? '-')) }})<br>
         <strong>Tahun Anggaran:</strong> {{ $printedBy?->active_budget_year ?? '-' }}<br>
-        <strong>Dicetak Oleh:</strong> {{ $printedBy?->name ?? '-' }} pada {{ now()->format('d/m/Y H:i') }}
-    </div>
+            </div>
 
     @foreach($chartSvgs as $svg)
         <div class="chart-container">
@@ -39,5 +38,6 @@
     <div style="margin-top: 20px; font-size: 9px; color: #666; text-align: center;">
         Dicetak dari Sistem Informasi PKK | Render: Vector SVG (Academic Style)
     </div>
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

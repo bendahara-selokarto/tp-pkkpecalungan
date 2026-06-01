@@ -15,7 +15,7 @@
         .center { text-align: center; }
         .right { text-align: right; }
         .summary { margin-top: 10px; font-size: 10px; line-height: 1.5; }
-        .footer-meta { margin-top: 8px; font-size: 9px; color: #374151; }
+        
     </style>
 </head>
 <body>
@@ -138,8 +138,7 @@
         'footerRoleLabel' => 'Bendahara'
     ])
 
-    <div class="footer-meta">
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
-    </div>
+    
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

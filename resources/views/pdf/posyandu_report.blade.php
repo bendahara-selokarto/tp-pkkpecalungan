@@ -49,7 +49,7 @@
     <div class="title">DATA ISIAN POSYANDU OLEH TP PKK {{ $levelLabel }}</div>
     <div class="meta">
         Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}<br>
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
+        <br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
 
@@ -209,7 +209,7 @@
                 @include('pdf.partials._report_footer')
 
                 <div class="meta" style="margin-top: 8px; font-size: 9px; color: #374151;">
-                    Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+                    
                 </div>
             </div>
 
@@ -218,6 +218,7 @@
             @endif
         @endforeach
     @endif
+    @include('pdf.partials._report_metadata')
 </body>
 </html>
 

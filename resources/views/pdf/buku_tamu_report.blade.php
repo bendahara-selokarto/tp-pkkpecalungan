@@ -37,11 +37,7 @@
         .center {
             text-align: center;
         }
-        .footer {
-            margin-top: 12px;
-            font-size: 10px;
-            color: #374151;
-        }
+        
     </style>
 </head>
 <body>
@@ -93,7 +89,8 @@
 
     <div class="footer">
         Total data: {{ $items->count() }}. | 
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
+        
     </div>
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

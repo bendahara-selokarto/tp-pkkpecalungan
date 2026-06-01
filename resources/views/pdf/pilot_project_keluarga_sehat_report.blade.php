@@ -91,7 +91,7 @@
             Judul laporan: {{ data_get($report, 'judul_laporan', '-') }}<br>
             Tahun anggaran: {{ $budgetYearLabel ?? '-' }}<br>
             Periode: {{ $tahunAwal }} - {{ $tahunAkhir }}<br>
-            Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
+            <br>
             Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
         </div>
 
@@ -202,10 +202,11 @@
         <div class="meta">
             {{ $areaLabel }}: {{ $areaName }}<br>
             Tahun anggaran: {{ $budgetYearLabel ?? '-' }}<br>
-            Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
+            <br>
             Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
         </div>
         <p>Data laporan belum tersedia.</p>
     @endforelse
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

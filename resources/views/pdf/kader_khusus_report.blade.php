@@ -12,7 +12,7 @@
         th { background: #f3f4f6; text-align: center; font-size: 10px; }
         .number-row th { font-size: 9px; font-weight: 400; }
         .center { text-align: center; }
-        .footer-meta { margin-top: 8px; font-size: 9px; color: #374151; }
+        
     </style>
 </head>
 <body>
@@ -27,7 +27,7 @@
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }}<br>
         Tahun Anggaran: {{ $budgetYearLabel }}<br>
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }}<br>
+        <br>
         Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
     </div>
 
@@ -104,8 +104,7 @@
 
     @include('pdf.partials._report_footer')
 
-    <div class="footer-meta">
-        Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
-    </div>
+    
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

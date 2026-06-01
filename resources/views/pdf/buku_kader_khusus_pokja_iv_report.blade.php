@@ -58,5 +58,6 @@
             </tr>
         </tbody>
     </table>
+    @include('pdf.partials._report_metadata')
 </body>
 </html>

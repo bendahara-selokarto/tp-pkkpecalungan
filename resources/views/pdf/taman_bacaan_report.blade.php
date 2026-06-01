@@ -20,7 +20,7 @@
         .center { text-align: center; }
         .left { text-align: left; }
         .note { margin-top: 8px; font-size: 10px; }
-        .meta-print { margin-top: 8px; font-size: 9px; color: #374151; }
+        
     </style>
 </head>
 <body>
@@ -149,10 +149,9 @@
 
             @include('pdf.partials._report_footer')
 
-            <div class="meta-print">
-                Dicetak oleh: {{ $printedBy?->name ?? '-' }} | Dicetak pada: {{ $printedAt->format('Y-m-d H:i:s') }}
-            </div>
+            
         </section>
     @endforeach
+    @include('pdf.partials._report_metadata')
 </body>
 </html>
