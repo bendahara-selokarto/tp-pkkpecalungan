@@ -13,15 +13,15 @@ class RoleScopeMatrix
 {
     // Administrative Roles
     public const ROLE_SUPER_ADMIN = 'super-admin';
-    public const ROLE_ADMIN_PUSAT = 'admin_pusat';
-    public const ROLE_ADMIN_PROVINSI = 'admin_provinsi';
-    public const ROLE_ADMIN_KABUPATEN = 'admin_kabupaten';
-    public const ROLE_ADMIN_KECAMATAN = 'admin_kecamatan';
-    public const ROLE_ADMIN_DESA = 'admin_desa';
-    public const ROLE_ADMIN_DUSUN = 'admin_dusun';
-    public const ROLE_ADMIN_RW = 'admin_rw';
-    public const ROLE_ADMIN_RT = 'admin_rt';
-    public const ROLE_ADMIN_DASAWISMA = 'admin_dasawisma';
+    public const ROLE_ADMIN_PUSAT = 'admin-pusat';
+    public const ROLE_ADMIN_PROVINSI = 'admin-provinsi';
+    public const ROLE_ADMIN_KABUPATEN = 'admin-kabupaten';
+    public const ROLE_ADMIN_KECAMATAN = 'admin-kecamatan';
+    public const ROLE_ADMIN_DESA = 'admin-desa';
+    public const ROLE_ADMIN_DUSUN = 'admin-dusun';
+    public const ROLE_ADMIN_RW = 'admin-rw';
+    public const ROLE_ADMIN_RT = 'admin-rt';
+    public const ROLE_ADMIN_DASAWISMA = 'admin-dasawisma';
 
     // Functional Roles (Implementation)
     public const ROLE_SEKRETARIS_KECAMATAN = 'kecamatan-sekretaris';
@@ -130,19 +130,18 @@ class RoleScopeMatrix
         ],
 
         self::ROLE_BENDAHARA_KECAMATAN => [
-            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'inventaris.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
+            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'buku_keuangan.view', 'buku_keuangan.create', 'buku_keuangan.update', 'buku_keuangan.delete', 'buku_keuangan.print',
             'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
         ],
 
         self::ROLE_POKJA_1_KECAMATAN => [
-            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'inventaris.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
+            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'anggota_pokja.view', 'anggota_pokja.create', 'anggota_pokja.update', 'anggota_pokja.delete', 'anggota_pokja.print',
             'program_prioritas.view', 'program_prioritas.create', 'program_prioritas.update', 'program_prioritas.delete', 'program_prioritas.print',
             'foto_kegiatan.view', 'foto_kegiatan.create', 'foto_kegiatan.update', 'foto_kegiatan.delete', 'foto_kegiatan.print',
-            'inventaris.view', 'inventaris.create', 'inventaris.update', 'inventaris.delete', 'inventaris.print',
             'bantuan.view', 'bantuan.create', 'bantuan.update', 'bantuan.delete', 'bantuan.print',
             'kader_khusus.view', 'kader_khusus.create', 'kader_khusus.update', 'kader_khusus.delete', 'kader_khusus.print',
             'prestasi_lomba.view', 'prestasi_lomba.create', 'prestasi_lomba.update', 'prestasi_lomba.delete', 'prestasi_lomba.print',
@@ -159,11 +158,10 @@ class RoleScopeMatrix
         ],
 
         self::ROLE_POKJA_2_KECAMATAN => [
-            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'inventaris.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
+            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'program_prioritas.view', 'program_prioritas.create', 'program_prioritas.update', 'program_prioritas.delete', 'program_prioritas.print',
             'foto_kegiatan.view', 'foto_kegiatan.create', 'foto_kegiatan.update', 'foto_kegiatan.delete', 'foto_kegiatan.print',
-            'inventaris.view', 'inventaris.create', 'inventaris.update', 'inventaris.delete', 'inventaris.print',
             'bantuan.view', 'bantuan.create', 'bantuan.update', 'bantuan.delete', 'bantuan.print',
             'kader_khusus.view', 'kader_khusus.create', 'kader_khusus.update', 'kader_khusus.delete', 'kader_khusus.print',
             'prestasi_lomba.view', 'prestasi_lomba.create', 'prestasi_lomba.update', 'prestasi_lomba.delete', 'prestasi_lomba.print',
@@ -195,11 +193,10 @@ class RoleScopeMatrix
         ],
 
         self::ROLE_POKJA_4_KECAMATAN => [
-            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'inventaris.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
+            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'program_prioritas.view', 'program_prioritas.create', 'program_prioritas.update', 'program_prioritas.delete', 'program_prioritas.print',
             'foto_kegiatan.view', 'foto_kegiatan.create', 'foto_kegiatan.update', 'foto_kegiatan.delete', 'foto_kegiatan.print',
-            'inventaris.view', 'inventaris.create', 'inventaris.update', 'inventaris.delete', 'inventaris.print',
             'bantuan.view', 'bantuan.create', 'bantuan.update', 'bantuan.delete', 'bantuan.print',
             'kader_khusus.view', 'kader_khusus.create', 'kader_khusus.update', 'kader_khusus.delete', 'kader_khusus.print',
             'prestasi_lomba.view', 'prestasi_lomba.create', 'prestasi_lomba.update', 'prestasi_lomba.delete', 'prestasi_lomba.print',
@@ -263,16 +260,14 @@ class RoleScopeMatrix
         ],
 
         self::ROLE_SEKRETARIS_DESA => [
-            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'inventaris.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
+            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'agenda_surat_tugas.view', 'anggota_pokja.view', 'inventaris.view', 'kader_khusus.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'arsip_document.view', 'arsip_document.create', 'arsip_document.update', 'arsip_document.delete', 'arsip_document.export',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'anggota_pokja.view', 'anggota_pokja.create', 'anggota_pokja.update', 'anggota_pokja.delete', 'anggota_pokja.print',
             'agenda_surat.view', 'agenda_surat.create', 'agenda_surat.update', 'agenda_surat.delete', 'agenda_surat.print',
             'agenda_surat_tugas.view', 'agenda_surat_tugas.create', 'agenda_surat_tugas.update', 'agenda_surat_tugas.delete', 'agenda_surat_tugas.print',
             'inventaris.view', 'inventaris.create', 'inventaris.update', 'inventaris.delete', 'inventaris.print',
-            'bantuan.view', 'bantuan.create', 'bantuan.update', 'bantuan.delete', 'bantuan.print',
             'kader_khusus.view', 'kader_khusus.create', 'kader_khusus.update', 'kader_khusus.delete', 'kader_khusus.print',
-            'prestasi_lomba.view', 'prestasi_lomba.create', 'prestasi_lomba.update', 'prestasi_lomba.delete', 'prestasi_lomba.print',
             'program_prioritas.view', 'program_prioritas.create', 'program_prioritas.update', 'program_prioritas.delete', 'program_prioritas.print',
             'foto_kegiatan.view', 'foto_kegiatan.create', 'foto_kegiatan.update', 'foto_kegiatan.delete', 'foto_kegiatan.print',
             'anggota_tim_penggerak.view', 'anggota_tim_penggerak.create', 'anggota_tim_penggerak.update', 'anggota_tim_penggerak.delete', 'anggota_tim_penggerak.print',
@@ -292,19 +287,18 @@ class RoleScopeMatrix
         ],
 
         self::ROLE_BENDAHARA_DESA => [
-            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'inventaris.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
+            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'buku_keuangan.view', 'buku_keuangan.create', 'buku_keuangan.update', 'buku_keuangan.delete', 'buku_keuangan.print',
             'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
         ],
 
         self::ROLE_POKJA_1_DESA => [
-            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'inventaris.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
+            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'anggota_pokja.view', 'anggota_pokja.create', 'anggota_pokja.update', 'anggota_pokja.delete', 'anggota_pokja.print',
             'program_prioritas.view', 'program_prioritas.create', 'program_prioritas.update', 'program_prioritas.delete', 'program_prioritas.print',
             'foto_kegiatan.view', 'foto_kegiatan.create', 'foto_kegiatan.update', 'foto_kegiatan.delete', 'foto_kegiatan.print',
-            'inventaris.view', 'inventaris.create', 'inventaris.update', 'inventaris.delete', 'inventaris.print',
             'bantuan.view', 'bantuan.create', 'bantuan.update', 'bantuan.delete', 'bantuan.print',
             'kader_khusus.view', 'kader_khusus.create', 'kader_khusus.update', 'kader_khusus.delete', 'kader_khusus.print',
             'prestasi_lomba.view', 'prestasi_lomba.create', 'prestasi_lomba.update', 'prestasi_lomba.delete', 'prestasi_lomba.print',
@@ -321,11 +315,10 @@ class RoleScopeMatrix
         ],
 
         self::ROLE_POKJA_2_DESA => [
-            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'inventaris.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
+            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'program_prioritas.view', 'program_prioritas.create', 'program_prioritas.update', 'program_prioritas.delete', 'program_prioritas.print',
             'foto_kegiatan.view', 'foto_kegiatan.create', 'foto_kegiatan.update', 'foto_kegiatan.delete', 'foto_kegiatan.print',
-            'inventaris.view', 'inventaris.create', 'inventaris.update', 'inventaris.delete', 'inventaris.print',
             'bantuan.view', 'bantuan.create', 'bantuan.update', 'bantuan.delete', 'bantuan.print',
             'kader_khusus.view', 'kader_khusus.create', 'kader_khusus.update', 'kader_khusus.delete', 'kader_khusus.print',
             'prestasi_lomba.view', 'prestasi_lomba.create', 'prestasi_lomba.update', 'prestasi_lomba.delete', 'prestasi_lomba.print',
@@ -358,11 +351,10 @@ class RoleScopeMatrix
         ],
 
         self::ROLE_POKJA_4_DESA => [
-            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'inventaris.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
+            'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'program_prioritas.view', 'program_prioritas.create', 'program_prioritas.update', 'program_prioritas.delete', 'program_prioritas.print',
             'foto_kegiatan.view', 'foto_kegiatan.create', 'foto_kegiatan.update', 'foto_kegiatan.delete', 'foto_kegiatan.print',
-            'inventaris.view', 'inventaris.create', 'inventaris.update', 'inventaris.delete', 'inventaris.print',
             'bantuan.view', 'bantuan.create', 'bantuan.update', 'bantuan.delete', 'bantuan.print',
             'kader_khusus.view', 'kader_khusus.create', 'kader_khusus.update', 'kader_khusus.delete', 'kader_khusus.print',
             'prestasi_lomba.view', 'prestasi_lomba.create', 'prestasi_lomba.update', 'prestasi_lomba.delete', 'prestasi_lomba.print',
@@ -374,6 +366,21 @@ class RoleScopeMatrix
         ],
 
         self::ROLE_ADMIN_DUSUN => [
+            'arsip_document.view', 'arsip_document.create', 'arsip_document.update', 'arsip_document.delete',
+            'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
+        ],
+
+        self::ROLE_ADMIN_RW => [
+            'arsip_document.view', 'arsip_document.create', 'arsip_document.update', 'arsip_document.delete',
+            'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
+        ],
+
+        self::ROLE_ADMIN_RT => [
+            'arsip_document.view', 'arsip_document.create', 'arsip_document.update', 'arsip_document.delete',
+            'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
+        ],
+
+        self::ROLE_ADMIN_DASAWISMA => [
             'arsip_document.view', 'arsip_document.create', 'arsip_document.update', 'arsip_document.delete',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
         ],

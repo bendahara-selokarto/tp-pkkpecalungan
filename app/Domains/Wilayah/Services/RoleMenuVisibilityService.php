@@ -117,7 +117,6 @@ class RoleMenuVisibilityService
             'prestasi-lomba',
             'anggota-tim-penggerak',
             'kader-khusus',
-            'inventaris',
             'simulasi-penyuluhan',
             'buku-tamu-simulasi',
             'buku-daftar-hadir-simulasi',
@@ -154,7 +153,6 @@ class RoleMenuVisibilityService
         'pokja-iv' => [
             'bantuans',
             'prestasi-lomba',
-            'inventaris',
             'kader-khusus',
             'bkl',
             'posyandu',
