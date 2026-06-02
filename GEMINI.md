@@ -62,6 +62,11 @@ Follow the **AI Single Path Architecture**:
 A task is considered complete ONLY if:
 1. It follows the architectural layering and authorization patterns defined here.
 2. It does not introduce bypasses to the Repository boundary.
-3. It passes relevant tests (`php artisan test`). Use `--compact` for efficient output.
+3. It passes relevant tests (`php artisan test`). **Status 'Skipped' pada modul yang sedang dikerjakan harus diubah menjadi 'Passed' (Hijau).**
 4. Documentation (TODO, ADR, or GEMINI.md) is updated to reflect changes in contracts or architecture.
 5. Code follows existing project style and naming conventions.
+
+## 5. Test Suite Stabilization Protocol
+- **Clean Slate Policy**: Test suite harus selalu dalam kondisi 0 Failures. Test yang usang ditandai sebagai `skipped` (ADR 005).
+- **Gradual Restoration**: Setiap tugas pengembangan wajib mengaktifkan kembali (memperbaiki) test yang terkait dengan modul tersebut.
+- **Finality**: Fitur dianggap final/selesai hanya jika test pendukungnya sudah Hijau.

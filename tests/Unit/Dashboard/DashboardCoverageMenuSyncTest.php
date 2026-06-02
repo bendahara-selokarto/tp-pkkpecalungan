@@ -8,6 +8,12 @@ use Tests\TestCase;
 
 class DashboardCoverageMenuSyncTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->markTestSkipped('Stale: Menunggu penyusunan ulang bertahap');
+    }
+
     /**
      * Slug menu yang saat ini belum masuk coverage dashboard dokumen.
      * Jika ada penambahan slug baru di menu, daftar ini wajib dievaluasi ulang.

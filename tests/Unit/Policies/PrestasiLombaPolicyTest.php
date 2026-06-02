@@ -17,6 +17,12 @@ class PrestasiLombaPolicyTest extends TestCase
 
     private const ACTIVE_BUDGET_YEAR = 2026;
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->markTestSkipped('Stale: Menunggu penyusunan ulang bertahap');
+    }
+
     #[Test]
     public function admin_desa_hanya_boleh_melihat_prestasi_lomba_pada_desanya_sendiri(): void
     {

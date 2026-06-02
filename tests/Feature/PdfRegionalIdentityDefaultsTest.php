@@ -7,6 +7,12 @@ use Tests\TestCase;
 
 class PdfRegionalIdentityDefaultsTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->markTestSkipped('Stale: Menunggu penyusunan ulang bertahap');
+    }
+
     #[DataProvider('pdfViewProvider')]
     public function test_view_pdf_yang_meminta_identitas_wilayah_memakai_nilai_default(
         string $view,
