@@ -104,6 +104,7 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'kader-khusus',
         ],
         'pokja-i' => [
+            'inventaris',
             'simulasi-penyuluhan',
             'buku-tamu-simulasi',
             'buku-daftar-hadir-simulasi',
@@ -140,6 +141,7 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'data-kegiatan-pkk-pokja-iii',
         ],
         'pokja-iv' => [
+            'inventaris',
             'posyandu',
             'pilot-project-naskah-pelaporan',
             'pilot-project-keluarga-sehat',

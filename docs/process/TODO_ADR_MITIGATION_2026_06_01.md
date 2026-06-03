@@ -17,13 +17,12 @@ Menyelesaikan inkoherensi antara ADR, Pedoman Akses, dan implementasi kode terka
 
 ### 2. Visibilitas Modul `inventaris`
 - [x] Edit `app/Domains/Wilayah/Services/RoleMenuVisibilityService.php`:
-    - Hapus `'inventaris'` dari `pokja-i`.
-    - Hapus `'inventaris'` dari `pokja-iv`.
+    - Sinkronkan `'inventaris'` untuk `pokja-i` dan `pokja-iv`.
 
 ### 3. Standardisasi Role
 - [x] Edit `app/Support/RoleScopeMatrix.php`:
     - Ganti `admin_` menjadi `admin-` pada konstanta role administratif.
-    - Sinkronisasi izin `inventaris` sesuai kepemilikan definitif (Sekretaris & Pokja III).
+    - Sinkronisasi izin `inventaris` sesuai kepemilikan definitif (Sekretaris, Pokja I, Pokja III, Pokja IV).
 
 ### 4. Migrasi
 - [x] Buat migrasi untuk update tabel `roles`.

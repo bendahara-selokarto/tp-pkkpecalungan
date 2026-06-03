@@ -18,7 +18,7 @@ class InventarisPolicyTest extends TestCase
     private const ACTIVE_BUDGET_YEAR = 2026;
 
     #[Test]
-    public function pokja_i_tidak_boleh_memakai_buku_inventaris(): void
+    public function pokja_i_boleh_memakai_buku_inventaris(): void
     {
         Role::firstOrCreate(['name' => 'desa-pokja-i']);
 
@@ -47,9 +47,9 @@ class InventarisPolicyTest extends TestCase
 
         $policy = app(InventarisPolicy::class);
 
-        $this->assertFalse($policy->viewAny($user));
-        $this->assertFalse($policy->create($user));
-        $this->assertFalse($policy->view($user, $inventaris));
+        $this->assertTrue($policy->viewAny($user));
+        $this->assertTrue($policy->create($user));
+        $this->assertTrue($policy->view($user, $inventaris));
     }
 
     #[Test]

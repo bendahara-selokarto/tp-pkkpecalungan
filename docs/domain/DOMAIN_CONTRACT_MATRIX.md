@@ -230,8 +230,10 @@ Catatan:
 - `super-admin` bypass policy dan tidak dibatasi matrix ini.
 - Role legacy (`admin-*`) dinonaktifkan di runtime sejak 2026-03-15 dan hanya dicatat sebagai histori.
 - Pengecualian akses modul `inventaris`:
-  - `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv` memiliki mode `read-write` via override modul backend.
-  - `kecamatan-pokja-i..iv` tetap tidak memiliki akses `inventaris` (tidak muncul di `moduleModes` scope `kecamatan`).
+  - `desa-pokja-i`, `desa-pokja-iii`, `desa-pokja-iv` memiliki mode `read-write` via izin backend.
+  - `desa-pokja-ii` tetap tidak memiliki akses `inventaris`.
+  - `kecamatan-pokja-i`, `kecamatan-pokja-ii`, `kecamatan-pokja-iv` tetap tidak memiliki akses `inventaris`.
+  - Data `inventaris` terisolasi per jabatan lewat `group`, `area_id`, `level`, dan `tahun_anggaran`.
 - Pengecualian akses modul `buku-tamu`:
   - `desa-pokja-i`, `desa-pokja-ii`, `desa-pokja-iii`, `desa-pokja-iv` memiliki mode `read-write` via override modul backend.
   - `kecamatan-pokja-i..iv` tetap tidak memiliki akses `buku-tamu` (tidak muncul di `moduleModes` scope `kecamatan`).

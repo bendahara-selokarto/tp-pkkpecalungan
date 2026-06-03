@@ -98,6 +98,8 @@ Ringkasan hasil route (name-based count):
 - `buku-keuangan`: desa=8, kecamatan=8
 - `bantuans`: desa=9, kecamatan=9 (termasuk alias report keuangan legacy)
 - `inventaris`: desa=8, kecamatan=8
+  - Data terisolasi per jabatan melalui `group`, `area_id`, `level`, dan `tahun_anggaran`.
+  - `desa-pokja-i`, `desa-pokja-iii`, `desa-pokja-iv` dan padanan kecamatan yang diizinkan memiliki akses RW; `desa-pokja-ii` dan `kecamatan-pokja-i..ii,iv` tetap tidak punya akses.
 - `activities`: desa=8, kecamatan=8, `kecamatan_desa_monitoring`=3
 - `data-warga`: desa=8, kecamatan=8
 - `data-kegiatan-warga`: desa=8, kecamatan=8
