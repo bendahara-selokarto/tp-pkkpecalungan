@@ -26,7 +26,6 @@ Dokumen ini mencatat daftar menu dan hak akses untuk pengguna dengan peran **des
 - Buku Notulen Rapat
 - Buku Prestasi
 - Buku Bantuan
-- Buku Kader Khusus
 
 #### **B. Penunjang Buku Wajib (Hak Akses: Read-Write)**
 - **Data Umum**: Laporan rekapitulasi data umum desa.

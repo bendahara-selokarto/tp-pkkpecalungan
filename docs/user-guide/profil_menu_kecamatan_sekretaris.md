@@ -27,7 +27,6 @@ Ini adalah modul operasional utama bagi sekretaris kecamatan:
 - Buku Notulen Rapat
 - Buku Prestasi
 - Buku Bantuan
-- Buku Kader Khusus
 
 #### **B. Penunjang Buku Wajib (Hak Akses: Read-Write)**
 - Data Umum (Laporan PDF Data Umum Kecamatan)
