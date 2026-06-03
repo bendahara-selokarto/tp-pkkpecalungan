@@ -34,10 +34,22 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
     public function test_header_kolom_pdf_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_tetap_sesuai_pedoman(): void
     {
         $this->assertPdfReportHeadersInOrder('pdf.data_pemanfaatan_tanah_pekarangan_hatinya_pkk_report', [
+            'BUKU BANTU PANGAN',
             'NO',
-            'KATEGORI',
-            'KOMODITI',
-            'JUMLAH',
+            'NAMA WILAYAH',
+            'MAKANAN POKOK',
+            'PEMANFAATAN PEKARANGAN / HATINYA PKK',
+            'BERAS',
+            'NON BERAS',
+            'PETERNAKAN',
+            'UNGGAS',
+            'KAMBING',
+            'SAPI/KERBAU',
+            'PERIKANAN',
+            'WARUNG HIDUP',
+            'LUMBUNG HIDUP',
+            'TOGA',
+            'TANAMAN KERAS',
         ]);
     }
 
@@ -91,5 +103,3 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
         $response->assertStatus(403);
     }
 }
-
-

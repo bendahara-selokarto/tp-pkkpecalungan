@@ -23,7 +23,7 @@ Dokumen ini mencatat daftar menu dan hak akses untuk pengguna dengan peran **des
 - **Buku Data Kegiatan Pokja III**: Laporan ringkasan data kegiatan (Format 4.23).
 - **Buku Kegiatan, Prestasi, Bantuan, Kader Khusus, Inventaris**.
 - **Buku Rumah Sehat dan Tidak Sehat**: (Format 4.14.2a).
-- **Buku Bantu Pangan**: (Format 4.14.2b).
+- **Buku Bantu Pangan**: pemanfaatan pekarangan dan pangan keluarga (Format 4.14.2b).
 - **Buku Jumlah Industri Rumah Tangga**: (Format 4.14.2c).
 
 #### **B. Modul Tambahan/Audit (Hak Akses: Read-Only)**

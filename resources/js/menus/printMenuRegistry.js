@@ -284,7 +284,7 @@ const buildScopedMenuGroups = (scope) => {
         { href: `/${scope}/buku-daftar-hadir`, label: 'Buku Daftar Hadir' },
         { href: `/${scope}/buku-notulen-rapat`, label: 'Buku Notulen' },
         { href: `/${scope}/inventaris`, label: 'Buku Inventaris' },
-        { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku HATINYA PKK' },
+        { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku Bantu Pangan' },
         { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus Pokja III' },
         { href: `/${scope}/data-keluarga`, label: 'Buku Rumah Sehat dan Tidak Sehat' },
         { href: `/${scope}/data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, label: 'Buku Bantu Pangan' },
