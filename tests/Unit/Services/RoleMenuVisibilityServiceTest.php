@@ -146,6 +146,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'bantuans',
                 'kader-khusus',
                 'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
+                'buku-bantu-pangan',
                 'warung-pkk',
                 'data-keluarga',
                 'buku-daftar-hadir',

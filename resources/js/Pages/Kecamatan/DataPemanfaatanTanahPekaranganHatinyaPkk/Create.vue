@@ -6,6 +6,14 @@ import { Link, useForm } from '@inertiajs/vue3'
 import { mdiAccountGroup } from '@mdi/js'
 
 const props = defineProps({
+  bookLabel: {
+    type: String,
+    required: true,
+  },
+  basePath: {
+    type: String,
+    required: true,
+  },
   kategoriPemanfaatanLahanOptions: {
     type: Array,
     required: true,
@@ -19,13 +27,13 @@ const form = useForm({
 })
 
 const submit = () => {
-  form.post('/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk')
+  form.post(props.basePath)
 }
 </script>
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Tambah Buku HATINYA PKK Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" :title="`Tambah ${props.bookLabel} Kecamatan`" main />
 
     <CardBox class="max-w-4xl">
       <form class="space-y-5" @submit.prevent="submit">
@@ -50,7 +58,7 @@ const submit = () => {
         </div>
 
         <div class="flex items-center justify-end gap-2">
-          <Link href="/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
+          <Link :href="props.basePath" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
             Batal
           </Link>
           <button type="submit" class="inline-flex rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60" :disabled="form.processing">
@@ -61,6 +69,5 @@ const submit = () => {
     </CardBox>
   </SectionMain>
 </template>
-
 
 

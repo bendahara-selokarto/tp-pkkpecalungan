@@ -22,6 +22,11 @@ use Inertia\Response;
 
 class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Controller
 {
+    private const BOOK_LABEL_DEFAULT = 'Buku HATINYA PKK';
+    private const BOOK_LABEL_BANTU = 'Buku Bantu Pangan';
+    private const ROUTE_PREFIX_DEFAULT = 'kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk';
+    private const ROUTE_PREFIX_BANTU = 'kecamatan.buku-bantu-pangan';
+
     public function __construct(
         private readonly DataPemanfaatanTanahPekaranganHatinyaPkkRepositoryInterface $dataPemanfaatanTanahPekaranganHatinyaPkkRepository,
         private readonly ListScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase $listScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase,
@@ -64,6 +69,7 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
     public function index(ListDataPemanfaatanTanahPekaranganHatinyaPkkRequest $request): Response
     {
         $this->authorize('viewAny', DataPemanfaatanTanahPekaranganHatinyaPkk::class);
+        $isBukuBantu = request()->route()?->getName() === self::ROUTE_PREFIX_BANTU . '.index';
         $items = $this->listScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase
             ->execute(ScopeLevel::KECAMATAN->value, $request->perPage())
             ->through(fn (DataPemanfaatanTanahPekaranganHatinyaPkk $item) => [
@@ -75,6 +81,9 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
             ]);
 
         return Inertia::render('Kecamatan/DataPemanfaatanTanahPekaranganHatinyaPkk/Index', [
+            'bookLabel' => $isBukuBantu ? self::BOOK_LABEL_BANTU : self::BOOK_LABEL_DEFAULT,
+            'baseRouteName' => $isBukuBantu ? self::ROUTE_PREFIX_BANTU : self::ROUTE_PREFIX_DEFAULT,
+            'basePath' => $isBukuBantu ? '/kecamatan/buku-bantu-pangan' : '/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
             'dataPemanfaatanTanahPekaranganHatinyaPkkItems' => $items,
             'pagination' => [
                 'perPageOptions' => [10, 25, 50],
@@ -89,8 +98,12 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
     public function create(): Response
     {
         $this->authorize('create', DataPemanfaatanTanahPekaranganHatinyaPkk::class);
+        $isBukuBantu = request()->route()?->getName() === self::ROUTE_PREFIX_BANTU . '.create';
 
         return Inertia::render('Kecamatan/DataPemanfaatanTanahPekaranganHatinyaPkk/Create', [
+            'bookLabel' => $isBukuBantu ? self::BOOK_LABEL_BANTU : self::BOOK_LABEL_DEFAULT,
+            'baseRouteName' => $isBukuBantu ? self::ROUTE_PREFIX_BANTU : self::ROUTE_PREFIX_DEFAULT,
+            'basePath' => $isBukuBantu ? '/kecamatan/buku-bantu-pangan' : '/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
             'kategoriPemanfaatanLahanOptions' => DataPemanfaatanTanahPekaranganHatinyaPkk::kategoriPemanfaatanLahanOptions(),
         ]);
     }
@@ -100,15 +113,23 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
         $this->authorize('create', DataPemanfaatanTanahPekaranganHatinyaPkk::class);
         $this->createScopedDataPemanfaatanTanahPekaranganHatinyaPkkAction->execute($request->validated(), ScopeLevel::KECAMATAN->value);
 
-        return redirect()->route('kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil dibuat');
+        $routeName = request()->route()?->getName() === self::ROUTE_PREFIX_BANTU . '.store'
+            ? self::ROUTE_PREFIX_BANTU . '.index'
+            : self::ROUTE_PREFIX_DEFAULT . '.index';
+
+        return redirect()->route($routeName)->with('success', 'Buku berhasil dibuat');
     }
 
     public function show(int $id): Response
     {
         $dataPemanfaatanTanahPekaranganHatinyaPkk = $this->getScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase->execute($id, ScopeLevel::KECAMATAN->value);
         $this->authorize('view', $dataPemanfaatanTanahPekaranganHatinyaPkk);
+        $isBukuBantu = request()->route()?->getName() === self::ROUTE_PREFIX_BANTU . '.show';
 
         return Inertia::render('Kecamatan/DataPemanfaatanTanahPekaranganHatinyaPkk/Show', [
+            'bookLabel' => $isBukuBantu ? self::BOOK_LABEL_BANTU : self::BOOK_LABEL_DEFAULT,
+            'baseRouteName' => $isBukuBantu ? self::ROUTE_PREFIX_BANTU : self::ROUTE_PREFIX_DEFAULT,
+            'basePath' => $isBukuBantu ? '/kecamatan/buku-bantu-pangan' : '/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
             'dataPemanfaatanTanahPekaranganHatinyaPkk' => [
                 'id' => $dataPemanfaatanTanahPekaranganHatinyaPkk->id,
                 'kategori_pemanfaatan_lahan' => $dataPemanfaatanTanahPekaranganHatinyaPkk->kategori_pemanfaatan_lahan,
@@ -123,8 +144,12 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
     {
         $dataPemanfaatanTanahPekaranganHatinyaPkk = $this->getScopedDataPemanfaatanTanahPekaranganHatinyaPkkUseCase->execute($id, ScopeLevel::KECAMATAN->value);
         $this->authorize('update', $dataPemanfaatanTanahPekaranganHatinyaPkk);
+        $isBukuBantu = request()->route()?->getName() === self::ROUTE_PREFIX_BANTU . '.edit';
 
         return Inertia::render('Kecamatan/DataPemanfaatanTanahPekaranganHatinyaPkk/Edit', [
+            'bookLabel' => $isBukuBantu ? self::BOOK_LABEL_BANTU : self::BOOK_LABEL_DEFAULT,
+            'baseRouteName' => $isBukuBantu ? self::ROUTE_PREFIX_BANTU : self::ROUTE_PREFIX_DEFAULT,
+            'basePath' => $isBukuBantu ? '/kecamatan/buku-bantu-pangan' : '/kecamatan/data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
             'dataPemanfaatanTanahPekaranganHatinyaPkk' => [
                 'id' => $dataPemanfaatanTanahPekaranganHatinyaPkk->id,
                 'kategori_pemanfaatan_lahan' => $dataPemanfaatanTanahPekaranganHatinyaPkk->kategori_pemanfaatan_lahan,
@@ -142,7 +167,11 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
         $this->authorize('update', $dataPemanfaatanTanahPekaranganHatinyaPkk);
         $this->updateDataPemanfaatanTanahPekaranganHatinyaPkkAction->execute($dataPemanfaatanTanahPekaranganHatinyaPkk, $request->validated());
 
-        return redirect()->route('kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil diperbarui');
+        $routeName = request()->route()?->getName() === self::ROUTE_PREFIX_BANTU . '.update'
+            ? self::ROUTE_PREFIX_BANTU . '.index'
+            : self::ROUTE_PREFIX_DEFAULT . '.index';
+
+        return redirect()->route($routeName)->with('success', 'Buku berhasil diperbarui');
     }
 
     public function destroy(int $id): RedirectResponse
@@ -151,6 +180,10 @@ class KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController extends Contro
         $this->authorize('delete', $dataPemanfaatanTanahPekaranganHatinyaPkk);
         $this->dataPemanfaatanTanahPekaranganHatinyaPkkRepository->delete($dataPemanfaatanTanahPekaranganHatinyaPkk);
 
-        return redirect()->route('kecamatan.data-pemanfaatan-tanah-pekarangan-hatinya-pkk.index')->with('success', 'Buku HATINYA PKK berhasil dihapus');
+        $routeName = request()->route()?->getName() === self::ROUTE_PREFIX_BANTU . '.destroy'
+            ? self::ROUTE_PREFIX_BANTU . '.index'
+            : self::ROUTE_PREFIX_DEFAULT . '.index';
+
+        return redirect()->route($routeName)->with('success', 'Buku berhasil dihapus');
     }
 }

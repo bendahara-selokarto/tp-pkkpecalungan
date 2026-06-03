@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Buku Bantu Pangan</title>
+    <title>Buku HATINYA PKK</title>
     <style>
         body { font-family: DejaVu Sans, sans-serif; font-size: 10px; color: #111827; }
         .lampiran { text-align: right; font-size: 14px; font-weight: 700; margin-bottom: 16px; }
@@ -25,7 +25,7 @@
     @endphp
 
     <div class="lampiran">LAMPIRAN 4.14.2b</div>
-    <div class="title">BUKU BANTU PANGAN</div>
+    <div class="title">BUKU HATINYA PKK</div>
     <div class="meta">
         {{ $areaLabel }}: {{ $areaName }} | Level: {{ $levelLabel }} | Tahun Anggaran: {{ $budgetYearLabel ?? '-' }}
     </div>
@@ -85,10 +85,10 @@
             @forelse ($items as $index => $item)
                 <tr>
                     <td class="center">{{ $index + 1 }}</td>
-                    <td>{{ $areaName }}</td>
-                    <td class="center">{{ $item->kategori_pemanfaatan_lahan }}</td>
+                    <td>{{ $item->kategori_pemanfaatan_lahan }}</td>
                     <td class="center">{{ $item->komoditi }}</td>
                     <td class="center">{{ $item->jumlah_komoditi }}</td>
+                    <td class="center">-</td>
                     <td class="center">-</td>
                     <td class="center">-</td>
                     <td class="center">-</td>
@@ -99,14 +99,14 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="12" class="center">Buku Bantu Pangan belum tersedia.</td>
+                    <td colspan="12" class="center">Buku HATINYA PKK belum tersedia.</td>
                 </tr>
             @endforelse
         </tbody>
     </table>
 
     <div class="note">
-        Kategori : (beras, non beras, unggas, kambing, sapi/kerbau, perikanan, warung hidup, lumbung hidup, toga, tanaman keras)
+        Kategori : (peternakan, perikanan, warung hidup, toga, tanaman keras, lainnya)
     </div>
 
     @include('pdf.partials._report_footer')

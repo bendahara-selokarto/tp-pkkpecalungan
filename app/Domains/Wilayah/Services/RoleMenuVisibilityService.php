@@ -142,6 +142,7 @@ class RoleMenuVisibilityService
             'buku-notulen-rapat',
             'inventaris',
             'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
+            'buku-bantu-pangan',
             'kader-khusus',
             'data-keluarga',
             'data-industri-rumah-tangga',

@@ -9,6 +9,14 @@ import { mdiAccountGroup } from '@mdi/js'
 import { computed, ref } from 'vue'
 
 const props = defineProps({
+  bookLabel: {
+    type: String,
+    required: true,
+  },
+  basePath: {
+    type: String,
+    required: true,
+  },
   dataPemanfaatanTanahPekaranganHatinyaPkkItems: {
     type: Object,
     required: true,
@@ -34,7 +42,7 @@ const perPage = computed(() => props.filters.per_page ?? 10)
 const updatePerPage = (event) => {
   const selectedPerPage = Number(event.target.value)
 
-  router.get('/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk', { per_page: selectedPerPage }, {
+  router.get(props.basePath, { per_page: selectedPerPage }, {
     preserveScroll: true,
     preserveState: true,
     replace: true,
@@ -51,7 +59,7 @@ const confirmDelete = () => {
     return
   }
 
-  router.delete(`/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/${deletingId.value}`, {
+  router.delete(`${props.basePath}/${deletingId.value}`, {
     onFinish: () => {
       isDeleteModalActive.value = false
       deletingId.value = null
@@ -67,11 +75,11 @@ const cancelDelete = () => {
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Buku HATINYA PKK Desa" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" :title="`${props.bookLabel} Desa`" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Buku HATINYA PKK</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar {{ props.bookLabel }}</h3>
         <div class="flex items-center gap-2">
           <label class="text-xs text-gray-600 dark:text-gray-300">
             Per halaman
@@ -86,7 +94,7 @@ const cancelDelete = () => {
             </select>
           </label>
           <a
-            href="/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf/chart"
+            :href="`${props.basePath}/report/pdf/chart`"
             target="_blank"
             rel="noopener"
             class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
@@ -94,7 +102,7 @@ const cancelDelete = () => {
             Cetak Grafik
           </a>
           <a
-            href="/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf"
+            :href="`${props.basePath}/report/pdf`"
             target="_blank"
             rel="noopener"
             class="inline-flex items-center rounded-md border border-sky-300 px-4 py-2 text-sm font-medium text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
@@ -102,7 +110,7 @@ const cancelDelete = () => {
             Cetak PDF
           </a>
           <Link
-            href="/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/create"
+            :href="`${props.basePath}/create`"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
             + Tambah
@@ -132,13 +140,13 @@ const cancelDelete = () => {
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
                   <Link
-                    :href="`/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/${item.id}`"
+                    :href="`${props.basePath}/${item.id}`"
                     class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
                   >
                     Lihat
                   </Link>
                   <Link
-                    :href="`/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/${item.id}/edit`"
+                    :href="`${props.basePath}/${item.id}/edit`"
                     class="inline-flex rounded-md border border-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
                   >
                     Edit
@@ -155,7 +163,7 @@ const cancelDelete = () => {
             </tr>
             <tr v-if="props.dataPemanfaatanTanahPekaranganHatinyaPkkItems.data.length === 0">
               <td colspan="4" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Buku HATINYA PKK belum tersedia.
+                {{ props.bookLabel }} belum tersedia.
               </td>
             </tr>
           </tbody>

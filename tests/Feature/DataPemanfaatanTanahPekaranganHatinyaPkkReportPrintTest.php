@@ -34,7 +34,7 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
     public function test_header_kolom_pdf_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_tetap_sesuai_pedoman(): void
     {
         $this->assertPdfReportHeadersInOrder('pdf.data_pemanfaatan_tanah_pekarangan_hatinya_pkk_report', [
-            'BUKU BANTU PANGAN',
+            'BUKU HATINYA PKK',
             'NO',
             'NAMA WILAYAH',
             'MAKANAN POKOK',
@@ -47,7 +47,6 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
             'SAPI/KERBAU',
             'PERIKANAN',
             'WARUNG HIDUP',
-            'LUMBUNG HIDUP',
             'TOGA',
             'TANAMAN KERAS',
         ]);
@@ -73,6 +72,27 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
         $response->assertHeader('content-type', 'application/pdf');
     }
 
+    public function test_admin_desa_dapat_mencetak_laporan_pdf_buku_bantu_pangan_melalui_route_baru(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user->assignRole('desa-pokja-iii');
+
+        $response = $this->actingAs($user)->get(route('desa.buku-bantu-pangan.report'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_admin_desa_dapat_mengakses_index_buku_bantu_pangan_melalui_route_baru(): void
+    {
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $this->desaA->id]);
+        $user->assignRole('desa-pokja-iii');
+
+        $response = $this->actingAs($user)->get('/desa/buku-bantu-pangan');
+
+        $response->assertOk();
+    }
+
     public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_kecamatannya_sendiri(): void
     {
         $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
@@ -91,6 +111,27 @@ class DataPemanfaatanTanahPekaranganHatinyaPkkReportPrintTest extends TestCase
 
         $response->assertOk();
         $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_admin_kecamatan_dapat_mencetak_laporan_pdf_buku_bantu_pangan_melalui_route_baru(): void
+    {
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $response = $this->actingAs($user)->get(route('kecamatan.buku-bantu-pangan.report'));
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_admin_kecamatan_dapat_mengakses_index_buku_bantu_pangan_melalui_route_baru(): void
+    {
+        $user = User::factory()->create(['scope' => 'kecamatan', 'area_id' => $this->kecamatanA->id]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $response = $this->actingAs($user)->get('/kecamatan/buku-bantu-pangan');
+
+        $response->assertOk();
     }
 
     public function test_laporan_pdf_data_pemanfaatan_tanah_pekarangan_hatinya_pkk_tetap_aman_saat_scope_metadata_tidak_sinkron(): void

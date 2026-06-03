@@ -6,6 +6,14 @@ import { Link } from '@inertiajs/vue3'
 import { mdiAccountGroup } from '@mdi/js'
 
 const props = defineProps({
+  bookLabel: {
+    type: String,
+    required: true,
+  },
+  basePath: {
+    type: String,
+    required: true,
+  },
   dataPemanfaatanTanahPekaranganHatinyaPkk: {
     type: Object,
     required: true,
@@ -15,7 +23,7 @@ const props = defineProps({
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiAccountGroup" title="Detail Buku HATINYA PKK Desa" main />
+    <SectionTitleLineWithButton :icon="mdiAccountGroup" :title="`Detail ${props.bookLabel} Desa`" main />
 
     <CardBox class="max-w-4xl space-y-4">
       <div>
@@ -34,14 +42,13 @@ const props = defineProps({
       </div>
 
       <div class="flex items-center justify-end gap-2">
-        <Link href="/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
+        <Link :href="props.basePath" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
           Kembali
         </Link>
-        <Link :href="`/desa/data-pemanfaatan-tanah-pekarangan-hatinya-pkk/${props.dataPemanfaatanTanahPekaranganHatinyaPkk.id}/edit`" class="inline-flex rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700">
+        <Link :href="`${props.basePath}/${props.dataPemanfaatanTanahPekaranganHatinyaPkk.id}/edit`" class="inline-flex rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700">
           Edit
         </Link>
       </div>
     </CardBox>
   </SectionMain>
 </template>
-

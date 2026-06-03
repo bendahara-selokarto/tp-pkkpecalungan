@@ -15,6 +15,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - Data `Data Kegiatan` tetap wajib terisolasi untuk masing-masing jabatan/group walaupun berada pada level wilayah dan area yang sama.
 - Perubahan sebelumnya sudah membuat beberapa buku tersedia pada masing-masing jabatan dan mengisolasi data per `group`; concern ini tidak boleh langsung menganggap format PDF/form/table bisa reuse hanya karena nama bukunya sama.
 - Implementasi berikutnya wajib dimulai dari audit format autentik, bukan dari penyamaan nama menu.
+- Catatan bisnis autentik 2026-06-03: `Buku HATINYA PKK` tetap dipertahankan sebagai buku existing, sedangkan `Buku Bantu Pangan` dicatat sebagai entri bisnis baru yang tidak boleh diperlakukan sebagai rename otomatis.
 
 ## Kontrak Concern (Lock)
 
@@ -51,6 +52,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - [ ] P1. Susun matrix `jabatan -> nama buku -> format id -> sumber bukti -> status implementasi`.
 - [ ] P2. Tandai `Buku Program Kerja` dan `Buku Kegiatan` sebagai `reuse-full` hanya jika header/kolom/merge cell terbukti identik.
 - [ ] P3. Tandai semua buku bernama sama selain `Buku Program Kerja` dan `Buku Kegiatan` sebagai `format-specific` sampai bukti autentik menyatakan identik.
+- [ ] P3aa. Tahan `Buku HATINYA PKK` sebagai buku existing dan daftarkan `Buku Bantu Pangan` sebagai entri terpisah pada matrix bisnis autentik.
 - [x] P3c. Tandai `Buku Prestasi`, `Buku Bantuan`, dan `Buku Kader Khusus` sebagai kelompok `buku bantu` berformat sama untuk `sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, dan `pokja-iv`.
 - [ ] P3d. Audit kebutuhan isolasi data kelompok `buku bantu` per `group` pada route, request, repository, policy/scope, UI, dan PDF/report output.
 - [ ] P3a. Tandai `Data Kegiatan` sebagai `format-specific` per jabatan untuk `sekretaris-tpk`, `pokja-i`, `pokja-ii`, `pokja-iii`, dan `pokja-iv`.

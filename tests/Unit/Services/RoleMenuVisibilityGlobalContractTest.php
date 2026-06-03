@@ -129,6 +129,7 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
         ],
         'pokja-iii' => [
             'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
+            'buku-bantu-pangan',
             'warung-pkk',
             'data-keluarga',
             'buku-daftar-hadir',

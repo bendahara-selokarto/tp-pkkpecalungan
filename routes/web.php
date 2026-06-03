@@ -245,8 +245,11 @@ Route::prefix('desa')
         Route::resource('data-industri-rumah-tangga', DesaDataIndustriRumahTanggaController::class);
         Route::resource('data-pelatihan-kader', DesaDataPelatihanKaderController::class);
         Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf/chart', [DesaDataPemanfaatanTanahPekaranganHatinyaPkkController::class, 'printChartPdf'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report.chart');
+        Route::get('buku-bantu-pangan/report/pdf', [DataPemanfaatanTanahPekaranganHatinyaPkkPrintController::class, 'printDesaReport'])->name('buku-bantu-pangan.report');
         Route::resource('data-pemanfaatan-tanah-pekarangan-hatinya-pkk', DesaDataPemanfaatanTanahPekaranganHatinyaPkkController::class)
             ->parameters(['data-pemanfaatan-tanah-pekarangan-hatinya-pkk' => 'dataPemanfaatan']);
+        Route::resource('buku-bantu-pangan', DesaDataPemanfaatanTanahPekaranganHatinyaPkkController::class)
+            ->parameters(['buku-bantu-pangan' => 'dataPemanfaatan']);
         Route::get('catatan-keluarga', [DesaCatatanKeluargaController::class, 'index'])->name('catatan-keluarga.index');
         Route::resource('warung-pkk', DesaWarungPkkController::class);
         Route::resource('taman-bacaan', DesaTamanBacaanController::class);
@@ -378,8 +381,11 @@ Route::prefix('kecamatan')
         Route::resource('data-industri-rumah-tangga', KecamatanDataIndustriRumahTanggaController::class);
         Route::resource('data-pelatihan-kader', KecamatanDataPelatihanKaderController::class);
         Route::get('data-pemanfaatan-tanah-pekarangan-hatinya-pkk/report/pdf/chart', [KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController::class, 'printChartPdf'])->name('data-pemanfaatan-tanah-pekarangan-hatinya-pkk.report.chart');
+        Route::get('buku-bantu-pangan/report/pdf', [DataPemanfaatanTanahPekaranganHatinyaPkkPrintController::class, 'printKecamatanReport'])->name('buku-bantu-pangan.report');
         Route::resource('data-pemanfaatan-tanah-pekarangan-hatinya-pkk', KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController::class)
             ->parameters(['data-pemanfaatan-tanah-pekarangan-hatinya-pkk' => 'dataPemanfaatan']);
+        Route::resource('buku-bantu-pangan', KecamatanDataPemanfaatanTanahPekaranganHatinyaPkkController::class)
+            ->parameters(['buku-bantu-pangan' => 'dataPemanfaatan']);
         Route::get('catatan-keluarga', [KecamatanCatatanKeluargaController::class, 'index'])->name('catatan-keluarga.index');
         Route::resource('warung-pkk', KecamatanWarungPkkController::class);
         Route::resource('taman-bacaan', KecamatanTamanBacaanController::class);
