@@ -9,6 +9,8 @@ Tujuan:
 
 1. Contract first
 - Tetapkan kontrak masalah: target, batasan, acceptance criteria, dan risiko.
+- Jika input datang dari divisi bisnis/non-teknis, terjemahkan dulu menjadi dokumen pedoman paling kuat yang relevan sebelum implementasi kode.
+- Jika input bisnis mengubah logika lama, update dokumen canonically related pada sesi yang sama atau tandai status dokumen lama sebagai `superseded` sebelum patch kode final.
 
 2. Scoped dependency map
 - Baca hanya file yang relevan.
@@ -32,6 +34,7 @@ Tujuan:
 5. Learning capture
 - Jika jalur baru lebih efisien, update playbook ini.
 - Jika jalur lama kalah efektif, tandai deprecated.
+- Jika informasi baru dari bisnis mengubah logika lama, perubahan dokumen bukan opsional: sinkronkan TODO/domain/security/ADR yang terdampak sebelum finalisasi concern.
 
 ## 2) Pattern Registry
 

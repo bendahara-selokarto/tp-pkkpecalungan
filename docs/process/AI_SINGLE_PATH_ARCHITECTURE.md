@@ -41,6 +41,8 @@ Aturan anti-ambiguity:
 - Prioritas tetap mengikuti `AGENTS.md`; instruksi yang melanggar invariant ditolak.
 - Istilah domain mengikuti pedoman utama; status dokumen harus sinkron sebelum final report.
 - Untuk concern ganda, acuan final adalah referensi user terakhir; referensi lama ditandai `superseded`.
+- Jika input baru datang dari divisi bisnis/non-teknis, AI wajib menurunkannya dulu menjadi dokumen pedoman paling kuat yang relevan sebelum implementasi kode dimulai.
+- Jika input bisnis mengubah logika lama, dokumen terdampak harus diupdate atau ditandai `superseded` pada sesi yang sama sebelum finalisasi concern.
 - Resolver ambiguity TODO wajib memakai registry SOT `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
 - TODO baru wajib berkode unik; ADR baru wajib 4 digit + status eksplisit.
 - Status utama TODO harus konsisten (`planned`, `in-progress`, `done`); state tambahan hanya keterangan.
@@ -91,6 +93,7 @@ Aturan:
 - Jika concern/file target/validation ladder tidak cocok, lakukan satu kali koreksi rute secara eksplisit.
 - Tetapkan tier model: `low -> small`, `medium -> mid`, `high -> large`.
 - Kunci hasil koreksi pada TODO concern (dan ADR jika concern strategis lintas concern).
+- Untuk info bisnis/non-teknis, lakukan terjemahan kontrak ke pedoman/dokumen sebelum patch kode.
 
 3. `Contract Lock`
 - Kunci target, scope, boundary data, acceptance criteria, dan file target.
@@ -104,6 +107,7 @@ Aturan:
 - Patch sekecil mungkin pada boundary:
   - `Controller -> UseCase/Action -> Repository Interface -> Repository -> Model`
   - `Policy -> Scope Service`
+- Jika logika lama berubah akibat input bisnis baru, jalankan doc-hardening pada TODO/domain/security/ADR yang terdampak sebelum atau bersamaan dengan patch kode.
 
 5A. `Anti-Hallucination Guardrail`
 - Setiap perubahan wajib punya explicit contract dari file rujukan (AGENTS/TODO/ADR).

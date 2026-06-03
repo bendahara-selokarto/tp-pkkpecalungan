@@ -22,6 +22,9 @@ Related ADR: `docs/adr/ADR_0009_ACTIVITY_GROUP_BOOK_ISOLATION.md`, `docs/adr/ADR
   - tidak ada data leak lintas level/scope/jabatan,
   - payload `menuGroupModes`/`moduleModes` sinkron dengan sidebar,
   - test matrix akses utama lulus.
+- Aturan perubahan input bisnis/non-teknis:
+  - setiap informasi baru dari divisi bisnis/non-teknis wajib diterjemahkan dulu menjadi dokumen pedoman paling kuat yang relevan sebelum implementasi kode,
+  - jika input baru mengubah logika lama, update dokumen terdampak adalah bagian dari definisi selesai concern, bukan langkah opsional.
 - Dampak keputusan arsitektur: `ya` (menyentuh kontrak akses lintas concern).
 
 ## Input Owner (Wajib sebelum Implementasi)
