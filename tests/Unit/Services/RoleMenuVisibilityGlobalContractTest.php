@@ -29,12 +29,10 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
             'buku-ekspedisi',
             'inventaris',
             'activities',
-            'buku-kliping',
             'agenda-surat-tugas',
             'foto-kegiatan',
             'prestasi-lomba',
             'bantuans',
-            'kader-khusus',
             'laporan-tahunan-pkk',
         ],
         'bendahara-tpk' => [
@@ -55,10 +53,8 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
         'sekretaris-bantu' => [
             'prestasi-lomba',
             'bantuans',
-            'kader-khusus',
             'buku-daftar-hadir',
             'buku-tamu',
-            'buku-kliping',
             'buku-agenda-sk',
             'foto-kegiatan',
             'laporan-tahunan-pkk',

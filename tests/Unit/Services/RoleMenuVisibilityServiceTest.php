@@ -61,7 +61,6 @@ class RoleMenuVisibilityServiceTest extends TestCase
             'buku-notulen-rapat',
             'prestasi-lomba',
             'bantuans',
-            'kader-khusus',
             'program-prioritas',
         ] as $moduleSlug) {
             $this->assertSame(

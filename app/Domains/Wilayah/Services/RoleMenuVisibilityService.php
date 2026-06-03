@@ -42,7 +42,6 @@ class RoleMenuVisibilityService
             'foto-kegiatan',
             'prestasi-lomba',
             'bantuans',
-            'kader-khusus',
             'laporan-tahunan-pkk',
         ],
         'bendahara-tpk' => [
@@ -63,10 +62,8 @@ class RoleMenuVisibilityService
         'sekretaris-bantu' => [
             'prestasi-lomba',
             'bantuans',
-            'kader-khusus',
             'buku-daftar-hadir',
             'buku-tamu',
-            'buku-kliping',
             'buku-agenda-sk',
             'agenda-surat-tugas',
             'foto-kegiatan',

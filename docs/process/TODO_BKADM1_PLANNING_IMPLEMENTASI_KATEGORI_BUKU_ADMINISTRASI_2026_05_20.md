@@ -10,6 +10,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - Khusus Sekretaris, ada kategori ketiga: `penunjang buku wajib`.
 - Revisi ini menggantikan kontrak sebelumnya yang menempatkan `Buku Inventaris` sebagai buku pembantu bersama. Mulai concern ini, `Buku Inventaris` adalah buku wajib Sekretaris.
 - Implementasi wajib memisahkan tiga hal: kategori menu, authority akses backend, dan format/output buku fisik.
+- Revisi bisnis 2026-06-04: `Buku Kliping` dan `Buku Kader Khusus` tidak dimiliki oleh jabatan Sekretaris.
 
 ## Kontrak Concern (Lock)
 
@@ -29,7 +30,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 | Role group | Kategori | Buku target |
 | --- | --- | --- |
 | `sekretaris-tpk` | Buku Wajib | Agenda Surat Keluar/Masuk; Buku Daftar Anggota TP PKK; Buku Inventaris; Buku Kegiatan; Buku Notulen Rapat |
-| `sekretaris-tpk` | Buku Pembantu | Buku Prestasi; Buku Bantuan; Buku Kader Khusus |
+| `sekretaris-tpk` | Buku Pembantu | Buku Prestasi; Buku Bantuan |
 | `sekretaris-tpk` | Penunjang Buku Wajib | Data Umum; Program Kerja; item penunjang lain hanya setelah dikunci owner |
 | `pokja-i` | Buku Pembantu Bersama | Buku Prestasi; Buku Bantuan; Buku Kader Khusus |
 | `pokja-i` | Buku Pembantu Pokja | Kegiatan Simulasi; Anggota Simulasi; Buku Tamu Simulasi; Daftar Hadir Simulasi; Notulen Simulasi; Kegiatan BKR; Buku Grafik; Data Lansia; Anggota Pokja I; Buku Data PAAR |
@@ -50,6 +51,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - [ ] Dashboard diaudit: coverage KPI/chart/progress input dipertahankan atau diberi justifikasi jika tidak relevan.
 - [ ] Backlog: Implementasi modul dedicated untuk `Buku Konsultasi` dan `Buku Agenda SK` (status: `hidden`).
 - [ ] Backlog: Verifikasi format autentik Rakernas X untuk `Buku Notulen Rapat`, `Buku Daftar Hadir`, dan `Buku Tamu` (saat ini `unverified-local-extension`).
+- [ ] Backlog: sinkronkan matriks sekretaris agar `Buku Kliping` dan `Buku Kader Khusus` tidak lagi muncul pada grup Sekretaris.
 
 ## Langkah Eksekusi
 
