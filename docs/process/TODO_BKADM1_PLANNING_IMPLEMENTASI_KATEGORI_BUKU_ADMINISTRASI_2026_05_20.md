@@ -11,6 +11,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - Revisi ini menggantikan kontrak sebelumnya yang menempatkan `Buku Inventaris` sebagai buku pembantu bersama. Mulai concern ini, `Buku Inventaris` adalah buku wajib Sekretaris.
 - Implementasi wajib memisahkan tiga hal: kategori menu, authority akses backend, dan format/output buku fisik.
 - Revisi bisnis 2026-06-04: `Buku Kliping` dan `Buku Kader Khusus` tidak dimiliki oleh jabatan Sekretaris.
+- Revisi bisnis 2026-06-04: `Buku Kader Khusus` tetap tersedia untuk Pokja, tetapi tidak tampil pada sidebar Sekretaris.
 
 ## Kontrak Concern (Lock)
 
@@ -52,6 +53,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - [ ] Backlog: Implementasi modul dedicated untuk `Buku Konsultasi` dan `Buku Agenda SK` (status: `hidden`).
 - [ ] Backlog: Verifikasi format autentik Rakernas X untuk `Buku Notulen Rapat`, `Buku Daftar Hadir`, dan `Buku Tamu` (saat ini `unverified-local-extension`).
 - [ ] Backlog: sinkronkan matriks sekretaris agar `Buku Kliping` dan `Buku Kader Khusus` tidak lagi muncul pada grup Sekretaris.
+- [ ] Backlog: sinkronkan semua dokumen menu Sekretaris agar `Buku Kader Khusus` tidak muncul di grup bersama yang dipakai Sekretaris.
 
 ## Langkah Eksekusi
 

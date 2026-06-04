@@ -235,7 +235,6 @@ const buildScopedMenuGroups = (scope) => {
       items: [
         { href: `/${scope}/prestasi-lomba`, label: 'Buku Prestasi' },
         { href: `/${scope}/bantuans`, label: 'Buku Bantuan' },
-        { href: `/${scope}/kader-khusus`, label: 'Buku Kader Khusus' },
       ],
     },
     {
