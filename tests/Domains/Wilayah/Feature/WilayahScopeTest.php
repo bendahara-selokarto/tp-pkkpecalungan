@@ -28,22 +28,47 @@ class WilayahScopeTest extends TestCase
 
         // Kecamatan
         $this->kecamatan = Area::create([
+            'code'  => '1001',
             'name'  => 'Pecalungan',
             'level' => ScopeLevel::KECAMATAN->value
         ]);
 
         // Desa
         $this->desa1 = Area::create([
+            'code'      => '2002',
             'name'      => 'Bandung',
             'level'     => ScopeLevel::DESA->value,
             'parent_id' => $this->kecamatan->id
         ]);
 
         $this->desa2 = Area::create([
+            'code'      => '2003',
             'name'      => 'Gombong',
             'level'     => ScopeLevel::DESA->value,
             'parent_id' => $this->kecamatan->id
         ]);
+    }
+
+    #[Test]
+    public function wilayah_canonical_pecalungan_menyediakan_10_desa()
+    {
+        $this->seed(\Database\Seeders\WilayahSeeder::class);
+
+        $kecamatan = Area::query()
+            ->where('code', '1001')
+            ->where('level', ScopeLevel::KECAMATAN->value)
+            ->first();
+
+        $this->assertNotNull($kecamatan);
+        $this->assertSame('Pecalungan', $kecamatan->name);
+        $this->assertCount(10, $kecamatan->children);
+
+        $codes = $kecamatan->children->pluck('code')->sort()->values()->all();
+
+        $this->assertSame([
+            '2001', '2002', '2003', '2004', '2005',
+            '2006', '2007', '2008', '2009', '2010',
+        ], $codes);
     }
 
     #[Test]
@@ -85,5 +110,4 @@ class WilayahScopeTest extends TestCase
         );
     }
 }
-
 

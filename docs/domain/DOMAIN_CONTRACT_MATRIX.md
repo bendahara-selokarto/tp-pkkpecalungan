@@ -28,6 +28,18 @@ Kontrak transversal aktif:
 - `tahun_anggaran` adalah identitas periode kerja administrasi TP PKK yang mengisolasi data lintas modul.
 - Tahun anggaran aktif ditetapkan dari flow `Profile` sebagai context backend user, lalu diterapkan ke boundary repository concern yang relevan.
 - Refactor `tahun_anggaran` tidak mengubah concern domain existing; hanya menambah dimensi isolasi data lintas concern.
+- `areas.code` adalah identitas wilayah stabil; `areas.name` tetap label tampilan.
+- Untuk wilayah Pecalungan, kode canonical desa dikunci sebagai:
+  - `2001` Pecalungan
+  - `2002` Bandung
+  - `2003` Gombong
+  - `2004` Randu
+  - `2005` Siguci
+  - `2006` Pretek
+  - `2007` Selokarto
+  - `2008` Gemuh
+  - `2009` Gumawang
+  - `2010` Keniten
 
 | Lampiran | Slug modul | Label pedoman | Field canonical (inti) | Label PDF saat ini | Sumber halaman pedoman | Catatan koherensi |
 | --- | --- | --- | --- | --- | --- | --- |

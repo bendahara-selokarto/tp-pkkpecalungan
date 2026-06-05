@@ -76,6 +76,8 @@ Aturan implementasi:
 ## 4. Domain Wilayah dan Source of Truth
 
 - Source wilayah canonical: tabel `areas`.
+- Identitas canonical wilayah: `areas.code` (stabil), `areas.name` (label tampilan), `areas.level`, `areas.parent_id`.
+- Pecalungan dipatok sebagai 1 kecamatan canonical + 10 desa canonical dengan kode resmi yang dikunci lewat ADR dan seed wilayah.
 - Hierarki aktif: `kecamatan -> desa` dengan `parent_id`.
 - Tabel `kecamatans`, `desas`, `user_assignments` dianggap legacy/transitional.
 - Fitur baru tidak boleh menambah dependency ke tabel legacy.
@@ -263,6 +265,17 @@ Default `php artisan migrate:fresh --seed` hanya mengisi data starter aplikasi:
 
 - role aplikasi,
 - kecamatan Pecalungan dan 10 desa canonical,
+- kode resmi desa Pecalungan:
+  - `2001` Pecalungan
+  - `2002` Bandung
+  - `2003` Gombong
+  - `2004` Randu
+  - `2005` Siguci
+  - `2006` Pretek
+  - `2007` Selokarto
+  - `2008` Gemuh
+  - `2009` Gumawang
+  - `2010` Keniten,
 - akun super-admin,
 - akun wilayah yang mewakili setiap role non-super-admin sesuai scope dan area,
 - sinkronisasi `scope` dan `area_id` user.
