@@ -208,6 +208,7 @@ Route::prefix('desa')
     ->middleware(['auth', 'scope.role:desa', 'module.visibility'])
     ->group(function () {
 
+        // Sekretaris / umum
         Route::resource('activities', DesaActivityController::class);
         Route::resource('foto-kegiatan', DesaFotoKegiatanController::class);
         Route::resource('buku-konsultasi', DesaBukuKonsultasiController::class);
@@ -231,6 +232,8 @@ Route::prefix('desa')
         Route::resource('inventaris', DesaInventarisController::class);
         Route::resource('bantuans', DesaBantuanController::class);
         Route::resource('buku-keuangan', DesaBukuKeuanganController::class);
+
+        // Pokja I
         Route::resource('anggota-pokja', DesaAnggotaPokjaController::class);
         Route::resource('anggota-tim-penggerak', DesaAnggotaTimPenggerakController::class);
         Route::resource('kader-khusus', DesaKaderKhususController::class);
@@ -238,6 +241,8 @@ Route::prefix('desa')
         Route::resource('bkl', DesaBklController::class);
         Route::resource('bkr', DesaBkrController::class);
         Route::resource('paar', DesaPaarController::class);
+
+        // Pokja II
         Route::resource('koperasi', DesaKoperasiController::class);
         Route::resource('data-warga', DesaDataWargaController::class);
         Route::resource('data-kegiatan-warga', DesaDataKegiatanWargaController::class);
@@ -258,6 +263,8 @@ Route::prefix('desa')
         Route::resource('bkb-kegiatan', DesaBkbKegiatanController::class);
         Route::resource('tutor-khusus', DesaTutorKhususController::class);
         Route::resource('pelatihan-kader-pokja-ii', DesaPelatihanKaderPokjaIiController::class);
+
+        // Pokja III
         Route::get('pra-koperasi-up2k/report/pdf/chart', [DesaPraKoperasiUp2kController::class, 'printChartPdf'])->name('pra-koperasi-up2k.report.chart');
         Route::resource('pra-koperasi-up2k', DesaPraKoperasiUp2kController::class);
         Route::get('posyandu/report/pdf/chart', [DesaPosyanduController::class, 'printChartPdf'])->name('posyandu.report.chart');
@@ -275,6 +282,8 @@ Route::prefix('desa')
         Route::resource('pilot-project-keluarga-sehat', DesaPilotProjectKeluargaSehatController::class);
         Route::resource('pilot-project-naskah-pelaporan', DesaPilotProjectNaskahPelaporanController::class);
         Route::resource('laporan-tahunan-pkk', DesaLaporanTahunanPkkController::class);
+
+        // Report-only and turunan catatan keluarga
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printDesa'])->name('activities.print');
         Route::get('activities/report/pdf', [ActivityPrintController::class, 'printDesaReport'])->name('activities.report');
         Route::get('buku-notulen-rapat/report/pdf', [BukuNotulenRapatPrintController::class, 'printDesaReport'])->name('buku-notulen-rapat.report');
@@ -344,6 +353,7 @@ Route::prefix('kecamatan')
     ->middleware(['auth', 'scope.role:kecamatan', 'module.visibility'])
     ->group(function () {
 
+        // Sekretaris / umum
         Route::resource('activities', KecamatanActivityController::class);
         Route::resource('foto-kegiatan', KecamatanFotoKegiatanController::class);
         Route::resource('buku-konsultasi', KecamatanBukuKonsultasiController::class);
@@ -367,6 +377,8 @@ Route::prefix('kecamatan')
         Route::resource('inventaris', KecamatanInventarisController::class);
         Route::resource('bantuans', KecamatanBantuanController::class);
         Route::resource('buku-keuangan', KecamatanBukuKeuanganController::class);
+
+        // Pokja I
         Route::resource('anggota-pokja', KecamatanAnggotaPokjaController::class);
         Route::resource('anggota-tim-penggerak', KecamatanAnggotaTimPenggerakController::class);
         Route::resource('kader-khusus', KecamatanKaderKhususController::class);
@@ -374,6 +386,8 @@ Route::prefix('kecamatan')
         Route::resource('bkl', KecamatanBklController::class);
         Route::resource('bkr', KecamatanBkrController::class);
         Route::resource('paar', KecamatanPaarController::class);
+
+        // Pokja II
         Route::resource('koperasi', KecamatanKoperasiController::class);
         Route::resource('data-warga', KecamatanDataWargaController::class);
         Route::resource('data-kegiatan-warga', KecamatanDataKegiatanWargaController::class);
@@ -394,6 +408,8 @@ Route::prefix('kecamatan')
         Route::resource('bkb-kegiatan', KecamatanBkbKegiatanController::class);
         Route::resource('tutor-khusus', KecamatanTutorKhususController::class);
         Route::resource('pelatihan-kader-pokja-ii', KecamatanPelatihanKaderPokjaIiController::class);
+
+        // Pokja III
         Route::get('pra-koperasi-up2k/report/pdf/chart', [KecamatanPraKoperasiUp2kController::class, 'printChartPdf'])->name('pra-koperasi-up2k.report.chart');
         Route::resource('pra-koperasi-up2k', KecamatanPraKoperasiUp2kController::class);
         Route::get('posyandu/report/pdf/chart', [KecamatanPosyanduController::class, 'printChartPdf'])->name('posyandu.report.chart');
@@ -411,6 +427,8 @@ Route::prefix('kecamatan')
         Route::resource('pilot-project-keluarga-sehat', KecamatanPilotProjectKeluargaSehatController::class);
         Route::resource('pilot-project-naskah-pelaporan', KecamatanPilotProjectNaskahPelaporanController::class);
         Route::resource('laporan-tahunan-pkk', KecamatanLaporanTahunanPkkController::class);
+
+        // Report-only and monitoring
         Route::get('activities/{id}/print', [ActivityPrintController::class, 'printKecamatan'])->name('activities.print');
         Route::get('activities/report/pdf', [ActivityPrintController::class, 'printKecamatanReport'])->name('activities.report');
         Route::get('buku-notulen-rapat/report/pdf', [BukuNotulenRapatPrintController::class, 'printKecamatanReport'])->name('buku-notulen-rapat.report');

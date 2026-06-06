@@ -2,7 +2,7 @@
 
 Tanggal: 2026-03-07  
 Status: `in-progress` (`state:runtime-mapping-updated-gap-modules-pending`)
-Related ADR: `docs/adr/ADR_0009_ACTIVITY_GROUP_BOOK_ISOLATION.md`, `docs/adr/ADR_0010_PRESTASI_GROUP_BOOK_ISOLATION.md`, `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`, `docs/adr/ADR_0012_KECAMATAN_UNOWNED_MODULE_AUDIT_GROUP.md`
+Related ADR: `docs/adr/ADR_0009_ACTIVITY_GROUP_BOOK_ISOLATION.md`, `docs/adr/ADR_0010_PRESTASI_GROUP_BOOK_ISOLATION.md`, `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`, `docs/adr/ADR_0012_KECAMATAN_UNOWNED_MODULE_AUDIT_GROUP.md`, `docs/adr/ADR_0014_ROUTE_GROUPING_LEVEL_JABATAN_MODUL.md`
 
 ## Konteks
 
@@ -18,6 +18,8 @@ Related ADR: `docs/adr/ADR_0009_ACTIVITY_GROUP_BOOK_ISOLATION.md`, `docs/adr/ADR
 - Acceptance criteria:
   - grouping modul jelas per role-group,
   - buku umum lintas jabatan memakai boundary `level + area_id + tahun_anggaran + group`,
+  - grouping route di `routes/web.php` dibaca dengan urutan `level -> jabatan -> modul`,
+  - pengelompokan route tidak mengubah `prefix`, `name()`, middleware, atau controller binding publik,
   - mode akses konsisten,
   - tidak ada data leak lintas level/scope/jabatan,
   - payload `menuGroupModes`/`moduleModes` sinkron dengan sidebar,
@@ -59,6 +61,8 @@ Catatan runtime: `buku-tamu` umum tidak diberi owner Pokja karena kebutuhan aktu
 ## Target Hasil Aktif
 
 - [x] Matrix buku kegiatan dan buku prestasi terdokumentasi sebagai `level + area_id + group`, bukan hanya `level + area_id`.
+- [ ] Matrix grouping route `level -> jabatan -> modul` terdokumentasi sebagai pola baca utama di `routes/web.php`.
+- [ ] Peta cluster route per level dan jabatan terdokumentasi sebelum refactor runtime.
 - [ ] Matrix visibilitas `inventaris` direvisi: buku wajib Sekretaris; Pokja III hanya jika slug/format spesifik dikunci.
 - [x] Matrix visibilitas dan data `program-prioritas` mengikuti Sekretaris sebagai penunjang dan Pokja I-IV sebagai buku wajib.
 - [x] Sidebar Sekretaris memisahkan Data Umum dan Program Kerja ke group `Penunjang Buku Wajib`.
@@ -74,10 +78,94 @@ Catatan runtime: `buku-tamu` umum tidak diberi owner Pokja karena kebutuhan aktu
 ## Langkah Eksekusi Terstruktur (Tanpa Eksekusi Kode)
 
 - [x] P0. Audit baseline `GROUP_MODULES`, `ROLE_GROUP_MODES`, `ROLE_MODULE_MODE_OVERRIDES`, middleware `module.visibility`, dan sidebar.
+- [x] P0a. Dokumentasikan pola route grouping `level -> jabatan -> modul` per blok `desa` dan `kecamatan` tanpa mengubah runtime.
 - [ ] P1. Freeze keputusan owner pada `Group Target`, `Mode Target`, scope rollout, dan out-of-scope.
 - [ ] P2. Susun matrix kontrak baru `role -> group -> modules -> mode`, termasuk override khusus dan kontrak buku kegiatan/buku prestasi terpisah per group.
 - [ ] P3. Rancang patch backend + frontend + test hardening dari `RoleMenuVisibilityService` sampai `DashboardLayout.vue`.
 - [ ] P4. Jalankan doc-hardening + rollout checklist setelah keputusan owner terkunci.
+
+## Rencana Refactor `routes/web.php`
+
+Prinsip patch:
+
+- hanya reorder dan regroup di `routes/web.php`;
+- tidak mengubah URI publik;
+- tidak mengubah nama route;
+- tidak mengubah controller/action binding;
+- tidak memindahkan logic ke file baru tanpa kebutuhan nyata.
+
+### Urutan Kerja
+
+1. Tambahkan lapisan cluster level untuk `desa` dan `kecamatan` tanpa mengubah middleware existing.
+2. Di dalam setiap level, pecah route menjadi blok:
+   - sekretaris / umum,
+   - pokja I,
+   - pokja II,
+   - pokja III,
+   - pokja IV,
+   - lintas pokja / monitoring / report-only.
+3. Pertahankan subcluster yang sudah alami:
+   - `simulasi` tetap nested di dalam level yang sama,
+   - `catatan-keluarga` tetap menjadi sumber turunan report-only,
+   - route `desa-activities` dan `desa-arsip` tetap hanya di blok kecamatan karena fungsinya monitoring.
+4. Setelah regroup, cek ulang urutan deklarasi route yang namanya berpotensi overlap:
+   - route report vs resource pada slug yang sama,
+   - route turunan `catatan-keluarga/*`,
+   - route `simulasi/*`.
+5. Bila perlu, tambahkan komentar blok singkat di `routes/web.php` untuk menandai batas cluster, tanpa menambah logika.
+
+### Patch Batch Aman
+
+- Batch 1: blok sekretaris / umum level `desa`.
+- Batch 2: blok pokja I dan report turunannya.
+- Batch 3: blok pokja II dan report turunannya.
+- Batch 4: blok pokja III dan report turunannya.
+- Batch 5: blok pokja IV dan report turunannya.
+- Batch 6: blok lintas pokja / monitoring / report-only.
+- Batch 7: replikasi struktur yang sama untuk level `kecamatan`.
+
+### Pemeriksaan Setelah Patch
+
+- `php artisan route:list` untuk memastikan nama route dan URI tetap sama.
+- targeted test route/middleware untuk memastikan scope tetap benar.
+- audit manual diff hanya pada `routes/web.php`.
+
+## Peta Cluster Route
+
+Catatan:
+
+- urutan baca utama tetap `level -> jabatan -> modul`;
+- route yang bersifat umum level tetap diletakkan di root blok level jika tidak punya owner jabatan yang tegas;
+- route report-only mengikuti cluster asal modulnya, bukan dipisahkan sebagai kelompok baru.
+
+### Blok `desa`
+
+| Cluster | Isi route utama |
+| --- | --- |
+| Sekretaris / umum | `activities`, `foto-kegiatan`, `agenda-surat`, `agenda-surat-tugas`, `buku-daftar-hadir`, `buku-ekspedisi`, `buku-tamu`, `buku-kliping`, `buku-agenda-sk`, `buku-notulen-rapat`, `inventaris`, `bantuans`, `buku-keuangan` |
+| Pokja I | `anggota-pokja`, `anggota-tim-penggerak`, `kader-khusus`, `prestasi-lomba`, `simulasi`, `data-kegiatan-pkk-pokja-i`, `bkr`, `paar` |
+| Pokja II | `pelatihan-kader-pokja-ii`, `pra-koperasi-up2k`, `literasi-warga`, `bkb-kegiatan`, `tutor-khusus`, `simulasi`, `data-kegiatan-pkk-pokja-ii` |
+| Pokja III | `data-keluarga`, `data-industri-rumah-tangga`, `data-pelatihan-kader`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `catatan-keluarga`, `warung-pkk`, `taman-bacaan`, `kejar-paket`, `buku-konsultasi`, `data-kegiatan-pkk-pokja-iii` |
+| Pokja IV | `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga` turunan `buku-data-umum-pokja-iv`, `buku-asi-eksklusif-pokja-iv`, `buku-iva-test-pokja-iv`, `buku-data-kegiatan-posyandu-pokja-iv`, `buku-kader-khusus-pokja-iv`, `data-kegiatan-pkk-pokja-iv` |
+| Lintas pokja / report-only | `program-prioritas`, `pilot-project-keluarga-sehat`, `pilot-project-naskah-pelaporan`, `laporan-tahunan-pkk`, `catatan-keluarga` rekap dan catatan TP PKK lintas level |
+
+### Blok `kecamatan`
+
+| Cluster | Isi route utama |
+| --- | --- |
+| Sekretaris / umum | `activities`, `foto-kegiatan`, `agenda-surat`, `agenda-surat-tugas`, `buku-daftar-hadir`, `buku-ekspedisi`, `buku-tamu`, `buku-kliping`, `buku-agenda-sk`, `buku-notulen-rapat`, `inventaris`, `bantuans`, `buku-keuangan` |
+| Pokja I | `anggota-pokja`, `anggota-tim-penggerak`, `kader-khusus`, `prestasi-lomba`, `simulasi`, `desa-activities`, `desa-arsip`, `data-kegiatan-pkk-pokja-i`, `bkr`, `paar` |
+| Pokja II | `pelatihan-kader-pokja-ii`, `pra-koperasi-up2k`, `literasi-warga`, `bkb-kegiatan`, `tutor-khusus`, `simulasi`, `data-kegiatan-pkk-pokja-ii` |
+| Pokja III | `data-keluarga`, `data-industri-rumah-tangga`, `data-pelatihan-kader`, `data-pemanfaatan-tanah-pekarangan-hatinya-pkk`, `catatan-keluarga`, `warung-pkk`, `taman-bacaan`, `kejar-paket`, `buku-konsultasi`, `data-kegiatan-pkk-pokja-iii` |
+| Pokja IV | `posyandu`, `simulasi-penyuluhan`, `catatan-keluarga` turunan `buku-data-umum-pokja-iv`, `buku-asi-eksklusif-pokja-iv`, `buku-iva-test-pokja-iv`, `buku-data-kegiatan-posyandu-pokja-iv`, `buku-kader-khusus-pokja-iv`, `data-kegiatan-pkk-pokja-iv` |
+| Lintas pokja / monitoring | `desa-activities`, `desa-arsip`, `program-prioritas`, `pilot-project-keluarga-sehat`, `pilot-project-naskah-pelaporan`, `laporan-tahunan-pkk`, `catatan-keluarga` rekap dan catatan TP PKK lintas level |
+
+### Catatan Refactor Aman
+
+- Route report PDF tetap mengikuti owner modul asal, bukan dipindah ke group baru tanpa alasan domain.
+- Route simulasi tetap menjadi subcluster tersendiri karena sudah ada prefix `simulasi`.
+- Route `desa-activities` dan `desa-arsip` tetap dicatat sebagai cluster monitoring lintas desa untuk level `kecamatan`.
+- Jika ada route yang terasa masuk dua cluster, pilih owner dominan yang paling dekat dengan modul sumber dan catat sebagai pengecualian di TODO sebelum patch.
 
 ## Validation Gate Plan
 
@@ -107,6 +195,9 @@ Catatan runtime: `buku-tamu` umum tidak diberi owner Pokja karena kebutuhan aktu
 - [x] K12A: seluruh modul CRUD bersama lintas role aktif wajib memakai isolasi role-group; chart/grafik bukan bagian kontrak ini.
 - [x] K13: `belum-ada-pemilik` adalah group audit `read-only`, bukan owner input baru.
 - [x] K14: modul aktual tanpa slug khusus tetap dicatat sebagai gap implementasi, bukan dipetakan ke slug yang salah.
+- [x] K15: route tetap dikelompokkan pertama berdasarkan level (`desa`, `kecamatan`), lalu dibaca ulang berdasarkan jabatan/pokja sebelum modul individual.
+- [x] K16: cluster route konkret per level dan jabatan dipakai sebagai acuan refactor `routes/web.php`.
+- [x] K17: refactor `routes/web.php` hanya dilakukan sebagai regroup tanpa perubahan URI publik atau nama route.
 - [ ] K5: implementasi baru hanya dimulai setelah tabel Input Owner terisi penuh.
 
 ## Keputusan Arsitektur (Jika Ada)
