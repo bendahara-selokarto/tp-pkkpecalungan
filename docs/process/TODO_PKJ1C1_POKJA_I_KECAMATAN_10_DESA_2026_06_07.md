@@ -1,7 +1,7 @@
 # TODO PKJ1C1 Pokja I Kecamatan 10 Desa
 
 Tanggal: 2026-06-07  
-Status: `planned`  
+Status: `done`  
 Related ADR: `docs/adr/ADR_0013_STANDARISASI_KODE_WILAYAH_Pecalungan.md`
 
 ## Aturan Pakai
@@ -39,21 +39,21 @@ Related ADR: `docs/adr/ADR_0013_STANDARISASI_KODE_WILAYAH_Pecalungan.md`
 
 ## Target Hasil
 
-- [ ] Report kecamatan menghasilkan row per desa child canonical.
-- [ ] Data kosong tetap tampil dengan default `0`.
+- [x] Report kecamatan menghasilkan row per desa child canonical.
+- [x] Data kosong tetap tampil dengan default `0`.
 
 ## Langkah Eksekusi
 
-- [ ] Analisis scoped dependency + side effect pada jalur report Pokja I.
-- [ ] Tambah jalur khusus repository untuk report kecamatan per desa child canonical.
-- [ ] Sinkronkan test feature/unit agar mengunci 10 row, zero-fill, dan urutan `areas.code`.
-- [ ] Sinkronkan dokumen domain yang menyebut kontrak 4.21 bila perlu.
+- [x] Analisis scoped dependency + side effect pada jalur report Pokja I.
+- [x] Tambah jalur khusus repository untuk report kecamatan per desa child canonical.
+- [x] Sinkronkan test feature/unit agar mengunci 10 row, zero-fill, dan urutan `areas.code`.
+- [x] Sinkronkan dokumen domain yang menyebut kontrak 4.21 bila perlu.
 
 ## Validasi
 
-- [ ] L1: targeted feature test report 4.21 untuk kecamatan Pecalungan.
-- [ ] L2: tolak role tidak valid + zero-fill row kosong + urutan `areas.code`.
-- [ ] L3: `php artisan test` jika patch sudah stabil.
+- [x] L1: targeted feature test report 4.21 untuk kecamatan Pecalungan.
+- [x] L2: tolak role tidak valid + zero-fill row kosong + urutan `areas.code`.
+- [x] L3: `php artisan test` jika patch sudah stabil.
 
 ## Risiko
 
@@ -62,13 +62,13 @@ Related ADR: `docs/adr/ADR_0013_STANDARISASI_KODE_WILAYAH_Pecalungan.md`
 
 ## Keputusan
 
-- [ ] K1: Transformasi report kecamatan harus berupa row per desa canonical, bukan ringkasan satu area.
-- [ ] K2: Desa tanpa data tetap dilaporkan sebagai row nol.
+- [x] K1: Transformasi report kecamatan harus berupa row per desa canonical, bukan ringkasan satu area.
+- [x] K2: Desa tanpa data tetap dilaporkan sebagai row nol.
 
 ## Keputusan Arsitektur (Jika Ada)
 
-- [ ] Tautkan perubahan ini ke ADR 0013 sebagai dasar canonical `areas.code`.
-- [ ] Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern.
+- [x] Tautkan perubahan ini ke ADR 0013 sebagai dasar canonical `areas.code`.
+- [x] Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern.
 
 ## Fallback Plan
 
@@ -76,6 +76,6 @@ Related ADR: `docs/adr/ADR_0013_STANDARISASI_KODE_WILAYAH_Pecalungan.md`
 
 ## Output Final
 
-- [ ] Ringkasan apa yang diubah dan kenapa.
-- [ ] Daftar file terdampak.
-- [ ] Hasil validasi + residual risk.
+- [x] Ringkasan apa yang diubah dan kenapa.
+- [x] Daftar file terdampak.
+- [x] Hasil validasi + residual risk.

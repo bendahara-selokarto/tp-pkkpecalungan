@@ -1,7 +1,7 @@
 # TODO PKJ1C2 Audit Pattern Report Kecamatan Desa
 
 Tanggal: 2026-06-07  
-Status: `planned`  
+Status: `done`  
 Related ADR: `docs/adr/ADR_0013_STANDARISASI_KODE_WILAYAH_Pecalungan.md`
 
 ## Aturan Pakai
@@ -49,15 +49,15 @@ Related ADR: `docs/adr/ADR_0013_STANDARISASI_KODE_WILAYAH_Pecalungan.md`
 
 ## Langkah Eksekusi
 
-- [ ] Audit scoped controller/repository/report yang memakai `level = kecamatan` dan `area_id` child desa.
-- [ ] Kelompokkan report yang sudah sesuai pola dan yang masih ringkasan satu area.
-- [ ] Sinkronkan dokumen domain agar pola baku tertulis jelas untuk report serupa di masa depan.
+- [x] Audit scoped controller/repository/report yang memakai `level = kecamatan` dan `area_id` child desa.
+- [x] Kelompokkan report yang sudah sesuai pola dan yang masih ringkasan satu area.
+- [x] Sinkronkan dokumen domain agar pola baku tertulis jelas untuk report serupa di masa depan.
 
 ## Validasi
 
-- [ ] L1: scoped `rg` dan baca file concern.
-- [ ] L2: verifikasi daftar report kecamatan terhadap matrix domain.
-- [ ] L3: lanjut implementasi hanya setelah kontrak audit terkunci.
+- [x] L1: scoped `rg` dan baca file concern.
+- [x] L2: verifikasi daftar report kecamatan terhadap matrix domain.
+- [x] L3: lanjut implementasi hanya setelah kontrak audit terkunci.
 
 ## Risiko
 
@@ -89,8 +89,8 @@ Report level `kecamatan` yang tidak dipaksa ke pola ini karena bukan report desa
 
 ## Keputusan Arsitektur (Jika Ada)
 
-- [ ] Tautkan hasil audit ke ADR 0013 sebagai basis canonical wilayah.
-- [ ] Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern.
+- [x] Tautkan hasil audit ke ADR 0013 sebagai basis canonical wilayah.
+- [x] Sinkronkan status ADR (`proposed/accepted/superseded/deprecated`) dengan status concern.
 
 ## Fallback Plan
 

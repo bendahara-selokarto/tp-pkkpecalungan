@@ -981,6 +981,50 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             ? trim((string) $scopeArea?->name)
             : 'SEBUTAN LAIN';
 
+        if ($level === 'kecamatan') {
+            return $this->buildDataKegiatanPkkPokjaIForKecamatan($areaId);
+        }
+
+        $metrics = $this->buildDataKegiatanPkkPokjaIMetrics($level, $areaId);
+
+        return collect([
+            array_merge([
+                'nomor_urut' => 1,
+                'nama_wilayah' => $wilayahLabel,
+            ], $metrics),
+        ]);
+    }
+
+    private function buildDataKegiatanPkkPokjaIForKecamatan(int $areaId): Collection
+    {
+        $desaAreas = Area::query()
+            ->where('parent_id', $areaId)
+            ->where('level', 'desa')
+            ->orderBy('code')
+            ->get(['id', 'code', 'name']);
+
+        $desaIds = $desaAreas->pluck('id')->all();
+        $reportRowsByAreaId = [];
+
+        foreach ($desaAreas as $index => $desaArea) {
+            $reportRowsByAreaId[$desaArea->id] = array_merge([
+                'nomor_urut' => $index + 1,
+                'nama_wilayah' => trim((string) $desaArea->name) !== ''
+                    ? trim((string) $desaArea->name)
+                    : 'SEBUTAN LAIN',
+            ], $this->emptyDataKegiatanPkkPokjaIRow());
+        }
+
+        foreach ($desaIds as $desaId) {
+            $metrics = $this->buildDataKegiatanPkkPokjaIMetrics('desa', (int) $desaId);
+            $reportRowsByAreaId[$desaId] = array_merge($reportRowsByAreaId[$desaId], $metrics);
+        }
+
+        return collect($reportRowsByAreaId)->sortBy('nomor_urut')->values();
+    }
+
+    private function buildDataKegiatanPkkPokjaIMetrics(string $level, int $areaId): array
+    {
         $jumlahKader = 0;
         $anggotaPokjaItems = $this->scopedModelQuery(AnggotaPokja::class, $level, $areaId)
             ->get(['pokja']);
@@ -1037,37 +1081,64 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             }
         }
 
-        return collect([
-            [
-                'nomor_urut' => 1,
-                'nama_wilayah' => $wilayahLabel,
-                'jumlah_kader' => $jumlahKader,
-                'kisah_kegiatan' => $metrics['kisah']['kegiatan'],
-                'kisah_volume' => $metrics['kisah']['volume'],
-                'kisah_metode' => $metrics['kisah']['metode'],
-                'kisah_sasaran' => $metrics['kisah']['sasaran'],
-                'krisan_kegiatan' => $metrics['krisan']['kegiatan'],
-                'krisan_volume' => $metrics['krisan']['volume'],
-                'krisan_metode' => $metrics['krisan']['metode'],
-                'krisan_sasaran' => $metrics['krisan']['sasaran'],
-                'kilas_kegiatan' => $metrics['kilas']['kegiatan'],
-                'kilas_volume' => $metrics['kilas']['volume'],
-                'kilas_metode' => $metrics['kilas']['metode'],
-                'kilas_sasaran' => $metrics['kilas']['sasaran'],
-                'ktiat_kegiatan' => $metrics['ktiat']['kegiatan'],
-                'ktiat_volume' => $metrics['ktiat']['volume'],
-                'ktiat_metode' => $metrics['ktiat']['metode'],
-                'ktiat_sasaran' => $metrics['ktiat']['sasaran'],
-                'kisak_kegiatan' => $metrics['kisak']['kegiatan'],
-                'kisak_volume' => $metrics['kisak']['volume'],
-                'kisak_metode' => $metrics['kisak']['metode'],
-                'kisak_sasaran' => $metrics['kisak']['sasaran'],
-                'pkbn_kegiatan' => $metrics['pkbn']['kegiatan'],
-                'pkbn_volume' => $metrics['pkbn']['volume'],
-                'pkbn_metode' => $metrics['pkbn']['metode'],
-                'pkbn_sasaran' => $metrics['pkbn']['sasaran'],
-            ],
-        ]);
+        return [
+            'jumlah_kader' => $jumlahKader,
+            'kisah_kegiatan' => $metrics['kisah']['kegiatan'],
+            'kisah_volume' => $metrics['kisah']['volume'],
+            'kisah_metode' => $metrics['kisah']['metode'],
+            'kisah_sasaran' => $metrics['kisah']['sasaran'],
+            'krisan_kegiatan' => $metrics['krisan']['kegiatan'],
+            'krisan_volume' => $metrics['krisan']['volume'],
+            'krisan_metode' => $metrics['krisan']['metode'],
+            'krisan_sasaran' => $metrics['krisan']['sasaran'],
+            'kilas_kegiatan' => $metrics['kilas']['kegiatan'],
+            'kilas_volume' => $metrics['kilas']['volume'],
+            'kilas_metode' => $metrics['kilas']['metode'],
+            'kilas_sasaran' => $metrics['kilas']['sasaran'],
+            'ktiat_kegiatan' => $metrics['ktiat']['kegiatan'],
+            'ktiat_volume' => $metrics['ktiat']['volume'],
+            'ktiat_metode' => $metrics['ktiat']['metode'],
+            'ktiat_sasaran' => $metrics['ktiat']['sasaran'],
+            'kisak_kegiatan' => $metrics['kisak']['kegiatan'],
+            'kisak_volume' => $metrics['kisak']['volume'],
+            'kisak_metode' => $metrics['kisak']['metode'],
+            'kisak_sasaran' => $metrics['kisak']['sasaran'],
+            'pkbn_kegiatan' => $metrics['pkbn']['kegiatan'],
+            'pkbn_volume' => $metrics['pkbn']['volume'],
+            'pkbn_metode' => $metrics['pkbn']['metode'],
+            'pkbn_sasaran' => $metrics['pkbn']['sasaran'],
+        ];
+    }
+
+    private function emptyDataKegiatanPkkPokjaIRow(): array
+    {
+        return [
+            'jumlah_kader' => 0,
+            'kisah_kegiatan' => 0,
+            'kisah_volume' => 0,
+            'kisah_metode' => 0,
+            'kisah_sasaran' => 0,
+            'krisan_kegiatan' => 0,
+            'krisan_volume' => 0,
+            'krisan_metode' => 0,
+            'krisan_sasaran' => 0,
+            'kilas_kegiatan' => 0,
+            'kilas_volume' => 0,
+            'kilas_metode' => 0,
+            'kilas_sasaran' => 0,
+            'ktiat_kegiatan' => 0,
+            'ktiat_volume' => 0,
+            'ktiat_metode' => 0,
+            'ktiat_sasaran' => 0,
+            'kisak_kegiatan' => 0,
+            'kisak_volume' => 0,
+            'kisak_metode' => 0,
+            'kisak_sasaran' => 0,
+            'pkbn_kegiatan' => 0,
+            'pkbn_volume' => 0,
+            'pkbn_metode' => 0,
+            'pkbn_sasaran' => 0,
+        ];
     }
 
     public function getDataKegiatanPkkPokjaIiByLevelAndArea(string $level, int $areaId): Collection
