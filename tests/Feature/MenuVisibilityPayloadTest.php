@@ -147,6 +147,9 @@ class MenuVisibilityPayloadTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.sekretaris-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
+                ->where('auth.user.menuGroupModes.sekretaris-bantu', 'read-write')
+                ->where('auth.user.moduleModes.prestasi-lomba', 'read-write')
+                ->where('auth.user.moduleModes.bantuans', 'read-write')
                 ->where('auth.user.menuGroupModes.monitoring', 'read-only')
                 ->where('auth.user.moduleModes.activities', 'read-write')
             );
