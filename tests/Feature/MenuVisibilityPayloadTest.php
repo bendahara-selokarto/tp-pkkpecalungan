@@ -63,11 +63,14 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.menuGroupModes.sekretaris-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.common-pembantu', 'read-write')
+                ->where('auth.user.menuGroupModes.sekretaris-bantu', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-i', 'read-only')
                 ->where('auth.user.menuGroupModes.pokja-ii', 'read-only')
                 ->where('auth.user.menuGroupModes.pokja-iii', 'read-only')
                 ->where('auth.user.menuGroupModes.pokja-iv', 'read-only')
                 ->where('auth.user.menuGroupModes.bendahara-wajib', 'read-only')
+                ->where('auth.user.moduleModes.bantuans', 'read-write')
+                ->where('auth.user.moduleModes.prestasi-lomba', 'read-write')
                 ->missing('auth.user.menuGroupModes.referensi')
             );
     }
@@ -82,10 +85,30 @@ class MenuVisibilityPayloadTest extends TestCase
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.pokja-ii-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-ii', 'read-write')
+                ->where('auth.user.menuGroupModes.sekretaris-bantu', 'read-only')
+                ->where('auth.user.moduleModes.agenda-surat-tugas', 'read-only')
                 ->missing('auth.user.menuGroupModes.common-pembantu')
                 ->missing('auth.user.menuGroupModes.referensi')
                 ->missing('auth.user.menuGroupModes.sekretaris-wajib')
                 ->missing('auth.user.menuGroupModes.monitoring')
+            );
+    }
+
+    public function test_payload_desa_pokja_iii_mengikuti_overlay_buku_kliping_dan_agenda_surat_tugas_ro(): void
+    {
+        $user = User::factory()->create(['area_id' => $this->desaArea->id]);
+        $user->assignRole(RoleScopeMatrix::ROLE_POKJA_3_DESA);
+
+        $this->actingAs($user)
+            ->get('/profile')
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->where('auth.user.menuGroupModes.pokja-iii-wajib', 'read-write')
+                ->where('auth.user.menuGroupModes.pokja-iii', 'read-write')
+                ->where('auth.user.menuGroupModes.sekretaris-bantu', 'read-only')
+                ->where('auth.user.moduleModes.agenda-surat-tugas', 'read-only')
+                ->where('auth.user.moduleModes.buku-kliping', 'read-write')
+                ->missing('auth.user.menuGroupModes.monitoring')
+                ->missing('auth.user.menuGroupModes.referensi')
             );
     }
 
