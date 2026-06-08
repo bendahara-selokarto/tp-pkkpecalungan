@@ -21,6 +21,7 @@ Related ADR: `docs/adr/ADR_0011_COMMON_BOOK_VISIBILITY_PER_ROLE_GROUP.md`
 - Acceptance criteria:
   - kategori menu tampil sebagai `Buku Wajib`, `Buku Pembantu`, dan khusus Sekretaris `Penunjang Buku Wajib`;
   - buku pembantu bersama hanya `Buku Prestasi`, `Buku Bantuan`, dan `Buku Kader Khusus`;
+  - `kecamatan-sekretaris` memiliki akses backend minimal `prestasi_lomba.view` dan `bantuan.view` untuk buku pembantu bersama;
   - `Buku Inventaris` tidak lagi diperlakukan sebagai buku pembantu bersama;
   - setiap buku yang dipakai lintas role tetap terisolasi dengan `level + area_id + tahun_anggaran + group`;
   - gap modul yang belum punya slug tidak dipaksakan ke modul lain.
