@@ -109,6 +109,7 @@ Mode akses group per role berasal dari `ROLE_GROUP_MODES` dan di-resolve per sco
   - `mode=by-level`,
   - `level=kecamatan`,
   - `sub_level=all`.
+- Untuk semua blok/tampilan kecamatan yang merinci daftar desa anak canonical, urutan render wajib mengikuti `areas.code` ascending; sorting dilakukan di source repository daftar desa, bukan di UI.
 
 ### Matrix Chart (Tipe, Orientasi, Warna)
 

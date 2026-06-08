@@ -25,6 +25,7 @@ class AreaRepository implements AreaRepositoryInterface
     {
         return Area::where('parent_id', $kecamatanId)
             ->where('level', ScopeLevel::DESA->value)
+            ->orderBy('code')
             ->get();
     }
 
@@ -43,6 +44,7 @@ class AreaRepository implements AreaRepositoryInterface
         ) {
             return Area::where('parent_id', $areaId)
                 ->where('level', ScopeLevel::DESA->value)
+                ->orderBy('code')
                 ->get();
         }
 

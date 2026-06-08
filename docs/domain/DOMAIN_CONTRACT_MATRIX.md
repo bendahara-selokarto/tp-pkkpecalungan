@@ -266,6 +266,7 @@ Struktur section sekretaris:
 - Single section aktif: dashboard hanya menampilkan satu section utama untuk mengurangi beban kognitif.
 - Section utama memprioritaskan domain sekretaris dan chart activity.
 - Pada scope `kecamatan`, chart activity menampilkan `jumlah kegiatan per desa` dengan filter bulan `section1_month` (`all|1..12`).
+- Semua tampilan kecamatan yang merinci desa anak canonical wajib memakai urutan `areas.code` ascending; source urutan berasal dari repository area bersama, bukan sorting di UI.
 
 Aturan role khusus:
 

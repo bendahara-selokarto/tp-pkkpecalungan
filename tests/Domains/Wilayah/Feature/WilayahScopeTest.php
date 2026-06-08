@@ -35,14 +35,14 @@ class WilayahScopeTest extends TestCase
 
         // Desa
         $this->desa1 = Area::create([
-            'code'      => '2002',
+            'code'      => '2003',
             'name'      => 'Bandung',
             'level'     => ScopeLevel::DESA->value,
             'parent_id' => $this->kecamatan->id
         ]);
 
         $this->desa2 = Area::create([
-            'code'      => '2003',
+            'code'      => '2002',
             'name'      => 'Gombong',
             'level'     => ScopeLevel::DESA->value,
             'parent_id' => $this->kecamatan->id
@@ -86,6 +86,17 @@ class WilayahScopeTest extends TestCase
                     ->getByUser($user);
 
         $this->assertCount(2, $areas);
+        $this->assertSame(['2002', '2003'], $areas->pluck('code')->all());
+    }
+
+    #[Test]
+    public function daftar_desa_kecamatan_disortir_berdasarkan_code(): void
+    {
+        $areas = app('App\Domains\Wilayah\Repositories\AreaRepositoryInterface')
+            ->getDesaByKecamatan($this->kecamatan->id);
+
+        $this->assertCount(2, $areas);
+        $this->assertSame(['2002', '2003'], $areas->pluck('code')->all());
     }
 
     #[Test]
@@ -110,4 +121,3 @@ class WilayahScopeTest extends TestCase
         );
     }
 }
-
