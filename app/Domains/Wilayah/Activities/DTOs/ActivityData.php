@@ -21,6 +21,7 @@ class ActivityData
         public ?string $tanda_tangan = null,
         public ?string $image_path = null,
         public ?string $document_path = null,
+        public array $additional_info = [],
     ) {}
 
     public static function fromArray(array $data): self
@@ -42,6 +43,7 @@ class ActivityData
             $data['tanda_tangan'] ?? null,
             $data['image_path'] ?? null,
             $data['document_path'] ?? null,
+            $data['additional_info'] ?? [],
         );
     }
 }

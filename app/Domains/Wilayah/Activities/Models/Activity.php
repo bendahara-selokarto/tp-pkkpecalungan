@@ -34,6 +34,7 @@ class Activity extends Model
         'uraian',
         'level',
         'group',
+        'additional_info',
         'area_id',
         'created_by',
         'tahun_anggaran',
@@ -49,6 +50,7 @@ class Activity extends Model
     {
         return [
             'tahun_anggaran' => 'integer',
+            'additional_info' => 'array',
         ];
     }
 

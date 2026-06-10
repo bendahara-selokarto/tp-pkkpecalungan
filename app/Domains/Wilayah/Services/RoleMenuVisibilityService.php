@@ -131,6 +131,9 @@ class RoleMenuVisibilityService
             'pelatihan-kader-pokja-ii',
             'pra-koperasi-up2k',
             'foto-kegiatan',
+            'bkb-kegiatan',
+            'literasi-warga',
+            'tutor-khusus',
         ],
         'pokja-iii' => [
             'bantuans',

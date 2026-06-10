@@ -18,7 +18,6 @@ class RoleMenuVisibilityServiceTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->markTestSkipped('Stale: Menunggu penyusunan ulang bertahap');
 
         foreach ([
             'desa-sekretaris',
@@ -119,23 +118,20 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'bkl',
                 'paar',
                 'anggota-pokja',
-                'literasi-warga',
+                'inventaris',
+                'anggota-tim-penggerak',
             ],
             'kecamatan-pokja-ii' => [
                 'program-prioritas',
                 'activities',
                 'prestasi-lomba',
                 'bantuans',
-                'kader-khusus',
                 'pelatihan-kader-pokja-ii',
                 'pra-koperasi-up2k',
-                'taman-bacaan',
-                'koperasi',
-                'kejar-paket',
                 'bkb-kegiatan',
+                'literasi-warga',
                 'tutor-khusus',
                 'foto-kegiatan',
-                'data-pelatihan-kader',
                 'data-kegiatan-pkk-pokja-ii',
             ],
             'kecamatan-pokja-iii' => [
@@ -143,10 +139,8 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'activities',
                 'prestasi-lomba',
                 'bantuans',
-                'kader-khusus',
                 'data-pemanfaatan-tanah-pekarangan-hatinya-pkk',
                 'buku-bantu-pangan',
-                'warung-pkk',
                 'data-keluarga',
                 'buku-daftar-hadir',
                 'buku-notulen-rapat',
@@ -155,20 +149,24 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'buku-konsultasi',
                 'data-kegiatan-pkk-pokja-iii',
                 'foto-kegiatan',
+                'kader-khusus',
+                'buku-keuangan',
+                'anggota-pokja',
+                'buku-kliping',
             ],
             'kecamatan-pokja-iv' => [
                 'program-prioritas',
                 'activities',
                 'prestasi-lomba',
                 'bantuans',
-                'kader-khusus',
                 'posyandu',
-                'pilot-project-naskah-pelaporan',
-                'pilot-project-keluarga-sehat',
                 'data-kegiatan-pkk-pokja-iv',
                 'data-umum-pkk',
                 'data-umum-pkk-kecamatan',
                 'foto-kegiatan',
+                'kader-khusus',
+                'inventaris',
+                'bkl',
             ],
         ];
 

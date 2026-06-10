@@ -40,6 +40,7 @@ class ActivityRepository implements ActivityRepositoryInterface
             'tanda_tangan' => $data->tanda_tangan,
             'image_path' => $data->image_path,
             'document_path' => $data->document_path,
+            'additional_info' => $data->additional_info,
         ]);
     }
 
@@ -220,6 +221,7 @@ class ActivityRepository implements ActivityRepositoryInterface
             'tanda_tangan' => $data->tanda_tangan,
             'image_path' => $data->image_path,
             'document_path' => $data->document_path,
+            'additional_info' => $data->additional_info,
         ]);
 
         return $activity;

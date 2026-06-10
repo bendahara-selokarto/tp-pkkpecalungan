@@ -10,6 +10,7 @@ use App\Domains\Wilayah\Activities\Requests\ListActivitiesRequest;
 use App\Domains\Wilayah\Activities\Requests\StoreActivityRequest;
 use App\Domains\Wilayah\Activities\Requests\UpdateActivityRequest;
 use App\Domains\Wilayah\Activities\Services\ActivityAttachmentService;
+use App\Domains\Wilayah\Activities\Services\ActivityScopeService;
 use App\Domains\Wilayah\Activities\UseCases\GetScopedActivityUseCase;
 use App\Domains\Wilayah\Activities\UseCases\ListScopedActivitiesUseCase;
 use App\Http\Controllers\Controller;
@@ -28,7 +29,8 @@ class DesaActivityController extends Controller
         private readonly GetScopedActivityUseCase $getScopedActivityUseCase,
         private readonly CreateScopedActivityAction $createScopedActivityAction,
         private readonly UpdateActivityAction $updateActivityAction,
-        private readonly ActivityAttachmentService $activityAttachmentService
+        private readonly ActivityAttachmentService $activityAttachmentService,
+        private readonly ActivityScopeService $activityScopeService
     ) {
         $this->middleware('scope.role:desa');
     }
@@ -42,12 +44,14 @@ class DesaActivityController extends Controller
 
         return Inertia::render('Desa/Activities/Index', [
             'activities' => $activities,
+            'activeGroup' => $this->activityScopeService->requireActivityGroupForUser(auth()->user()),
             'pagination' => [
                 'perPageOptions' => [10, 25, 50],
             ],
             'filters' => [
                 'per_page' => $request->perPage(),
                 'tahun_anggaran' => (int) ($request->user()->active_budget_year ?? now()->year),
+                'book_group' => $request->query('book_group'),
             ],
         ]);
     }
@@ -56,7 +60,9 @@ class DesaActivityController extends Controller
     {
         $this->authorize('create', Activity::class);
 
-        return Inertia::render('Desa/Activities/Create');
+        return Inertia::render('Desa/Activities/Create', [
+            'jobGroup' => $this->activityScopeService->requireActivityGroupForUser(auth()->user()),
+        ]);
     }
 
     public function store(StoreActivityRequest $request): RedirectResponse
@@ -110,6 +116,7 @@ class DesaActivityController extends Controller
 
         return Inertia::render('Desa/Activities/Edit', [
             'activity' => $this->mapActivityPayload($activity),
+            'jobGroup' => $this->activityScopeService->requireActivityGroupForUser(auth()->user()),
         ]);
     }
 
@@ -153,6 +160,7 @@ class DesaActivityController extends Controller
             'document_path' => $activity->document_path,
             'document_url' => $this->resolveAttachmentUrl($activity, 'document'),
             'tahun_anggaran' => $activity->tahun_anggaran,
+            'additional_info' => $activity->additional_info ?? [],
         ];
     }
 

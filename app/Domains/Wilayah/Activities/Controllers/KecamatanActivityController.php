@@ -155,6 +155,7 @@ class KecamatanActivityController extends Controller
             'document_path' => $activity->document_path,
             'document_url' => $this->resolveAttachmentUrl($activity, 'document'),
             'tahun_anggaran' => $activity->tahun_anggaran,
+            'additional_info' => $activity->additional_info ?? [],
         ];
     }
 

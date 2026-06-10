@@ -14,6 +14,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  activeGroup: {
+    type: String,
+    required: true,
+  },
   filters: {
     type: Object,
     default: () => ({}),
@@ -97,7 +101,7 @@ const formatDate = (value) => formatDateForDisplay(value)
             Cetak PDF
           </a>
           <Link
-            href="/desa/activities/create"
+            :href="`/desa/activities/create${props.filters.book_group ? '?book_group=' + props.filters.book_group : ''}`"
             class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
           >
             + Tambah
@@ -133,13 +137,13 @@ const formatDate = (value) => formatDateForDisplay(value)
               <td class="px-3 py-3">
                 <div class="flex items-center gap-2">
                   <Link
-                    :href="`/desa/activities/${item.id}`"
+                    :href="`/desa/activities/${item.id}${props.filters.book_group ? '?book_group=' + props.filters.book_group : ''}`"
                     class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
                   >
                     Lihat
                   </Link>
                   <Link
-                    :href="`/desa/activities/${item.id}/edit`"
+                    :href="`/desa/activities/${item.id}/edit${props.filters.book_group ? '?book_group=' + props.filters.book_group : ''}`"
                     class="inline-flex rounded-md border border-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
                   >
                     Edit

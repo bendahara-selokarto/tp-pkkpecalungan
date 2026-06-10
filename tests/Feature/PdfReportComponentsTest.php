@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class PdfHeaderComponentTest extends TestCase
+class PdfReportComponentsTest extends TestCase
 {
     public function test_header_component_renders_correctly(): void
     {

@@ -35,6 +35,7 @@ class UpdateActivityAction
             'tanda_tangan' => $payload['tanda_tangan'] ?? null,
             'image_path' => $attachments['image_path'],
             'document_path' => $attachments['document_path'],
+            'additional_info' => $payload['additional_info'] ?? [],
         ]);
 
         return $this->activityRepository->update($activity, $data);
