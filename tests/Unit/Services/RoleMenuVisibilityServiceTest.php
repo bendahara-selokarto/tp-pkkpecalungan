@@ -121,6 +121,26 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'inventaris',
                 'anggota-tim-penggerak',
             ],
+            'desa-pokja-i' => [
+                'program-prioritas',
+                'data-kegiatan-pkk-pokja-i',
+                'activities',
+                'prestasi-lomba',
+                'bantuans',
+                'kader-khusus',
+                'simulasi-penyuluhan',
+                'buku-tamu-simulasi',
+                'buku-daftar-hadir-simulasi',
+                'buku-notulen-simulasi',
+                'buku-kliping',
+                'bkr',
+                'bkl',
+                'paar',
+                'anggota-pokja',
+                'inventaris',
+                'anggota-tim-penggerak',
+                'literasi-warga',
+            ],
             'kecamatan-pokja-ii' => [
                 'program-prioritas',
                 'activities',
@@ -134,6 +154,24 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'foto-kegiatan',
                 'data-kegiatan-pkk-pokja-ii',
             ],
+            'desa-pokja-ii' => [
+                'program-prioritas',
+                'activities',
+                'prestasi-lomba',
+                'bantuans',
+                'pelatihan-kader-pokja-ii',
+                'pra-koperasi-up2k',
+                'bkb-kegiatan',
+                'literasi-warga',
+                'tutor-khusus',
+                'foto-kegiatan',
+                'data-kegiatan-pkk-pokja-ii',
+                'koperasi',
+                'kejar-paket',
+                'taman-bacaan',
+                'kader-khusus',
+                'anggota-pokja',
+            ],
             'kecamatan-pokja-iii' => [
                 'program-prioritas',
                 'activities',
@@ -146,6 +184,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'buku-notulen-rapat',
                 'inventaris',
                 'data-industri-rumah-tangga',
+                'buku-makan-bersama',
                 'buku-konsultasi',
                 'data-kegiatan-pkk-pokja-iii',
                 'foto-kegiatan',
@@ -168,20 +207,41 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'inventaris',
                 'bkl',
             ],
+            'desa-pokja-iv' => [
+                'program-prioritas',
+                'activities',
+                'prestasi-lomba',
+                'bantuans',
+                'posyandu',
+                'data-kegiatan-pkk-pokja-iv',
+                'data-umum-pkk',
+                'data-umum-pkk-kecamatan',
+                'foto-kegiatan',
+                'kader-khusus',
+                'inventaris',
+                'bkl',
+                'anggota-pokja',
+                'bkb-kegiatan',
+            ],
         ];
 
         foreach ($expectedModulesByRole as $role => $expectedModules) {
             $user = User::factory()->create();
             $user->assignRole($role);
 
-            $visibility = $this->service->resolveForScope($user, 'kecamatan');
+            $scope = str_contains($role, 'kecamatan') ? 'kecamatan' : 'desa';
+            $visibility = $this->service->resolveForScope($user, $scope);
 
-            $actualModules = $visibility['modules'];
+            $actualModules = array_filter(
+                $visibility['modules'],
+                fn (string $mode): bool => $mode === RoleMenuVisibilityService::MODE_READ_WRITE
+            );
+
             ksort($actualModules);
             $expected = array_fill_keys($expectedModules, RoleMenuVisibilityService::MODE_READ_WRITE);
             ksort($expected);
 
-            $this->assertSame($expected, $actualModules, sprintf('Modul role %s drift.', $role));
+            $this->assertSame($expected, $actualModules, sprintf('Modul role %s drift (RW Only).', $role));
         }
     }
 

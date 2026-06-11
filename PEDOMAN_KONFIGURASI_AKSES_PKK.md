@@ -65,5 +65,6 @@ Setiap kali terjadi perubahan hak akses atau struktur menu, wajib mengikuti alur
 ### 6. Log Perubahan Non-Teknis
 | Tanggal | Deskripsi Perubahan | Disetujui Oleh | Status |
 | :--- | :--- | :--- | :--- |
-| 21-05-2026 | Peresmian **Strict Visibility**, Granular Mapping, & Flow E2E | Tim Pengembang | **Aktif (Standard)** |
+| 11-06-2026 | Isolasi modul tambahan (`koperasi`, `kejar-paket`, `taman-bacaan`, `kader-khusus`, `literasi-warga`, `bkb-kegiatan`) khusus level **Desa** untuk akurasi Buku Data Kegiatan Pokja I-IV. Menu level Kecamatan tetap mengikuti baseline fixed V1.0. | Tim Pengembang | **Aktif (Standard)** |
+| 21-05-2026 | Peresmian **Strict Visibility**, Granular Mapping, & Flow E2E | Tim Pengembang | Superseded |
 | 20-05-2026 | Peresmian Dokumen Acuan Awal | Tim Pengembang | Superseded |
