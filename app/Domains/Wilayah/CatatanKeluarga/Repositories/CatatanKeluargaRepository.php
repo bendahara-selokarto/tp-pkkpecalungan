@@ -1057,9 +1057,25 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         }
 
         $activityItems = $this->scopedModelQuery(Activity::class, $level, $areaId)
-            ->get(['title', 'description', 'uraian']);
+            ->get(['title', 'description', 'uraian', 'additional_info']);
 
         foreach ($activityItems as $activity) {
+            $info = $activity->additional_info ?? [];
+            $programCategory = strtolower(trim((string) ($info['program_category'] ?? '')));
+
+            // 1. Prioritas data terstruktur (additional_info)
+            if (array_key_exists($programCategory, $keywordMap)) {
+                $metrics[$programCategory]['kegiatan']++;
+                $metrics[$programCategory]['volume'] += (int) ($info['volume'] ?? 1);
+                $metrics[$programCategory]['sasaran'] += (int) ($info['sasaran_jumlah'] ?? 0);
+                if (! empty($info['metode'])) {
+                    $metrics[$programCategory]['metode']++;
+                }
+
+                continue;
+            }
+
+            // 2. Fallback ke keyword matching (untuk data lama/tidak terstruktur)
             $payload = trim(sprintf(
                 '%s %s %s',
                 (string) $activity->title,

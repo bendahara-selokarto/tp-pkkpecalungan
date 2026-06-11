@@ -26,6 +26,7 @@ class StoreActivityRequest extends FormRequest
             'additional_info.program_category' => 'nullable|string|max:255',
             'additional_info.volume' => 'nullable|integer|min:1',
             'additional_info.sasaran' => 'nullable|string|max:255',
+            'additional_info.sasaran_jumlah' => 'nullable|integer|min:0',
             'additional_info.metode' => 'nullable|string|max:255',
             'additional_info.jenis_literasi' => 'nullable|string|max:255',
             'additional_info.jenis_kejar_paket' => 'nullable|string|max:255',

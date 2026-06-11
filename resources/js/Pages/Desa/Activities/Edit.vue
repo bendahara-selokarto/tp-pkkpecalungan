@@ -32,6 +32,7 @@ const form = useForm({
     program_category: props.activity.additional_info?.program_category ?? '',
     volume: props.activity.additional_info?.volume ?? 1,
     sasaran: props.activity.additional_info?.sasaran ?? '',
+    sasaran_jumlah: props.activity.additional_info?.sasaran_jumlah ?? 0,
     metode: props.activity.additional_info?.metode ?? '',
     // Pokja II
     jenis_literasi: props.activity.additional_info?.jenis_literasi ?? '',
@@ -93,14 +94,18 @@ const submit = () => {
 
         <div v-if="['pokja-i', 'pokja-ii', 'pokja-iii', 'pokja-iv'].includes(jobGroup)" class="rounded-md border border-gray-200 bg-gray-50/70 p-4 dark:border-slate-700 dark:bg-slate-900/40">
           <h3 class="mb-3 text-sm font-bold text-gray-800 dark:text-gray-100">Capaian Kegiatan</h3>
-          <div class="grid gap-5 md:grid-cols-3">
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
             <div>
               <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Volume</label>
               <input v-model="form.additional_info.volume" type="number" min="1" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
             </div>
             <div>
-              <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Sasaran</label>
+              <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Sasaran (Narasi)</label>
               <input v-model="form.additional_info.sasaran" type="text" placeholder="Contoh: 25 warga" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Sasaran (Angka)</label>
+              <input v-model="form.additional_info.sasaran_jumlah" type="number" min="0" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
             </div>
             <div>
               <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Metode</label>
@@ -111,15 +116,18 @@ const submit = () => {
 
         <!-- Pokja I Section -->
         <div v-if="jobGroup === 'pokja-i'" class="rounded-md border border-emerald-100 bg-emerald-50/30 p-4 dark:border-emerald-900/20 dark:bg-emerald-900/10">
-          <h3 class="mb-3 text-sm font-bold text-emerald-800 dark:text-emerald-400">Informasi Khusus Pokja I (Hukum & Pola Asuh)</h3>
+          <h3 class="mb-3 text-sm font-bold text-emerald-800 dark:text-emerald-400">Informasi Khusus Pokja I (Hukum & Karakter)</h3>
           <div class="grid gap-5 md:grid-cols-2">
             <div>
               <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Program</label>
               <select v-model="form.additional_info.program_category" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
                 <option value="">-- Pilih Program --</option>
-                <option value="PKBN">PKBN (Penghayatan & Pengamalan Pancasila)</option>
-                <option value="PAAR">Pola Asuh Anak & Remaja (PAAR)</option>
-                <option value="Kadarkum">Keluarga Sadar Hukum (Kadarkum)</option>
+                <option value="pkbn">PKBN (Penghayatan & Pengamalan Pancasila)</option>
+                <option value="kisah">KISAH (Keluarga Indonesia Sejahtera Anti Narkoba)</option>
+                <option value="krisan">KRISAN (Keluarga Indonesia Sadar Administrasi Kependudukan)</option>
+                <option value="kilas">KILAS (Keluarga Indonesia Lindungi Anak dari Kekerasan Seksual)</option>
+                <option value="ktiat">KTIAT (Keluarga Indonesia Tangguh Ekonomi dengan Administrasi Teratur)</option>
+                <option value="kisak">KISAK (Keluarga Indonesia Sadar Adab dan Karakter)</option>
               </select>
             </div>
           </div>

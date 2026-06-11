@@ -89,4 +89,60 @@ class CatatanKeluargaRepositoryDataKegiatanPkkPokjaITest extends TestCase
         $this->assertSame(1, $items->sum('jumlah_kader'));
         $this->assertSame(1, $items->first()['kisah_kegiatan']);
     }
+
+    public function test_pokja_i_menggunakan_additional_info_sebagai_prioritas(): void
+    {
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        $kecamatan = Area::create(['code' => '2000', 'name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['code' => '2001', 'name' => 'Pecalungan', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+        $user = User::factory()->create(['scope' => 'desa', 'area_id' => $desa->id]);
+        $user->assignRole('desa-sekretaris');
+        $this->actingAs($user);
+
+        // 1. Data lama (keyword matching)
+        Activity::create([
+            'title' => 'Kegiatan KISAH lama',
+            'level' => 'desa',
+            'group' => 'pokja-i',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => now()->year,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+        ]);
+
+        // 2. Data baru (additional_info)
+        Activity::create([
+            'title' => 'Aktivitas PKBN Baru',
+            'level' => 'desa',
+            'group' => 'pokja-i',
+            'area_id' => $desa->id,
+            'created_by' => $user->id,
+            'tahun_anggaran' => now()->year,
+            'activity_date' => now()->toDateString(),
+            'status' => 'published',
+            'additional_info' => [
+                'program_category' => 'pkbn',
+                'volume' => 5,
+                'sasaran_jumlah' => 100,
+                'metode' => 'Penyuluhan',
+            ],
+        ]);
+
+        /** @var \Illuminate\Support\Collection<int, array<string, mixed>> $items */
+        $items = app(CatatanKeluargaRepositoryInterface::class)
+            ->getDataKegiatanPkkPokjaIByLevelAndArea('desa', $desa->id);
+
+        $row = $items->first();
+
+        // KISAH (fallback)
+        $this->assertEquals(1, $row['kisah_kegiatan']);
+        $this->assertEquals(1, $row['kisah_volume']);
+
+        // PKBN (structured)
+        $this->assertEquals(1, $row['pkbn_kegiatan']);
+        $this->assertEquals(5, $row['pkbn_volume']);
+        $this->assertEquals(1, $row['pkbn_metode']);
+        $this->assertEquals(100, $row['pkbn_sasaran']);
+    }
 }

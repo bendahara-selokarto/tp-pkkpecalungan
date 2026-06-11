@@ -83,6 +83,47 @@ const isDocumentImage = computed(() => imageExtensions.includes(documentExtensio
         <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.activity.uraian || props.activity.description || '-' }}</p>
       </div>
 
+      <div v-if="props.activity.additional_info && Object.keys(props.activity.additional_info).length > 0" class="rounded-md border border-gray-100 bg-gray-50/50 p-4 dark:border-slate-800 dark:bg-slate-900/30">
+        <h3 class="mb-3 text-sm font-bold text-gray-800 dark:text-gray-100">Capaian & Informasi Khusus</h3>
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div v-if="props.activity.additional_info.volume">
+            <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Volume</p>
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ props.activity.additional_info.volume }}</p>
+          </div>
+          <div v-if="props.activity.additional_info.sasaran">
+            <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Sasaran (Narasi)</p>
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ props.activity.additional_info.sasaran }}</p>
+          </div>
+          <div v-if="props.activity.additional_info.sasaran_jumlah !== undefined">
+            <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Sasaran (Angka)</p>
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ props.activity.additional_info.sasaran_jumlah }}</p>
+          </div>
+          <div v-if="props.activity.additional_info.metode">
+            <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Metode</p>
+            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ props.activity.additional_info.metode }}</p>
+          </div>
+        </div>
+
+        <div v-if="props.activity.additional_info.program_category" class="mt-4 border-t border-gray-100 pt-4 dark:border-slate-800">
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Kategori Program Pokja I</p>
+          <p class="text-sm font-bold text-emerald-700 dark:text-emerald-400">{{ props.activity.additional_info.program_category.toUpperCase() }}</p>
+        </div>
+
+        <!-- Pokja II-IV Specific display if needed -->
+        <div v-if="props.activity.additional_info.jenis_literasi || props.activity.additional_info.jenis_koperasi" class="mt-4 border-t border-gray-100 pt-4 dark:border-slate-800">
+          <div class="grid gap-4 md:grid-cols-2">
+            <div v-if="props.activity.additional_info.jenis_literasi">
+              <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jenis Literasi</p>
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ props.activity.additional_info.jenis_literasi }}</p>
+            </div>
+            <div v-if="props.activity.additional_info.jenis_koperasi">
+              <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Jenis Koperasi</p>
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ props.activity.additional_info.jenis_koperasi }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="grid gap-4 md:grid-cols-2">
         <div>
           <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Status</p>
