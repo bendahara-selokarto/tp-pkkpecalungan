@@ -43,6 +43,24 @@ Jika terdapat permintaan perubahan dari stakeholder (misal: Ketua Pokja IV memin
 
 ---
 
+### 4. Kontrak Menu Spesifik per Level (Mirror Scope Architecture)
+
+Aplikasi PKK membedakan kontrak menu antara level Kecamatan dan Desa untuk menjaga stabilitas birokrasi di tingkat Kecamatan sambil memungkinkan fleksibilitas pendataan di tingkat Desa.
+
+#### A. Level Kecamatan (Fixed Baseline V1.0)
+Menu level Kecamatan dinyatakan **FIXED** dan tidak menerima modul tambahan di luar fungsi koordinasi. Seluruh Pokja di Kecamatan hanya mengelola modul yang bersifat agregat atau administratif umum.
+- **Modul Utama**: `Program Prioritas`, `Buku Kegiatan`, `Data Kegiatan Pokja (Agregat)`.
+- **Modul Bantu**: `Anggota TP-PKK`, `Kader Khusus`, `Inventaris`, `Prestasi Lomba`, `Bantuan`.
+
+#### B. Level Desa (Extended Operational)
+Menu level Desa bersifat **EXTENDED** untuk mengakomodasi titik masuk data (entry point) yang dibutuhkan untuk laporan Buku Data Kegiatan (Lampiran 4.21 - 4.24).
+- **Pokja I (Desa)**: + `Literasi Warga`.
+- **Pokja II (Desa)**: + `Koperasi`, `Kejar Paket`, `Taman Bacaan`.
+- **Pokja IV (Desa)**: + `BKB Kegiatan`.
+- **Umum (Desa)**: + `Anggota Pokja` (untuk setiap Pokja).
+
+---
+
 ### 5. Flow Perbaikan & Sinkronisasi (E2E)
 
 Setiap kali terjadi perubahan hak akses atau struktur menu, wajib mengikuti alur sinkronisasi berikut untuk mencegah error 403 atau menu tidak tampil:
