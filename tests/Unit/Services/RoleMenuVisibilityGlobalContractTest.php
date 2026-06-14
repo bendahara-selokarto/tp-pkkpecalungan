@@ -357,7 +357,6 @@ class RoleMenuVisibilityGlobalContractTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->markTestSkipped('Stale: Menu contract baseline drift.');
 
         $this->service = $this->app->make(RoleMenuVisibilityService::class);
 
