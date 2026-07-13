@@ -272,7 +272,7 @@ class RoleMenuVisibilityService
             'sekretaris-tpk' => self::MODE_READ_WRITE,
             'sekretaris-wajib' => self::MODE_READ_WRITE,
             'penunjang-buku-wajib' => self::MODE_READ_WRITE,
-            'pkk-data-dasar' => self::MODE_READ_ONLY,
+            'pkk-data-dasar' => self::MODE_READ_WRITE,
             'sekretaris-bantu' => self::MODE_READ_WRITE,
             'common-pembantu' => self::MODE_READ_WRITE,
             'pokja-i' => self::MODE_READ_ONLY,
