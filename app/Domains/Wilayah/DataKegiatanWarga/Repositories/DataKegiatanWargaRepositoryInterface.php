@@ -20,4 +20,6 @@ interface DataKegiatanWargaRepositoryInterface
     public function update(DataKegiatanWarga $dataKegiatanWarga, DataKegiatanWargaData $data): DataKegiatanWarga;
 
     public function delete(DataKegiatanWarga $dataKegiatanWarga): void;
+
+    public function getRecapByDesaForKecamatan(int $kecamatanAreaId, int $tahunAnggaran): Collection;
 }

@@ -32,22 +32,11 @@ class KecamatanDataKegiatanWargaController extends Controller
     public function index(ListDataKegiatanWargaRequest $request): Response
     {
         $this->authorize('viewAny', DataKegiatanWarga::class);
-        $items = $this->listScopedDataKegiatanWargaUseCase
-            ->execute(ScopeLevel::KECAMATAN->value, $request->perPage())
-            ->through(fn (DataKegiatanWarga $item) => [
-                'id' => $item->id,
-                'kegiatan' => $item->kegiatan,
-                'aktivitas' => $item->aktivitas,
-                'aktivitas_label' => $item->aktivitas ? 'Ya' : 'Tidak',
-                'keterangan' => $item->keterangan,
-                'tahun_anggaran' => $item->tahun_anggaran,
-            ]);
+        $recapItems = $this->listScopedDataKegiatanWargaUseCase->executeRecap();
 
         return Inertia::render('Kecamatan/DataKegiatanWarga/Index', [
-            'dataKegiatanWargaItems' => $items,
-            'pagination' => [
-                'perPageOptions' => [10, 25, 50],
-            ],
+            'recapItems' => $recapItems,
+            'kegiatanOptions' => DataKegiatanWarga::kegiatanOptions(),
             'filters' => [
                 'per_page' => $request->perPage(),
                 'tahun_anggaran' => (int) $request->user()->active_budget_year,

@@ -24,6 +24,8 @@ class DataKegiatanWarga extends Model
         'kegiatan',
         'aktivitas',
         'keterangan',
+        'source_module',
+        'source_id',
         'tahun_anggaran',
         'level',
         'area_id',
@@ -35,6 +37,7 @@ class DataKegiatanWarga extends Model
         return [
             'aktivitas' => 'boolean',
             'tahun_anggaran' => 'integer',
+            'source_id' => 'integer',
         ];
     }
 

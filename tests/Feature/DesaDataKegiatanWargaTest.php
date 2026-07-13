@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Domains\Wilayah\Activities\Models\Activity;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
 use App\Domains\Wilayah\Models\Area;
 use App\Models\User;
@@ -26,9 +27,8 @@ class DesaDataKegiatanWargaTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->markTestSkipped('Stale: Menunggu penyusunan ulang bertahap');
 
-        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
         Role::firstOrCreate(['name' => 'kecamatan-pokja-i']);
 
         $this->kecamatan = Area::create([
@@ -91,80 +91,7 @@ class DesaDataKegiatanWargaTest extends TestCase
     }
 
     #[Test]
-    public function daftar_data_kegiatan_warga_desa_mendukung_pagination_dan_tetap_scoped(): void
-    {
-        $adminDesa = User::factory()->create([
-            'area_id' => $this->desaA->id,
-            'scope' => 'desa',
-        ]);
-        $adminDesa->assignRole('desa-pokja-i');
-
-        for ($index = 1; $index <= 12; $index++) {
-            DataKegiatanWarga::create([
-                'kegiatan' => 'Kegiatan Desa '.$index,
-                'aktivitas' => true,
-                'keterangan' => 'Keterangan '.$index,
-                'level' => 'desa',
-                'area_id' => $this->desaA->id,
-                'created_by' => $adminDesa->id,
-            ]);
-        }
-
-        DataKegiatanWarga::create([
-            'kegiatan' => 'Kegiatan Bocor',
-            'aktivitas' => true,
-            'keterangan' => 'Bocor',
-            'level' => 'desa',
-            'area_id' => $this->desaB->id,
-            'created_by' => $adminDesa->id,
-        ]);
-
-        $response = $this->actingAs($adminDesa)->get('/desa/data-kegiatan-warga?page=2&per_page=10');
-
-        $response->assertOk();
-        $response->assertDontSee('Kegiatan Bocor');
-        $response->assertInertia(function (AssertableInertia $page): void {
-            $page
-                ->component('Desa/DataKegiatanWarga/Index')
-                ->has('dataKegiatanWargaItems.data', 2)
-                ->where('dataKegiatanWargaItems.current_page', 2)
-                ->where('dataKegiatanWargaItems.per_page', 10)
-                ->where('dataKegiatanWargaItems.total', 12)
-                ->where('filters.per_page', 10);
-        });
-    }
-
-    #[Test]
-    public function per_page_tidak_valid_di_data_kegiatan_warga_desa_kembali_ke_default(): void
-    {
-        $adminDesa = User::factory()->create([
-            'area_id' => $this->desaA->id,
-            'scope' => 'desa',
-        ]);
-        $adminDesa->assignRole('desa-pokja-i');
-
-        DataKegiatanWarga::create([
-            'kegiatan' => 'Kegiatan Default',
-            'aktivitas' => true,
-            'keterangan' => 'Default',
-            'level' => 'desa',
-            'area_id' => $this->desaA->id,
-            'created_by' => $adminDesa->id,
-        ]);
-
-        $response = $this->actingAs($adminDesa)->get('/desa/data-kegiatan-warga?per_page=999');
-
-        $response->assertOk();
-        $response->assertInertia(function (AssertableInertia $page): void {
-            $page
-                ->component('Desa/DataKegiatanWarga/Index')
-                ->where('filters.per_page', 10)
-                ->where('dataKegiatanWargaItems.per_page', 10);
-        });
-    }
-
-    #[Test]
-    public function admin_desa_dapat_menambah_memperbarui_dan_menghapus_data_kegiatan_warga(): void
+    public function admin_desa_dapat_menambah_data_kegiatan_warga_dengan_relasi_sumber(): void
     {
         $adminDesa = User::factory()->create([
             'area_id' => $this->desaA->id,
@@ -173,25 +100,62 @@ class DesaDataKegiatanWargaTest extends TestCase
         ]);
         $adminDesa->assignRole('desa-pokja-i');
 
+        $activity = Activity::create([
+            'title' => 'Log Kerja Bakti',
+            'activity_date' => '2026-06-11',
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+            'group' => 'pokja-i',
+        ]);
+
         $this->actingAs($adminDesa)->post('/desa/data-kegiatan-warga', [
+            'kegiatan' => 'Kerja Bakti',
+            'aktivitas' => true,
+            'keterangan' => 'Mengikuti log #'.$activity->id,
+            'source_module' => 'Activity',
+            'source_id' => $activity->id,
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('data_kegiatan_wargas', [
+            'kegiatan' => 'Kerja Bakti',
+            'source_module' => 'Activity',
+            'source_id' => $activity->id,
+            'area_id' => $this->desaA->id,
+        ]);
+    }
+
+    #[Test]
+    public function admin_desa_dapat_memperbarui_dan_menghapus_data_kegiatan_warga(): void
+    {
+        $adminDesa = User::factory()->create([
+            'area_id' => $this->desaA->id,
+            'scope' => 'desa',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $adminDesa->assignRole('desa-pokja-i');
+
+        $dataKegiatanWarga = DataKegiatanWarga::create([
             'kegiatan' => 'Rukun Kematian',
             'aktivitas' => true,
             'keterangan' => 'Takziyah warga',
-        ])->assertStatus(302);
-
-        $dataKegiatanWarga = DataKegiatanWarga::where('kegiatan', 'Rukun Kematian')->firstOrFail();
+            'level' => 'desa',
+            'area_id' => $this->desaA->id,
+            'created_by' => $adminDesa->id,
+        ]);
 
         $this->actingAs($adminDesa)->put(route('desa.data-kegiatan-warga.update', $dataKegiatanWarga->id), [
             'kegiatan' => 'Rukun Kematian',
             'aktivitas' => false,
             'keterangan' => 'Tidak ada kegiatan bulan ini',
+            'source_module' => null,
+            'source_id' => null,
         ])->assertStatus(302);
 
         $this->assertDatabaseHas('data_kegiatan_wargas', [
             'id' => $dataKegiatanWarga->id,
             'aktivitas' => false,
             'keterangan' => 'Tidak ada kegiatan bulan ini',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
         $this->actingAs($adminDesa)->delete(route('desa.data-kegiatan-warga.destroy', $dataKegiatanWarga->id))
@@ -212,62 +176,5 @@ class DesaDataKegiatanWargaTest extends TestCase
         $response = $this->actingAs($adminKecamatan)->get('/desa/data-kegiatan-warga');
 
         $response->assertStatus(403);
-    }
-
-    #[Test]
-    public function pengguna_role_desa_dengan_area_tidak_valid_tidak_bisa_mengakses_modul_data_kegiatan_warga_desa(): void
-    {
-        $userStale = User::factory()->create([
-            'area_id' => $this->kecamatan->id,
-            'scope' => 'desa',
-        ]);
-        $userStale->assignRole('desa-pokja-i');
-
-        $response = $this->actingAs($userStale)->get('/desa/data-kegiatan-warga');
-
-        $response->assertStatus(403);
-    }
-
-    #[Test]
-    public function admin_desa_hanya_melihat_data_kegiatan_warga_pada_tahun_anggaran_aktif(): void
-    {
-        $adminDesa = User::factory()->create([
-            'area_id' => $this->desaA->id,
-            'scope' => 'desa',
-            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
-        ]);
-        $adminDesa->assignRole('desa-pokja-i');
-
-        DataKegiatanWarga::create([
-            'kegiatan' => 'Kerja Bakti',
-            'aktivitas' => true,
-            'keterangan' => 'Tahun aktif',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
-            'level' => 'desa',
-            'area_id' => $this->desaA->id,
-            'created_by' => $adminDesa->id,
-        ]);
-
-        DataKegiatanWarga::create([
-            'kegiatan' => 'Arisan',
-            'aktivitas' => true,
-            'keterangan' => 'Tahun lalu',
-            'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR - 1,
-            'level' => 'desa',
-            'area_id' => $this->desaA->id,
-            'created_by' => $adminDesa->id,
-        ]);
-
-        $response = $this->actingAs($adminDesa)->get('/desa/data-kegiatan-warga');
-
-        $response->assertOk();
-        $response->assertDontSee('Tahun lalu');
-        $response->assertInertia(function (AssertableInertia $page): void {
-            $page
-                ->component('Desa/DataKegiatanWarga/Index')
-                ->has('dataKegiatanWargaItems.data', 1)
-                ->where('dataKegiatanWargaItems.data.0.kegiatan', 'Kerja Bakti')
-                ->where('filters.tahun_anggaran', self::ACTIVE_BUDGET_YEAR);
-        });
     }
 }

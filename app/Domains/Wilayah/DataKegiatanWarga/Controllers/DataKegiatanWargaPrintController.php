@@ -32,10 +32,14 @@ class DataKegiatanWargaPrintController extends Controller
     {
         $this->authorize('viewAny', DataKegiatanWarga::class);
 
-        $items = $this->listScopedDataKegiatanWargaUseCase
-            ->executeAll($level)
-            ->sortBy('id')
-            ->values();
+        if ($level === ScopeLevel::KECAMATAN->value) {
+            $items = $this->listScopedDataKegiatanWargaUseCase->executeRecap();
+        } else {
+            $items = $this->listScopedDataKegiatanWargaUseCase
+                ->executeAll($level)
+                ->sortBy('id')
+                ->values();
+        }
 
         $user = auth()->user()->loadMissing('area');
         $budgetYearLabel = $this->activeBudgetYearContextService->resolveForUser($user);

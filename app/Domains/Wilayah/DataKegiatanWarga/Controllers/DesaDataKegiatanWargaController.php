@@ -2,6 +2,7 @@
 
 namespace App\Domains\Wilayah\DataKegiatanWarga\Controllers;
 
+use App\Domains\Wilayah\Activities\Repositories\ActivityRepositoryInterface;
 use App\Domains\Wilayah\DataKegiatanWarga\Actions\CreateScopedDataKegiatanWargaAction;
 use App\Domains\Wilayah\DataKegiatanWarga\Actions\UpdateDataKegiatanWargaAction;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
@@ -24,7 +25,8 @@ class DesaDataKegiatanWargaController extends Controller
         private readonly ListScopedDataKegiatanWargaUseCase $listScopedDataKegiatanWargaUseCase,
         private readonly GetScopedDataKegiatanWargaUseCase $getScopedDataKegiatanWargaUseCase,
         private readonly CreateScopedDataKegiatanWargaAction $createScopedDataKegiatanWargaAction,
-        private readonly UpdateDataKegiatanWargaAction $updateDataKegiatanWargaAction
+        private readonly UpdateDataKegiatanWargaAction $updateDataKegiatanWargaAction,
+        private readonly ActivityRepositoryInterface $activityRepository
     ) {
         $this->middleware('scope.role:desa');
     }
@@ -40,6 +42,8 @@ class DesaDataKegiatanWargaController extends Controller
                 'aktivitas' => $item->aktivitas,
                 'aktivitas_label' => $item->aktivitas ? 'Ya' : 'Tidak',
                 'keterangan' => $item->keterangan,
+                'source_module' => $item->source_module,
+                'source_id' => $item->source_id,
                 'tahun_anggaran' => $item->tahun_anggaran,
             ]);
 
@@ -59,8 +63,20 @@ class DesaDataKegiatanWargaController extends Controller
     {
         $this->authorize('create', DataKegiatanWarga::class);
 
+        $user = auth()->user();
+        $activities = $this->activityRepository->listByLevelAndArea(
+            ScopeLevel::DESA->value,
+            $user->area_id,
+            (int) $user->active_budget_year
+        )->map(fn ($activity) => [
+            'id' => $activity->id,
+            'title' => $activity->title,
+            'activity_date' => $activity->activity_date,
+        ]);
+
         return Inertia::render('Desa/DataKegiatanWarga/Create', [
             'kegiatanOptions' => DataKegiatanWarga::kegiatanOptions(),
+            'activityOptions' => $activities,
         ]);
     }
 
@@ -84,6 +100,8 @@ class DesaDataKegiatanWargaController extends Controller
                 'aktivitas' => $dataKegiatanWarga->aktivitas,
                 'aktivitas_label' => $dataKegiatanWarga->aktivitas ? 'Ya' : 'Tidak',
                 'keterangan' => $dataKegiatanWarga->keterangan,
+                'source_module' => $dataKegiatanWarga->source_module,
+                'source_id' => $dataKegiatanWarga->source_id,
                 'tahun_anggaran' => $dataKegiatanWarga->tahun_anggaran,
             ],
         ]);
@@ -94,15 +112,29 @@ class DesaDataKegiatanWargaController extends Controller
         $dataKegiatanWarga = $this->getScopedDataKegiatanWargaUseCase->execute($id, ScopeLevel::DESA->value);
         $this->authorize('update', $dataKegiatanWarga);
 
+        $user = auth()->user();
+        $activities = $this->activityRepository->listByLevelAndArea(
+            ScopeLevel::DESA->value,
+            $user->area_id,
+            (int) $user->active_budget_year
+        )->map(fn ($activity) => [
+            'id' => $activity->id,
+            'title' => $activity->title,
+            'activity_date' => $activity->activity_date,
+        ]);
+
         return Inertia::render('Desa/DataKegiatanWarga/Edit', [
             'dataKegiatanWarga' => [
                 'id' => $dataKegiatanWarga->id,
                 'kegiatan' => $dataKegiatanWarga->kegiatan,
                 'aktivitas' => $dataKegiatanWarga->aktivitas,
                 'keterangan' => $dataKegiatanWarga->keterangan,
+                'source_module' => $dataKegiatanWarga->source_module,
+                'source_id' => $dataKegiatanWarga->source_id,
                 'tahun_anggaran' => $dataKegiatanWarga->tahun_anggaran,
             ],
             'kegiatanOptions' => DataKegiatanWarga::kegiatanOptions(),
+            'activityOptions' => $activities,
         ]);
     }
 

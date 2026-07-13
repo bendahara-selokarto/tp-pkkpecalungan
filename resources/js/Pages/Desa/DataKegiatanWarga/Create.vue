@@ -10,12 +10,18 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  activityOptions: {
+    type: Array,
+    default: () => [],
+  },
 })
 
 const form = useForm({
   kegiatan: props.kegiatanOptions[0] ?? '',
   aktivitas: false,
   keterangan: '',
+  source_module: 'Activity',
+  source_id: null,
 })
 
 const submit = () => {
@@ -35,6 +41,17 @@ const submit = () => {
             <option v-for="kegiatan in props.kegiatanOptions" :key="kegiatan" :value="kegiatan">{{ kegiatan }}</option>
           </select>
           <p v-if="form.errors.kegiatan" class="mt-1 text-xs text-rose-600">{{ form.errors.kegiatan }}</p>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Tautkan ke Buku Kegiatan (Opsional)</label>
+          <select v-model="form.source_id" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <option :value="null">-- Tidak ditautkan --</option>
+            <option v-for="activity in props.activityOptions" :key="activity.id" :value="activity.id">
+              {{ activity.title }} ({{ activity.activity_date }})
+            </option>
+          </select>
+          <p v-if="form.errors.source_id" class="mt-1 text-xs text-rose-600">{{ form.errors.source_id }}</p>
         </div>
 
         <div class="rounded-md border border-gray-200 p-3 dark:border-slate-700">

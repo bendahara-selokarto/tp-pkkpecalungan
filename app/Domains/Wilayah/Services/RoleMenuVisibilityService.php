@@ -141,6 +141,9 @@ class RoleMenuVisibilityService
             'paar',
             'anggota-pokja',
             'literasi-warga',
+            'buku-daftar-hadir',
+            'buku-tamu',
+            'buku-agenda-sk',
         ],
         'pokja-ii' => [
             'bantuans',

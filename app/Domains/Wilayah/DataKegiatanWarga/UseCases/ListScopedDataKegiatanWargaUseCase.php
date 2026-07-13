@@ -31,4 +31,12 @@ class ListScopedDataKegiatanWargaUseCase
 
         return $this->dataKegiatanWargaRepository->getByLevelAndArea($level, $areaId, $tahunAnggaran);
     }
+
+    public function executeRecap(): Collection
+    {
+        $areaId = $this->dataKegiatanWargaScopeService->requireUserAreaId();
+        $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
+
+        return $this->dataKegiatanWargaRepository->getRecapByDesaForKecamatan($areaId, $tahunAnggaran);
+    }
 }

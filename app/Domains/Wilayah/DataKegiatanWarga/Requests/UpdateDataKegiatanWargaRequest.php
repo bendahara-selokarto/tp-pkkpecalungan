@@ -19,6 +19,8 @@ class UpdateDataKegiatanWargaRequest extends FormRequest
             'kegiatan' => ['required', 'string', Rule::in(DataKegiatanWarga::kegiatanOptions())],
             'aktivitas' => 'required|boolean',
             'keterangan' => 'nullable|string',
+            'source_module' => 'nullable|string',
+            'source_id' => 'nullable|integer',
         ];
     }
 

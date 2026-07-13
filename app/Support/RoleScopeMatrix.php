@@ -133,7 +133,9 @@ class RoleScopeMatrix
             'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'buku_keuangan.view', 'buku_keuangan.create', 'buku_keuangan.update', 'buku_keuangan.delete', 'buku_keuangan.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
         ],
 
         self::ROLE_POKJA_1_KECAMATAN => [
@@ -155,7 +157,9 @@ class RoleScopeMatrix
             'paar.view', 'paar.create', 'paar.update', 'paar.delete', 'paar.print',
             'bkl.view', 'bkl.create', 'bkl.update', 'bkl.delete', 'bkl.print',
             'literasi_warga.view', 'literasi_warga.create', 'literasi_warga.update', 'literasi_warga.delete', 'literasi_warga.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
         ],
 
         self::ROLE_POKJA_2_KECAMATAN => [
@@ -174,7 +178,9 @@ class RoleScopeMatrix
             'warung_pkk.view', 'warung_pkk.create', 'warung_pkk.update', 'warung_pkk.delete', 'warung_pkk.print',
             'tutor_khusus.view', 'tutor_khusus.create', 'tutor_khusus.update', 'tutor_khusus.delete', 'tutor_khusus.print',
             'data_pelatihan_kader.view', 'data_pelatihan_kader.create', 'data_pelatihan_kader.update', 'data_pelatihan_kader.delete', 'data_pelatihan_kader.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
         ],
 
         self::ROLE_POKJA_3_KECAMATAN => [
@@ -192,7 +198,9 @@ class RoleScopeMatrix
             'data_keluarga.view', 'data_keluarga.create', 'data_keluarga.update', 'data_keluarga.delete', 'data_keluarga.print',
             'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.create', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.update', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.delete', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.print',
             'data_industri_rumah_tangga.view', 'data_industri_rumah_tangga.create', 'data_industri_rumah_tangga.update', 'data_industri_rumah_tangga.delete', 'data_industri_rumah_tangga.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
         ],
 
         self::ROLE_POKJA_4_KECAMATAN => [
@@ -208,7 +216,9 @@ class RoleScopeMatrix
             'bkb_kegiatan.view', 'bkb_kegiatan.create', 'bkb_kegiatan.update', 'bkb_kegiatan.delete', 'bkb_kegiatan.print',
             'pilot_project_naskah_pelaporan.view', 'pilot_project_naskah_pelaporan.create', 'pilot_project_naskah_pelaporan.update', 'pilot_project_naskah_pelaporan.delete', 'pilot_project_naskah_pelaporan.print',
             'pilot_project_keluarga_sehat.view', 'pilot_project_keluarga_sehat.create', 'pilot_project_keluarga_sehat.update', 'pilot_project_keluarga_sehat.delete', 'pilot_project_keluarga_sehat.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
         ],
 
         self::ROLE_ADMIN_DESA => [
@@ -294,7 +304,9 @@ class RoleScopeMatrix
             'arsip_document.view', 'activities.view', 'agenda_surat.view', 'anggota_pokja.view', 'bantuan.view', 'kader_khusus.view', 'prestasi_lomba.view', 'program_prioritas.view', 'anggota_tim_penggerak.view', 'buku_daftar_hadir.view', 'buku_notulen_rapat.view', 'buku_ekspedisi.view', 'buku_tamu.view', 'buku_agenda_sk.view', 'buku_konsultasi.view', 'laporan_tahunan_pkk.view', 'data_warga.view', 'data_kegiatan_warga.view', 'data_keluarga.view', 'catatan_keluarga.view', 'buku_keuangan.view', 'simulasi_penyuluhan.view', 'bkr.view', 'paar.view', 'bkl.view', 'literasi_warga.view', 'pra_koperasi_up2k.view', 'koperasi.view', 'kejar_paket.view', 'taman_bacaan.view', 'pelatihan_kader_pokja_ii.view', 'warung_pkk.view', 'tutor_khusus.view', 'data_pelatihan_kader.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_industri_rumah_tangga.view', 'posyandu.view', 'bkb_kegiatan.view', 'pilot_project_naskah_pelaporan.view', 'pilot_project_keluarga_sehat.view',
             'activities.view', 'activities.create', 'activities.update', 'activities.delete', 'activities.print',
             'buku_keuangan.view', 'buku_keuangan.create', 'buku_keuangan.update', 'buku_keuangan.delete', 'buku_keuangan.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
         ],
 
         self::ROLE_POKJA_1_DESA => [
@@ -316,7 +328,9 @@ class RoleScopeMatrix
             'paar.view', 'paar.create', 'paar.update', 'paar.delete', 'paar.print',
             'bkl.view', 'bkl.create', 'bkl.update', 'bkl.delete', 'bkl.print',
             'literasi_warga.view', 'literasi_warga.create', 'literasi_warga.update', 'literasi_warga.delete', 'literasi_warga.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
         ],
 
         self::ROLE_POKJA_2_DESA => [
@@ -335,7 +349,9 @@ class RoleScopeMatrix
             'warung_pkk.view', 'warung_pkk.create', 'warung_pkk.update', 'warung_pkk.delete', 'warung_pkk.print',
             'tutor_khusus.view', 'tutor_khusus.create', 'tutor_khusus.update', 'tutor_khusus.delete', 'tutor_khusus.print',
             'data_pelatihan_kader.view', 'data_pelatihan_kader.create', 'data_pelatihan_kader.update', 'data_pelatihan_kader.delete', 'data_pelatihan_kader.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
             'bkb_kegiatan.view', 
         ],
 
@@ -355,7 +371,9 @@ class RoleScopeMatrix
             'data_keluarga.view', 'data_keluarga.create', 'data_keluarga.update', 'data_keluarga.delete', 'data_keluarga.print',
             'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.view', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.create', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.update', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.delete', 'data_pemanfaatan_tanah_pekarangan_hatinya_pkk.print',
             'data_industri_rumah_tangga.view', 'data_industri_rumah_tangga.create', 'data_industri_rumah_tangga.update', 'data_industri_rumah_tangga.delete', 'data_industri_rumah_tangga.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
         ],
 
         self::ROLE_POKJA_4_DESA => [
@@ -371,7 +389,9 @@ class RoleScopeMatrix
             'bkb_kegiatan.view', 'bkb_kegiatan.create', 'bkb_kegiatan.update', 'bkb_kegiatan.delete', 'bkb_kegiatan.print',
             'pilot_project_naskah_pelaporan.view', 'pilot_project_naskah_pelaporan.create', 'pilot_project_naskah_pelaporan.update', 'pilot_project_naskah_pelaporan.delete', 'pilot_project_naskah_pelaporan.print',
             'pilot_project_keluarga_sehat.view', 'pilot_project_keluarga_sehat.create', 'pilot_project_keluarga_sehat.update', 'pilot_project_keluarga_sehat.delete', 'pilot_project_keluarga_sehat.print',
-            'data_warga.view', 'data_keluarga.view', 'data_kegiatan_warga.view', 'catatan_keluarga.view',
+            'data_warga.view', 'data_keluarga.view', 
+            'data_kegiatan_warga.view', 'data_kegiatan_warga.create', 'data_kegiatan_warga.update', 'data_kegiatan_warga.delete', 'data_kegiatan_warga.print',
+            'catatan_keluarga.view',
         ],
 
         self::ROLE_ADMIN_DUSUN => [

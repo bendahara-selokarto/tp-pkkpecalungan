@@ -1,90 +1,33 @@
 <script setup>
 import CardBox from '@/admin-one/components/CardBox.vue'
-import ConfirmActionModal from '@/admin-one/components/ConfirmActionModal.vue'
-import PaginationBar from '@/admin-one/components/PaginationBar.vue'
 import SectionMain from '@/admin-one/components/SectionMain.vue'
 import SectionTitleLineWithButton from '@/admin-one/components/SectionTitleLineWithButton.vue'
-import { Link, router } from '@inertiajs/vue3'
 import { mdiClipboardList } from '@mdi/js'
-import { computed, ref } from 'vue'
 
 const props = defineProps({
-  dataKegiatanWargaItems: {
-    type: Object,
+  recapItems: {
+    type: Array,
+    required: true,
+  },
+  kegiatanOptions: {
+    type: Array,
     required: true,
   },
   filters: {
     type: Object,
     default: () => ({}),
   },
-  pagination: {
-    type: Object,
-    default: () => ({
-      perPageOptions: [10, 25, 50],
-    }),
-  },
 })
-
-
-const deleteConfirmationMessage = 'Apakah Anda yakin ingin menghapus data kegiatan warga ini?'
-const isDeleteModalActive = ref(false)
-const deletingId = ref(null)
-const perPage = computed(() => props.filters.per_page ?? 10)
-
-const updatePerPage = (event) => {
-  const selectedPerPage = Number(event.target.value)
-
-  router.get('/kecamatan/data-kegiatan-warga', { per_page: selectedPerPage }, {
-    preserveScroll: true,
-    preserveState: true,
-    replace: true,
-  })
-}
-
-const hapusDataKegiatanWarga = (id) => {
-  deletingId.value = id
-  isDeleteModalActive.value = true
-}
-
-const confirmDelete = () => {
-  if (deletingId.value === null) {
-    return
-  }
-
-  router.delete(`/kecamatan/data-kegiatan-warga/${deletingId.value}`, {
-    onFinish: () => {
-      isDeleteModalActive.value = false
-      deletingId.value = null
-    },
-  })
-}
-
-const cancelDelete = () => {
-  isDeleteModalActive.value = false
-  deletingId.value = null
-}
 </script>
 
 <template>
   <SectionMain>
-    <SectionTitleLineWithButton :icon="mdiClipboardList" title="Data Kegiatan Warga Kecamatan" main />
+    <SectionTitleLineWithButton :icon="mdiClipboardList" title="Rekap Data Kegiatan Warga per Desa" main />
 
     <CardBox>
       <div class="mb-4 flex items-center justify-between gap-4">
-        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Data Kegiatan Warga</h3>
+        <h3 class="text-base font-semibold text-gray-900 dark:text-gray-100">Daftar Rekapitulasi Kegiatan Warga</h3>
         <div class="flex items-center gap-2">
-          <label class="text-xs text-gray-600 dark:text-gray-300">
-            Per halaman
-            <select
-              :value="perPage"
-              class="ml-2 rounded-md border border-gray-300 px-2 py-1 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-              @change="updatePerPage"
-            >
-              <option v-for="option in pagination.perPageOptions" :key="`per-page-${option}`" :value="option">
-                {{ option }}
-              </option>
-            </select>
-          </label>
           <a
             href="/kecamatan/data-kegiatan-warga/report/pdf"
             target="_blank"
@@ -93,82 +36,60 @@ const cancelDelete = () => {
           >
             Cetak PDF
           </a>
-          <Link
-            href="/kecamatan/data-kegiatan-warga/create"
-            class="inline-flex items-center rounded-md bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-          >
-            + Tambah
-          </Link>
         </div>
       </div>
 
       <div class="overflow-x-auto">
-        <table class="w-full min-w-[900px] text-sm">
-          <thead class="border-b border-gray-200 dark:border-slate-700">
+        <table class="w-full min-w-[1200px] text-xs">
+          <thead class="border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50">
             <tr class="text-left text-gray-600 dark:text-gray-300">
-              <th class="px-3 py-3 font-semibold">Kegiatan</th>
-              <th class="px-3 py-3 font-semibold text-center">Aktivitas (Y/T)</th>
-              <th class="px-3 py-3 font-semibold">Keterangan</th>
-              <th class="px-3 py-3 font-semibold w-44">Aksi</th>
+              <th rowspan="2" class="px-3 py-3 font-semibold border-r border-gray-200 dark:border-slate-700 text-center w-12">NO</th>
+              <th rowspan="2" class="px-3 py-3 font-semibold border-r border-gray-200 dark:border-slate-700 min-w-[200px]">NAMA DESA</th>
+              <th v-for="kegiatan in props.kegiatanOptions" :key="kegiatan" colspan="2" class="px-3 py-2 font-semibold border-b border-gray-200 dark:border-slate-700 text-center border-r last:border-r-0">
+                {{ kegiatan }}
+              </th>
+            </tr>
+            <tr class="text-left text-gray-600 dark:text-gray-300">
+              <template v-for="(kegiatan, index) in props.kegiatanOptions" :key="`sub-${index}`">
+                <th class="px-2 py-2 font-semibold text-center border-r border-gray-200 dark:border-slate-700">Aktivitas</th>
+                <th class="px-2 py-2 font-semibold border-r border-gray-200 dark:border-slate-700 last:border-r-0">Keterangan</th>
+              </template>
             </tr>
           </thead>
           <tbody>
             <tr
-              v-for="item in props.dataKegiatanWargaItems.data"
-              :key="item.id"
-              class="border-b border-gray-100 align-top dark:border-slate-800"
+              v-for="(item, index) in props.recapItems"
+              :key="item.area_id"
+              class="border-b border-gray-100 align-top dark:border-slate-800 hover:bg-gray-50 dark:hover:bg-slate-900/40"
             >
-              <td class="px-3 py-3 text-gray-900 dark:text-gray-100">{{ item.kegiatan }}</td>
-              <td class="px-3 py-3 text-center text-gray-700 dark:text-gray-300">{{ item.aktivitas_label }}</td>
-              <td class="px-3 py-3 text-gray-700 dark:text-gray-300">{{ item.keterangan || '-' }}</td>
-              <td class="px-3 py-3">
-                <div class="flex items-center gap-2">
-                  <Link
-                    :href="`/kecamatan/data-kegiatan-warga/${item.id}`"
-                    class="inline-flex rounded-md border border-sky-200 px-3 py-1.5 text-xs font-semibold text-sky-700 hover:bg-sky-50 dark:border-sky-900/50 dark:text-sky-300 dark:hover:bg-sky-900/20"
-                  >
-                    Lihat
-                  </Link>
-                  <Link
-                    :href="`/kecamatan/data-kegiatan-warga/${item.id}/edit`"
-                    class="inline-flex rounded-md border border-amber-200 px-3 py-1.5 text-xs font-semibold text-amber-700 hover:bg-amber-50 dark:border-amber-900/50 dark:text-amber-300 dark:hover:bg-amber-900/20"
-                  >
-                    Edit
-                  </Link>
-                  <button
-                    type="button"
-                    class="inline-flex rounded-md border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20"
-                    @click="hapusDataKegiatanWarga(item.id)"
-                  >
-                    Hapus
-                  </button>
-                </div>
+              <td class="px-3 py-3 text-center border-r border-gray-100 dark:border-slate-800">{{ index + 1 }}</td>
+              <td class="px-3 py-3 font-medium text-gray-900 dark:text-gray-100 border-r border-gray-100 dark:border-slate-800">
+                {{ item.nama_desa }}
               </td>
+              <template v-for="activity in item.activities" :key="activity.kegiatan">
+                <td class="px-2 py-3 text-center border-r border-gray-100 dark:border-slate-800">
+                  <span 
+                    :class="[
+                      'inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium',
+                      activity.aktivitas ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400' : 'bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400'
+                    ]"
+                  >
+                    {{ activity.aktivitas ? 'Y' : 'T' }}
+                  </span>
+                </td>
+                <td class="px-2 py-3 text-gray-700 dark:text-gray-300 border-r border-gray-100 dark:border-slate-800 last:border-r-0 italic text-[10px] max-w-[150px] truncate" :title="activity.keterangan">
+                  {{ activity.keterangan }}
+                </td>
+              </template>
             </tr>
-            <tr v-if="props.dataKegiatanWargaItems.data.length === 0">
-              <td colspan="4" class="px-3 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-                Data kegiatan warga belum tersedia.
+            <tr v-if="props.recapItems.length === 0">
+              <td :colspan="2 + (props.kegiatanOptions.length * 2)" class="px-3 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                Data rekapitulasi desa belum tersedia.
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-
-      <PaginationBar
-        :links="dataKegiatanWargaItems.links"
-        :from="dataKegiatanWargaItems.from"
-        :to="dataKegiatanWargaItems.to"
-        :total="dataKegiatanWargaItems.total"
-      />
     </CardBox>
-
-    <ConfirmActionModal
-      v-model="isDeleteModalActive"
-      title="Konfirmasi Hapus"
-      :message="deleteConfirmationMessage"
-      confirm-label="Ya, Hapus"
-      @confirm="confirmDelete"
-      @cancel="cancelDelete"
-    />
   </SectionMain>
 </template>

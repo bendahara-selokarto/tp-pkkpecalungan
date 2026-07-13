@@ -33,6 +33,16 @@ const props = defineProps({
         <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.dataKegiatanWarga.keterangan || '-' }}</p>
       </div>
 
+      <div v-if="props.dataKegiatanWarga.source_id">
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Sumber Data</p>
+        <Link 
+          :href="`/desa/activities/${props.dataKegiatanWarga.source_id}`" 
+          class="text-sm text-sky-600 hover:underline dark:text-sky-400"
+        >
+          Lihat Buku Kegiatan terkait (#{{ props.dataKegiatanWarga.source_id }})
+        </Link>
+      </div>
+
       <div class="flex items-center justify-end gap-2">
         <Link href="/desa/data-kegiatan-warga" class="inline-flex rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-700 dark:text-slate-200 dark:hover:bg-slate-800">
           Kembali

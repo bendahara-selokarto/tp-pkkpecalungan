@@ -4,6 +4,7 @@ namespace App\Domains\Wilayah\DataKegiatanWarga\Repositories;
 
 use App\Domains\Wilayah\DataKegiatanWarga\DTOs\DataKegiatanWargaData;
 use App\Domains\Wilayah\DataKegiatanWarga\Models\DataKegiatanWarga;
+use App\Domains\Wilayah\Models\Area;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -15,6 +16,8 @@ class DataKegiatanWargaRepository implements DataKegiatanWargaRepositoryInterfac
             'kegiatan' => $data->kegiatan,
             'aktivitas' => $data->aktivitas,
             'keterangan' => $data->keterangan,
+            'source_module' => $data->source_module,
+            'source_id' => $data->source_id,
             'tahun_anggaran' => $data->tahun_anggaran,
             'level' => $data->level,
             'area_id' => $data->area_id,
@@ -54,6 +57,8 @@ class DataKegiatanWargaRepository implements DataKegiatanWargaRepositoryInterfac
             'kegiatan' => $data->kegiatan,
             'aktivitas' => $data->aktivitas,
             'keterangan' => $data->keterangan,
+            'source_module' => $data->source_module,
+            'source_id' => $data->source_id,
             'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 
@@ -63,5 +68,47 @@ class DataKegiatanWargaRepository implements DataKegiatanWargaRepositoryInterfac
     public function delete(DataKegiatanWarga $dataKegiatanWarga): void
     {
         $dataKegiatanWarga->delete();
+    }
+
+    public function getRecapByDesaForKecamatan(int $kecamatanAreaId, int $tahunAnggaran): Collection
+    {
+        $desaAreas = Area::query()
+            ->where('parent_id', $kecamatanAreaId)
+            ->where('level', 'desa')
+            ->orderBy('code')
+            ->get(['id', 'name', 'code']);
+
+        $desaIds = $desaAreas->pluck('id')->toArray();
+
+        $dataKegiatans = DataKegiatanWarga::query()
+            ->where('level', 'desa')
+            ->whereIn('area_id', $desaIds)
+            ->where('tahun_anggaran', $tahunAnggaran)
+            ->get();
+
+        $groupedData = $dataKegiatans->groupBy('area_id');
+
+        $kegiatanOptions = DataKegiatanWarga::kegiatanOptions();
+
+        return $desaAreas->map(function (Area $desa) use ($groupedData, $kegiatanOptions) {
+            $desaData = $groupedData->get($desa->id, collect());
+            
+            $activities = [];
+            foreach ($kegiatanOptions as $kegiatan) {
+                $item = $desaData->firstWhere('kegiatan', $kegiatan);
+                $activities[] = [
+                    'kegiatan' => $kegiatan,
+                    'aktivitas' => $item?->aktivitas ?? false,
+                    'keterangan' => $item?->keterangan ?? '-',
+                ];
+            }
+
+            return [
+                'area_id' => $desa->id,
+                'nama_desa' => $desa->name,
+                'kode_desa' => $desa->code,
+                'activities' => $activities,
+            ];
+        });
     }
 }

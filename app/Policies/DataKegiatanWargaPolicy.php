@@ -24,7 +24,11 @@ class DataKegiatanWargaPolicy
 
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'data_kegiatan_warga.create');
+        $hasPerm = RoleScopeMatrix::userHasPermission($user, 'data_kegiatan_warga.create');
+        if (!$hasPerm) {
+            dd('Permission missing', $user->id, $user->getRoleNames());
+        }
+        return $hasPerm;
     }
 
     public function view(User $user, DataKegiatanWarga $dataKegiatanWarga): bool
