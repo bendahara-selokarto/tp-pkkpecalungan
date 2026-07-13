@@ -405,6 +405,18 @@ class RoleMenuVisibilityService
      * @var array<string, array<string, string|null>>
      */
     private const ROLE_MODULE_MODE_OVERRIDES = [
+        RoleScopeMatrix::ROLE_POKJA_1_DESA => [
+            'data-kegiatan-warga' => self::MODE_READ_WRITE,
+        ],
+        RoleScopeMatrix::ROLE_POKJA_2_DESA => [
+            'data-kegiatan-warga' => self::MODE_READ_WRITE,
+        ],
+        RoleScopeMatrix::ROLE_POKJA_3_DESA => [
+            'data-kegiatan-warga' => self::MODE_READ_WRITE,
+        ],
+        RoleScopeMatrix::ROLE_POKJA_4_DESA => [
+            'data-kegiatan-warga' => self::MODE_READ_WRITE,
+        ],
     ];
 
     public function __construct(

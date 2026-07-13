@@ -28,5 +28,8 @@ class SidebarPokjaDesaTest extends TestCase
         $this->assertArrayHasKey('buku-daftar-hadir', $modules);
         $this->assertArrayHasKey('buku-tamu', $modules);
         $this->assertArrayHasKey('buku-agenda-sk', $modules);
+        $this->assertArrayHasKey('simulasi-penyuluhan', $modules);
+        $this->assertArrayHasKey('buku-kliping', $modules);
+        $this->assertArrayHasKey('literasi-warga', $modules);
     }
 }
