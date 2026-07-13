@@ -29,8 +29,23 @@ const props = defineProps({
         </div>
       </div>
 
+      <div class="grid gap-4 md:grid-cols-4">
+        <div class="md:col-span-2">
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Alamat Detail</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.dataWarga.alamat_detail || '-' }}</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Dusun</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.dataWarga.dusun || '-' }}</p>
+        </div>
+        <div>
+          <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">RT / RW</p>
+          <p class="text-sm text-gray-700 dark:text-gray-300">RT {{ props.dataWarga.rt || '-' }} / RW {{ props.dataWarga.rw || '-' }}</p>
+        </div>
+      </div>
+
       <div>
-        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Alamat</p>
+        <p class="text-xs uppercase tracking-wide text-gray-500 dark:text-gray-400">Alamat Lengkap (PDF)</p>
         <p class="text-sm text-gray-700 dark:text-gray-300">{{ props.dataWarga.alamat }}</p>
       </div>
 

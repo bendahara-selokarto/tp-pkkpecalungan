@@ -30,7 +30,6 @@ class EnsureScopeRole
         $areaLevel = $this->userAreaContextService->resolveUserAreaLevel($user);
 
         if ($areaLevel !== $scope) {
-            dd($areaLevel, $scope, $user->area_id);
             abort(403, 'Scope pengguna tidak sesuai area.');
         }
 

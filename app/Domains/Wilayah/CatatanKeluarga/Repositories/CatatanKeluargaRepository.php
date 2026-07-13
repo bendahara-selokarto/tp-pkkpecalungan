@@ -2294,6 +2294,10 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
     private function extractRtNumber(DataWarga $item): string
     {
+        if (! empty($item->rt) && $item->rt !== '-') {
+            return str_pad((string) ((int) $item->rt), 2, '0', STR_PAD_LEFT);
+        }
+
         $sources = [$item->alamat, $item->dasawisma];
 
         foreach ($sources as $source) {
@@ -2318,6 +2322,10 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
     private function extractRwNumber(DataWarga $item): string
     {
+        if (! empty($item->rw) && $item->rw !== '-') {
+            return str_pad((string) ((int) $item->rw), 2, '0', STR_PAD_LEFT);
+        }
+
         $sources = [$item->alamat, $item->dasawisma];
 
         foreach ($sources as $source) {
@@ -2342,6 +2350,10 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
     private function extractDusunLingkunganName(DataWarga $item): string
     {
+        if (! empty($item->dusun) && $item->dusun !== '-') {
+            return 'DUSUN ' . strtoupper(trim($item->dusun));
+        }
+
         $sources = [$item->alamat, $item->dasawisma];
 
         foreach ($sources as $source) {

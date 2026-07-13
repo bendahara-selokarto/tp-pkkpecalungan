@@ -26,6 +26,10 @@ const form = useForm({
   dasawisma: '',
   nama_kepala_keluarga: '',
   alamat: '',
+  alamat_detail: '',
+  dusun: '',
+  rt: '',
+  rw: '',
   jumlah_warga_laki_laki: 0,
   jumlah_warga_perempuan: 0,
   keterangan: '',
@@ -56,10 +60,29 @@ const submit = () => {
           </div>
         </div>
 
-        <div>
-          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Alamat</label>
-          <input v-model="form.alamat" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
-          <p v-if="form.errors.alamat" class="mt-1 text-xs text-rose-600">{{ form.errors.alamat }}</p>
+        <div class="grid gap-5 md:grid-cols-4">
+          <div class="md:col-span-2">
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Alamat Detail (Jalan / No. Rumah)</label>
+            <input v-model="form.alamat_detail" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <p v-if="form.errors.alamat_detail" class="mt-1 text-xs text-rose-600">{{ form.errors.alamat_detail }}</p>
+          </div>
+          <div>
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Dusun</label>
+            <input v-model="form.dusun" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <p v-if="form.errors.dusun" class="mt-1 text-xs text-rose-600">{{ form.errors.dusun }}</p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">RT</label>
+              <input v-model="form.rt" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+              <p v-if="form.errors.rt" class="mt-1 text-xs text-rose-600">{{ form.errors.rt }}</p>
+            </div>
+            <div>
+              <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">RW</label>
+              <input v-model="form.rw" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+              <p v-if="form.errors.rw" class="mt-1 text-xs text-rose-600">{{ form.errors.rw }}</p>
+            </div>
+          </div>
         </div>
 
         <div class="grid gap-5 md:grid-cols-2">

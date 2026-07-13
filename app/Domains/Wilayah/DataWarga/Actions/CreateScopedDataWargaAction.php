@@ -26,10 +26,39 @@ class CreateScopedDataWargaAction
         $createdBy = (int) auth()->id();
         $tahunAnggaran = $this->activeBudgetYearContextService->requireForAuthenticatedUser();
 
+        $alamatDetail = $payload['alamat_detail'] ?? null;
+        $dusun = $payload['dusun'] ?? null;
+        $rt = $payload['rt'] ?? null;
+        $rw = $payload['rw'] ?? null;
+        $alamatFull = $payload['alamat'] ?? '';
+
+        if ($rt !== null || $rw !== null || $dusun !== null) {
+            $parts = [];
+            if ($alamatDetail !== null && trim((string) $alamatDetail) !== '') {
+                $parts[] = trim((string) $alamatDetail);
+            }
+            if ($dusun !== null && trim((string) $dusun) !== '') {
+                $parts[] = 'Dusun ' . trim((string) $dusun);
+            }
+            if ($rt !== null || $rw !== null) {
+                $parts[] = 'RT ' . ($rt ?: '0') . ' / RW ' . ($rw ?: '0');
+            }
+            $alamatFull = implode(' ', $parts);
+        } else {
+            $rt = $this->extractRt($alamatFull);
+            $rw = $this->extractRw($alamatFull);
+            $dusun = $this->extractDusun($alamatFull);
+            $alamatDetail = $alamatFull;
+        }
+
         $data = DataWargaData::fromArray([
             'dasawisma' => $payload['dasawisma'],
             'nama_kepala_keluarga' => $payload['nama_kepala_keluarga'],
-            'alamat' => $payload['alamat'],
+            'alamat' => $alamatFull,
+            'rt' => $rt ?? '',
+            'rw' => $rw ?? '',
+            'dusun' => $dusun,
+            'alamat_detail' => $alamatDetail,
             'jumlah_warga_laki_laki' => $payload['jumlah_warga_laki_laki'],
             'jumlah_warga_perempuan' => $payload['jumlah_warga_perempuan'],
             'keterangan' => $payload['keterangan'] ?? null,
@@ -82,5 +111,29 @@ class CreateScopedDataWargaAction
         $payload['jumlah_warga_perempuan'] = $jumlahPerempuan;
 
         return $payload;
+    }
+
+    private function extractRt(string $address): string
+    {
+        if (preg_match('/\bRT(?:\/RW)?\s*[:.\-]?\s*0*(\d{1,3})\b/i', $address, $matches) === 1) {
+            return str_pad((string) ((int) $matches[1]), 2, '0', STR_PAD_LEFT);
+        }
+        return '-';
+    }
+
+    private function extractRw(string $address): string
+    {
+        if (preg_match('/\bRW\s*[:.\-]?\s*0*(\d{1,3})\b/i', $address, $matches) === 1) {
+            return str_pad((string) ((int) $matches[1]), 2, '0', STR_PAD_LEFT);
+        }
+        return '-';
+    }
+
+    private function extractDusun(string $address): ?string
+    {
+        if (preg_match('/\b(DUSUN|LINGKUNGAN)\s+([^,;]+?)(?=\s+RT\b|\s+RW\b|$)/i', $address, $matches) === 1) {
+            return trim($matches[2]);
+        }
+        return null;
     }
 }

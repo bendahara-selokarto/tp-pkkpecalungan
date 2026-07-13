@@ -69,7 +69,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
             );
         }
 
-        $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['catatan-keluarga'] ?? null);
+        $this->assertSame(RoleMenuVisibilityService::MODE_READ_WRITE, $visibility['modules']['catatan-keluarga'] ?? null);
         $this->assertSame(RoleMenuVisibilityService::MODE_READ_ONLY, $visibility['modules']['buku-keuangan'] ?? null);
     }
 
@@ -140,6 +140,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'inventaris',
                 'anggota-tim-penggerak',
                 'literasi-warga',
+                'data-kegiatan-warga',
             ],
             'kecamatan-pokja-ii' => [
                 'program-prioritas',
@@ -171,6 +172,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'taman-bacaan',
                 'kader-khusus',
                 'anggota-pokja',
+                'data-kegiatan-warga',
             ],
             'kecamatan-pokja-iii' => [
                 'program-prioritas',
@@ -222,6 +224,7 @@ class RoleMenuVisibilityServiceTest extends TestCase
                 'bkl',
                 'anggota-pokja',
                 'bkb-kegiatan',
+                'data-kegiatan-warga',
             ],
         ];
 

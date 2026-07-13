@@ -407,6 +407,9 @@ class RoleMenuVisibilityService
     private const ROLE_MODULE_MODE_OVERRIDES = [
         RoleScopeMatrix::ROLE_POKJA_1_DESA => [
             'data-kegiatan-warga' => self::MODE_READ_WRITE,
+            'buku-tamu' => self::MODE_READ_ONLY,
+            'buku-daftar-hadir' => self::MODE_READ_ONLY,
+            'buku-agenda-sk' => self::MODE_READ_ONLY,
         ],
         RoleScopeMatrix::ROLE_POKJA_2_DESA => [
             'data-kegiatan-warga' => self::MODE_READ_WRITE,

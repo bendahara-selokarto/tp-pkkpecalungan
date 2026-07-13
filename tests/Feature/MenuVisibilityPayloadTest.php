@@ -84,7 +84,7 @@ class MenuVisibilityPayloadTest extends TestCase
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.pokja-ii-wajib', 'read-write')
-                ->where('auth.user.menuGroupModes.pokja-ii', 'read-write')
+                ->where('auth.user.menuGroupModes.pokja-ii-desa', 'read-write')
                 ->where('auth.user.menuGroupModes.sekretaris-bantu', 'read-only')
                 ->where('auth.user.moduleModes.agenda-surat-tugas', 'read-only')
                 ->missing('auth.user.menuGroupModes.common-pembantu')
@@ -137,7 +137,7 @@ class MenuVisibilityPayloadTest extends TestCase
             ->get('/profile')
             ->assertInertia(fn (AssertableInertia $page) => $page
                 ->where('auth.user.menuGroupModes.pokja-i-wajib', 'read-write')
-                ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
+                ->where('auth.user.menuGroupModes.pokja-i-desa', 'read-write')
                 ->missing('auth.user.menuGroupModes.common-pembantu')
                 ->where('auth.user.moduleModes.data-kegiatan-pkk-pokja-i', 'read-write')
             );
@@ -154,7 +154,7 @@ class MenuVisibilityPayloadTest extends TestCase
                 ->where('auth.user.menuGroupModes.sekretaris-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.penunjang-buku-wajib', 'read-write')
                 ->where('auth.user.menuGroupModes.pokja-i-wajib', 'read-write')
-                ->where('auth.user.menuGroupModes.pokja-i', 'read-write')
+                ->where('auth.user.menuGroupModes.pokja-i-desa', 'read-write')
                 ->where('auth.user.moduleModes.agenda-surat', 'read-write')
                 ->where('auth.user.moduleModes.data-kegiatan-pkk-pokja-i', 'read-write')
             );

@@ -27,10 +27,9 @@ class DesaDataWargaTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->markTestSkipped('Stale: Menunggu penyusunan ulang bertahap');
 
-        Role::firstOrCreate(['name' => 'desa-pokja-i']);
-        Role::firstOrCreate(['name' => 'kecamatan-pokja-i']);
+        Role::firstOrCreate(['name' => 'desa-sekretaris']);
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
 
         $this->kecamatan = Area::create([
             'name' => 'Pecalungan',
@@ -57,7 +56,7 @@ class DesaDataWargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('desa-pokja-i');
+        $adminDesa->assignRole('desa-sekretaris');
 
         DataWarga::create([
             'dasawisma' => 'Mawar 01',
@@ -103,7 +102,7 @@ class DesaDataWargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('desa-pokja-i');
+        $adminDesa->assignRole('desa-sekretaris');
 
         for ($index = 1; $index <= 12; $index++) {
             DataWarga::create([
@@ -153,7 +152,7 @@ class DesaDataWargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('desa-pokja-i');
+        $adminDesa->assignRole('desa-sekretaris');
 
         DataWarga::create([
             'dasawisma' => 'Default 01',
@@ -186,12 +185,14 @@ class DesaDataWargaTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('desa-pokja-i');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->actingAs($adminDesa)->post('/desa/data-warga', [
             'dasawisma' => 'Anggrek 02',
             'nama_kepala_keluarga' => 'Nur Aini',
             'alamat' => 'RT 02 RW 05',
+            'rt' => '02',
+            'rw' => '05',
             'jumlah_warga_laki_laki' => 2,
             'jumlah_warga_perempuan' => 2,
             'keterangan' => 'Data awal',
@@ -203,6 +204,8 @@ class DesaDataWargaTest extends TestCase
             'dasawisma' => 'Anggrek 02',
             'nama_kepala_keluarga' => 'Nur Aini',
             'alamat' => 'RT 02 RW 05',
+            'rt' => '02',
+            'rw' => '05',
             'jumlah_warga_laki_laki' => 3,
             'jumlah_warga_perempuan' => 2,
             'keterangan' => 'Perubahan warga laki-laki',
@@ -212,6 +215,8 @@ class DesaDataWargaTest extends TestCase
             'id' => $dataWarga->id,
             'jumlah_warga_laki_laki' => 3,
             'jumlah_warga_perempuan' => 2,
+            'rt' => '02',
+            'rw' => '05',
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,
         ]);
 
@@ -229,12 +234,14 @@ class DesaDataWargaTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('desa-pokja-i');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->actingAs($adminDesa)->post('/desa/data-warga', [
             'dasawisma' => 'Melati 04',
             'nama_kepala_keluarga' => 'Sulastri',
             'alamat' => 'RT 04 RW 02',
+            'rt' => '04',
+            'rw' => '02',
             'jumlah_warga_laki_laki' => 0,
             'jumlah_warga_perempuan' => 0,
             'keterangan' => 'Header dibuat dari detail anggota',
@@ -275,6 +282,8 @@ class DesaDataWargaTest extends TestCase
             'dasawisma' => 'Melati 04',
             'nama_kepala_keluarga' => 'Sulastri',
             'alamat' => 'RT 04 RW 02',
+            'rt' => '04',
+            'rw' => '02',
             'jumlah_warga_laki_laki' => 99,
             'jumlah_warga_perempuan' => 99,
             'keterangan' => 'Summary harus dihitung ulang',
@@ -306,7 +315,7 @@ class DesaDataWargaTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'kecamatan',
         ]);
-        $adminKecamatan->assignRole('kecamatan-pokja-i');
+        $adminKecamatan->assignRole('kecamatan-sekretaris');
 
         $response = $this->actingAs($adminKecamatan)->get('/desa/data-warga');
 
@@ -320,7 +329,7 @@ class DesaDataWargaTest extends TestCase
             'area_id' => $this->kecamatan->id,
             'scope' => 'desa',
         ]);
-        $userStale->assignRole('desa-pokja-i');
+        $userStale->assignRole('desa-sekretaris');
 
         $response = $this->actingAs($userStale)->get('/desa/data-warga');
 
@@ -335,7 +344,7 @@ class DesaDataWargaTest extends TestCase
             'scope' => 'desa',
             'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
         ]);
-        $adminDesa->assignRole('desa-pokja-i');
+        $adminDesa->assignRole('desa-sekretaris');
 
         DataWarga::create([
             'dasawisma' => 'Mawar 01',
@@ -383,12 +392,14 @@ class DesaDataWargaTest extends TestCase
             'area_id' => $this->desaA->id,
             'scope' => 'desa',
         ]);
-        $adminDesa->assignRole('desa-pokja-i');
+        $adminDesa->assignRole('desa-sekretaris');
 
         $this->actingAs($adminDesa)->post('/desa/data-warga', [
             'dasawisma' => 'Melati 09',
             'nama_kepala_keluarga' => 'Sukmawati',
             'alamat' => 'RT 09 RW 03',
+            'rt' => '09',
+            'rw' => '03',
             'jumlah_warga_laki_laki' => 1,
             'jumlah_warga_perempuan' => 1,
             'keterangan' => null,
@@ -404,6 +415,8 @@ class DesaDataWargaTest extends TestCase
             'dasawisma' => 'Melati 10',
             'nama_kepala_keluarga' => 'Sukmawati 2',
             'alamat' => 'RT 10 RW 03',
+            'rt' => '10',
+            'rw' => '03',
             'jumlah_warga_laki_laki' => 1,
             'jumlah_warga_perempuan' => 1,
             'keterangan' => null,
@@ -416,6 +429,8 @@ class DesaDataWargaTest extends TestCase
             'dasawisma' => 'Melati 10',
             'nama_kepala_keluarga' => 'Sukmawati 2',
             'alamat' => 'RT 10 RW 03',
+            'rt' => '10',
+            'rw' => '03',
             'jumlah_warga_laki_laki' => 1,
             'jumlah_warga_perempuan' => 1,
             'keterangan' => null,

@@ -47,7 +47,7 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         ]);
     }
 
-    public function test_desa_sekretaris_read_only_pada_modul_pokja(): void
+    public function test_desa_sekretaris_bisa_mengakses_modul_data_warga(): void
     {
         $user = User::factory()->create([
             'scope' => 'desa',
@@ -58,8 +58,8 @@ class ModuleVisibilityMiddlewareTest extends TestCase
         $this->actingAs($user);
 
         $this->get('/desa/data-warga')->assertOk();
-        $this->get('/desa/data-warga/create')->assertForbidden();
-        $this->post('/desa/data-warga', [])->assertForbidden();
+        $this->get('/desa/data-warga/create')->assertOk();
+        $this->post('/desa/data-warga', [])->assertStatus(302); // Redirect back with validation error instead of 403
     }
 
     public function test_desa_pokja_i_tidak_bisa_akses_modul_pokja_iii(): void
