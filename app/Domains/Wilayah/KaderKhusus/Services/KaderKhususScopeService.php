@@ -121,6 +121,15 @@ class KaderKhususScopeService
         return ! $user->hasAnyRole(self::ROLE_SCOPED_KADER_KHUSUS_BYPASS_ROLES);
     }
 
+    public function canUseKaderKhususBook(User $user): bool
+    {
+        if ($user->hasAnyRole(self::ROLE_SCOPED_KADER_KHUSUS_BYPASS_ROLES)) {
+            return true;
+        }
+
+        return $this->resolveKaderKhususGroupsForUser($user) !== [];
+    }
+
     public function canAccessKaderKhususGroup(User $user, KaderKhusus $kaderKhusus): bool
     {
         if (! $this->requiresKaderKhususGroupFilter($user)) {

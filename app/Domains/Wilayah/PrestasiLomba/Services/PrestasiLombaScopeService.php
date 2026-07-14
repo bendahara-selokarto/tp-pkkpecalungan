@@ -114,6 +114,15 @@ class PrestasiLombaScopeService
         return true;
     }
 
+    public function canUsePrestasiLombaBook(User $user): bool
+    {
+        if ($user->hasAnyRole(self::ROLE_SCOPED_PRESTASI_BYPASS_ROLES)) {
+            return true;
+        }
+
+        return $this->resolvePrestasiGroupsForUser($user) !== [];
+    }
+
     public function canAccessPrestasiGroup(User $user, PrestasiLomba $prestasiLomba): bool
     {
         if (! $this->requiresPrestasiGroupFilter($user)) {

@@ -20,12 +20,14 @@ class PrestasiLombaPolicy
 
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'prestasi_lomba.view');
+        return RoleScopeMatrix::userHasPermission($user, 'prestasi_lomba.view')
+            && $this->prestasiLombaScopeService->canUsePrestasiLombaBook($user);
     }
 
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'prestasi_lomba.create');
+        return RoleScopeMatrix::userHasPermission($user, 'prestasi_lomba.create')
+            && $this->prestasiLombaScopeService->canUsePrestasiLombaBook($user);
     }
 
     public function view(User $user, PrestasiLomba $prestasiLomba): bool

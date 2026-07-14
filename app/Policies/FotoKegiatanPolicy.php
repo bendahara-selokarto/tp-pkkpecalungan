@@ -19,7 +19,8 @@ class FotoKegiatanPolicy
 
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'foto_kegiatan.view');
+        return RoleScopeMatrix::userHasPermission($user, 'foto_kegiatan.view')
+            && $this->fotoKegiatanScopeService->canUseFotoKegiatanBook($user);
     }
 
     public function view(User $user, FotoKegiatan $fotoKegiatan): bool

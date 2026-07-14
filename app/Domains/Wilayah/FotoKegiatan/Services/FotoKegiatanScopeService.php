@@ -88,6 +88,15 @@ class FotoKegiatanScopeService
         return ! $user->hasAnyRole(self::ROLE_SCOPED_BYPASS_ROLES);
     }
 
+    public function canUseFotoKegiatanBook(User $user): bool
+    {
+        if ($user->hasAnyRole(self::ROLE_SCOPED_BYPASS_ROLES)) {
+            return true;
+        }
+
+        return $this->resolveGroupsForUser($user) !== [];
+    }
+
     public function canAccessGroup(User $user, FotoKegiatan $fotoKegiatan): bool
     {
         if (! $this->requiresGroupFilter($user)) {

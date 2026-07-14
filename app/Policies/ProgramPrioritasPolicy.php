@@ -20,12 +20,14 @@ class ProgramPrioritasPolicy
 
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'program_prioritas.view');
+        return RoleScopeMatrix::userHasPermission($user, 'program_prioritas.view')
+            && $this->programPrioritasScopeService->canUseProgramPrioritasBook($user);
     }
 
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'program_prioritas.create');
+        return RoleScopeMatrix::userHasPermission($user, 'program_prioritas.create')
+            && $this->programPrioritasScopeService->canUseProgramPrioritasBook($user);
     }
 
     public function view(User $user, ProgramPrioritas $programPrioritas): bool

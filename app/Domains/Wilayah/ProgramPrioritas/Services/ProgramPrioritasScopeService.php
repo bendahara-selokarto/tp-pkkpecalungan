@@ -120,6 +120,15 @@ class ProgramPrioritasScopeService
         return ! $user->hasAnyRole(self::ROLE_SCOPED_PROGRAM_PRIORITAS_BYPASS_ROLES);
     }
 
+    public function canUseProgramPrioritasBook(User $user): bool
+    {
+        if ($user->hasAnyRole(self::ROLE_SCOPED_PROGRAM_PRIORITAS_BYPASS_ROLES)) {
+            return true;
+        }
+
+        return $this->resolveProgramPrioritasGroupsForUser($user) !== [];
+    }
+
     public function canAccessProgramPrioritasGroup(User $user, ProgramPrioritas $programPrioritas): bool
     {
         if (! $this->requiresProgramPrioritasGroupFilter($user)) {

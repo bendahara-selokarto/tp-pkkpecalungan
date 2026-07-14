@@ -120,6 +120,15 @@ class BantuanScopeService
         return ! $user->hasAnyRole(self::ROLE_SCOPED_BANTUAN_BYPASS_ROLES);
     }
 
+    public function canUseBantuanBook(User $user): bool
+    {
+        if ($user->hasAnyRole(self::ROLE_SCOPED_BANTUAN_BYPASS_ROLES)) {
+            return true;
+        }
+
+        return $this->resolveBantuanGroupsForUser($user) !== [];
+    }
+
     public function canAccessBantuanGroup(User $user, Bantuan $bantuan): bool
     {
         if (! $this->requiresBantuanGroupFilter($user)) {

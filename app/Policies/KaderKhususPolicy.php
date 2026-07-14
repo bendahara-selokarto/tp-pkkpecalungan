@@ -20,12 +20,14 @@ class KaderKhususPolicy
 
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'kader_khusus.view');
+        return RoleScopeMatrix::userHasPermission($user, 'kader_khusus.view')
+            && $this->kaderKhususScopeService->canUseKaderKhususBook($user);
     }
 
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'kader_khusus.create');
+        return RoleScopeMatrix::userHasPermission($user, 'kader_khusus.create')
+            && $this->kaderKhususScopeService->canUseKaderKhususBook($user);
     }
 
     public function view(User $user, KaderKhusus $kaderKhusus): bool

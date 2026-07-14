@@ -219,4 +219,27 @@ class ProgramPrioritasPolicyTest extends TestCase
         $this->assertFalse($policy->view($pokja, $programSekretaris));
         $this->assertTrue($policy->view($pokja, $programPokja));
     }
+
+    #[Test]
+    public function create_dan_view_any_ditolak_ketika_context_book_group_tidak_sesuai(): void
+    {
+        Role::firstOrCreate(['name' => 'desa-pokja-i']);
+
+        $kecamatan = Area::create(['name' => 'Pecalungan', 'level' => 'kecamatan']);
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa', 'parent_id' => $kecamatan->id]);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('desa-pokja-i');
+
+        request()->query->set('book_group', 'pokja-iii');
+
+        $policy = app(ProgramPrioritasPolicy::class);
+
+        $this->assertFalse($policy->create($user));
+        $this->assertFalse($policy->viewAny($user));
+    }
 }

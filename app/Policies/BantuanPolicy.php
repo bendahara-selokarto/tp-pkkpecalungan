@@ -20,12 +20,14 @@ class BantuanPolicy
 
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'bantuan.view');
+        return RoleScopeMatrix::userHasPermission($user, 'bantuan.view')
+            && $this->bantuanScopeService->canUseBantuanBook($user);
     }
 
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'bantuan.create');
+        return RoleScopeMatrix::userHasPermission($user, 'bantuan.create')
+            && $this->bantuanScopeService->canUseBantuanBook($user);
     }
 
     public function view(User $user, Bantuan $bantuan): bool
