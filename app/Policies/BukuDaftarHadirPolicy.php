@@ -19,17 +19,24 @@ class BukuDaftarHadirPolicy
 
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'buku_daftar_hadir.view');
+        return RoleScopeMatrix::userHasPermission($user, 'buku_daftar_hadir.view')
+            && $this->bukuDaftarHadirScopeService->canAccessGroup($user);
     }
 
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'buku_daftar_hadir.create');
+        return RoleScopeMatrix::userHasPermission($user, 'buku_daftar_hadir.create')
+            && $this->bukuDaftarHadirScopeService->canAccessGroup($user)
+            && $this->bukuDaftarHadirScopeService->canEnterModule($user);
     }
 
     public function view(User $user, BukuDaftarHadir $bukuDaftarHadir): bool
     {
         if (! RoleScopeMatrix::userHasPermission($user, 'buku_daftar_hadir.view')) {
+            return false;
+        }
+
+        if (! $this->bukuDaftarHadirScopeService->canAccessGroup($user)) {
             return false;
         }
 
@@ -39,6 +46,10 @@ class BukuDaftarHadirPolicy
     public function update(User $user, BukuDaftarHadir $bukuDaftarHadir): bool
     {
         if (! RoleScopeMatrix::userHasPermission($user, 'buku_daftar_hadir.update')) {
+            return false;
+        }
+
+        if (! $this->bukuDaftarHadirScopeService->canAccessGroup($user)) {
             return false;
         }
 

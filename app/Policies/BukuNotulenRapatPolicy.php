@@ -19,17 +19,24 @@ class BukuNotulenRapatPolicy
 
     public function viewAny(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.view');
+        return RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.view')
+            && $this->bukuNotulenRapatScopeService->canAccessGroup($user);
     }
 
     public function create(User $user): bool
     {
-        return RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.create');
+        return RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.create')
+            && $this->bukuNotulenRapatScopeService->canAccessGroup($user)
+            && $this->bukuNotulenRapatScopeService->canEnterModule($user);
     }
 
     public function view(User $user, BukuNotulenRapat $bukuNotulenRapat): bool
     {
         if (! RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.view')) {
+            return false;
+        }
+
+        if (! $this->bukuNotulenRapatScopeService->canAccessGroup($user)) {
             return false;
         }
 
@@ -39,6 +46,10 @@ class BukuNotulenRapatPolicy
     public function update(User $user, BukuNotulenRapat $bukuNotulenRapat): bool
     {
         if (! RoleScopeMatrix::userHasPermission($user, 'buku_notulen_rapat.update')) {
+            return false;
+        }
+
+        if (! $this->bukuNotulenRapatScopeService->canAccessGroup($user)) {
             return false;
         }
 

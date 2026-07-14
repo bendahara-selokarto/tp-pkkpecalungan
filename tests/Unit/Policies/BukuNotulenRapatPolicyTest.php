@@ -126,4 +126,26 @@ class BukuNotulenRapatPolicyTest extends TestCase
 
         $this->assertFalse($policy->update($user, $notulenLuar));
     }
+
+    #[Test]
+    public function admin_desa_tidak_boleh_mengakses_konteks_book_group_yang_tidak_terkait(): void
+    {
+        Role::firstOrCreate(['name' => 'desa-pokja-iii']);
+
+        $desa = Area::create(['name' => 'Gombong', 'level' => 'desa']);
+
+        $user = User::factory()->create([
+            'scope' => 'desa',
+            'area_id' => $desa->id,
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('desa-pokja-iii');
+
+        request()->query->set('book_group', 'pokja-i');
+
+        $policy = app(BukuNotulenRapatPolicy::class);
+
+        $this->assertFalse($policy->create($user));
+        $this->assertFalse($policy->viewAny($user));
+    }
 }

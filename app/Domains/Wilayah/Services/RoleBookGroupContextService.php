@@ -50,15 +50,23 @@ class RoleBookGroupContextService
     public function resolveContextualGroups(User $user, string $moduleSlug, array $roleGroups): array
     {
         $requestedGroup = $this->requestedGroup();
-        if (is_string($requestedGroup) && $this->isGroupAllowed($requestedGroup, $user, $roleGroups)) {
-            $this->storeSelectedGroup($moduleSlug, $requestedGroup);
+        if (is_string($requestedGroup)) {
+            if ($this->isGroupAllowed($requestedGroup, $user, $roleGroups)) {
+                $this->storeSelectedGroup($moduleSlug, $requestedGroup);
 
-            return [$requestedGroup];
+                return [$requestedGroup];
+            }
+
+            return [];
         }
 
         $selectedGroup = $this->selectedGroup($moduleSlug);
-        if (is_string($selectedGroup) && $this->isGroupAllowed($selectedGroup, $user, $roleGroups)) {
-            return [$selectedGroup];
+        if (is_string($selectedGroup)) {
+            if ($this->isGroupAllowed($selectedGroup, $user, $roleGroups)) {
+                return [$selectedGroup];
+            }
+
+            return [];
         }
 
         return $roleGroups;
