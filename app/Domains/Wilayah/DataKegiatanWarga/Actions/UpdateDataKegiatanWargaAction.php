@@ -18,6 +18,8 @@ class UpdateDataKegiatanWargaAction
             'kegiatan' => $payload['kegiatan'],
             'aktivitas' => $payload['aktivitas'],
             'keterangan' => $payload['keterangan'] ?? null,
+            'is_pkg' => $payload['is_pkg'] ?? false,
+            'is_tbc' => $payload['is_tbc'] ?? false,
             'source_module' => $payload['source_module'] ?? null,
             'source_id' => $payload['source_id'] ?? null,
             'tahun_anggaran' => $dataKegiatanWarga->tahun_anggaran,

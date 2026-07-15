@@ -24,6 +24,8 @@ class DataKegiatanWarga extends Model
         'kegiatan',
         'aktivitas',
         'keterangan',
+        'is_pkg',
+        'is_tbc',
         'source_module',
         'source_id',
         'tahun_anggaran',
@@ -36,6 +38,8 @@ class DataKegiatanWarga extends Model
     {
         return [
             'aktivitas' => 'boolean',
+            'is_pkg' => 'boolean',
+            'is_tbc' => 'boolean',
             'tahun_anggaran' => 'integer',
             'source_id' => 'integer',
         ];

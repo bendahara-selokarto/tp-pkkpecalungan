@@ -30,6 +30,7 @@ class CreateScopedAnggotaPokjaAction
             'pekerjaan' => $payload['pekerjaan'],
             'keterangan' => $payload['keterangan'] ?? null,
             'pokja' => $payload['pokja'],
+            'bidang_pokja_iii' => $payload['bidang_pokja_iii'] ?? null,
             'tahun_anggaran' => $this->activeBudgetYearContextService->requireForAuthenticatedUser(),
             'level' => $level,
             'area_id' => $this->anggotaPokjaScopeService->requireUserAreaId(),

@@ -36,6 +36,7 @@ class AnggotaPokja extends Model
         'pekerjaan',
         'keterangan',
         'pokja',
+        'bidang_pokja_iii',
         'tahun_anggaran',
         'level',
         'area_id',

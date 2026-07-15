@@ -19,6 +19,8 @@ class UpdateDataKegiatanWargaRequest extends FormRequest
             'kegiatan' => ['required', 'string', Rule::in(DataKegiatanWarga::kegiatanOptions())],
             'aktivitas' => 'required|boolean',
             'keterangan' => 'nullable|string',
+            'is_pkg' => 'nullable|boolean',
+            'is_tbc' => 'nullable|boolean',
             'source_module' => 'nullable|string',
             'source_id' => 'nullable|integer',
         ];
@@ -28,6 +30,8 @@ class UpdateDataKegiatanWargaRequest extends FormRequest
     {
         $this->merge([
             'aktivitas' => $this->boolean('aktivitas'),
+            'is_pkg' => $this->boolean('is_pkg'),
+            'is_tbc' => $this->boolean('is_tbc'),
         ]);
     }
 }

@@ -24,6 +24,8 @@ const form = useForm({
   kegiatan: props.dataKegiatanWarga.kegiatan,
   aktivitas: props.dataKegiatanWarga.aktivitas,
   keterangan: props.dataKegiatanWarga.keterangan ?? '',
+  is_pkg: props.dataKegiatanWarga.is_pkg ?? false,
+  is_tbc: props.dataKegiatanWarga.is_tbc ?? false,
   source_module: props.dataKegiatanWarga.source_module ?? 'Activity',
   source_id: props.dataKegiatanWarga.source_id ?? null,
 })
@@ -70,6 +72,19 @@ const submit = () => {
           <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Keterangan (Jenis kegiatan yang diikuti)</label>
           <textarea v-model="form.keterangan" rows="3" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
           <p v-if="form.errors.keterangan" class="mt-1 text-xs text-rose-600">{{ form.errors.keterangan }}</p>
+        </div>
+
+        <div class="grid gap-3 rounded-md border border-gray-200 p-3 dark:border-slate-700 sm:grid-cols-2">
+          <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <input v-model="form.is_pkg" type="checkbox">
+            PKG (Pemantauan Keluarga / Gerakan)
+          </label>
+          <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+            <input v-model="form.is_tbc" type="checkbox">
+            TBC (Penyuluhan / Penanganan TBC)
+          </label>
+          <p v-if="form.errors.is_pkg" class="col-span-2 mt-1 text-xs text-rose-600">{{ form.errors.is_pkg }}</p>
+          <p v-if="form.errors.is_tbc" class="col-span-2 mt-1 text-xs text-rose-600">{{ form.errors.is_tbc }}</p>
         </div>
 
         <div class="flex items-center justify-end gap-2">

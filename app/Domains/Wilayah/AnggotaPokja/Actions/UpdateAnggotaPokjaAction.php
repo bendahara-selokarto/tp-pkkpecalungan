@@ -26,6 +26,7 @@ class UpdateAnggotaPokjaAction
             'pekerjaan' => $payload['pekerjaan'],
             'keterangan' => $payload['keterangan'] ?? null,
             'pokja' => $payload['pokja'],
+            'bidang_pokja_iii' => $payload['bidang_pokja_iii'] ?? null,
             'tahun_anggaran' => $anggotaPokja->tahun_anggaran,
             'level' => $anggotaPokja->level,
             'area_id' => $anggotaPokja->area_id,

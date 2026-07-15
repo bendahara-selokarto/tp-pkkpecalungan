@@ -30,6 +30,7 @@ class AnggotaPokjaRepository implements AnggotaPokjaRepositoryInterface
             'pekerjaan' => $data->pekerjaan,
             'keterangan' => $data->keterangan,
             'pokja' => $data->pokja,
+            'bidang_pokja_iii' => $data->bidang_pokja_iii,
             'tahun_anggaran' => $data->tahun_anggaran,
             'level' => $data->level,
             'area_id' => $data->area_id,
@@ -102,6 +103,7 @@ class AnggotaPokjaRepository implements AnggotaPokjaRepositoryInterface
             'pekerjaan' => $data->pekerjaan,
             'keterangan' => $data->keterangan,
             'pokja' => $data->pokja,
+            'bidang_pokja_iii' => $data->bidang_pokja_iii,
             'tahun_anggaran' => $data->tahun_anggaran,
         ]);
 

@@ -17,6 +17,7 @@ const form = useForm({
   pekerjaan: '',
   keterangan: '',
   pokja: '',
+  bidang_pokja_iii: null,
 })
 
 const submit = () => {
@@ -95,6 +96,17 @@ const submit = () => {
             <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Pokja</label>
             <input v-model="form.pokja" type="text" placeholder="Contoh: Pokja I" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
             <p v-if="form.errors.pokja" class="mt-1 text-xs text-rose-600">{{ form.errors.pokja }}</p>
+          </div>
+
+          <div v-if="form.pokja.toLowerCase().includes('iii') || form.pokja === '3'">
+            <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Bidang Pokja III</label>
+            <select v-model="form.bidang_pokja_iii" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+              <option :value="null">-- Pilih Bidang --</option>
+              <option value="pangan">Pangan</option>
+              <option value="sandang">Sandang</option>
+              <option value="tata_laksana_rumah_tangga">Tata Laksana Rumah Tangga</option>
+            </select>
+            <p v-if="form.errors.bidang_pokja_iii" class="mt-1 text-xs text-rose-600">{{ form.errors.bidang_pokja_iii }}</p>
           </div>
         </div>
 

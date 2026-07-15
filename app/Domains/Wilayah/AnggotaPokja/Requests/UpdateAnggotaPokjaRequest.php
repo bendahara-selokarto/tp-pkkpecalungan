@@ -25,6 +25,7 @@ class UpdateAnggotaPokjaRequest extends FormRequest
             'pekerjaan' => 'required|string|max:255',
             'keterangan' => 'nullable|string',
             'pokja' => 'required|string|max:50',
+            'bidang_pokja_iii' => 'nullable|string|in:pangan,sandang,tata_laksana_rumah_tangga',
         ];
     }
 }

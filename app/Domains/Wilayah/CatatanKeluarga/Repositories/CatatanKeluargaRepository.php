@@ -1422,7 +1422,7 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         $jumlahKaderTataLaksanaRumahTangga = 0;
 
         $anggotaPokjaItems = $this->scopedModelQuery(AnggotaPokja::class, $level, $areaId)
-            ->get(['pokja', 'jabatan', 'keterangan']);
+            ->get(['pokja', 'jabatan', 'keterangan', 'bidang_pokja_iii']);
 
         foreach ($anggotaPokjaItems as $item) {
             $pokja = Str::lower(trim((string) $item->pokja));
@@ -1430,14 +1430,24 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
                 continue;
             }
 
-            $jabatan = Str::lower(trim((string) $item->jabatan));
-
-            if (str_contains($jabatan, 'pangan')) {
+            // Prioritaskan kolom terstruktur; fallback ke parsing jabatan untuk data lama.
+            $bidang = Str::lower(trim((string) $item->bidang_pokja_iii));
+            if ($bidang === 'pangan') {
                 $jumlahKaderPangan++;
-            } elseif (str_contains($jabatan, 'sandang')) {
+            } elseif ($bidang === 'sandang') {
                 $jumlahKaderSandang++;
-            } else {
+            } elseif ($bidang === 'tata_laksana_rumah_tangga') {
                 $jumlahKaderTataLaksanaRumahTangga++;
+            } else {
+                // Fallback: parsing jabatan untuk record lama.
+                $jabatan = Str::lower(trim((string) $item->jabatan));
+                if (str_contains($jabatan, 'pangan')) {
+                    $jumlahKaderPangan++;
+                } elseif (str_contains($jabatan, 'sandang')) {
+                    $jumlahKaderSandang++;
+                } else {
+                    $jumlahKaderTataLaksanaRumahTangga++;
+                }
             }
 
             $keterangan = trim((string) $item->keterangan);
