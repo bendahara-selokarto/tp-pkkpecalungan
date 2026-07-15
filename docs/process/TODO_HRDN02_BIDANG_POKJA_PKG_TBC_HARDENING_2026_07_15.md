@@ -1,7 +1,8 @@
 # TODO HRDN02 Bidang Pokja III & PKG/TBC Hardening
 
 Tanggal: 2026-07-15
-Status: `in-progress`
+Status: `done`
+Commit: `6138e2d2`
 Related ADR: `-`
 
 ## Konteks
@@ -62,7 +63,7 @@ Dua migration stub yang ditemukan uncommitted setelah sesi HRDN01 selesai:
 
 - [x] L1: `php artisan migrate` — 2 migrasi DONE ✓
 - [x] L2: `php artisan test --filter "AnggotaPokja|DataKegiatanWarga" --compact` — 29 passed ✓
-- [ ] L3: `php artisan test --compact` — in-progress
+- [x] L3: `php artisan test --compact` — **985 passed, 402 skipped, 0 failures** ✓
 
 ## Risiko
 
