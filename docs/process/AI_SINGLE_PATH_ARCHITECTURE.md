@@ -46,6 +46,11 @@ Aturan anti-ambiguity:
 - Resolver ambiguity TODO wajib memakai registry SOT `docs/process/TODO_TTM25R1_REGISTRY_SOURCE_OF_TRUTH_TODO_2026_02_25.md`.
 - TODO baru wajib berkode unik; ADR baru wajib 4 digit + status eksplisit.
 - Status utama TODO harus konsisten (`planned`, `in-progress`, `done`); state tambahan hanya keterangan.
+- Jika ada konflik kepentingan antara perbaikan desa dan kontrak level kecamatan yang sudah dinyatakan benar oleh pengetest, maka level kecamatan menjadi prioritas dan tidak boleh dikalahkan oleh perubahan shared logic.
+- Untuk setiap concern yang menyentuh akses, beri status perubahan level eksplisit:
+  - `mode-boleh-diubah`: perilaku masih boleh disesuaikan selama tidak mematahkan kontrak final yang sudah tervalidasi.
+  - `mode-tidak-boleh-diubah`: perilaku sudah final atau dinyatakan benar oleh pengetest, sehingga patch baru wajib menyesuaikan diri tanpa mengubah hasilnya.
+- Status level ini wajib dicatat di TODO concern atau ADR saat ada trade-off antara desa dan kecamatan.
 
 ## 2A. Load Order
 

@@ -126,6 +126,13 @@ class BantuanScopeService
             return true;
         }
 
+        if ($user->hasAnyRole([
+            RoleScopeMatrix::ROLE_SEKRETARIS_DESA,
+            RoleScopeMatrix::ROLE_SEKRETARIS_KECAMATAN,
+        ])) {
+            return true;
+        }
+
         return $this->resolveBantuanGroupsForUser($user) !== [];
     }
 

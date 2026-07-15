@@ -79,6 +79,7 @@ Gunakan status:
 | `P-031` | Fetch Failure Runtime Telemetry Hook | UI menambah fetch asinkron baru di luar flow Inertia utama | Kegagalan fetch tetap tercatat ke jalur telemetry runtime tanpa memecah UX user | Targeted concern regression + runtime log endpoint test + build frontend | `active` |
 | `P-032` | Markdown Context Space Budgeting | Ada audit/pertumbuhan dokumen governance yang berisiko membebani context AI | Konteks markdown aktif tetap terukur, punya reserve, dan bisa diekspansi terkontrol saat context window model naik | Audit chars/tokens + sinkronisasi budget doc + registry/log/process refs | `active` |
 | `P-033` | Commit by Concern at Closure | Satu concern sudah tervalidasi dan boundary perubahan bersih | Siklus delivery lebih pendek tanpa menunggu prompt commit terpisah | Validasi concern hijau + audit `git status` scoped + no unrelated files staged | `active` |
+| `P-034` | Final Kecamatan Priority Guardrail | Perbaikan shared logic berpotensi bentrok antara desa dan kecamatan | Level kecamatan yang sudah dinyatakan benar oleh pengetest tetap dipertahankan; perubahan desa tidak boleh mengalahkan kontrak final kecamatan | Audit shared diff + regression kecamatan prioritas + status `mode-boleh-diubah` / `mode-tidak-boleh-diubah` dicatat di TODO/ADR | `active` |
 
 ## 3) Protocol Update Pattern
 
