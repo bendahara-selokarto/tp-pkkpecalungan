@@ -41,6 +41,7 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
                 'sumber_dana_swd' => $data->sumber_dana_swd,
                 'sumber_dana_bant' => $data->sumber_dana_bant,
                 'keterangan' => $data->keterangan,
+                'kategori_program_unggulan' => $data->kategori_program_unggulan,
                 'level' => $data->level,
                 'group' => $data->group,
                 'area_id' => $data->area_id,
@@ -129,6 +130,7 @@ class ProgramPrioritasRepository implements ProgramPrioritasRepositoryInterface
                 'sumber_dana_swd' => $data->sumber_dana_swd,
                 'sumber_dana_bant' => $data->sumber_dana_bant,
                 'keterangan' => $data->keterangan,
+                'kategori_program_unggulan' => $data->kategori_program_unggulan,
                 'tahun_anggaran' => $data->tahun_anggaran,
             ]);
 

@@ -54,6 +54,7 @@ class ProgramPrioritas extends Model
         'sumber_dana_swd',
         'sumber_dana_bant',
         'keterangan',
+        'kategori_program_unggulan',
         'level',
         'group',
         'area_id',

@@ -10,6 +10,10 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  jenisKaderOptions: {
+    type: Array,
+    default: () => [],
+  },
 })
 
 const form = useForm({
@@ -44,7 +48,9 @@ const submit = () => {
 
           <div>
             <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Kader Khusus</label>
-            <input v-model="form.jenis_kader_khusus" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <select v-model="form.jenis_kader_khusus" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+              <option v-for="opt in jenisKaderOptions" :key="opt.value" :value="opt.value">{{ opt.label }}</option>
+            </select>
             <p v-if="form.errors.jenis_kader_khusus" class="mt-1 text-xs text-rose-600">{{ form.errors.jenis_kader_khusus }}</p>
           </div>
         </div>

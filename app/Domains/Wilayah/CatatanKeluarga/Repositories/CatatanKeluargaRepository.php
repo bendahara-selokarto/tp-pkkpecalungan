@@ -1658,6 +1658,12 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
                 $anggota = $household->relationLoaded('anggota') ? $household->anggota : collect();
 
                 return $anggota->contains(function (DataWargaAnggota $item): bool {
+                    // 1. Prioritas: kolom terstruktur (data baru)
+                    if ($item->memiliki_asuransi_kesehatan !== null) {
+                        return (bool) $item->memiliki_asuransi_kesehatan;
+                    }
+
+                    // 2. Fallback: keyword parsing keterangan (data lama)
                     $text = Str::lower(trim((string) $item->keterangan));
 
                     return $text !== '' && (str_contains($text, 'asuransi') || str_contains($text, 'bpjs'));
@@ -1677,33 +1683,51 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             ->count();
 
         $programPrioritasItems = $this->scopedModelQuery(ProgramPrioritas::class, $level, $areaId)
-            ->get(['program', 'prioritas_program', 'kegiatan', 'keterangan']);
+            ->get(['program', 'prioritas_program', 'kegiatan', 'keterangan', 'kategori_program_unggulan']);
 
         $programUnggulanKesehatan = 0;
         $programUnggulanKelestarianLingkunganHidup = 0;
         $programUnggulanPerencanaanSehat = 0;
 
         foreach ($programPrioritasItems as $item) {
-            $text = Str::lower(trim(sprintf(
-                '%s %s %s',
-                (string) $item->program,
-                (string) $item->prioritas_program,
-                (string) $item->kegiatan
-            )));
+            $kategori = Str::lower(trim((string) $item->kategori_program_unggulan));
 
-            if ($programUnggulanKesehatan === 0 && str_contains($text, 'kesehatan')) {
-                $programUnggulanKesehatan = 1;
-            }
+            if ($kategori !== '') {
+                // Structured column (new data) — exact match
+                if ($programUnggulanKesehatan === 0 && $kategori === 'kesehatan') {
+                    $programUnggulanKesehatan = 1;
+                }
 
-            if ($programUnggulanKelestarianLingkunganHidup === 0 && str_contains($text, 'lingkungan')) {
-                $programUnggulanKelestarianLingkunganHidup = 1;
-            }
+                if ($programUnggulanKelestarianLingkunganHidup === 0 && $kategori === 'lingkungan') {
+                    $programUnggulanKelestarianLingkunganHidup = 1;
+                }
 
-            if (
-                $programUnggulanPerencanaanSehat === 0
-                && (str_contains($text, 'perencanaan sehat') || str_contains($text, 'perencanaan'))
-            ) {
-                $programUnggulanPerencanaanSehat = 1;
+                if ($programUnggulanPerencanaanSehat === 0 && $kategori === 'perencanaan_sehat') {
+                    $programUnggulanPerencanaanSehat = 1;
+                }
+            } else {
+                // Fallback: keyword parsing (legacy data only)
+                $text = Str::lower(trim(sprintf(
+                    '%s %s %s',
+                    (string) $item->program,
+                    (string) $item->prioritas_program,
+                    (string) $item->kegiatan
+                )));
+
+                if ($programUnggulanKesehatan === 0 && str_contains($text, 'kesehatan')) {
+                    $programUnggulanKesehatan = 1;
+                }
+
+                if ($programUnggulanKelestarianLingkunganHidup === 0 && str_contains($text, 'lingkungan')) {
+                    $programUnggulanKelestarianLingkunganHidup = 1;
+                }
+
+                if (
+                    $programUnggulanPerencanaanSehat === 0
+                    && (str_contains($text, 'perencanaan sehat') || str_contains($text, 'perencanaan'))
+                ) {
+                    $programUnggulanPerencanaanSehat = 1;
+                }
             }
 
             $keterangan = trim((string) $item->keterangan);

@@ -42,6 +42,7 @@ class DataWargaAnggotaRepository implements DataWargaAnggotaRepositoryInterface
                 'aktif_posyandu' => $this->normalizeBoolean($row['aktif_posyandu'] ?? false),
                 'ikut_bkb' => $this->normalizeBoolean($row['ikut_bkb'] ?? false),
                 'memiliki_tabungan' => $this->normalizeBoolean($row['memiliki_tabungan'] ?? false),
+                'memiliki_asuransi_kesehatan' => $this->normalizeBoolean($row['memiliki_asuransi_kesehatan'] ?? false),
                 'ikut_kelompok_belajar' => $this->normalizeBoolean($row['ikut_kelompok_belajar'] ?? false),
                 'jenis_kelompok_belajar' => $this->normalizeString($row['jenis_kelompok_belajar'] ?? null),
                 'ikut_paud' => $this->normalizeBoolean($row['ikut_paud'] ?? false),

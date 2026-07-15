@@ -43,6 +43,7 @@ const form = useForm({
   sumber_dana_swd: props.programPrioritas.sumber_dana_swd ?? false,
   sumber_dana_bant: props.programPrioritas.sumber_dana_bant ?? false,
   keterangan: props.programPrioritas.keterangan ?? '',
+  kategori_program_unggulan: props.programPrioritas.kategori_program_unggulan ?? '',
 })
 
 const submit = () => {
@@ -113,6 +114,17 @@ const submit = () => {
           <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Keterangan</label>
           <textarea v-model="form.keterangan" rows="2" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" />
           <p v-if="form.errors.keterangan" class="mt-1 text-xs text-rose-600">{{ form.errors.keterangan }}</p>
+        </div>
+
+        <div>
+          <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Kategori Program Unggulan</label>
+          <select v-model="form.kategori_program_unggulan" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100">
+            <option value="">— Pilih Kategori (opsional) —</option>
+            <option value="kesehatan">Kesehatan</option>
+            <option value="lingkungan">Kelestarian Lingkungan Hidup</option>
+            <option value="perencanaan_sehat">Perencanaan Sehat</option>
+          </select>
+          <p v-if="form.errors.kategori_program_unggulan" class="mt-1 text-xs text-rose-600">{{ form.errors.kategori_program_unggulan }}</p>
         </div>
 
         <div class="flex items-center justify-end gap-2">

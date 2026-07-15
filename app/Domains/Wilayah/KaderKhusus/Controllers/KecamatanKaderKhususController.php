@@ -10,6 +10,7 @@ use App\Domains\Wilayah\KaderKhusus\Repositories\KaderKhususRepositoryInterface;
 use App\Domains\Wilayah\KaderKhusus\Requests\ListKaderKhususRequest;
 use App\Domains\Wilayah\KaderKhusus\Requests\StoreKaderKhususRequest;
 use App\Domains\Wilayah\KaderKhusus\Requests\UpdateKaderKhususRequest;
+use App\Domains\Wilayah\KaderKhusus\Services\KaderKhususScopeService;
 use App\Domains\Wilayah\KaderKhusus\UseCases\GetScopedKaderKhususUseCase;
 use App\Domains\Wilayah\KaderKhusus\UseCases\ListScopedKaderKhususUseCase;
 use App\Http\Controllers\Controller;
@@ -19,12 +20,28 @@ use Inertia\Response;
 
 class KecamatanKaderKhususController extends Controller
 {
+    /** @var array<string,list<array{value:string,label:string}>> */
+    private const JENIS_KADER_OPTIONS_BY_GROUP = [
+        'pokja-i' => [
+            ['value' => 'BKB', 'label' => 'Bina Keluarga Balita (BKB)'],
+            ['value' => 'Koperasi', 'label' => 'Koperasi / UP2K'],
+            ['value' => 'Keterampilan', 'label' => 'Keterampilan / Kerajinan'],
+        ],
+        'pokja-iv' => [
+            ['value' => 'Gizi', 'label' => 'Kader Gizi'],
+            ['value' => 'Kesling', 'label' => 'Kader Kesling / Lingkungan'],
+            ['value' => 'PHBS', 'label' => 'Kader PHBS'],
+            ['value' => 'KB', 'label' => 'Kader KB'],
+        ],
+    ];
+
     public function __construct(
         private readonly KaderKhususRepositoryInterface $kaderKhususRepository,
         private readonly ListScopedKaderKhususUseCase $listScopedKaderKhususUseCase,
         private readonly GetScopedKaderKhususUseCase $getScopedKaderKhususUseCase,
         private readonly CreateScopedKaderKhususAction $createScopedKaderKhususAction,
-        private readonly UpdateKaderKhususAction $updateKaderKhususAction
+        private readonly UpdateKaderKhususAction $updateKaderKhususAction,
+        private readonly KaderKhususScopeService $kaderKhususScopeService
     ) {
         $this->middleware('scope.role:kecamatan');
     }
@@ -58,8 +75,12 @@ class KecamatanKaderKhususController extends Controller
     public function create(): Response
     {
         $this->authorize('create', KaderKhusus::class);
+        $user = $this->kaderKhususScopeService->requireAuthenticatedUser();
+        $group = $this->kaderKhususScopeService->requireKaderKhususGroupForUser($user);
 
-        return Inertia::render('Kecamatan/KaderKhusus/Create');
+        return Inertia::render('Kecamatan/KaderKhusus/Create', [
+            'jenisKaderOptions' => self::JENIS_KADER_OPTIONS_BY_GROUP[$group] ?? self::JENIS_KADER_OPTIONS_BY_GROUP['pokja-i'],
+        ]);
     }
 
     public function store(StoreKaderKhususRequest $request): RedirectResponse
@@ -112,6 +133,7 @@ class KecamatanKaderKhususController extends Controller
                 'keterangan' => $kaderKhusus->keterangan,
                 'tahun_anggaran' => $kaderKhusus->tahun_anggaran,
             ],
+            'jenisKaderOptions' => self::JENIS_KADER_OPTIONS_BY_GROUP[$kaderKhusus->group] ?? self::JENIS_KADER_OPTIONS_BY_GROUP['pokja-i'],
         ]);
     }
 

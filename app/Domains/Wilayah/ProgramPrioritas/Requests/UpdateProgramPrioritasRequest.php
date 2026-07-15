@@ -47,6 +47,7 @@ class UpdateProgramPrioritasRequest extends FormRequest
             'sumber_dana_swd' => 'required|boolean',
             'sumber_dana_bant' => 'required|boolean',
             'keterangan' => 'nullable|string',
+            'kategori_program_unggulan' => 'nullable|string|in:kesehatan,lingkungan,perencanaan_sehat',
         ];
     }
 

@@ -21,7 +21,7 @@ class UpdateKaderKhususRequest extends FormRequest
             'status_perkawinan' => 'required|in:kawin,tidak_kawin',
             'alamat' => 'required|string',
             'pendidikan' => 'required|string|max:255',
-            'jenis_kader_khusus' => 'required|string|in:BKB,Koperasi,Keterampilan',
+            'jenis_kader_khusus' => 'required|string|in:BKB,Koperasi,Keterampilan,Gizi,Kesling,PHBS,KB',
             'keterangan' => 'nullable|string',
         ];
     }

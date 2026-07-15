@@ -133,6 +133,7 @@ class KecamatanProgramPrioritasController extends Controller
             'sumber_dana_swd' => (bool) $item->sumber_dana_swd,
             'sumber_dana_bant' => (bool) $item->sumber_dana_bant,
             'keterangan' => $item->keterangan,
+            'kategori_program_unggulan' => $item->kategori_program_unggulan,
             'tahun_anggaran' => $item->tahun_anggaran,
         ];
     }

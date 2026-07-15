@@ -45,6 +45,7 @@ class StoreDataWargaRequest extends FormRequest
             'anggota.*.aktif_posyandu' => 'nullable|boolean',
             'anggota.*.ikut_bkb' => 'nullable|boolean',
             'anggota.*.memiliki_tabungan' => 'nullable|boolean',
+            'anggota.*.memiliki_asuransi_kesehatan' => 'nullable|boolean',
             'anggota.*.ikut_kelompok_belajar' => 'nullable|boolean',
             'anggota.*.jenis_kelompok_belajar' => 'nullable|string|max:120',
             'anggota.*.ikut_paud' => 'nullable|boolean',
