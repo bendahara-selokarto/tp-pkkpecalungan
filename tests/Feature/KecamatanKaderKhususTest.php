@@ -272,7 +272,7 @@ class KecamatanKaderKhususTest extends TestCase
             'status_perkawinan' => 'kawin',
             'alamat' => 'Jl. Teratai 1',
             'pendidikan' => 'SMA',
-            'jenis_kader_khusus' => 'Kader Posyandu',
+            'jenis_kader_khusus' => 'Koperasi',
             'keterangan' => 'Data awal',
         ])->assertStatus(302);
 
@@ -289,7 +289,7 @@ class KecamatanKaderKhususTest extends TestCase
             'status_perkawinan' => 'kawin',
             'alamat' => 'Jl. Teratai 2',
             'pendidikan' => 'D3',
-            'jenis_kader_khusus' => 'Kader Lansia',
+            'jenis_kader_khusus' => 'Keterampilan',
             'keterangan' => 'Data revisi',
         ])->assertStatus(302);
 
@@ -297,7 +297,7 @@ class KecamatanKaderKhususTest extends TestCase
             'id' => $kader->id,
             'alamat' => 'Jl. Teratai 2',
             'pendidikan' => 'D3',
-            'jenis_kader_khusus' => 'Kader Lansia',
+            'jenis_kader_khusus' => 'Keterampilan',
             'level' => 'kecamatan',
             'area_id' => $this->kecamatanA->id,
             'tahun_anggaran' => self::ACTIVE_BUDGET_YEAR,

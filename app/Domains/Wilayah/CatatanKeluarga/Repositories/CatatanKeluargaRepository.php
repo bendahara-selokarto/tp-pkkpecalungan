@@ -1271,13 +1271,22 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
         $kaderKeterampilan = 0;
 
         foreach ($kaderItems as $item) {
-            $jenisKader = Str::lower(trim((string) $item->jenis_kader_khusus));
+            $jenisKader = trim((string) $item->jenis_kader_khusus);
+            $jenisKaderLower = Str::lower($jenisKader);
 
-            if ($this->containsAnyKeyword($jenisKader, ['bkb', 'bina keluarga balita'])) {
+            // Exact match for structured values (new records)
+            if ($jenisKader === 'BKB') {
                 $kaderBkb++;
-            } elseif ($this->containsAnyKeyword($jenisKader, ['koperasi', 'usaha bersama', 'up2k', 'up2k-pkk'])) {
+            } elseif ($jenisKader === 'Koperasi') {
                 $kaderKoperasi++;
-            } elseif ($this->containsAnyKeyword($jenisKader, ['keterampilan', 'kerajinan'])) {
+            } elseif ($jenisKader === 'Keterampilan') {
+                $kaderKeterampilan++;
+            // Fallback keyword matching for legacy free-text records
+            } elseif ($this->containsAnyKeyword($jenisKaderLower, ['bkb', 'bina keluarga balita'])) {
+                $kaderBkb++;
+            } elseif ($this->containsAnyKeyword($jenisKaderLower, ['koperasi', 'usaha bersama', 'up2k', 'up2k-pkk'])) {
+                $kaderKoperasi++;
+            } elseif ($this->containsAnyKeyword($jenisKaderLower, ['keterampilan', 'kerajinan'])) {
                 $kaderKeterampilan++;
             }
 
@@ -2517,6 +2526,12 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
 
     private function extractMaternalStatus(DataWarga $household, ?DataWargaAnggota $ibu): string
     {
+        // 1. Prioritize structured column (new records)
+        if ($ibu !== null && $ibu->status_kehamilan !== null && $ibu->status_kehamilan !== '') {
+            return strtoupper((string) $ibu->status_kehamilan);
+        }
+
+        // 2. Fallback: parse keterangan free-text (legacy records)
         $text = Str::lower(trim(implode(' ', array_filter([
             (string) ($household->keterangan ?? ''),
             (string) ($ibu?->keterangan ?? ''),
@@ -2546,12 +2561,6 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
      */
     private function extractDeathInfo(DataWarga $household, ?DataWargaAnggota $ibu, ?DataWargaAnggota $bayi): array
     {
-        $text = Str::lower(trim(implode(' ', array_filter([
-            (string) ($household->keterangan ?? ''),
-            (string) ($ibu?->keterangan ?? ''),
-            (string) ($bayi?->keterangan ?? ''),
-        ]))));
-
         $default = [
             'nama' => '-',
             'status' => '-',
@@ -2560,6 +2569,36 @@ class CatatanKeluargaRepository implements CatatanKeluargaRepositoryInterface
             'tanggal' => '-',
             'sebab' => '-',
         ];
+
+        // 1. Prioritize structured columns (new records)
+        $deceasedMembers = collect([$ibu, $bayi])
+            ->filter(fn (?DataWargaAnggota $m): bool => $m !== null && (bool) $m->is_meninggal);
+
+        if ($deceasedMembers->isNotEmpty()) {
+            /** @var DataWargaAnggota $deceased */
+            $deceased = $deceasedMembers->first();
+            $golongan = strtoupper((string) ($deceased->golongan_kematian ?? ''));
+            $tanggal = $deceased->tanggal_meninggal?->format('Y-m-d') ?? '-';
+            $sebab = $deceased->sebab_meninggal ?? '-';
+            $isL = $deceased->jenis_kelamin === 'L' ? 1 : 0;
+            $isP = $deceased->jenis_kelamin === 'P' ? 1 : 0;
+
+            return [
+                'nama' => $deceased->nama ?? '-',
+                'status' => $golongan !== '' ? $golongan : 'UMUM',
+                'l' => $isL,
+                'p' => $isP,
+                'tanggal' => $tanggal,
+                'sebab' => $sebab !== '' ? $sebab : '-',
+            ];
+        }
+
+        // 2. Fallback: parse keterangan free-text (legacy records)
+        $text = Str::lower(trim(implode(' ', array_filter([
+            (string) ($household->keterangan ?? ''),
+            (string) ($ibu?->keterangan ?? ''),
+            (string) ($bayi?->keterangan ?? ''),
+        ]))));
 
         if ($text === '' || ! str_contains($text, 'meninggal')) {
             return $default;

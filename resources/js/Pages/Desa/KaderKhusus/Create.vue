@@ -13,7 +13,7 @@ const form = useForm({
   status_perkawinan: 'kawin',
   alamat: '',
   pendidikan: '',
-  jenis_kader_khusus: '',
+  jenis_kader_khusus: 'BKB',
   keterangan: '',
 })
 
@@ -37,7 +37,11 @@ const submit = () => {
 
           <div>
             <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Jenis Kader Khusus</label>
-            <input v-model="form.jenis_kader_khusus" type="text" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+            <select v-model="form.jenis_kader_khusus" class="w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-emerald-500 focus:ring-emerald-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100" required>
+              <option value="BKB">Bina Keluarga Balita (BKB)</option>
+              <option value="Koperasi">Koperasi / UP2K</option>
+              <option value="Keterampilan">Keterampilan / Kerajinan</option>
+            </select>
             <p v-if="form.errors.jenis_kader_khusus" class="mt-1 text-xs text-rose-600">{{ form.errors.jenis_kader_khusus }}</p>
           </div>
         </div>

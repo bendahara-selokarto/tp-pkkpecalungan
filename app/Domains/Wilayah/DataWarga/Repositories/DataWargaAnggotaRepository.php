@@ -47,6 +47,11 @@ class DataWargaAnggotaRepository implements DataWargaAnggotaRepositoryInterface
                 'ikut_paud' => $this->normalizeBoolean($row['ikut_paud'] ?? false),
                 'ikut_koperasi' => $this->normalizeBoolean($row['ikut_koperasi'] ?? false),
                 'keterangan' => $this->normalizeString($row['keterangan'] ?? null),
+                'status_kehamilan' => $this->normalizeStatusKehamilan($row['status_kehamilan'] ?? null),
+                'is_meninggal' => $this->normalizeBoolean($row['is_meninggal'] ?? false),
+                'tanggal_meninggal' => $this->normalizeString($row['tanggal_meninggal'] ?? null),
+                'sebab_meninggal' => $this->normalizeString($row['sebab_meninggal'] ?? null),
+                'golongan_kematian' => $this->normalizeGolonganKematian($row['golongan_kematian'] ?? null),
                 'tahun_anggaran' => $tahunAnggaran,
                 'level' => $level,
                 'area_id' => $areaId,
@@ -93,5 +98,27 @@ class DataWargaAnggotaRepository implements DataWargaAnggotaRepositoryInterface
         $normalized = strtoupper((string) $value);
 
         return in_array($normalized, ['L', 'P'], true) ? $normalized : null;
+    }
+
+    private function normalizeStatusKehamilan(mixed $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $normalized = strtolower(trim((string) $value));
+
+        return in_array($normalized, ['hamil', 'melahirkan', 'nifas', 'normal'], true) ? $normalized : null;
+    }
+
+    private function normalizeGolonganKematian(mixed $value): ?string
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $normalized = strtolower(trim((string) $value));
+
+        return in_array($normalized, ['ibu', 'bayi', 'balita', 'umum'], true) ? $normalized : null;
     }
 }

@@ -37,6 +37,11 @@ class DataWargaAnggota extends Model
         'ikut_paud',
         'ikut_koperasi',
         'keterangan',
+        'status_kehamilan',
+        'is_meninggal',
+        'tanggal_meninggal',
+        'sebab_meninggal',
+        'golongan_kematian',
         'tahun_anggaran',
         'level',
         'area_id',
@@ -57,6 +62,8 @@ class DataWargaAnggota extends Model
             'ikut_kelompok_belajar' => 'boolean',
             'ikut_paud' => 'boolean',
             'ikut_koperasi' => 'boolean',
+            'is_meninggal' => 'boolean',
+            'tanggal_meninggal' => 'date',
         ];
     }
 

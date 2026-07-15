@@ -33,6 +33,11 @@ const createRow = () => ({
   ikut_paud: false,
   ikut_koperasi: false,
   keterangan: '',
+  status_kehamilan: '',
+  is_meninggal: false,
+  tanggal_meninggal: '',
+  sebab_meninggal: '',
+  golongan_kematian: '',
 })
 
 const ensureArray = () => {
@@ -114,6 +119,11 @@ onMounted(() => {
             <th class="px-2 py-2 text-center">PAUD</th>
             <th class="px-2 py-2 text-center">Koperasi</th>
             <th class="px-2 py-2 min-w-[8rem]">Keterangan</th>
+            <th class="px-2 py-2 min-w-[9rem]">Status Kehamilan</th>
+            <th class="px-2 py-2 text-center">Meninggal</th>
+            <th class="px-2 py-2 min-w-[9rem]">Tgl Meninggal</th>
+            <th class="px-2 py-2 min-w-[10rem]">Sebab Meninggal</th>
+            <th class="px-2 py-2 min-w-[8rem]">Golongan</th>
             <th class="px-2 py-2">Aksi</th>
           </tr>
         </thead>
@@ -154,6 +164,54 @@ onMounted(() => {
             <td class="px-2 py-2 text-center"><input v-model="anggota.ikut_paud" type="checkbox" class="rounded border-gray-300 text-emerald-600 shadow-sm focus:ring-emerald-500"></td>
             <td class="px-2 py-2 text-center"><input v-model="anggota.ikut_koperasi" type="checkbox" class="rounded border-gray-300 text-emerald-600 shadow-sm focus:ring-emerald-500"></td>
             <td class="px-2 py-2"><input v-model="anggota.keterangan" type="text" class="w-full min-w-[8rem] rounded border-gray-300 px-2 py-1 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"></td>
+            <!-- Status Kehamilan: only relevant for female members -->
+            <td class="px-2 py-2">
+              <select
+                v-model="anggota.status_kehamilan"
+                class="w-full min-w-[9rem] rounded border-gray-300 px-2 py-1 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                :disabled="String(anggota.jenis_kelamin || '').toUpperCase() !== 'P'"
+              >
+                <option value="">-</option>
+                <option value="normal">Normal</option>
+                <option value="hamil">Hamil</option>
+                <option value="melahirkan">Melahirkan</option>
+                <option value="nifas">Nifas</option>
+              </select>
+            </td>
+            <!-- Meninggal panel -->
+            <td class="px-2 py-2 text-center">
+              <input v-model="anggota.is_meninggal" type="checkbox" class="rounded border-gray-300 text-rose-600 shadow-sm focus:ring-rose-500">
+            </td>
+            <td class="px-2 py-2">
+              <input
+                v-model="anggota.tanggal_meninggal"
+                type="date"
+                class="w-full min-w-[9rem] rounded border-gray-300 px-2 py-1 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                :disabled="!anggota.is_meninggal"
+              >
+            </td>
+            <td class="px-2 py-2">
+              <input
+                v-model="anggota.sebab_meninggal"
+                type="text"
+                class="w-full min-w-[10rem] rounded border-gray-300 px-2 py-1 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                :disabled="!anggota.is_meninggal"
+                placeholder="Sebab meninggal"
+              >
+            </td>
+            <td class="px-2 py-2">
+              <select
+                v-model="anggota.golongan_kematian"
+                class="w-full min-w-[8rem] rounded border-gray-300 px-2 py-1 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+                :disabled="!anggota.is_meninggal"
+              >
+                <option value="">-</option>
+                <option value="ibu">Ibu</option>
+                <option value="bayi">Bayi</option>
+                <option value="balita">Balita</option>
+                <option value="umum">Umum</option>
+              </select>
+            </td>
             <td class="px-2 py-2">
               <button type="button" class="rounded border border-rose-200 px-2 py-1 text-[11px] font-semibold text-rose-700 hover:bg-rose-50 dark:border-rose-900/50 dark:text-rose-300 dark:hover:bg-rose-900/20" @click="removeRow(index)">
                 Hapus
@@ -161,7 +219,7 @@ onMounted(() => {
             </td>
           </tr>
           <tr v-if="form.anggota.length === 0">
-            <td colspan="26" class="px-3 py-4 text-center text-xs text-gray-500 dark:text-gray-400">
+            <td colspan="32" class="px-3 py-4 text-center text-xs text-gray-500 dark:text-gray-400">
               Belum ada detail anggota. Tambahkan minimal satu anggota untuk format autentik 4.14.1a.
             </td>
           </tr>

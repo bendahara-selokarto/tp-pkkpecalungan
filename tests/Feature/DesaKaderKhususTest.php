@@ -332,7 +332,7 @@ class DesaKaderKhususTest extends TestCase
             'status_perkawinan' => 'kawin',
             'alamat' => 'Jl. Kenanga 3',
             'pendidikan' => 'D3',
-            'jenis_kader_khusus' => 'Kader Disabilitas',
+            'jenis_kader_khusus' => 'BKB',
             'keterangan' => 'Aktif',
         ])->assertStatus(302);
 
@@ -346,7 +346,7 @@ class DesaKaderKhususTest extends TestCase
             'status_perkawinan' => 'kawin',
             'alamat' => 'Jl. Kenanga 33',
             'pendidikan' => 'S1',
-            'jenis_kader_khusus' => 'Kader Disabilitas',
+            'jenis_kader_khusus' => 'BKB',
             'keterangan' => 'Pengurus inti',
         ])->assertStatus(302);
 

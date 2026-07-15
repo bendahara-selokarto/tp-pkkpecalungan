@@ -50,6 +50,11 @@ class StoreDataWargaRequest extends FormRequest
             'anggota.*.ikut_paud' => 'nullable|boolean',
             'anggota.*.ikut_koperasi' => 'nullable|boolean',
             'anggota.*.keterangan' => 'nullable|string',
+            'anggota.*.status_kehamilan' => 'nullable|string|in:hamil,melahirkan,nifas,normal',
+            'anggota.*.is_meninggal' => 'nullable|boolean',
+            'anggota.*.tanggal_meninggal' => 'nullable|date_format:Y-m-d',
+            'anggota.*.sebab_meninggal' => 'nullable|string|max:255',
+            'anggota.*.golongan_kematian' => 'nullable|string|in:ibu,bayi,balita,umum',
         ];
     }
 }
