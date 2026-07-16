@@ -18,7 +18,7 @@ Revisi owner 2026-05-20: khusus Sekretaris memiliki kategori ketiga `penunjang b
 
 `sekretaris-tpk` memiliki buku wajib `agenda-surat`, daftar anggota TP PKK, `inventaris`, `activities`, dan `buku-notulen-rapat`; buku pembantu bersama `prestasi-lomba`, `bantuans`, dan `kader-khusus`; serta penunjang `catatan-keluarga` untuk data umum dan `program-prioritas`.
 
-Untuk scope `kecamatan-sekretaris`, backend permission yang mengunci akses index buku pembantu bersama mencakup minimal `prestasi_lomba.view` dan `bantuan.view`.
+Untuk scope `kecamatan-sekretaris`, backend permission buku pembantu bersama `prestasi-lomba` dan `bantuans` mencakup `view` dan `create`, sehingga halaman index dan form create sama-sama valid pada jalur kecamatan.
 
 Pokja I-IV masing-masing memiliki buku pembantu bersama serta buku pembantu spesifik Pokja. Link menu/sidebar/cetak untuk modul seragam wajib membawa konteks `book_group` agar akun multi-role tetap melihat satu buku jabatan yang sedang dibuka, bukan gabungan seluruh group role user. Slug data kegiatan aktual: Pokja I memakai `data-kegiatan-pkk-pokja-i`; Pokja II-IV masih memakai route cetak di bawah slug `catatan-keluarga` sampai modul input spesifik tersedia.
 

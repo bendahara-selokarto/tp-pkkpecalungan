@@ -58,4 +58,62 @@ class KecamatanBantuanAccessTest extends TestCase
                 ->where('bantuans.data.0.lokasi_penerima', 'Bantuan Kecamatan');
         });
     }
+
+    #[Test]
+    public function kecamatan_sekretaris_dapat_membuka_form_create_bantuan(): void
+    {
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+
+        $kecamatan = Area::create([
+            'name' => 'Pecalungan',
+            'level' => 'kecamatan',
+        ]);
+
+        $user = User::factory()->create([
+            'area_id' => $kecamatan->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->actingAs($user)
+            ->get('/kecamatan/bantuans/create')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Kecamatan/Bantuan/Create')
+            );
+    }
+
+    #[Test]
+    public function kecamatan_sekretaris_dapat_menyimpan_bantuan(): void
+    {
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+
+        $kecamatan = Area::create([
+            'name' => 'Pecalungan',
+            'level' => 'kecamatan',
+        ]);
+
+        $user = User::factory()->create([
+            'area_id' => $kecamatan->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->actingAs($user)->post('/kecamatan/bantuans', [
+            'lokasi_penerima' => 'Desa Randu',
+            'jenis_bantuan' => 'uang',
+            'keterangan' => 'Tahap awal',
+            'asal_bantuan' => 'kabupaten',
+            'jumlah' => 5000000,
+            'tanggal' => '2026-02-12',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('bantuans', [
+            'name' => 'Desa Randu',
+            'level' => 'kecamatan',
+            'area_id' => $kecamatan->id,
+        ]);
+    }
 }

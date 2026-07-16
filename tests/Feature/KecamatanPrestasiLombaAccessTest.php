@@ -58,4 +58,66 @@ class KecamatanPrestasiLombaAccessTest extends TestCase
                 ->where('prestasiLombaItems.data.0.jenis_lomba', 'Lomba PKK Kecamatan');
         });
     }
+
+    #[Test]
+    public function kecamatan_sekretaris_dapat_membuka_form_create_prestasi_lomba(): void
+    {
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+
+        $kecamatan = Area::create([
+            'name' => 'Pecalungan',
+            'level' => 'kecamatan',
+        ]);
+
+        $user = User::factory()->create([
+            'area_id' => $kecamatan->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->actingAs($user)
+            ->get('/kecamatan/prestasi-lomba/create')
+            ->assertOk()
+            ->assertInertia(fn (AssertableInertia $page) => $page
+                ->component('Kecamatan/PrestasiLomba/Create')
+            );
+    }
+
+    #[Test]
+    public function kecamatan_sekretaris_dapat_menyimpan_prestasi_lomba(): void
+    {
+        Role::firstOrCreate(['name' => 'kecamatan-sekretaris']);
+
+        $kecamatan = Area::create([
+            'name' => 'Pecalungan',
+            'level' => 'kecamatan',
+        ]);
+
+        $user = User::factory()->create([
+            'area_id' => $kecamatan->id,
+            'scope' => 'kecamatan',
+            'active_budget_year' => self::ACTIVE_BUDGET_YEAR,
+        ]);
+        $user->assignRole('kecamatan-sekretaris');
+
+        $this->actingAs($user)->post('/kecamatan/prestasi-lomba', [
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Lomba PKK Kecamatan Baru',
+            'lokasi' => 'Pendopo Kecamatan',
+            'prestasi_kecamatan' => true,
+            'prestasi_kabupaten' => false,
+            'prestasi_provinsi' => false,
+            'prestasi_nasional' => false,
+            'keterangan' => 'Valid',
+        ])->assertStatus(302);
+
+        $this->assertDatabaseHas('prestasi_lombas', [
+            'tahun' => self::ACTIVE_BUDGET_YEAR,
+            'jenis_lomba' => 'Lomba PKK Kecamatan Baru',
+            'lokasi' => 'Pendopo Kecamatan',
+            'level' => 'kecamatan',
+            'area_id' => $kecamatan->id,
+        ]);
+    }
 }
