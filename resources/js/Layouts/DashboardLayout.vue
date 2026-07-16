@@ -170,6 +170,14 @@ const filterMenuItems = (items, seenInternalHrefs) => items.filter((item) => {
     return false
   }
 
+  if (
+    isKecamatanScope.value
+    && isSekretarisRole.value
+    && item.sourceKey === 'common-pembantu'
+  ) {
+    return false
+  }
+
   if (!isModuleAllowedForCurrentUser(item)) {
     return false
   }
